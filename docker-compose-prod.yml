@@ -32,6 +32,7 @@ services:
       - ./.env
     depends_on:
       - api
+    command: ["npm", "run", "start"]
 
   postgres:
     image: postgres
@@ -44,5 +45,15 @@ services:
       - "db-data:/var/lib/postgresql/data"
     ports:
       - "5432:5432"
+
+  nginx:
+    image: nginx
+    container_name: ngx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - frontend
 volumes:
   db-data:
