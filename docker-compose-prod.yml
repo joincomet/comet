@@ -28,6 +28,7 @@ services:
       - NODE_ENV=production
       - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
+      - VIRTUAL_HOST=frontend.local
     env_file:
       - ./.env
     depends_on:
