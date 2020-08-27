@@ -12,6 +12,8 @@ services:
       - "4000:4000"
     environment:
       - NODE_ENV=production
+      - VIRTUAL_HOST=api.cometx.io
+      - LETSENCRYPT_HOST=api.cometx.io
     env_file:
       - ./.env
     volumes:

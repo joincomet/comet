@@ -257,9 +257,14 @@ export default {
    */
   axios: {
     progress: false,
-    baseURL: process.env.NODE_ENV === 'production' ? '' : 'http://api:4000',
+    baseURL:
+      process.env.NODE_ENV === 'production'
+        ? 'http://api:4000'
+        : 'http://api:4000',
     browserBaseURL:
-      process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4000'
+      process.env.NODE_ENV === 'production'
+        ? 'https://api.cometx.io'
+        : 'http://localhost:4000'
   },
 
   pwa: {
@@ -300,11 +305,11 @@ export default {
       default: {
         httpEndpoint:
           process.env.NODE_ENV === 'production'
-            ? ''
+            ? 'http://api:4000/graphql'
             : 'http://api:4000/graphql',
         browserHttpEndpoint:
           process.env.NODE_ENV === 'production'
-            ? ''
+            ? 'https://api.cometx.io/graphql'
             : 'http://localhost:4000/graphql',
         httpLinkOptions: {
           credentials: 'same-origin'
