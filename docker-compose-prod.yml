@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile.api.prod
+      args:
+        PACKAGE_PATH: api
+        WORKING_DIR: /usr/src/
+    expose:
+      - "4000"
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./.env
+    volumes:
+      - .:/src
+    depends_on:
+      - postgres
+
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend.prod
+    environment:
+      - NODE_ENV=production
+      - NODE_PATH=/usr/src/frontend/src
+      - HOST=0.0.0.0
+    env_file:
+      - ./.env
+    depends_on:
+      - api
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password
+    env_file:
+      ./.env
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+volumes:
+  db-data:

@@ -1,0 +1,10 @@
+# build environment
+FROM node:14 as builder
+RUN mkdir /usr/src/api
+WORKDIR /usr/src/api
+ENV PATH /usr/src/api/node_modules/.bin:$PATH
+COPY ./api/package.json /usr/src/api/package.json
+RUN npm install --silent
+COPY ./api /usr/src/api
+RUN npm run tsc
+RUN npm run start

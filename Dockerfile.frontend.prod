@@ -1,0 +1,17 @@
+# build environment
+FROM node:14 as builder
+RUN mkdir /usr/src/frontend
+WORKDIR /usr/src/frontend
+ENV PATH /usr/src/frontend/node_modules/.bin:$PATH
+COPY ./frontend/package.json /usr/src/frontend/package.json
+RUN npm install --silent
+COPY ./frontend /usr/src/frontend
+RUN npm run build
+
+# production environment
+FROM nginx:latest
+RUN rm -rf /etc/nginx/conf.d
+COPY default.conf /etc/nginx
+COPY --from=builder /usr/src/frontend/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
