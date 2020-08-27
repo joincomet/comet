@@ -50,8 +50,8 @@ services:
     build: ./proxy
     restart: always
     ports:
-      - 80:80
-      - 443:443
+      - 80
+      - 443
     labels:
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     volumes:
