@@ -29,6 +29,9 @@ services:
       - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
       - VIRTUAL_HOST=cometx.io
+      - LETSENCRYPT_HOST=cometx.io
+    ports:
+      - "3000:3000"
     env_file:
       - ./.env
     depends_on:
@@ -46,15 +49,40 @@ services:
       - "5432:5432"
 
   proxy:
-    image: jwilder/nginx-proxy
+    image: jwilder/nginx-proxy:alpine
+    restart: always
     ports:
       - "80:80"
       - "443:443"
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     volumes:
-      - "/var/run/docker.sock:/tmp/docker.sock:ro"
-      - "./certs:/etc/nginx/certs"
+      - certs:/etc/nginx/certs:ro
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     environment:
       - ENABLE_IPV6=true
 
+  letsencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy-tier
+    depends_on:
+      - proxy
+
 volumes:
   db-data:
+  certs:
+  vhost.d:
+  html:
+
+networks:
+  proxy-tier:
+
