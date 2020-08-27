@@ -6,7 +6,6 @@ import * as TypeORM from 'typeorm'
 import { Container } from 'typedi'
 import { getUser } from './auth'
 import express from 'express'
-import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { ApolloServer } from 'apollo-server-express'
 import { Context } from './Context'
@@ -30,46 +29,19 @@ TypeORM.useContainer(Container)
 
 async function bootstrap() {
   try {
-    if (process.env.NODE_ENV !== 'production') {
-      // DEV
-      await TypeORM.createConnection({
-        type: 'postgres',
-        host: 'postgres',
-        port: 5432,
-        username: 'postgres',
-        password: 'password',
-        database: 'postgres',
-        entities: [__dirname + '/entities/**/*.{ts,js}'],
-        synchronize: true,
-        logging: true,
-        dropSchema: false, // CLEARS DATABASE ON START
-        cache: true
-      })
-    } else if (process.env.NODE_ENV === 'production' && !process.env.STAGING) {
-      // PROD
-      await TypeORM.createConnection({
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
-        entities: [__dirname + '/entities/**/*.{ts,js}'],
-        synchronize: true,
-        logging: false,
-        cache: true
-      })
-    } else if (
-      process.env.NODE_ENV === 'production' &&
-      process.env.STAGING === 'true'
-    ) {
-      // STAGING
-      await TypeORM.createConnection({
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
-        entities: [__dirname + '/entities/**/*.{ts,js}'],
-        synchronize: true,
-        logging: false,
-        dropSchema: false, // CLEARS DATABASE ON START
-        cache: true
-      })
-    } else return
+    await TypeORM.createConnection({
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
+      entities: [__dirname + '/entities/**/*.{ts,js}'],
+      synchronize: true,
+      logging: true,
+      dropSchema: false, // CLEARS DATABASE ON START
+      cache: true
+    })
 
     getRepository(Galaxy).save(galaxiesList)
 
@@ -107,16 +79,6 @@ async function bootstrap() {
 
     const app = express()
 
-    const origin =
-      process.env.NODE_ENV === 'production' ? process.env.ORIGIN_URL : true
-
-    app.use(
-      cors({
-        origin,
-        credentials: true
-      })
-    )
-
     app.use(cookieParser())
 
     app.use(
@@ -146,11 +108,7 @@ async function bootstrap() {
     })
 
     server.applyMiddleware({
-      app,
-      cors: {
-        origin,
-        credentials: true
-      }
+      app
     })
 
     app.get('/avataaar', avataaarEndpoint)
