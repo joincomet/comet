@@ -12,6 +12,7 @@ RUN npm run build
 FROM nginx:latest
 RUN rm -rf /etc/nginx/conf.d
 COPY default.conf /etc/nginx
+RUN ls /usr/src/frontend
 COPY --from=builder /usr/src/frontend/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
