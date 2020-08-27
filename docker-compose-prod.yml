@@ -6,9 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api.prod
-      args:
-        PACKAGE_PATH: api
-        WORKING_DIR: /usr/src/
     expose:
       - "4000"
     ports:
@@ -45,5 +42,7 @@ services:
       ./.env
     volumes:
       - "db-data:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
 volumes:
   db-data:
