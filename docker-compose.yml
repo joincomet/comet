@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+      args:
+        PACKAGE_PATH: api
+        WORKING_DIR: /usr/src/
+    expose:
+      - "4000"
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./.env
+    volumes:
+      - ./api:/usr/src
+    depends_on:
+      - postgres
+    command: ["npm", "run", "dev"]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+      args:
+        PACKAGE_PATH: frontend
+        WORKING_DIR: /usr/src/
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NODE_PATH=/usr/src/
+      - HOST=0.0.0.0
+    env_file:
+      - ./.env
+    volumes:
+      - ./frontend:/usr/src
+    depends_on:
+      - api
+    command: ["npm", "run", "dev"]
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password
+    env_file:
+      ./.env
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+volumes:
+  db-data:

@@ -1,0 +1,3 @@
+mutation joinPlanet($planetName: ID!) {
+  joinPlanet(planetName: $planetName)
+}

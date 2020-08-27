@@ -1,0 +1,18 @@
+query allPlanets($galaxyName: ID) {
+  allPlanets(galaxyName: $galaxyName) {
+    avatarImageUrl
+    name
+    description
+    customName
+    joined
+    userCount
+    themeColor
+    bannerImageUrl
+    createdAt
+    galaxy {
+      fullName
+      name
+      icon
+    }
+  }
+}

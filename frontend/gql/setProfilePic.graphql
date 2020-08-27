@@ -1,0 +1,3 @@
+mutation setProfilePic($profilePicUrl: String!, $image: Upload) {
+  setProfilePic(profilePicUrl: $profilePicUrl, image: $image)
+}

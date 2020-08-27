@@ -1,0 +1,9 @@
+query joinedPlanets {
+  joinedPlanets {
+    name
+    postCount
+    avatarImageUrl
+    themeColor
+    joined
+  }
+}

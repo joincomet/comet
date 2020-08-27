@@ -1,0 +1,27 @@
+query user($username: String!) {
+  user(username: $username) {
+    id
+    username
+    commentCount
+    postCount
+    endorsementCount
+    createdAt
+    lastLogin
+    isBlocking
+    isBlocked
+    isCurrentUser
+    tag
+    tagColor
+    profilePicUrl
+    bannerImageUrl
+    bio
+    appearOffline
+    moderatedPlanets {
+      name
+      description
+      bannerImageUrl
+      avatarImageUrl
+      themeColor
+    }
+  }
+}

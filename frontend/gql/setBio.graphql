@@ -1,0 +1,3 @@
+mutation setBio($bio: String!) {
+  setBio(bio: $bio)
+}

@@ -1,0 +1,9 @@
+query recentPlanets($planetNames: [ID!]!) {
+  recentPlanets(planetNames: $planetNames) {
+    avatarImageUrl
+    customName
+    name
+    description
+    postCount
+  }
+}

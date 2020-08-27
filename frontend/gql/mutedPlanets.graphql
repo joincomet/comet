@@ -1,0 +1,8 @@
+query mutedPlanets {
+  mutedPlanets {
+    name
+    muted
+    userCount
+    description
+  }
+}

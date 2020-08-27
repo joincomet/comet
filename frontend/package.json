@@ -1,0 +1,57 @@
+{
+  "name": "@comet/web",
+  "version": "1.0.0",
+  "description": "Create and browse posts and comments on Comet",
+  "author": "Comet Communications",
+  "private": true,
+  "engines": {
+    "node": "14.x.x"
+  },
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+  },
+  "dependencies": {
+    "@mdi/js": "^5.5.55",
+    "@nuxtjs/apollo": "^4.0.1-rc.3",
+    "@nuxtjs/axios": "^5.12.1",
+    "@nuxtjs/component-cache": "^1.1.6",
+    "@nuxtjs/device": "^1.2.7",
+    "@nuxtjs/pwa": "^3.0.1",
+    "date-fns": "^2.15.0",
+    "email-validator": "^2.0.4",
+    "emoji-mart-vue-fast": "^7.0.4",
+    "fuse.js": "^6.4.1",
+    "graphql-tag": "^2.11.0",
+    "is-url": "^1.2.4",
+    "nuxt": "^2.14.3",
+    "redirect-ssl": "^2.0.0",
+    "simplebar-vue": "^1.5.1",
+    "tippy.js": "^6.2.6",
+    "tiptap": "^1.29.6",
+    "tiptap-extensions": "^1.32.5",
+    "vue-clipboard2": "^0.3.1",
+    "vue-friendly-iframe": "^0.18.0",
+    "vue-infinite-loading": "^2.4.5",
+    "vue-instagram-embed": "^1.0.0",
+    "vue-tweet-embed": "^2.4.0",
+    "vue-virtual-scroller": "^1.0.10",
+    "vue-youtube": "^1.4.0"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.14.3",
+    "@nuxtjs/eslint-config": "^3.1.0",
+    "@nuxtjs/eslint-module": "^2.0.0",
+    "@nuxtjs/vuetify": "^1.11.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-nuxt": "^1.0.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5",
+    "vuetify": "^2.3.9"
+  }
+}

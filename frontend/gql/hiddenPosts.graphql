@@ -1,0 +1,40 @@
+query hiddenPosts {
+    hiddenPosts {
+      author {
+        id
+        username
+        isCurrentUser
+        tag
+        tagColor
+        profilePicUrl
+      }
+      commentCount
+      createdAt
+      editedAt
+      domain
+      endorsementCount
+      id
+      isEndorsed
+      link
+      textContent
+      thumbnailUrl
+      title
+      type
+      isHidden
+      planet {
+        name
+        description
+        userCount
+        createdAt
+        joined
+        avatarImageUrl
+        themeColor
+      }
+      postView {
+        lastCommentCount
+        postId
+        userId
+        createdAt
+      }
+    }
+  }

@@ -1,0 +1,18 @@
+query blockedUsers {
+  blockedUsers {
+    id
+    username
+    commentCount
+    postCount
+    endorsementCount
+    createdAt
+    lastLogin
+    isBlocking
+    isBlocked
+    isCurrentUser
+    tag
+    tagColor
+    profilePicUrl
+    bio
+  }
+}

@@ -1,0 +1,24 @@
+mutation submitComment($postId: ID!, $textContent: String!, $parentCommentId: ID) {
+  submitComment(
+    textContent: $textContent
+    postId: $postId
+    parentCommentId: $parentCommentId
+  ) {
+    createdAt
+    editedAt
+    endorsementCount
+    id
+    isEndorsed
+    textContent
+    postId
+    parentCommentId
+    author {
+      id
+      username
+      isCurrentUser
+      tag
+      tagColor
+      profilePicUrl
+    }
+  }
+}

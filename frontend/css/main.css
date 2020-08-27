@@ -1,0 +1,83 @@
+body {
+  font-family: -apple-system,BlinkMacSystemFont,segoe ui,Roboto,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol !important;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.topappbar {
+  transform: translateY(env(safe-area-inset-top)) !important;
+}
+
+.topappbar > .v-toolbar__content {
+  width:100vw;
+  overflow-x:hidden;
+}
+
+@media (min-width: 960px) {
+  html {
+    width:calc(100vw - 17px);
+    overflow-x:hidden;
+  }
+}
+
+/*.page-enter-active,
+.page-leave-active {
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+  transition-duration: 125ms;
+}
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+}*/
+
+.hoverable:hover {
+  text-decoration: underline !important;
+}
+
+.hoverable {
+  cursor: pointer !important;
+  text-decoration: none !important;
+}
+
+.unselectable {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+.ProseMirror:focus {
+  outline: none !important;
+}
+
+.theme--light.v-text-field--solo > .v-input__control > .v-input__slot {
+  background-color: #DEE1E6 !important;
+}
+
+.theme--dark.v-text-field--solo.darktextfield > .v-input__control > .v-input__slot {
+  background: #202124 !important;
+}
+
+.v-btn--active::before {
+  opacity: 0 !important;
+}
+
+.v-btn--active:hover::before {
+  opacity: 0.08 !important;
+}
+
+.sticky {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 60px;
+}
+
+.disable-scrollbars *::-webkit-scrollbar {
+  width: 0;
+  background: transparent; /* Chrome/Safari/Webkit */
+}
+
+.disable-scrollbars * {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}

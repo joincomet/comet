@@ -1,0 +1,10 @@
+query galaxy($galaxyName: ID!) {
+  galaxy(galaxyName: $galaxyName) {
+    description
+    fullName
+    icon
+    name
+    planetCount
+    bannerImageUrl
+  }
+}

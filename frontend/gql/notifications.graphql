@@ -1,0 +1,27 @@
+query notifications($unreadOnly: Boolean!) {
+  notifications(unreadOnly: $unreadOnly) {
+    id
+    createdAt
+    read
+    parentCommentId
+    comment {
+      id
+      textContent
+    }
+    fromUser {
+      id
+      username
+      isCurrentUser
+      tag
+      tagColor
+      profilePicUrl
+    }
+    post {
+      id
+      title
+      planet {
+        name
+      }
+    }
+  }
+}

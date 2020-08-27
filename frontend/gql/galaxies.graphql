@@ -1,0 +1,10 @@
+query {
+  galaxies {
+    description
+    fullName
+    icon
+    name
+    planetCount
+    bannerImageUrl
+  }
+}

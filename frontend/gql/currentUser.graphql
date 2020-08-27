@@ -1,0 +1,17 @@
+query currentUser {
+  currentUser {
+    id
+    username
+    tag
+    tagColor
+    profilePicUrl
+    admin
+    appearOffline
+    moderatedPlanets {
+      name
+      avatarImageUrl
+      themeColor
+      postCount
+    }
+  }
+}
