@@ -7,6 +7,8 @@ WORKDIR ${WORKING_DIR}
 
 COPY ${PACKAGE_PATH}/package*.json ${WORKING_DIR}
 
+RUN apt update && apt install -y libglu1
+
 RUN npm install
 
 COPY ${PACKAGE_PATH} ${WORKING_DIR}

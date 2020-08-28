@@ -29,13 +29,14 @@
 
     <div
       v-if="$device.isDesktop"
-      :style="`width: 60%; height: 100vh; background-size: cover; background-position: center; transition: background-image 3s ease-in-out; background-image: url(${images[currentImage].imageUrl})`"
+      :style="`width: 60%; height: 100vh; background-size: cover; background-position: center; transition: background-image 3s ease-in-out`"
+      :class="`image${currentImage + 1}`"
     >
       <div
         :style="`position: absolute; width: 25%; height: 100%; bottom: 0; right: 40%; background-color: transparent; background-image: ${
           $vuetify.theme.dark
-            ? 'linear-gradient(270deg,#202124,rgba(32,33,36,0))'
-            : 'linear-gradient(270deg,#F1F3F4,rgba(241,243,244,0))'
+            ? 'linear-gradient(270deg, #202124, rgba(32,33,36,0))'
+            : 'linear-gradient(270deg, #F1F3F4, rgba(241,243,244,0))'
         }`"
       />
     </div>
@@ -102,6 +103,12 @@
         </div>
       </v-col>
     </v-row>
+    <div
+      :class="`image${
+        currentImage + 2 > 10 ? currentImage - 8 : currentImage + 2
+      }`"
+      style="visibility: hidden;"
+    />
   </div>
 </template>
 
@@ -109,11 +116,6 @@
 import spaceImages from 'assets/spaceimages.json'
 
 const i = Math.floor(Math.random() * spaceImages.length)
-// preload next image
-if (process.client) {
-  new Image().src =
-    spaceImages[i + 1 >= spaceImages.length ? 0 : i + 1].imageUrl
-}
 
 export default {
   middleware({ store, redirect }) {
@@ -148,10 +150,6 @@ export default {
       } else {
         this.currentImage++
       }
-      // preload next image
-      new Image().src = this.images[
-        this.currentImage + 1 >= this.images.length ? 0 : this.currentImage + 1
-      ].imageUrl
     }, 15000)
   },
   head: {
@@ -182,5 +180,36 @@ export default {
 
 #changeText:hover > #description {
   transition: font-size 0.25s, margin 0.25s, padding 0.25s, opacity 0.5s 0.25s;
+}
+
+.image1 {
+  background-image: url('~assets/spaceimages/01.jpg');
+}
+.image2 {
+  background-image: url('~assets/spaceimages/02.jpg');
+}
+.image3 {
+  background-image: url('~assets/spaceimages/03.jpg');
+}
+.image4 {
+  background-image: url('~assets/spaceimages/04.jpg');
+}
+.image5 {
+  background-image: url('~assets/spaceimages/05.jpg');
+}
+.image6 {
+  background-image: url('~assets/spaceimages/06.jpg');
+}
+.image7 {
+  background-image: url('~assets/spaceimages/07.jpg');
+}
+.image8 {
+  background-image: url('~assets/spaceimages/08.jpg');
+}
+.image9 {
+  background-image: url('~assets/spaceimages/09.jpg');
+}
+.image10 {
+  background-image: url('~assets/spaceimages/10.jpg');
 }
 </style>

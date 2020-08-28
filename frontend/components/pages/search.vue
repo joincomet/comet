@@ -5,7 +5,6 @@
         <v-col :class="$device.isDesktop ? '' : 'pa-0'">
           <PostsScroller
             v-model="dialog"
-            :loading="$fetchState.pending"
             :items="feed"
             :selected-post="selectedPost"
             @togglehidden="toggleHidden"
@@ -36,22 +35,17 @@ export default {
     PostsScroller
   },
   mixins: [postDialogMixin],
-  async fetch() {
-    this.feed = (
-      await this.$apollo.query({
+  async asyncData({ app, route }) {
+    const feed = (
+      await app.apolloProvider.defaultClient.query({
         query: feedGql,
-        variables: feedVars(this.$route),
+        variables: feedVars(route),
         fetchPolicy: 'network-only'
       })
     ).data.feed
+
+    return { feed }
   },
-  activated() {
-    // Call fetch again if last fetch more than 30 sec ago
-    if (this.$fetchState.timestamp <= Date.now() - 30000) {
-      this.$fetch()
-    }
-  },
-  scrollToTop: false,
   head() {
     if (this.selectedPost && this.dialog) return postHead(this.selectedPost)
     else

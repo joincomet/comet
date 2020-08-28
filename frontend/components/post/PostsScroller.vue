@@ -5,6 +5,7 @@
       :items="items"
       :min-item-size="54"
       :buffer="3000"
+      :prerender="items.length > 20 ? 20 : items.length"
     >
       <template v-slot="{ item, index, active }">
         <DynamicScrollerItem
@@ -116,7 +117,7 @@ export default {
     },
     loading: {
       type: Boolean,
-      required: true
+      default: false
     },
     value: {
       type: Boolean,

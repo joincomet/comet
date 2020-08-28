@@ -1,9 +1,17 @@
-# build environment
-FROM node:14 as builder
+FROM node:14
+
 RUN mkdir /usr/src/frontend
+
 WORKDIR /usr/src/frontend
+
 ENV PATH /usr/src/frontend/node_modules/.bin:$PATH
+
 COPY ./frontend/package.json /usr/src/frontend/package.json
+
+RUN apt update && apt install -y libglu1
+
 RUN npm install --silent
+
 COPY ./frontend /usr/src/frontend
+
 RUN npm run build

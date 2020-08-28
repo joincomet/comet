@@ -139,14 +139,15 @@ export default {
       return redirect(`/p/${params.planetname}`)
     }
   },
-  async fetch() {
-    this.planet = (
-      await this.$apollo.query({
+  async asyncData({ app, params }) {
+    const planet = (
+      await app.apolloProvider.defaultClient.query({
         query: planetGql,
-        variables: { planetName: this.$route.params.planetname }
+        variables: { planetName: params.planetname }
       })
     ).data.planet
-    this.themeColor = this.planet.themeColor
+
+    return { planet, themeColor: planet.themeColor }
   },
   data() {
     return {

@@ -194,7 +194,6 @@
           <PlanetBar :planet="planet" />
           <PostsScroller
             v-model="dialog"
-            :loading="$fetchState.pending"
             :items="feed"
             :selected-post="selectedPost"
             @togglehidden="toggleHidden"
@@ -240,7 +239,6 @@ import { feedVars } from '@/util/feedVars'
 
 export default {
   name: 'Planet',
-  scrollToTop: false,
   components: {
     MobilePlanetJoinButton,
     PlanetBar,
@@ -251,23 +249,25 @@ export default {
     PostsScroller
   },
   mixins: [postDialogMixin],
-  async fetch() {
-    this.feed = (
-      await this.$apollo.query({
-        query: feedGql,
-        variables: feedVars(this.$route),
-        fetchPolicy: 'network-only'
-      })
-    ).data.feed
-  },
-  async asyncData({ app, params }) {
+  async asyncData({ app, params, route }) {
+    const client = app.apolloProvider.defaultClient
+
     const planet = (
-      await app.apolloProvider.defaultClient.query({
+      await client.query({
         query: planetGql,
         variables: { planetName: params.planetname }
       })
     ).data.planet
-    return { planet }
+
+    const feed = (
+      await client.query({
+        query: feedGql,
+        variables: feedVars(route),
+        fetchPolicy: 'network-only'
+      })
+    ).data.feed
+
+    return { planet, feed }
   },
   data() {
     return {
@@ -331,12 +331,6 @@ export default {
         }
       })
       this.refetchPlanet()
-    }
-  },
-  activated() {
-    // Call fetch again if last fetch more than 30 sec ago
-    if (this.$fetchState.timestamp <= Date.now() - 30000) {
-      this.$fetch()
     }
   },
   mounted() {

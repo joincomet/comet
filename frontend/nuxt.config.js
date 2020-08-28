@@ -234,7 +234,12 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify', '@nuxtjs/pwa'],
+  buildModules: [
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/vuetify',
+    '@nuxtjs/pwa',
+    '@aceforth/nuxt-optimized-images'
+  ],
   /*
    ** Nuxt.js modules
    */
@@ -250,6 +255,10 @@ export default {
       }
     ]
   ],
+
+  optimizedImages: {
+    optimizeImages: true
+  },
 
   /*
    ** Axios module configuration

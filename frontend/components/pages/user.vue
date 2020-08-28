@@ -166,7 +166,6 @@
             <v-tab-item>
               <PostsScroller
                 v-model="dialog"
-                :loading="$fetchState.pending"
                 :items="feed"
                 :selected-post="selectedPost"
                 @togglehidden="toggleHidden"
@@ -180,7 +179,6 @@
                 v-model="dialog"
                 :items="userComments"
                 :selected-post="selectedPost"
-                :loading="$fetchState.pending"
               />
             </v-tab-item>
           </v-tabs-items>
@@ -283,33 +281,35 @@ export default {
     PostsScroller
   },
   mixins: [postDialogMixin],
-  async fetch() {
-    this.feed = (
-      await this.$apollo.query({
+  async asyncData({ app, route, params }) {
+    const client = app.apolloProvider.defaultClient
+    const feed = (
+      await client.query({
         query: feedGql,
-        variables: feedVars(this.$route),
+        variables: feedVars(route),
         fetchPolicy: 'network-only'
       })
     ).data.feed
-    this.userComments = (
-      await this.$apollo.query({
+
+    const userComments = (
+      await client.query({
         query: userCommentsGql,
         variables: {
-          username: this.$route.params.username
+          username: params.username
         },
         fetchPolicy: 'network-only'
       })
     ).data.userComments
-  },
-  async asyncData({ app, params }) {
+
     const user = (
-      await app.apolloProvider.defaultClient.query({
+      await client.query({
         query: userGql,
         variables: { username: params.username },
         fetchPolicy: 'network-only'
       })
     ).data.user
-    return { user, editBio: user.bio }
+
+    return { user, editBio: user.bio, feed, userComments }
   },
   data() {
     return {
@@ -362,13 +362,6 @@ export default {
       this.refetchUser()
     }
   },
-  activated() {
-    // Call fetch again if last fetch more than 30 sec ago
-    if (this.$fetchState.timestamp <= Date.now() - 30000) {
-      this.$fetch()
-    }
-  },
-  scrollToTop: false,
   methods: {
     openBannerInput() {
       if (!this.user.isCurrentUser) return

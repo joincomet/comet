@@ -1,17 +1,8 @@
 <template>
   <div>
-    <GalaxyCard
-      v-if="!$device.isDesktop && galaxy"
-      hide-buttons
-      :galaxy="galaxy"
-      tile
-    />
+    <GalaxyCard v-if="!$device.isDesktop" hide-buttons :galaxy="galaxy" tile />
     <v-container>
-      <GalaxyCard
-        v-if="$device.isDesktop && galaxy"
-        hide-buttons
-        :galaxy="galaxy"
-      />
+      <GalaxyCard v-if="$device.isDesktop" hide-buttons :galaxy="galaxy" />
       <v-fade-transition hide-on-leave>
         <v-row v-show="$route.query.view !== 'planets'" justify="center">
           <v-col :class="$device.isDesktop ? '' : 'px-0'">
@@ -19,7 +10,6 @@
 
             <PostsScroller
               v-model="dialog"
-              :loading="$fetchState.pending"
               :items="feed"
               :selected-post="selectedPost"
               @togglehidden="toggleHidden"
@@ -75,7 +65,6 @@ import { feedVars } from '@/util/feedVars'
 
 export default {
   name: 'Galaxy',
-  scrollToTop: false,
   components: {
     GalaxyBar,
     PlanetInfoCard,
@@ -85,42 +74,39 @@ export default {
     PostsScroller
   },
   mixins: [postDialogMixin],
-  async fetch() {
-    this.allPlanets = (
-      await this.$apollo.query({
-        query: allPlanetsGql,
-        variables: { galaxyName: this.$route.params.galaxyname },
-        fetchPolicy: 'network-only'
-      })
-    ).data.allPlanets
-    this.feed = (
-      await this.$apollo.query({
-        query: feedGql,
-        variables: feedVars(this.$route),
-        fetchPolicy: 'network-only'
-      })
-    ).data.feed
-  },
-  async asyncData({ app, params }) {
+  async asyncData({ app, params, route }) {
+    const client = app.apolloProvider.defaultClient
+
     const galaxy = (
-      await app.apolloProvider.defaultClient.query({
+      await client.query({
         query: galaxyGql,
         variables: { galaxyName: params.galaxyname },
         fetchPolicy: 'network-only'
       })
     ).data.galaxy
-    return { galaxy }
+
+    const allPlanets = (
+      await client.query({
+        query: allPlanetsGql,
+        variables: { galaxyName: params.galaxyname },
+        fetchPolicy: 'network-only'
+      })
+    ).data.allPlanets
+
+    const feed = (
+      await client.query({
+        query: feedGql,
+        variables: feedVars(route),
+        fetchPolicy: 'network-only'
+      })
+    ).data.feed
+
+    return { galaxy, allPlanets, feed }
   },
   data() {
     return {
       galaxy: null,
       allPlanets: []
-    }
-  },
-  activated() {
-    // Call fetch again if last fetch more than 30 sec ago
-    if (this.$fetchState.timestamp <= Date.now() - 30000) {
-      this.$fetch()
     }
   },
   head() {
