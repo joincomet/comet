@@ -31,8 +31,8 @@ services:
       - NODE_ENV=production
       - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
-      - VIRTUAL_HOST=cometx.io
-      - LETSENCRYPT_HOST=cometx.io
+      - VIRTUAL_HOST=www.cometx.io
+      - LETSENCRYPT_HOST=www.cometx.io
     ports:
       - "3000:3000"
     env_file:
