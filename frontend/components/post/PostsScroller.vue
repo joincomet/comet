@@ -51,7 +51,6 @@
             "
           >
             <Post
-              v-intersect.quiet.once="intersect(index)"
               :post="item"
               :index="index"
               :active="active"
@@ -62,6 +61,10 @@
         </DynamicScrollerItem>
       </template>
     </DynamicScroller>
+
+    <client-only>
+      <infinite-loading @infinite="$emit('infinite')" />
+    </client-only>
 
     <div class="pt-3" :class="$device.isDesktop ? '' : 'px-3'">
       <v-progress-linear v-show="loading" indeterminate />
@@ -100,6 +103,7 @@ import Post from '@/components/post/Post'
 import PostDialog from '@/components/pages/PostDialog'
 import { urlName } from '@/util/urlName'
 import NoPostsMessage from '@/components/NoPostsMessage'
+import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
   name: 'PostsScroller',
@@ -108,7 +112,8 @@ export default {
     PostDialog,
     Post,
     DynamicScroller,
-    DynamicScrollerItem
+    DynamicScrollerItem,
+    InfiniteLoading
   },
   props: {
     items: {
@@ -142,11 +147,6 @@ export default {
     }
   },
   methods: {
-    intersect(index) {
-      if (index === this.items.length - 10) {
-        this.$emit('infinite')
-      }
-    },
     urlName(item) {
       return urlName(item.title)
     }

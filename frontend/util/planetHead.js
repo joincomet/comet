@@ -19,17 +19,17 @@ export const planetHead = (planet) => {
           property: 'og:image',
           content: planet.bannerImageUrl
             ? planet.bannerImageUrl
-            : 'https://www.getcomet.net/comet_og_image.png'
+            : 'https://www.cometx.io/og_image.png'
         },
         {
           hid: 'og:url',
           property: 'og:url',
-          content: `https://www.getcomet.net/p/${planet.name}`
+          content: `https://www.cometx.io/p/${planet.name}`
         },
         {
           hid: 'og:site_name',
           property: 'og:site_name',
-          content: `getcomet.net/p/${planet.name}`
+          content: `cometx.io/p/${planet.name}`
         },
         {
           hid: 'twitter:card',
@@ -56,12 +56,12 @@ export const planetHead = (planet) => {
           name: 'twitter:image',
           content: planet.bannerImageUrl
             ? planet.bannerImageUrl
-            : 'https://www.getcomet.net/comet_og_image.png'
+            : 'https://www.cometx.io/og_image.png'
         },
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: `https://www.getcomet.net/p/${planet.name}`
+          content: `https://www.cometx.io/p/${planet.name}`
         }
       ]
     }

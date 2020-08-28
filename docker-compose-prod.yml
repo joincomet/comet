@@ -12,10 +12,8 @@ services:
       - "4000:4000"
     environment:
       - NODE_ENV=production
-      - VIRTUAL_HOST=api.cometx.io
-      - LETSENCRYPT_HOST=api.cometx.io
     env_file:
-      - ./.env
+      api/.env
     volumes:
       - .:/src
     depends_on:
@@ -31,12 +29,10 @@ services:
       - NODE_ENV=production
       - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
-      - VIRTUAL_HOST=www.cometx.io
-      - LETSENCRYPT_HOST=www.cometx.io
     ports:
       - "3000:3000"
     env_file:
-      - ./.env
+      frontend/.env
     depends_on:
       - api
     command: ["npm", "run", "start"]
@@ -44,8 +40,13 @@ services:
   postgres:
     image: postgres
     restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=postgres
     env_file:
-      ./.env
+      postgres.env
     volumes:
       - "db-data:/var/lib/postgresql/data"
     ports:

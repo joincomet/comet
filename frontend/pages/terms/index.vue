@@ -11,7 +11,7 @@
       <p>Effective June 8, 2020</p>
       <p>
         This Comet User Agreement ("Terms") applies to your access to and use of
-        getcomet.net ("Comet," "we," or "us"). By accessing or using Comet, you
+        cometx.io ("Comet," "we," or "us"). By accessing or using Comet, you
         agree to be bound by these Terms. If you do not agree to these Terms,
         you may not access or use Comet.
       </p>

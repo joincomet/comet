@@ -106,6 +106,9 @@ export default {
         return {
           unreadOnly: this.unreadOnly
         }
+      },
+      skip() {
+        return !this.$store.state.currentUser
       }
     }
   }

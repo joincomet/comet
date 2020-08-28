@@ -1,5 +1,3 @@
-import 'newrelic'
-
 import 'reflect-metadata'
 import { buildSchema, registerEnumType } from 'type-graphql'
 import * as TypeORM from 'typeorm'
@@ -23,6 +21,13 @@ import { getRepository } from 'typeorm'
 import { Galaxy } from './entities/Galaxy'
 import { galaxiesList } from './galaxiesList'
 import { graphqlUploadExpress } from 'graphql-upload'
+
+if (!process.env.ACCESS_TOKEN_SECRET) {
+  console.error(
+    'ACCESS_TOKEN_SECRET environment variable missing. Shutting down.'
+  )
+  process.exit()
+}
 
 // register 3rd party IOC container
 TypeORM.useContainer(Container)
@@ -88,7 +93,29 @@ async function bootstrap() {
       })
     )
 
+    const myPlugin = {
+      // Fires whenever a GraphQL request is received from a client.
+      requestDidStart(requestContext: any) {
+        console.log('GraphQL: ' + requestContext.request.operationName)
+
+        return {
+          // Fires whenever Apollo Server will parse a GraphQL
+          // request to create its associated document AST.
+          parsingDidStart(requestContext: any) {
+            // console.log('Parsing started!')
+          },
+
+          // Fires whenever Apollo Server will validate a
+          // request's document AST against your GraphQL schema.
+          validationDidStart(requestContext: any) {
+            // console.log('Validation started!')
+          }
+        }
+      }
+    }
+
     const server = new ApolloServer({
+      plugins: [myPlugin],
       schema,
       playground: process.env.NODE_ENV !== 'production',
       tracing: true,

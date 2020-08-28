@@ -1,11 +1,13 @@
-# Comet ([getcomet.net](https://www.getcomet.net))
+# CometX ([cometx.io](https://www.cometx.io))
 
-Find, join, and create Planets (communities), share content, and join the discussion.
+Find, join, and create Planets, share content, and engage in discussion.
 
 [Join our Discord server](https://discord.gg/NPCMGSm)
 
-![Screenshot of getcomet.net](./screenshot.png)
+![Screenshot of cometx.io](./screenshot.png)
 
-[Info for contributors](./CONTRIBUTING.md)
+[Installation instructions](INSTALLATION.md)
+
+[Contributing info](CONTRIBUTING.md)
 
 This README is a WIP

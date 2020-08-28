@@ -1,6 +1,9 @@
 import currentUserGql from '@/gql/currentUser.graphql'
 import recentPlanetsGql from '@/gql/recentPlanets.graphql'
 import galaxiesGql from '@/gql/galaxies.graphql'
+import joinedPlanetsGql from '@/gql/joinedPlanets.graphql'
+import allPlanetsGql from '@/gql/allPlanets.graphql'
+import popularPlanetsGql from '@/gql/popularPlanets.graphql'
 
 export const state = () => ({
   currentUser: null,
@@ -51,6 +54,18 @@ export const actions = {
       query: galaxiesGql
     })
     commit('setGalaxies', galaxiesQuery.data.galaxies)
+
+    await client.query({
+      query: allPlanetsGql
+    })
+
+    await client.query({
+      query: joinedPlanetsGql
+    })
+
+    await client.query({
+      query: popularPlanetsGql
+    })
 
     if (!context.app.$apolloHelpers.getToken()) return
     const { data } = await client.query({ query: currentUserGql })

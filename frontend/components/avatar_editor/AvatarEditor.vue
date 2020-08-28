@@ -276,7 +276,7 @@ export default {
   },
   computed: {
     avataaarUrl() {
-      return `https://api.getcomet.net/avataaar/?avatarStyle=Transparent&topType=${this.topType}&accessoriesType=${this.accessoriesType}&hairColor=${this.hairColor}&facialHairType=${this.facialHairType}&facialHairColor=${this.facialHairColor}&clotheType=${this.clotheType}&clotheColor=${this.clotheColor}&eyeType=${this.eyeType}&eyebrowType=${this.eyebrowType}&mouthType=${this.mouthType}&skinColor=${this.skinColor}`
+      return `https://api.cometx.io/avataaar/?avatarStyle=Transparent&topType=${this.topType}&accessoriesType=${this.accessoriesType}&hairColor=${this.hairColor}&facialHairType=${this.facialHairType}&facialHairColor=${this.facialHairColor}&clotheType=${this.clotheType}&clotheColor=${this.clotheColor}&eyeType=${this.eyeType}&eyebrowType=${this.eyebrowType}&mouthType=${this.mouthType}&skinColor=${this.skinColor}`
     },
     imageValid() {
       if (!this.imageData) return true
@@ -320,7 +320,7 @@ export default {
       const currentUser = this.$store.state.currentUser
       if (currentUser && currentUser.profilePicUrl) {
         const profilePicUrl = currentUser.profilePicUrl
-        if (profilePicUrl.startsWith('https://api.getcomet.net/avataaar/')) {
+        if (profilePicUrl.startsWith('https://api.cometx.io/avataaar/')) {
           this.previewUrl = ''
           this.topType = profilePicUrl.split('&topType=')[1].split('&')[0]
           this.accessoriesType = profilePicUrl

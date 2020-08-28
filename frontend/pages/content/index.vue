@@ -62,7 +62,7 @@
             For the safety of Comet users, please report any security
             vulnerabilities that you find directly to Dan#7457 on
             <a href="https://discord.gg/NPCMGSm">Discord</a>, or email
-            <a href="mailto:support@getcomet.net">support@getcomet.net</a>.
+            <a href="mailto:support@cometx.io">support@cometx.io</a>.
           </li>
           <li>
             <span class="font-weight-bold">No pornography.</span> Pornographic

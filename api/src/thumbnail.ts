@@ -3,7 +3,7 @@ import JSSoup from 'jssoup'
 import axios from 'axios'
 
 export const getThumbnailUrl = async (link: string, timeout = 3000) => {
-  const headers = { 'User-Agent': 'getcomet.net thumbnail saver' }
+  const headers = { 'User-Agent': 'cometx.io thumbnail saver' }
 
   let response
 

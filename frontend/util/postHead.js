@@ -8,7 +8,7 @@ export const postHead = (post) => {
       link: [
         {
           rel: 'canonical',
-          href: `https://www.getcomet.net/p/${post.planet.name}/comments/${
+          href: `https://www.cometx.io/p/${post.planet.name}/comments/${
             post.id
           }/${urlName(post.title)}`
         }
@@ -55,19 +55,19 @@ export const postHead = (post) => {
           content:
             post.type === 'IMAGE' && post.link.startsWith('https://')
               ? post.link
-              : 'https://www.getcomet.net/comet_og_image.png'
+              : 'https://www.cometx.io/og_image.png'
         },
         {
           hid: 'og:url',
           property: 'og:url',
-          content: `https://www.getcomet.net/p/${post.planet.name}/comments/${
+          content: `https://www.cometx.io/p/${post.planet.name}/comments/${
             post.id
           }/${urlName(post.title)}`
         },
         {
           hid: 'og:site_name',
           property: 'og:site_name',
-          content: `getcomet.net/p/${post.planet.name}`
+          content: `cometx.io/p/${post.planet.name}`
         },
         {
           hid: 'twitter:card',
@@ -100,12 +100,12 @@ export const postHead = (post) => {
           content:
             post.type === 'IMAGE' && post.link.startsWith('https://')
               ? post.link
-              : 'https://www.getcomet.net/comet_og_image.png'
+              : 'https://www.cometx.io/og_image.png'
         },
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: `https://www.getcomet.net/p/${post.planet.name}/comments/${
+          content: `https://www.cometx.io/p/${post.planet.name}/comments/${
             post.id
           }/${urlName(post.title)}`
         }

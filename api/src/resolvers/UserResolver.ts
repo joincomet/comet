@@ -190,8 +190,8 @@ export class UserResolver extends RepositoryInjector {
 
     if (
       !(
-        profilePicUrl.startsWith('https://i.getcomet.net/profile') ||
-        profilePicUrl.startsWith('https://api.getcomet.net/avataaar')
+        profilePicUrl.startsWith('https://i.cometx.io/profile') ||
+        profilePicUrl.startsWith('https://api.cometx.io/avataaar')
       )
     ) {
       throw new Error('Invalid URL')

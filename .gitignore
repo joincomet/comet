@@ -1,6 +1,10 @@
 .idea
-.env
+postgres.env
+
+api/.env
+api/node_modules
+
+frontend/.env
+frontend/static/sw.js
 frontend/.nuxt
 frontend/node_modules
-api/node_modules
-api/newrelic_agent.log

@@ -81,6 +81,7 @@ export default {
     },
     async showMore() {
       if (!this.hasMore || this.loadingMore) return
+      console.log('showMore')
       this.loadingMore = true
       this.page++
       const { data } = await this.$apollo.query({

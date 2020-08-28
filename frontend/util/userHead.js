@@ -7,7 +7,7 @@ export const userHead = (user) => {
         {
           hid: 'og:description',
           property: 'og:description',
-          content: `${user.username}'s profile on Comet`
+          content: `${user.username}'s profile on CometX`
         },
         {
           hid: 'og:title',
@@ -19,17 +19,17 @@ export const userHead = (user) => {
           property: 'og:image',
           content: user.bannerImageUrl
             ? user.bannerImageUrl
-            : 'https://www.getcomet.net/comet_og_image.png'
+            : 'https://www.cometx.io/og_image.png'
         },
         {
           hid: 'og:url',
           property: 'og:url',
-          content: `https://www.getcomet.net/u/${user.username}`
+          content: `https://www.cometx.io/u/${user.username}`
         },
         {
           hid: 'og:site_name',
           property: 'og:site_name',
-          content: `getcomet.net/u/${user.username}`
+          content: `cometx.io/u/${user.username}`
         },
         {
           hid: 'twitter:card',
@@ -54,19 +54,19 @@ export const userHead = (user) => {
         {
           hid: 'twitter:description',
           name: 'twitter:description',
-          content: `${user.username}'s profile on Comet`
+          content: `${user.username}'s profile on CometX`
         },
         {
           hid: 'twitter:image',
           name: 'twitter:image',
           content: user.bannerImageUrl
             ? user.bannerImageUrl
-            : 'https://www.getcomet.net/comet_og_image.png'
+            : 'https://www.cometx.io/og_image.png'
         },
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: `https://www.getcomet.net/u/${user.username}`
+          content: `https://www.cometx.io/u/${user.username}`
         }
       ]
     }
