@@ -20,6 +20,7 @@ services:
       - .:/src
     depends_on:
       - postgres
+    command: [ "npm", "run", "start" ]
 
   frontend:
     container_name: frontend

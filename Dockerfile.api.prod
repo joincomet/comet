@@ -7,4 +7,3 @@ COPY ./api/package.json /usr/src/api/package.json
 RUN npm install --silent
 COPY ./api /usr/src/api
 RUN npm run tsc
-RUN npm run start
