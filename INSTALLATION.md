@@ -18,8 +18,8 @@
 ### Create .env files
 Create the following files and set the environment variables as demonstrated in the examples:
 * cometx/postgres.env ([example](./postgres.example.env))
-* cometx/api/.env ([example](./api/.env))
-* cometx/frontend/.env ([example](./frontend/.env))
+* cometx/api/.env ([example](./api/example.env))
+* cometx/frontend/.env ([example](./frontend/example.env))
 
 ### Start Docker-Compose
 Simply install [Docker](https://www.docker.com/) on your development machine and run `docker-compose up`.
