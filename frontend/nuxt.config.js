@@ -269,5 +269,11 @@ export default {
 
   env: {
     EMBEDLY_KEY: process.env.EMBEDLY_KEY
+  },
+
+  build: {
+    splitChunks: {
+      pages: false
+    }
   }
 }

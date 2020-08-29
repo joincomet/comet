@@ -119,7 +119,7 @@ async function bootstrap() {
       schema,
       playground: process.env.NODE_ENV !== 'production',
       tracing: true,
-      context: ({ req, res }) => {
+      context: ({ req, res }: { req: any; res: any }) => {
         return {
           req,
           res,
