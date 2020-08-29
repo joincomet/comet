@@ -1,6 +1,6 @@
 import redirectSSL from 'redirect-ssl'
 import { sortRoutes } from '@nuxt/utils'
-import * as icons from './icons'
+import * as iconImport from './icons'
 
 export default {
   mode: 'universal',
@@ -190,7 +190,10 @@ export default {
     customVariables: ['~/assets/variables.scss'],
     treeShake: true,
     defaultAssets: false,
-    icons,
+    icons: {
+      iconfont: 'mdiSvg',
+      values: { ...iconImport }
+    },
     theme: {
       options: {
         customProperties: true

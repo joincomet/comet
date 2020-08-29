@@ -16,6 +16,7 @@ services:
       - NODE_ENV=development
     env_file:
       - api/.env
+      - postgres.env
     volumes:
       - ./api:/usr/src
     depends_on:
@@ -48,11 +49,6 @@ services:
   postgres:
     image: postgres
     restart: always
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_HOST=postgres
     env_file:
       - postgres.env
     volumes:
