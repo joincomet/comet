@@ -13,7 +13,8 @@ services:
     environment:
       - NODE_ENV=production
     env_file:
-      api/.env
+      - api/.env
+      - postgres.env
     volumes:
       - .:/src
     depends_on:
