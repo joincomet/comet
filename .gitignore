@@ -1,10 +1,13 @@
 .idea
 postgres.env
+dump.sql
 
-api/.env
-api/node_modules
+*/.env
+*/node_modules
+*/yarn-error.log
 
-frontend/.env
-frontend/static/sw.js
+api/dist
+
+frontend/src/static/sw.js
 frontend/.nuxt
-frontend/node_modules
+frontend/tailwind.css

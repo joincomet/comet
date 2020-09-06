@@ -1,3 +1,0 @@
-mutation toggleCommentEndorsement($commentId: ID!) {
-  toggleCommentEndorsement(commentId: $commentId)
-}

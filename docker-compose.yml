@@ -2,9 +2,10 @@ version: '3.8'
 
 services:
   api:
+    container_name: api
     build:
       context: .
-      dockerfile: Dockerfile.api.dev
+      dockerfile: api/Dockerfile
       args:
         PACKAGE_PATH: api
         WORKING_DIR: /usr/src/
@@ -21,12 +22,15 @@ services:
       - ./api:/usr/src
     depends_on:
       - postgres
-    command: ["npm", "run", "dev"]
+      - redis
+      - iframely
+    command: ["yarn", "run", "dev"]
 
   frontend:
+    container_name: frontend
     build:
       context: .
-      dockerfile: Dockerfile.frontend.dev
+      dockerfile: frontend/Dockerfile
       args:
         PACKAGE_PATH: frontend
         WORKING_DIR: /usr/src/
@@ -44,10 +48,11 @@ services:
       - ./frontend:/usr/src
     depends_on:
       - api
-    command: ["npm", "run", "dev"]
+    command: ["yarn", "run", "dev"]
 
   postgres:
-    image: postgres
+    container_name: postgres
+    image: "postgres:alpine"
     restart: always
     env_file:
       - postgres.env
@@ -55,5 +60,22 @@ services:
       - "db-data:/var/lib/postgresql/data"
     ports:
       - "5432:5432"
+
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    expose:
+      - "6379"
+
+  iframely:
+    container_name: iframely
+    build: "https://github.com/itteco/iframely.git"
+    expose:
+      - "8061"
+    volumes:
+      - ./iframely.js:/iframely/config.local.js
+    depends_on:
+      - redis
+
 volumes:
   db-data:

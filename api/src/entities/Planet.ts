@@ -4,16 +4,16 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  PrimaryColumn,
+  ManyToOne,
   OneToMany,
-  ManyToOne
+  PrimaryColumn
 } from 'typeorm'
-import { Lazy } from '../lazy'
-import { User } from './User'
-import { Post } from './Post'
-import { Galaxy } from './Galaxy'
-import { Sort } from '../args/FeedArgs'
-import { CommentSort } from '../args/UserCommentsArgs'
+import { Lazy } from '@/lazy'
+import { User } from '@/entities/User'
+import { Post } from '@/entities/Post'
+import { Galaxy } from '@/entities/Galaxy'
+import { Sort } from '@/args/FeedArgs'
+import { CommentSort } from '@/args/UserCommentsArgs'
 
 @ObjectType()
 @Entity()

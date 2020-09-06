@@ -1,11 +1,11 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
-import { Comment } from './Comment'
-import { Lazy } from '../lazy'
-import { User } from './User'
-import { PostEndorsement } from './PostEndorsement'
-import { PostView } from './PostView'
-import { Planet } from './Planet'
+import { Comment } from '@/entities/Comment'
+import { Lazy } from '@/lazy'
+import { User } from '@/entities/User'
+import { PostEndorsement } from '@/entities/PostEndorsement'
+import { PostView } from '@/entities/PostView'
+import { Planet } from '@/entities/Planet'
 
 export enum PostType {
   TEXT = 'TEXT',
@@ -51,9 +51,15 @@ export class Post {
   @Column()
   createdAt: Date
 
+  @Field()
+  timeSince: string
+
   @Field({ nullable: true })
   @Column({ nullable: true })
   editedAt?: Date
+
+  @Field({ nullable: true })
+  editedTimeSince: string
 
   @Field()
   @Column({ default: false })
@@ -72,6 +78,10 @@ export class Post {
     nullable: true
   })
   planet: Lazy<Planet>
+
+  @Field(() => ID, { nullable: true })
+  @Column({ nullable: true })
+  planetName: string
 
   @Field()
   @Column({ default: false })
@@ -117,4 +127,7 @@ export class Post {
 
   @Field()
   isHidden: boolean
+
+  @Field()
+  relativeUrl: string
 }

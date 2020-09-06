@@ -1,0 +1,3 @@
+mutation editPost($postId: ID!, $newTextContent: String!) {
+  editPost(postId: $postId, newTextContent: $newTextContent)
+}

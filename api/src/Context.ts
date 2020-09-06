@@ -1,8 +1,8 @@
 import DataLoader from 'dataloader'
-import { User } from './entities/User'
-import { Comment } from './entities/Comment'
-import { Post } from './entities/Post'
-import { PostView } from './entities/PostView'
+import { User } from '@/entities/User'
+import { Comment } from '@/entities/Comment'
+import { Post } from '@/entities/Post'
+import { PostView } from '@/entities/PostView'
 
 export interface Context {
   req: any

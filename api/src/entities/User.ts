@@ -7,13 +7,13 @@ import {
   OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
-import { Comment } from './Comment'
-import { Lazy } from '../lazy'
-import { Post } from './Post'
-import { PostEndorsement } from './PostEndorsement'
-import { CommentEndorsement } from './CommentEndorsement'
-import { PostView } from './PostView'
-import { Planet } from './Planet'
+import { Comment } from '@/entities/Comment'
+import { Lazy } from '@/lazy'
+import { Post } from '@/entities/Post'
+import { PostEndorsement } from '@/entities/PostEndorsement'
+import { CommentEndorsement } from '@/entities/CommentEndorsement'
+import { PostView } from '@/entities/PostView'
+import { Planet } from '@/entities/Planet'
 
 @ObjectType()
 @Entity()

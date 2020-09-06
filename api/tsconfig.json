@@ -1,22 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es6",
     "module": "commonjs",
-    "lib": ["es2016", "esnext.asynciterable"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "types": ["node"],
     "outDir": "dist",
-    "baseUrl": ".",
-    "types": ["postlight__mercury-parser"],
-    "suppressImplicitAnyIndexErrors": true
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "newLine": "LF",
+    "allowJs": true,
+    "checkJs": true
   },
-  "exclude": [
-    "node_modules"
+  "include": [
+    "src/**/*"
   ]
 }

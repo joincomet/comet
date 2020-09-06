@@ -1,5 +1,5 @@
 import { ArgsType, Field } from 'type-graphql'
-import { ArrayMaxSize, ArrayMinSize, Length, Matches } from 'class-validator'
+import { Length, Matches } from 'class-validator'
 
 @ArgsType()
 export class CreatePlanetArgs {

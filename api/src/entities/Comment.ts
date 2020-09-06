@@ -1,5 +1,4 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { User } from './User'
 import {
   Column,
   Entity,
@@ -10,9 +9,10 @@ import {
   TreeChildren,
   TreeParent
 } from 'typeorm'
-import { Lazy } from '../lazy'
-import { Post } from './Post'
-import { CommentEndorsement } from './CommentEndorsement'
+import { Lazy } from '@/lazy'
+import { Post } from '@/entities/Post'
+import { CommentEndorsement } from '@/entities/CommentEndorsement'
+import { User } from '@/entities/User'
 
 @ObjectType()
 @Entity()
@@ -50,9 +50,15 @@ export class Comment {
   @Column()
   createdAt: Date
 
+  @Field()
+  timeSince: string
+
   @Field({ nullable: true })
   @Column({ nullable: true })
   editedAt?: Date
+
+  @Field({ nullable: true })
+  editedTimeSince: string
 
   @Field(() => Comment, { nullable: true })
   @TreeParent()

@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
-import { Lazy } from '../lazy'
-import { Planet } from './Planet'
+import { Lazy } from '@/lazy'
+import { Planet } from '@/entities/Planet'
 
 @ObjectType()
 @Entity()

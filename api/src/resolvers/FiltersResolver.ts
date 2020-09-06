@@ -1,8 +1,8 @@
 import { Ctx, Query, Resolver } from 'type-graphql'
-import { RepositoryInjector } from '../RepositoryInjector'
-import { Context } from '../Context'
-import { User } from '../entities/User'
-import { Planet } from '../entities/Planet'
+import { RepositoryInjector } from '@/RepositoryInjector'
+import { Context } from '@/Context'
+import { User } from '@/entities/User'
+import { Planet } from '@/entities/Planet'
 
 @Resolver()
 export class FiltersResolver extends RepositoryInjector {

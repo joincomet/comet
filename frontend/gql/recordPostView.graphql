@@ -1,8 +1,0 @@
-mutation recordPostView($postId: ID!) {
-  recordPostView(postId: $postId) {
-    createdAt
-    lastCommentCount
-    postId
-    userId
-  }
-}

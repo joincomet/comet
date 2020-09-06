@@ -1,7 +1,7 @@
 import { ArgsType, Field } from 'type-graphql'
-import { PaginationArgs } from './PaginationArgs'
+import { PaginationArgs } from '@/args/PaginationArgs'
 import { Length } from 'class-validator'
-import { Time } from './FeedArgs'
+import { Time } from '@/args/FeedArgs'
 
 export enum CommentSort {
   NEW = 'new',

@@ -1,21 +1,10 @@
-import {
-  Arg,
-  Ctx,
-  ID,
-  Mutation,
-  Query,
-  Resolver,
-  UseMiddleware
-} from 'type-graphql'
-import { Galaxy } from '../entities/Galaxy'
-import { RepositoryInjector } from '../RepositoryInjector'
-import { RequiresAuth } from '../middleware/RequiresAuth'
+import { Arg, ID, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql'
+import { Galaxy } from '@/entities/Galaxy'
+import { RepositoryInjector } from '@/RepositoryInjector'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { Context } from '../Context'
 import { Stream } from 'stream'
-import { s3upload } from '../S3Storage'
-import { RequiresAdmin } from '../middleware/RequiresAdmin'
-import { Planet } from '../entities/Planet'
+import { s3upload } from '@/S3Storage'
+import { RequiresAdmin } from '@/middleware/RequiresAdmin'
 
 @Resolver(() => Galaxy)
 export class GalaxyResolver extends RepositoryInjector {

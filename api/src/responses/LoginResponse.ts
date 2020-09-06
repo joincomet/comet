@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql'
-import { User } from '../entities/User'
+import { User } from '@/entities/User'
 
 @ObjectType()
 export class LoginResponse {

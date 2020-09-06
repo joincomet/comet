@@ -1,0 +1,31 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities.css";
+
+.dark-mode body {
+  @apply bg-black text-white;
+}
+
+.text-primary {
+  @apply text-indigo-500
+}
+
+.text-secondary {
+  @apply text-gray-700;
+}
+
+.dark-mode .text-secondary {
+  @apply text-gray-500;
+}
+
+.listitem {
+  @apply p-3 inline-flex flex-row items-center;
+}
+
+.listitem:hover {
+  @apply bg-gray-200;
+}
+
+.dark-mode .listitem:hover {
+  @apply bg-gray-700;
+}

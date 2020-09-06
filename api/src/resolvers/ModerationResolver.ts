@@ -1,9 +1,9 @@
-import { RepositoryInjector } from '../RepositoryInjector'
+import { RepositoryInjector } from '@/RepositoryInjector'
 import { Arg, ID, Mutation, UseMiddleware } from 'type-graphql'
-import { Planet } from '../entities/Planet'
-import { s3upload } from '../S3Storage'
+import { Planet } from '@/entities/Planet'
+import { s3upload } from '@/S3Storage'
 import { Stream } from 'stream'
-import { RequiresMod } from '../middleware/RequiresMod'
+import { RequiresMod } from '@/middleware/RequiresMod'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 export class ModerationResolver extends RepositoryInjector {

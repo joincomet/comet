@@ -10,61 +10,30 @@ import {
   Root,
   UseMiddleware
 } from 'type-graphql'
-import { RepositoryInjector } from '../RepositoryInjector'
-import { Post, PostType } from '../entities/Post'
-import { SubmitPostArgs } from '../args/SubmitPostArgs'
-import { RequiresAuth } from '../middleware/RequiresAuth'
-import { Context } from '../Context'
+import { RepositoryInjector } from '@/RepositoryInjector'
+import { Post } from '@/entities/Post'
+import { SubmitPostArgs } from '@/args/SubmitPostArgs'
+import { RequiresAuth } from '@/middleware/RequiresAuth'
+import { Context } from '@/Context'
 import shortid from 'shortid'
-import Mercury from '@postlight/mercury-parser'
-// @ts-ignore
-import isImageUrl from 'is-image-url'
-// @ts-ignore
-import Url from 'url-parse'
-import { getThumbnailUrl } from '../thumbnail'
-import { PostView } from '../entities/PostView'
-// @ts-ignore
-import { FeedArgs, Filter, Sort, Time } from '../args/FeedArgs'
-import axios from 'axios'
-import sharp from 'sharp'
-import { User } from '../entities/User'
-import { s3 } from '../s3'
-import { discordReport } from '../DiscordBot'
-import cheerio from 'cheerio'
-import request from 'request'
-// @ts-ignore
-import isUrl from 'is-url'
+import { getTitleAtUrl } from '@/thumbnail'
+import { PostView } from '@/entities/PostView'
+import { FeedArgs, Filter, Sort, Time } from '@/args/FeedArgs'
+import { User } from '@/entities/User'
+import { discordReport } from '@/DiscordBot'
 import { filterXSS } from 'xss'
-import { whiteList } from '../xssWhiteList'
-import { Planet } from '../entities/Planet'
-import { PostEndorsement } from '../entities/PostEndorsement'
+import { whiteList } from '@/xssWhiteList'
+import { Planet } from '@/entities/Planet'
+import { PostEndorsement } from '@/entities/PostEndorsement'
 import { Stream } from 'stream'
-import { s3upload } from '../S3Storage'
+import { s3upload } from '@/S3Storage'
+import { formatDistanceToNowStrict } from 'date-fns'
 
 @Resolver(() => Post)
 export class PostResolver extends RepositoryInjector {
-  @Query(() => String)
+  @Query(() => String, { nullable: true })
   async getTitleAtUrl(@Arg('url') url: string) {
-    if (!isUrl(url)) return ''
-    let result
-    try {
-      result = await new Promise((resolve, reject) =>
-        request(url, function (error, response, body) {
-          let output = url // default to URL
-          if (!error && response.statusCode === 200) {
-            const $ = cheerio.load(body)
-            output = $('head > title').text().trim()
-            resolve(output)
-          } else {
-            reject(error)
-          }
-        })
-      )
-    } catch (e) {
-      result = ''
-    }
-
-    return result
+    return getTitleAtUrl(url)
   }
 
   @Query(() => [Post])
@@ -442,12 +411,6 @@ export class PostResolver extends RepositoryInjector {
     if (bannedUsers.map((u) => u.id).includes(userId))
       throw new Error('You have been banned from ' + planet)
 
-    /*if (user.lastPostedAt && !user.admin) {
-      if (differenceInSeconds(new Date(), user.lastPostedAt) < 60 * 2) {
-        throw new Error('Please wait 2 minutes between posts')
-      }
-    }*/
-
     const postId = shortid.generate()
 
     if (textContent) {
@@ -468,75 +431,6 @@ export class PostResolver extends RepositoryInjector {
 
     this.userRepository.update(userId, { lastPostedAt: new Date() })
 
-    const url = new Url(link)
-    let parseResult: any = null
-    if (type === PostType.LINK || type === PostType.IMAGE) {
-      if (isImageUrl(link)) {
-        parseResult = {
-          lead_image_url: link
-        }
-        type = PostType.IMAGE
-      } else {
-        const longTask = () =>
-          new Promise(async (resolve) => {
-            try {
-              resolve(await Mercury.parse(link))
-            } catch (e) {
-              resolve({})
-            }
-          })
-
-        const timeout = (cb: any, interval: number) => () =>
-          new Promise((resolve) => setTimeout(() => cb(resolve), interval))
-
-        const onTimeout = timeout((resolve: any) => resolve({}), 3000)
-
-        parseResult = await Promise.race([longTask, onTimeout].map((f) => f()))
-
-        if (!parseResult.lead_image_url) {
-          try {
-            parseResult.lead_image_url = await getThumbnailUrl(link)
-          } catch (e) {}
-        }
-      }
-      parseResult.domain = url.hostname
-    }
-
-    let s3UploadLink = ''
-
-    if (
-      (type === PostType.LINK || type === PostType.IMAGE) &&
-      parseResult &&
-      parseResult.lead_image_url
-    ) {
-      try {
-        const response = await axios.get(parseResult.lead_image_url, {
-          responseType: 'arraybuffer'
-        })
-        const resizedImage = await sharp(response.data)
-          .resize(80, 60, {
-            background: { r: 0, g: 0, b: 0, alpha: 0 }
-          })
-          .jpeg()
-          .toBuffer()
-
-        s3UploadLink = await new Promise((resolve, reject) =>
-          s3.upload(
-            {
-              Bucket: process.env.AWS_S3_BUCKET,
-              Key: `thumbs/${postId}.jpg`,
-              Body: resizedImage,
-              ContentType: 'image/jpeg'
-            },
-            (err, data) => {
-              if (err) reject(err)
-              else resolve(data.Location.replace('s3.amazonaws.com/', ''))
-            }
-          )
-        )
-      } catch (e) {}
-    }
-
     const post = await this.postRepository.save({
       id: postId,
       title,
@@ -545,8 +439,6 @@ export class PostResolver extends RepositoryInjector {
       textContent,
       createdAt: new Date(),
       authorId: userId,
-      thumbnailUrl: s3UploadLink ? s3UploadLink : undefined,
-      domain: parseResult ? parseResult.domain.replace('www.', '') : undefined,
       planet: { name: planet } as Planet,
       endorsementCount: 1
     } as Post)
@@ -764,5 +656,34 @@ export class PostResolver extends RepositoryInjector {
   ) {
     if (!userId) return null
     return postViewLoader.load({ postId: post.id, userId })
+  }
+
+  @FieldResolver()
+  timeSince(@Root() post: Post) {
+    return formatDistanceToNowStrict(new Date(post.createdAt)) + ' ago'
+  }
+
+  @FieldResolver({ nullable: true })
+  editedTimeSince(@Root() post: Post) {
+    if (!post.editedAt) return null
+    return formatDistanceToNowStrict(new Date(post.editedAt)) + ' ago'
+  }
+
+  @FieldResolver()
+  relativeUrl(@Root() post: Post) {
+    const slug = post.title
+      .toLowerCase()
+      .replace(/ /g, '_')
+      .replace(/\W/g, '')
+      .split('_')
+      .slice(0, 9)
+      .join('_')
+    return `/p/${post.planetName}/comments/${post.id}/${slug}`
+  }
+
+  @FieldResolver()
+  newCommentCount(@Root() post: Post) {
+    if (!post.postView) return 0
+    return post.commentCount - post.postView.lastCommentCount
   }
 }

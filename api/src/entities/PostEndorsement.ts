@@ -1,8 +1,8 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
-import { Lazy } from '../lazy'
-import { User } from './User'
-import { Post } from './Post'
+import { Lazy } from '@/lazy'
+import { User } from '@/entities/User'
+import { Post } from '@/entities/Post'
 
 @ObjectType()
 @Entity()

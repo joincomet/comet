@@ -36,8 +36,8 @@ Personal information such as emails, password hashes, and IP addresses have been
 Any account can be logged into with password `password` if environment variable `ACCESS_TOKEN_SECRET` is set to `password`.
 
 ```
-docker cp ./dump.sql comet_postgres_1:/dump.sql
-docker exec -it comet_postgres_1 bash
+docker cp ./dump.sql postgres:/dump.sql
+docker exec -it postgres bash
 psql -U postgres -d postgres -f /dump.sql
 exit
 ```

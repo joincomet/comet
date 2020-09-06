@@ -1,0 +1,339 @@
+<template functional>
+  <div v-bind="data.attrs" :class="[data.class, data.staticClass]" :style="data.staticStyle">
+    <!--FALLBACK-->
+    <svg
+      v-if="!props.name"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      :width="props.size ? props.size : 24"
+      :height="props.size ? props.size : 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'comet-logo'"
+      width="100%"
+      height="100%"
+      viewBox="0 0 211.26 33.84"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+    >
+      <g>
+        <path
+          d="m29.371 26.625q-1.0053 0.928-2.7453 1.8947-1.74 0.96667-3.9827 1.6627-2.2427 0.65733-4.7947 0.65733-3.132 0-5.8387-0.96667-2.7067-1.0053-4.756-2.8227-2.0107-1.8173-3.132-4.3693-1.1213-2.5907-1.1213-5.7613 0-2.9773 1.16-5.4907 1.1987-2.5133 3.2867-4.3693 2.088-1.856 4.7947-2.8613 2.7067-1.044 5.7227-1.044 2.4747 0 4.756 0.696 2.2813 0.65733 4.06 1.7013 1.8173 1.044 2.9 2.1653l-2.5907 3.364q-1.8947-1.6627-4.2147-2.7067-2.32-1.0827-5.22-1.0827-1.972 0-3.828 0.65733-1.856 0.65733-3.364 1.9333-1.4693 1.2373-2.3587 3.016-0.85067 1.7787-0.85067 4.0213 0 3.248 1.5467 5.452 1.5467 2.1653 4.06 3.2867 2.552 1.0827 5.4133 1.0827 2.088 0 3.7507-0.54133 1.6627-0.58 2.9773-1.392 1.3147-0.812 2.3587-1.624z"
+        />
+        <g>
+          <path
+            d="m82.893 3.3867 10.865 14.423 10.865-14.423h4.0213v27.067h-4.176v-11.368q0-2.5133 0.0773-4.756 0.116-2.2427 0.348-4.4853l-9.8986 12.837h-2.552l-9.8987-12.799q0.27067 2.204 0.348 4.4467 0.07733 2.2427 0.07733 4.756v11.368h-4.176v-27.067z"
+          />
+          <path
+            d="m120.94 3.3867h20.957v4.0213h-16.781v7.1533h14.655v4.0213h-14.655v7.8493h16.781v4.0213h-20.957z"
+          />
+          <path
+            d="m159.83 30.453v-23.045h-9.512v-4.0213h23.471v4.0213h-9.7827v23.045z"
+          />
+          <path
+            d="m179.73 30.453 11.445-13.881-11.252-13.185h5.568l8.8547 10.711 8.1973-10.711h5.336l-11.097 13.611 11.484 13.456h-5.568l-9.0093-10.865-8.6613 10.865z"
+          />
+        </g>
+      </g>
+      <path
+        d="m63.821 3.9135-28.384 1.951 35.105 3.5105 0.99011 1.7074-36.095 2.586 37.431 2.6859 0.0011 1.1437-37.432 2.6737 36.105 2.5789-0.99533 1.7213-35.11 3.5036 28.384 1.951c2.833-1.1883 5.1457-3.1084 6.7251-5.4546 1.4955-2.2216 2.3336-4.8253 2.3337-7.5519-2e-5 -0.18921-4e-3 -0.37783-0.01211-0.56577-0.07907-1.8505-0.54358-3.6354-1.3359-5.2719-1.5112-3.1212-4.2148-5.7024-7.7109-7.1689z"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'spinner'"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+      class="animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      />
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'home'"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      :width="props.size ? props.size : 24"
+      :height="props.size ? props.size : 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+      />
+    </svg>
+    <svg
+      v-else-if="props.name === 'chevron-left'"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      :width="props.size ? props.size : 24"
+      :height="props.size ? props.size : 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 19l-7-7 7-7"
+      />
+    </svg>
+    <svg
+      v-else-if="props.name === 'chevron-right'"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      :width="props.size ? props.size : 24"
+      :height="props.size ? props.size : 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 5l7 7-7 7"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'text'"
+      :width="props.size ? props.size : 24"
+      :height="props.size ? props.size : 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M4 6h16M4 12h8m-8 6h16"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'link'"
+      :width="props.size ? props.size : 24"
+      :height="props.size ? props.size : 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'login'"
+      :width="props.size ? props.size : 24"
+      :height="props.size ? props.size : 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+      />
+    </svg>
+
+    <!--20x20-->
+    <svg
+      v-else-if="props.name === 'heart'"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+        clip-rule="evenodd"
+      />
+    </svg>
+    <svg
+      v-else-if="props.name === 'dots'"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+        clip-rule="evenodd"
+      />
+    </svg>
+    <svg
+      v-else-if="props.name === 'dots-horizontal'"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"
+      />
+    </svg>
+    <svg
+      v-else-if="props.name === 'bookmark'"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+    >
+      <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+    </svg>
+    <svg
+      v-else-if="props.name === 'comment'"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
+        clip-rule="evenodd"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'rocket'"
+      id="bold"
+      :width="props.size ? props.size : 17"
+      :height="props.size ? props.size : 17"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m23.508.003c-4.685-.084-10.028 2.365-13.41 6.164-3.232.061-6.379 1.386-8.696 3.703-.135.133-.183.332-.124.512.06.181.216.312.404.339l3.854.552-.476.533c-.177.198-.168.499.02.687l6.427 6.427c.097.097.225.146.354.146.119 0 .238-.042.333-.127l.533-.476.552 3.854c.027.188.175.326.354.386.046.015.094.022.143.022.142 0 .287-.062.387-.161 2.285-2.285 3.61-5.432 3.671-8.664 3.803-3.389 6.272-8.73 6.163-13.409-.007-.266-.222-.481-.489-.488zm-4.608 8.632c-.487.487-1.127.731-1.768.731s-1.281-.244-1.768-.731c-.974-.975-.974-2.561 0-3.536.975-.975 2.561-.975 3.536 0s.975 2.562 0 3.536z"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'report'"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+        clip-rule="evenodd"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'crosspost'"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z"
+      />
+    </svg>
+
+    <svg
+      v-else-if="props.name === 'eye-off'"
+      :width="props.size ? props.size : 20"
+      :height="props.size ? props.size : 20"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
+        clip-rule="evenodd"
+      />
+      <path
+        d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"
+      />
+    </svg>
+
+    <!--FALLBACK-->
+    <svg
+      v-else
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      :width="props.size ? props.size : 24"
+      :height="props.size ? props.size : 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Icon',
+  props: {
+    size: {
+      type: [Number, String],
+      default: null
+    },
+    name: {
+      type: String,
+      default: null
+    }
+  }
+}
+</script>
+
+<style scoped></style>

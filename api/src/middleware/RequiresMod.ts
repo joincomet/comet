@@ -1,7 +1,7 @@
 import { MiddlewareFn } from 'type-graphql'
-import { Context } from '../Context'
+import { Context } from '@/Context'
 import { getRepository } from 'typeorm'
-import { User } from '../entities/User'
+import { User } from '@/entities/User'
 
 export const RequiresMod: MiddlewareFn<Context> = async (
   { context, args },

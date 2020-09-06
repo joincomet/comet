@@ -10,16 +10,16 @@ import {
   Root,
   UseMiddleware
 } from 'type-graphql'
-import { Context } from '../Context'
-import { User } from '../entities/User'
-import { RequiresAuth } from '../middleware/RequiresAuth'
-import { Comment } from '../entities/Comment'
-import { CommentSort, UserCommentsArgs } from '../args/UserCommentsArgs'
-import { RepositoryInjector } from '../RepositoryInjector'
-import { Time } from '../args/FeedArgs'
-import { discordSendFeedback } from '../DiscordBot'
+import { Context } from '@/Context'
+import { User } from '@/entities/User'
+import { RequiresAuth } from '@/middleware/RequiresAuth'
+import { Comment } from '@/entities/Comment'
+import { CommentSort, UserCommentsArgs } from '@/args/UserCommentsArgs'
+import { RepositoryInjector } from '@/RepositoryInjector'
+import { Time } from '@/args/FeedArgs'
+import { discordSendFeedback } from '@/DiscordBot'
 import { Stream } from 'stream'
-import { s3upload } from '../S3Storage'
+import { s3upload } from '@/S3Storage'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 @Resolver(() => User)
@@ -189,10 +189,7 @@ export class UserResolver extends RepositoryInjector {
     }
 
     if (
-      !(
-        profilePicUrl.startsWith('https://i.cometx.io/profile') ||
-        profilePicUrl.startsWith('https://api.cometx.io/avataaar')
-      )
+      !profilePicUrl.startsWith(`https://${process.env.AWS_S3_BUCKET}/profile`)
     ) {
       throw new Error('Invalid URL')
     }

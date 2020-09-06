@@ -1,14 +1,14 @@
-import { Post } from './entities/Post'
+import { Post } from '@/entities/Post'
 import { InjectRepository } from 'typeorm-typedi-extensions'
-import { User } from './entities/User'
+import { User } from '@/entities/User'
 import { Repository, TreeRepository } from 'typeorm'
-import { Comment } from './entities/Comment'
-import { PostEndorsement } from './entities/PostEndorsement'
-import { CommentEndorsement } from './entities/CommentEndorsement'
-import { PostView } from './entities/PostView'
-import { ReplyNotification } from './entities/ReplyNotification'
-import { Planet } from './entities/Planet'
-import { Galaxy } from './entities/Galaxy'
+import { Comment } from '@/entities/Comment'
+import { PostEndorsement } from '@/entities/PostEndorsement'
+import { CommentEndorsement } from '@/entities/CommentEndorsement'
+import { PostView } from '@/entities/PostView'
+import { ReplyNotification } from '@/entities/ReplyNotification'
+import { Planet } from '@/entities/Planet'
+import { Galaxy } from '@/entities/Galaxy'
 
 export class RepositoryInjector {
   @InjectRepository(User) readonly userRepository: Repository<User>

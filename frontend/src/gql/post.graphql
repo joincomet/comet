@@ -1,0 +1,50 @@
+query post($postId: ID!) {
+    post(postId: $postId) {
+      author {
+        id
+        username
+        isCurrentUser
+        tag
+        tagColor
+        profilePicUrl
+      }
+      commentCount
+      relativeUrl
+      newCommentCount
+      createdAt
+      editedAt
+      timeSince
+      editedTimeSince
+      domain
+      endorsementCount
+      id
+      isEndorsed
+      link
+      textContent
+      thumbnailUrl
+      title
+      type
+      sticky
+      planet {
+        name
+        description
+        userCount
+        createdAt
+        avatarImageUrl
+        bannerImageUrl
+        themeColor
+        joined
+        galaxy {
+          name
+          fullName
+          icon
+        }
+      }
+      postView {
+        lastCommentCount
+        postId
+        userId
+        createdAt
+      }
+    }
+  }

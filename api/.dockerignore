@@ -1,2 +1,5 @@
+dist
 node_modules
-npm-debug.log
+.prettierrc.js
+example.env
+yarn-error.log

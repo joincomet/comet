@@ -1,15 +1,14 @@
 import redirectSSL from 'redirect-ssl'
 import { sortRoutes } from '@nuxt/utils'
-import * as iconImport from './icons'
+import tailwindTypography from '@tailwindcss/typography'
 
 export default {
   mode: 'universal',
-  /*
-   ** Headers of the page
-   */
+  srcDir: 'src/',
+
   head: {
-    titleTemplate: '%s / CometX',
-    title: 'CometX',
+    titleTemplate: '%s',
+    title: "CometX - See what's in orbit.",
     meta: [
       { charset: 'utf-8' },
       { name: 'theme-color', content: '#202124' },
@@ -91,42 +90,84 @@ export default {
       }
     ]
   },
-  /*
-   ** Customize the progress-bar color
-   */
+
   loading: { color: '#fff' },
-  /*
-   ** Global CSS
-   */
-  css: ['~/css/main.css', '~/css/main.scss'],
-  /*
-   ** Plugins to load before mounting the App
-   */
-  plugins: ['~/plugins/color.js'],
-  /*
-   ** Nuxt.js dev-modules
-   */
+
   buildModules: [
-    '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify',
+    '@nuxtjs/color-mode',
+    '@nuxtjs/tailwindcss',
     '@nuxtjs/pwa',
-    '@aceforth/nuxt-optimized-images'
+    '@aceforth/nuxt-optimized-images',
+    '@nuxtjs/eslint-module'
   ],
-  /*
-   ** Nuxt.js modules
-   */
-  modules: [
-    '@nuxtjs/axios',
-    '@nuxtjs/apollo',
-    '@nuxtjs/device',
-    [
-      '@nuxtjs/component-cache',
-      {
-        max: 10000,
-        maxAge: 1000 * 60 * 60
+
+  modules: ['@nuxtjs/axios', '@nuxtjs/apollo', '@nuxtjs/device'],
+
+  eslint: {
+    cache: true,
+    fix: true
+  },
+
+  build: {
+    /*extend(config, ctx) {
+      // Run ESLint on save
+      if (ctx.isDev && ctx.isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/,
+          options: {
+            fix: true
+          }
+        })
       }
-    ]
-  ],
+    },*/
+    parallel: true,
+    cache: true,
+    hardSource: true
+  },
+
+  tailwindcss: {
+    // add '~tailwind.config` alias - increases bundle size
+    exposeConfig: true,
+    config: {
+      theme: {
+        darkSelector: '.dark-mode'
+      },
+      variants: {
+        backgroundColor: [
+          'dark',
+          'dark-hover',
+          'dark-group-hover',
+          'dark-even',
+          'dark-odd',
+          'hover',
+          'group-hover',
+          'even',
+          'odd'
+        ],
+        borderColor: [
+          'dark',
+          'dark-focus',
+          'dark-focus-within',
+          'focus',
+          'focus-within'
+        ],
+        textColor: ['dark', 'dark-hover', 'dark-active', 'hover', 'active']
+      },
+      plugins: [require('tailwindcss-dark-mode')(), tailwindTypography],
+      future: {
+        removeDeprecatedGapUtilities: true
+      }
+    }
+  },
+
+  css: ['@/assets/css/inter/inter.css'],
+
+  purgeCSS: {
+    whitelist: ['dark-mode']
+  },
 
   optimizedImages: {
     optimizeImages: true
@@ -134,35 +175,32 @@ export default {
 
   pwa: {
     manifest: {
-      name: 'Comet',
-      short_name: 'Comet',
-      description: 'Create and browse posts and comments on Comet',
+      name: 'CometX',
+      short_name: 'CometX',
+      description: "See what's in orbit.",
       theme_color: '#202124',
       background_color: '#202124',
       fileName: 'manifest.[ext]?[hash]',
       start_url: '/'
     },
     meta: {
-      name: 'Comet',
-      description: 'Create and browse posts and comments on Comet',
+      name: 'CometX',
+      description: "See what's in orbit.",
       theme_color: '#202124',
       favicon: false,
       viewport:
         'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover',
       mobileAppIOS: true,
       appleStatusBarStyle: 'black-translucent'
-    },
-    icon: {
-      purpose: ['any', 'maskable']
     }
   },
 
   axios: {
     progress: false,
-    baseURL: process.env.BASE_URL,
+    baseURL: 'http://api:4000',
     browserBaseURL:
       process.env.NODE_ENV === 'production'
-        ? process.env.BROWSER_BASE_URL
+        ? process.env.BASE_URL
         : 'http://localhost:4000'
   },
 
@@ -173,47 +211,15 @@ export default {
     },
     clientConfigs: {
       default: {
-        httpEndpoint: `${process.env.BASE_URL}/graphql`,
+        httpEndpoint: `http://api:4000/graphql`,
         browserHttpEndpoint:
           process.env.NODE_ENV === 'production'
-            ? `${process.env.BROWSER_BASE_URL}/graphql`
+            ? `${process.env.BASE_URL}/graphql`
             : 'http://localhost:4000/graphql',
         httpLinkOptions: {
           credentials: 'same-origin'
         },
         wsEndpoint: null
-      }
-    }
-  },
-
-  vuetify: {
-    customVariables: ['~/assets/variables.scss'],
-    treeShake: true,
-    defaultAssets: false,
-    icons: {
-      iconfont: 'mdiSvg',
-      values: { ...iconImport }
-    },
-    theme: {
-      options: {
-        customProperties: true
-      },
-      dark: true,
-      themes: {
-        dark: {
-          primary: '#5C6BC0',
-          secondary: '#EF5350',
-          accent: '#FF9800',
-          error: '#F44336',
-          success: '#43A047'
-        },
-        light: {
-          primary: '#5C6BC0',
-          secondary: '#EF5350',
-          accent: '#FF9800',
-          error: '#F44336',
-          success: '#43A047'
-        }
       }
     }
   },
@@ -230,44 +236,40 @@ export default {
         {
           name: 'universe-sort-time',
           path: '/universe/:sort?/:time?',
-          component: resolve(__dirname, 'components/pages/universe.vue')
+          component: resolve(__dirname, 'src/components/pages/universe.vue')
         },
         {
           name: 'p-planetname-sort-time',
           path: '/p/:planetname/:sort?/:time?',
-          component: resolve(__dirname, 'components/pages/planet.vue')
+          component: resolve(__dirname, 'src/components/pages/planet.vue')
         },
         {
           name: 'p-planetname-comments-id-title',
           path: '/p/:planetname/comments/:id/:title?',
-          component: resolve(__dirname, 'components/pages/post.vue')
+          component: resolve(__dirname, 'src/components/pages/post.vue')
         },
         {
           name: 'g-galaxyname-sort-time',
           path: '/g/:galaxyname/:sort?/:time?',
-          component: resolve(__dirname, 'components/pages/galaxy.vue')
+          component: resolve(__dirname, 'src/components/pages/galaxy.vue')
         },
         {
           name: 'u-username-sort-time',
           path: '/u/:username/:sort?/:time?',
-          component: resolve(__dirname, 'components/pages/user.vue')
+          component: resolve(__dirname, 'src/components/pages/user.vue')
         },
         {
           name: 'search-sort-time',
           path: '/search/:sort?/:time?',
-          component: resolve(__dirname, 'components/pages/search.vue')
+          component: resolve(__dirname, 'src/components/pages/search.vue')
         },
         {
           name: 'home-sort-time',
           path: '/home/:sort?/:time?',
-          component: resolve(__dirname, 'components/pages/home.vue')
+          component: resolve(__dirname, 'src/components/pages/home.vue')
         }
       )
       sortRoutes(routes)
     }
-  },
-
-  env: {
-    EMBEDLY_KEY: process.env.EMBEDLY_KEY
   }
 }

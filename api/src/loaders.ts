@@ -1,9 +1,9 @@
 import { getRepository } from 'typeorm'
-import { User } from './entities/User'
-import { Comment } from './entities/Comment'
+import { User } from '@/entities/User'
+import { Comment } from '@/entities/Comment'
 import DataLoader from 'dataloader'
-import { Post } from './entities/Post'
-import { PostView } from './entities/PostView'
+import { Post } from '@/entities/Post'
+import { PostView } from '@/entities/PostView'
 
 export const UserLoader = new DataLoader(async (keys: string[]) => {
   const entities = await getRepository(User)

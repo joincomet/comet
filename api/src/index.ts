@@ -1,25 +1,24 @@
 import 'reflect-metadata'
 import { buildSchema, registerEnumType } from 'type-graphql'
 import * as TypeORM from 'typeorm'
+import { getRepository } from 'typeorm'
 import { Container } from 'typedi'
-import { getUser } from './auth'
+import { getUser } from '@/auth'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import { ApolloServer } from 'apollo-server-express'
-import { Context } from './Context'
+import { Context } from '@/Context'
 import {
   CommentLoader,
   PostLoader,
   PostViewLoader,
   UserLoader
-} from './loaders'
-import { PostType } from './entities/Post'
-import { Filter, Sort, Time, Type } from './args/FeedArgs'
-import { avataaarEndpoint } from './avataaars/avataaarEndpoint'
-import { CommentSort } from './args/UserCommentsArgs'
-import { getRepository } from 'typeorm'
-import { Galaxy } from './entities/Galaxy'
-import { galaxiesList } from './galaxiesList'
+} from '@/loaders'
+import { PostType } from '@/entities/Post'
+import { Filter, Sort, Time, Type } from '@/args/FeedArgs'
+import { CommentSort } from '@/args/UserCommentsArgs'
+import { Galaxy } from '@/entities/Galaxy'
+import { galaxiesList } from '@/galaxiesList'
 import { graphqlUploadExpress } from 'graphql-upload'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
@@ -37,7 +36,7 @@ async function bootstrap() {
     await TypeORM.createConnection({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
+      port: parseInt(process.env.POSTGRES_PORT as string),
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
@@ -93,29 +92,14 @@ async function bootstrap() {
       })
     )
 
-    const myPlugin = {
-      // Fires whenever a GraphQL request is received from a client.
+    const logPlugin = {
       requestDidStart(requestContext: any) {
         console.log('GraphQL: ' + requestContext.request.operationName)
-
-        return {
-          // Fires whenever Apollo Server will parse a GraphQL
-          // request to create its associated document AST.
-          parsingDidStart(requestContext: any) {
-            // console.log('Parsing started!')
-          },
-
-          // Fires whenever Apollo Server will validate a
-          // request's document AST against your GraphQL schema.
-          validationDidStart(requestContext: any) {
-            // console.log('Validation started!')
-          }
-        }
       }
     }
 
     const server = new ApolloServer({
-      plugins: [myPlugin],
+      plugins: [logPlugin],
       schema,
       playground: process.env.NODE_ENV !== 'production',
       tracing: true,
@@ -137,8 +121,6 @@ async function bootstrap() {
     server.applyMiddleware({
       app
     })
-
-    app.get('/avataaar', avataaarEndpoint)
 
     app.listen({ port: process.env.PORT || 4000 }, () => {
       console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)

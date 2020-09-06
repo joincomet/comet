@@ -2,24 +2,20 @@ import {
   Arg,
   Args,
   Ctx,
-  FieldResolver,
   ID,
   Mutation,
   Query,
   Resolver,
-  Root,
   UseMiddleware
 } from 'type-graphql'
-import { RepositoryInjector } from '../RepositoryInjector'
-import { RequiresAuth } from '../middleware/RequiresAuth'
-import { CreatePlanetArgs } from '../args/CreatePlanetArgs'
-import { Planet } from '../entities/Planet'
-import { galaxiesList } from '../galaxiesList'
-import { Galaxy } from '../entities/Galaxy'
-import { Context } from '../Context'
-import { User } from '../entities/User'
-import { randomThemeColor } from '../randomThemeColor'
-import { bannedWords } from '../bannedWords'
+import { RepositoryInjector } from '@/RepositoryInjector'
+import { RequiresAuth } from '@/middleware/RequiresAuth'
+import { CreatePlanetArgs } from '@/args/CreatePlanetArgs'
+import { Planet } from '@/entities/Planet'
+import { galaxiesList } from '@/galaxiesList'
+import { Context } from '@/Context'
+import { User } from '@/entities/User'
+import { bannedWords } from '@/bannedWords'
 
 @Resolver(() => Planet)
 export class PlanetResolver extends RepositoryInjector {
@@ -55,8 +51,7 @@ export class PlanetResolver extends RepositoryInjector {
       createdAt: new Date(),
       creatorId: userId,
       moderators: [{ id: userId }],
-      users: [{ id: userId }],
-      themeColor: randomThemeColor()
+      users: [{ id: userId }]
     } as Planet)
 
     return true

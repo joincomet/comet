@@ -1,0 +1,3 @@
+mutation hidePost($postId: ID!) {
+  hidePost(postId: $postId)
+}

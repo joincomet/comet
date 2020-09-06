@@ -1,7 +1,7 @@
-import { RepositoryInjector } from '../RepositoryInjector'
+import { RepositoryInjector } from '@/RepositoryInjector'
 import { Arg, Ctx, ID, Mutation, UseMiddleware } from 'type-graphql'
-import { RequiresAdmin } from '../middleware/RequiresAdmin'
-import { Context } from '../Context'
+import { RequiresAdmin } from '@/middleware/RequiresAdmin'
+import { Context } from '@/Context'
 
 export class AdminResolver extends RepositoryInjector {
   @UseMiddleware(RequiresAdmin)

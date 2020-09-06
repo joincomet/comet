@@ -1,3 +1,0 @@
-mutation togglePostEndorsement($postId: ID!) {
-  togglePostEndorsement(postId: $postId)
-}

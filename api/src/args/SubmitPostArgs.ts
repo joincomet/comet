@@ -1,6 +1,6 @@
 import { ArgsType, Field } from 'type-graphql'
-import { PostType } from '../entities/Post'
-import { Length, Matches, IsOptional } from 'class-validator'
+import { PostType } from '@/entities/Post'
+import { IsOptional, Length, Matches } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 @ArgsType()

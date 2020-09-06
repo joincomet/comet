@@ -1,5 +1,5 @@
 import { ArgsType, Field, ID } from 'type-graphql'
-import { PaginationArgs } from './PaginationArgs'
+import { PaginationArgs } from '@/args/PaginationArgs'
 
 export enum Sort {
   NEW = 'new',

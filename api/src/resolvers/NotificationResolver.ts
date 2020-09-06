@@ -1,4 +1,4 @@
-import { RepositoryInjector } from '../RepositoryInjector'
+import { RepositoryInjector } from '@/RepositoryInjector'
 import {
   Arg,
   Ctx,
@@ -8,9 +8,9 @@ import {
   Resolver,
   UseMiddleware
 } from 'type-graphql'
-import { RequiresAuth } from '../middleware/RequiresAuth'
-import { ReplyNotification } from '../entities/ReplyNotification'
-import { Context } from '../Context'
+import { RequiresAuth } from '@/middleware/RequiresAuth'
+import { ReplyNotification } from '@/entities/ReplyNotification'
+import { Context } from '@/Context'
 
 @Resolver()
 export class NotificationResolver extends RepositoryInjector {

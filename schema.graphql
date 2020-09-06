@@ -10,6 +10,7 @@ type Comment {
   authorId: ID
   createdAt: DateTime!
   editedAt: DateTime
+  editedTimeSince: String
   endorsementCount: Float!
   id: ID!
   isEndorsed: Boolean!
@@ -20,6 +21,7 @@ type Comment {
   postId: ID
   rootCommentId: ID
   textContent: String!
+  timeSince: String!
 }
 
 type CommentEndorsement {
@@ -130,6 +132,7 @@ type Post {
   createdAt: DateTime!
   domain: String
   editedAt: DateTime
+  editedTimeSince: String
   endorsementCount: Float!
   id: ID!
   isEndorsed: Boolean!
@@ -137,11 +140,14 @@ type Post {
   link: String
   newCommentCount: Float!
   planet: Planet
+  planetName: ID
   postView: PostView
   postedToProfile: Boolean!
+  relativeUrl: String!
   sticky: Boolean!
   textContent: String
   thumbnailUrl: String
+  timeSince: String!
   title: String!
   type: PostType!
 }

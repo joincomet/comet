@@ -10,19 +10,20 @@ import {
   Root,
   UseMiddleware
 } from 'type-graphql'
-import { RequiresAuth } from '../middleware/RequiresAuth'
-import { Context } from '../Context'
-import { RepositoryInjector } from '../RepositoryInjector'
-import { Comment } from '../entities/Comment'
-import { SubmitCommentArgs } from '../args/SubmitCommentArgs'
+import { RequiresAuth } from '@/middleware/RequiresAuth'
+import { Context } from '@/Context'
+import { RepositoryInjector } from '@/RepositoryInjector'
+import { Comment } from '@/entities/Comment'
+import { SubmitCommentArgs } from '@/args/SubmitCommentArgs'
 import shortid from 'shortid'
-import { PostCommentsArgs } from '../args/PostCommentsArgs'
-import { User } from '../entities/User'
-import { ReplyNotification } from '../entities/ReplyNotification'
+import { PostCommentsArgs } from '@/args/PostCommentsArgs'
+import { User } from '@/entities/User'
+import { ReplyNotification } from '@/entities/ReplyNotification'
 import { filterXSS } from 'xss'
-import { whiteList } from '../xssWhiteList'
-import { CommentEndorsement } from '../entities/CommentEndorsement'
-import { flat } from '../flat'
+import { whiteList } from '@/xssWhiteList'
+import { CommentEndorsement } from '@/entities/CommentEndorsement'
+import { flat } from '@/flat'
+import { formatDistanceToNowStrict } from 'date-fns'
 
 @Resolver(() => Comment)
 export class CommentResolver extends RepositoryInjector {
@@ -360,5 +361,16 @@ export class CommentResolver extends RepositoryInjector {
   @FieldResolver()
   async post(@Root() comment: Comment, @Ctx() { postLoader }: Context) {
     return postLoader.load(comment.postId)
+  }
+
+  @FieldResolver()
+  timeSince(@Root() comment: Comment) {
+    return formatDistanceToNowStrict(new Date(comment.createdAt)) + ' ago'
+  }
+
+  @FieldResolver({ nullable: true })
+  editedTimeSince(@Root() comment: Comment) {
+    if (!comment.editedAt) return null
+    return formatDistanceToNowStrict(new Date(comment.editedAt)) + ' ago'
   }
 }
