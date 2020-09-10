@@ -16,6 +16,7 @@
     "tailwind": "npx tailwindcss build src/assets/css/tailwind.css -o .tailwind/tailwind.css"
   },
   "dependencies": {
+    "@nuxt/content": "^1.8.1",
     "@nuxtjs/apollo": "^4.0.1-rc.3",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/device": "^1.2.7",
@@ -44,6 +45,8 @@
     "eslint": "^7.8.1",
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.0",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^10.0.2",
     "webp-loader": "^0.6.0"
   }
 }

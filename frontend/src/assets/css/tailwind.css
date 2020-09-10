@@ -3,15 +3,23 @@
 @import "tailwindcss/utilities.css";
 
 .dark-mode body {
-  @apply bg-black text-white;
+  @apply bg-gray-900 text-white;
 }
 
-.text-primary {
+.text-accent {
   @apply text-indigo-500
 }
 
+.text-primary {
+  @apply text-black
+}
+
+.dark-mode .text-primary {
+  @apply text-white
+}
+
 .text-secondary {
-  @apply text-gray-700;
+  @apply text-gray-500;
 }
 
 .dark-mode .text-secondary {
@@ -19,7 +27,7 @@
 }
 
 .listitem {
-  @apply p-3 inline-flex flex-row items-center;
+  @apply p-3 inline-flex flex-row items-center w-full;
 }
 
 .listitem:hover {

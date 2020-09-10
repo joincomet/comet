@@ -8,7 +8,7 @@ export default {
 
   head: {
     titleTemplate: '%s',
-    title: "CometX - See what's in orbit.",
+    title: "CometX – See what's in orbit.",
     meta: [
       { charset: 'utf-8' },
       { name: 'theme-color', content: '#202124' },
@@ -101,7 +101,7 @@ export default {
     '@nuxtjs/eslint-module'
   ],
 
-  modules: ['@nuxtjs/axios', '@nuxtjs/apollo', '@nuxtjs/device'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/apollo', '@nuxtjs/device', '@nuxt/content'],
 
   eslint: {
     cache: true,
@@ -163,7 +163,9 @@ export default {
     }
   },
 
-  css: ['@/assets/css/inter/inter.css'],
+  css: ['@/assets/css/inter/inter.css', '@/assets/css/toast/themes/sugar/index.scss'],
+
+  plugins: ['@/plugins/toast.client.js'],
 
   purgeCSS: {
     whitelist: ['dark-mode']
@@ -230,7 +232,7 @@ export default {
     })
   ],
 
-  router: {
+  /*router: {
     extendRoutes(routes, resolve) {
       routes.push(
         {
@@ -271,5 +273,5 @@ export default {
       )
       sortRoutes(routes)
     }
-  }
+  }*/
 }

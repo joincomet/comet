@@ -1,165 +1,134 @@
 <template>
-  <div class="h-full flex flex-row">
+  <div class="px-24 py-6">
+    <PlanetOfTheDay :planet="planetOfTheDay" :posts="topDiscussions" />
+
+    <div class="text-xl font-bold my-6">
+      Ongoing Discussions
+    </div>
     <div
-      id="changeText"
-      class="absolute bottom-0 left-0 w-1/3 rounded-t-lg p-4 bg-gray-900"
-      :class="hideText ? 'hide' : ''"
+      class="grid gap-4 grid-rows-4 sm:grid-rows-1 grid-cols-1 sm:grid-cols-4"
     >
-      <a
-        :href="images[currentDescription].link"
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-        class="text--primary hover:underline"
-      >{{ images[currentDescription].name }}</a>
-      <div
-        id="description"
-        class="text--secondary"
-        style="white-space: pre-line"
-      >
-        {{ images[currentDescription].description }}
+      <Post v-for="post in topDiscussions" :key="post.id" :post="post" />
+    </div>
+    <div class="mt-6 grid grid-cols-3 grid-rows-1 gap-12 min-h-0 min-w-0">
+      <div class="col-span-3 sm:col-span-2 overflow-hidden min-w-0">
+        <div class="text-xl font-bold mb-6">
+          Your Feed
+        </div>
+        <article v-for="post in feed" :key="post.id">
+          <div class="pb-8" style="content-visibility: auto">
+            <div class="flex flex-row cursor-pointer">
+              <div class="flex flex-col items-center justify-start mr-4 pt-1 text-secondary text-xs">
+                <Icon class="text-indigo-500" name="comment" />
+                <span class="text-indigo-500">{{ post.commentCount }}</span>
+                <Icon name="rocket" class="mt-4" />
+                <span>{{ post.endorsementCount }}</span>
+              </div>
+              <div class="flex flex-col justify-start">
+                <nuxt-link :to="post.relativeUrl" class="font-medium">
+                  {{ post.title }}
+                </nuxt-link>
+                <div
+                  v-if="post.textContent"
+                  class="text-secondary text-sm line-clamp-2 mt-1"
+                  v-html="post.textContent"
+                />
+                <PostAuthor class="text-sm text-secondary pt-3" :post="post" />
+              </div>
+              <div class="ml-auto pl-4">
+                <div class="h-20 sm:h-24 w-20 sm:w-24">
+                  <div v-if="post.type === 'IMAGE'" class="bg-cover flex flex-grow h-20 sm:h-24" :style="`background-image: url(${post.link})`" />
+                  <div v-else class="flex flex-grow bg-gray-200 dark:bg-gray-800 h-20 sm:h-24">
+                    <div class="m-auto text-gray-400 dark:text-gray-700">
+                      <Icon v-if="post.type === 'TEXT'" size="48" name="text" />
+                      <Icon v-else-if="post.type === 'LINK' || post.type === 'IMAGE'" size="48" name="text" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="hidden sm:block sm:col-span-1">
+        <div class="sticky top-0" style="top: 5.5rem">
+          <div class="text-xl font-bold mb-6">
+            Popular Planets
+          </div>
+        </div>
       </div>
     </div>
-
-    <div
-      class="w-1/2 bg-cover bg-center"
-      style="transition: background-image 3s ease-in-out"
-      :class="`image${currentImage + 1}`"
-    />
-
-    <div class="h-screen w-1/2 flex flex-row justify-center align-middle p-6">
-      <nuxt-link to="/home" class="absolute top-4 right-4">
-        <button class="text-secondary">
-          Continue without logging in
-        </button>
-      </nuxt-link>
-
-      <v-col
-        md="11"
-        sm="12"
-        lg="11"
-        xl="6"
-        :class="$device.isDesktop ? '' : 'px-6'"
-      >
-        <div style="display: flex; flex-direction: column">
-          <img
-            src="/frontend/src/static/CometLogoSvg.svg"
-            style="margin-bottom: 16px; width: 164px"
-          >
-
-          <div style="font-size: 2rem; font-weight: 500; margin-bottom: 24px">
-            See what's in orbit.
-          </div>
-
-          <nuxt-child />
-        </div>
-      </v-col>
-    </div>
-    <div
-      :class="`image${
-        currentImage + 2 > 10 ? currentImage - 8 : currentImage + 2
-      }`"
-      style="visibility: hidden"
-    />
   </div>
 </template>
 
 <script>
-import spaceImages from '@/assets/spaceimages.json'
-
-const i = Math.floor(Math.random() * spaceImages.length)
+import Post from '@/components/post/Post'
+import feedGql from '@/gql/feed'
+import planetGql from '@/gql/planet'
+import { feedVars } from '@/util/feedVars'
+import PlanetOfTheDay from '@/components/PlanetOfTheDay'
+import Icon from '@/components/Icon'
+import PostAuthor from '@/components/post/PostAuthor'
 
 export default {
-  middleware ({ store, redirect }) {
-    // If the user is not authenticated
-    if (store.state.currentUser) {
-      return redirect('/home')
-    }
+  components: { PostAuthor, Icon, PlanetOfTheDay, Post },
+  async asyncData ({ app, route }) {
+    const client = app.apolloProvider.defaultClient
+
+    const feed = (
+      await client.query({
+        query: feedGql,
+        variables: feedVars(route),
+        fetchPolicy: 'network-only'
+      })
+    ).data.feed
+
+    const planetOfTheDay = (
+      await client.query({
+        query: planetGql,
+        variables: {
+          planetName: 'HistoryInPictures'
+        }
+      })
+    ).data.planet
+    return { feed, planetOfTheDay }
   },
-  layout: 'login',
   data () {
     return {
-      step: 1,
-      backgroundUrl: null,
-      images: spaceImages,
-      currentImage: i,
-      currentDescription: i,
-      hideText: false,
-      signingUp: false
+      feed: [],
+      planetOfTheDay: null
     }
   },
-  mounted () {
-    setInterval(() => {
-      this.hideText = true
-      setTimeout(() => {
-        this.hideText = false
-        this.currentDescription++
-        if (this.currentDescription >= this.images.length) { this.currentDescription = 0 }
-      }, 1500)
-      if (this.currentImage + 1 >= this.images.length) {
-        this.currentImage = 0
-      } else {
-        this.currentImage++
-      }
-    }, 15000)
-  },
-  head: {
-    title: 'Sign Up'
+  computed: {
+    topDiscussions () {
+      return this.feed.slice(0, 4)
+    }
   }
 }
 </script>
 
 <style scoped>
-#changeText {
-  opacity: 0.75;
-  transition: opacity 1.5s;
-}
+.line-clamp-2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
 
-.hide {
-  opacity: 0 !important;
-}
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
-#changeText:not(:hover) > #description {
-  font-size: 0;
-  margin: 0;
-  opacity: 0;
-  padding: 0;
-  /* fade out, then shrink */
-  transition: opacity 0.25s, font-size 0.5s 0.25s, margin 0.5s 0.25s,
-    padding 0.5s 0.25s;
-}
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
 
-#changeText:hover > #description {
-  transition: font-size 0.25s, margin 0.25s, padding 0.25s, opacity 0.5s 0.25s;
-}
-
-.image1 {
-  background-image: url('~assets/spaceimages/01.jpg');
-}
-.image2 {
-  background-image: url('~assets/spaceimages/02.jpg');
-}
-.image3 {
-  background-image: url('~assets/spaceimages/03.jpg');
-}
-.image4 {
-  background-image: url('~assets/spaceimages/04.jpg');
-}
-.image5 {
-  background-image: url('~assets/spaceimages/05.jpg');
-}
-.image6 {
-  background-image: url('~assets/spaceimages/06.jpg');
-}
-.image7 {
-  background-image: url('~assets/spaceimages/07.jpg');
-}
-.image8 {
-  background-image: url('~assets/spaceimages/08.jpg');
-}
-.image9 {
-  background-image: url('~assets/spaceimages/09.jpg');
-}
-.image10 {
-  background-image: url('~assets/spaceimages/10.jpg');
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 </style>

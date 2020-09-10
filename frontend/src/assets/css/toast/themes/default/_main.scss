@@ -1,0 +1,76 @@
+.v-notices {
+  position: fixed;
+  display: flex;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2em;
+  overflow: hidden;
+  z-index: 1052;
+  pointer-events: none;
+
+  .v-toast {
+    display: inline-flex;
+    align-items: center;
+    animation-duration: 150ms;
+    margin: 0.5em 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    border-radius: 0.25em;
+    pointer-events: auto;
+    opacity: 0.92;
+    color: #fff;
+    min-height: 3em;
+    cursor: pointer;
+
+    .v-toast-text {
+      margin: 0;
+      padding: 0.5em 1em;
+      word-break: break-word;
+    }
+
+    .v-toast-icon {
+      display: none;
+    }
+  }
+
+  // Colors
+  @each $color, $value in $toast-colors {
+    .v-toast-#{$color} {
+      background-color: $value;
+    }
+  }
+
+  // Individual toast position
+  .v-toast {
+    &.is-top, &.is-bottom {
+      align-self: center;
+    }
+
+    &.is-top-right, &.is-bottom-right {
+      align-self: flex-end;
+    }
+
+    &.is-top-left, &.is-bottom-left {
+      align-self: flex-start;
+    }
+  }
+
+  // Notice container positions
+  &.is-top {
+    flex-direction: column;
+  }
+
+  &.is-bottom {
+    flex-direction: column-reverse;
+  }
+
+  &.is-custom-parent {
+    position: absolute;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 0;
+    position: fixed !important;
+  }
+}

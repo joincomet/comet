@@ -673,12 +673,13 @@ export class PostResolver extends RepositoryInjector {
   relativeUrl(@Root() post: Post) {
     const slug = post.title
       .toLowerCase()
-      .replace(/ /g, '_')
-      .replace(/\W/g, '')
-      .split('_')
-      .slice(0, 9)
-      .join('_')
-    return `/p/${post.planetName}/comments/${post.id}/${slug}`
+        .trim()
+        .split(' ')
+        .slice(0, 9)
+        .join('-')
+        .replace(/[^a-z0-9-]+/gi, '')
+        .replace(/[-](.)\1+/g, '$1')
+    return `/+${post.planetName}/${slug}_${post.id}`
   }
 
   @FieldResolver()
