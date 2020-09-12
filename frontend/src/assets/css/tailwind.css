@@ -1,9 +1,13 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
-@import "tailwindcss/utilities.css";
+@import "tailwindcss/utilities";
 
-.dark-mode body {
-  @apply bg-gray-900 text-white;
+html {
+  @apply text-black bg-white;
+}
+
+html.dark {
+  @apply text-white bg-gray-900;
 }
 
 .text-accent {
@@ -11,29 +15,13 @@
 }
 
 .text-primary {
-  @apply text-black
-}
-
-.dark-mode .text-primary {
-  @apply text-white
+  @apply text-black dark:text-white;
 }
 
 .text-secondary {
-  @apply text-gray-500;
-}
-
-.dark-mode .text-secondary {
-  @apply text-gray-500;
+  @apply text-gray-700 dark:text-gray-500;
 }
 
 .listitem {
-  @apply p-3 inline-flex flex-row items-center w-full;
-}
-
-.listitem:hover {
-  @apply bg-gray-200;
-}
-
-.dark-mode .listitem:hover {
-  @apply bg-gray-700;
+  @apply inline-flex flex-row items-center w-full p-3 hover:bg-gray-200 dark:hover:bg-gray-700;
 }

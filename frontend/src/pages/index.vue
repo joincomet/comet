@@ -78,7 +78,7 @@ export default {
     const feed = (
       await client.query({
         query: feedGql,
-        variables: feedVars(route),
+        variables: { ...feedVars(route), types: ['IMAGE'] },
         fetchPolicy: 'network-only'
       })
     ).data.feed

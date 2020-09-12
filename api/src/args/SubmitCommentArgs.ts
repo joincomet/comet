@@ -4,7 +4,7 @@ import { Length } from 'class-validator'
 @ArgsType()
 export class SubmitCommentArgs {
   @Field()
-  @Length(1, 100000)
+  @Length(1, 100000, { message: 'Text must be between 1 and 100000 characters' })
   textContent: string
 
   @Field(() => ID)

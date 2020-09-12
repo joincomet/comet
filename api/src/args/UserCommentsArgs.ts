@@ -11,7 +11,6 @@ export enum CommentSort {
 @ArgsType()
 export class UserCommentsArgs extends PaginationArgs {
   @Field()
-  @Length(3, 20)
   username: string
 
   @Field(() => CommentSort, { defaultValue: CommentSort.NEW })

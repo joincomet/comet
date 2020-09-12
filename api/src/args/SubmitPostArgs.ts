@@ -6,7 +6,7 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload'
 @ArgsType()
 export class SubmitPostArgs {
   @Field()
-  @Length(1, 300)
+  @Length(1, 300, { message: "Title must be no longer than 300 characters."})
   title: string
 
   @Field(() => PostType)
@@ -14,17 +14,17 @@ export class SubmitPostArgs {
 
   @Field({ nullable: true })
   @IsOptional()
-  @Length(1, 5000)
+  @Length(1, 5000, { message: "URL must be no longer than 5000 characters."})
   link?: string
 
   @Field({ nullable: true })
   @IsOptional()
-  @Length(1, 100000)
+  @Length(1, 100000, { message: "Text must be between 1 and 100000 characters"})
   textContent?: string
 
   @Field()
-  @Matches(/^[a-zA-Z0-9_]+$/)
-  @Length(3, 21)
+  @Matches(/^[a-zA-Z0-9_]+$/, {message: "Planet name can only have letters, numbers, and underscores."})
+  @Length(3, 21, { message: "Planet name must be between 3 and 21 characters."})
   planet: string
 
   @Field(() => GraphQLUpload, { nullable: true })

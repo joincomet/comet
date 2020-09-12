@@ -1,6 +1,5 @@
 import redirectSSL from 'redirect-ssl'
 import { sortRoutes } from '@nuxt/utils'
-import tailwindTypography from '@tailwindcss/typography'
 
 export default {
   mode: 'universal',
@@ -40,7 +39,7 @@ export default {
       {
         hid: 'og:site_name',
         property: 'og:site_name',
-        content: `cometx.io`
+        content: 'cometx.io'
       },
       {
         hid: 'twitter:card',
@@ -94,7 +93,7 @@ export default {
   loading: { color: '#fff' },
 
   buildModules: [
-    '@nuxtjs/color-mode',
+    '~/modules/theme',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/pwa',
     '@aceforth/nuxt-optimized-images',
@@ -104,25 +103,10 @@ export default {
   modules: ['@nuxtjs/axios', '@nuxtjs/apollo', '@nuxtjs/device', '@nuxt/content'],
 
   eslint: {
-    cache: true,
-    fix: true
+    cache: true
   },
 
   build: {
-    /*extend(config, ctx) {
-      // Run ESLint on save
-      if (ctx.isDev && ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/,
-          options: {
-            fix: true
-          }
-        })
-      }
-    },*/
     parallel: true,
     cache: true,
     hardSource: true
@@ -131,45 +115,12 @@ export default {
   tailwindcss: {
     // add '~tailwind.config` alias - increases bundle size
     exposeConfig: true,
-    config: {
-      theme: {
-        darkSelector: '.dark-mode'
-      },
-      variants: {
-        backgroundColor: [
-          'dark',
-          'dark-hover',
-          'dark-group-hover',
-          'dark-even',
-          'dark-odd',
-          'hover',
-          'group-hover',
-          'even',
-          'odd'
-        ],
-        borderColor: [
-          'dark',
-          'dark-focus',
-          'dark-focus-within',
-          'focus',
-          'focus-within'
-        ],
-        textColor: ['dark', 'dark-hover', 'dark-active', 'hover', 'active']
-      },
-      plugins: [require('tailwindcss-dark-mode')(), tailwindTypography],
-      future: {
-        removeDeprecatedGapUtilities: true
-      }
-    }
+    configPath: '@/tailwind.config.js'
   },
 
   css: ['@/assets/css/inter/inter.css', '@/assets/css/toast/themes/sugar/index.scss'],
 
-  plugins: ['@/plugins/toast.client.js'],
-
-  purgeCSS: {
-    whitelist: ['dark-mode']
-  },
+  plugins: ['@/plugins/toast.client.js', '@/plugins/theme.client.js', '@/plugins/theme.server.js'],
 
   optimizedImages: {
     optimizeImages: true
@@ -213,7 +164,7 @@ export default {
     },
     clientConfigs: {
       default: {
-        httpEndpoint: `http://api:4000/graphql`,
+        httpEndpoint: 'http://api:4000/graphql',
         browserHttpEndpoint:
           process.env.NODE_ENV === 'production'
             ? `${process.env.BASE_URL}/graphql`
@@ -230,9 +181,9 @@ export default {
     redirectSSL.create({
       enabled: process.env.NODE_ENV === 'production'
     })
-  ],
+  ]
 
-  /*router: {
+  /* router: {
     extendRoutes(routes, resolve) {
       routes.push(
         {
@@ -273,5 +224,5 @@ export default {
       )
       sortRoutes(routes)
     }
-  }*/
+  } */
 }

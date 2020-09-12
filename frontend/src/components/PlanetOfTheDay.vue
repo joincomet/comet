@@ -1,30 +1,30 @@
 <template>
   <div
-    class="grid grid-flow-row grid-rows-2 grid-cols-1 sm:grid-rows-1 sm:grid-cols-2"
+    class="grid grid-flow-row grid-cols-1 grid-rows-2 sm:grid-rows-1 sm:grid-cols-2"
   >
     <div
-      class="h-64 w-full flex bg-cover bg-center cursor-pointer"
+      class="flex w-full h-64 bg-center bg-cover cursor-pointer"
       :style="`background-image: linear-gradient( rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75) ), url(${planet.bannerImageUrl});`"
       @click="$router.push(`/p/${planet.name}`)"
     >
-      <div class="m-auto items-center flex flex-col">
-        <div class="mb-4 text-xs text-gray-400 uppercase tracking-widest">
+      <div class="flex flex-col items-center m-auto">
+        <div class="mb-4 text-xs tracking-widest text-gray-400 uppercase">
           Planet of the Day
         </div>
         <img
           v-if="planet.avatarImageUrl"
-          class="h-24 w-24 mb-2 object-cover rounded-full"
+          class="object-cover w-24 h-24 mb-2 rounded-full"
           :src="planet.avatarImageUrl"
           :alt="planet.name"
         >
         <div
           v-else
-          class="h-24 w-24 mb-2"
+          class="w-24 h-24 mb-2"
           :style="`background-color: ${planet.themeColor}`"
         />
         <nuxt-link
           :to="`/p/${planet.name}`"
-          class="text-2xl font-medium mb-1 text-white"
+          class="mb-1 text-2xl font-medium text-white"
         >
           {{ planet.name }}
         </nuxt-link>
@@ -40,23 +40,24 @@
     </div>
 
     <div
-      class="h-64 w-full relative bg-cover bg-center bg-indigo-700 dark:bg-gray-800 cursor-pointer"
+      class="relative w-full h-64 bg-indigo-700 bg-center bg-cover cursor-pointer dark:bg-gray-800"
       :style="
         post.link && post.type === 'IMAGE'
           ? `background-image: url(${post.link});`
           : 'background-image: url()'
       "
-      style="transition: background-image 0.5s ease-in-out"
+      style="transition: background-image 0.5s ease-in-out; z-index: 0"
       @click="$router.push(post.relativeUrl)"
     >
       <div
         v-if="post.link && post.type === 'IMAGE'"
-        class="absolute w-full h-full top-0 rounded-r-lg"
+        class="absolute top-0 w-full h-full rounded-r-lg"
         :style="'background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75));'"
+        style="z-index: -1"
       />
       <div
         class="absolute bottom-0 flex flex-row"
-        style="transform: translateX(-50%); left: 50%"
+        style="transform: translateX(-50%); left: 50%; z-index: 1"
       >
         <div
           v-for="(_, index) in posts"
@@ -73,12 +74,12 @@
           />
         </div>
       </div>
-      <div>
+      <div style="z-index: 2">
         <transition-group name="fade">
           <div v-for="p in posts.filter((po) => po.id === post.id)" :key="p.id">
             <div
               v-show="p.id === post.id"
-              class="items-start flex flex-col p-12"
+              class="flex flex-col items-start p-12"
             >
               <nuxt-link
                 :to="p.relativeUrl"
@@ -86,7 +87,7 @@
               >
                 {{ p.title }}
               </nuxt-link>
-              <div class="text-gray-400 text-sm mt-2">
+              <div class="mt-2 text-sm text-gray-400">
                 {{ p.timeSince }}
               </div>
               <div class="flex flex-row items-center mt-4 text-white">
@@ -95,7 +96,7 @@
                   class="inline-flex flex-row items-center"
                 >
                   <img
-                    class="h-5 w-5 object-cover rounded-full mr-2"
+                    class="object-cover w-5 h-5 mr-2 rounded-full"
                     :src="p.author.profilePicUrl"
                     :alt="p.author.username"
                   >
@@ -104,13 +105,13 @@
 
                 <nuxt-link
                   :to="p.relativeUrl"
-                  class="ml-6 inline-flex flex-row items-center"
+                  class="inline-flex flex-row items-center ml-6"
                 >
                   <Icon class="mr-2" name="comment" />
                   <span>{{ p.commentCount }}</span>
                 </nuxt-link>
 
-                <div class="ml-6 inline-flex flex-row items-center">
+                <div class="inline-flex flex-row items-center ml-6">
                   <Icon class="mr-2" name="rocket" />
                   <span>{{ p.endorsementCount }}</span>
                 </div>
