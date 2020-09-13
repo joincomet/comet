@@ -19,13 +19,16 @@ services:
     env_file:
       - api/.env
       - postgres.env
+      - aws.env
     volumes:
       - ./api:/usr/src
     depends_on:
       - postgres
-      - redis
       - iframely
+      - imageflow
     command: ["yarn", "run", "dev"]
+    networks:
+      - app-network
 
   frontend:
     container_name: frontend
@@ -51,6 +54,8 @@ services:
     depends_on:
       - api
     command: ["yarn", "run", "dev"]
+    networks:
+      - app-network
 
   postgres:
     container_name: postgres
@@ -62,6 +67,8 @@ services:
       - "db-data:/var/lib/postgresql/data"
     ports:
       - "5432:5432"
+    networks:
+      - app-network
 
   redis:
     container_name: redis
@@ -69,6 +76,8 @@ services:
     restart: always
     expose:
       - "6379"
+    networks:
+      - app-network
 
   iframely:
     container_name: iframely
@@ -80,13 +89,23 @@ services:
       - ./iframely/iframely.js:/iframely/config.local.js
     depends_on:
       - redis
+    networks:
+      - app-network
 
   imageflow:
     container_name: imageflow
     build: ./imageflow
     restart: always
+    env_file:
+      - aws.env
     ports:
-      - "8080:80"
+      - "12345:12345"
+    networks:
+      - app-network
 
 volumes:
   db-data:
+
+networks:
+  app-network:
+    driver: bridge

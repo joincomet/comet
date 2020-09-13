@@ -1,4 +1,6 @@
 using Amazon;
+using System.IO;
+using System;
 using Imageflow.Server.Storage.S3;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,8 +15,8 @@ namespace Imageflow.Server.ExampleDocker {
             // Make S3 bucket available at /
             // If you use credentials, do not check them into your repository
             // You can call AddImageflowS3Service multiple times for each unique access key
-            services.AddImageflowS3Service (new S3ServiceOptions ("AKIAJ5NGB6X44CQAWZ7A", "macRMiFw2966NqLaNM4de+QiFuyG4V/xYFXYnyho")
-                .MapPrefix ("/i/", RegionEndpoint.USEast1, "i.cometx.io"));
+            services.AddImageflowS3Service (new S3ServiceOptions (Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"), Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"))
+                .MapPrefix ("/i/", RegionEndpoint.USEast1, Environment.GetEnvironmentVariable("AWS_S3_BUCKET")));
         }
         public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
             if (env.IsDevelopment ()) {
@@ -22,18 +24,16 @@ namespace Imageflow.Server.ExampleDocker {
             }
 
             app.UseImageflow (new ImageflowMiddlewareOptions ()
-                .SetMapWebRoot (true)
-                .SetDefaultCacheControlString("public, max-age=2592000")
-            );
+                .SetDefaultCacheControlString("public, max-age=2592000"));
 
             app.UseRouting ();
 
-            app.UseEndpoints (endpoints => {
+            /* app.UseEndpoints (endpoints => {
                 endpoints.MapGet ("/", context => {
                     context.Response.Redirect("https://www.cometx.io");
                     return Task.FromResult(0);
                 });
-            });
+            }); */
         }
     }
 }

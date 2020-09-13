@@ -1,6 +1,7 @@
 .idea
 .vscode
 postgres.env
+aws.env
 dump.sql
 
 */.env
