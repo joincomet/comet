@@ -100,7 +100,7 @@ export default {
     '@nuxtjs/eslint-module'
   ],
 
-  modules: ['@nuxtjs/axios', '@nuxtjs/apollo', '@nuxtjs/device', '@nuxt/content'],
+  modules: ['@nuxtjs/apollo', '@nuxtjs/device', '@nuxt/content'],
 
   eslint: {
     cache: true
@@ -148,15 +148,6 @@ export default {
     }
   },
 
-  axios: {
-    progress: false,
-    baseURL: 'http://api:4000',
-    browserBaseURL:
-      process.env.NODE_ENV === 'production'
-        ? process.env.BASE_URL
-        : 'http://localhost:4000'
-  },
-
   apollo: {
     cookieAttributes: {
       expires: 7,
@@ -167,7 +158,7 @@ export default {
         httpEndpoint: 'http://api:4000/graphql',
         browserHttpEndpoint:
           process.env.NODE_ENV === 'production'
-            ? `${process.env.BASE_URL}/graphql`
+            ? '/graphql'
             : 'http://localhost:4000/graphql',
         httpLinkOptions: {
           credentials: 'same-origin'

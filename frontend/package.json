@@ -18,7 +18,6 @@
   "dependencies": {
     "@nuxt/content": "^1.8.1",
     "@nuxtjs/apollo": "^4.0.1-rc.3",
-    "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/device": "^1.2.7",
     "@nuxtjs/pwa": "^3.0.2",
     "@popperjs/core": "^2.4.4",
