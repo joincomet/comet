@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:14
 
 ARG PACKAGE_PATH
 ARG WORKING_DIR
@@ -8,12 +8,8 @@ WORKDIR ${WORKING_DIR}
 COPY ${PACKAGE_PATH}/package.json ${WORKING_DIR}
 COPY ${PACKAGE_PATH}/yarn.lock ${WORKING_DIR}
 
-RUN npm install --global --force yarn
-
 RUN yarn
 
 COPY ${PACKAGE_PATH} ${WORKING_DIR}
 
 VOLUME $WORKING_DIR/node_modules
-
-WORKDIR /

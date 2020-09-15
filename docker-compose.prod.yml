@@ -5,8 +5,11 @@ services:
     environment:
       - NODE_ENV=production
     command:
-      - "yarn run tsc"
-      - "yarn run start"
+      - /bin/bash
+      - -c
+      - |
+      - yarn run build
+      - yarn run start
 
   frontend:
     environment:
@@ -14,8 +17,11 @@ services:
       - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
     command:
-      - "yarn run build"
-      - "yarn run start"
+      - /bin/bash
+      - -c
+      - |
+      - yarn run build
+      - yarn run start
   
   nginx:
     image: nginx:alpine
