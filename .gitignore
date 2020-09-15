@@ -14,5 +14,6 @@ frontend/src/static/sw.js
 frontend/.nuxt
 frontend/tailwind.css
 
-
 imageflow/packages-microsoft-prod.deb
+imageflow/bin
+imageflow/obj

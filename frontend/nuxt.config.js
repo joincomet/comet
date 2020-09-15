@@ -1,5 +1,4 @@
-import redirectSSL from 'redirect-ssl'
-import { sortRoutes } from '@nuxt/utils'
+// import { sortRoutes } from '@nuxt/utils'
 
 export default {
   mode: 'universal',
@@ -166,13 +165,7 @@ export default {
         wsEndpoint: null
       }
     }
-  },
-
-  serverMiddleware: [
-    redirectSSL.create({
-      enabled: process.env.NODE_ENV === 'production'
-    })
-  ]
+  }
 
   /* router: {
     extendRoutes(routes, resolve) {

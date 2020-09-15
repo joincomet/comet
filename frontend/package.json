@@ -26,7 +26,6 @@
     "email-validator": "^2.0.4",
     "graphql-tag": "^2.11.0",
     "nuxt": "^2.14.4",
-    "redirect-ssl": "^2.0.0",
     "tailwindcss-dark-mode": "^1.1.6",
     "tiptap": "^1.29.6",
     "tiptap-extensions": "^1.32.7",

@@ -7783,11 +7783,6 @@ is-hexadecimal@^1.0.0:
   resolved "https://registry.yarnpkg.com/is-hexadecimal/-/is-hexadecimal-1.0.4.tgz#cc35c97588da4bd49a8eedd6bc4082d44dcb23a7"
   integrity sha512-gyPJuv83bHMpocVYoqof5VDiZveEoGoFL8m3BXNb2VW8Xs+rz9kqO8LOQ5DH6EsuvilT1ApazU0pyl+ytbPtlw==
 
-is-https@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/is-https/-/is-https-2.0.2.tgz#7009d303c72580f15897d5c063d6b6bc1f838fef"
-  integrity sha512-UfUCKVQH/6PQRCh5Qk9vNu4feLZiFmV/gr8DjbtJD0IrCRIDTA6E+d/AVFGPulI5tqK5W45fYbn1Nir1O99rFw==
-
 is-installed-globally@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/is-installed-globally/-/is-installed-globally-0.1.0.tgz#0dfd98f5a9111716dd535dda6492f67bf3d25a80"
@@ -11269,13 +11264,6 @@ redeyed@~2.1.0:
   integrity sha1-iYS1gV2ZyyIEacme7v/jiRPmzAs=
   dependencies:
     esprima "~4.0.0"
-
-redirect-ssl@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/redirect-ssl/-/redirect-ssl-2.0.0.tgz#0d70f0adeab2de6f01f4adc4da4f55775a29b6cf"
-  integrity sha512-+6hV0ltd6rnBZmHaKtct7siAm1hvwf0F2nTDQHXOkJyt78d6X4Smiyuni/TsXnNsBrpuOQ6vRSvFC+/4VvMylA==
-  dependencies:
-    is-https "^2.0.0"
 
 reduce-css-calc@^2.1.6:
   version "2.1.7"
