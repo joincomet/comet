@@ -1,5 +1,6 @@
 .idea
 .vscode
+ssl
 postgres.env
 aws.env
 dump.sql

@@ -10,6 +10,8 @@ WORKDIR ${WORKING_DIR}
 COPY ${PACKAGE_PATH}/package.json ${WORKING_DIR}
 COPY ${PACKAGE_PATH}/yarn.lock ${WORKING_DIR}
 
+RUN npm install --global --force yarn
+
 RUN yarn
 
 COPY ${PACKAGE_PATH} ${WORKING_DIR}
