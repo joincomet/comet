@@ -1,6 +1,5 @@
 .idea
 .vscode
-ssl
 postgres.env
 aws.env
 dump.sql
@@ -18,3 +17,6 @@ frontend/tailwind.css
 imageflow/packages-microsoft-prod.deb
 imageflow/bin
 imageflow/obj
+
+ssl/cert.pem
+ssl/key.pem

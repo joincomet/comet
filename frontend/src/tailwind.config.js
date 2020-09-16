@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   dark: 'class',
   experimental: 'all',
@@ -12,7 +14,7 @@ module.exports = {
     content (defaultContents) {
       return defaultContents
         .concat(['content/**/*.md'])
-        .map(path => join('src/', path))
+        .map(p => path.join('src/', p))
     }
   }
 }
