@@ -5,7 +5,7 @@ services:
     container_name: api
     build:
       context: ./api
-      dockerfile: api/Dockerfile.dev
+      dockerfile: Dockerfile.dev
     restart: always
     expose:
       - "4000"
@@ -28,7 +28,7 @@ services:
     container_name: frontend
     build:
       context: ./frontend
-      dockerfile: frontend/Dockerfile.dev
+      dockerfile: Dockerfile.dev
     restart: always
     expose:
       - "3000"
