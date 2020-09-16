@@ -9,8 +9,10 @@ module.exports = {
     require('@tailwindcss/typography')
   ],
   purge: {
-    content: [
-      'content/**/*.md'
-    ]
+    content (defaultContents) {
+      return defaultContents
+        .concat(['content/**/*.md'])
+        .map(path => path.join('src/', path))
+    }
   }
 }
