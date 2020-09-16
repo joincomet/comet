@@ -1,0 +1,37 @@
+FROM node:14 as base
+
+RUN apt update -y && apt install -y libglu1
+
+RUN npm install --global --force yarn
+
+FROM base as builder
+
+# Set up working dir and perms
+RUN mkdir /app && chown node:node /app
+WORKDIR /app
+
+# Don't need root any more
+USER node
+
+# Install app dependencies
+COPY --chown=node package.json yarn.lock /app/
+RUN yarn
+
+# Copy source code
+COPY --chown=node . /app/
+
+RUN yarn run build
+
+FROM base as runtime
+
+USER node
+
+# Enable Yarn cache volume for local development
+RUN mkdir -p /home/node/.cache/yarn
+
+# Copy app
+COPY --from=builder /app /app
+
+WORKDIR /app
+
+CMD yarn run start

@@ -4,11 +4,8 @@ services:
   api:
     container_name: api
     build:
-      context: .
-      dockerfile: api/Dockerfile
-      args:
-        PACKAGE_PATH: api
-        WORKING_DIR: /usr/src/
+      context: ./api
+      dockerfile: api/Dockerfile.dev
     restart: always
     expose:
       - "4000"
@@ -26,17 +23,12 @@ services:
       - postgres
       - iframely
       - imageflow
-    command:
-      - "yarn run dev"
 
   frontend:
     container_name: frontend
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
-      args:
-        PACKAGE_PATH: frontend
-        WORKING_DIR: /usr/src/
+      context: ./frontend
+      dockerfile: frontend/Dockerfile.dev
     restart: always
     expose:
       - "3000"
@@ -52,8 +44,6 @@ services:
       - ./frontend:/usr/src
     depends_on:
       - api
-    command:
-      - "yarn run dev"
 
   postgres:
     container_name: postgres

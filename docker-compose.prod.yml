@@ -2,26 +2,20 @@ version: '3.8'
 
 services:
   api:
+    build:
+      context: ./api
+      dockerfile: api/Dockerfile.prod
     environment:
       - NODE_ENV=production
-    command:
-      - /bin/bash
-      - -c
-      - |
-      - yarn run build
-      - yarn run start
 
   frontend:
+    build:
+      context: ./frontend
+      dockerfile: frontend/Dockerfile.prod
     environment:
       - NODE_ENV=production
       - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
-    command:
-      - /bin/bash
-      - -c
-      - |
-      - yarn run build
-      - yarn run start
   
   nginx:
     image: nginx:alpine
