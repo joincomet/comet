@@ -12,7 +12,7 @@ module.exports = {
     content (defaultContents) {
       return defaultContents
         .concat(['content/**/*.md'])
-        .map(path => path.join('src/', path))
+        .map(path => join('src/', path))
     }
   }
 }
