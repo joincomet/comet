@@ -2,23 +2,23 @@
   <div class="px-24 py-6">
     <PlanetOfTheDay :planet="planetOfTheDay" :posts="topDiscussions" />
 
-    <div class="text-xl font-bold my-6">
+    <div class="my-6 text-xl font-bold">
       Ongoing Discussions
     </div>
     <div
-      class="grid gap-4 grid-rows-4 sm:grid-rows-1 grid-cols-1 sm:grid-cols-4"
+      class="grid grid-cols-1 grid-rows-4 gap-4 sm:grid-rows-1 sm:grid-cols-4"
     >
       <Post v-for="post in topDiscussions" :key="post.id" :post="post" />
     </div>
-    <div class="mt-6 grid grid-cols-3 grid-rows-1 gap-12 min-h-0 min-w-0">
-      <div class="col-span-3 sm:col-span-2 overflow-hidden min-w-0">
-        <div class="text-xl font-bold mb-6">
+    <div class="grid min-w-0 min-h-0 grid-cols-3 grid-rows-1 gap-12 mt-6">
+      <div class="min-w-0 col-span-3 overflow-hidden sm:col-span-2">
+        <div class="mb-6 text-xl font-bold">
           Your Feed
         </div>
         <article v-for="post in feed" :key="post.id">
-          <div class="pb-8" style="content-visibility: auto">
+          <div class="pb-8">
             <div class="flex flex-row cursor-pointer">
-              <div class="flex flex-col items-center justify-start mr-4 pt-1 text-secondary text-xs">
+              <div class="flex flex-col items-center justify-start pt-1 mr-4 text-xs text-secondary">
                 <Icon class="text-indigo-500" name="comment" />
                 <span class="text-indigo-500">{{ post.commentCount }}</span>
                 <Icon name="rocket" class="mt-4" />
@@ -30,15 +30,15 @@
                 </nuxt-link>
                 <div
                   v-if="post.textContent"
-                  class="text-secondary text-sm line-clamp-2 mt-1"
+                  class="mt-1 text-sm text-secondary line-clamp-2"
                   v-html="post.textContent"
                 />
-                <PostAuthor class="text-sm text-secondary pt-3" :post="post" />
+                <PostAuthor class="pt-3 text-sm text-secondary" :post="post" />
               </div>
-              <div class="ml-auto pl-4">
-                <div class="h-20 sm:h-24 w-20 sm:w-24">
-                  <div v-if="post.type === 'IMAGE'" class="bg-cover flex flex-grow h-20 sm:h-24" :style="`background-image: url(${post.link})`" />
-                  <div v-else class="flex flex-grow bg-gray-200 dark:bg-gray-800 h-20 sm:h-24">
+              <div class="pl-4 ml-auto">
+                <div class="w-20 h-20 sm:h-24 sm:w-24">
+                  <div v-if="post.type === 'IMAGE'" class="flex flex-grow h-20 bg-cover sm:h-24" :style="`background-image: url(${post.link})`" />
+                  <div v-else class="flex flex-grow h-20 bg-gray-200 dark:bg-gray-800 sm:h-24">
                     <div class="m-auto text-gray-400 dark:text-gray-700">
                       <Icon v-if="post.type === 'TEXT'" size="48" name="text" />
                       <Icon v-else-if="post.type === 'LINK' || post.type === 'IMAGE'" size="48" name="text" />
@@ -52,7 +52,7 @@
       </div>
       <div class="hidden sm:block sm:col-span-1">
         <div class="sticky top-0" style="top: 5.5rem">
-          <div class="text-xl font-bold mb-6">
+          <div class="mb-6 text-xl font-bold">
             Popular Planets
           </div>
         </div>
