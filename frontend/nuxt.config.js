@@ -157,7 +157,7 @@ export default {
         httpEndpoint: 'http://api:4000/graphql',
         browserHttpEndpoint:
           process.env.NODE_ENV === 'production'
-            ? '/graphql'
+            ? 'https://api.cometx.io/graphql'
             : 'http://localhost:4000/graphql',
         httpLinkOptions: {
           credentials: 'same-origin'
