@@ -1,0 +1,23 @@
+api:
+  ports:
+    - "4000:4000"
+
+frontend:
+  ports:
+    - "3000:3000"
+
+postgres:
+  ports:
+    - "5432:5432"
+
+redis:
+  ports:
+    - "6379:6379"
+
+iframely:
+  ports:
+    - "8061:8061"
+
+imageflow:
+  ports:
+    - "12345:12345"
