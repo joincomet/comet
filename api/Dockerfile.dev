@@ -20,13 +20,15 @@ COPY --chown=node . /app/
 
 FROM base as runtime
 
-USER node
-
 # Enable Yarn cache volume for local development
 RUN mkdir -p /home/node/.cache/yarn
 
 # Copy app
 COPY --from=builder /app /app
+
+RUN chown node:node /app && chown node:node /home/node/.cache/yarn
+
+USER node
 
 WORKDIR /app
 

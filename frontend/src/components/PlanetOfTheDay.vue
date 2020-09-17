@@ -5,7 +5,7 @@
     <div
       class="flex w-full h-64 bg-center bg-cover cursor-pointer"
       :style="`background-image: linear-gradient( rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75) ), url(${planet.bannerImageUrl});`"
-      @click="$router.push(`/p/${planet.name}`)"
+      @click="$router.push(`/+${planet.name}`)"
     >
       <div class="flex flex-col items-center m-auto">
         <div class="mb-4 text-xs tracking-widest text-gray-400 uppercase">
@@ -23,7 +23,7 @@
           :style="`background-color: ${planet.themeColor}`"
         />
         <nuxt-link
-          :to="`/p/${planet.name}`"
+          :to="`/+${planet.name}`"
           class="mb-1 text-2xl font-medium text-white"
         >
           {{ planet.name }}

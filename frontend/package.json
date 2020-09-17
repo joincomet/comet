@@ -26,6 +26,7 @@
     "email-validator": "^2.0.4",
     "graphql-tag": "^2.11.0",
     "nuxt": "^2.14.4",
+    "nuxt-matomo": "^1.2.3",
     "tailwindcss-dark-mode": "^1.1.6",
     "tiptap": "^1.29.6",
     "tiptap-extensions": "^1.32.7",
@@ -44,7 +45,7 @@
     "imagemin-pngquant": "^9.0.0",
     "node-sass": "^4.14.1",
     "sass-loader": "^10.0.2",
-    "tailwindcss": "^1.8.6",
+    "tailwindcss": "^1.8.10",
     "webp-loader": "^0.6.0"
   }
 }

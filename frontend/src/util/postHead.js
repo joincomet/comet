@@ -60,7 +60,7 @@ export const postHead = (post) => {
         {
           hid: 'og:site_name',
           property: 'og:site_name',
-          content: `cometx.io/p/${post.planet.name}`
+          content: `cometx.io/+${post.planet.name}`
         },
         {
           hid: 'twitter:card',

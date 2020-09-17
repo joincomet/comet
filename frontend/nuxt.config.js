@@ -99,7 +99,12 @@ export default {
     '@nuxtjs/eslint-module'
   ],
 
-  modules: ['@nuxtjs/apollo', '@nuxtjs/device', '@nuxt/content'],
+  modules: [
+    '@nuxtjs/apollo',
+    '@nuxtjs/device',
+    '@nuxt/content'
+    // ['nuxt-matomo', { matomoUrl: 'https://analytics.cometx.io/', siteId: 1 }]
+  ],
 
   eslint: {
     cache: true

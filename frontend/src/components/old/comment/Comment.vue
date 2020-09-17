@@ -33,7 +33,7 @@
           <div v-if="showPostTitle" class="mb-1">
             <nuxt-link
               event=""
-              :to="`/p/${post.planet.name}/comments/${post.id}/${postUrlName}`"
+              :to="`/+${post.planet.name}/comments/${post.id}/${postUrlName}`"
               class="font-weight-medium text--secondary"
               style="font-size: 0.86rem"
             >
@@ -227,9 +227,9 @@ import { isEditorEmpty } from '@/util/isEditorEmpty'
 import AnimatedRocket from '@/components/old/AnimatedRocket'
 import commentMixin from '@/mixins/commentMixin'
 import CommentOptions from '@/components/old/comment/options/CommentOptions'
-import TextContent from '../TextContent'
 import deleteCommentGql from '@/gql/deleteComment.graphql'
 import toggleCommentEndorsementGql from '@/gql/toggleCommentEndorsement.graphql'
+import TextContent from '../TextContent'
 import UsernameMenu from '../user/UsernameMenu'
 
 export default {

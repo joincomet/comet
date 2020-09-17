@@ -23,12 +23,12 @@ export const planetHead = (planet) => {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: `https://www.cometx.io/p/${planet.name}`
+          content: `https://www.cometx.io/+${planet.name}`
         },
         {
           hid: 'og:site_name',
           property: 'og:site_name',
-          content: `cometx.io/p/${planet.name}`
+          content: `cometx.io/+${planet.name}`
         },
         {
           hid: 'twitter:card',
@@ -60,7 +60,7 @@ export const planetHead = (planet) => {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: `https://www.cometx.io/p/${planet.name}`
+          content: `https://www.cometx.io/+${planet.name}`
         }
       ]
     }

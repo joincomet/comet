@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   api:
@@ -16,10 +16,10 @@ services:
       - NODE_ENV=production
       - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
-  
+
   nginx:
-    image: nginx:alpine
     container_name: nginx
+    image: nginx:alpine
     restart: always
     ports:
       - "80:80"
@@ -27,5 +27,35 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - ./ssl:/etc/ssl
-    depends_on: 
+    depends_on:
       - frontend
+
+  matomo:
+    container_name: matomo
+    image: matomo:fpm-alpine
+    restart: always
+    expose:
+      - "9000"
+    depends_on:
+      - mariadb
+    volumes:
+      - matomo:/var/www/html
+    environment:
+      - MATOMO_DATABASE_HOST=db
+    env_file:
+      - matomo.env
+
+  mariadb:
+    image: mariadb
+    command: --max-allowed-packet=64MB
+    restart: always
+    volumes:
+      - matomo-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+    env_file:
+      - matomo.env
+
+volumes:
+  matomo-data:
+  matomo:

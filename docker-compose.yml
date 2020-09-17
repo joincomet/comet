@@ -9,8 +9,6 @@ services:
     restart: always
     expose:
       - "4000"
-    ports:
-      - "4000:4000"
     environment:
       - NODE_ENV=development
     env_file:
@@ -29,19 +27,16 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
+    volumes: 
+      - /app/node_modules
+      - ./frontend:/app
     restart: always
     expose:
       - "3000"
-    ports:
-      - "3000:3000"
     environment:
       - NODE_ENV=development
       - NODE_PATH=/usr/src/
       - HOST=0.0.0.0
-    env_file:
-      - frontend/.env
-    volumes:
-      - ./frontend:/usr/src
     depends_on:
       - api
 
@@ -53,8 +48,8 @@ services:
       - postgres.env
     volumes:
       - "db-data:/var/lib/postgresql/data"
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
 
   redis:
     container_name: redis
