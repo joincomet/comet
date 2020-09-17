@@ -9,6 +9,8 @@ services:
     restart: always
     expose:
       - "4000"
+    ports:
+      - "4000:4000"
     environment:
       - NODE_ENV=development
     env_file:
@@ -36,6 +38,8 @@ services:
     restart: always
     expose:
       - "3000"
+    ports:
+      - "3000:3000"
     environment:
       - NODE_ENV=development
       - NODE_PATH=/usr/src/
@@ -53,6 +57,8 @@ services:
       - "db-data:/var/lib/postgresql/data"
     expose:
       - "5432"
+    ports:
+      - "5432:5432"
 
   redis:
     container_name: redis
@@ -60,6 +66,8 @@ services:
     restart: always
     expose:
       - "6379"
+    ports:
+      - "6379:6379"
 
   iframely:
     container_name: iframely
@@ -67,6 +75,8 @@ services:
     restart: always
     expose:
       - "8061"
+    ports:
+      - "8061:8061"
     volumes:
       - ./iframely/iframely.config.js:/iframely/config.local.js
     depends_on:
@@ -78,6 +88,8 @@ services:
     restart: always
     env_file:
       - aws.env
+    expose:
+      - "12345"
     ports:
       - "12345:12345"
 
