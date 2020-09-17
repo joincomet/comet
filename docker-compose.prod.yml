@@ -41,6 +41,7 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - ./ssl:/etc/ssl
+      - matomo:/var/www/html:ro
     depends_on:
       - frontend
     env_file:
@@ -68,6 +69,8 @@ services:
     restart: always
     volumes:
       - matomo-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=matomo
     env_file:
       - matomo.env
 
