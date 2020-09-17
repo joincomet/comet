@@ -30,6 +30,7 @@ services:
       - matomo:/var/www/html:ro
     depends_on:
       - frontend
+      - matomo
     env_file:
       - nginx/.env
 
