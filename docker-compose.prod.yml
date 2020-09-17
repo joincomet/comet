@@ -7,7 +7,7 @@ services:
       dockerfile: ../Dockerfile.prod
     environment:
       - NODE_ENV=production
-    ports:
+    ports: []
 
   frontend:
     build:
@@ -17,19 +17,19 @@ services:
       - NODE_ENV=production
       - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
-    ports:
+    ports: []
   
   postgres:
-    ports:
+    ports: []
   
   redis:
-    ports:
+    ports: []
 
   iframely:
-    ports:
+    ports: []
 
   imageflow:
-    ports:
+    ports: []
 
   nginx:
     container_name: nginx
