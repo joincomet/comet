@@ -2,6 +2,7 @@
 .vscode
 postgres.env
 aws.env
+matomo.env
 dump.sql
 
 */.env
