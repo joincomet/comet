@@ -101,8 +101,8 @@ export default {
   modules: [
     '@nuxtjs/apollo',
     '@nuxtjs/device',
-    '@nuxt/content'
-    // ['nuxt-matomo', { matomoUrl: 'https://analytics.cometx.io/', siteId: 1 }]
+    '@nuxt/content',
+    ['nuxt-matomo', { matomoUrl: 'https://analytics.cometx.io/', siteId: 1 }]
   ],
 
   eslint: {
