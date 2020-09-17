@@ -6,9 +6,8 @@ WORKDIR /app
 
 COPY ./package.json ./
 
-RUN yarn
+RUN yarn && yarn run build
 
 COPY . .
 
-RUN yarn run build
 CMD yarn run start
