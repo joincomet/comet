@@ -61,6 +61,8 @@ services:
       - MATOMO_DATABASE_HOST=mariadb
     env_file:
       - matomo.env
+    expose:
+      - "9000"
 
   mariadb:
     container_name: mariadb
@@ -73,6 +75,8 @@ services:
       - MYSQL_ROOT_PASSWORD=matomo
     env_file:
       - matomo.env
+    expose:
+      - "3306"
 
 volumes:
   matomo-data:
