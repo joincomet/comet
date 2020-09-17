@@ -1,7 +1,7 @@
 <template>
   <header class="fixed inset-x-0 top-0 z-50 flex flex-row items-center flex-grow h-12 px-6 bg-white dark:bg-gray-900">
     <nuxt-link to="/">
-      <Icon class="w-32 text-black dark:text-white" name="comet-logo" />
+      <Icon class="text-black w-36 dark:text-white" name="comet-logo" />
       <!--<img src="~/assets/cometx_optimized.png" class="h-6">-->
     </nuxt-link>
 

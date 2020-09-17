@@ -57,7 +57,7 @@ services:
     volumes:
       - matomo:/var/www/html
     environment:
-      - MATOMO_DATABASE_HOST=db
+      - MATOMO_DATABASE_HOST=mariadb
     env_file:
       - matomo.env
 
