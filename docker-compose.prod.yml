@@ -52,8 +52,6 @@ services:
     restart: always
     volumes:
       - matomo-data:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=
     env_file:
       - matomo.env
 
