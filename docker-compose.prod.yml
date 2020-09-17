@@ -43,6 +43,8 @@ services:
       - ./ssl:/etc/ssl
     depends_on:
       - frontend
+    env_file:
+      - nginx/.env
 
   matomo:
     container_name: matomo
