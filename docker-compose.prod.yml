@@ -46,6 +46,7 @@ services:
       - matomo.env
 
   mariadb:
+    container_name: mariadb
     image: mariadb
     command: --max-allowed-packet=64MB
     restart: always
