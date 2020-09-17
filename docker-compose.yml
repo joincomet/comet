@@ -5,7 +5,7 @@ services:
     container_name: api
     build:
       context: ./api
-      dockerfile: Dockerfile.dev
+      dockerfile: ../Dockerfile.dev
     restart: always
     expose:
       - "4000"
@@ -16,7 +16,9 @@ services:
       - postgres.env
       - aws.env
     volumes:
-      - ./api:/usr/src
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/dist
     depends_on:
       - postgres
       - iframely
@@ -26,10 +28,11 @@ services:
     container_name: frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev
-    volumes: 
-      - /app/node_modules
-      - ./frontend:/app
+      dockerfile: ../Dockerfile.dev
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.nuxt
     restart: always
     expose:
       - "3000"

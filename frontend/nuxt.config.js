@@ -95,7 +95,6 @@ export default {
     '~/modules/theme',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/pwa',
-    '@aceforth/nuxt-optimized-images',
     '@nuxtjs/eslint-module'
   ],
 

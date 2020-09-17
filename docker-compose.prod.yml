@@ -4,14 +4,14 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile.prod
+      dockerfile: ../Dockerfile.prod
     environment:
       - NODE_ENV=production
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod
+      dockerfile: ../Dockerfile.prod
     environment:
       - NODE_ENV=production
       - NODE_PATH=/usr/src/frontend/src

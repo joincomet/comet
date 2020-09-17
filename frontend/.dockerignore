@@ -1,6 +1,2 @@
-tailwind.css
-example.env
-.prettierrc
 node_modules
 .nuxt
-yarn-error.log

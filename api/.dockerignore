@@ -1,5 +1,2 @@
-dist
 node_modules
-.prettierrc.js
-example.env
-yarn-error.log
+dist
