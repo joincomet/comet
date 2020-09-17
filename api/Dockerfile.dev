@@ -2,34 +2,12 @@ FROM node:14 as base
 
 RUN npm install --global --force yarn
 
-FROM base as builder
-
-# Set up working dir and perms
-RUN mkdir /app && chown node:node /app
 WORKDIR /app
 
-# Don't need root any more
-USER node
+COPY ./package.json ./
 
-# Install app dependencies
-COPY --chown=node package.json yarn.lock /app/
 RUN yarn
 
-# Copy source code
-COPY --chown=node . /app/
-
-FROM base as runtime
-
-# Enable Yarn cache volume for local development
-RUN mkdir -p /home/node/.cache/yarn
-
-# Copy app
-COPY --from=builder /app /app
-
-RUN chown node:node /app && chown node:node /home/node/.cache/yarn
-
-USER node
-
-WORKDIR /app
+COPY . .
 
 CMD yarn run dev
