@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="sticky z-50 flex flex-col flex-grow-0 flex-shrink-0 w-56 py-4 mt-12 overflow-y-auto"
+    class="sticky z-50 flex flex-col flex-grow-0 flex-shrink-0 w-56 py-4 mt-12 overflow-y-auto bg-white border-r myborder dark:bg-gray-900"
     style="height: calc(100vh - 3rem); top: 3rem"
   >
     <nuxt-link to="/" class="navitem">
@@ -48,7 +48,6 @@ export default {
 
 <style scoped>
 .navitem {
-  z-index: 200;
   @apply mr-3 flex flex-row items-center py-3 px-6 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 transform hover:scale-110 transition duration-150 ease-in-out rounded-r-full;
 }
 </style>

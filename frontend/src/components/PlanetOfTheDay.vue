@@ -3,7 +3,7 @@
     class="grid grid-flow-row grid-cols-1 grid-rows-2 sm:grid-rows-1 sm:grid-cols-2"
   >
     <div
-      class="flex w-full h-64 bg-center bg-cover cursor-pointer"
+      class="flex w-full h-48 bg-center bg-cover rounded-l-lg cursor-pointer"
       :style="`background-image: linear-gradient( rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75) ), url(${planet.bannerImageUrl});`"
       @click="$router.push(`/+${planet.name}`)"
     >
@@ -13,7 +13,7 @@
         </div>
         <img
           v-if="planet.avatarImageUrl"
-          class="object-cover w-24 h-24 mb-2 rounded-full"
+          class="object-cover w-20 h-20 mb-2 rounded-full"
           :src="planet.avatarImageUrl"
           :alt="planet.name"
         >
@@ -24,11 +24,11 @@
         />
         <nuxt-link
           :to="`/+${planet.name}`"
-          class="mb-1 text-2xl font-medium text-white"
+          class="mb-1 text-xl font-medium text-white"
         >
           {{ planet.name }}
         </nuxt-link>
-        <div class="text-base text-gray-400">
+        <div class="text-sm text-gray-400">
           {{ planet.userCount }} User{{
             planet.userCount === 1 ? '' : 's'
           }}
@@ -40,7 +40,7 @@
     </div>
 
     <div
-      class="relative w-full h-64 bg-indigo-700 bg-center bg-cover cursor-pointer dark:bg-gray-800"
+      class="relative w-full h-48 bg-indigo-700 bg-center bg-cover rounded-r-lg cursor-pointer dark:bg-gray-800"
       :style="
         post.link && post.type === 'IMAGE'
           ? `background-image: url(${post.link});`

@@ -4,5 +4,6 @@ query popularPlanets($galaxyName: ID) {
     postCount
     avatarImageUrl
     themeColor
+    userCount
   }
 }

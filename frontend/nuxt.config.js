@@ -1,7 +1,6 @@
 // import { sortRoutes } from '@nuxt/utils'
 
 export default {
-  mode: 'universal',
   srcDir: 'src/',
 
   head: {
@@ -124,10 +123,6 @@ export default {
   css: ['@/assets/css/inter/inter.css', '@/assets/css/toast/themes/sugar/index.scss'],
 
   plugins: ['@/plugins/toast.client.js', '@/plugins/theme.client.js', '@/plugins/theme.server.js'],
-
-  optimizedImages: {
-    optimizeImages: true
-  },
 
   pwa: {
     manifest: {

@@ -206,6 +206,7 @@ export class PlanetResolver extends RepositoryInjector {
       .groupBy('planet.name')
       .orderBy('planet_total', 'DESC')
       .take(5)
+      .loadRelationCountAndMap('planet.userCount', 'planet.users')
 
     if (galaxyName) {
       qb.where('planet.galaxy = :galaxyName', { galaxyName })
