@@ -314,8 +314,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd cometx
-            echo -e $ENV > .env
-            echo -e $SSL_CERT > cert.pem
-            echo -e $SSL_KEY > key.pem
+            echo -e "$ENV" > .env
+            echo -e "$SSL_CERT" > cert.pem
+            echo -e "$SSL_KEY" > key.pem
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull --quiet
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
