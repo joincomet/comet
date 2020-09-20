@@ -304,16 +304,18 @@ jobs:
       - name: Docker-Compose Up
         uses: appleboy/ssh-action@master
         env:
+          ENV: ${{ secrets.ENV }}
           SSL_CERT: ${{ secrets.SSL_CERT }}
           SSL_KEY: ${{ secrets.SSL_KEY }}
         with:
-          envs: SSL_CERT,SSL_KEY
+          envs: ENV,SSL_CERT,SSL_KEY
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
             cd cometx
+            echo $ENV > .env
             echo $SSL_CERT > cert.pem
             echo $SSL_KEY > key.pem
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
