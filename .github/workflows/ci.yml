@@ -297,7 +297,8 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           port: ${{ secrets.PORT }}
           source: "docker-compose.yml,docker-compose.prod.yml,iframely.config.js,nginx.conf,cloudflare.crt"
           target: "cometx"
@@ -311,7 +312,8 @@ jobs:
           envs: ENV,SSL_CERT,SSL_KEY
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           port: ${{ secrets.PORT }}
           script: |
             cd cometx
