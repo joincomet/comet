@@ -1,14 +1,11 @@
 name: ci
 
 on:
-  schedule:
-    - cron: "0 10 * * *" # everyday at 10am
   push:
     branches:
       - "**"
     tags:
       - "v*.*.*"
-  pull_request:
 
 jobs:
   frontend:
@@ -317,8 +314,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd cometx
-            echo $ENV > .env
-            echo $SSL_CERT > cert.pem
-            echo $SSL_KEY > key.pem
-            docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            echo -e $ENV > .env
+            echo -e $SSL_CERT > cert.pem
+            echo -e $SSL_KEY > key.pem
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull --quiet
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
