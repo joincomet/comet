@@ -11,7 +11,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./api:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/dist
     depends_on:
@@ -22,7 +21,6 @@ services:
   frontend:
     container_name: frontend
     volumes:
-      - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/.nuxt
     restart: always
