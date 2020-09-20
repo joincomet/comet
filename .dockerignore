@@ -1,6 +1,0 @@
-.git
-*Dockerfile*
-*docker-compose*
-*/node_modules
-*/.yarn
-*/.pnp.js

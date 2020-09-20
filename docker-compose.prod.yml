@@ -26,14 +26,16 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./ssl:/etc/ssl
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./cloudflare.crt:/etc/ssl/cloudflare.crt
+      - ./cert.pem:/etc/ssl/cert.pem
+      - ./key.pem:/etc/ssl/key.pem
       - matomo:/var/www/html:ro
     depends_on:
       - frontend
       - matomo
     env_file:
-      - nginx/.env
+      - .env
 
   matomo:
     container_name: matomo
@@ -48,7 +50,7 @@ services:
     environment:
       - MATOMO_DATABASE_HOST=mariadb
     env_file:
-      - matomo.env
+      - .env
     expose:
       - "9000"
 
@@ -59,10 +61,8 @@ services:
     restart: always
     volumes:
       - matomo-data:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=matomo
     env_file:
-      - matomo.env
+      - .env
     expose:
       - "3306"
 

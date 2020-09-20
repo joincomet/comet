@@ -29,5 +29,6 @@ services:
       - "8061:8061"
 
   imageflow:
+    build: ./imageflow
     ports:
       - "12345:12345"

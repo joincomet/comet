@@ -9,9 +9,7 @@ services:
     environment:
       - NODE_ENV=development
     env_file:
-      - api/.env
-      - postgres.env
-      - aws.env
+      - .env
     volumes:
       - ./api:/usr/src/app
       - /usr/src/app/node_modules
@@ -41,7 +39,7 @@ services:
     image: "postgres:alpine"
     restart: always
     env_file:
-      - postgres.env
+      - .env
     volumes:
       - "db-data:/var/lib/postgresql/data"
     expose:
@@ -60,16 +58,15 @@ services:
     expose:
       - "8061"
     volumes:
-      - ./iframely/iframely.config.js:/iframely/config.local.js
+      - ./iframely.config.js:/iframely/config.local.js
     depends_on:
       - redis
 
   imageflow:
     container_name: imageflow
-    build: ./imageflow
     restart: always
     env_file:
-      - aws.env
+      - .env
     expose:
       - "12345"
 

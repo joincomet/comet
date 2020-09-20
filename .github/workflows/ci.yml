@@ -299,13 +299,21 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          source: "docker-compose.yml,docker-compose.prod.yml"
+          source: "docker-compose.yml,docker-compose.prod.yml,iframely.config.js,nginx.conf,cloudflare.crt"
           target: "cometx"
       - name: Docker-Compose Up
         uses: appleboy/ssh-action@master
+        env:
+          SSL_CERT: ${{ secrets.SSL_CERT }}
+          SSL_KEY: ${{ secrets.SSL_KEY }}
         with:
+          envs: SSL_CERT,SSL_KEY
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: cd cometx && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+          script: |
+            cd cometx
+            echo $SSL_CERT > cert.pem
+            echo $SSL_KEY > key.pem
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d

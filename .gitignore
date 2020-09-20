@@ -1,11 +1,8 @@
 .idea
 .vscode
-postgres.env
-aws.env
-matomo.env
 dump.sql
+.env
 
-*/.env
 */node_modules
 */yarn-error.log
 
