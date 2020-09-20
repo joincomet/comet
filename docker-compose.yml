@@ -3,9 +3,6 @@ version: '3.8'
 services:
   api:
     container_name: api
-    build:
-      context: ./api
-      dockerfile: ../Dockerfile.dev
     restart: always
     expose:
       - "4000"
@@ -26,9 +23,6 @@ services:
 
   frontend:
     container_name: frontend
-    build:
-      context: ./frontend
-      dockerfile: ../Dockerfile.dev
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
@@ -38,7 +32,6 @@ services:
       - "3000"
     environment:
       - NODE_ENV=development
-      - NODE_PATH=/usr/src/
       - HOST=0.0.0.0
     depends_on:
       - api
@@ -63,7 +56,6 @@ services:
 
   iframely:
     container_name: iframely
-    build: "https://github.com/itteco/iframely.git"
     restart: always
     expose:
       - "8061"

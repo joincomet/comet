@@ -2,10 +2,16 @@ version: "3.8"
 
 services:
   api:
+    build:
+      context: ./api
+      dockerfile: ../Dockerfile.dev
     ports:
       - "4000:4000"
 
   frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../Dockerfile.dev
     ports:
       - "3000:3000"
 
@@ -18,6 +24,7 @@ services:
       - "6379:6379"
 
   iframely:
+    build: "https://github.com/itteco/iframely.git"
     ports:
       - "8061:8061"
 

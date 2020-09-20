@@ -2,28 +2,21 @@ version: "3.8"
 
 services:
   api:
-    image: cometxbuilds/api:latest
-    build:
-      context: ./api
-      dockerfile: ../Dockerfile.prod
+    image: cometxbuilds/api:edge
     environment:
       - NODE_ENV=production
 
   frontend:
-    image: cometxbuilds/frontend:latest
-    build:
-      context: ./frontend
-      dockerfile: ../Dockerfile.prod
+    image: cometxbuilds/frontend:edge
     environment:
       - NODE_ENV=production
-      - NODE_PATH=/usr/src/frontend/src
       - HOST=0.0.0.0
   
   iframely:
-    image: cometxbuilds/iframely:latest
+    image: cometxbuilds/iframely:edge
 
   imageflow:
-    image: cometxbuilds/imageflow:latest
+    image: cometxbuilds/imageflow:edge
   
   nginx:
     container_name: nginx
