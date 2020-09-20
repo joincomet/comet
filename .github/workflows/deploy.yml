@@ -1,3 +1,5 @@
+name: deploy
+
 on:
   workflow_dispatch:
 
@@ -34,4 +36,5 @@ jobs:
             echo $ENV > .env
             echo $SSL_CERT > cert.pem
             echo $SSL_KEY > key.pem
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
