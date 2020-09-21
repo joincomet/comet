@@ -62,7 +62,7 @@ jobs:
         with:
           workflow: Build
           token: ${{ secrets.PAT }}
-          inputs: '{ "image": "nginx", "context": "./nginx", "file": "./nginx/Dockerfile", "build-args": "CERT=\"${{ secrets.SSL_CERT }}\" KEY=\"${{ secrets.SSL_KEY }}\"" }'
+          inputs: '{ "image": "nginx", "context": "./nginx", "file": "./nginx/Dockerfile" }'
 
   deploy:
     needs: [frontend, api, imageflow, iframely-base, iframely, nginx]

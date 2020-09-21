@@ -9,8 +9,6 @@ on:
         required: true
       file:
         required: true
-      build-args:
-        required: false
 
 jobs:
   build:
@@ -60,7 +58,7 @@ jobs:
           password: ${{ secrets.PAT }}
       - uses: docker/build-push-action@v2
         with:
-          build-args: ${{ github.event.inputs.build-args }}
+          build-args: CERT="${{ secrets.SSL_CERT }}" KEY="${{ secrets.SSL_KEY }}"
           context: ${{ github.event.inputs.context }}
           file: ${{ github.event.inputs.file }}
           cache-from: type=local,src=/tmp/.buildx-cache
