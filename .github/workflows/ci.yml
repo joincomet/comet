@@ -329,8 +329,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - if: github.event.inputs.image == 'nginx'
-        run: 'echo -e "$SSL_CERT" > ./nginx/cert.pem && echo -e "$SSL_KEY" > ./nginx/key.pem'
+      - run: 'echo -e "$SSL_CERT" > ./nginx/cert.pem && echo -e "$SSL_KEY" > ./nginx/key.pem'
         shell: bash
         env:
           SSL_CERT: ${{ secrets.SSL_CERT }}
