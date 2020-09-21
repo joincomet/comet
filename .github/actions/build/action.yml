@@ -11,8 +11,6 @@ inputs:
     description: "List of build-time variables"
     required: false
 runs:
-  - name: Checkout
-    uses: actions/checkout@v2
   - name: Prepare
     id: prep
     run: |
