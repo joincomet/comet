@@ -19,6 +19,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/prepare
         id: prep
+        with:
+          image: ${{ github.event.inputs.image }}
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - uses: actions/cache@v2
