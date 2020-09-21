@@ -35,16 +35,19 @@ async function bootstrap() {
   try {
     await TypeORM.createConnection({
       type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT as string),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
+      username: process.env.NODE_ENV === 'production' ? process.env.POSTGRES_USER : 'postgres',
+      password: process.env.NODE_ENV === 'production' ? process.env.POSTGRES_PASSWORD : 'password',
+      host: process.env.NODE_ENV === 'production' ? process.env.POSTGRES_HOST : 'postgres',
+      port: process.env.NODE_ENV === 'production' ? parseInt(process.env.POSTGRES_PORT) : 5432,
+      database: process.env.NODE_ENV === 'production' ? process.env.POSTGRES_DB : 'postgres',
       entities: [__dirname + '/entities/**/*.{ts,js}'],
       synchronize: true,
       logging: true,
       dropSchema: false, // CLEARS DATABASE ON START
-      cache: true
+      cache: true,
+      extra: {
+        ssl: process.env.NODE_ENV === 'production'
+      }
     })
 
     getRepository(Galaxy).save(galaxiesList)

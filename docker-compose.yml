@@ -14,7 +14,6 @@ services:
       - /usr/src/app/node_modules
       - /usr/src/app/dist
     depends_on:
-      - postgres
       - iframely
       - imageflow
 
@@ -31,17 +30,6 @@ services:
       - HOST=0.0.0.0
     depends_on:
       - api
-
-  postgres:
-    container_name: postgres
-    image: "postgres:alpine"
-    restart: always
-    env_file:
-      - .env
-    volumes:
-      - "db-data:/var/lib/postgresql/data"
-    expose:
-      - "5432"
 
   redis:
     container_name: redis
@@ -65,6 +53,3 @@ services:
       - .env
     expose:
       - "12345"
-
-volumes:
-  db-data:

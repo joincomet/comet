@@ -11,6 +11,10 @@ services:
       - ./api:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/dist
+    depends_on:
+      - postgres
+      - iframely
+      - imageflow
 
   frontend:
     build:
@@ -22,10 +26,6 @@ services:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/.nuxt
-
-  postgres:
-    ports:
-      - "5432:5432"
 
   redis:
     ports:
@@ -42,3 +42,19 @@ services:
     build: ./imageflow
     ports:
       - "12345:12345"
+
+  postgres:
+    container_name: postgres
+    image: "postgres:alpine"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+
+volumes:
+  db-data:
