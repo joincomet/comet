@@ -16,10 +16,8 @@ namespace Imageflow.Server.ExampleDocker {
             // Make S3 bucket available at /
             // If you use credentials, do not check them into your repository
             // You can call AddImageflowS3Service multiple times for each unique access key
-            AmazonS3Config config = new AmazonS3Config();
-            config.ServiceURL = "nyc3.digitaloceanspaces.com";
             services.AddImageflowS3Service (new S3ServiceOptions (Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"), Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"))
-                .MapPrefix ("/i/", config, Environment.GetEnvironmentVariable("AWS_S3_BUCKET"), "", false, false));
+                .MapPrefix ("/i/", new AmazonS3Config() {ServiceURL = "nyc3.digitaloceanspaces.com"}, Environment.GetEnvironmentVariable("AWS_S3_BUCKET"), "", false, false));
         }
         public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
             if (env.IsDevelopment ()) {
