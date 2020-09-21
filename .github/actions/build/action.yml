@@ -11,6 +11,7 @@ inputs:
     description: "List of build-time variables"
     required: false
 runs:
+  using: "composite"
   steps:
     - name: Prepare
       id: prep

@@ -1,6 +1,7 @@
 name: "Deploy"
 description: "Deploy Docker images"
 runs:
+  using: "composite"
   steps:
     - name: Copy Docker-Compose files
       uses: appleboy/scp-action@master
