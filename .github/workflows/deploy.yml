@@ -35,6 +35,5 @@ jobs:
           script: |
             cd $REPOSITORY
             echo -e "$ENV" > .env
-            echo $CR_PAT | docker login ghcr.io -u $USERNAME --password stdin
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
