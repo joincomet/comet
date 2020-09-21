@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Imageflow.Server" Version="0.3.7" />
-      <PackageReference Include="Imageflow.Server.Storage.S3" Version="0.3.7" />
+      <PackageReference Include="Imageflow.Server" Version="0.3.9" />
+      <PackageReference Include="Imageflow.Server.Storage.S3" Version="0.3.9" />
     </ItemGroup>
 
 </Project>
