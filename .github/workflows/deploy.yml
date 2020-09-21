@@ -7,4 +7,4 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/deploy
+      - uses: ./.github/actions/deploy.yml

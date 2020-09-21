@@ -11,7 +11,7 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build.yml
         with:
           image: frontend
           context: ./frontend
@@ -20,7 +20,7 @@ jobs:
   api:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build.yml
         with:
           image: api
           context: ./api
@@ -29,7 +29,7 @@ jobs:
   imageflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build.yml
         with:
           image: imageflow
           context: ./imageflow
@@ -38,7 +38,7 @@ jobs:
   iframely-base:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build.yml
         with:
           image: iframely-base
           context: "https://github.com/itteco/iframely.git"
@@ -48,7 +48,7 @@ jobs:
     needs: [iframely-base]
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build.yml
         with:
           image: iframely
           context: ./iframely
@@ -57,7 +57,7 @@ jobs:
   nginx:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build.yml
         with:
           image: nginx
           context: ./nginx
@@ -68,4 +68,4 @@ jobs:
     needs: [frontend, api, imageflow, iframely-base, iframely, nginx]
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/deploy
+      - uses: ./.github/actions/deploy.yml
