@@ -15,6 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - if: github.event.inputs.image == 'nginx'
+        run: 'echo -e "$SSL_CERT" > /etc/ssl/cert.pem && echo -e "$SSL_KEY" > /etc/ssl/key.pem'
+        shell: bash
+        env:
+          SSL_CERT: ${{ secrets.SSL_CERT }}
+          SSL_KEY: ${{ secrets.SSL_KEY }}
       - name: Prepare
         id: prep
         run: |
