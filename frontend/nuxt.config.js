@@ -139,8 +139,6 @@ export default {
       description: "See what's in orbit.",
       theme_color: '#202124',
       favicon: false,
-      viewport:
-        'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover',
       mobileAppIOS: true,
       appleStatusBarStyle: 'black-translucent'
     }

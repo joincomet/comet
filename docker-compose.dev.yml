@@ -35,6 +35,8 @@ services:
     build: "https://github.com/itteco/iframely.git"
     ports:
       - "8061:8061"
+    volumes:
+      - ./iframely.config.js:/iframely/config.local.js
 
   imageflow:
     build: ./imageflow

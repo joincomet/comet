@@ -1,4 +1,4 @@
-name: deploy
+name: "Deploy"
 
 on:
   workflow_dispatch:
@@ -7,34 +7,4 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Copy Docker-Compose files
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          port: ${{ secrets.PORT }}
-          source: "docker-compose.yml,docker-compose.prod.yml,iframely.config.js,nginx.conf,cloudflare.crt"
-          target: "cometx"
-      - name: Docker-Compose Up
-        uses: appleboy/ssh-action@master
-        env:
-          ENV: ${{ secrets.ENV }}
-          SSL_CERT: ${{ secrets.SSL_CERT }}
-          SSL_KEY: ${{ secrets.SSL_KEY }}
-        with:
-          envs: ENV,SSL_CERT,SSL_KEY
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd cometx
-            echo -e "$ENV" > .env
-            echo -e "$SSL_CERT" > cert.pem
-            echo -e "$SSL_KEY" > key.pem
-            docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
-            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+      - uses: ./.github/actions/deploy

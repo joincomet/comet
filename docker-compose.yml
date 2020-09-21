@@ -55,8 +55,6 @@ services:
     restart: always
     expose:
       - "8061"
-    volumes:
-      - ./iframely.config.js:/iframely/config.local.js
     depends_on:
       - redis
 

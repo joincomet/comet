@@ -2,70 +2,30 @@ version: "3.8"
 
 services:
   api:
-    image: cometxbuilds/api:edge
+    image: ghcr.io/comet-app/api:edge
     environment:
       - NODE_ENV=production
 
   frontend:
-    image: cometxbuilds/frontend:edge
+    image: ghcr.io/comet-app/frontend:edge
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
   
   iframely:
-    image: cometxbuilds/iframely:edge
+    image: ghcr.io/comet-app/iframely:edge
 
   imageflow:
-    image: cometxbuilds/imageflow:edge
+    image: ghcr.io/comet-app/imageflow:edge
   
   nginx:
     container_name: nginx
-    image: nginx:alpine
+    image: ghcr.io/comet-app/nginx:edge
     restart: always
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
-      - ./cloudflare.crt:/etc/ssl/cloudflare.crt
-      - ./cert.pem:/etc/ssl/cert.pem
-      - ./key.pem:/etc/ssl/key.pem
-      - matomo:/var/www/html:ro
     depends_on:
       - frontend
-      - matomo
     env_file:
       - .env
-
-  matomo:
-    container_name: matomo
-    image: matomo:fpm-alpine
-    restart: always
-    expose:
-      - "9000"
-    depends_on:
-      - mariadb
-    volumes:
-      - matomo:/var/www/html
-    environment:
-      - MATOMO_DATABASE_HOST=mariadb
-    env_file:
-      - .env
-    expose:
-      - "9000"
-
-  mariadb:
-    container_name: mariadb
-    image: mariadb
-    command: --max-allowed-packet=64MB
-    restart: always
-    volumes:
-      - matomo-data:/var/lib/mysql
-    env_file:
-      - .env
-    expose:
-      - "3306"
-
-volumes:
-  matomo-data:
-  matomo:
