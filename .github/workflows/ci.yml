@@ -62,9 +62,7 @@ jobs:
           image: nginx
           context: ./nginx
           file: ./nginx/Dockerfile
-          build-args:
-            CERT: "${{ secrets.SSL_CERT }}"
-            KEY: "${{ secrets.SSL_KEY }}"
+          build-args: CERT="${{ secrets.SSL_CERT }}" KEY="${{ secrets.SSL_KEY }}"
 
   deploy:
     needs: [frontend, api, imageflow, iframely-base, iframely, nginx]
