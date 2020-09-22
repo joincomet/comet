@@ -22,11 +22,9 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           ENV: ${{ secrets.ENV }}
-          REPOSITORY: ${{ github.event.repository.name }}
-          USERNAME: ${{ github.repository_owner }}
           CR_PAT: ${{ secrets.CR_PAT }}
         with:
-          envs: ENV,REPOSITORY,USERNAME,CR_PAT
+          envs: ENV,CR_PAT
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
