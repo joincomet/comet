@@ -35,14 +35,10 @@ async function bootstrap() {
   try {
     await TypeORM.createConnection({
       type: 'postgres',
-      username: process.env.NODE_ENV === 'production' ? process.env.POSTGRES_USER : 'postgres',
-      password: process.env.NODE_ENV === 'production' ? process.env.POSTGRES_PASSWORD : 'password',
-      host: process.env.NODE_ENV === 'production' ? process.env.POSTGRES_HOST : 'postgres',
-      port: process.env.NODE_ENV === 'production' ? parseInt(process.env.POSTGRES_PORT) : 5432,
-      database: process.env.NODE_ENV === 'production' ? process.env.POSTGRES_DB : 'postgres',
+      url: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'postgresql://postgres:password@postgres:5432/postgres',
       entities: [__dirname + '/entities/**/*.{ts,js}'],
       synchronize: true,
-      logging: true,
+      logging: process.env.NODE_ENV !== 'production',
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true
     })

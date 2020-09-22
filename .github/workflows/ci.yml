@@ -76,6 +76,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: 'echo -e "$DB_CERT" > ./api/dbcert.crt'
+        shell: bash
+        env:
+          DB_CERT: ${{ secrets.DB_CERT }}
       - name: Prepare
         id: prep
         run: |
@@ -120,7 +124,7 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: ./api
-          file: ./Dockerfile.prod
+          file: ./api/Dockerfile.prod
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           push: true
