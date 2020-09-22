@@ -33,5 +33,5 @@ jobs:
           script: |
             cd $REPOSITORY
             echo -e "$ENV" > .env
-            docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull -q
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
