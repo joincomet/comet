@@ -20,6 +20,7 @@ import { CommentSort } from '@/args/UserCommentsArgs'
 import { Galaxy } from '@/entities/Galaxy'
 import { galaxiesList } from '@/galaxiesList'
 import { graphqlUploadExpress } from 'graphql-upload'
+import fs from 'fs'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -41,8 +42,8 @@ async function bootstrap() {
       logging: process.env.NODE_ENV !== 'production',
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
-      extra: {
-        ssl: true
+      ssl: {
+        ca: fs.readFileSync('/usr/local/share/ca-certificates/dbcert.crt').toString()
       }
     })
 
