@@ -2,25 +2,25 @@ version: "3.8"
 
 services:
   api:
-    image: registry.digitalocean.com/comet-app/api:edge
+    image: registry.digitalocean.com/cometx/api:latest
     environment:
       - NODE_ENV=production
 
   frontend:
-    image: registry.digitalocean.com/comet-app/frontend:edge
+    image: registry.digitalocean.com/cometx/frontend:latest
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
   
   iframely:
-    image: registry.digitalocean.com/comet-app/iframely:edge
+    image: registry.digitalocean.com/cometx/iframely:latest
 
   imageflow:
-    image: registry.digitalocean.com/comet-app/imageflow:edge
+    image: registry.digitalocean.com/cometx/imageflow:latest
   
   nginx:
     container_name: nginx
-    image: registry.digitalocean.com/comet-app/nginx:edge
+    image: registry.digitalocean.com/cometx/nginx:latest
     restart: always
     ports:
       - "80:80"

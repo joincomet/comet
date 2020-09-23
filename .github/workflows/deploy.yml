@@ -7,7 +7,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout master
+        uses: actions/checkout@v2
       - name: Copy Docker-Compose files
         uses: appleboy/scp-action@master
         with:
