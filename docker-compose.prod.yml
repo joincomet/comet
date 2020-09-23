@@ -2,25 +2,25 @@ version: "3.8"
 
 services:
   api:
-    image: ghcr.io/comet-app/api:edge
+    image: registry.digitalocean.com/comet-app/api:edge
     environment:
       - NODE_ENV=production
 
   frontend:
-    image: ghcr.io/comet-app/frontend:edge
+    image: registry.digitalocean.com/comet-app/frontend:edge
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
   
   iframely:
-    image: ghcr.io/comet-app/iframely:edge
+    image: registry.digitalocean.com/comet-app/iframely:edge
 
   imageflow:
-    image: ghcr.io/comet-app/imageflow:edge
+    image: registry.digitalocean.com/comet-app/imageflow:edge
   
   nginx:
     container_name: nginx
-    image: ghcr.io/comet-app/nginx:edge
+    image: registry.digitalocean.com/comet-app/nginx:edge
     restart: always
     ports:
       - "80:80"

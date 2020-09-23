@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="2184.8501"
+   inkscape:export-xdpi="2184.8501"
+   inkscape:export-filename="C:\Users\Dan\Desktop\new logo.png"
+   sodipodi:docname="new logo.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg53"
+   version="1.1"
+   viewBox="0 0 47.6106 11.051781"
+   height="11.051781mm"
+   width="47.6106mm">
+  <defs
+     id="defs47" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     fit-margin-bottom="3"
+     fit-margin-right="3"
+     fit-margin-left="3"
+     fit-margin-top="3"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="17.996037"
+     inkscape:cx="65.97754"
+     inkscape:zoom="2.8"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata50">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-53.688365,-60.810439)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <text
+       id="text57"
+       y="68.791664"
+       x="55.940475"
+       style="font-size:7.05556px;line-height:1.25;font-family:'Lexend Peta';-inkscape-font-specification:'Lexend Peta';stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="stroke-width:0.264583"
+         y="68.791664"
+         x="55.940475"
+         id="tspan55"
+         sodipodi:role="line">C  METX<tspan
+   id="tspan59"
+   style="font-size:2.82222px">.io</tspan></tspan></text>
+    <path
+       d="m 65.518876,63.810329 a 2.4814283,2.5259535 0 0 0 -1.593241,0.589756 1.9313004,1.9659544 0 0 1 1.599397,1.936244 1.9313004,1.9659544 0 0 1 -1.599035,1.936612 2.4814283,2.5259535 0 0 0 1.592879,0.589388 2.4814283,2.5259535 0 0 0 2.481474,-2.526 2.4814283,2.5259535 0 0 0 -2.481474,-2.526 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.176742;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path61" />
+    <circle
+       r="1.0428491"
+       cy="66.336327"
+       cx="63.755398"
+       id="path914"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.175177;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+  </g>
+</svg>
