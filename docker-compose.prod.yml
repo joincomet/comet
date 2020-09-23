@@ -3,21 +3,66 @@ version: "3.8"
 services:
   api:
     image: registry.digitalocean.com/cometx/api:latest
+    container_name: api
+    restart: always
+    expose:
+      - "4000"
+    env_file:
+      - .env
+    volumes:
+      - /usr/src/app/node_modules
+      - /usr/src/app/dist
     environment:
       - NODE_ENV=production
       - PGSSLMODE=require
+      - TS_NODE_PROJECT=tsconfig.prod.json
+    depends_on:
+      - iframely
+      - imageflow
+    
 
   frontend:
     image: registry.digitalocean.com/cometx/frontend:latest
+    container_name: frontend
+    restart: always
+    expose:
+      - "3000"
+    env_file: 
+      - .env
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.nuxt
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
+    depends_on:
+      - api
   
+  redis:
+    image: "redis:alpine"
+    container_name: redis
+    restart: always
+    expose:
+      - "6379"
+
   iframely:
     image: registry.digitalocean.com/cometx/iframely:latest
+    container_name: iframely
+    restart: always
+    expose:
+      - "8061"
+    depends_on:
+      - redis
 
   imageflow:
     image: registry.digitalocean.com/cometx/imageflow:latest
+    container_name: imageflow
+    restart: always
+    expose:
+      - "12345"
+    env_file:
+      - .env
   
   nginx:
     container_name: nginx

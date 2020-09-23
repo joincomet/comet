@@ -7,9 +7,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "cross-env TS_NODE_PROJECT=tsconfig.prod.json node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/index.js",
+    "start": "node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/index.js",
     "deploy": "yarn run build && yarn run start",
-    "dev": "cross-env TS_NODE_PROJECT=tsconfig.dev.json ts-node-dev --experimental-specifier-resolution=node --harmony --respawn --no-notify -r tsconfig-paths/register src/index.ts"
+    "dev": "ts-node-dev --experimental-specifier-resolution=node --harmony --respawn --no-notify -r tsconfig-paths/register src/index.ts"
   },
   "main": "dist/index.js",
   "license": "MIT",
@@ -22,7 +22,6 @@
     "@types/shortid": "^0.0.29",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
-    "cross-env": "^7.0.2",
     "eslint": "^7.8.1",
     "prettier": "^2.1.1",
     "ts-node-dev": "^1.0.0-pre.62",

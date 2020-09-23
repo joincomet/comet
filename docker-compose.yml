@@ -1,55 +1,86 @@
-version: '3.8'
+version: "3.8"
 
 services:
   api:
-    container_name: api
-    restart: always
+    build:
+      context: ./api
+      dockerfile: ../Dockerfile.dev
+    ports:
+      - "4000:4000"
     expose:
       - "4000"
-    environment:
-      - NODE_ENV=development
     env_file:
       - .env
     volumes:
+      - ./api:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/dist
     depends_on:
+      - postgres
       - iframely
       - imageflow
-
-  frontend:
-    container_name: frontend
-    volumes:
-      - /usr/src/app/node_modules
-      - /usr/src/app/.nuxt
-    restart: always
-    expose:
-      - "3000"
     environment:
       - NODE_ENV=development
-      - HOST=0.0.0.0
+      - TS_NODE_PROJECT=tsconfig.dev.json
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../Dockerfile.dev
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    env_file: 
+      - .env
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.nuxt
     depends_on:
       - api
 
   redis:
     container_name: redis
     image: "redis:alpine"
-    restart: always
     expose:
       - "6379"
 
   iframely:
+    build: "https://github.com/itteco/iframely.git"
     container_name: iframely
-    restart: always
+    ports:
+      - "8061:8061"
     expose:
       - "8061"
+    volumes:
+      - ./iframely.config.js:/iframely/config.local.js
     depends_on:
       - redis
 
   imageflow:
+    build: ./imageflow
     container_name: imageflow
-    restart: always
-    env_file:
-      - .env
+    ports:
+      - "12345:12345"
     expose:
       - "12345"
+    env_file:
+      - .env
+
+  postgres:
+    container_name: postgres
+    image: "postgres:alpine"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+
+volumes:
+  db-data:
