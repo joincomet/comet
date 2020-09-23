@@ -44,6 +44,7 @@ async function bootstrap() {
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
       ssl: process.env.NODE_ENV === 'production' ? {
+        rejectUnauthorized: false,
         ca: fs.readFileSync(path.resolve(__dirname, '../ca-certificate.crt'), { encoding: 'utf8' })
       } : undefined
     })
