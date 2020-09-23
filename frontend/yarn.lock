@@ -8714,11 +8714,6 @@ number-is-nan@^1.0.0:
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
 
-nuxt-matomo@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/nuxt-matomo/-/nuxt-matomo-1.2.3.tgz#9814b19b8898872d7d4535ac472097bf021e8edc"
-  integrity sha512-jaA8u5XjBi1KJ/MAymzMexNvJO6meoMLMRH4M7AsVpnw4F5Dm+ahsvp2xKaFqtcKtknVi6x/n2IBd8FqVWSXBw==
-
 nuxt@^2.14.4:
   version "2.14.5"
   resolved "https://registry.yarnpkg.com/nuxt/-/nuxt-2.14.5.tgz#d4da8ed7dd03cf199cf3981637377ab1fe682187"

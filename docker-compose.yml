@@ -39,6 +39,9 @@ services:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/.nuxt
+    environment:
+      - NODE_ENV=development
+      - HOST=0.0.0.0
     depends_on:
       - api
 

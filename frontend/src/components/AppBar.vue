@@ -1,8 +1,8 @@
 <template>
-  <header class="fixed inset-x-0 top-0 z-50 flex flex-row items-center flex-grow h-12 px-6 bg-white border-b myborder dark:bg-gray-900">
+  <header class="fixed inset-x-0 top-0 z-50 flex flex-row items-center flex-grow h-12 px-4 bg-white border-b myborder dark:bg-gray-900">
     <nuxt-link to="/">
       <!-- <Icon class="text-black w-36 dark:text-white" name="comet-logo" /> -->
-      <img src="~/assets/newlogo.svg" class="h-6">
+      <img src="~/assets/newlogo.svg" class="h-10">
     </nuxt-link>
 
     <div class="absolute flex flex-row items-center w-1/3 top-1.5" style="left: 50%; transform: translateX(-50%)">
