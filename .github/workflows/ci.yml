@@ -52,7 +52,7 @@ jobs:
       - uses: docker/login-action@v1
         with:
           registry: registry.digitalocean.com
-          username: ${{ github.repository_owner }}
+          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
           password: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
@@ -119,7 +119,7 @@ jobs:
       - uses: docker/login-action@v1
         with:
           registry: registry.digitalocean.com
-          username: ${{ github.repository_owner }}
+          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
           password: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
@@ -182,7 +182,7 @@ jobs:
       - uses: docker/login-action@v1
         with:
           registry: registry.digitalocean.com
-          username: ${{ github.repository_owner }}
+          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
           password: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
@@ -245,7 +245,7 @@ jobs:
       - uses: docker/login-action@v1
         with:
           registry: registry.digitalocean.com
-          username: ${{ github.repository_owner }}
+          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
           password: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
@@ -309,7 +309,7 @@ jobs:
       - uses: docker/login-action@v1
         with:
           registry: registry.digitalocean.com
-          username: ${{ github.repository_owner }}
+          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
           password: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
@@ -377,7 +377,7 @@ jobs:
       - uses: docker/login-action@v1
         with:
           registry: registry.digitalocean.com
-          username: ${{ github.repository_owner }}
+          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
           password: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
