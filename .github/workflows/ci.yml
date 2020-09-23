@@ -12,390 +12,125 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=${{ github.repository_owner }}/frontend
-          VERSION=noop
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            VERSION=nightly
-          elif [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-            if [ "${{ github.event.repository.default_branch }}" = "$VERSION" ]; then
-              VERSION=edge
-            fi
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=pr-${{ github.event.number }}
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            MINOR=${VERSION%.*}
-            MAJOR=${MINOR%.*}
-            TAGS="$TAGS,${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
-          fi
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - uses: actions/cache@v2
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Build container image
+        run: docker build ./frontend -t registry.digitalocean.com/cometx/frontend:latest
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      - uses: docker/login-action@v1
-        with:
-          registry: registry.digitalocean.com
-          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          password: ${{ secrets.DIGITALOCEAN_TOKEN }}
-      - uses: docker/build-push-action@v2
-        with:
-          context: ./frontend
-          file: ./Dockerfile.prod
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          push: true
-          tags: registry.digitalocean.com/${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/cometx/frontend
+
+
 
   api:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: 'echo -e "$DB_CERT" > ./api/dbcert.crt'
-        shell: bash
-        env:
-          DB_CERT: ${{ secrets.DB_CERT }}
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=${{ github.repository_owner }}/api
-          VERSION=noop
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            VERSION=nightly
-          elif [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-            if [ "${{ github.event.repository.default_branch }}" = "$VERSION" ]; then
-              VERSION=edge
-            fi
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=pr-${{ github.event.number }}
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            MINOR=${VERSION%.*}
-            MAJOR=${MINOR%.*}
-            TAGS="$TAGS,${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
-          fi
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      - uses: docker/login-action@v1
-        with:
-          registry: registry.digitalocean.com
-          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          password: ${{ secrets.DIGITALOCEAN_TOKEN }}
-      - uses: docker/build-push-action@v2
-        with:
-          context: ./api
-          file: ./api/Dockerfile.prod
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          push: true
-          tags: registry.digitalocean.com/${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
+      - name: Checkout master
+        uses: actions/checkout@master
 
+      - name: Build container image
+        run: docker build ./api -t registry.digitalocean.com/cometx/api:latest
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/cometx/api
+  
   imageflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=${{ github.repository_owner }}/imageflow
-          VERSION=noop
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            VERSION=nightly
-          elif [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-            if [ "${{ github.event.repository.default_branch }}" = "$VERSION" ]; then
-              VERSION=edge
-            fi
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=pr-${{ github.event.number }}
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            MINOR=${VERSION%.*}
-            MAJOR=${MINOR%.*}
-            TAGS="$TAGS,${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
-          fi
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - uses: actions/cache@v2
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Build container image
+        run: docker build ./imageflow -t registry.digitalocean.com/cometx/imageflow:latest
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      - uses: docker/login-action@v1
-        with:
-          registry: registry.digitalocean.com
-          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          password: ${{ secrets.DIGITALOCEAN_TOKEN }}
-      - uses: docker/build-push-action@v2
-        with:
-          context: ./imageflow
-          file: ./imageflow/Dockerfile
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          push: true
-          tags: registry.digitalocean.com/${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/cometx/api
 
   iframely-base:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=${{ github.repository_owner }}/iframely-base
-          VERSION=noop
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            VERSION=nightly
-          elif [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-            if [ "${{ github.event.repository.default_branch }}" = "$VERSION" ]; then
-              VERSION=edge
-            fi
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=pr-${{ github.event.number }}
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            MINOR=${VERSION%.*}
-            MAJOR=${MINOR%.*}
-            TAGS="$TAGS,${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
-          fi
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - uses: actions/cache@v2
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Build container image
+        run: docker build https://github.com/itteco/iframely.git -t registry.digitalocean.com/cometx/iframely-base:latest
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      - uses: docker/login-action@v1
-        with:
-          registry: registry.digitalocean.com
-          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          password: ${{ secrets.DIGITALOCEAN_TOKEN }}
-      - uses: docker/build-push-action@v2
-        with:
-          context: "https://github.com/itteco/iframely.git"
-          file: Dockerfile
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          push: true
-          tags: registry.digitalocean.com/${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/cometx/iframely-base
 
   iframely:
     needs: [iframely-base]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=${{ github.repository_owner }}/iframely
-          VERSION=noop
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            VERSION=nightly
-          elif [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-            if [ "${{ github.event.repository.default_branch }}" = "$VERSION" ]; then
-              VERSION=edge
-            fi
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=pr-${{ github.event.number }}
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            MINOR=${VERSION%.*}
-            MAJOR=${MINOR%.*}
-            TAGS="$TAGS,${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
-          fi
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - uses: actions/cache@v2
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Build container image
+        run: docker build ./iframely -t registry.digitalocean.com/cometx/iframely:latest
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      - uses: docker/login-action@v1
-        with:
-          registry: registry.digitalocean.com
-          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          password: ${{ secrets.DIGITALOCEAN_TOKEN }}
-      - uses: docker/build-push-action@v2
-        with:
-          context: ./iframely
-          file: ./iframely/Dockerfile
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          push: true
-          tags: registry.digitalocean.com/${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/cometx/iframely
 
   nginx:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: 'echo -e "$SSL_CERT" > ./nginx/cert.pem && echo -e "$SSL_KEY" > ./nginx/key.pem'
-        shell: bash
-        env:
-          SSL_CERT: ${{ secrets.SSL_CERT }}
-          SSL_KEY: ${{ secrets.SSL_KEY }}
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=${{ github.repository_owner }}/nginx
-          VERSION=noop
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            VERSION=nightly
-          elif [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-            if [ "${{ github.event.repository.default_branch }}" = "$VERSION" ]; then
-              VERSION=edge
-            fi
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=pr-${{ github.event.number }}
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            MINOR=${VERSION%.*}
-            MAJOR=${MINOR%.*}
-            TAGS="$TAGS,${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
-          fi
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - uses: actions/cache@v2
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Build container image
+        run: docker build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      - uses: docker/login-action@v1
-        with:
-          registry: registry.digitalocean.com
-          username: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          password: ${{ secrets.DIGITALOCEAN_TOKEN }}
-      - uses: docker/build-push-action@v2
-        with:
-          context: ./nginx
-          file: ./nginx/Dockerfile
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          push: true
-          tags: registry.digitalocean.com/${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/cometx/nginx
 
   deploy:
     needs: [frontend, api, imageflow, iframely-base, iframely, nginx]
