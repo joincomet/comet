@@ -21,6 +21,7 @@ import { Galaxy } from '@/entities/Galaxy'
 import { galaxiesList } from '@/galaxiesList'
 import { graphqlUploadExpress } from 'graphql-upload'
 import fs from 'fs'
+import path from 'path'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -43,7 +44,7 @@ async function bootstrap() {
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
       ssl: process.env.NODE_ENV === 'production' ? {
-        ca: fs.readFileSync(__dirname + '/ca-certificate.crt')
+        ca: fs.readFileSync(path.resolve(__dirname, '../ca-certificate.crt'))
       } : undefined
     })
 
