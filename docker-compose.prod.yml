@@ -5,6 +5,7 @@ services:
     image: registry.digitalocean.com/cometx/api:latest
     environment:
       - NODE_ENV=production
+      - PGSSLMODE=require
 
   frontend:
     image: registry.digitalocean.com/cometx/frontend:latest

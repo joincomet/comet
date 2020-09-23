@@ -40,7 +40,10 @@ async function bootstrap() {
       synchronize: true,
       logging: process.env.NODE_ENV !== 'production',
       dropSchema: false, // CLEARS DATABASE ON START
-      cache: true
+      cache: true,
+      extra: {
+        ssl: true
+      }
     })
 
     getRepository(Galaxy).save(galaxiesList)
