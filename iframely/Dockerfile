@@ -1,2 +1,2 @@
-FROM registry.digitalocean.com/comet-app/iframely-base:edge
+FROM registry.digitalocean.com/cometx/iframely-base:edge
 COPY ./iframely.config.js /iframely/config.local.js
