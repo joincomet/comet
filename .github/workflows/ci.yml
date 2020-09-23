@@ -15,9 +15,6 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@master
 
-      - name: Build container image
-        run: docker build ./frontend -t registry.digitalocean.com/cometx/frontend:latest
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -25,6 +22,9 @@ jobs:
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+
+      - name: Build container image
+        run: docker build ./frontend -t registry.digitalocean.com/cometx/frontend:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
@@ -37,9 +37,6 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@master
 
-      - name: Build container image
-        run: docker build ./api -t registry.digitalocean.com/cometx/api:latest
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -47,6 +44,9 @@ jobs:
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+
+      - name: Build container image
+        run: docker build ./api -t registry.digitalocean.com/cometx/api:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/api
@@ -57,9 +57,6 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@master
 
-      - name: Build container image
-        run: docker build ./imageflow -t registry.digitalocean.com/cometx/imageflow:latest
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -68,8 +65,11 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
 
+      - name: Build container image
+        run: docker build ./imageflow -t registry.digitalocean.com/cometx/imageflow:latest
+
       - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/cometx/api
+        run: docker push registry.digitalocean.com/cometx/imageflow
 
   iframely-base:
     runs-on: ubuntu-latest
@@ -77,9 +77,6 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@master
 
-      - name: Build container image
-        run: docker build https://github.com/itteco/iframely.git -t registry.digitalocean.com/cometx/iframely-base:latest
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -87,6 +84,9 @@ jobs:
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+
+      - name: Build container image
+        run: docker build https://github.com/itteco/iframely.git -t registry.digitalocean.com/cometx/iframely-base:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/iframely-base
@@ -98,9 +98,6 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@master
 
-      - name: Build container image
-        run: docker build ./iframely -t registry.digitalocean.com/cometx/iframely:latest
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -108,6 +105,9 @@ jobs:
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+
+      - name: Build container image
+        run: docker build ./iframely -t registry.digitalocean.com/cometx/iframely:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/iframely
@@ -118,9 +118,6 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@master
 
-      - name: Build container image
-        run: docker build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -128,6 +125,9 @@ jobs:
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+
+      - name: Build container image
+        run: docker build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/nginx
