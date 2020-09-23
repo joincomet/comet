@@ -3,10 +3,6 @@ name: "Build & Deploy"
 on:
   workflow_dispatch:
   push:
-    branches:
-      - "**"
-    tags:
-      - "v*.*.*"
 
 jobs:
   frontend:
@@ -29,13 +25,17 @@ jobs:
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
 
-
-
   api:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
         uses: actions/checkout@master
+
+      - name: Copy DB cert
+        run: 'echo -e "$DB_CERT" > ./api/dbcert.crt'
+        shell: bash
+        env:
+          DB_CERT: ${{ secrets.DB_CERT }}
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -117,6 +117,13 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@master
+
+      - name: Copy SSL certs
+        run: 'echo -e "$SSL_CERT" > ./nginx/cert.pem && echo -e "$SSL_KEY" > ./nginx/key.pem'
+        shell: bash
+        env:
+          SSL_CERT: ${{ secrets.SSL_CERT }}
+          SSL_KEY: ${{ secrets.SSL_KEY }}
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
