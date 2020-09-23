@@ -42,9 +42,9 @@ async function bootstrap() {
       logging: process.env.NODE_ENV !== 'production',
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
-      ssl: {
-        ca: fs.readFileSync('/usr/local/share/ca-certificates/dbcert.crt').toString()
-      }
+      ssl: process.env.NODE_ENV === 'production' ? {
+        ca: fs.readFileSync(__dirname + '/ca-certificate.crt')
+      } : undefined
     })
 
     getRepository(Galaxy).save(galaxiesList)

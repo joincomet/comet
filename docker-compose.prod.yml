@@ -65,8 +65,8 @@ services:
       - .env
   
   nginx:
-    container_name: nginx
     image: registry.digitalocean.com/cometx/nginx:latest
+    container_name: nginx
     restart: always
     ports:
       - "80:80"

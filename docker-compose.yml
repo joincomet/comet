@@ -5,6 +5,7 @@ services:
     build:
       context: ./api
       dockerfile: ../Dockerfile.dev
+    container_name: api
     ports:
       - "4000:4000"
     expose:
@@ -42,8 +43,8 @@ services:
       - api
 
   redis:
-    container_name: redis
     image: "redis:alpine"
+    container_name: redis
     expose:
       - "6379"
 
@@ -70,8 +71,8 @@ services:
       - .env
 
   postgres:
-    container_name: postgres
     image: "postgres:alpine"
+    container_name: postgres
     restart: always
     environment:
       - POSTGRES_PASSWORD=password

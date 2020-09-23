@@ -31,12 +31,6 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@master
 
-      - name: Copy DB cert
-        run: 'echo -e "$DB_CERT" > ./api/dbcert.crt'
-        shell: bash
-        env:
-          DB_CERT: ${{ secrets.DB_CERT }}
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:

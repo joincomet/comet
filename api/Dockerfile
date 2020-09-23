@@ -8,10 +8,6 @@ RUN yarn
 
 COPY . /usr/src/app
 
-RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
-COPY ./dbcert.crt /usr/local/share/ca-certificates/dbcert.crt
-RUN update-ca-certificates
-
 RUN yarn run build
 
 CMD "yarn" "run" "start"
