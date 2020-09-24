@@ -34,6 +34,12 @@ if (!process.env.ACCESS_TOKEN_SECRET) {
 TypeORM.useContainer(Container)
 
 async function bootstrap() {
+  console.log(process.env.NODE_ENV)
+  console.log(process.env.DB_USERNAME)
+  console.log(process.env.DB_PASSWORD)
+  console.log(process.env.DB_HOST)
+  console.log(process.env.DB_PORT)
+  console.log(process.env.DB_DATABASE)
   try {
     await TypeORM.createConnection({
       type: 'postgres',
