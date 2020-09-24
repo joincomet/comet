@@ -17,7 +17,7 @@ jobs:
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
-          source: "docker-compose.yml,docker-compose.prod.yml"
+          source: "docker-compose.prod.yml"
           target: ${{ github.event.repository.name }}
       - name: Docker-Compose Up
         uses: appleboy/ssh-action@master
@@ -34,5 +34,7 @@ jobs:
           script: |
             cd $REPOSITORY
             echo -e "$ENV" > .env
-            docker-compose -f docker-compose.prod.yml pull -q
-            docker-compose -f docker-compose.prod.yml up -d
+            mv docker-compose.prod.yml docker-compose.yml
+            docker-compose pull -q
+            docker-compose up -d
+            docker image prune -f
