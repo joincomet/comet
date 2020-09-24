@@ -12,15 +12,10 @@ services:
     volumes:
       - /usr/src/app/node_modules
       - /usr/src/app/dist
-    environment:
-      - NODE_ENV=production
-      - PGSSLMODE=require
-      - TS_NODE_PROJECT=tsconfig.prod.json
     depends_on:
       - iframely
       - imageflow
     
-
   frontend:
     image: registry.digitalocean.com/cometx/frontend:latest
     container_name: frontend
@@ -30,12 +25,8 @@ services:
     env_file: 
       - .env
     volumes:
-      - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/.nuxt
-    environment:
-      - NODE_ENV=production
-      - HOST=0.0.0.0
     depends_on:
       - api
   
