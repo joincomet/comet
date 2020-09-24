@@ -16,6 +16,7 @@ query user($username: String!) {
     bannerImageUrl
     bio
     appearOffline
+    timeSinceCreated
     moderatedPlanets {
       name
       description

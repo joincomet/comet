@@ -83,7 +83,7 @@
             >
               <nuxt-link
                 :to="p.relativeUrl"
-                class="text-lg font-medium text-white"
+                class="text-lg font-medium text-white line-clamp-2"
               >
                 {{ p.title }}
               </nuxt-link>

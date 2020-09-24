@@ -21,6 +21,7 @@ import { discordSendFeedback } from '@/DiscordBot'
 import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
+import { formatDistanceToNowStrict } from 'date-fns'
 
 @Resolver(() => User)
 export class UserResolver extends RepositoryInjector {
@@ -457,5 +458,10 @@ export class UserResolver extends RepositoryInjector {
   async lastLogin(@Root() user: User) {
     if (user.appearOffline) return null
     return user.lastLogin
+  }
+
+  @FieldResolver()
+  timeSinceCreated(@Root() user: User) {
+    return formatDistanceToNowStrict(new Date(user.createdAt)) + ' ago'
   }
 }

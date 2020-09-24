@@ -19,7 +19,6 @@ services:
     depends_on:
       - postgres
       - iframely
-      - imageflow
     environment:
       - NODE_ENV=development
       - TS_NODE_PROJECT=tsconfig.dev.json
@@ -41,6 +40,7 @@ services:
       - /usr/src/app/.nuxt
     environment:
       - NODE_ENV=development
+      - HOST=0.0.0.0
     depends_on:
       - api
 
@@ -61,16 +61,6 @@ services:
       - ./iframely.config.js:/iframely/config.local.js
     depends_on:
       - redis
-
-  imageflow:
-    build: ./imageflow
-    container_name: imageflow
-    ports:
-      - "12345:12345"
-    expose:
-      - "12345"
-    env_file:
-      - .env
 
   postgres:
     image: "postgres:alpine"

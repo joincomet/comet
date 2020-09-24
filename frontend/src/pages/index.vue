@@ -1,7 +1,7 @@
 <template>
   <div class="container py-3 mx-auto">
     <div class="mb-6">
-      <div class="mb-3 text-sm text-secondary">
+      <div class="mb-6 font-bold text-md">
         Ongoing Discussions
       </div>
       <div
@@ -15,7 +15,7 @@
 
     <div class="grid min-w-0 min-h-0 grid-cols-3 grid-rows-1 gap-12 mt-6">
       <div class="min-w-0 col-span-3 overflow-hidden sm:col-span-2">
-        <div class="mb-6 text-xl font-bold">
+        <div class="mb-6 font-bold text-md">
           Your Feed
         </div>
         <article v-for="post in feed" :key="post.id">
@@ -48,7 +48,7 @@
       </div>
       <div class="hidden sm:block sm:col-span-1">
         <div class="sticky top-0" style="top: 4.5rem">
-          <div class="mb-6 text-xl font-bold">
+          <div class="mb-6 font-bold text-md">
             Popular Planets
           </div>
           <div class="bg-white border rounded-lg myborder dark:bg-gray-800">
@@ -149,29 +149,5 @@ export default {
     .thumbnail {
       min-width: 6rem;
     }
-}
-
-.line-clamp-2 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* number of lines to show */
-  -webkit-box-orient: vertical;
-
-  /* These are technically the same, but use both */
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  -ms-word-break: break-all;
-  /* This is the dangerous one in WebKit, as it breaks things wherever */
-  word-break: break-all;
-  /* Instead use this non-standard one: */
-  word-break: break-word;
-
-  /* Adds a hyphen where the word breaks, if supported (No Blink) */
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
 }
 </style>

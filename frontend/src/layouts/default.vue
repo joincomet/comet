@@ -5,7 +5,7 @@
     <div class="flex flex-row">
       <NavDrawer />
 
-      <div class="flex items-center flex-grow mt-16">
+      <div class="flex flex-grow mt-16">
         <nuxt />
       </div>
     </div>

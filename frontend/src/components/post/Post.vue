@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col p-4 overflow-hidden bg-cover rounded-lg cursor-pointer" :style="post.type === 'IMAGE' && post.link ? `background-image: linear-gradient( rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75) ), url(${post.link})` : ''" @click="$router.push(post.relativeUrl)">
-    <nuxt-link :to="post.relativeUrl" class="mb-12 text-white">
+    <nuxt-link :to="post.relativeUrl" class="mb-12 text-white line-clamp-3">
       {{ post.title }}
     </nuxt-link>
 
@@ -43,4 +43,5 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

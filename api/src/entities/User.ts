@@ -179,4 +179,7 @@ export class User {
 
   @Field()
   level: number
+
+  @Field()
+  timeSinceCreated: string
 }
