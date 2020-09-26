@@ -80,12 +80,10 @@ export default {
         const { target } = e
         const btn = this.$refs.btnRef
         const popover = this.$refs.popoverRef
-        console.log({ btn, popover, target })
         if (btn.contains(target) || btn.isEqualNode(target) || popover.contains(target) || popover.isEqualNode(target)) {
           if (this.popoverShow) {
             this.popoverShow = false
           } else {
-            console.log('yes')
             e.preventDefault()
             this.popoverShow = true
             createPopper(btn, popover, {

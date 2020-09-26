@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="sticky z-50 flex flex-col flex-grow-0 flex-shrink-0 w-56 py-4 mt-12 overflow-y-auto bg-white border-r myborder dark:bg-gray-900"
+    class="sticky z-50 flex flex-col flex-grow-0 flex-shrink-0 py-4 mt-12 overflow-y-auto bg-white border-r w-60 myborder dark:bg-gray-900"
     style="height: calc(100vh - 3rem); top: 3rem"
   >
     <nuxt-link to="/" class="navitem">
