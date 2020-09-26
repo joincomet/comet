@@ -21,7 +21,7 @@ query userComments($username: String!, $page: Int, $pageSize: Int, $sort: Commen
       isCurrentUser
       tag
       tagColor
-      profilePicUrl
+      avatarImageUrl
     }
   }
 }

@@ -169,32 +169,23 @@ export class UserResolver extends RepositoryInjector {
   @Mutation(() => Boolean)
   async setProfilePic(
     @Ctx() { userId }: Context,
-    @Arg('profilePicUrl') profilePicUrl: string,
-    @Arg('image', () => GraphQLUpload, { nullable: true }) image?: FileUpload
+    @Arg('image', () => GraphQLUpload, { nullable: true }) image: FileUpload
   ) {
-    if (image) {
-      const { createReadStream, mimetype } = await image
-
+    const { createReadStream, mimetype } = await image
       if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
         throw new Error('Image must be PNG or JPEG')
 
       const outStream = new Stream.PassThrough()
       createReadStream().pipe(outStream)
 
-      profilePicUrl = await s3upload(
+      const avatarImageUrl = await s3upload(
         `profile/${userId}.png`,
         outStream,
         mimetype,
         true
       )
-    }
 
-    if (
-      !profilePicUrl.startsWith(`https://${process.env.AWS_S3_BUCKET}/profile`)
-    ) {
-      throw new Error('Invalid URL')
-    }
-    await this.userRepository.update(userId, { profilePicUrl })
+    await this.userRepository.update(userId, { avatarImageUrl })
     return true
   }
 
@@ -218,7 +209,7 @@ export class UserResolver extends RepositoryInjector {
 
   @Mutation(() => Boolean)
   @UseMiddleware(RequiresAuth)
-  async uploadProfilePic(
+  async uploadAvatar(
     @Arg('file', () => GraphQLUpload) file: FileUpload,
     @Ctx() { userId }: Context
   ) {
@@ -236,31 +227,7 @@ export class UserResolver extends RepositoryInjector {
       file.mimetype
     )
 
-    await this.userRepository.update(userId, { profilePicUrl: url })
-    return true
-  }
-
-  @Mutation(() => Boolean)
-  @UseMiddleware(RequiresAuth)
-  async uploadBannerImage(
-    @Arg('file', () => GraphQLUpload) file: FileUpload,
-    @Ctx() { userId }: Context
-  ) {
-    const { createReadStream, mimetype } = await file
-
-    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-      throw new Error('Image must be PNG or JPEG')
-
-    const outStream = new Stream.PassThrough()
-    createReadStream().pipe(outStream)
-
-    const url = await s3upload(
-      `user/${userId}/banner.png`,
-      outStream,
-      file.mimetype
-    )
-
-    await this.userRepository.update(userId, { bannerImageUrl: url })
+    await this.userRepository.update(userId, { avatarImageUrl: url })
     return true
   }
 

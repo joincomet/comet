@@ -15,7 +15,7 @@ query postComments($postId: ID!, $sort: Sort) {
       isCurrentUser
       tag
       tagColor
-      profilePicUrl
+      avatarImageUrl
     }
   }
 }

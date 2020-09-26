@@ -4,7 +4,7 @@ query currentUser {
     username
     tag
     tagColor
-    profilePicUrl
+    avatarImageUrl
     admin
     appearOffline
     moderatedPlanets {

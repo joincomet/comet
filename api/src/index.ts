@@ -100,7 +100,9 @@ async function bootstrap() {
 
     const logPlugin = {
       requestDidStart(requestContext: any) {
-        console.log('GraphQL: ' + requestContext.request.operationName)
+        const name = requestContext.request.operationName
+        if (name === 'IntrospectionQuery') return
+        console.log('GraphQL: ' + name)
       }
     }
 

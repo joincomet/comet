@@ -12,8 +12,7 @@ query user($username: String!) {
     isCurrentUser
     tag
     tagColor
-    profilePicUrl
-    bannerImageUrl
+    avatarImageUrl
     bio
     appearOffline
     timeSinceCreated

@@ -12,7 +12,7 @@ query blockedUsers {
     isCurrentUser
     tag
     tagColor
-    profilePicUrl
+    avatarImageUrl
     bio
   }
 }

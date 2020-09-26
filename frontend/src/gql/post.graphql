@@ -6,7 +6,7 @@ query post($postId: ID!) {
         isCurrentUser
         tag
         tagColor
-        profilePicUrl
+        avatarImageUrl
       }
       commentCount
       relativeUrl

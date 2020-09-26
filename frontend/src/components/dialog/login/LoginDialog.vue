@@ -1,15 +1,15 @@
 <template>
   <Dialog v-model="open">
     <template v-slot:activator="{ on }">
-      <div class="ml-auto inline-flex flex-row items-center">
+      <div class="inline-flex flex-row items-center ml-auto">
         <button
-          class="mr-3 py-1 px-3 border border-indigo-500 text-indigo-500 text-sm rounded"
+          class="px-3 py-1 mr-3 text-sm text-indigo-500 border border-indigo-500 rounded"
           @click="openLogIn(on)"
         >
           Log In
         </button>
         <button
-          class="py-1 px-3 text-sm text-white bg-indigo-500 rounded"
+          class="px-3 py-1 text-sm text-white bg-indigo-500 rounded"
           @click="openSignUp(on)"
         >
           Sign Up
@@ -18,10 +18,9 @@
     </template>
 
     <DialogCard>
-      <RandomSpaceImage class="h-16 w-full" />
       <div class="p-6">
         <Icon name="comet-logo" class="h-6 mb-3" />
-        <!--<div class="text-sm mb-6 text-secondary tracking-wide uppercase">
+        <!--<div class="mb-6 text-sm tracking-wide uppercase text-secondary">
           <span
             :class="{ 'font-semibold': tab === 0 }"
             class="cursor-pointer hover:underline"
@@ -74,9 +73,9 @@
               type="submit"
               :class="formValid ? 'text-white' : 'text-secondary opacity-25'"
               :disabled="!formValid"
-              class="inline-flex items-center px-4 py-2 leading-6 rounded text-gray-300 focus:outline-none bg-gray-300 dark:bg-gray-800 transition ease-in-out duration-150"
+              class="inline-flex items-center px-4 py-2 leading-6 text-gray-300 transition duration-150 ease-in-out bg-gray-300 rounded focus:outline-none dark:bg-gray-800"
             >
-              <div v-show="loading" class="-ml-1 mr-3">
+              <div v-show="loading" class="mr-3 -ml-1">
                 <Icon name="spinner" />
               </div>
               {{ tab === 0 ? 'Log In' : 'Sign Up' }}
@@ -84,20 +83,20 @@
 
             <button
               type="button"
-              class="inline-flex items-center px-4 py-2 leading-6 rounded text-secondary text-sm focus:outline-none transition ease-in-out duration-150"
+              class="inline-flex items-center px-4 py-2 text-sm leading-6 transition duration-150 ease-in-out rounded text-secondary focus:outline-none"
               @click="switchTab"
             >
               {{ tab === 0 ? 'Create an account' : 'Already have an account' }}
             </button>
 
             <!--<a
-              class="inline-block align-baseline font-bold text-sm text-indigo-500 hover:text-indigo-800"
+              class="inline-block text-sm font-bold text-indigo-500 align-baseline hover:text-indigo-800"
               href="#"
             >
               Forgot Password?
             </a>-->
           </div>
-          <div v-show="tab === 1" class="text-xs text-secondary pt-5">
+          <div v-show="tab === 1" class="pt-5 text-xs text-secondary">
             By clicking Sign Up, you agree to our
             <nuxt-link to="/terms" class="text-indigo-500">
               Terms of Service
@@ -115,7 +114,6 @@
 
 <script>
 import * as EmailValidator from 'email-validator'
-import RandomSpaceImage from '@/components/dialog/login/RandomSpaceImage'
 import DialogCard from '@/components/dialog/DialogCard'
 import Dialog from '@/components/dialog/Dialog'
 import TextInput from '@/components/dialog/login/TextInput'
@@ -125,7 +123,7 @@ import signUpGql from '@/gql/signUp'
 
 export default {
   name: 'LoginDialog',
-  components: { DialogCard, RandomSpaceImage, Icon, TextInput, Dialog },
+  components: { DialogCard, Icon, TextInput, Dialog },
   data () {
     return {
       open: false,

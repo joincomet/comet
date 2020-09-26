@@ -1,4 +1,4 @@
-// import { sortRoutes } from '@nuxt/utils'
+import { sortRoutes } from '@nuxt/utils'
 
 export default {
   srcDir: 'src/',
@@ -160,48 +160,23 @@ export default {
         wsEndpoint: null
       }
     }
-  }
+  },
 
-  /* router: {
-    extendRoutes(routes, resolve) {
+  router: {
+    extendRoutes (routes, resolve) {
       routes.push(
         {
-          name: 'universe-sort-time',
-          path: '/universe/:sort?/:time?',
-          component: resolve(__dirname, 'src/components/pages/universe.vue')
+          name: 'user-tab',
+          path: '/:id/:tab?',
+          component: resolve(__dirname, 'src/pages/_id.vue')
         },
         {
-          name: 'p-planetname-sort-time',
-          path: '/p/:planetname/:sort?/:time?',
-          component: resolve(__dirname, 'src/components/pages/planet.vue')
-        },
-        {
-          name: 'p-planetname-comments-id-title',
-          path: '/p/:planetname/comments/:id/:title?',
-          component: resolve(__dirname, 'src/components/pages/post.vue')
-        },
-        {
-          name: 'g-galaxyname-sort-time',
-          path: '/g/:galaxyname/:sort?/:time?',
-          component: resolve(__dirname, 'src/components/pages/galaxy.vue')
-        },
-        {
-          name: 'u-username-sort-time',
-          path: '/u/:username/:sort?/:time?',
-          component: resolve(__dirname, 'src/components/pages/user.vue')
-        },
-        {
-          name: 'search-sort-time',
-          path: '/search/:sort?/:time?',
-          component: resolve(__dirname, 'src/components/pages/search.vue')
-        },
-        {
-          name: 'home-sort-time',
-          path: '/home/:sort?/:time?',
-          component: resolve(__dirname, 'src/components/pages/home.vue')
+          name: 'user-tab-sort',
+          path: '/:id/:tab/:sort?',
+          component: resolve(__dirname, 'src/pages/_id.vue')
         }
       )
       sortRoutes(routes)
     }
-  } */
+  }
 }

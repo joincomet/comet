@@ -97,7 +97,7 @@
                 >
                   <img
                     class="object-cover w-5 h-5 mr-2 rounded-full"
-                    :src="p.author.profilePicUrl"
+                    :src="p.author.avatarImageUrl"
                     :alt="p.author.username"
                   >
                   <span class="text-white">{{ p.author.username }}</span>

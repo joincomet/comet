@@ -13,7 +13,7 @@ import planetGql from '@/gql/planet.graphql'
 
 export default {
   components: {
-    PlanetPage: () => import('@/components/pages/planet/PlanetPage'),
+    PlanetPage: () => import('@/components/pages/PlanetPage'),
     UserPage: () => import('@/components/pages/user/UserPage')
   },
   middleware ({ redirect, params }) {

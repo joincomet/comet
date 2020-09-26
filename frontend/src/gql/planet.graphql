@@ -30,7 +30,7 @@ query planet($planetName: ID!) {
       isCurrentUser
       tag
       tagColor
-      profilePicUrl
+      avatarImageUrl
       bio
     }
   }

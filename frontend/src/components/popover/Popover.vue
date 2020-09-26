@@ -1,18 +1,11 @@
 <template>
-  <div>
-    <div ref="btnRef" style="height: inherit">
-      <slot name="activator" :on="togglePopover" />
-    </div>
+  <div ref="btnRef" style="height: inherit">
+    <slot name="activator" :on="handleClick" style="height: inherit" />
 
     <div
-      v-show="popoverShow"
-      class="fixed w-full h-full left-0 top-0 bg-transparent z-40 cursor-auto"
-      @click.stop.prevent="popoverShow = false"
-    />
-    <div
       ref="popoverRef"
-      :class="{ hidden: !popoverShow, block: popoverShow }"
-      class="shadow bg-white dark:bg-black border border-gray-300 dark:border-gray-800 z-50 font-normal leading-normal text-sm max-w-xs text-left no-underline break-words rounded flex flex-col"
+      class="z-50 block transition-opacity duration-150 ease-in-out"
+      :class="{ invisible: !popoverShow, 'opacity-1': popoverShow, 'opacity-0': !popoverShow }"
       @click.stop.prevent="popoverShow = false"
     >
       <slot />
@@ -23,31 +16,95 @@
 <script>
 import { createPopper } from '@popperjs/core'
 
+const sameWidthMod = {
+  name: 'sameWidth',
+  enabled: true,
+  phase: 'beforeWrite',
+  requires: ['computeStyles'],
+  fn: ({ state }) => {
+    state.styles.popper.width = `${state.rects.reference.width}px`
+  },
+  effect: ({ state }) => {
+    state.elements.popper.style.width = `${
+      state.elements.reference.offsetWidth
+    }px`
+  }
+}
+
 export default {
   name: 'Popover',
-  data () {
-    return {
-      popoverShow: false
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
+    placement: {
+      type: String,
+      default: 'bottom'
+    },
+    offsetX: {
+      type: Number,
+      default: 0
+    },
+    offsetY: {
+      type: Number,
+      default: 0
+    },
+    sameWidth: {
+      type: Boolean,
+      default: true
     }
   },
+  data () {
+    return {
+      popoverShow: this.value
+    }
+  },
+  watch: {
+    popoverShow () {
+      this.$emit('input', this.popoverShow)
+    }
+  },
+  mounted () {
+    document.addEventListener('click', this.togglePopover)
+  },
+  beforeDestroy () {
+    document.removeEventListener('click', this.togglePopover)
+  },
   methods: {
-    togglePopover () {
-      if (this.popoverShow) {
-        this.popoverShow = false
-      } else {
-        this.popoverShow = true
-        createPopper(this.$refs.btnRef, this.$refs.popoverRef, {
-          placement: 'left',
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, 10]
-              }
-            }
-          ]
-        })
-      }
+    handleClick () {
+
+    },
+    togglePopover (e) {
+      this.$nextTick(() => {
+        const { target } = e
+        const btn = this.$refs.btnRef
+        const popover = this.$refs.popoverRef
+        console.log({ btn, popover, target })
+        if (btn.contains(target) || btn.isEqualNode(target) || popover.contains(target) || popover.isEqualNode(target)) {
+          if (this.popoverShow) {
+            this.popoverShow = false
+          } else {
+            console.log('yes')
+            e.preventDefault()
+            this.popoverShow = true
+            createPopper(btn, popover, {
+              placement: this.placement,
+              modifiers: [
+                this.sameWidth ? sameWidthMod : undefined,
+                {
+                  name: 'offset',
+                  options: {
+                    offset: [this.offsetX, this.offsetY]
+                  }
+                }
+              ]
+            })
+          }
+        } else {
+          this.popoverShow = false
+        }
+      })
     }
   }
 }

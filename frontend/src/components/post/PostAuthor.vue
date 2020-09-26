@@ -7,9 +7,9 @@
         @click.native.stop.prevent="$router.push(`@${post.author.username}`)"
       >
         <img
-          v-if="post.author.profilePicUrl"
-          class="h-4 w-4 mr-2 object-cover rounded-full"
-          :src="post.author.profilePicUrl"
+          v-if="post.author.avatarImageUrl"
+          class="object-cover w-4 h-4 mr-2 rounded-full"
+          :src="post.author.avatarImageUrl"
           :alt="post.author.username"
         >
         <span>{{ post.author.username }}</span>
@@ -22,7 +22,7 @@
       >
         <img
           v-if="post.planet.avatarImageUrl"
-          class="h-4 w-4 mr-2 object-cover rounded-full"
+          class="object-cover w-4 h-4 mr-2 rounded-full"
           :src="post.planet.avatarImageUrl"
           :alt="post.planet.name"
         >

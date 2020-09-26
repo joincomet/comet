@@ -14,7 +14,7 @@ query notifications($unreadOnly: Boolean!) {
       isCurrentUser
       tag
       tagColor
-      profilePicUrl
+      avatarImageUrl
     }
     post {
       id

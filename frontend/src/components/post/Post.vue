@@ -5,7 +5,7 @@
     </nuxt-link>
 
     <div class="flex flex-row items-center mt-auto">
-      <img class="w-4 h-4 mr-3 rounded-full" :src="post.author.profilePicUrl">
+      <img class="w-4 h-4 mr-3 rounded-full" :src="post.author.avatarImageUrl">
       <span class="text-xs text-gray-300">{{ post.author.username }}</span>
     </div>
   </div>

@@ -24,7 +24,7 @@ query feed($page: Int, $sort: Sort, $time: Time, $filter: Filter, $types: [Type!
       isCurrentUser
       tag
       tagColor
-      profilePicUrl
+      avatarImageUrl
     }
     planet {
       name

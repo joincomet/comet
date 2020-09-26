@@ -35,11 +35,11 @@ export class User {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  profilePicUrl?: string
+  website?: string
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  bannerImageUrl?: string
+  avatarImageUrl?: string
 
   @Field()
   @Column()
@@ -51,6 +51,78 @@ export class User {
 
   @Column()
   passwordHash: string
+
+  @Field()
+  @Column({ default: false })
+  nsfwEnabled: boolean
+
+  @Field()
+  @Column({ default: true })
+  nsfwWarningEnabled: boolean
+
+  @Field()
+  @Column({ nullable: true })
+  usernameTwitter?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameDiscord?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameReddit?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameSnapchat?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameInstagram?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameGithub?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameTwitch?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameTumblr?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameYoutube?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameSteam?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameFacebook?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameLinkedin?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameSpotify?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameSoundcloud?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameTiktok?: string
+
+  @Field()
+  @Column({ nullable: true })
+  usernameVsco?: string
 
   @Field()
   @Column({ default: false })

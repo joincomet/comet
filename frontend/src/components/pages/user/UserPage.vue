@@ -1,92 +1,92 @@
 <template>
   <div class="container py-6 mx-auto">
-    <div class="grid grid-cols-12 gap-4">
-      <div class="flex flex-row col-span-9 p-6 rounded-lg card">
-        <img :src="user.profilePicUrl" class="w-48 h-48 mr-12 rounded-full">
-        <div class="py-2">
-          <div class="inline-flex flex-row items-center mb-3">
-            <span class="inline-flex flex-row items-end">
-              <span class="text-3xl font-semibold">
-                {{ user.username }}
+    <div class="grid justify-center grid-cols-11 gap-4">
+      <div class="col-span-8" :class="hasLinkedAccount || user.moderatedPlanets.length > 0 ? '' : 'col-start-2'">
+        <div class="flex flex-row p-6 rounded-lg card">
+          <img :src="user.avatarImageUrl" class="w-48 h-48 mr-12 rounded-full" style="min-width: 12rem; min-height: 12rem">
+          <div class="py-2">
+            <div class="inline-flex flex-row items-center mb-3">
+              <span class="inline-flex flex-row items-end">
+                <span class="text-3xl font-semibold">
+                  {{ user.username }}
+                </span>
+                <span class="text-2xl font-semibold text-gray-500 dark:text-gray-400">&nbsp;&nbsp;@{{ user.username }}</span>
               </span>
-              <span class="text-2xl font-semibold text-gray-500 dark:text-gray-400">&nbsp;&nbsp;@{{ user.username }}</span>
-            </span>
-            <span class="px-3 py-1 ml-6 text-sm text-white bg-indigo-500 rounded cursor-pointer">Follow</span>
-            <Icon class="ml-6 cursor-pointer text-secondary" name="dots-horizontal" />
-          </div>
-          <div class="mb-3 text-sm text-secondary">
-            Joined {{ user.timeSinceCreated }} &middot; {{ user.endorsementCount }} Rocket{{ user.endorsementCount === 1 ? '' : 's' }} &middot; 22 Followers &middot; 68 Following
-          </div>
-          <div class="mb-3 text-md text-secondary">
-            {{ user.bio }}
+              <nuxt-link v-if="user.isCurrentUser" to="/settings" class="inline-flex flex-row items-center px-3 py-1 ml-6 text-sm text-indigo-500 border border-indigo-500 rounded cursor-pointer">
+                <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                </svg>
+                <span class="ml-2">Settings</span>
+              </nuxt-link>
+              <span v-else class="px-3 py-1 ml-6 text-sm text-white bg-indigo-500 rounded cursor-pointer">Follow</span>
+              <Icon class="ml-6 cursor-pointer text-secondary" name="dots-horizontal" />
+            </div>
+            <div class="mb-3 text-sm text-secondary">
+              Joined {{ user.timeSinceCreated }} &middot; {{ user.endorsementCount }} Rocket{{ user.endorsementCount === 1 ? '' : 's' }} &middot; 22 Followers &middot; 68 Following
+            </div>
+            <div class="mb-3 text-md text-secondary">
+              {{ user.bio }}
+            </div>
+            <div class="inline-flex flex-row items-center mb-3 text-sm cursor-pointer text-secondary hover:underline">
+              <svg
+                width="16"
+                height="16"
+                class="mr-3"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" />
+              </svg>
+              cometx.io
+            </div>
           </div>
         </div>
+
+        <UserPageTabs :user="user" />
       </div>
+      <div v-if="hasLinkedAccount || user.moderatedPlanets.length > 0" class="col-span-3">
+        <LinkedAccounts v-if="hasLinkedAccount" :user="user" />
 
-      <div class="flex flex-col col-span-3 p-6 rounded-lg card">
-        <div class="text-xl font-bold">
-          Linked Accounts
-        </div>
-        <div class="linked-account text-secondary">
-          <img class="w-5" src="~/assets/twitter.svg">
-          <span class="ml-6 text-sm">@dan_b__</span>
-        </div>
-
-        <div class="linked-account text-secondary">
-          <img class="w-5" src="~/assets/discord.svg">
-          <span class="ml-6 text-sm">Dan#7457</span>
-        </div>
-
-        <div class="linked-account text-secondary">
-          <img class="w-5" src="~/assets/reddit.svg">
-          <span class="ml-6 text-sm">u/CometCommunications</span>
+        <div v-if="user.moderatedPlanets && user.moderatedPlanets.length > 0" class="flex flex-col px-6 py-4 rounded-lg card">
+          <div class="font-semibold text-secondary text-md">
+            Moderated Planets
+          </div>
+          <div v-for="planet in user.moderatedPlanets" :key="planet.id" class="linked-account text-secondary">
+            <img class="w-5 rounded-full" :src="planet.avatarImageUrl">
+            <span class="ml-6 text-sm">+{{ planet.name }}</span>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="flex flex-row items-center mt-6">
-      <div class="tab tab-active">
-        Everything
-      </div>
-      <div class="tab">
-        22 Posts
-      </div>
-      <div class="tab">
-        45 Comments
-      </div>
-    </div>
+  </div>
   </div>
 </template>
 
 <script>
-import Icon from '@/components/Icon'
+import Icon from '@/components/Icon.vue'
+import UserPageTabs from '@/components/pages/user/UserPageTabs.vue'
+import LinkedAccounts from '@/components/pages/user/LinkedAccounts.vue'
 
 export default {
   name: 'UserPage',
-  components: { Icon },
+  components: { Icon, UserPageTabs, LinkedAccounts },
   props: {
     user: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    hasLinkedAccount () {
+      return Object.keys(this.user).filter(u => u.startsWith('username') && u.length > 8).length > 0
     }
   }
 }
 </script>
 
 <style scoped>
-.background {
-  background-image: linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0)), url('~assets/spaceimages/01.jpg');
-}
-
 .linked-account {
   @apply flex flex-row items-center mt-4 hover:underline cursor-pointer;
-}
-
-.tab {
-  @apply px-6 py-3 text-sm text-gray-500 transition duration-150 ease-in-out border-b-2 dark:border-gray-800 border-gray-200 cursor-pointer dark:hover:bg-gray-800 hover:bg-gray-200;
-}
-
-.tab-active {
-  @apply text-black dark:text-white border-gray-700 dark:border-gray-300;
 }
 </style>
