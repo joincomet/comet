@@ -77,17 +77,12 @@
 </template>
 
 <script>
-import Post from '@/components/post/Post'
 import feedGql from '@/gql/feed'
 import planetGql from '@/gql/planet'
 import popularPlanetsGql from '@/gql/popularPlanets.graphql'
 import { feedVars } from '@/util/feedVars'
-import PlanetOfTheDay from '@/components/PlanetOfTheDay'
-import Icon from '@/components/Icon'
-import PostAuthor from '@/components/post/PostAuthor'
 
 export default {
-  components: { PostAuthor, Icon, PlanetOfTheDay, Post },
   async asyncData ({ app, route }) {
     const client = app.apolloProvider.defaultClient
 

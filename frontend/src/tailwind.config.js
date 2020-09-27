@@ -1,5 +1,3 @@
-const path = require('path')
-
 module.exports = {
   dark: 'class',
   experimental: 'all',
@@ -11,10 +9,8 @@ module.exports = {
     require('@tailwindcss/typography')
   ],
   purge: {
-    content (defaultContents) {
-      return defaultContents
-        .concat(['content/**/*.md'])
-        .map(p => path.join('src/', p))
-    }
+    content: [
+      'content/**/*.md'
+    ]
   }
 }

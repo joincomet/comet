@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto py-3 sm:px-3">
+  <div class="container py-3 mx-auto sm:px-3">
     test
   </div>
 </template>

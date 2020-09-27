@@ -8,7 +8,7 @@
 import allPlanetsGql from '@/gql/allPlanets.graphql'
 
 export default {
-  async asnycData ({ app }) {
+  async asyncData ({ app }) {
     const client = app.apolloProvider.defaultClient
     let allPlanets = []
     allPlanets = (await client.query({

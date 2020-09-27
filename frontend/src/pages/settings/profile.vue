@@ -13,10 +13,7 @@
 </template>
 
 <script>
-import TextInput from '@/components/dialog/login/TextInput.vue'
-
 export default {
-  components: { TextInput }
 }
 </script>
 
