@@ -2,6 +2,7 @@ import { sortRoutes } from '@nuxt/utils'
 
 export default {
   srcDir: 'src/',
+  components: true,
 
   head: {
     titleTemplate: '%s',

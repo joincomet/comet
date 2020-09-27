@@ -1,17 +1,17 @@
 <template>
   <div class="mb-2">
-    <label class="block text-secondary text-xs mb-2" :for="label">
+    <label class="block mb-2 text-xs text-secondary" :for="label">
       {{ label }}
     </label>
     <input
       :id="label"
       v-model="text"
-      class="appearance-none border rounded w-full py-2 px-3 mb-2 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-900 dark:border-gray-700"
+      class="w-full px-3 py-2 mb-2 leading-tight border rounded appearance-none focus:outline-none focus:shadow-outline dark:bg-gray-900 dark:border-gray-700"
       :class="error ? 'border-red-500' : ''"
       :type="type"
       :placeholder="placeholder"
     >
-    <p class="text-red-500 text-xs italic" :class="error ? '' : 'opacity-0'">
+    <p class="text-xs italic text-red-500" :class="error ? '' : 'opacity-0'">
       {{ errorMessage }}
     </p>
   </div>

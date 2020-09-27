@@ -1,6 +1,6 @@
 <template>
   <div class="container py-3 mx-auto">
-    Account settings
+    Security settings
   </div>
 </template>
 
