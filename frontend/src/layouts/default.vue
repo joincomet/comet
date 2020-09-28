@@ -5,7 +5,7 @@
     <div class="flex flex-row">
       <NavDrawer />
 
-      <div class="flex flex-grow mt-16">
+      <div class="flex flex-grow mt-12">
         <nuxt />
       </div>
     </div>
@@ -13,12 +13,8 @@
 </template>
 
 <script>
-import AppBar from '@/components/AppBar'
-import NavDrawer from '@/components/NavDrawer'
-
 export default {
   name: 'Default',
-  components: { AppBar, NavDrawer },
   data () {
     return {
       loginDialog: false

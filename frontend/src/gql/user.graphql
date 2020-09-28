@@ -16,6 +16,8 @@ query user($username: String!) {
     bio
     appearOffline
     timeSinceCreated
+    followerCount
+    followingCount
     moderatedPlanets {
       name
       description

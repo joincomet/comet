@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Authorized, Field, ID, ObjectType } from 'type-graphql'
 import {
   Column,
   Entity,
@@ -8,134 +8,74 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { Comment } from '@/entities/Comment'
-import { Lazy } from '@/lazy'
+import { Lazy } from '@/Lazy'
 import { Post } from '@/entities/Post'
-import { PostEndorsement } from '@/entities/PostEndorsement'
-import { CommentEndorsement } from '@/entities/CommentEndorsement'
-import { PostView } from '@/entities/PostView'
-import { Planet } from '@/entities/Planet'
+import { PostUpvote } from '@/entities/PostUpvote'
+import { CommentUpvote } from '@/entities/CommentUpvote'
+import { Community } from '@/entities/Community'
+import { formatDistanceToNowStrict } from 'date-fns'
+import { UserProfile } from '@/types/UserProfile'
+import { UserSettings } from '@/types/UserSettings'
 
 @ObjectType()
 @Entity()
 export class User {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('uuid')
-  readonly id: string
+  @PrimaryGeneratedColumn()
+  readonly _id: number
+
+  @Field()
+  get id(): string {
+    return this._id.toString(36)
+  }
 
   @Field()
   @Column()
   username: string
 
+  @Authorized('USER')
+  @Field()
   @Column({ nullable: true })
   email?: string
 
-  @Field({ nullable: true })
-  @Column('text', { nullable: true })
-  bio?: string
+  @Authorized('USER')
+  @Field()
+  @Column()
+  settings: UserSettings
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  website?: string
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  avatarImageUrl?: string
+  @Field()
+  @Column()
+  profile: UserProfile
 
   @Field()
   @Column()
   createdAt: Date
 
+  @Authorized()
   @Field({ nullable: true })
   @Column({ nullable: true })
   lastLogin?: Date
 
+  @Field()
+  online: boolean
+
   @Column()
   passwordHash: string
 
-  @Field()
-  @Column({ default: false })
-  nsfwEnabled: boolean
-
-  @Field()
-  @Column({ default: true })
-  nsfwWarningEnabled: boolean
-
-  @Field()
-  @Column({ nullable: true })
-  usernameTwitter?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameDiscord?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameReddit?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameSnapchat?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameInstagram?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameGithub?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameTwitch?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameTumblr?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameYoutube?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameSteam?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameFacebook?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameLinkedin?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameSpotify?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameSoundcloud?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameTiktok?: string
-
-  @Field()
-  @Column({ nullable: true })
-  usernameVsco?: string
-
+  @Authorized('ADMIN')
   @Field()
   @Column({ default: false })
   admin: boolean
 
+  @Authorized()
+  @Field()
   @Column({ default: false })
   banned: boolean
 
+  @Authorized()
+  @Field()
   @Column({ nullable: true })
   banReason?: string
-
-  @Column('text', { array: true, default: {} })
-  ipAddresses: string[]
 
   @OneToMany(() => Comment, (comment) => comment.author)
   comments: Lazy<Comment[]>
@@ -143,17 +83,17 @@ export class User {
   @OneToMany(() => Post, (post) => post.author)
   posts: Lazy<Post[]>
 
-  @Field(() => [Planet])
-  @ManyToMany(() => Planet, (planet) => planet.users)
-  planets: Lazy<Planet[]>
+  @Field(() => [Community])
+  @ManyToMany(() => Community, (community) => community.users)
+  communities: Lazy<Community[]>
 
-  @Field(() => [Planet])
-  @ManyToMany(() => Planet, (planet) => planet.moderators)
-  moderatedPlanets: Lazy<Planet[]>
+  @Field(() => [Community])
+  @ManyToMany(() => Community, (community) => community.moderators)
+  moderatedCommunities: Lazy<Community[]>
 
-  @ManyToMany(() => Planet)
+  @ManyToMany(() => Community)
   @JoinTable()
-  mutedPlanets: Lazy<Planet[]>
+  mutedCommunities: Lazy<Community[]>
 
   @ManyToMany(() => Post)
   @JoinTable()
@@ -194,40 +134,23 @@ export class User {
   followerCount: number
 
   @Field()
+  followingCount: number
+
+  @Field()
   commentCount: number
 
   @Field()
   postCount: number
 
-  @OneToMany(() => PostEndorsement, (endorsement) => endorsement.user)
-  postEndorsements: Lazy<PostEndorsement[]>
+  @OneToMany(() => PostUpvote, (upvote) => upvote.user)
+  postUpvotes: Lazy<PostUpvote[]>
 
-  @OneToMany(() => CommentEndorsement, (endorsement) => endorsement.user)
-  commentEndorsements: Lazy<CommentEndorsement[]>
+  @OneToMany(() => CommentUpvote, (upvote) => upvote.user)
+  commentUpvotes: Lazy<CommentUpvote[]>
 
   @Field()
   @Column({ default: 0 })
-  endorsementCount: number
-
-  @Column({ nullable: true })
-  lastPostedAt?: Date
-
-  @Column({ nullable: true })
-  lastUploadedImageAt?: Date
-
-  @Column({ nullable: true })
-  lastCommentedAt?: Date
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  tag?: string
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  tagColor?: string
-
-  @OneToMany(() => PostView, (postView) => postView.user)
-  postViews: Lazy<PostView[]>
+  upvoteCount: number
 
   /**
    * Current user is blocked by this user
@@ -242,16 +165,7 @@ export class User {
   isBlocking: boolean
 
   @Field()
-  @Column({ default: false })
-  appearOffline: boolean
-
-  @Field()
-  @Column({ default: 0 })
-  xp: number
-
-  @Field()
-  level: number
-
-  @Field()
-  timeSinceCreated: string
+  get timeSinceCreated(): string {
+    return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+  }
 }

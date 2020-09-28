@@ -1,12 +1,7 @@
 import { ArgsType, Field } from 'type-graphql'
 import { PaginationArgs } from '@/args/PaginationArgs'
-import { Length } from 'class-validator'
-import { Time } from '@/args/FeedArgs'
-
-export enum CommentSort {
-  NEW = 'new',
-  TOP = 'top'
-}
+import { TimeFilter } from '@/types/TimeFilter'
+import { CommentSort } from '@/types/CommentSort'
 
 @ArgsType()
 export class UserCommentsArgs extends PaginationArgs {
@@ -16,6 +11,6 @@ export class UserCommentsArgs extends PaginationArgs {
   @Field(() => CommentSort, { defaultValue: CommentSort.NEW })
   sort: CommentSort = CommentSort.NEW
 
-  @Field(() => Time, { defaultValue: Time.ALL })
-  time: Time = Time.ALL
+  @Field(() => TimeFilter, { defaultValue: TimeFilter.ALL })
+  time: TimeFilter = TimeFilter.ALL
 }

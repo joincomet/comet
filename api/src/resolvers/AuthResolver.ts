@@ -1,15 +1,23 @@
-import { Arg, Args, Ctx, Mutation, Resolver, UseMiddleware } from 'type-graphql'
+import {
+  Arg,
+  Args,
+  Authorized,
+  Ctx,
+  Mutation,
+  Resolver,
+  UseMiddleware
+} from 'type-graphql'
 import { LoginResponse } from '@/responses/LoginResponse'
 import { LoginArgs } from '@/args/LoginArgs'
 import { Context } from '@/Context'
 import { User } from '@/entities/User'
 import { Repository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
-import { createAccessToken } from '@/auth'
+import { createAccessToken } from '@/Auth'
 import * as argon2 from 'argon2'
-import { RequiresAuth } from '@/middleware/RequiresAuth'
 import { SignUpArgs } from '@/args/SignUpArgs'
-import { bannedWords } from '@/bannedWords'
+import { bannedWords } from '@/BannedWords'
+import { format } from 'date-fns'
 
 @Resolver()
 export class AuthResolver {
@@ -25,7 +33,7 @@ export class AuthResolver {
 
     bannedWords.forEach((u) => {
       if (username.toLowerCase().includes(u.toLowerCase())) {
-        throw new Error('Inappropiate Username')
+        throw new Error('Inappropriate Username')
       }
     })
 
@@ -40,9 +48,14 @@ export class AuthResolver {
       username,
       email,
       passwordHash,
-      bio: 'New Comet user',
       createdAt: new Date(),
-      lastLogin: new Date()
+      lastLogin: new Date(),
+      profile: {
+        bio: `My name is ${username} and I joined CometX.io on ${format(
+          new Date(),
+          'MMM. do, yyyy'
+        )}`
+      }
     } as User)
 
     return {
@@ -77,8 +90,8 @@ export class AuthResolver {
     } as LoginResponse
   }
 
+  @Authorized()
   @Mutation(() => LoginResponse)
-  @UseMiddleware(RequiresAuth)
   async changePassword(
     @Arg('oldPassword') oldPassword: string,
     @Arg('newPassword') newPassword: string,

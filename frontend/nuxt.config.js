@@ -116,7 +116,7 @@ export default {
   tailwindcss: {
     // add '~tailwind.config` alias - increases bundle size
     exposeConfig: true,
-    configPath: '@/tailwind.config.js'
+    configPath: '~~/tailwind.config.js'
   },
 
   css: ['@/assets/css/inter/inter.css', '@/assets/css/toast/themes/sugar/index.scss'],
@@ -160,24 +160,6 @@ export default {
         },
         wsEndpoint: null
       }
-    }
-  },
-
-  router: {
-    extendRoutes (routes, resolve) {
-      routes.push(
-        {
-          name: 'user-tab',
-          path: '/:id/:tab?',
-          component: resolve(__dirname, 'src/pages/_id.vue')
-        },
-        {
-          name: 'user-tab-sort',
-          path: '/:id/:tab/:sort?',
-          component: resolve(__dirname, 'src/pages/_id.vue')
-        }
-      )
-      sortRoutes(routes)
     }
   }
 }

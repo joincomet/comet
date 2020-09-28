@@ -11,12 +11,12 @@
             <Icon class="h-6 mb-3" name="comet-logo" />
           </nuxt-link>
 
-          <h1 v-if="error.statusCode === 404">
+          <div v-if="error.statusCode === 404" class="text-xl">
             {{ pageNotFound }}
-          </h1>
-          <h1 v-else>
+          </div>
+          <div v-else class="text-xl">
             {{ otherError }}
-          </h1>
+          </div>
           <nuxt-link to="/" class="underline text-accent">
             Home page
           </nuxt-link>
@@ -27,55 +27,7 @@
 </template>
 
 <script>
-import AppBar from '@/components/AppBar'
-import NavDrawer from '@/components/NavDrawer'
-
 export default {
-  name: 'Default',
-  components: { AppBar, NavDrawer },
-  data () {
-    return {
-      loginDialog: false
-    }
-  },
-
-  methods: {
-    openLoginDialog () {
-      this.loginDialog = true
-    }
-  }
-}
-</script>
-
-<style scoped>
-
-</style>
-
-<template>
-  <div id="app">
-    <div class="flex justify-center flex-grow">
-      <nuxt-link to="/">
-        <Icon class="h-6 mb-3" name="comet-logo" />
-      </nuxt-link>
-
-      <h1 v-if="error.statusCode === 404">
-        {{ pageNotFound }}
-      </h1>
-      <h1 v-else>
-        {{ otherError }}
-      </h1>
-      <nuxt-link to="/" class="underline text-accent">
-        Home page
-      </nuxt-link>
-    </div>
-  </div>
-</template>
-
-<script>
-import Icon from '@/components/Icon'
-
-export default {
-  components: { Icon },
   layout: 'empty',
   props: {
     error: {
@@ -100,7 +52,4 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  font-size: 20px;
-}
 </style>

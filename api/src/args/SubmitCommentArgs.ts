@@ -4,7 +4,9 @@ import { Length, Matches } from 'class-validator'
 @ArgsType()
 export class SubmitCommentArgs {
   @Field()
-  @Length(1, 100000, { message: 'Text must be between 1 and 100000 characters' })
+  @Length(1, 100000, {
+    message: 'Text must be between 1 and 100000 characters'
+  })
   @Matches(/[^ ]+/)
   textContent: string
 

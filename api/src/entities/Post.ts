@@ -1,24 +1,29 @@
-import { Field, ID, ObjectType } from 'type-graphql'
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
+import { Authorized, Field, ID, ObjectType } from 'type-graphql'
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn
+} from 'typeorm'
 import { Comment } from '@/entities/Comment'
-import { Lazy } from '@/lazy'
+import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
-import { PostEndorsement } from '@/entities/PostEndorsement'
-import { PostView } from '@/entities/PostView'
-import { Planet } from '@/entities/Planet'
-
-export enum PostType {
-  TEXT = 'TEXT',
-  LINK = 'LINK',
-  IMAGE = 'IMAGE'
-}
+import { PostUpvote } from '@/entities/PostUpvote'
+import { Community } from '@/entities/Community'
+import { formatDistanceToNowStrict } from 'date-fns'
 
 @ObjectType()
 @Entity()
 export class Post {
   @Field(() => ID)
-  @PrimaryColumn('varchar', { length: 20 })
-  id: string
+  @PrimaryGeneratedColumn()
+  _id: number
+
+  @Field()
+  get id(): string {
+    return this._id.toString(36)
+  }
 
   @Field()
   @Column()
@@ -38,28 +43,26 @@ export class Post {
 
   @Field(() => ID)
   @Column({ nullable: true })
-  authorId: string
-
-  @Field(() => PostType)
-  @Column({
-    type: 'enum',
-    enum: PostType
-  })
-  type: PostType
+  authorId: number
 
   @Field()
   @Column()
   createdAt: Date
 
   @Field()
-  timeSince: string
+  get timeSince(): string {
+    return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+  }
 
   @Field({ nullable: true })
   @Column({ nullable: true })
   editedAt?: Date
 
   @Field({ nullable: true })
-  editedTimeSince: string
+  get editedTimeSince(): string | null {
+    if (!this.editedAt) return null
+    return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
+  }
 
   @Field()
   @Column({ default: false })
@@ -72,62 +75,57 @@ export class Post {
   @Column({ default: 0 })
   commentCount: number
 
-  @Field(() => Planet, { nullable: true })
-  @ManyToOne(() => Planet, (planet) => planet.posts, {
+  @Field(() => Community, { nullable: true })
+  @ManyToOne(() => Community, (community) => community.posts, {
     cascade: true,
     nullable: true
   })
-  planet: Lazy<Planet>
+  community?: Lazy<Community>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  planetName: string
+  communityId?: number
 
-  @Field()
-  @Column({ default: false })
-  postedToProfile: boolean
-
-  @OneToMany(() => PostEndorsement, (endorsement) => endorsement.post)
-  endorsements: Lazy<PostEndorsement[]>
+  @OneToMany(() => PostUpvote, (vote) => vote.post)
+  upvotes: Lazy<PostUpvote[]>
 
   @Field()
   @Column({ default: 0 })
-  endorsementCount: number
-
-  personalEndorsementCount = 0
-
-  @OneToMany(() => PostView, (postView) => postView.post)
-  postViews: Lazy<PostView[]>
+  upvoteCount: number
 
   @Field()
-  newCommentCount: number
+  upvoted: boolean
 
+  @Authorized('ADMIN')
   @Field()
-  isEndorsed: boolean
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  thumbnailUrl?: string
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  domain?: string
-
   @Column({ default: false })
   deleted: boolean
 
+  @Authorized('ADMIN')
+  @Field()
   @Column({ default: false })
   removed: boolean
 
+  @Authorized('ADMIN')
+  @Field()
   @Column({ nullable: true })
   removedReason?: string
 
-  @Field({ nullable: true })
-  postView: PostView
+  @Field()
+  hidden: boolean
 
   @Field()
-  isHidden: boolean
+  get relativeUrl(): string {
+    const slug = this.title
+      .toLowerCase()
+      .trim()
+      .split(' ')
+      .slice(0, 9)
+      .join('_')
+      .replace(/[^a-z0-9_]+/gi, '')
+      .replace(/[_](.)\1+/g, '$1')
+    return `/+${this.community}/${this.id}/${slug}`
+  }
 
-  @Field()
-  relativeUrl: string
+  personalUpvoteCount = 0
 }

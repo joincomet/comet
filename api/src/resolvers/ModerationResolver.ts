@@ -1,48 +1,47 @@
 import { RepositoryInjector } from '@/RepositoryInjector'
-import { Arg, ID, Mutation, UseMiddleware } from 'type-graphql'
-import { Planet } from '@/entities/Planet'
+import { Arg, Authorized, ID, Mutation, UseMiddleware } from 'type-graphql'
+import { Community } from '@/entities/Community'
 import { s3upload } from '@/S3Storage'
 import { Stream } from 'stream'
-import { RequiresMod } from '@/middleware/RequiresMod'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 export class ModerationResolver extends RepositoryInjector {
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
   async removePost(
-    @Arg('planetName', () => ID) planetName: string,
-    @Arg('postId', () => ID) postId: string,
+    @Arg('community', () => ID) community: string,
+    @Arg('postId', () => ID) postId: number,
     @Arg('removedReason') removedReason: string
   ) {
     await this.postRepository.update(postId, { removed: true, removedReason })
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
   async pinPost(
-    @Arg('planetName', () => ID) planetName: string,
-    @Arg('postId', () => ID) postId: string
+    @Arg('community', () => ID) community: string,
+    @Arg('postId', () => ID) postId: number
   ) {
     await this.postRepository.update(postId, { sticky: true })
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
   async unpinPost(
-    @Arg('planetName', () => ID) planetName: string,
-    @Arg('postId', () => ID) postId: string
+    @Arg('community', () => ID) community: string,
+    @Arg('postId', () => ID) postId: number
   ) {
     await this.postRepository.update(postId, { sticky: false })
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
   async removeComment(
-    @Arg('planetName', () => ID) planetName: string,
-    @Arg('commentId', () => ID) commentId: string,
+    @Arg('community', () => ID) community: string,
+    @Arg('commentId', () => ID) commentId: number,
     @Arg('removedReason') removedReason: string
   ) {
     const comment = await this.commentRepository.findOne(commentId)
@@ -55,38 +54,38 @@ export class ModerationResolver extends RepositoryInjector {
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
-  async banUserFromPlanet(
-    @Arg('planetName', () => ID) planetName: string,
-    @Arg('bannedUserId', () => ID) bannedUserId: string
+  async banUserFromCommunity(
+    @Arg('community', () => ID) community: string,
+    @Arg('bannedUserId', () => ID) bannedUserId: number
   ) {
-    await this.planetRepository
+    await this.communityRepository
       .createQueryBuilder()
-      .relation(Planet, 'bannedUsers')
-      .of(planetName)
+      .relation(Community, 'bannedUsers')
+      .of(community)
       .add(bannedUserId)
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
-  async unbanUserFromPlanet(
-    @Arg('planetName', () => ID) planetName: string,
-    @Arg('bannedUserId', () => ID) bannedUserId: string
+  async unbanUserFromCommunity(
+    @Arg('community', () => ID) community: string,
+    @Arg('bannedUserId', () => ID) bannedUserId: number
   ) {
-    await this.planetRepository
+    await this.communityRepository
       .createQueryBuilder()
-      .relation(Planet, 'bannedUsers')
-      .of(planetName)
+      .relation(Community, 'bannedUsers')
+      .of(community)
       .remove(bannedUserId)
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
-  async uploadPlanetAvatarImage(
-    @Arg('planetName', () => ID) planetName: string,
+  async uploadCommunityAvatarImage(
+    @Arg('community', () => ID) community: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
     const { createReadStream, mimetype } = await file
@@ -98,19 +97,21 @@ export class ModerationResolver extends RepositoryInjector {
     createReadStream().pipe(outStream)
 
     const url = await s3upload(
-      `planet/${planetName}/avatar.png`,
+      `community/${community}/avatar.png`,
       outStream,
       file.mimetype
     )
 
-    await this.planetRepository.update(planetName, { avatarImageUrl: url })
+    await this.communityRepository.update(community, {
+      avatarImageUrl: url
+    })
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
-  async uploadPlanetBannerImage(
-    @Arg('planetName', () => ID) planetName: string,
+  async uploadCommunityBannerImage(
+    @Arg('community', () => ID) community: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
     const { createReadStream, mimetype } = await file
@@ -122,19 +123,21 @@ export class ModerationResolver extends RepositoryInjector {
     createReadStream().pipe(outStream)
 
     const url = await s3upload(
-      `planet/${planetName}/banner.png`,
+      `community/${community}/banner.png`,
       outStream,
       file.mimetype
     )
 
-    await this.planetRepository.update(planetName, { bannerImageUrl: url })
+    await this.communityRepository.update(community, {
+      bannerImageUrl: url
+    })
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
-  async setPlanetInfo(
-    @Arg('planetName', () => ID) planetName: string,
+  async setCommunityInfo(
+    @Arg('community', () => ID) community: string,
     @Arg('allowTextPosts') allowTextPosts: boolean,
     @Arg('allowLinkPosts') allowLinkPosts: boolean,
     @Arg('allowImagePosts') allowImagePosts: boolean,
@@ -152,7 +155,7 @@ export class ModerationResolver extends RepositoryInjector {
     if (themeColor && !/^#[0-9A-F]{6}$/i.test(themeColor))
       throw new Error('Invalid color')
 
-    await this.planetRepository.update(planetName, {
+    await this.communityRepository.update(community, {
       allowTextPosts,
       allowLinkPosts,
       allowImagePosts,
@@ -165,24 +168,10 @@ export class ModerationResolver extends RepositoryInjector {
     return true
   }
 
+  @Authorized('MOD')
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
-  async removePlanetAvatar(@Arg('planetName', () => ID) planetName: string) {
-    await this.planetRepository.update(planetName, { avatarImageUrl: null })
-    return true
-  }
-
-  @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
-  async removePlanetBanner(@Arg('planetName', () => ID) planetName: string) {
-    await this.planetRepository.update(planetName, { bannerImageUrl: null })
-    return true
-  }
-
-  @Mutation(() => Boolean)
-  @UseMiddleware(RequiresMod)
   async addModerator(
-    @Arg('planetName', () => ID) planetName: string,
+    @Arg('community', () => ID) community: string,
     @Arg('username') username: string
   ) {
     const user = await this.userRepository
@@ -191,26 +180,26 @@ export class ModerationResolver extends RepositoryInjector {
         username: username.replace(/_/g, '\\_')
       })
       .andWhere('user.banned = false')
-      .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
+      .leftJoinAndSelect('user.moderatedCommunities', 'moderatedCommunity')
       .getOne()
 
     if (!user) throw new Error('User not found')
     if (
-      !!(await user.moderatedPlanets).find(
-        (p) => p.name.toLowerCase() === planetName.toLowerCase()
+      (await user.moderatedCommunities).find(
+        (p) => p.name.toLowerCase() === community.toLowerCase()
       )
     ) {
-      throw new Error(
-        `${user.username} is already a moderator of ${planetName}`
-      )
+      throw new Error(`${user.username} is already a moderator of ${community}`)
     }
-    if ((await user.moderatedPlanets).length >= 10)
-      throw new Error(`${user.username} cannot moderate more than 10 planets`)
+    if ((await user.moderatedCommunities).length >= 3)
+      throw new Error(
+        `${user.username} cannot moderate more than 3 communities`
+      )
 
-    await this.planetRepository
+    await this.communityRepository
       .createQueryBuilder()
-      .relation(Planet, 'moderators')
-      .of(planetName)
+      .relation(Community, 'moderators')
+      .of(community)
       .add(user.id)
     return true
   }

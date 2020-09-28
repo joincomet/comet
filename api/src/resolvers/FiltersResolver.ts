@@ -2,23 +2,23 @@ import { Ctx, Query, Resolver } from 'type-graphql'
 import { RepositoryInjector } from '@/RepositoryInjector'
 import { Context } from '@/Context'
 import { User } from '@/entities/User'
-import { Planet } from '@/entities/Planet'
+import { Community } from '@/entities/Community'
 
 @Resolver()
 export class FiltersResolver extends RepositoryInjector {
-  @Query(() => [Planet])
-  async mutedPlanets(@Ctx() { userId }: Context) {
+  @Query(() => [Community])
+  async mutedcommunities(@Ctx() { userId }: Context) {
     if (!userId) return []
 
-    const planets = await this.userRepository
+    const communities = await this.userRepository
       .createQueryBuilder()
-      .relation(User, 'mutedPlanets')
+      .relation(User, 'mutedcommunities')
       .of(userId)
       .loadMany()
 
-    planets.forEach((planet) => (planet.muted = true))
+    communities.forEach((community) => (community.muted = true))
 
-    return planets
+    return communities
   }
 
   @Query(() => [User])
@@ -40,6 +40,7 @@ export class FiltersResolver extends RepositoryInjector {
       .whereInIds(blockedUsersIds)
       .andWhere('user.banned = false')
       .loadRelationCountAndMap('user.followerCount', 'user.followers')
+      .loadRelationCountAndMap('user.followingCount', 'user.following')
       .loadRelationCountAndMap(
         'user.commentCount',
         'user.comments',

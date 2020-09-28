@@ -1,33 +1,31 @@
 import {
   Arg,
   Args,
+  Authorized,
   Ctx,
   FieldResolver,
   ID,
   Mutation,
   Query,
   Resolver,
-  Root,
-  UseMiddleware
+  Root
 } from 'type-graphql'
-import { RequiresAuth } from '@/middleware/RequiresAuth'
 import { Context } from '@/Context'
 import { RepositoryInjector } from '@/RepositoryInjector'
 import { Comment } from '@/entities/Comment'
 import { SubmitCommentArgs } from '@/args/SubmitCommentArgs'
-import shortid from 'shortid'
 import { PostCommentsArgs } from '@/args/PostCommentsArgs'
 import { User } from '@/entities/User'
-import { ReplyNotification } from '@/entities/ReplyNotification'
+import { Notification } from '@/entities/Notification'
 import { filterXSS } from 'xss'
-import { whiteList } from '@/xssWhiteList'
-import { CommentEndorsement } from '@/entities/CommentEndorsement'
-import { flat } from '@/flat'
+import { whiteList } from '@/XSSWhiteList'
+import { CommentUpvote } from '@/entities/CommentUpvote'
+import { flat } from '@/Flat'
 import { formatDistanceToNowStrict } from 'date-fns'
 
 @Resolver(() => Comment)
 export class CommentResolver extends RepositoryInjector {
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Comment)
   async submitComment(
     @Args() { textContent, postId, parentCommentId }: SubmitCommentArgs,
@@ -36,44 +34,37 @@ export class CommentResolver extends RepositoryInjector {
     const post = await this.postRepository
       .createQueryBuilder('post')
       .where('post.id = :postId', { postId })
-      .leftJoinAndSelect('post.planet', 'planet')
-      .leftJoinAndSelect('planet.bannedUsers', 'bannedUser')
+      .leftJoinAndSelect('post.community', 'community')
+      .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
       .getOne()
-    const bannedUsers = await (await post.planet).bannedUsers
+    const bannedUsers = await (await post.community).bannedUsers
     if (bannedUsers.map((u) => u.id).includes(userId))
-      throw new Error('You have been banned from ' + (await post.planet).name)
-
-    /*if (user.lastCommentedAt && !user.admin) {
-      if (differenceInSeconds(new Date(), user.lastCommentedAt) < 15) {
-        throw new Error('Please wait 15 seconds between comments')
-      }
-    }*/
+      throw new Error(
+        'You have been banned from ' + (await post.community).name
+      )
 
     textContent = filterXSS(textContent, { whiteList })
 
     this.userRepository.update(userId, { lastCommentedAt: new Date() })
 
-    const commentId = shortid.generate()
-
     const savedComment = await this.commentRepository.save({
-      id: commentId,
       textContent,
       parentCommentId,
       postId,
       authorId: userId,
       createdAt: new Date(),
-      isEndorsed: true,
-      endorsementCount: 1
-    } as Comment)
+      upvoted: true,
+      upvoteCount: 1
+    })
 
-    this.commentEndorsementRepository.save({
-      commentId,
+    this.commentUpvoteRepository.save({
+      commentId: savedComment.id,
       userId,
       active: true,
       createdAt: new Date()
-    } as CommentEndorsement)
+    } as CommentUpvote)
 
-    this.userRepository.increment({ id: userId }, 'endorsementCount', 1)
+    this.userRepository.increment({ id: userId }, 'upvoteCount', 1)
 
     this.postRepository.increment({ id: postId }, 'commentCount', 1)
 
@@ -82,25 +73,25 @@ export class CommentResolver extends RepositoryInjector {
         parentCommentId
       )
       if (parentComment.authorId !== userId) {
-        this.replyNotifRepository.save({
+        this.notificationRepository.save({
           commentId,
           fromUserId: userId,
           toUserId: parentComment.authorId,
           postId,
           createdAt: new Date(),
           parentCommentId
-        } as ReplyNotification)
+        } as Notification)
       }
     } else {
       const post = await this.postRepository.findOne(postId)
       if (post.authorId !== userId) {
-        this.replyNotifRepository.save({
+        this.notificationRepository.save({
           commentId,
           fromUserId: userId,
           toUserId: post.authorId,
           postId,
           createdAt: new Date()
-        } as ReplyNotification)
+        } as Notification)
       }
     }
 
@@ -122,13 +113,13 @@ export class CommentResolver extends RepositoryInjector {
 
     if (userId) {
       qb.loadRelationCountAndMap(
-        'comment.personalEndorsementCount',
-        'comment.endorsements',
-        'endorsement',
+        'comment.personalUpvoteCount',
+        'comment.upvotes',
+        'upvote',
         (qb) => {
           return qb
-            .andWhere('endorsement.active = true')
-            .andWhere('endorsement.userId = :userId', { userId })
+            .andWhere('upvote.active = true')
+            .andWhere('upvote.userId = :userId', { userId })
         }
       )
 
@@ -146,16 +137,16 @@ export class CommentResolver extends RepositoryInjector {
     }
 
     /*if (sort === Sort.TOP) {
-      qb.addOrderBy('comment.endorsementCount', 'DESC')
+      qb.addOrderBy('comment.upvoteCount', 'DESC')
     }*/
 
     qb.addOrderBy('comment.createdAt', 'DESC')
-    qb.addOrderBy('comment.endorsementCount', 'DESC')
+    qb.addOrderBy('comment.upvoteCount', 'DESC')
 
     const postComments = await qb.getMany()
 
     postComments.forEach((comment) => {
-      comment.isEndorsed = Boolean(comment.personalEndorsementCount)
+      comment.upvoted = Boolean(comment.personalUpvoteCount)
       if (comment.deleted) {
         comment.textContent = `<p>[deleted]</p>`
         comment.authorId = null
@@ -214,10 +205,10 @@ export class CommentResolver extends RepositoryInjector {
     return comments
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async deleteComment(
-    @Arg('commentId', () => ID) commentId: string,
+    @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
     const comment = await this.commentRepository.findOne(commentId)
@@ -237,10 +228,10 @@ export class CommentResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async editComment(
-    @Arg('commentId', () => ID) commentId: string,
+    @Arg('commentId', () => ID) commentId: number,
     @Arg('newTextContent') newTextContent: string,
     @Ctx() { userId }: Context
   ) {
@@ -261,10 +252,10 @@ export class CommentResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
-  async toggleCommentEndorsement(
-    @Arg('commentId', () => ID) commentId: string,
+  async toggleCommentUpvote(
+    @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
     const comment = await this.commentRepository
@@ -276,18 +267,18 @@ export class CommentResolver extends RepositoryInjector {
 
     let active: boolean
 
-    const endorsement = await this.commentEndorsementRepository.findOne({
+    const upvote = await this.commentUpvoteRepository.findOne({
       commentId,
       userId
     })
-    if (endorsement) {
-      await this.commentEndorsementRepository.update(
+    if (upvote) {
+      await this.commentUpvoteRepository.update(
         { commentId, userId },
-        { active: !endorsement.active }
+        { active: !upvote.active }
       )
-      active = !endorsement.active
+      active = !upvote.active
     } else {
-      await this.commentEndorsementRepository.save({
+      await this.commentUpvoteRepository.save({
         commentId,
         userId,
         createdAt: new Date(),
@@ -299,9 +290,7 @@ export class CommentResolver extends RepositoryInjector {
     this.commentRepository.update(
       { id: commentId },
       {
-        endorsementCount: active
-          ? comment.endorsementCount + 1
-          : comment.endorsementCount - 1
+        upvoteCount: active ? comment.upvoteCount + 1 : comment.upvoteCount - 1
       }
     )
 
@@ -309,19 +298,17 @@ export class CommentResolver extends RepositoryInjector {
     this.userRepository.update(
       { id: author.id },
       {
-        endorsementCount: active
-          ? author.endorsementCount + 1
-          : author.endorsementCount - 1
+        upvoteCount: active ? author.upvoteCount + 1 : author.upvoteCount - 1
       }
     )
 
     return active
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async saveComment(
-    @Arg('commentId', () => ID) commentId: string,
+    @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
     await this.userRepository
@@ -338,10 +325,10 @@ export class CommentResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async unsaveComment(
-    @Arg('commentId', () => ID) commentId: string,
+    @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
     await this.userRepository
@@ -361,16 +348,5 @@ export class CommentResolver extends RepositoryInjector {
   @FieldResolver()
   async post(@Root() comment: Comment, @Ctx() { postLoader }: Context) {
     return postLoader.load(comment.postId)
-  }
-
-  @FieldResolver()
-  timeSince(@Root() comment: Comment) {
-    return formatDistanceToNowStrict(new Date(comment.createdAt)) + ' ago'
-  }
-
-  @FieldResolver({ nullable: true })
-  editedTimeSince(@Root() comment: Comment) {
-    if (!comment.editedAt) return null
-    return formatDistanceToNowStrict(new Date(comment.editedAt)) + ' ago'
   }
 }

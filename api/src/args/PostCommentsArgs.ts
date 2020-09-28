@@ -1,11 +1,11 @@
 import { ArgsType, Field, ID } from 'type-graphql'
-import { Sort } from '@/args/FeedArgs'
+import { PostSort } from '@/types/PostSort'
 
 @ArgsType()
 export class PostCommentsArgs {
   @Field(() => ID)
   postId: string
 
-  @Field(() => Sort, { defaultValue: Sort.TOP })
-  sort: Sort = Sort.TOP
+  @Field(() => PostSort, { defaultValue: PostSort.TOP })
+  sort: PostSort = PostSort.TOP
 }

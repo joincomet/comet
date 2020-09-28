@@ -1,27 +1,21 @@
 import 'reflect-metadata'
 import { buildSchema, registerEnumType } from 'type-graphql'
 import * as TypeORM from 'typeorm'
-import { getRepository } from 'typeorm'
 import { Container } from 'typedi'
-import { getUser } from '@/auth'
+import { getUser } from '@/Auth'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import { ApolloServer } from 'apollo-server-express'
 import { Context } from '@/Context'
-import {
-  CommentLoader,
-  PostLoader,
-  PostViewLoader,
-  UserLoader
-} from '@/loaders'
-import { PostType } from '@/entities/Post'
-import { Filter, Sort, Time, Type } from '@/args/FeedArgs'
-import { CommentSort } from '@/args/UserCommentsArgs'
-import { Galaxy } from '@/entities/Galaxy'
-import { galaxiesList } from '@/galaxiesList'
+import { CommentLoader, PostLoader, UserLoader } from '@/Loaders'
 import { graphqlUploadExpress } from 'graphql-upload'
 import fs from 'fs'
 import path from 'path'
+import { authChecker } from '@/AuthChecker'
+import { PostSort } from '@/types/PostSort'
+import { TimeFilter } from '@/types/TimeFilter'
+import { Feed } from '@/types/Feed'
+import { CommentSort } from '@/types/CommentSort'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -37,42 +31,53 @@ async function bootstrap() {
   try {
     await TypeORM.createConnection({
       type: 'postgres',
-      username: process.env.NODE_ENV === 'production' ? process.env.DB_USERNAME : 'postgres',
-      password: process.env.NODE_ENV === 'production' ? process.env.DB_PASSWORD : 'password',
-      host: process.env.NODE_ENV === 'production' ? process.env.DB_HOST : 'postgres',
-      port: process.env.NODE_ENV === 'production' ? parseInt(process.env.DB_PORT) : 5432,
-      database: process.env.NODE_ENV === 'production' ? process.env.DB_DATABASE : 'postgres',
+      username:
+        process.env.NODE_ENV === 'production'
+          ? process.env.DB_USERNAME
+          : 'postgres',
+      password:
+        process.env.NODE_ENV === 'production'
+          ? process.env.DB_PASSWORD
+          : 'password',
+      host:
+        process.env.NODE_ENV === 'production'
+          ? process.env.DB_HOST
+          : 'postgres',
+      port:
+        process.env.NODE_ENV === 'production'
+          ? parseInt(process.env.DB_PORT)
+          : 5432,
+      database:
+        process.env.NODE_ENV === 'production'
+          ? process.env.DB_DATABASE
+          : 'postgres',
       // url: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'postgresql://postgres:password@postgres:5432/postgres',
       entities: [__dirname + '/entities/**/*.{ts,js}'],
-      synchronize: true,
+      synchronize: false,
       logging: process.env.NODE_ENV !== 'production',
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
-      ssl: process.env.NODE_ENV === 'production' ? {
-        ca: fs.readFileSync(path.resolve(__dirname, '../ca-certificate.crt'), { encoding: 'utf8' })
-      } : undefined
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? {
+              ca: fs.readFileSync(
+                path.resolve(__dirname, '../ca-certificate.crt'),
+                { encoding: 'utf8' }
+              )
+            }
+          : undefined
     })
 
-    getRepository(Galaxy).save(galaxiesList)
-
-    registerEnumType(PostType, {
-      name: 'PostType'
-    })
-
-    registerEnumType(Sort, {
+    registerEnumType(PostSort, {
       name: 'Sort'
     })
 
-    registerEnumType(Time, {
+    registerEnumType(TimeFilter, {
       name: 'Time'
     })
 
-    registerEnumType(Filter, {
+    registerEnumType(Feed, {
       name: 'Filter'
-    })
-
-    registerEnumType(Type, {
-      name: 'Type'
     })
 
     registerEnumType(CommentSort, {
@@ -84,7 +89,9 @@ async function bootstrap() {
       resolvers: [__dirname + '/resolvers/**/*.{ts,js}'],
       emitSchemaFile: false,
       container: Container,
-      validate: true
+      validate: true,
+      authChecker: authChecker,
+      authMode: 'null'
     })
 
     const app = express()
@@ -115,11 +122,10 @@ async function bootstrap() {
         return {
           req,
           res,
-          userId: getUser(req),
+          ...getUser(req),
           userLoader: UserLoader,
           postLoader: PostLoader,
-          commentLoader: CommentLoader,
-          postViewLoader: PostViewLoader
+          commentLoader: CommentLoader
         } as Context
       },
       uploads: false,

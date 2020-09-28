@@ -1,12 +1,19 @@
 import { ArgsType, Field } from 'type-graphql'
-import {IsEmail, IsOptional, Length, Matches, ValidateIf} from 'class-validator'
-import { LoginArgs } from '@/args/LoginArgs'
+import {
+  IsEmail,
+  IsOptional,
+  Length,
+  Matches,
+  ValidateIf
+} from 'class-validator'
 
 @ArgsType()
 export class SignUpArgs {
   @Field()
   @Length(3, 15, { message: 'Username must be between 3 and 15 characters.' })
-  @Matches(/^[a-zA-Z0-9_]+$/, { message: 'Username can only have letters, numbers, and underscores.' })
+  @Matches(/^[a-zA-Z0-9_]+$/, {
+    message: 'Username can only have letters, numbers, and underscores.'
+  })
   username: string
 
   @Field()

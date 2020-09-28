@@ -1,27 +1,23 @@
 import { RepositoryInjector } from '@/RepositoryInjector'
-import { Arg, Ctx, ID, Mutation, UseMiddleware } from 'type-graphql'
-import { RequiresAdmin } from '@/middleware/RequiresAdmin'
-import { Context } from '@/Context'
+import { Arg, Authorized, ID, Mutation } from 'type-graphql'
 
 export class AdminResolver extends RepositoryInjector {
-  @UseMiddleware(RequiresAdmin)
+  @Authorized('ADMIN')
   @Mutation(() => Boolean)
   async banUser(
-    @Arg('bannedId', () => ID) bannedId: string,
-    @Arg('banReason') banReason: string,
-    @Ctx() { userId }: Context
+    @Arg('bannedId', () => ID) bannedId: number,
+    @Arg('banReason') banReason: string
   ) {
     await this.userRepository.update(bannedId, { banned: true, banReason })
 
     return true
   }
 
-  @UseMiddleware(RequiresAdmin)
+  @Authorized('ADMIN')
   @Mutation(() => Boolean)
   async banAndPurgeUser(
-    @Arg('bannedId', () => ID) bannedId: string,
-    @Arg('banReason') banReason: string,
-    @Ctx() { userId }: Context
+    @Arg('bannedId', () => ID) bannedId: number,
+    @Arg('banReason') banReason: string
   ) {
     await this.userRepository.update(bannedId, { banned: true, banReason })
 
@@ -33,12 +29,9 @@ export class AdminResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAdmin)
+  @Authorized('ADMIN')
   @Mutation(() => Boolean)
-  async unbanUser(
-    @Arg('bannedId', () => ID) bannedId: string,
-    @Ctx() { userId }: Context
-  ) {
+  async unbanUser(@Arg('bannedId', () => ID) bannedId: number) {
     await this.userRepository.update(bannedId, {
       banned: false,
       banReason: null

@@ -1,25 +1,24 @@
 <template>
-  <LazyUserPage v-if="id.startsWith('@')" :user="user">
-    {{ id }}
-  </LazyUserPage>
-  <LazyPlanetPage v-else-if="id.startsWith('+')" :planet="planet">
-    {{ id }}
-  </LazyPlanetPage>
+  <LazyUserPage v-if="id.startsWith('@')" :user="user" />
+  <LazyPlanetPage v-else-if="id.startsWith('+')" :planet="planet" />
+  <LazyGalaxyPage v-else-if="id.startsWith('#')" :galaxy="galaxy" />
 </template>
 
 <script>
 import userGql from '@/gql/user.graphql'
 import planetGql from '@/gql/planet.graphql'
+import galaxyGql from '@/gql/galaxy.graphql'
 
 export default {
   middleware ({ redirect, params }) {
     const { id } = params
-    if (id.length === 1 || (!id.startsWith('@') && !id.startsWith('+'))) { return redirect('/') }
+    if (id.length === 1 || !['+', '@', '#'].includes(id[0])) { return redirect('/') }
   },
   async asyncData ({ app, params }) {
     const client = app.apolloProvider.defaultClient
     let user = null
     let planet = null
+    const galaxy = null
     const { id } = params
     if (id.startsWith('@')) {
       user = (await client.query({
@@ -35,17 +34,26 @@ export default {
           planetName: id.substring(1)
         }
       })).data.planet
+    } else if (id.startsWith('#')) {
+      planet = (await client.query({
+        query: galaxyGql,
+        variables: {
+          galaxyName: id.substring(1)
+        }
+      })).data.galaxy
     }
 
     return {
       user,
-      planet
+      planet,
+      galaxy
     }
   },
   data () {
     return {
       user: null,
-      planet: null
+      planet: null,
+      galaxy: null
     }
   },
   computed: {

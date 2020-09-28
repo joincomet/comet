@@ -36,7 +36,7 @@ export default function (ctx, inject) {
         colorMode.addClass(newValue)
       }
     },
-    created () {
+    beforeMount () {
       if (this.preference === 'system') {
         this._watchMedia()
       }

@@ -21,11 +21,11 @@ export class NotificationResolver extends RepositoryInjector {
   ) {
     if (!userId) return []
 
-    const qb = this.replyNotifRepository
+    const qb = this.notificationRepository
       .createQueryBuilder('notification')
       .leftJoinAndSelect('notification.fromUser', 'fromUser')
       .leftJoinAndSelect('notification.post', 'post')
-      .leftJoinAndSelect('post.planet', 'planet')
+      .leftJoinAndSelect('post.community', 'community')
       .leftJoinAndSelect(
         'notification.comment',
         'comment',
@@ -46,10 +46,10 @@ export class NotificationResolver extends RepositoryInjector {
   @UseMiddleware(RequiresAuth)
   @Mutation(() => Boolean)
   async markNotificationRead(
-    @Arg('id', () => ID) id: string,
+    @Arg('id', () => ID) Id: number,
     @Ctx() { userId }: Context
   ) {
-    await this.replyNotifRepository
+    await this.notificationRepository
       .createQueryBuilder()
       .update()
       .set({ read: true })
@@ -62,7 +62,7 @@ export class NotificationResolver extends RepositoryInjector {
   @UseMiddleware(RequiresAuth)
   @Mutation(() => Boolean)
   async markAllNotificationsRead(@Ctx() { userId }: Context) {
-    await this.replyNotifRepository
+    await this.notificationRepository
       .createQueryBuilder()
       .update()
       .set({ read: true })

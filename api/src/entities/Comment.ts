@@ -4,23 +4,29 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   Tree,
   TreeChildren,
   TreeParent
 } from 'typeorm'
-import { Lazy } from '@/lazy'
+import { Lazy } from '@/Lazy'
 import { Post } from '@/entities/Post'
-import { CommentEndorsement } from '@/entities/CommentEndorsement'
+import { CommentUpvote } from '@/entities/CommentUpvote'
 import { User } from '@/entities/User'
+import { formatDistanceToNowStrict } from 'date-fns'
 
 @ObjectType()
 @Entity()
 @Tree('materialized-path')
 export class Comment {
   @Field(() => ID)
-  @PrimaryColumn('varchar', { length: 20 })
-  id: string
+  @PrimaryGeneratedColumn()
+  _id: number
+
+  @Field()
+  get id(): string {
+    return this._id.toString(36)
+  }
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.comments)
@@ -28,7 +34,7 @@ export class Comment {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  authorId: string
+  authorId: number
 
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post, (post) => post.comments)
@@ -36,11 +42,11 @@ export class Comment {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  postId: string
+  postId: number
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  rootCommentId: string
+  rootCommentId: number
 
   @Field()
   @Column('text')
@@ -51,14 +57,19 @@ export class Comment {
   createdAt: Date
 
   @Field()
-  timeSince: string
+  get timeSince(): string {
+    return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+  }
 
   @Field({ nullable: true })
   @Column({ nullable: true })
   editedAt?: Date
 
   @Field({ nullable: true })
-  editedTimeSince: string
+  get editedTimeSince(): string | null {
+    if (!this.editedAt) return null
+    return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
+  }
 
   @Field(() => Comment, { nullable: true })
   @TreeParent()
@@ -66,22 +77,22 @@ export class Comment {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  parentCommentId: string
+  parentCommentId: number
 
   @TreeChildren()
   childComments: Lazy<Comment[]>
 
-  @OneToMany(() => CommentEndorsement, (endorsement) => endorsement.comment)
-  endorsements: Lazy<CommentEndorsement[]>
+  @OneToMany(() => CommentUpvote, (upvote) => upvote.comment)
+  upvotes: Lazy<CommentUpvote[]>
 
   @Field()
   @Column({ default: 0 })
-  endorsementCount: number
+  upvoteCount: number
 
-  personalEndorsementCount: number
+  personalUpvoteCount: number
 
   @Field()
-  isEndorsed: boolean
+  upvoted: boolean
 
   @Column({ default: false })
   deleted: boolean

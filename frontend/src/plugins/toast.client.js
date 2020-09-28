@@ -1,4 +1,4 @@
 import Vue from 'vue'
-import VueToast from '@/components/toast'
+import VueToast from '@/components/common/toast'
 
 Vue.use(VueToast)

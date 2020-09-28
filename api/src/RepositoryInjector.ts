@@ -3,27 +3,27 @@ import { InjectRepository } from 'typeorm-typedi-extensions'
 import { User } from '@/entities/User'
 import { Repository, TreeRepository } from 'typeorm'
 import { Comment } from '@/entities/Comment'
-import { PostEndorsement } from '@/entities/PostEndorsement'
-import { CommentEndorsement } from '@/entities/CommentEndorsement'
-import { PostView } from '@/entities/PostView'
-import { ReplyNotification } from '@/entities/ReplyNotification'
-import { Planet } from '@/entities/Planet'
-import { Galaxy } from '@/entities/Galaxy'
+import { PostUpvote } from '@/entities/PostUpvote'
+import { CommentUpvote } from '@/entities/CommentUpvote'
+import { Notification } from '@/entities/Notification'
+import { Community } from '@/entities/Community'
+import { Tag } from '@/entities/Tag'
 
 export class RepositoryInjector {
   @InjectRepository(User) readonly userRepository: Repository<User>
 
   @InjectRepository(Post) readonly postRepository: Repository<Post>
-  @InjectRepository(PostView) readonly postViewRepository: Repository<PostView>
-  @InjectRepository(PostEndorsement)
-  readonly postEndorsementRepository: Repository<PostEndorsement>
+  @InjectRepository(PostUpvote)
+  readonly postUpvoteRepository: Repository<PostUpvote>
 
   @InjectRepository(Comment) readonly commentRepository: TreeRepository<Comment>
-  @InjectRepository(CommentEndorsement)
-  readonly commentEndorsementRepository: Repository<CommentEndorsement>
-  @InjectRepository(ReplyNotification)
-  readonly replyNotifRepository: Repository<ReplyNotification>
+  @InjectRepository(CommentUpvote)
+  readonly commentUpvoteRepository: Repository<CommentUpvote>
+  @InjectRepository(Notification)
+  readonly notificationRepository: Repository<Notification>
 
-  @InjectRepository(Planet) readonly planetRepository: Repository<Planet>
-  @InjectRepository(Galaxy) readonly galaxyRepository: Repository<Galaxy>
+  @InjectRepository(Community) readonly communityRepository: Repository<
+    Community
+  >
+  @InjectRepository(Tag) readonly tagRepository: Repository<Tag>
 }

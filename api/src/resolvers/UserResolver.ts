@@ -1,27 +1,25 @@
 import {
   Arg,
   Args,
+  Authorized,
   Ctx,
   FieldResolver,
   ID,
   Mutation,
   Query,
   Resolver,
-  Root,
-  UseMiddleware
+  Root
 } from 'type-graphql'
 import { Context } from '@/Context'
 import { User } from '@/entities/User'
-import { RequiresAuth } from '@/middleware/RequiresAuth'
 import { Comment } from '@/entities/Comment'
-import { CommentSort, UserCommentsArgs } from '@/args/UserCommentsArgs'
+import { UserCommentsArgs } from '@/args/UserCommentsArgs'
 import { RepositoryInjector } from '@/RepositoryInjector'
-import { Time } from '@/args/FeedArgs'
-import { discordSendFeedback } from '@/DiscordBot'
 import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { formatDistanceToNowStrict } from 'date-fns'
+import { TimeFilter } from '@/types/TimeFilter'
+import { CommentSort } from '@/types/CommentSort'
 
 @Resolver(() => User)
 export class UserResolver extends RepositoryInjector {
@@ -35,32 +33,29 @@ export class UserResolver extends RepositoryInjector {
       .createQueryBuilder('user')
       .whereInIds(userId)
       .andWhere('user.banned = false')
-      .leftJoinAndSelect('user.moderatedPlanets', 'planet')
-      .addSelect('COUNT(posts.id)', 'planet_total')
+      .leftJoinAndSelect('user.moderatedCommunities', 'community')
+      .addSelect('COUNT(posts.id)', 'community_total')
       .leftJoin(
-        'planet.posts',
+        'community.posts',
         'posts',
         "posts.deleted = false AND posts.createdAt > NOW() - INTERVAL '1 day'"
       )
       .addGroupBy('user.id')
-      .addGroupBy('planet.name')
+      .addGroupBy('community.name')
       .getOne()
 
     if (!user) return null
 
     const lastLogin = new Date()
     user.lastLogin = lastLogin
-    let ipAddresses = user.ipAddresses
-    ipAddresses.unshift(req.ip)
-    ipAddresses = [...new Set(ipAddresses)]
-    this.userRepository.update(user.id, { lastLogin, ipAddresses })
+    this.userRepository.update(user.id, { lastLogin })
 
-    user.moderatedPlanets = (await user.moderatedPlanets).filter(
+    user.moderatedCommunities = (await user.moderatedCommunities).filter(
       (p) => !!p.name
     )
 
-    for (const planet of user.moderatedPlanets) {
-      planet.postCount = planet.total
+    for (const community of user.moderatedCommunities) {
+      community.postCount = community.total
     }
 
     return user
@@ -77,6 +72,7 @@ export class UserResolver extends RepositoryInjector {
       })
       .andWhere('user.banned = false')
       .loadRelationCountAndMap('user.followerCount', 'user.followers')
+      .loadRelationCountAndMap('user.followingCount', 'user.following')
       .loadRelationCountAndMap(
         'user.commentCount',
         'user.comments',
@@ -90,7 +86,7 @@ export class UserResolver extends RepositoryInjector {
           .andWhere('post.deleted = false')
           .andWhere('post.removed = false')
       })
-      .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
+      .leftJoinAndSelect('user.moderatedCommunities', 'moderatedCommunity')
       .getOne()
   }
 
@@ -118,39 +114,39 @@ export class UserResolver extends RepositoryInjector {
 
     if (sort === CommentSort.TOP) {
       switch (time) {
-        case Time.HOUR:
+        case TimeFilter.HOUR:
           qb.andWhere("comment.createdAt > NOW() - INTERVAL '1 hour'")
           break
-        case Time.DAY:
+        case TimeFilter.DAY:
           qb.andWhere("comment.createdAt > NOW() - INTERVAL '1 day'")
           break
-        case Time.WEEK:
+        case TimeFilter.WEEK:
           qb.andWhere("comment.createdAt > NOW() - INTERVAL '1 week'")
           break
-        case Time.MONTH:
+        case TimeFilter.MONTH:
           qb.andWhere("comment.createdAt > NOW() - INTERVAL '1 month'")
           break
-        case Time.YEAR:
+        case TimeFilter.YEAR:
           qb.andWhere("comment.createdAt > NOW() - INTERVAL '1 year'")
           break
-        case Time.ALL:
+        case TimeFilter.ALL:
           break
         default:
           break
       }
-      qb.addOrderBy('comment.endorsementCount', 'DESC')
+      qb.addOrderBy('comment.upvoteCount', 'DESC')
     }
     qb.addOrderBy('comment.createdAt', 'DESC')
 
     if (userId) {
       qb.loadRelationCountAndMap(
-        'comment.personalEndorsementCount',
-        'comment.endorsements',
-        'endorsement',
+        'comment.personalUpvoteCount',
+        'comment.upvotes',
+        'upvote',
         (qb) => {
           return qb
-            .andWhere('endorsement.active = true')
-            .andWhere('endorsement.userId = :userId', { userId })
+            .andWhere('upvote.active = true')
+            .andWhere('upvote.userId = :userId', { userId })
         }
       )
     }
@@ -158,38 +154,36 @@ export class UserResolver extends RepositoryInjector {
     const comments = await qb.getMany()
 
     comments.forEach(
-      (comment) =>
-        (comment.isEndorsed = Boolean(comment.personalEndorsementCount))
+      (comment) => (comment.upvoted = Boolean(comment.personalUpvoteCount))
     )
 
     return comments
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async setProfilePic(
     @Ctx() { userId }: Context,
     @Arg('image', () => GraphQLUpload, { nullable: true }) image: FileUpload
   ) {
     const { createReadStream, mimetype } = await image
-      if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-        throw new Error('Image must be PNG or JPEG')
+    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
+      throw new Error('Image must be PNG or JPEG')
 
-      const outStream = new Stream.PassThrough()
-      createReadStream().pipe(outStream)
+    const outStream = new Stream.PassThrough()
+    createReadStream().pipe(outStream)
 
-      const avatarImageUrl = await s3upload(
-        `profile/${userId}.png`,
-        outStream,
-        mimetype,
-        true
-      )
+    const avatarImageUrl = await s3upload(
+      `profile/${userId}.png`,
+      outStream,
+      mimetype
+    )
 
     await this.userRepository.update(userId, { avatarImageUrl })
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async setBio(@Arg('bio') bio: string, @Ctx() { userId }: Context) {
     if (bio.length > 160) throw new Error('Bio must be 160 characters or less')
@@ -197,7 +191,7 @@ export class UserResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async setAppearOffline(
     @Arg('appearOffline') appearOffline: boolean,
@@ -208,7 +202,7 @@ export class UserResolver extends RepositoryInjector {
   }
 
   @Mutation(() => Boolean)
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   async uploadAvatar(
     @Arg('file', () => GraphQLUpload) file: FileUpload,
     @Ctx() { userId }: Context
@@ -226,15 +220,15 @@ export class UserResolver extends RepositoryInjector {
       outStream,
       file.mimetype
     )
-
-    await this.userRepository.update(userId, { avatarImageUrl: url })
+    // TODO
+    // await this.userRepository.update(userId, { avatarImageUrl: url })
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async followUser(
-    @Arg('followedId', () => ID) followedId: string,
+    @Arg('followedId', () => ID) followedId: number,
     @Ctx() { userId }: Context
   ) {
     if (followedId === userId) {
@@ -250,10 +244,10 @@ export class UserResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async unfollowUser(
-    @Arg('followedId', () => ID) followedId: string,
+    @Arg('followedId', () => ID) followedId: number,
     @Ctx() { userId }: Context
   ) {
     if (followedId === userId) {
@@ -269,7 +263,7 @@ export class UserResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async blockUser(
     @Arg('blockedUsername') blockedUsername: string,
@@ -296,10 +290,10 @@ export class UserResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async unblockUser(
-    @Arg('blockedId', () => ID) blockedId: string,
+    @Arg('blockedId', () => ID) blockedId: number,
     @Ctx() { userId }: Context
   ) {
     if (blockedId === userId) {
@@ -311,20 +305,6 @@ export class UserResolver extends RepositoryInjector {
       .relation(User, 'blockedUsers')
       .of(userId)
       .remove(blockedId)
-    return true
-  }
-
-  @Mutation(() => Boolean)
-  async sendFeedback(
-    @Arg('feedback') feedback: string,
-    @Ctx() { userId }: Context
-  ) {
-    let username = 'Anonymous'
-    if (userId) {
-      const user = await this.userRepository.findOne(userId)
-      username = user.username
-    }
-    await discordSendFeedback(feedback, username)
     return true
   }
 
@@ -419,16 +399,5 @@ export class UserResolver extends RepositoryInjector {
   @FieldResolver(() => Boolean)
   async isCurrentUser(@Root() user: User, @Ctx() { userId }: Context) {
     return user.id === userId
-  }
-
-  @FieldResolver(() => Date, { nullable: true })
-  async lastLogin(@Root() user: User) {
-    if (user.appearOffline) return null
-    return user.lastLogin
-  }
-
-  @FieldResolver()
-  timeSinceCreated(@Root() user: User) {
-    return formatDistanceToNowStrict(new Date(user.createdAt)) + ' ago'
   }
 }

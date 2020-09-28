@@ -1,37 +1,29 @@
 import shortid from 'shortid'
 import AWS from 'aws-sdk'
 
-if (
-  process.env.AWS_S3_BUCKET &&
-  process.env.AWS_ACCESS_KEY_ID &&
-  process.env.AWS_SECRET_ACCESS_KEY
-) {
-  AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  })
-} else {
-  console.warn('Missing AWS environment variables. Image upload will not work.')
-}
-
 export const s3 = new AWS.S3({
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string
-  }
+  },
+  endpoint: `https://${process.env.AWS_S3_BUCKET}.${process.env.AWS_ENDPOINT}`
 })
 
 export const s3upload = async (
-  Key: string,
-  Body: any,
-  ContentType: string,
-  cacheBust = true
+  key: string,
+  body: any,
+  contentType: string
 ): Promise<string> => {
+  if (process.env.NODE_ENV !== 'production') {
+    key = 'dev/' + key
+  } else if (process.env.STAGING === 'true') {
+    key = 'staging/' + key
+  }
   const upload = s3.upload({
-    Bucket: process.env.AWS_S3_BUCKET as string,
-    Key,
-    Body,
-    ContentType,
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: key,
+    Body: body,
+    ContentType: contentType,
     ACL: 'public-read'
   })
 
@@ -42,11 +34,7 @@ export const s3upload = async (
           reject(err)
         }
 
-        resolve(
-          `${result.Location.replace('s3.amazonaws.com/', '')}${
-            cacheBust ? '?rand=' + shortid.generate() : ''
-          }`
-        )
+        resolve(`https://${process.env.AWS_S3_BUCKET}/${key}`)
       })
     })
   } catch (e) {
