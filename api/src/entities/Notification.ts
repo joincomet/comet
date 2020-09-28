@@ -10,11 +10,11 @@ import { User } from '@/entities/User'
 export class Notification {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  readonly _id: number
+  readonly id: number
 
   @Field()
-  get id(): string {
-    return this._id.toString(36)
+  get id36(): string {
+    return this.id.toString(36)
   }
 
   @Field(() => User, { nullable: true })
@@ -23,7 +23,7 @@ export class Notification {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  touserId: number
+  toUserId: number
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User)
@@ -31,7 +31,7 @@ export class Notification {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  fromuserId: number
+  fromUserId: number
 
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post)

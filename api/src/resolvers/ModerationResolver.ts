@@ -102,9 +102,7 @@ export class ModerationResolver extends RepositoryInjector {
       file.mimetype
     )
 
-    await this.communityRepository.update(community, {
-      avatarImageUrl: url
-    })
+    // TODO
     return true
   }
 
@@ -128,43 +126,7 @@ export class ModerationResolver extends RepositoryInjector {
       file.mimetype
     )
 
-    await this.communityRepository.update(community, {
-      bannerImageUrl: url
-    })
-    return true
-  }
-
-  @Authorized('MOD')
-  @Mutation(() => Boolean)
-  async setCommunityInfo(
-    @Arg('community', () => ID) community: string,
-    @Arg('allowTextPosts') allowTextPosts: boolean,
-    @Arg('allowLinkPosts') allowLinkPosts: boolean,
-    @Arg('allowImagePosts') allowImagePosts: boolean,
-    @Arg('modPostsOnly') modPostsOnly: boolean,
-    @Arg('description') description: string,
-    @Arg('customName', { nullable: true }) customName?: string,
-    @Arg('themeColor', { nullable: true }) themeColor?: string
-  ) {
-    if (customName && customName.length > 50)
-      throw new Error('Custom name must be 50 characters or less')
-
-    if (description && description.length > 10000)
-      throw new Error('Custom name must be 10000 characters or less')
-
-    if (themeColor && !/^#[0-9A-F]{6}$/i.test(themeColor))
-      throw new Error('Invalid color')
-
-    await this.communityRepository.update(community, {
-      allowTextPosts,
-      allowLinkPosts,
-      allowImagePosts,
-      modPostsOnly,
-      customName,
-      description,
-      themeColor
-    })
-
+    // TODO
     return true
   }
 

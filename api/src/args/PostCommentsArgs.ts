@@ -4,7 +4,7 @@ import { PostSort } from '@/types/PostSort'
 @ArgsType()
 export class PostCommentsArgs {
   @Field(() => ID)
-  postId: string
+  postId: number
 
   @Field(() => PostSort, { defaultValue: PostSort.TOP })
   sort: PostSort = PostSort.TOP

@@ -33,7 +33,7 @@ export class CommentResolver extends RepositoryInjector {
   ) {
     const post = await this.postRepository
       .createQueryBuilder('post')
-      .where('post.id = :postId', { postId })
+      .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.community', 'community')
       .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
       .getOne()
@@ -44,8 +44,6 @@ export class CommentResolver extends RepositoryInjector {
       )
 
     textContent = filterXSS(textContent, { whiteList })
-
-    this.userRepository.update(userId, { lastCommentedAt: new Date() })
 
     const savedComment = await this.commentRepository.save({
       textContent,
@@ -74,7 +72,7 @@ export class CommentResolver extends RepositoryInjector {
       )
       if (parentComment.authorId !== userId) {
         this.notificationRepository.save({
-          commentId,
+          commentId: savedComment.id,
           fromUserId: userId,
           toUserId: parentComment.authorId,
           postId,
@@ -86,7 +84,7 @@ export class CommentResolver extends RepositoryInjector {
       const post = await this.postRepository.findOne(postId)
       if (post.authorId !== userId) {
         this.notificationRepository.save({
-          commentId,
+          commentId: savedComment.id,
           fromUserId: userId,
           toUserId: post.authorId,
           postId,

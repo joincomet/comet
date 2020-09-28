@@ -21,11 +21,11 @@ import { formatDistanceToNowStrict } from 'date-fns'
 export class Comment {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  _id: number
+  id: number
 
   @Field()
-  get id(): string {
-    return this._id.toString(36)
+  get id36(): string {
+    return this.id.toString(36)
   }
 
   @Field(() => User, { nullable: true })

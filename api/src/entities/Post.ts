@@ -18,11 +18,11 @@ import { formatDistanceToNowStrict } from 'date-fns'
 export class Post {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  _id: number
+  id: number
 
   @Field()
-  get id(): string {
-    return this._id.toString(36)
+  get id36(): string {
+    return this.id.toString(36)
   }
 
   @Field()
@@ -124,7 +124,7 @@ export class Post {
       .join('_')
       .replace(/[^a-z0-9_]+/gi, '')
       .replace(/[_](.)\1+/g, '$1')
-    return `/+${this.community}/${this.id}/${slug}`
+    return `/+${this.community}/${this.id36}/${slug}`
   }
 
   personalUpvoteCount = 0

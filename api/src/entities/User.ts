@@ -22,11 +22,11 @@ import { UserSettings } from '@/types/UserSettings'
 export class User {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  readonly _id: number
+  readonly id: number
 
   @Field()
-  get id(): string {
-    return this._id.toString(36)
+  get id36(): string {
+    return this.id.toString(36)
   }
 
   @Field()

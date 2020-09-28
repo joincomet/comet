@@ -49,12 +49,11 @@ export class CommunityResolver extends RepositoryInjector {
     await this.communityRepository.save({
       name,
       description,
-      tags: tags,
       createdAt: new Date(),
       creatorId: userId,
       moderators: [{ id: userId }],
       users: [{ id: userId }]
-    } as Community)
+    })
 
     return true
   }
@@ -87,7 +86,7 @@ export class CommunityResolver extends RepositoryInjector {
         'community.users',
         'user',
         (qb) => {
-          return qb.andWhere('user.id = :userId', { userId })
+          return qb.andWhere('user.id  = :userId', { userId })
         }
       )
     }
@@ -98,12 +97,14 @@ export class CommunityResolver extends RepositoryInjector {
   }
 
   @Query(() => [Community])
-  async recentCommunities(@Arg('communitys', () => [ID]) communitys: string[]) {
-    if (communitys.length === 0) return []
+  async recentCommunities(
+    @Arg('recentCommunities', () => [ID]) recentCommunities: string[]
+  ) {
+    if (recentCommunities.length === 0) return []
     const qb = this.communityRepository
       .createQueryBuilder('community')
-      .andWhere('community.name ILIKE ANY(:communitys)', {
-        communitys: communitys.map((p) => p.replace(/_/g, '\\_'))
+      .andWhere('community.name ILIKE ANY(:communities)', {
+        communities: recentCommunities.map((p) => p.replace(/_/g, '\\_'))
       })
       .addGroupBy('community.name')
       .addSelect('COUNT(posts.id)', 'community_total')
@@ -117,12 +118,12 @@ export class CommunityResolver extends RepositoryInjector {
     communities.forEach((community) => {
       community.postCount = community.total
     })
-    return communitys
+    return recentCommunities
       .map((name) => communities.find((p) => p.name === name))
       .filter((p) => !!p)
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async joinCommunity(
     @Arg('community', () => ID) community: string,
@@ -136,7 +137,7 @@ export class CommunityResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async leaveCommunity(
     @Arg('community', () => ID) community: string,
@@ -150,7 +151,7 @@ export class CommunityResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async muteCommunity(
     @Arg('community', () => ID) community: string,
@@ -179,7 +180,7 @@ export class CommunityResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async unmuteCommunity(
     @Arg('community', () => ID) community: string,
@@ -240,7 +241,7 @@ export class CommunityResolver extends RepositoryInjector {
         'community.users',
         'user',
         (qb) => {
-          return qb.andWhere('user.id = :userId', { userId })
+          return qb.andWhere('user.id  = :userId', { userId })
         }
       )
     }

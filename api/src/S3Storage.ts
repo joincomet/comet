@@ -1,9 +1,8 @@
-import shortid from 'shortid'
 import AWS from 'aws-sdk'
 
 export const s3 = new AWS.S3({
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+    accessKeyId: process.env.AWS_ACCESS_KEYid as string,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string
   },
   endpoint: `https://${process.env.AWS_S3_BUCKET}.${process.env.AWS_ENDPOINT}`

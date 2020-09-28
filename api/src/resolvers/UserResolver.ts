@@ -160,47 +160,6 @@ export class UserResolver extends RepositoryInjector {
     return comments
   }
 
-  @Authorized()
-  @Mutation(() => Boolean)
-  async setProfilePic(
-    @Ctx() { userId }: Context,
-    @Arg('image', () => GraphQLUpload, { nullable: true }) image: FileUpload
-  ) {
-    const { createReadStream, mimetype } = await image
-    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-      throw new Error('Image must be PNG or JPEG')
-
-    const outStream = new Stream.PassThrough()
-    createReadStream().pipe(outStream)
-
-    const avatarImageUrl = await s3upload(
-      `profile/${userId}.png`,
-      outStream,
-      mimetype
-    )
-
-    await this.userRepository.update(userId, { avatarImageUrl })
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async setBio(@Arg('bio') bio: string, @Ctx() { userId }: Context) {
-    if (bio.length > 160) throw new Error('Bio must be 160 characters or less')
-    await this.userRepository.update(userId, { bio })
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async setAppearOffline(
-    @Arg('appearOffline') appearOffline: boolean,
-    @Ctx() { userId }: Context
-  ) {
-    await this.userRepository.update(userId, { appearOffline })
-    return true
-  }
-
   @Mutation(() => Boolean)
   @Authorized()
   async uploadAvatar(
@@ -314,11 +273,11 @@ export class UserResolver extends RepositoryInjector {
 
     user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.id = :userId', { userId: userId })
+      .where('user.id  = :userId', { userId: userId })
       .leftJoinAndSelect(
         'user.following',
         'targetUser',
-        'targetUser.id = :targetId',
+        'targetuser.id  = :targetId',
         {
           targetId: user.id
         }
@@ -336,11 +295,11 @@ export class UserResolver extends RepositoryInjector {
 
     user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.id = :userId', { userId: user.id })
+      .where('user.id  = :userId', { userId: user.id })
       .leftJoinAndSelect(
         'user.following',
         'targetUser',
-        'targetUser.id = :targetId',
+        'targetuser.id  = :targetId',
         {
           targetId: userId
         }
@@ -358,11 +317,11 @@ export class UserResolver extends RepositoryInjector {
 
     user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.id = :userId', { userId: user.id })
+      .where('user.id  = :userId', { userId: user.id })
       .leftJoinAndSelect(
         'user.blockedUsers',
         'targetUser',
-        'targetUser.id = :targetId',
+        'targetuser.id  = :targetId',
         {
           targetId: userId
         }
@@ -380,11 +339,11 @@ export class UserResolver extends RepositoryInjector {
 
     user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.id = :userId', { userId: userId })
+      .where('user.id  = :userId', { userId: userId })
       .leftJoinAndSelect(
         'user.blockedUsers',
         'targetUser',
-        'targetUser.id = :targetId',
+        'targetuser.id  = :targetId',
         {
           targetId: user.id
         }

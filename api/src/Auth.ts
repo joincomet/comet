@@ -3,7 +3,7 @@ import { User } from '@/entities/User'
 
 export const createAccessToken = (user: User) => {
   return sign(
-    { userId36: user.id, userId: user._id },
+    { userId36: user.id, userId: user.id },
     process.env.ACCESS_TOKEN_SECRET!,
     {
       expiresIn: '7d'

@@ -15,15 +15,17 @@ import { Post } from '@/entities/Post'
 import { SubmitPostArgs } from '@/args/SubmitPostArgs'
 import { Context } from '@/Context'
 import { getTitleAtUrl } from '@/iFramely'
-import { FeedArgs, Feed, PostSort, TimeFilter } from '@/args/FeedArgs'
+import { FeedArgs } from '@/args/FeedArgs'
 import { User } from '@/entities/User'
 import { discordReport } from '@/DiscordBot'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
-import { Community } from '@/entities/Community'
 import { PostUpvote } from '@/entities/PostUpvote'
 import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
+import { TimeFilter } from '@/types/TimeFilter'
+import { PostSort } from '@/types/PostSort'
+import { Feed } from '@/types/Feed'
 
 @Resolver(() => Post)
 export class PostResolver extends RepositoryInjector {
@@ -142,7 +144,7 @@ export class PostResolver extends RepositoryInjector {
       }
       if (sort === PostSort.TOP) {
         qb.addOrderBy('post.upvoteCount', 'DESC')
-      } else if (sort === PostSort.MOSTCOMMENTS) {
+      } else if (sort === PostSort.COMMENTS) {
         qb.addOrderBy('post.commentCount', 'DESC')
       }
       qb.addOrderBy('post.createdAt', 'DESC')
@@ -165,7 +167,7 @@ export class PostResolver extends RepositoryInjector {
         const blockedUsers = (await user.blockedUsers).map((user) => user.id)
         const hiddenPosts = (await user.hiddenPosts).map((post) => post.id)
 
-        if (!community && feed === Feed.MYcommunities) {
+        if (!community && feed === Feed.JOINED) {
           const communities = (await user.communities).map(
             (community) => community.name
           )
@@ -182,7 +184,7 @@ export class PostResolver extends RepositoryInjector {
           blockedUsers
         })
 
-        qb.andWhere('NOT (post.id = ANY(:hiddenPosts))', { hiddenPosts })
+        qb.andWhere('NOT (post.id  = ANY(:hiddenPosts))', { hiddenPosts })
 
         qb.loadRelationCountAndMap(
           'post.personalUpvoteCount',
@@ -200,7 +202,7 @@ export class PostResolver extends RepositoryInjector {
           'community.users',
           'user',
           (qb) => {
-            return qb.andWhere('user.id = :userId', { userId })
+            return qb.andWhere('user.id  = :userId', { userId })
           }
         )
       }
@@ -241,7 +243,7 @@ export class PostResolver extends RepositoryInjector {
           'community.users',
           'user',
           (qb) => {
-            return qb.andWhere('user.id = :userId', { userId })
+            return qb.andWhere('user.id  = :userId', { userId })
           }
         )
       }
@@ -300,15 +302,14 @@ export class PostResolver extends RepositoryInjector {
   }
 
   @Query(() => Post, { nullable: true })
-  async post(
-    @Arg('postId', () => ID) postId: number,
-    @Ctx() { userId }: Context
-  ) {
+  async post(@Arg('postId', () => ID) postId: any, @Ctx() { userId }: Context) {
     if (!postId) return null
+
+    postId = parseInt(postId, 36)
 
     const qb = this.postRepository
       .createQueryBuilder('post')
-      .where('post.id = :postId', { postId })
+      .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.community', 'community')
       .loadRelationCountAndMap('community.userCount', 'community.users')
       .leftJoinAndSelect('community.galaxy', 'galaxy')
@@ -329,7 +330,7 @@ export class PostResolver extends RepositoryInjector {
         'community.users',
         'user',
         (qb) => {
-          return qb.andWhere('user.id = :userId', { userId })
+          return qb.andWhere('user.id  = :userId', { userId })
         }
       )
     }
@@ -372,7 +373,7 @@ export class PostResolver extends RepositoryInjector {
       .getOne()
     const bannedUsers = await cmmnty.bannedUsers
     if (bannedUsers.map((u) => u.id).includes(userId))
-      throw new Error('You have been banned from ' + community)
+      throw new Error('You have been banned from ' + cmmnty.name)
 
     if (textContent) {
       textContent = filterXSS(textContent, { whiteList })
@@ -383,8 +384,8 @@ export class PostResolver extends RepositoryInjector {
       link,
       textContent,
       createdAt: new Date(),
-      authorId: parseInt(userId, 36),
-      community: { name: community },
+      authorId: userId,
+      communityId: cmmnty.id,
       upvoteCount: 1
     })
 
@@ -397,21 +398,17 @@ export class PostResolver extends RepositoryInjector {
       const outStream = new Stream.PassThrough()
       createReadStream().pipe(outStream)
 
-      link = await s3upload(`uploads/${postId}.png`, outStream, mimetype, false)
+      link = await s3upload(`uploads/${post.id}.png`, outStream, mimetype)
     }
 
     this.postUpvoteRepository.save({
-      postId: post._id,
-      userId: parseInt(userId, 36),
+      postId: post.id,
+      userId: userId,
       active: true,
       createdAt: new Date()
     } as PostUpvote)
 
-    this.userRepository.increment(
-      { _id: parseInt(userId, 36) },
-      'upvoteCount',
-      1
-    )
+    this.userRepository.increment({ id: userId }, 'upvoteCount', 1)
 
     return post
   }

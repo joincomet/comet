@@ -1,20 +1,19 @@
 import { RepositoryInjector } from '@/RepositoryInjector'
 import {
   Arg,
+  Authorized,
   Ctx,
   ID,
   Mutation,
   Query,
-  Resolver,
-  UseMiddleware
+  Resolver
 } from 'type-graphql'
-import { RequiresAuth } from '@/middleware/RequiresAuth'
-import { ReplyNotification } from '@/entities/ReplyNotification'
+import { Notification } from '@/entities/Notification'
 import { Context } from '@/Context'
 
 @Resolver()
 export class NotificationResolver extends RepositoryInjector {
-  @Query(() => [ReplyNotification])
+  @Query(() => [Notification])
   async notifications(
     @Arg('unreadOnly', { defaultValue: false }) unreadOnly: boolean,
     @Ctx() { userId }: Context
@@ -43,10 +42,10 @@ export class NotificationResolver extends RepositoryInjector {
     )
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async markNotificationRead(
-    @Arg('id', () => ID) Id: number,
+    @Arg('id', () => ID) id: number,
     @Ctx() { userId }: Context
   ) {
     await this.notificationRepository
@@ -59,7 +58,7 @@ export class NotificationResolver extends RepositoryInjector {
     return true
   }
 
-  @UseMiddleware(RequiresAuth)
+  @Authorized()
   @Mutation(() => Boolean)
   async markAllNotificationsRead(@Ctx() { userId }: Context) {
     await this.notificationRepository

@@ -19,11 +19,11 @@ import { CommunitySettings } from '@/types/CommunitySettings'
 export class Community {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  _id: number
+  id: number
 
   @Field()
-  get id(): string {
-    return this._id.toString(36)
+  get id36(): string {
+    return this.id.toString(36)
   }
 
   @Field()
@@ -32,6 +32,7 @@ export class Community {
 
   @Authorized('MOD')
   @Field()
+  @Column({ default: CommunitySettings })
   settings: CommunitySettings
 
   @Field()
