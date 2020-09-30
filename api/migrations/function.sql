@@ -1,3 +1,49 @@
+ALTER TABLE "planet"
+    ADD COLUMN "settings" jsonb;
+UPDATE planet T
+SET settings = (SELECT to_json(concat(
+        '{',
+        '"avatarImageUrl": "', T."avatarImageUrl", '", ',
+        '"bannerImageUrl": "', T."bannerImageUrl", '", ',
+        '"themeColor": "', T."themeColor", '", ',
+        '"customName": "', T."customName", '", ',
+        '"description": "', T."description", '"',
+        '}'))::jsonb AS settings
+                FROM planet
+                WHERE "name" = T."name")
+WHERE 1 = 1;
+
+ALTER TABLE "user"
+    ADD COLUMN "settings" jsonb;
+UPDATE "user" T
+SET settings = (SELECT to_json(concat(
+        '{',
+        '"appearOffline": ', (SELECT (CASE WHEN T."appearOffline" = TRUE THEN 'true' ELSE 'false' END)
+                FROM "user"
+                WHERE "id" = T."id"),
+        '}'))::jsonb AS settings
+                FROM "user"
+                WHERE "id" = T."id")
+WHERE 1 = 1;
+
+ALTER TABLE "user"
+    ADD COLUMN "profile" jsonb;
+UPDATE "user" T
+SET profile = (SELECT to_json(concat(
+        '{',
+        '"avatarImageUrl": "', T."profilePicUrl", '", ',
+        '"bannerImageUrl": "', T."bannerImageUrl", '", ',
+        '"bio": "', T."bio", '", ',
+        '"tag": "', T."tag", '", ',
+        '"tagColor": "', T."tagColor", '", ',
+        '"fullName": "', T."username", '"',
+        '}'))::jsonb AS profile
+               FROM "user"
+               WHERE "id" = T."id")
+WHERE 1 = 1;
+
+
+
 CREATE OR REPLACE FUNCTION drop_unneeded_tables() RETURNS void AS
 $$
 BEGIN
@@ -46,6 +92,9 @@ BEGIN
 
     ALTER TABLE "comment"
         DROP COLUMN "rootCommentId";
+
+    ALTER TABLE "post"
+        DROP COLUMN "domain";
 
     ALTER TABLE "planet"
         DROP COLUMN "allowTextPosts";
@@ -103,6 +152,9 @@ BEGIN
         RENAME COLUMN "createdAt" TO "created_at";
     ALTER TABLE "planet"
         RENAME COLUMN "creatorId" TO "creator_id";
+    ALTER TABLE "planet"
+        ADD COLUMN "temp_name" text NOT NULL default '';
+    UPDATE "planet" SET "temp_name" = "name";
     ALTER TABLE "planet"
         RENAME COLUMN "name" TO "id";
 
@@ -165,9 +217,9 @@ BEGIN
         ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
     ALTER TABLE "comment"
         ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
-    ALTER TABLE "planet"
-        ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
     ALTER TABLE "post"
+        ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
+    ALTER TABLE "planet"
         ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
 END;
 $$ LANGUAGE plpgsql;
@@ -234,6 +286,8 @@ BEGIN
         RENAME COLUMN "planet_id" TO "community_id";
     ALTER TABLE post
         RENAME COLUMN "planet_id" TO "community_id";
+    ALTER TABLE planet
+        RENAME COLUMN "temp_name" TO "name";
 
     ALTER TABLE planet
         RENAME TO community;

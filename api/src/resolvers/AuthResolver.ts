@@ -18,6 +18,7 @@ import * as argon2 from 'argon2'
 import { SignUpArgs } from '@/args/SignUpArgs'
 import { bannedWords } from '@/BannedWords'
 import { format } from 'date-fns'
+import { UserProfile } from '@/types/UserProfile'
 
 @Resolver()
 export class AuthResolver {
@@ -54,7 +55,8 @@ export class AuthResolver {
         bio: `My name is ${username} and I joined CometX.io on ${format(
           new Date(),
           'MMM. do, yyyy'
-        )}`
+        )}`,
+        ...new UserProfile()
       }
     } as User)
 
