@@ -16,6 +16,7 @@ import { PostSort } from '@/types/PostSort'
 import { TimeFilter } from '@/types/TimeFilter'
 import { Feed } from '@/types/Feed'
 import { CommentSort } from '@/types/CommentSort'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -65,7 +66,8 @@ async function bootstrap() {
                 { encoding: 'utf8' }
               )
             }
-          : undefined
+          : undefined,
+      namingStrategy: new SnakeNamingStrategy()
     })
 
     registerEnumType(PostSort, {

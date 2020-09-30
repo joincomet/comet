@@ -44,10 +44,6 @@ export class Comment {
   @Column({ nullable: true })
   postId: number
 
-  @Field(() => ID, { nullable: true })
-  @Column({ nullable: true })
-  rootCommentId: number
-
   @Field()
   @Column('text')
   textContent: string

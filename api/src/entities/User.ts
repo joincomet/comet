@@ -16,6 +16,7 @@ import { Community } from '@/entities/Community'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { UserProfile } from '@/types/UserProfile'
 import { UserSettings } from '@/types/UserSettings'
+import { GraphQLJSONObject } from 'graphql-type-json'
 
 @ObjectType()
 @Entity()
@@ -39,12 +40,12 @@ export class User {
   email?: string
 
   @Authorized('USER')
-  @Field()
-  @Column()
+  @Field(() => GraphQLJSONObject)
+  @Column('jsonb', { default: new UserSettings() })
   settings: UserSettings
 
-  @Field()
-  @Column()
+  @Field(() => GraphQLJSONObject)
+  @Column('jsonb', { default: new UserProfile() })
   profile: UserProfile
 
   @Field()

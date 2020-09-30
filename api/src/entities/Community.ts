@@ -13,6 +13,7 @@ import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
 import { Tag } from '@/entities/Tag'
 import { CommunitySettings } from '@/types/CommunitySettings'
+import { GraphQLJSONObject } from 'graphql-type-json'
 
 @ObjectType()
 @Entity()
@@ -31,8 +32,8 @@ export class Community {
   name: string
 
   @Authorized('MOD')
-  @Field()
-  @Column({ default: CommunitySettings })
+  @Field(() => GraphQLJSONObject)
+  @Column('jsonb', { default: new CommunitySettings() })
   settings: CommunitySettings
 
   @Field()

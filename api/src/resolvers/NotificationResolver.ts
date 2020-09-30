@@ -38,7 +38,8 @@ export class NotificationResolver extends RepositoryInjector {
     const notifications = await qb.getMany()
 
     return notifications.filter(
-      (notif) => notif.comment !== null && notif.comment !== undefined
+      (notification) =>
+        notification.comment !== null && notification.comment !== undefined
     )
   }
 
