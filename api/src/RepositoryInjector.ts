@@ -1,7 +1,7 @@
 import { Post } from '@/entities/Post'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { User } from '@/entities/User'
-import { Repository, TreeRepository } from 'typeorm'
+import { Repository } from 'typeorm'
 import { Comment } from '@/entities/Comment'
 import { PostUpvote } from '@/entities/PostUpvote'
 import { CommentUpvote } from '@/entities/CommentUpvote'
@@ -16,7 +16,7 @@ export class RepositoryInjector {
   @InjectRepository(PostUpvote)
   readonly postUpvoteRepository: Repository<PostUpvote>
 
-  @InjectRepository(Comment) readonly commentRepository: TreeRepository<Comment>
+  @InjectRepository(Comment) readonly commentRepository: Repository<Comment>
   @InjectRepository(CommentUpvote)
   readonly commentUpvoteRepository: Repository<CommentUpvote>
   @InjectRepository(Notification)

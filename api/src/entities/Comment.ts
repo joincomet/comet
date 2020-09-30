@@ -4,10 +4,7 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
-  Tree,
-  TreeChildren,
-  TreeParent
+  PrimaryGeneratedColumn
 } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { Post } from '@/entities/Post'
@@ -17,7 +14,6 @@ import { formatDistanceToNowStrict } from 'date-fns'
 
 @ObjectType()
 @Entity()
-@Tree('materialized-path')
 export class Comment {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
@@ -67,16 +63,11 @@ export class Comment {
     return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
   }
 
-  @Field(() => Comment, { nullable: true })
-  @TreeParent()
-  parentComment: Lazy<Comment>
-
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
   parentCommentId: number
 
-  @TreeChildren()
-  childComments: Lazy<Comment[]>
+  childComments: Comment[] = []
 
   @OneToMany(() => CommentUpvote, (upvote) => upvote.comment)
   upvotes: Lazy<CommentUpvote[]>

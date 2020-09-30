@@ -19,8 +19,8 @@ UPDATE "user" T
 SET settings = (SELECT to_json(concat(
         '{',
         '"appearOffline": ', (SELECT (CASE WHEN T."appearOffline" = TRUE THEN 'true' ELSE 'false' END)
-                FROM "user"
-                WHERE "id" = T."id"),
+                              FROM "user"
+                              WHERE "id" = T."id"),
         '}'))::jsonb AS settings
                 FROM "user"
                 WHERE "id" = T."id")
@@ -92,6 +92,8 @@ BEGIN
 
     ALTER TABLE "comment"
         DROP COLUMN "rootCommentId";
+    ALTER TABLE "comment"
+        DROP COLUMN "mpath";
 
     ALTER TABLE "post"
         DROP COLUMN "domain";
