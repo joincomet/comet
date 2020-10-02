@@ -1,0 +1,10 @@
+query mutedCommunities {
+  mutedCommunities {
+    name
+    muted
+    userCount
+    profile {
+      avatar
+    }
+  }
+}

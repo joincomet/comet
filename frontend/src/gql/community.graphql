@@ -1,0 +1,25 @@
+query community($name: String!) {
+  community(name: $name) {
+    name
+    joined
+    userCount
+    creatorId
+    createdAt
+    profile {
+      avatar
+      banner
+      color
+    }
+    moderators {
+      id
+      username
+      upvoteCount
+      createdAt
+      lastLogin
+      isCurrentUser
+      profile {
+        avatar
+      }
+    }
+  }
+}

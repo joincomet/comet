@@ -1,14 +1,14 @@
 ALTER TABLE "planet"
-    ADD COLUMN "settings" jsonb;
+    ADD COLUMN "profile" jsonb;
 UPDATE planet T
-SET settings = (SELECT to_json(concat(
+SET profile = (SELECT to_json(concat(
         '{',
-        '"avatarImageUrl": "', T."avatarImageUrl", '", ',
-        '"bannerImageUrl": "', T."bannerImageUrl", '", ',
-        '"themeColor": "', T."themeColor", '", ',
+        '"avatar": "', T."avatarImageUrl", '", ',
+        '"banner": "', T."bannerImageUrl", '", ',
+        '"color": "', T."themeColor", '", ',
         '"customName": "', T."customName", '", ',
-        '"description": "', T."description", '"',
-        '}'))::jsonb AS settings
+        '"description": ', (SELECT to_json(T."description")),
+        '}'))::jsonb AS profile
                 FROM planet
                 WHERE "name" = T."name")
 WHERE 1 = 1;
@@ -31,9 +31,9 @@ ALTER TABLE "user"
 UPDATE "user" T
 SET profile = (SELECT to_json(concat(
         '{',
-        '"avatarImageUrl": "', T."profilePicUrl", '", ',
-        '"bannerImageUrl": "', T."bannerImageUrl", '", ',
-        '"bio": "', T."bio", '", ',
+        '"avatar": "', T."profilePicUrl", '", ',
+        '"banner": "', T."bannerImageUrl", '", ',
+        '"bio": ', (SELECT to_json(T."bio")), ', ',
         '"tag": "', T."tag", '", ',
         '"tagColor": "', T."tagColor", '", ',
         '"fullName": "', T."username", '"',
@@ -97,6 +97,8 @@ BEGIN
 
     ALTER TABLE "post"
         DROP COLUMN "domain";
+    ALTER TABLE "post"
+        DROP COLUMN "thumbnailUrl";
 
     ALTER TABLE "planet"
         DROP COLUMN "allowTextPosts";
@@ -120,6 +122,9 @@ BEGIN
         DROP COLUMN "modPostsOnly";
     ALTER TABLE "planet"
         DROP COLUMN "bannerImageUrl";
+    ALTER TABLE "planet"
+        DROP COLUMN "description";
+
 END;
 $$ LANGUAGE plpgsql;
 
@@ -155,7 +160,7 @@ BEGIN
     ALTER TABLE "planet"
         RENAME COLUMN "creatorId" TO "creator_id";
     ALTER TABLE "planet"
-        ADD COLUMN "temp_name" text NOT NULL default '';
+        ADD COLUMN "temp_name" character varying NOT NULL default '';
     UPDATE "planet" SET "temp_name" = "name";
     ALTER TABLE "planet"
         RENAME COLUMN "name" TO "id";
@@ -184,8 +189,6 @@ BEGIN
         RENAME COLUMN "postedToProfile" TO "posted_to_profile";
     ALTER TABLE "post"
         RENAME COLUMN "endorsementCount" TO "upvote_count";
-    ALTER TABLE "post"
-        RENAME COLUMN "thumbnailUrl" TO "thumbnail_url";
     ALTER TABLE "post"
         RENAME COLUMN "planetName" TO "planet_id";
     ALTER TABLE "post"
@@ -234,7 +237,7 @@ $$
 BEGIN
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP CONSTRAINT "' || _pk || '";';
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP CONSTRAINT "' || _fk || '";';
-    EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD COLUMN "' || _id || '2" integer;';
+    EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD COLUMN "' || _id || '2" integer NOT NULL default 0;';
     EXECUTE 'UPDATE "' || _relation_table || '" T SET "' || _id || '2" = (SELECT "_id" FROM "' || _fromEntity ||
             '" WHERE ' || _compareId || ' = T."' || _id || '") WHERE 1=1;';
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP COLUMN "' || _id || '";';
@@ -244,17 +247,18 @@ BEGIN
     EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD CONSTRAINT "' || _pk || '" PRIMARY KEY ("' || _id || '2", "' ||
             _otherId || '");';
     EXECUTE 'ALTER TABLE "' || _relation_table || '" RENAME COLUMN "' || _id || '2" TO "' || _id || '";';
-END;
+END ;
 $$ LANGUAGE plpgsql;
 
 
 
 CREATE OR REPLACE FUNCTION update_relation(_relation_table text, _fromEntity text, _fk text, _id text,
-                                           _compareId text) RETURNS void AS
+                                           _compareId text, _nullable boolean default false) RETURNS void AS
 $$
 BEGIN
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP CONSTRAINT "' || _fk || '";';
-    EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD COLUMN "' || _id || '2" integer;';
+    EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD COLUMN "' || _id || '2" integer ' ||
+            (CASE WHEN _nullable = TRUE THEN '' ELSE 'NOT NULL default 0' END) || ';';
     EXECUTE 'UPDATE "' || _relation_table || '" T SET "' || _id || '2" = (SELECT "_id" FROM "' || _fromEntity ||
             '" WHERE ' || _compareId || ' = T."' || _id || '") WHERE 1=1;';
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP COLUMN "' || _id || '";';
@@ -262,7 +266,7 @@ BEGIN
             '2") REFERENCES "' ||
             _fromEntity || '" (_id) ON DELETE CASCADE;';
     EXECUTE 'ALTER TABLE "' || _relation_table || '" RENAME COLUMN "' || _id || '2" TO "' || _id || '";';
-END;
+END ;
 $$ LANGUAGE plpgsql;
 
 
@@ -344,7 +348,7 @@ SELECT update_mm_relation('comment_endorsement', 'comment', 'PK_9698f1b56e7addb0
                           'comment_id', 'user_id', 'id');
 SELECT "update_relation"('comment', 'user', 'FK_276779da446413a0d79598d4fbd', 'author_id', '_id');
 SELECT "update_relation"('comment', 'post', 'FK_94a85bb16d24033a2afdd5df060', 'post_id', '_id');
-SELECT "update_relation"('comment', 'comment', 'FK_73aac6035a70c5f0313c939f237', 'parent_comment_id', 'id');
+SELECT "update_relation"('comment', 'comment', 'FK_73aac6035a70c5f0313c939f237', 'parent_comment_id', 'id', true);
 
 -- Change planet IDs
 
@@ -362,3 +366,12 @@ SELECT "update_entity"('post', 'PK_be5fda3aac270b134ff9c21cdee');
 -- Rename tables
 
 SELECT renaming();
+
+ALTER TABLE "comment" ALTER COLUMN "id" DROP DEFAULT;
+ALTER TABLE "community" ALTER COLUMN "id" DROP DEFAULT;
+ALTER TABLE "post" ALTER COLUMN "id" DROP DEFAULT;
+ALTER TABLE "user" ALTER COLUMN "id" DROP DEFAULT;
+DROP SEQUENCE "comment__id_seq";
+DROP SEQUENCE "planet__id_seq";
+DROP SEQUENCE "post__id_seq";
+DROP SEQUENCE "user__id_seq";

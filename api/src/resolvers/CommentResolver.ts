@@ -11,7 +11,6 @@ import {
   Root
 } from 'type-graphql'
 import { Context } from '@/Context'
-import { RepositoryInjector } from '@/RepositoryInjector'
 import { Comment } from '@/entities/Comment'
 import { SubmitCommentArgs } from '@/args/SubmitCommentArgs'
 import { PostCommentsArgs } from '@/args/PostCommentsArgs'
@@ -21,10 +20,23 @@ import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
 import { CommentUpvote } from '@/entities/CommentUpvote'
 import { flat } from '@/Flat'
-import { formatDistanceToNowStrict } from 'date-fns'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { Repository } from 'typeorm'
+import { Post } from '@/entities/Post'
 
 @Resolver(() => Comment)
-export class CommentResolver extends RepositoryInjector {
+export class CommentResolver {
+  @InjectRepository(User)
+  readonly userRepository: Repository<User>
+  @InjectRepository(Post)
+  readonly postRepository: Repository<Post>
+  @InjectRepository(Comment)
+  readonly commentRepository: Repository<Comment>
+  @InjectRepository(CommentUpvote)
+  readonly commentUpvoteRepository: Repository<CommentUpvote>
+  @InjectRepository(Notification)
+  readonly notificationRepository: Repository<Notification>
+
   @Authorized()
   @Mutation(() => Comment)
   async submitComment(

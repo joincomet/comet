@@ -1,0 +1,11 @@
+query allCommunities {
+  allCommunities {
+    profile {
+      avatar
+    }
+    name
+    joined
+    userCount
+    createdAt
+  }
+}

@@ -16,7 +16,6 @@ import { Community } from '@/entities/Community'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { UserProfile } from '@/types/UserProfile'
 import { UserSettings } from '@/types/UserSettings'
-import { GraphQLJSONObject } from 'graphql-type-json'
 
 @ObjectType()
 @Entity()
@@ -40,12 +39,36 @@ export class User {
   email?: string
 
   @Authorized('USER')
-  @Field(() => GraphQLJSONObject)
-  @Column('jsonb', { default: new UserSettings() })
+  @Field()
+  @Column('jsonb', {
+    default: new UserSettings(),
+    transformer: {
+      to: value => value,
+      from: value => {
+        try {
+          return JSON.parse(value) as UserSettings
+        } catch {
+          return value
+        }
+      }
+    }
+  })
   settings: UserSettings
 
-  @Field(() => GraphQLJSONObject)
-  @Column('jsonb', { default: new UserProfile() })
+  @Field()
+  @Column('jsonb', {
+    default: new UserProfile(),
+    transformer: {
+      to: value => value,
+      from: value => {
+        try {
+          return JSON.parse(value) as UserProfile
+        } catch {
+          return value
+        }
+      }
+    }
+  })
   profile: UserProfile
 
   @Field()
@@ -78,18 +101,18 @@ export class User {
   @Column({ nullable: true })
   banReason?: string
 
-  @OneToMany(() => Comment, (comment) => comment.author)
+  @OneToMany(() => Comment, comment => comment.author)
   comments: Lazy<Comment[]>
 
-  @OneToMany(() => Post, (post) => post.author)
+  @OneToMany(() => Post, post => post.author)
   posts: Lazy<Post[]>
 
   @Field(() => [Community])
-  @ManyToMany(() => Community, (community) => community.users)
+  @ManyToMany(() => Community, community => community.users)
   communities: Lazy<Community[]>
 
   @Field(() => [Community])
-  @ManyToMany(() => Community, (community) => community.moderators)
+  @ManyToMany(() => Community, community => community.moderators)
   moderatedCommunities: Lazy<Community[]>
 
   @ManyToMany(() => Community)
@@ -108,18 +131,18 @@ export class User {
   @JoinTable()
   hiddenPosts: Lazy<Post[]>
 
-  @ManyToMany(() => User, (user) => user.following)
+  @ManyToMany(() => User, user => user.following)
   @JoinTable()
   followers: Lazy<User[]>
 
-  @ManyToMany(() => User, (user) => user.followers)
+  @ManyToMany(() => User, user => user.followers)
   following: Lazy<User[]>
 
-  @ManyToMany(() => User, (user) => user.blockedUsers)
+  @ManyToMany(() => User, user => user.blockedUsers)
   @JoinTable()
   blockedBy: Lazy<User[]>
 
-  @ManyToMany(() => User, (user) => user.blockedBy)
+  @ManyToMany(() => User, user => user.blockedBy)
   blockedUsers: Lazy<User[]>
 
   /**
@@ -143,10 +166,10 @@ export class User {
   @Field()
   postCount: number
 
-  @OneToMany(() => PostUpvote, (upvote) => upvote.user)
+  @OneToMany(() => PostUpvote, upvote => upvote.user)
   postUpvotes: Lazy<PostUpvote[]>
 
-  @OneToMany(() => CommentUpvote, (upvote) => upvote.user)
+  @OneToMany(() => CommentUpvote, upvote => upvote.user)
   commentUpvotes: Lazy<CommentUpvote[]>
 
   @Field()

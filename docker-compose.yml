@@ -51,21 +51,18 @@ services:
       - "6379"
 
   iframely:
-    build: "https://github.com/itteco/iframely.git"
+    image: registry.digitalocean.com/cometx/iframely:latest
     container_name: iframely
     ports:
       - "8061:8061"
     expose:
       - "8061"
-    volumes:
-      - ./iframely.config.js:/iframely/config.local.js
     depends_on:
       - redis
 
   postgres:
     image: "postgres:alpine"
     container_name: postgres
-    restart: always
     environment:
       - POSTGRES_PASSWORD=password
     volumes:

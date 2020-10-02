@@ -19,6 +19,7 @@
     "allowJs": true,
     "checkJs": true
   },
+  "types": ["class-transformer"],
   "include": [
     "src/**/*"
   ]

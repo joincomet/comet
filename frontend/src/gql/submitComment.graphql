@@ -6,9 +6,9 @@ mutation submitComment($postId: ID!, $textContent: String!, $parentCommentId: ID
   ) {
     createdAt
     editedAt
-    endorsementCount
+    upvoteCount
     id
-    isEndorsed
+    upvoted
     textContent
     postId
     parentCommentId
@@ -16,9 +16,9 @@ mutation submitComment($postId: ID!, $textContent: String!, $parentCommentId: ID
       id
       username
       isCurrentUser
-      tag
-      tagColor
-      avatarImageUrl
+      profile {
+        avatar
+      }
     }
   }
 }

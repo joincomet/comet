@@ -1,11 +1,22 @@
-import { RepositoryInjector } from '@/RepositoryInjector'
 import { Arg, Authorized, ID, Mutation, UseMiddleware } from 'type-graphql'
 import { Community } from '@/entities/Community'
 import { s3upload } from '@/S3Storage'
 import { Stream } from 'stream'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { User } from '@/entities/User'
+import { Repository } from 'typeorm'
+import { Post } from '@/entities/Post'
+import { Comment } from '@/entities/Comment'
 
-export class ModerationResolver extends RepositoryInjector {
+export class ModerationResolver {
+  @InjectRepository(User) readonly userRepository: Repository<User>
+  @InjectRepository(Post) readonly postRepository: Repository<Post>
+  @InjectRepository(Comment) readonly commentRepository: Repository<Comment>
+  @InjectRepository(Community) readonly communityRepository: Repository<
+    Community
+  >
+
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async removePost(

@@ -1,9 +1,0 @@
-query popularPlanets($galaxyName: ID) {
-  popularPlanets(galaxyName: $galaxyName) {
-    name
-    postCount
-    avatarImageUrl
-    themeColor
-    userCount
-  }
-}

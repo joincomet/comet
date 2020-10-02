@@ -4,26 +4,26 @@ query user($username: String!) {
     username
     commentCount
     postCount
-    endorsementCount
+    upvoteCount
     createdAt
     lastLogin
     isBlocking
     isBlocked
     isCurrentUser
-    tag
-    tagColor
-    avatarImageUrl
-    bio
-    appearOffline
     timeSinceCreated
     followerCount
     followingCount
-    moderatedPlanets {
+    profile {
+      avatar
+      bio
+      realName
+      website
+    }
+    moderatedCommunities {
       name
-      description
-      bannerImageUrl
-      avatarImageUrl
-      themeColor
+      profile {
+        avatar
+      }
     }
   }
 }

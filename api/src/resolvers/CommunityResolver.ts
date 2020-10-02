@@ -6,25 +6,30 @@ import {
   ID,
   Mutation,
   Query,
-  Resolver,
-  UseMiddleware
+  Resolver
 } from 'type-graphql'
-import { RepositoryInjector } from '@/RepositoryInjector'
 import { CreateCommunityArgs } from '@/args/CreateCommunityArgs'
 import { Community } from '@/entities/Community'
 import { Context } from '@/Context'
 import { User } from '@/entities/User'
 import { bannedWords } from '@/BannedWords'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { Repository } from 'typeorm'
 
 @Resolver(() => Community)
-export class CommunityResolver extends RepositoryInjector {
+export class CommunityResolver {
+  @InjectRepository(Community) readonly communityRepository: Repository<
+    Community
+  >
+  @InjectRepository(User) readonly userRepository: Repository<User>
+
   @Authorized()
   @Mutation(() => Boolean)
   async createCommunity(
     @Args() { name, description, tags }: CreateCommunityArgs,
     @Ctx() { userId }: Context
   ) {
-    bannedWords.forEach((u) => {
+    bannedWords.forEach(u => {
       if (name.toLowerCase().includes(u.toLowerCase())) {
         throw new Error('Inappropriate Community Name')
       }
@@ -67,10 +72,7 @@ export class CommunityResolver extends RepositoryInjector {
   }
 
   @Query(() => Community, { nullable: true })
-  async community(
-    @Arg('name', () => ID) name: string,
-    @Ctx() { userId }: Context
-  ) {
+  async community(@Arg('name') name: string, @Ctx() { userId }: Context) {
     const qb = this.communityRepository
       .createQueryBuilder('community')
       .andWhere('community.name ILIKE :name', {
@@ -78,14 +80,14 @@ export class CommunityResolver extends RepositoryInjector {
       })
       .loadRelationCountAndMap('community.userCount', 'community.users')
       .leftJoinAndSelect('community.moderators', 'moderator')
-      .leftJoinAndSelect('community.galaxy', 'galaxy')
+      .leftJoinAndSelect('community.tags', 'tag')
 
     if (userId) {
       qb.loadRelationCountAndMap(
         'community.personalUserCount',
         'community.users',
         'user',
-        (qb) => {
+        qb => {
           return qb.andWhere('user.id  = :userId', { userId })
         }
       )
@@ -93,6 +95,7 @@ export class CommunityResolver extends RepositoryInjector {
     const community = await qb.getOne()
     if (!community) return null
     community.joined = Boolean(community.personalUserCount)
+
     return community
   }
 
@@ -104,9 +107,9 @@ export class CommunityResolver extends RepositoryInjector {
     const qb = this.communityRepository
       .createQueryBuilder('community')
       .andWhere('community.name ILIKE ANY(:communities)', {
-        communities: recentCommunities.map((p) => p.replace(/_/g, '\\_'))
+        communities: recentCommunities.map(p => p.replace(/_/g, '\\_'))
       })
-      .addGroupBy('community.name')
+      .addGroupBy('community.id')
       .addSelect('COUNT(posts.id)', 'community_total')
       .leftJoin(
         'community.posts',
@@ -115,52 +118,43 @@ export class CommunityResolver extends RepositoryInjector {
       )
 
     const communities = await qb.getMany()
-    communities.forEach((community) => {
+    communities.forEach(community => {
       community.postCount = community.total
     })
     return recentCommunities
-      .map((name) => communities.find((p) => p.name === name))
-      .filter((p) => !!p)
+      .map(name => communities.find(p => p.name === name))
+      .filter(p => !!p)
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async joinCommunity(
-    @Arg('community', () => ID) community: string,
-    @Ctx() { userId }: Context
-  ) {
+  async joinCommunity(@Arg('name') name: string, @Ctx() { userId }: Context) {
     await this.userRepository
       .createQueryBuilder()
       .relation(User, 'communities')
       .of(userId)
-      .add(community)
+      .add(name)
     return true
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async leaveCommunity(
-    @Arg('community', () => ID) community: string,
-    @Ctx() { userId }: Context
-  ) {
+  async leaveCommunity(@Arg('name') name: string, @Ctx() { userId }: Context) {
     await this.userRepository
       .createQueryBuilder()
       .relation(User, 'communities')
       .of(userId)
-      .remove(community)
+      .remove(name)
     return true
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async muteCommunity(
-    @Arg('community', () => ID) community: string,
-    @Ctx() { userId }: Context
-  ) {
+  async muteCommunity(@Arg('name') name: string, @Ctx() { userId }: Context) {
     const foundCommunity = await this.communityRepository
       .createQueryBuilder('community')
       .where('community.name ILIKE :community', {
-        community: community.replace(/_/g, '\\_')
+        community: name.replace(/_/g, '\\_')
       })
       .getOne()
 
@@ -182,21 +176,18 @@ export class CommunityResolver extends RepositoryInjector {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async unmuteCommunity(
-    @Arg('community', () => ID) community: string,
-    @Ctx() { userId }: Context
-  ) {
+  async unmuteCommunity(@Arg('name') name: string, @Ctx() { userId }: Context) {
     await this.userRepository
       .createQueryBuilder()
-      .relation(User, 'mutedcommunities')
+      .relation(User, 'mutedCommunities')
       .of(userId)
-      .remove(community)
+      .remove(name)
     return true
   }
 
   @Query(() => [Community])
   async popularCommunities(
-    @Arg('galaxyName', () => ID, { nullable: true }) galaxyName?: string
+    @Arg('tag', () => String, { nullable: true }) tag?: string
   ) {
     const qb = await this.communityRepository
       .createQueryBuilder('community')
@@ -206,41 +197,41 @@ export class CommunityResolver extends RepositoryInjector {
         'posts',
         "posts.deleted = false AND posts.createdAt > NOW() - INTERVAL '1 day'"
       )
-      .groupBy('community.name')
+      .groupBy('community.id')
       .orderBy('community_total', 'DESC')
       .take(5)
       .loadRelationCountAndMap('community.userCount', 'community.users')
 
-    if (galaxyName) {
+    // TODO
+    /*if (galaxyName) {
       qb.where('community.galaxy = :galaxyName', { galaxyName })
-    }
+    }*/
 
     const communities = await qb.getMany()
-
-    communities.forEach((community) => (community.postCount = community.total))
-
+    communities.forEach(community => (community.postCount = community.total))
     return communities
   }
 
   @Query(() => [Community])
   async allCommunities(
     @Ctx() { userId }: Context,
-    @Arg('galaxyName', () => ID, { nullable: true }) galaxyName: string
+    @Arg('tag', () => String, { nullable: true }) tag: string
   ) {
     const qb = this.communityRepository
       .createQueryBuilder('community')
-      .orderBy('community.name', 'ASC')
-      .leftJoinAndSelect('community.galaxy', 'galaxy')
+      .orderBy('community.id', 'ASC')
+      .leftJoinAndSelect('community.tags', 'tag')
       .loadRelationCountAndMap('community.userCount', 'community.users')
 
-    if (galaxyName) qb.andWhere('galaxy.name = :galaxyName', { galaxyName })
+    // TODO
+    // if (galaxyName) qb.andWhere('galaxy.name = :galaxyName', { galaxyName })
 
     if (userId) {
       qb.loadRelationCountAndMap(
         'community.personalUserCount',
         'community.users',
         'user',
-        (qb) => {
+        qb => {
           return qb.andWhere('user.id  = :userId', { userId })
         }
       )
@@ -248,7 +239,7 @@ export class CommunityResolver extends RepositoryInjector {
 
     const communities = await qb.getMany()
 
-    communities.forEach((community) => {
+    communities.forEach(community => {
       community.joined = Boolean(community.personalUserCount)
     })
 
@@ -282,13 +273,13 @@ export class CommunityResolver extends RepositoryInjector {
 
     communities = await this.communityRepository
       .createQueryBuilder('community')
-      .whereInIds(communities.map((community) => community.name))
-      .addOrderBy('community.name', 'ASC')
+      .whereInIds(communities.map(community => community.name))
+      .addOrderBy('community.id', 'ASC')
       .loadRelationCountAndMap(
         'community.postCount',
         'community.posts',
         'post',
-        (qb) => {
+        qb => {
           return qb
             .andWhere('post.deleted = false')
             .andWhere('post.removed = false')
@@ -297,7 +288,7 @@ export class CommunityResolver extends RepositoryInjector {
       )
       .getMany()
 
-    communities.forEach((p) => (p.joined = true))
+    communities.forEach(p => (p.joined = true))
 
     return communities
   }

@@ -17,28 +17,28 @@
     </nuxt-link>
 
     <div class="px-6 pt-3 pb-1 text-xs tracking-widest uppercase text-secondary">
-      MY PLANETS
+      MY communityS
     </div>
 
-    <nuxt-link v-for="planet in joinedPlanets" :key="planet.id" :to="`/+${planet.name}`" class="navitem">
-      <img :src="planet.avatarImageUrl" class="w-6 h-6 mr-6 rounded-full">
-      +{{ planet.name }}
+    <nuxt-link v-for="community in joinedCommunities" :key="community.id" :to="`/+${community.name}`" class="navitem">
+      <img :src="community.profile.avatar" class="w-6 h-6 mr-6 rounded-full">
+      +{{ community.name }}
     </nuxt-link>
   </nav>
 </template>
 
 <script>
-import joinedPlanetsGql from '@/gql/joinedPlanets.graphql'
+import joinedCommunitiesGql from '@/gql/joinedCommunities.graphql'
 
 export default {
   data () {
     return {
-      joinedPlanets: []
+      joinedCommunities: []
     }
   },
   apollo: {
-    joinedPlanets: {
-      query: joinedPlanetsGql
+    joinedCommunities: {
+      query: joinedCommunitiesGql
     }
   }
 }

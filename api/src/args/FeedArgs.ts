@@ -15,7 +15,7 @@ export class FeedArgs extends PaginationArgs {
   @Field(() => Feed, { defaultValue: Feed.ALL })
   feed: Feed = Feed.ALL
 
-  @Field(() => ID, { nullable: true })
+  @Field({ nullable: true })
   community?: string
 
   @Field(() => [String], { nullable: true })

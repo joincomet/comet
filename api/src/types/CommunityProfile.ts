@@ -1,20 +1,19 @@
 import { Field, ObjectType } from 'type-graphql'
-import { Usernames } from '@/types/Usernames'
 
 @ObjectType()
-export class UserProfile {
-  @Field({ nullable: true })
-  realName?: string
-
-  @Field({ nullable: true })
-  website?: string
-
-  @Field({ nullable: true })
-  bio?: string
-
+export class CommunityProfile {
   @Field({ nullable: true })
   avatar?: string
 
   @Field({ nullable: true })
-  usernames?: Usernames
+  banner?: string
+
+  @Field({ nullable: true })
+  color?: string
+
+  @Field({ nullable: true })
+  description?: string
+
+  @Field({ nullable: true })
+  customName?: string
 }

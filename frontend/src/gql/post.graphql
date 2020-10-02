@@ -4,47 +4,31 @@ query post($postId: ID!) {
         id
         username
         isCurrentUser
-        tag
-        tagColor
-        avatarImageUrl
+        profile {
+          avatar
+        }
       }
       commentCount
       relativeUrl
-      newCommentCount
       createdAt
       editedAt
       timeSince
       editedTimeSince
-      domain
-      endorsementCount
+      upvoteCount
       id
-      isEndorsed
+      upvoted
       link
       textContent
-      thumbnailUrl
       title
-      type
       sticky
-      planet {
+      community {
         name
-        description
         userCount
         createdAt
-        avatarImageUrl
-        bannerImageUrl
-        themeColor
         joined
-        galaxy {
-          name
-          fullName
-          icon
+        profile {
+          avatar
         }
-      }
-      postView {
-        lastCommentCount
-        postId
-        userId
-        createdAt
       }
     }
   }

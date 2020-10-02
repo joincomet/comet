@@ -1,3 +1,0 @@
-mutation leavePlanet($planetName: ID!) {
-  leavePlanet(planetName: $planetName)
-}

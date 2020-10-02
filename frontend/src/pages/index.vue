@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-3 mx-auto">
+  <div class="container py-6 mx-auto">
     <div class="mb-6">
       <div class="mb-6 font-bold text-md">
         Ongoing Discussions
@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <PlanetOfTheDay :planet="planetOfTheDay" :posts="topDiscussions" />
+    <CommunityOfTheDay :community="communityOfTheDay" :posts="topDiscussions" />
 
     <div class="grid min-w-0 min-h-0 grid-cols-3 grid-rows-1 gap-12 mt-6">
       <div class="min-w-0 col-span-3 overflow-hidden sm:col-span-2">
@@ -47,7 +47,7 @@
         </article>
       </div>
       <div class="hidden sm:block sm:col-span-1">
-        <PopularPlanets :popular-planets="popularPlanets" class="sticky top-0" style="top: 4.5rem" />
+        <PopularCommunities :popular-communities="popularCommunities" class="sticky top-0" style="top: 4.5rem" />
       </div>
     </div>
   </div>
@@ -55,8 +55,8 @@
 
 <script>
 import feedGql from '@/gql/feed'
-import planetGql from '@/gql/planet'
-import popularPlanetsGql from '@/gql/popularPlanets.graphql'
+import communityGql from '@/gql/community'
+import popularCommunitiesGql from '@/gql/popularCommunities.graphql'
 import { feedVars } from '@/util/feedVars'
 
 export default {
@@ -71,28 +71,28 @@ export default {
       })
     ).data.feed
 
-    const planetOfTheDay = (
+    const communityOfTheDay = (
       await client.query({
-        query: planetGql,
+        query: communityGql,
         variables: {
-          planetName: 'HistoryInPictures'
+          name: 'HistoryInPictures'
         }
       })
-    ).data.planet
+    ).data.community
 
-    const popularPlanets = (
+    const popularCommunities = (
       await client.query({
-        query: popularPlanetsGql
+        query: popularCommunitiesGql
       })
-    ).data.popularPlanets
+    ).data.popularCommunities
 
-    return { feed, planetOfTheDay, popularPlanets }
+    return { feed, communityOfTheDay, popularCommunities }
   },
   data () {
     return {
       feed: [],
-      planetOfTheDay: null,
-      popularPlanets: []
+      communityOfTheDay: null,
+      popularCommunities: []
     }
   },
   computed: {

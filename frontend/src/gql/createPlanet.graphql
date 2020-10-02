@@ -1,3 +1,0 @@
-mutation createPlanet($name: String!, $description: String!, $galaxy: String!) {
-  createPlanet(name: $name, description: $description, galaxy: $galaxy)
-}

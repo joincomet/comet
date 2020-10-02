@@ -3,12 +3,12 @@ export const feedVars = (route) => {
   return {
     sort: params.sort ? params.sort.toUpperCase() : 'HOT',
     time: params.time ? params.time.toUpperCase() : 'ALL',
-    filter: route.name.startsWith('home-sort-time') ? 'MYPLANETS' : 'ALL',
+    filter: route.name.startsWith('home-sort-time') ? 'MYcommunityS' : 'ALL',
     types:
       query && query.types
         ? query.types.split('-').map(t => t.toUpperCase())
         : [],
-    planetName: params.planetname,
+    communityName: params.communityname,
     galaxyName: params.galaxyname,
     username: params.username,
     search: query.q

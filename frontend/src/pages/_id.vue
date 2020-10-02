@@ -1,13 +1,13 @@
 <template>
   <LazyUserPage v-if="id.startsWith('@')" :user="user" />
-  <LazyPlanetPage v-else-if="id.startsWith('+')" :planet="planet" />
+  <LazyCommunityPage v-else-if="id.startsWith('+')" :community="community" />
   <LazyGalaxyPage v-else-if="id.startsWith('#')" :galaxy="galaxy" />
 </template>
 
 <script>
 import userGql from '@/gql/user.graphql'
-import planetGql from '@/gql/planet.graphql'
-import galaxyGql from '@/gql/galaxy.graphql'
+import communityGql from '@/gql/community.graphql'
+// import tagGql from '@/gql/tag.graphql'
 
 export default {
   middleware ({ redirect, params }) {
@@ -17,8 +17,8 @@ export default {
   async asyncData ({ app, params }) {
     const client = app.apolloProvider.defaultClient
     let user = null
-    let planet = null
-    const galaxy = null
+    let community = null
+    // const tag = null
     const { id } = params
     if (id.startsWith('@')) {
       user = (await client.query({
@@ -28,31 +28,31 @@ export default {
         }
       })).data.user
     } else if (id.startsWith('+')) {
-      planet = (await client.query({
-        query: planetGql,
+      community = (await client.query({
+        query: communityGql,
         variables: {
-          planetName: id.substring(1)
+          communityName: id.substring(1)
         }
-      })).data.planet
-    } else if (id.startsWith('#')) {
-      planet = (await client.query({
-        query: galaxyGql,
+      })).data.community
+    } /* else if (id.startsWith('#')) {
+      community = (await client.query({
+        query: tagGql,
         variables: {
-          galaxyName: id.substring(1)
+          name: id.substring(1)
         }
-      })).data.galaxy
-    }
+      })).data.tag
+    } */
 
     return {
       user,
-      planet,
-      galaxy
+      community
+      // tag
     }
   },
   data () {
     return {
       user: null,
-      planet: null,
+      community: null,
       galaxy: null
     }
   },

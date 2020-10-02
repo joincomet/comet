@@ -4,36 +4,36 @@
   >
     <div
       class="flex w-full h-48 bg-center bg-cover rounded-l-lg cursor-pointer"
-      :style="`background-image: linear-gradient( rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75) ), url(${planet.bannerImageUrl});`"
-      @click="$router.push(`/+${planet.name}`)"
+      :style="`background-image: linear-gradient( rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75) ), url(${community.profile.banner});`"
+      @click="$router.push(`/+${community.name}`)"
     >
       <div class="flex flex-col items-center m-auto">
         <div class="mb-4 text-xs tracking-widest text-gray-400 uppercase">
-          Planet of the Day
+          Community of the Day
         </div>
         <img
-          v-if="planet.avatarImageUrl"
+          v-if="community.profile.avatar"
           class="object-cover w-20 h-20 mb-2 rounded-full"
-          :src="planet.avatarImageUrl"
-          :alt="planet.name"
+          :src="community.profile.avatar"
+          :alt="community.name"
         >
         <div
           v-else
           class="w-24 h-24 mb-2"
-          :style="`background-color: ${planet.themeColor}`"
+          :style="`background-color: ${community.profile.color}`"
         />
         <nuxt-link
-          :to="`/+${planet.name}`"
+          :to="`/+${community.name}`"
           class="mb-1 text-xl font-medium text-white"
         >
-          {{ planet.name }}
+          {{ community.name }}
         </nuxt-link>
         <div class="text-sm text-gray-400">
-          {{ planet.userCount }} User{{
-            planet.userCount === 1 ? '' : 's'
+          {{ community.userCount }} User{{
+            community.userCount === 1 ? '' : 's'
           }}
-          &middot; {{ planet.postCount }} Post{{
-            planet.postCount === 1 ? '' : 's'
+          &middot; {{ community.postCount }} Post{{
+            community.postCount === 1 ? '' : 's'
           }}
         </div>
       </div>
@@ -97,7 +97,7 @@
                 >
                   <img
                     class="object-cover w-5 h-5 mr-2 rounded-full"
-                    :src="p.author.avatarImageUrl"
+                    :src="p.author.profile.avatar"
                     :alt="p.author.username"
                   >
                   <span class="text-white">{{ p.author.username }}</span>
@@ -113,7 +113,7 @@
 
                 <div class="inline-flex flex-row items-center ml-6">
                   <Icon class="mr-2" name="rocket" />
-                  <span>{{ p.endorsementCount }}</span>
+                  <span>{{ p.upvoteCount }}</span>
                 </div>
               </div>
             </div>
@@ -126,9 +126,9 @@
 
 <script>
 export default {
-  name: 'PlanetOfTheDay',
+  name: 'CommunityOfTheDay',
   props: {
-    planet: {
+    community: {
       type: Object,
       required: true
     },

@@ -10,7 +10,6 @@ import {
   Resolver,
   Root
 } from 'type-graphql'
-import { RepositoryInjector } from '@/RepositoryInjector'
 import { Post } from '@/entities/Post'
 import { SubmitPostArgs } from '@/args/SubmitPostArgs'
 import { Context } from '@/Context'
@@ -26,9 +25,27 @@ import { s3upload } from '@/S3Storage'
 import { TimeFilter } from '@/types/TimeFilter'
 import { PostSort } from '@/types/PostSort'
 import { Feed } from '@/types/Feed'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { Repository } from 'typeorm'
+import { Comment } from '@/entities/Comment'
+import { Notification } from '@/entities/Notification'
+import { Community } from '@/entities/Community'
 
 @Resolver(() => Post)
-export class PostResolver extends RepositoryInjector {
+export class PostResolver {
+  @InjectRepository(User)
+  readonly userRepository: Repository<User>
+  @InjectRepository(Post)
+  readonly postRepository: Repository<Post>
+  @InjectRepository(PostUpvote)
+  readonly postUpvoteRepository: Repository<PostUpvote>
+  @InjectRepository(Comment)
+  readonly commentRepository: Repository<Comment>
+  @InjectRepository(Notification)
+  readonly notificationRepository: Repository<Notification>
+  @InjectRepository(Community)
+  readonly communityRepository: Repository<Community>
+
   @Query(() => String, { nullable: true })
   async getTitleAtUrl(@Arg('url') url: string) {
     return getTitleAtUrl(url)
@@ -55,7 +72,7 @@ export class PostResolver extends RepositoryInjector {
       .andWhere('post.deleted = false')
       .andWhere('post.removed = false')
       .leftJoinAndSelect('post.community', 'community')
-      .leftJoinAndSelect('community.galaxy', 'galaxy')
+      .leftJoinAndSelect('community.tags', 'tag')
 
     if (community) {
       qb.andWhere(':community ILIKE post.community', {
@@ -222,7 +239,7 @@ export class PostResolver extends RepositoryInjector {
           community
         })
         .leftJoinAndSelect('post.community', 'community')
-        .leftJoinAndSelect('community.galaxy', 'galaxy')
+        .leftJoinAndSelect('community.tags', 'tag')
         .loadRelationCountAndMap('community.userCount', 'community.users')
         .addOrderBy('post.createdAt', 'DESC')
 
@@ -312,7 +329,7 @@ export class PostResolver extends RepositoryInjector {
       .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.community', 'community')
       .loadRelationCountAndMap('community.userCount', 'community.users')
-      .leftJoinAndSelect('community.galaxy', 'galaxy')
+      .leftJoinAndSelect('community.tags', 'tag')
 
     if (userId) {
       qb.loadRelationCountAndMap(

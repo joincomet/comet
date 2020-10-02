@@ -29,7 +29,7 @@ export class Post {
   @Column()
   title: string
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   @Column('text', { nullable: true })
   textContent?: string
 
@@ -37,8 +37,12 @@ export class Post {
   @Column({ nullable: true })
   link?: string
 
+  @Field(() => [String], { nullable: true })
+  @Column('text', { array: true, nullable: true })
+  images?: string[]
+
   @Field(() => User, { nullable: true })
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, user => user.posts)
   author: Lazy<User>
 
   @Field(() => ID)
@@ -68,7 +72,11 @@ export class Post {
   @Column({ default: false })
   sticky: boolean
 
-  @OneToMany(() => Comment, (comment) => comment.post)
+  @Field()
+  @Column({ default: false })
+  postedToProfile: boolean
+
+  @OneToMany(() => Comment, comment => comment.post)
   comments: Lazy<Comment[]>
 
   @Field()
@@ -76,7 +84,7 @@ export class Post {
   commentCount: number
 
   @Field(() => Community, { nullable: true })
-  @ManyToOne(() => Community, (community) => community.posts, {
+  @ManyToOne(() => Community, community => community.posts, {
     cascade: true,
     nullable: true
   })
@@ -86,7 +94,7 @@ export class Post {
   @Column({ nullable: true })
   communityId?: number
 
-  @OneToMany(() => PostUpvote, (vote) => vote.post)
+  @OneToMany(() => PostUpvote, vote => vote.post)
   upvotes: Lazy<PostUpvote[]>
 
   @Field()
@@ -124,7 +132,7 @@ export class Post {
       .join('_')
       .replace(/[^a-z0-9_]+/gi, '')
       .replace(/[_](.)\1+/g, '$1')
-    return `/+${this.community}/${this.id36}/${slug}`
+    return `/+${(this.community as Community).name}/${this.id36}/${slug}`
   }
 
   personalUpvoteCount = 0

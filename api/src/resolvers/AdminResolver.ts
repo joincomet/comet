@@ -1,7 +1,13 @@
-import { RepositoryInjector } from '@/RepositoryInjector'
 import { Arg, Authorized, ID, Mutation } from 'type-graphql'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { User } from '@/entities/User'
+import { Repository } from 'typeorm'
+import { Post } from '@/entities/Post'
 
-export class AdminResolver extends RepositoryInjector {
+export class AdminResolver {
+  @InjectRepository(User) readonly userRepository: Repository<User>
+  @InjectRepository(Post) readonly postRepository: Repository<Post>
+
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
   async banUser(

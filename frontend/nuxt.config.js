@@ -1,5 +1,3 @@
-import { sortRoutes } from '@nuxt/utils'
-
 export default {
   srcDir: 'src/',
   components: true,
@@ -9,16 +7,15 @@ export default {
     title: "CometX – See what's in orbit.",
     meta: [
       { charset: 'utf-8' },
-      { name: 'theme-color', content: '#202124' },
       {
         hid: 'description',
         name: 'description',
-        content: 'Explore Planets, posts, and comments on CometX'
+        content: 'Explore communities, posts, and comments on CometX'
       },
       {
         hid: 'og:description',
         name: 'og:description',
-        content: 'Explore Planets, posts, and comments on CometX'
+        content: 'Explore communities, posts, and comments on CometX'
       },
       {
         hid: 'og:title',
@@ -58,7 +55,7 @@ export default {
       {
         hid: 'twitter:description',
         name: 'twitter:description',
-        content: 'Explore Planets, posts, and comments on CometX'
+        content: 'Explore communitys, posts, and comments on CometX'
       },
       {
         hid: 'twitter:image',
@@ -69,22 +66,6 @@ export default {
         hid: 'twitter:url',
         name: 'twitter:url',
         content: 'https://www.cometx.io'
-      }
-    ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
-      {
-        rel: 'icon',
-        type: 'image/png',
-        sizes: '32x32',
-        href: '/favicon-32x32.png'
-      },
-      {
-        rel: 'icon',
-        type: 'image/png',
-        sizes: '16x16',
-        href: '/favicon-16x16.png'
       }
     ]
   },
@@ -137,7 +118,7 @@ export default {
       name: 'CometX',
       description: "See what's in orbit.",
       theme_color: '#202124',
-      favicon: false,
+      favicon: true,
       mobileAppIOS: true,
       appleStatusBarStyle: 'black-translucent'
     }

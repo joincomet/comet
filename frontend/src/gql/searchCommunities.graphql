@@ -1,0 +1,8 @@
+query searchCommunities($search: String!) {
+  searchCommunities(search: $search) {
+    name
+    profile {
+      avatar
+    }
+  }
+}

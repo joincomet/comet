@@ -22,7 +22,7 @@ export const postHead = (post) => {
         {
           hid: 'og:article:section',
           property: 'og:article:section',
-          content: post.planet.name
+          content: post.community.name
         },
         {
           hid: 'og:article:published_time',
@@ -60,7 +60,7 @@ export const postHead = (post) => {
         {
           hid: 'og:site_name',
           property: 'og:site_name',
-          content: `cometx.io/+${post.planet.name}`
+          content: `cometx.io/+${post.community.name}`
         },
         {
           hid: 'twitter:card',

@@ -1,6 +1,0 @@
-query searchPlanets($search: String!) {
-  searchPlanets(search: $search) {
-    avatarImageUrl
-    name
-  }
-}

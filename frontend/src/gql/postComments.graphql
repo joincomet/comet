@@ -1,10 +1,10 @@
-query postComments($postId: ID!, $sort: Sort) {
+query postComments($postId: ID!, $sort: PostSort) {
   postComments(postId: $postId, sort: $sort) {
     createdAt
     editedAt
-    endorsementCount
+    upvoteCount
     id
-    isEndorsed
+    upvoted
     textContent
     postId
     parentCommentId
@@ -13,9 +13,9 @@ query postComments($postId: ID!, $sort: Sort) {
       id
       username
       isCurrentUser
-      tag
-      tagColor
-      avatarImageUrl
+      profile {
+        avatar
+      }
     }
   }
 }

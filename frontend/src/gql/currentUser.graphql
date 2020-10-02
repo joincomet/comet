@@ -2,16 +2,16 @@ query currentUser {
   currentUser {
     id
     username
-    tag
-    tagColor
-    avatarImageUrl
+    profile {
+      avatar
+    }
     admin
-    appearOffline
-    moderatedPlanets {
+    moderatedCommunities {
       name
-      avatarImageUrl
-      themeColor
       postCount
+      profile {
+        avatar
+      }
     }
   }
 }

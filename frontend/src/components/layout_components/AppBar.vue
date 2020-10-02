@@ -58,7 +58,7 @@
             <img
               ref="btnRef"
               class="w-8 h-8 rounded-full cursor-pointer"
-              :src="$store.state.currentUser.avatarImageUrl"
+              :src="$store.state.currentUser.profile.avatar"
               alt="Profile"
               @click="on"
             >

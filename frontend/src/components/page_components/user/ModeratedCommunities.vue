@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-col px-6 py-4 rounded-lg card">
     <div class="font-semibold text-secondary text-md">
-      Moderated Planets
+      Moderated communitys
     </div>
-    <div v-for="planet in user.moderatedPlanets" :key="planet.id" class="moderated-planet text-secondary">
-      <img class="w-5 rounded-full" :src="planet.avatarImageUrl">
-      <span class="ml-6 text-sm">+{{ planet.name }}</span>
+    <div v-for="community in user.moderatedCommunities" :key="community.id" class="moderated-community text-secondary">
+      <img class="w-5 rounded-full" :src="community.profile.avatar">
+      <span class="ml-6 text-sm">+{{ community.name }}</span>
     </div>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style>
-.moderated-planet {
+.moderated-community {
   @apply flex flex-row items-center mt-4 hover:underline cursor-pointer;
 }
 </style>

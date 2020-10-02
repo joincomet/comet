@@ -31,7 +31,7 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    if (to.name === 'p-planetname-comments-id-title') {
+    if (to.name === 'p-communityname-comments-id-title') {
       if (!this.dialog) {
         this.displayDialog(to)
       } else if (this.$device.isDesktop) {
@@ -67,7 +67,7 @@ export default {
         variables: {
           ...this.vars
         },
-        data: { feed: this.feed.filter(p => !p.isHidden) }
+        data: { feed: this.feed.filter(p => !p.hidden) }
       })
     },
     toggleBlock () {

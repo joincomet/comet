@@ -1,12 +1,4 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  Mutation,
-  Resolver,
-  UseMiddleware
-} from 'type-graphql'
+import { Arg, Args, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
 import { LoginResponse } from '@/responses/LoginResponse'
 import { LoginArgs } from '@/args/LoginArgs'
 import { Context } from '@/Context'

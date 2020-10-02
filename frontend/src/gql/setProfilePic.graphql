@@ -1,3 +1,0 @@
-mutation setProfilePic($avatarImageUrl: String!, $image: Upload) {
-  setProfilePic(avatarImageUrl: $avatarImageUrl, image: $image)
-}

@@ -5,7 +5,7 @@
     </nuxt-link>
 
     <div class="flex flex-row items-center mt-auto">
-      <img class="w-4 h-4 mr-3 rounded-full" :src="post.author.avatarImageUrl">
+      <img class="w-4 h-4 mr-3 rounded-full" :src="post.author.profile.avatar">
       <span class="text-xs text-gray-300">{{ post.author.username }}</span>
     </div>
   </div>
@@ -34,8 +34,8 @@ export default {
       return (
         this.$store.state.currentUser &&
         (this.$store.state.currentUser.admin ||
-          !!this.$store.state.currentUser.moderatedPlanets.find(
-            p => p.name === this.post.planet.name
+          !!this.$store.state.currentUser.moderatedCommunities.find(
+            p => p.name === this.post.community.name
           ))
       )
     }

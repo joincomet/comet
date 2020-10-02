@@ -1,18 +1,21 @@
 import { Ctx, Query, Resolver } from 'type-graphql'
-import { RepositoryInjector } from '@/RepositoryInjector'
 import { Context } from '@/Context'
 import { User } from '@/entities/User'
 import { Community } from '@/entities/Community'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { Repository } from 'typeorm'
 
 @Resolver()
-export class FiltersResolver extends RepositoryInjector {
+export class FiltersResolver {
+  @InjectRepository(User) readonly userRepository: Repository<User>
+
   @Query(() => [Community])
-  async mutedcommunities(@Ctx() { userId }: Context) {
+  async mutedCommunities(@Ctx() { userId }: Context) {
     if (!userId) return []
 
     const communities = await this.userRepository
       .createQueryBuilder()
-      .relation(User, 'mutedcommunities')
+      .relation(User, 'mutedCommunities')
       .of(userId)
       .loadMany()
 

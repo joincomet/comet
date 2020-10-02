@@ -1,3 +1,0 @@
-mutation mutePlanet($planetName: ID!) {
-  mutePlanet(planetName: $planetName)
-}

@@ -4,15 +4,14 @@ query blockedUsers {
     username
     commentCount
     postCount
-    endorsementCount
+    upvoteCount
     createdAt
     lastLogin
     isBlocking
     isBlocked
     isCurrentUser
-    tag
-    tagColor
-    avatarImageUrl
-    bio
+    profile {
+      avatar
+    }
   }
 }

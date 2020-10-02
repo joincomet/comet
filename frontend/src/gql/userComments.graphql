@@ -1,17 +1,16 @@
-query userComments($username: String!, $page: Int, $pageSize: Int, $sort: CommentSort, $time: Time) {
+query userComments($username: String!, $page: Int, $pageSize: Int, $sort: CommentSort, $time: TimeFilter) {
   userComments(username: $username, page: $page, pageSize: $pageSize, sort: $sort, time: $time) {
-    __typename
     textContent
     createdAt
     editedAt
-    endorsementCount
+    upvoteCount
     id
-    isEndorsed
+    upvoted
     postId
     post {
       id
       title
-      planet {
+      community {
         name
       }
     }
@@ -19,9 +18,9 @@ query userComments($username: String!, $page: Int, $pageSize: Int, $sort: Commen
       id
       username
       isCurrentUser
-      tag
-      tagColor
-      avatarImageUrl
+      profile {
+        avatar
+      }
     }
   }
 }

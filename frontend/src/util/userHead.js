@@ -16,8 +16,8 @@ export const userHead = (user) => {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: user.bannerImageUrl
-            ? user.bannerImageUrl
+          content: user.profile.banner
+            ? user.profile.banner
             : 'https://www.cometx.io/og_image.png'
         },
         {
@@ -58,8 +58,8 @@ export const userHead = (user) => {
         {
           hid: 'twitter:image',
           name: 'twitter:image',
-          content: user.bannerImageUrl
-            ? user.bannerImageUrl
+          content: user.profile.banner
+            ? user.profile.banner
             : 'https://www.cometx.io/og_image.png'
         },
         {

@@ -14,17 +14,23 @@ import { Context } from '@/Context'
 import { User } from '@/entities/User'
 import { Comment } from '@/entities/Comment'
 import { UserCommentsArgs } from '@/args/UserCommentsArgs'
-import { RepositoryInjector } from '@/RepositoryInjector'
 import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { TimeFilter } from '@/types/TimeFilter'
 import { CommentSort } from '@/types/CommentSort'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { Repository } from 'typeorm'
 
 @Resolver(() => User)
-export class UserResolver extends RepositoryInjector {
+export class UserResolver {
+  @InjectRepository(User)
+  readonly userRepository: Repository<User>
+  @InjectRepository(Comment)
+  readonly commentRepository: Repository<Comment>
+
   @Query(() => User, { nullable: true })
-  async currentUser(@Ctx() { userId, req }: Context) {
+  async currentUser(@Ctx() { userId }: Context) {
     if (!userId) {
       return null
     }
@@ -41,7 +47,7 @@ export class UserResolver extends RepositoryInjector {
         "posts.deleted = false AND posts.createdAt > NOW() - INTERVAL '1 day'"
       )
       .addGroupBy('user.id')
-      .addGroupBy('community.name')
+      .addGroupBy('community.id')
       .getOne()
 
     if (!user) return null
@@ -180,7 +186,7 @@ export class UserResolver extends RepositoryInjector {
       file.mimetype
     )
     // TODO
-    // await this.userRepository.update(userId, { avatarImageUrl: url })
+    // await this.userRepository.update(userId, { avatar: url })
     return true
   }
 

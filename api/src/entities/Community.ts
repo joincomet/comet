@@ -13,7 +13,7 @@ import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
 import { Tag } from '@/entities/Tag'
 import { CommunitySettings } from '@/types/CommunitySettings'
-import { GraphQLJSONObject } from 'graphql-type-json'
+import { CommunityProfile } from '@/types/CommunityProfile'
 
 @ObjectType()
 @Entity()
@@ -31,10 +31,37 @@ export class Community {
   @Column()
   name: string
 
-  @Authorized('MOD')
-  @Field(() => GraphQLJSONObject)
-  @Column('jsonb', { default: new CommunitySettings() })
+  @Field()
+  @Column('jsonb', {
+    default: new CommunitySettings(),
+    transformer: {
+      to: value => value,
+      from: value => {
+        try {
+          return JSON.parse(value) as CommunitySettings
+        } catch {
+          return value
+        }
+      }
+    }
+  })
   settings: CommunitySettings
+
+  @Field()
+  @Column('jsonb', {
+    default: new CommunityProfile(),
+    transformer: {
+      to: value => value,
+      from: value => {
+        try {
+          return JSON.parse(value) as CommunityProfile
+        } catch (e) {
+          return value
+        }
+      }
+    }
+  })
+  profile: CommunityProfile
 
   @Field()
   @Column()
@@ -50,10 +77,10 @@ export class Community {
   @Column({ nullable: true })
   creatorId: number
 
-  @OneToMany(() => Post, (post) => post.community)
+  @OneToMany(() => Post, post => post.community)
   posts: Lazy<Post[]>
 
-  @ManyToMany(() => User, (user) => user.communities)
+  @ManyToMany(() => User, user => user.communities)
   @JoinTable()
   users: Lazy<User[]>
 
@@ -61,7 +88,7 @@ export class Community {
   @JoinTable()
   allowedPosters: Lazy<User[]>
 
-  @ManyToMany(() => Tag, (tag) => tag.communities)
+  @ManyToMany(() => Tag, tag => tag.communities)
   @JoinTable()
   tags: Lazy<Tag[]>
 
@@ -73,7 +100,7 @@ export class Community {
   userCount: number
 
   @Field(() => [User])
-  @ManyToMany(() => User, (user) => user.moderatedCommunities)
+  @ManyToMany(() => User, user => user.moderatedCommunities)
   @JoinTable()
   moderators: Lazy<User[]>
 

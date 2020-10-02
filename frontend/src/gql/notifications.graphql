@@ -12,14 +12,14 @@ query notifications($unreadOnly: Boolean!) {
       id
       username
       isCurrentUser
-      tag
-      tagColor
-      avatarImageUrl
+      profile {
+        avatar
+      }
     }
     post {
       id
       title
-      planet {
+      community {
         name
       }
     }

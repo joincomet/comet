@@ -1,9 +1,9 @@
 <template>
   <div class="container py-6 mx-auto">
     <div class="grid justify-center grid-cols-11 gap-4">
-      <div class="col-span-8" :class="hasLinkedAccount || user.moderatedPlanets.length > 0 ? '' : 'col-start-2'">
+      <div class="col-span-8" :class="hasLinkedAccount || user.moderatedCommunities.length > 0 ? '' : 'col-start-2'">
         <div class="flex flex-row p-6 rounded-lg card">
-          <img :src="user.avatarImageUrl" class="w-48 h-48 mr-12 rounded-full" style="min-width: 12rem; min-height: 12rem">
+          <img :src="user.profile.avatar" class="w-48 h-48 mr-12 rounded-full" style="min-width: 12rem; min-height: 12rem">
           <div class="py-2">
             <div class="inline-flex flex-row items-center mb-3">
               <span class="inline-flex flex-row items-end">
@@ -22,7 +22,7 @@
               <Icon class="ml-6 cursor-pointer text-secondary" name="dots-horizontal" />
             </div>
             <div class="mb-3 text-sm text-secondary">
-              Joined {{ user.timeSinceCreated }} &middot; {{ user.endorsementCount }} Rocket{{ user.endorsementCount === 1 ? '' : 's' }} &middot; 22 Followers &middot; 68 Following
+              Joined {{ user.timeSinceCreated }} &middot; {{ user.upvoteCount }} Rocket{{ user.upvoteCount === 1 ? '' : 's' }} &middot; 22 Followers &middot; 68 Following
             </div>
             <div class="mb-3 text-md text-secondary">
               {{ user.bio }}
@@ -47,10 +47,10 @@
 
         <nuxt-child />
       </div>
-      <div v-if="hasLinkedAccount || user.moderatedPlanets.length > 0" class="col-span-3">
+      <div v-if="hasLinkedAccount || user.moderatedCommunities.length > 0" class="col-span-3">
         <LazyLinkedAccounts v-if="hasLinkedAccount" :user="user" />
 
-        <ModeratedPlanets v-if="user.moderatedPlanets && user.moderatedPlanets.length > 0" :user="user" />
+        <moderatedCommunities v-if="user.moderatedCommunities && user.moderatedCommunities.length > 0" :user="user" />
       </div>
     </div>
   </div>

@@ -4,37 +4,28 @@ query hiddenPosts {
         id
         username
         isCurrentUser
-        tag
-        tagColor
-        avatarImageUrl
+        profile {
+          avatar
+        }
       }
       commentCount
       createdAt
       editedAt
-      domain
-      endorsementCount
+      upvoteCount
       id
-      isEndorsed
+      upvoted
       link
       textContent
-      thumbnailUrl
       title
-      type
-      isHidden
-      planet {
+      hidden
+      community {
         name
-        description
         userCount
         createdAt
         joined
-        avatarImageUrl
-        themeColor
-      }
-      postView {
-        lastCommentCount
-        postId
-        userId
-        createdAt
+        profile {
+          avatar
+        }
       }
     }
   }

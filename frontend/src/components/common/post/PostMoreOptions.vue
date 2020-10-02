@@ -40,7 +40,7 @@
             Mute @{{ post.author.username }}
           </div>
           <div class="listitem">
-            Mute @{{ post.planet.name }}
+            Mute @{{ post.community.name }}
           </div>
 
           <div class="pt-3 pb-1 pl-2 text-xs tracking-wide uppercase text-secondary">
@@ -53,7 +53,7 @@
             Remove
           </div>
           <div class="text-red-600 listitem">
-            Ban @{{ post.author.username }} from +{{ post.planet.name }}
+            Ban @{{ post.author.username }} from +{{ post.community.name }}
           </div>
 
           <div class="pt-3 pb-1 pl-2 text-xs tracking-wide uppercase text-secondary">

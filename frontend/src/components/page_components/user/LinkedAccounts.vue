@@ -4,17 +4,17 @@
       Linked Accounts
     </div>
     <div v-if="user.usernameTwitter" class="linked-account text-secondary">
-      <img class="w-5" src="~/assets/twitter.svg">
+      <!--<img class="w-5" src="~/assets/twitter.svg">-->
       <span class="ml-6 text-sm">{{ user.usernameTwitter }}</span>
     </div>
 
     <div v-if="user.usernameDiscord" class="linked-account text-secondary">
-      <img class="w-5" src="~/assets/discord.svg">
+      <!--<img class="w-5" src="~/assets/discord.svg">-->
       <span class="ml-6 text-sm">{{ user.usernameDiscord }}</span>
     </div>
 
     <div v-if="user.usernameReddit" class="linked-account text-secondary">
-      <img class="w-5" src="~/assets/reddit.svg">
+      <!--<img class="w-5" src="~/assets/reddit.svg">-->
       <span class="ml-6 text-sm">{{ user.usernameReddit }}</span>
     </div>
   </div>

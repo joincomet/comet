@@ -1,16 +1,16 @@
 <template>
   <div class="container mx-auto py-3 sm:px-3">
     <div class="text-xl font-semibold">
-      {{ planet.name }}
+      {{ community.name }}
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'PlanetPage',
+  name: 'communityPage',
   props: {
-    planet: {
+    community: {
       type: Object,
       required: true
     }

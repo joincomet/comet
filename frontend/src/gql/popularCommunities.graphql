@@ -1,0 +1,10 @@
+query popularCommunities {
+  popularCommunities {
+    name
+    postCount
+    userCount
+    profile {
+      avatar
+    }
+  }
+}

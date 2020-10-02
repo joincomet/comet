@@ -11,6 +11,8 @@ api/dist
 frontend/src/static/sw.js
 frontend/.nuxt
 frontend/tailwind.css
+frontend/.graphqlconfig
+frontend/schema.graphql
 
 imageflow/packages-microsoft-prod.deb
 imageflow/bin

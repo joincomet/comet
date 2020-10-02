@@ -1,4 +1,3 @@
-import { RepositoryInjector } from '@/RepositoryInjector'
 import {
   Arg,
   Authorized,
@@ -10,9 +9,14 @@ import {
 } from 'type-graphql'
 import { Notification } from '@/entities/Notification'
 import { Context } from '@/Context'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { Repository } from 'typeorm'
 
 @Resolver()
-export class NotificationResolver extends RepositoryInjector {
+export class NotificationResolver {
+  @InjectRepository(Notification)
+  readonly notificationRepository: Repository<Notification>
+
   @Query(() => [Notification])
   async notifications(
     @Arg('unreadOnly', { defaultValue: false }) unreadOnly: boolean,

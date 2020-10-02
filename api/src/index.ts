@@ -54,7 +54,7 @@ async function bootstrap() {
           : 'postgres',
       // url: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'postgresql://postgres:password@postgres:5432/postgres',
       entities: [__dirname + '/entities/**/*.{ts,js}'],
-      synchronize: false,
+      synchronize: true,
       logging: process.env.NODE_ENV !== 'production',
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
@@ -71,15 +71,15 @@ async function bootstrap() {
     })
 
     registerEnumType(PostSort, {
-      name: 'Sort'
+      name: 'PostSort'
     })
 
     registerEnumType(TimeFilter, {
-      name: 'Time'
+      name: 'TimeFilter'
     })
 
     registerEnumType(Feed, {
-      name: 'Filter'
+      name: 'Feed'
     })
 
     registerEnumType(CommentSort, {
