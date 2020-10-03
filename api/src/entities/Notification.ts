@@ -9,8 +9,8 @@ import { User } from '@/entities/User'
 @Entity()
 export class Notification {
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  readonly id: number
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  readonly id: bigint
 
   @Field()
   get id36(): string {
@@ -23,7 +23,7 @@ export class Notification {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  toUserId: number
+  toUserId: bigint
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User)
@@ -31,7 +31,7 @@ export class Notification {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  fromUserId: number
+  fromUserId: bigint
 
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post)
@@ -39,7 +39,7 @@ export class Notification {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  postId: number
+  postId: bigint
 
   @Field(() => Comment, { nullable: true })
   @ManyToOne(() => Comment)
@@ -47,7 +47,7 @@ export class Notification {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  commentId: number
+  commentId: bigint
 
   @Field()
   @Column({ default: false })
@@ -59,5 +59,5 @@ export class Notification {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  parentCommentId: number
+  parentCommentId: bigint
 }

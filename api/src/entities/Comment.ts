@@ -16,8 +16,8 @@ import { formatDistanceToNowStrict } from 'date-fns'
 @Entity()
 export class Comment {
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  readonly id: bigint
 
   @Field()
   get id36(): string {
@@ -25,20 +25,20 @@ export class Comment {
   }
 
   @Field(() => User, { nullable: true })
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(() => User, user => user.comments)
   author: Lazy<User>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  authorId: number
+  authorId: bigint
 
   @Field(() => Post, { nullable: true })
-  @ManyToOne(() => Post, (post) => post.comments)
+  @ManyToOne(() => Post, post => post.comments)
   post: Lazy<Post>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  postId: number
+  postId: bigint
 
   @Field()
   @Column('text')
@@ -65,11 +65,11 @@ export class Comment {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  parentCommentId: number
+  parentCommentId: bigint
 
   childComments: Comment[] = []
 
-  @OneToMany(() => CommentUpvote, (upvote) => upvote.comment)
+  @OneToMany(() => CommentUpvote, upvote => upvote.comment)
   upvotes: Lazy<CommentUpvote[]>
 
   @Field()

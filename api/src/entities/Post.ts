@@ -17,8 +17,8 @@ import { formatDistanceToNowStrict } from 'date-fns'
 @Entity()
 export class Post {
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  readonly id: bigint
 
   @Field()
   get id36(): string {
@@ -47,7 +47,7 @@ export class Post {
 
   @Field(() => ID)
   @Column({ nullable: true })
-  authorId: number
+  authorId: bigint
 
   @Field()
   @Column()
@@ -92,7 +92,7 @@ export class Post {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  communityId?: number
+  communityId?: bigint
 
   @OneToMany(() => PostUpvote, vote => vote.post)
   upvotes: Lazy<PostUpvote[]>
@@ -132,7 +132,7 @@ export class Post {
       .join('_')
       .replace(/[^a-z0-9_]+/gi, '')
       .replace(/[_](.)\1+/g, '$1')
-    return `/+${(this.community as Community).name}/${this.id36}/${slug}`
+    return `/+${(this.community as Community).name}/post/${this.id36}/${slug}`
   }
 
   personalUpvoteCount = 0

@@ -50,7 +50,7 @@
       <div v-if="hasLinkedAccount || user.moderatedCommunities.length > 0" class="col-span-3">
         <LazyLinkedAccounts v-if="hasLinkedAccount" :user="user" />
 
-        <moderatedCommunities v-if="user.moderatedCommunities && user.moderatedCommunities.length > 0" :user="user" />
+        <ModeratedCommunities v-if="user.moderatedCommunities && user.moderatedCommunities.length > 0" :user="user" />
       </div>
     </div>
   </div>
@@ -68,6 +68,90 @@ export default {
   computed: {
     hasLinkedAccount () {
       return Object.keys(this.user).filter(u => u.startsWith('username') && u.length > 8).length > 0
+    }
+  },
+  head () {
+    const title = `${this.user.username} – CometX`
+    return {
+      title,
+      link: [
+        {
+          rel: 'canonical',
+          href: `https://www.cometx.io/@${this.user.username}`
+        }
+      ],
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.user.profile.bio
+        },
+        {
+          hid: 'og:site_name',
+          property: 'og:site_name',
+          content: 'CometX'
+        },
+        {
+          hid: 'og:type',
+          property: 'og:type',
+          content: 'profile'
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: title
+        },
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.user.profile.avatar
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.user.profile.bio
+        },
+        {
+          hid: 'og:profile:username',
+          property: 'og:profile:username',
+          content: this.user.username
+        },
+        {
+          hid: 'og:profile:first_name',
+          property: 'og:profile:first_name',
+          content: this.user.username.includes(' ') ? this.user.username.split(' ')[0] : this.user.username
+        },
+        {
+          hid: 'og:profile:last_name',
+          property: 'og:profile:last_name',
+          content: this.user.username.includes(' ') ? this.user.username.split(' ')[1] : ''
+        },
+        {
+          hid: 'twitter:site',
+          name: 'twitter:site',
+          content: '@CometWebsite'
+        },
+        {
+          hid: 'twitter:card',
+          name: 'twitter:card',
+          content: 'summary'
+        },
+        {
+          hid: 'twitter:image',
+          name: 'twitter:image',
+          content: this.user.profile.avatar
+        },
+        {
+          hid: 'twitter:description',
+          name: 'twitter:description',
+          content: this.user.bio
+        },
+        this.user.profile.usernames.twitter ? {
+          hid: 'twitter:creator',
+          name: 'twitter:creator',
+          content: `@${this.user.profile.usernames.twitter}`
+        } : undefined
+      ]
     }
   }
 }

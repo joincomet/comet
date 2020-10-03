@@ -19,8 +19,8 @@ import { CommunityProfile } from '@/types/CommunityProfile'
 @Entity()
 export class Community {
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  readonly id: bigint
 
   @Field()
   get id36(): string {
@@ -75,7 +75,7 @@ export class Community {
   @Authorized('ADMIN')
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  creatorId: number
+  creatorId: bigint
 
   @OneToMany(() => Post, post => post.community)
   posts: Lazy<Post[]>

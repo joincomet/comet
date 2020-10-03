@@ -21,8 +21,8 @@ import { UserSettings } from '@/types/UserSettings'
 @Entity()
 export class User {
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  readonly id: number
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  readonly id: bigint
 
   @Field()
   get id36(): string {

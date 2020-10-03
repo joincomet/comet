@@ -237,7 +237,7 @@ $$
 BEGIN
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP CONSTRAINT "' || _pk || '";';
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP CONSTRAINT "' || _fk || '";';
-    EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD COLUMN "' || _id || '2" integer NOT NULL default 0;';
+    EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD COLUMN "' || _id || '2" bigint NOT NULL default 0;';
     EXECUTE 'UPDATE "' || _relation_table || '" T SET "' || _id || '2" = (SELECT "_id" FROM "' || _fromEntity ||
             '" WHERE ' || _compareId || ' = T."' || _id || '") WHERE 1=1;';
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP COLUMN "' || _id || '";';
@@ -257,7 +257,7 @@ CREATE OR REPLACE FUNCTION update_relation(_relation_table text, _fromEntity tex
 $$
 BEGIN
     EXECUTE 'ALTER TABLE "' || _relation_table || '" DROP CONSTRAINT "' || _fk || '";';
-    EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD COLUMN "' || _id || '2" integer ' ||
+    EXECUTE 'ALTER TABLE "' || _relation_table || '" ADD COLUMN "' || _id || '2" bigint ' ||
             (CASE WHEN _nullable = TRUE THEN '' ELSE 'NOT NULL default 0' END) || ';';
     EXECUTE 'UPDATE "' || _relation_table || '" T SET "' || _id || '2" = (SELECT "_id" FROM "' || _fromEntity ||
             '" WHERE ' || _compareId || ' = T."' || _id || '") WHERE 1=1;';

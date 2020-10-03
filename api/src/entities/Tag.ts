@@ -7,8 +7,8 @@ import { Community } from '@/entities/Community'
 @Entity()
 export class Tag {
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  readonly id: bigint
 
   @Field()
   get id36(): string {
@@ -19,6 +19,6 @@ export class Tag {
   @Column()
   name: string
 
-  @ManyToMany(() => Community, (community) => community.tags)
+  @ManyToMany(() => Community, community => community.tags)
   communities: Lazy<Community[]>
 }

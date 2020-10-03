@@ -7,19 +7,19 @@ import { User } from '@/entities/User'
 @ObjectType()
 @Entity()
 export class CommentUpvote {
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, user => user.posts)
   user: Lazy<User>
 
   @Field(() => ID)
   @PrimaryColumn()
-  userId: number
+  userId: bigint
 
-  @ManyToOne(() => Comment, (comment) => comment.upvotes)
+  @ManyToOne(() => Comment, comment => comment.upvotes)
   comment: Lazy<Comment>
 
   @Field(() => ID)
   @PrimaryColumn()
-  commentId: number
+  commentId: bigint
 
   @Field()
   @Column()

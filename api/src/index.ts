@@ -25,7 +25,6 @@ if (!process.env.ACCESS_TOKEN_SECRET) {
   process.exit()
 }
 
-// register 3rd party IOC container
 TypeORM.useContainer(Container)
 
 async function bootstrap() {
