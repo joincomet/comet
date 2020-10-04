@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <AppBar />
+    <!--<AppBar />-->
 
     <div class="flex flex-row">
       <NavDrawer />
 
-      <div class="flex flex-grow mt-12">
+      <div class="flex flex-grow" style="margin-left: 17.5rem">
         <nuxt />
       </div>
     </div>

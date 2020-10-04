@@ -29,6 +29,7 @@
     "tailwindcss-dark-mode": "^1.1.6",
     "tiptap": "^1.29.6",
     "tiptap-extensions": "^1.32.7",
+    "v-lazy-image": "^1.4.0",
     "vue-infinite-loading": "^2.4.5",
     "vue-virtual-scroller": "^1.0.10"
   },

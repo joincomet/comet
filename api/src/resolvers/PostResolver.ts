@@ -179,14 +179,14 @@ export class PostResolver {
 
       if (user) {
         const mutedCommunities = (await user.mutedCommunities).map(
-          (community) => community.name
+          community => community.name
         )
-        const blockedUsers = (await user.blockedUsers).map((user) => user.id)
-        const hiddenPosts = (await user.hiddenPosts).map((post) => post.id)
+        const blockedUsers = (await user.blockedUsers).map(user => user.id)
+        const hiddenPosts = (await user.hiddenPosts).map(post => post.id)
 
         if (!community && feed === Feed.JOINED) {
           const communities = (await user.communities).map(
-            (community) => community.name
+            community => community.name
           )
           qb.andWhere('post.community = ANY(:communities)', { communities })
         }
@@ -207,7 +207,7 @@ export class PostResolver {
           'post.personalUpvoteCount',
           'post.upvotes',
           'upvote',
-          (qb) => {
+          qb => {
             return qb
               .andWhere('upvote.active = true')
               .andWhere('upvote.userId = :userId', { userId })
@@ -218,7 +218,7 @@ export class PostResolver {
           'community.personalUserCount',
           'community.users',
           'user',
-          (qb) => {
+          qb => {
             return qb.andWhere('user.id  = :userId', { userId })
           }
         )
@@ -248,7 +248,7 @@ export class PostResolver {
           'post.personalUpvoteCount',
           'post.upvotes',
           'upvote',
-          (qb) => {
+          qb => {
             return qb
               .andWhere('upvote.active = true')
               .andWhere('upvote.userId = :userId', { userId })
@@ -259,7 +259,7 @@ export class PostResolver {
           'community.personalUserCount',
           'community.users',
           'user',
-          (qb) => {
+          qb => {
             return qb.andWhere('user.id  = :userId', { userId })
           }
         )
@@ -295,13 +295,13 @@ export class PostResolver {
 
     const qb = this.postRepository
       .createQueryBuilder('post')
-      .whereInIds(posts.map((post) => post.id))
+      .whereInIds(posts.map(post => post.id))
 
     qb.loadRelationCountAndMap(
       'post.personalUpvoteCount',
       'post.upvotes',
       'upvote',
-      (qb) => {
+      qb => {
         return qb
           .andWhere('upvote.active = true')
           .andWhere('upvote.userId = :userId', { userId })
@@ -310,7 +310,7 @@ export class PostResolver {
 
     posts = await qb.leftJoinAndSelect('post.community', 'community').getMany()
 
-    posts.forEach((post) => {
+    posts.forEach(post => {
       post.upvoted = Boolean(post.personalUpvoteCount)
       post.hidden = true
     })
@@ -336,7 +336,7 @@ export class PostResolver {
         'post.personalUpvoteCount',
         'post.upvotes',
         'upvote',
-        (qb) => {
+        qb => {
           return qb
             .andWhere('upvote.active = true')
             .andWhere('upvote.userId = :userId', { userId })
@@ -346,7 +346,7 @@ export class PostResolver {
         'community.personalUserCount',
         'community.users',
         'user',
-        (qb) => {
+        qb => {
           return qb.andWhere('user.id  = :userId', { userId })
         }
       )
@@ -389,7 +389,7 @@ export class PostResolver {
       .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
       .getOne()
     const bannedUsers = await cmmnty.bannedUsers
-    if (bannedUsers.map((u) => u.id).includes(userId))
+    if (bannedUsers.map(u => u.id).includes(userId))
       throw new Error('You have been banned from ' + cmmnty.name)
 
     if (textContent) {

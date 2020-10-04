@@ -219,13 +219,13 @@ CREATE OR REPLACE FUNCTION add_new_ids() RETURNS void AS
 $$
 BEGIN
     ALTER TABLE "user"
-        ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
+        ADD COLUMN "_id" bigserial UNIQUE NOT NULL;
     ALTER TABLE "comment"
-        ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
+        ADD COLUMN "_id" bigserial UNIQUE NOT NULL;
     ALTER TABLE "post"
-        ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
+        ADD COLUMN "_id" bigserial UNIQUE NOT NULL;
     ALTER TABLE "planet"
-        ADD COLUMN "_id" SERIAL UNIQUE NOT NULL;
+        ADD COLUMN "_id" bigserial UNIQUE NOT NULL;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -277,7 +277,8 @@ BEGIN
     EXECUTE 'ALTER TABLE "' || _entity || '" DROP CONSTRAINT "' || _pk || '";';
     EXECUTE 'ALTER TABLE "' || _entity || '" DROP COLUMN "id";';
     EXECUTE 'ALTER TABLE "' || _entity || '" RENAME COLUMN "_id" to "id";';
-    EXECUTE 'ALTER TABLE "' || _entity || '" ADD PRIMARY KEY ("id");';
+    EXECUTE 'ALTER TABLE "' || _entity || '" ADD CONSTRAINT "'|| _pk ||'" PRIMARY KEY ("id");';
+    -- EXECUTE 'ALTER TABLE "' || _entity || '" DROP CONSTRAINT "' || _entity || '__id_key";';
 END;
 $$ LANGUAGE plpgsql;
 
@@ -371,7 +372,7 @@ ALTER TABLE "comment" ALTER COLUMN "id" DROP DEFAULT;
 ALTER TABLE "community" ALTER COLUMN "id" DROP DEFAULT;
 ALTER TABLE "post" ALTER COLUMN "id" DROP DEFAULT;
 ALTER TABLE "user" ALTER COLUMN "id" DROP DEFAULT;
-DROP SEQUENCE "comment__id_seq";
-DROP SEQUENCE "planet__id_seq";
-DROP SEQUENCE "post__id_seq";
-DROP SEQUENCE "user__id_seq";
+DROP SEQUENCE "comment__id_seq" CASCADE;
+DROP SEQUENCE "planet__id_seq" CASCADE;
+DROP SEQUENCE "post__id_seq" CASCADE;
+DROP SEQUENCE "user__id_seq" CASCADE;

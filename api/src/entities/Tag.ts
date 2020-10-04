@@ -8,7 +8,7 @@ import { Community } from '@/entities/Community'
 export class Tag {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
-  readonly id: bigint
+  readonly id: number
 
   @Field()
   get id36(): string {

@@ -17,7 +17,7 @@ import { formatDistanceToNowStrict } from 'date-fns'
 export class Comment {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
-  readonly id: bigint
+  readonly id: number
 
   @Field()
   get id36(): string {
@@ -30,7 +30,7 @@ export class Comment {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  authorId: bigint
+  authorId: number
 
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post, post => post.comments)
@@ -38,7 +38,7 @@ export class Comment {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  postId: bigint
+  postId: number
 
   @Field()
   @Column('text')
@@ -65,7 +65,7 @@ export class Comment {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  parentCommentId: bigint
+  parentCommentId: number
 
   childComments: Comment[] = []
 

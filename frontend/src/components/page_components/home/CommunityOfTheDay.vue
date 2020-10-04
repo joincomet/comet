@@ -3,13 +3,13 @@
     class="grid grid-flow-row grid-cols-1 grid-rows-2 sm:grid-rows-1 sm:grid-cols-2"
   >
     <div
-      class="flex w-full h-48 bg-center bg-cover rounded-l-lg cursor-pointer"
+      class="flex w-full h-48 bg-center bg-cover rounded-l-xl cursor-pointer"
       :style="`background-image: linear-gradient( rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75) ), url(${community.profile.banner});`"
       @click="$router.push(`/+${community.name}`)"
     >
       <div class="flex flex-col items-center m-auto">
         <div class="mb-4 text-xs tracking-widest text-gray-400 uppercase">
-          Community of the Day
+          Planet of the Day
         </div>
         <img
           v-if="community.profile.avatar"
@@ -40,7 +40,7 @@
     </div>
 
     <div
-      class="relative w-full h-48 bg-indigo-700 bg-center bg-cover rounded-r-lg cursor-pointer dark:bg-gray-800"
+      class="relative w-full h-48 bg-indigo-700 bg-center bg-cover rounded-r-xl cursor-pointer dark:bg-gray-800"
       :style="
         post.link && post.type === 'IMAGE'
           ? `background-image: url(${post.link});`
@@ -51,7 +51,7 @@
     >
       <div
         v-if="post.link && post.type === 'IMAGE'"
-        class="absolute top-0 w-full h-full rounded-r-lg"
+        class="absolute top-0 w-full h-full rounded-r-xl"
         :style="'background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75));'"
         style="z-index: -1"
       />

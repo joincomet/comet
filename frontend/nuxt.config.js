@@ -1,3 +1,5 @@
+import { sortRoutes } from '@nuxt/utils'
+
 export default {
   srcDir: 'src/',
   components: true,
@@ -89,11 +91,6 @@ export default {
     cache: true
   },
 
-  build: {
-    parallel: true,
-    cache: true
-  },
-
   tailwindcss: {
     // add '~tailwind.config` alias - increases bundle size
     exposeConfig: true,
@@ -141,6 +138,35 @@ export default {
         },
         wsEndpoint: null
       }
+    }
+  },
+
+  build: {
+    cache: process.env.NODE_ENV !== 'production',
+    parallel: process.env.NODE_ENV !== 'production',
+    hardSource: process.env.NODE_ENV !== 'production'
+  },
+
+  router: {
+    extendRoutes (routes, resolve) {
+      routes.push(
+        {
+          name: 'user',
+          path: '/@:name',
+          component: resolve(__dirname, 'src/pages/-user.vue')
+        },
+        {
+          name: 'community',
+          path: '/+:name',
+          component: resolve(__dirname, 'src/pages/-community.vue')
+        },
+        {
+          name: 'tag',
+          path: '/~:name',
+          component: resolve(__dirname, 'src/pages/-tag.vue')
+        }
+      )
+      sortRoutes(routes)
     }
   }
 }

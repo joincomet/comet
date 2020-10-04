@@ -1,26 +1,29 @@
 <template>
-  <div>
-    <div class="mb-6 font-bold text-md">
-      Popular Communities
+  <div class="bg-white border rounded-xl myborder dark:bg-gray-800">
+    <div class="flex flex-row items-center">
+      <div class="px-5 py-4 flex flex-row flex-grow h-full items-center border-b border-gray-200 text-sm text-gray-700 font-medium">
+        Popular Planets
+      </div>
     </div>
-    <div class="bg-white border rounded-lg myborder dark:bg-gray-800">
-      <div v-for="community in popularCommunities" :key="community.id" class="flex flex-row items-center p-3 transition duration-150 ease-in-out transform cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800">
-        <img class="object-cover w-10 h-10 rounded-full" :src="community.profile.avatar">
+    <div v-for="(community, index) in popularCommunities" :key="community.id" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
+      <div class="mx-5 py-4 flex flex-row flex-grow h-full items-center border-gray-200" :class="index < popularCommunities.length - 1 ? 'border-b' : ''">
+        <img class="object-cover w-10 h-10 rounded-lg p-1" :src="community.profile.avatar">
         <div class="flex flex-row items-center flex-grow community">
           <div class="flex flex-col ml-6">
-            <div class="text-sm">
+            <div class="leading-5 font-medium text-secondary">
               +{{ community.name }}
             </div>
-            <div class="text-xs text-secondary">
-              {{ community.postCount }} post{{ community.postCount == 1 ? '' : 's' }} today
+            <div class="text-xs text-tertiary mt-1">
+              {{ community.userCount }} user{{ community.userCount == 1 ? '' : 's' }} &middot; {{ community.postCount }} post{{ community.postCount == 1 ? '' : 's' }} today
             </div>
-          </div>
-
-          <div class="px-3 py-1 ml-auto text-sm text-white bg-indigo-500 rounded-full btn hovergrow-10">
-            Join
           </div>
         </div>
       </div>
+    </div>
+    <div class="flex flex-row items-center border-t border-gray-200 hover:bg-gray-100">
+      <nuxt-link to="/explore" class="px-5 py-4 flex flex-row flex-grow h-full items-center text-sm text-indigo-600 font-medium">
+        Explore more planets
+      </nuxt-link>
     </div>
   </div>
 </template>
@@ -36,12 +39,6 @@ export default {
 }
 </script>
 
-<style>
-.community:hover > .btn {
-  opacity: 1;
-}
+<style scoped>
 
-.community > .btn {
-  opacity: 0;
-}
 </style>

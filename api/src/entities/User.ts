@@ -22,7 +22,7 @@ import { UserSettings } from '@/types/UserSettings'
 export class User {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
-  readonly id: bigint
+  readonly id: number
 
   @Field()
   get id36(): string {

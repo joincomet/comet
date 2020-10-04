@@ -3,11 +3,15 @@
 @import "tailwindcss/utilities";
 
 html {
-  @apply text-black bg-gray-100;
+  @apply text-black bg-gray-50;
 }
 
 html.dark {
   @apply text-white bg-gray-900;
+}
+
+.text-tiny {
+  font-size: 0.625rem;
 }
 
 .text-accent {
@@ -20,6 +24,10 @@ html.dark {
 
 .text-secondary {
   @apply text-gray-700 dark:text-gray-300;
+}
+
+.text-tertiary {
+  @apply text-gray-500 dark:text-gray-300;
 }
 
 .listitem {
@@ -88,4 +96,18 @@ html.dark {
 
 .card {
   @apply bg-white dark:bg-gray-800;
+}
+
+.rounded-xl {
+  border-radius: 16px;
+}
+
+.rounded-l-xl {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+
+.rounded-r-xl {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
 }

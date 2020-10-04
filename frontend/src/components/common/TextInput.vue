@@ -27,15 +27,15 @@ export default {
     },
     label: {
       type: String,
-      required: true
+      default: ''
     },
     placeholder: {
       type: String,
-      required: true
+      default: ''
     },
     errorMessage: {
       type: String,
-      required: true
+      default: ''
     },
     error: {
       type: Boolean,

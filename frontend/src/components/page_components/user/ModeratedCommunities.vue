@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col px-6 py-4 rounded-lg card">
     <div class="font-semibold text-secondary text-md">
-      Moderated communitys
+      Moderated Communities
     </div>
     <div v-for="community in user.moderatedCommunities" :key="community.id" class="moderated-community text-secondary">
       <img class="w-5 rounded-full" :src="community.profile.avatar">

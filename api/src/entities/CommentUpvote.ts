@@ -12,14 +12,14 @@ export class CommentUpvote {
 
   @Field(() => ID)
   @PrimaryColumn()
-  userId: bigint
+  userId: number
 
   @ManyToOne(() => Comment, comment => comment.upvotes)
   comment: Lazy<Comment>
 
   @Field(() => ID)
   @PrimaryColumn()
-  commentId: bigint
+  commentId: number
 
   @Field()
   @Column()

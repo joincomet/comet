@@ -4,7 +4,7 @@
       Customize Profile
     </div>
     <div class="flex flex-row items-start">
-      <img :src="$store.state.currentUser.profile.avatar" class="w-48 h-48 bg-indigo-500 rounded-full">
+      <img v-if="$store.state.currentUser" :src="$store.state.currentUser.profile.avatar" class="w-48 h-48 bg-indigo-500 rounded-full">
       <div class="flex flex-col ml-6">
         <TextInput placeholder="Full name" />
       </div>

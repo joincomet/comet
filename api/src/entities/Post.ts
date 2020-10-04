@@ -18,7 +18,7 @@ import { formatDistanceToNowStrict } from 'date-fns'
 export class Post {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
-  readonly id: bigint
+  readonly id: number
 
   @Field()
   get id36(): string {
@@ -47,7 +47,7 @@ export class Post {
 
   @Field(() => ID)
   @Column({ nullable: true })
-  authorId: bigint
+  authorId: number
 
   @Field()
   @Column()
@@ -92,7 +92,7 @@ export class Post {
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  communityId?: bigint
+  communityId?: number
 
   @OneToMany(() => PostUpvote, vote => vote.post)
   upvotes: Lazy<PostUpvote[]>

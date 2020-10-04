@@ -56,12 +56,14 @@
         <Popover>
           <template v-slot:activator="{ on }">
             <img
+              v-if="$store.state.currentUser"
               ref="btnRef"
               class="w-8 h-8 rounded-full cursor-pointer"
               :src="$store.state.currentUser.profile.avatar"
               alt="Profile"
               @click="on"
             >
+            <div v-else ref="btnRef" class="w-8 h-8 rounded-full bg-indigo-500" @click="on" />
           </template>
 
           <div class="listitem">
