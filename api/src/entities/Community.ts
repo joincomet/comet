@@ -1,6 +1,7 @@
 import { Authorized, Field, ID, ObjectType } from 'type-graphql'
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -11,9 +12,13 @@ import {
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
-import { Tag } from '@/entities/Tag'
 import { CommunitySettings } from '@/types/CommunitySettings'
 import { CommunityProfile } from '@/types/CommunityProfile'
+import { CommunityJoin } from '@/entities/relations/CommunityJoin'
+import { CommunityMute } from '@/entities/relations/CommunityMute'
+import { Moderator } from '@/entities/relations/Moderator'
+import { AllowedPoster } from '@/entities/relations/AllowedPoster'
+import { Ban } from '@/entities/moderation/Ban'
 
 @ObjectType()
 @Entity()
@@ -24,7 +29,7 @@ export class Community {
 
   @Field()
   get id36(): string {
-    return this.id.toString(36)
+    return BigInt(this.id).toString(36)
   }
 
   @Field()
@@ -64,7 +69,7 @@ export class Community {
   profile: CommunityProfile
 
   @Field()
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
   @Authorized('ADMIN')
@@ -80,29 +85,27 @@ export class Community {
   @OneToMany(() => Post, post => post.community)
   posts: Lazy<Post[]>
 
-  @ManyToMany(() => User, user => user.communities)
-  @JoinTable()
-  users: Lazy<User[]>
+  @OneToMany(() => CommunityJoin, user => user.community)
+  users: Lazy<CommunityJoin[]>
 
-  @ManyToMany(() => User)
-  @JoinTable()
+  @OneToMany(() => AllowedPoster, allowed => allowed.community)
   allowedPosters: Lazy<User[]>
 
-  @ManyToMany(() => Tag, tag => tag.communities)
-  @JoinTable()
-  tags: Lazy<Tag[]>
+  @Field(() => [String], { nullable: true })
+  @Column('text', { array: true, nullable: true })
+  tags?: string[]
 
-  @ManyToMany(() => User)
-  @JoinTable()
-  bannedUsers: Lazy<User[]>
+  @OneToMany(() => Ban, ban => ban.community)
+  bans: Lazy<Ban[]>
 
   @Field({ nullable: true })
   userCount: number
 
-  @Field(() => [User])
-  @ManyToMany(() => User, user => user.moderatedCommunities)
-  @JoinTable()
-  moderators: Lazy<User[]>
+  @OneToMany(() => Moderator, mod => mod.community)
+  moderators: Lazy<Moderator[]>
+
+  @OneToMany(() => CommunityMute, mute => mute.community)
+  mutes: Lazy<CommunityMute[]>
 
   @Field()
   muted: boolean
@@ -115,6 +118,4 @@ export class Community {
 
   @Column('int', { select: false, default: 0 })
   total: number
-
-  personalUserCount = 0
 }

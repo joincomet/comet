@@ -35,36 +35,10 @@ export class UserResolver {
       return null
     }
 
-    const user = await this.userRepository
+    return this.userRepository
       .createQueryBuilder('user')
       .whereInIds(userId)
-      .andWhere('user.banned = false')
-      .leftJoinAndSelect('user.moderatedCommunities', 'community')
-      .addSelect('COUNT(posts.id)', 'community_total')
-      .leftJoin(
-        'community.posts',
-        'posts',
-        "posts.deleted = false AND posts.createdAt > NOW() - INTERVAL '1 day'"
-      )
-      .addGroupBy('user.id')
-      .addGroupBy('community.id')
       .getOne()
-
-    if (!user) return null
-
-    const lastLogin = new Date()
-    user.lastLogin = lastLogin
-    this.userRepository.update(user.id, { lastLogin })
-
-    user.moderatedCommunities = (await user.moderatedCommunities).filter(
-      (p) => !!p.name
-    )
-
-    for (const community of user.moderatedCommunities) {
-      community.postCount = community.total
-    }
-
-    return user
   }
 
   @Query(() => User, { nullable: true })
@@ -83,11 +57,11 @@ export class UserResolver {
         'user.commentCount',
         'user.comments',
         'comment',
-        (qb) => {
+        qb => {
           return qb.andWhere('comment.deleted = false')
         }
       )
-      .loadRelationCountAndMap('user.postCount', 'user.posts', 'post', (qb) => {
+      .loadRelationCountAndMap('user.postCount', 'user.posts', 'post', qb => {
         return qb
           .andWhere('post.deleted = false')
           .andWhere('post.removed = false')
@@ -144,26 +118,7 @@ export class UserResolver {
     }
     qb.addOrderBy('comment.createdAt', 'DESC')
 
-    if (userId) {
-      qb.loadRelationCountAndMap(
-        'comment.personalUpvoteCount',
-        'comment.upvotes',
-        'upvote',
-        (qb) => {
-          return qb
-            .andWhere('upvote.active = true')
-            .andWhere('upvote.userId = :userId', { userId })
-        }
-      )
-    }
-
-    const comments = await qb.getMany()
-
-    comments.forEach(
-      (comment) => (comment.upvoted = Boolean(comment.personalUpvoteCount))
-    )
-
-    return comments
+    return qb.getMany()
   }
 
   @Mutation(() => Boolean)
@@ -271,94 +226,6 @@ export class UserResolver {
       .of(userId)
       .remove(blockedId)
     return true
-  }
-
-  @FieldResolver(() => Boolean)
-  async isFollowing(@Root() user: User, @Ctx() { userId }: Context) {
-    if (!userId) return false
-
-    user = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.id  = :userId', { userId: userId })
-      .leftJoinAndSelect(
-        'user.following',
-        'targetUser',
-        'targetuser.id  = :targetId',
-        {
-          targetId: user.id
-        }
-      )
-      .getOne()
-
-    if (!user) return false
-
-    return Boolean((await user.following).length)
-  }
-
-  @FieldResolver(() => Boolean)
-  async isFollowed(@Root() user: User, @Ctx() { userId }: Context) {
-    if (!userId) return false
-
-    user = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.id  = :userId', { userId: user.id })
-      .leftJoinAndSelect(
-        'user.following',
-        'targetUser',
-        'targetuser.id  = :targetId',
-        {
-          targetId: userId
-        }
-      )
-      .getOne()
-
-    if (!user) return false
-
-    return Boolean((await user.following).length)
-  }
-
-  @FieldResolver(() => Boolean)
-  async isBlocked(@Root() user: User, @Ctx() { userId }: Context) {
-    if (!userId) return false
-
-    user = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.id  = :userId', { userId: user.id })
-      .leftJoinAndSelect(
-        'user.blockedUsers',
-        'targetUser',
-        'targetuser.id  = :targetId',
-        {
-          targetId: userId
-        }
-      )
-      .getOne()
-
-    if (!user) return false
-
-    return Boolean((await user.blockedUsers).length)
-  }
-
-  @FieldResolver(() => Boolean)
-  async isBlocking(@Root() user: User, @Ctx() { userId }: Context) {
-    if (!userId) return false
-
-    user = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.id  = :userId', { userId: userId })
-      .leftJoinAndSelect(
-        'user.blockedUsers',
-        'targetUser',
-        'targetuser.id  = :targetId',
-        {
-          targetId: user.id
-        }
-      )
-      .getOne()
-
-    if (!user) return false
-
-    return Boolean((await user.blockedUsers).length)
   }
 
   @FieldResolver(() => Boolean)

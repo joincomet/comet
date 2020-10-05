@@ -11,10 +11,11 @@ import {
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '../Post'
+import { Community } from '@/entities/Community'
 
 @ObjectType()
 @Entity()
-export class Removal {
+export class Ban {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   readonly id: number
@@ -26,19 +27,29 @@ export class Removal {
   @Column('bigint')
   modId: number
 
-  @ManyToOne(() => Post, { nullable: true })
-  post?: Lazy<Post>
+  @ManyToOne(() => User, user => user.bans)
+  user: Lazy<User>
+
+  @Field(() => ID)
+  @Column('bigint')
+  userId: number
+
+  @ManyToOne(() => Community, community => community.bans, { nullable: true })
+  community?: Lazy<User> // null = sitewide ban
 
   @Field(() => ID, { nullable: true })
   @Column('bigint', { nullable: true })
-  postId?: number
+  communityId?: number
 
-  @ManyToOne(() => Comment, { nullable: true })
-  comment?: Lazy<Comment>
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  duration?: number // null = permanent
 
-  @Field(() => ID, { nullable: true })
-  @Column('bigint', { nullable: true })
-  commentId?: number
+  @Field()
+  get expired(): boolean {
+    if (!this.duration || this.duration <= 0) return false
+    return new Date().getTime() - this.createdAt.getTime() > this.duration
+  }
 
   @Field()
   @Column()

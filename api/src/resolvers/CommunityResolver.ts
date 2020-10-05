@@ -3,10 +3,11 @@ import {
   Args,
   Authorized,
   Ctx,
-  ID,
+  FieldResolver,
   Mutation,
   Query,
-  Resolver
+  Resolver,
+  Root
 } from 'type-graphql'
 import { CreateCommunityArgs } from '@/args/CreateCommunityArgs'
 import { Community } from '@/entities/Community'
@@ -15,6 +16,9 @@ import { User } from '@/entities/User'
 import { bannedWords } from '@/BannedWords'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
+import { CommunitiesArgs } from '@/args/CommunitiesArgs'
+import { CommunitySort } from '@/types/CommunitySort'
+import { CommunityJoin } from '@/entities/relations/CommunityJoin'
 
 @Resolver(() => Community)
 export class CommunityResolver {
@@ -22,6 +26,9 @@ export class CommunityResolver {
     Community
   >
   @InjectRepository(User) readonly userRepository: Repository<User>
+  @InjectRepository(CommunityJoin) readonly userCommunityRepository: Repository<
+    CommunityJoin
+  >
 
   @Authorized()
   @Mutation(() => Boolean)
@@ -35,8 +42,11 @@ export class CommunityResolver {
       }
     })
 
-    if (await this.communityExists(name))
-      throw new Error('Community already exists')
+    const foundCommunity = await this.communityRepository.findOne({
+      where: `"name" ILIKE '${name.replace(/_/g, '\\_')}'`
+    })
+
+    if (foundCommunity) throw new Error('Community already exists')
 
     const user = await this.userRepository
       .createQueryBuilder('user')
@@ -54,21 +64,10 @@ export class CommunityResolver {
     await this.communityRepository.save({
       name,
       description,
-      createdAt: new Date(),
-      creatorId: userId,
-      moderators: [{ id: userId }],
-      users: [{ id: userId }]
+      creatorId: userId
     })
 
     return true
-  }
-
-  @Query(() => Boolean)
-  async communityExists(@Arg('name') name: string) {
-    const foundCommunity = await this.communityRepository.findOne({
-      where: `"name" ILIKE '${name.replace(/_/g, '\\_')}'`
-    })
-    return !!foundCommunity
   }
 
   @Query(() => Community, { nullable: true })
@@ -82,48 +81,7 @@ export class CommunityResolver {
       .leftJoinAndSelect('community.moderators', 'moderator')
       .leftJoinAndSelect('community.tags', 'tag')
 
-    if (userId) {
-      qb.loadRelationCountAndMap(
-        'community.personalUserCount',
-        'community.users',
-        'user',
-        qb => {
-          return qb.andWhere('user.id  = :userId', { userId })
-        }
-      )
-    }
-    const community = await qb.getOne()
-    if (!community) return null
-    community.joined = Boolean(community.personalUserCount)
-
-    return community
-  }
-
-  @Query(() => [Community])
-  async recentCommunities(
-    @Arg('recentCommunities', () => [ID]) recentCommunities: string[]
-  ) {
-    if (recentCommunities.length === 0) return []
-    const qb = this.communityRepository
-      .createQueryBuilder('community')
-      .andWhere('community.name ILIKE ANY(:communities)', {
-        communities: recentCommunities.map(p => p.replace(/_/g, '\\_'))
-      })
-      .addGroupBy('community.id')
-      .addSelect('COUNT(posts.id)', 'community_total')
-      .leftJoin(
-        'community.posts',
-        'posts',
-        "posts.deleted = false AND posts.createdAt > NOW() - INTERVAL '1 day'"
-      )
-
-    const communities = await qb.getMany()
-    communities.forEach(community => {
-      community.postCount = community.total
-    })
-    return recentCommunities
-      .map(name => communities.find(p => p.name === name))
-      .filter(p => !!p)
+    return qb.getOne()
   }
 
   @Authorized()
@@ -186,110 +144,61 @@ export class CommunityResolver {
   }
 
   @Query(() => [Community])
-  async popularCommunities(
-    @Arg('tag', () => String, { nullable: true }) tag?: string
-  ) {
-    const qb = await this.communityRepository
-      .createQueryBuilder('community')
-      .addSelect('COUNT(posts.id)', 'community_total')
-      .leftJoin(
-        'community.posts',
-        'posts',
-        "posts.deleted = false AND posts.createdAt > NOW() - INTERVAL '1 day'"
-      )
-      .groupBy('community.id')
-      .orderBy('community_total', 'DESC')
-      .take(5)
-      .loadRelationCountAndMap('community.userCount', 'community.users')
-
-    // TODO
-    /*if (galaxyName) {
-      qb.where('community.galaxy = :galaxyName', { galaxyName })
-    }*/
-
-    const communities = await qb.getMany()
-    communities.forEach(community => (community.postCount = community.total))
-    return communities
-  }
-
-  @Query(() => [Community])
-  async allCommunities(
-    @Ctx() { userId }: Context,
-    @Arg('tag', () => String, { nullable: true }) tag: string
+  async communities(
+    @Args()
+    { sort, joined, names, search, tags, page, pageSize }: CommunitiesArgs,
+    @Ctx() { userId }: Context
   ) {
     const qb = this.communityRepository
       .createQueryBuilder('community')
-      .orderBy('community.id', 'ASC')
-      .leftJoinAndSelect('community.tags', 'tag')
       .loadRelationCountAndMap('community.userCount', 'community.users')
-
-    // TODO
-    // if (galaxyName) qb.andWhere('galaxy.name = :galaxyName', { galaxyName })
-
-    if (userId) {
-      qb.loadRelationCountAndMap(
-        'community.personalUserCount',
-        'community.users',
-        'user',
-        qb => {
-          return qb.andWhere('user.id  = :userId', { userId })
-        }
-      )
-    }
-
-    const communities = await qb.getMany()
-
-    communities.forEach(community => {
-      community.joined = Boolean(community.personalUserCount)
-    })
-
-    return communities
-  }
-
-  @Query(() => [Community])
-  async searchCommunities(@Arg('search') search: string) {
-    if (!search) return []
-
-    return this.communityRepository
-      .createQueryBuilder('community')
-      .where('community.name ILIKE :name', {
-        name: '%' + search.toLowerCase().replace(/ /g, '_') + '%'
-      })
-      .take(10)
-      .getMany()
-  }
-
-  @Query(() => [Community])
-  async joinedCommunities(@Ctx() { userId }: Context) {
-    if (!userId) return []
-
-    let communities = await this.userRepository
-      .createQueryBuilder()
-      .relation(User, 'communities')
-      .of(userId)
-      .loadMany()
-
-    if (communities.length === 0) return []
-
-    communities = await this.communityRepository
-      .createQueryBuilder('community')
-      .whereInIds(communities.map(community => community.name))
-      .addOrderBy('community.id', 'ASC')
       .loadRelationCountAndMap(
         'community.postCount',
         'community.posts',
-        'post',
-        qb => {
-          return qb
-            .andWhere('post.deleted = false')
-            .andWhere('post.removed = false')
-            .andWhere("post.createdAt > NOW() - INTERVAL '1 day'")
-        }
+        'p',
+        qb => qb.andWhere('p.deleted = false AND p.removed = false')
       )
+
+    if (sort === CommunitySort.NEW) {
+      qb.addOrderBy('community.createdAt', 'DESC')
+    } else if (sort === CommunitySort.TOP) {
+      qb.addSelect('COUNT(join.userId)', 'community_total')
+        .leftJoin('community.users', 'join')
+        .addGroupBy('community.id')
+        .addOrderBy('community_total', 'DESC')
+    } else if (sort === CommunitySort.TRENDING) {
+      qb.addSelect('COUNT(join.userId)', 'community_total')
+        .leftJoin(
+          'community.users',
+          'join',
+          "join.createdAt > NOW() - INTERVAL '1 day'"
+        )
+        .addGroupBy('community.id')
+        .addOrderBy('community_total', 'DESC')
+    }
+
+    qb.addOrderBy('community.name', 'ASC')
+
+    if (userId && joined) {
+      const sub = await this.userCommunityRepository
+        .createQueryBuilder('join')
+        .where(`join.userId = ${userId}`)
+        .select('"join"."community_id"')
+      qb.andWhere(`community.id = ANY((${sub.getQuery()}))`)
+    }
+
+    return qb
+      .skip(page * pageSize)
+      .take(pageSize)
       .getMany()
+  }
 
-    communities.forEach(p => (p.joined = true))
-
-    return communities
+  @FieldResolver()
+  async joined(
+    @Root() community: Community,
+    @Ctx() { joinedLoader, userId }: Context
+  ) {
+    if (!userId) return false
+    return joinedLoader.load({ userId, communityId: community.id })
   }
 }

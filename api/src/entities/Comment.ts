@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -8,9 +9,10 @@ import {
 } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { Post } from '@/entities/Post'
-import { CommentUpvote } from '@/entities/CommentUpvote'
+import { CommentUpvote } from '@/entities/relations/CommentUpvote'
 import { User } from '@/entities/User'
 import { formatDistanceToNowStrict } from 'date-fns'
+import { Save } from '@/entities/relations/Save'
 
 @ObjectType()
 @Entity()
@@ -21,7 +23,7 @@ export class Comment {
 
   @Field()
   get id36(): string {
-    return this.id.toString(36)
+    return BigInt(this.id).toString(36)
   }
 
   @Field(() => User, { nullable: true })
@@ -31,6 +33,9 @@ export class Comment {
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
   authorId: number
+
+  @OneToMany(() => Save, save => save.comment)
+  saves: Lazy<Save[]>
 
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post, post => post.comments)
@@ -45,7 +50,7 @@ export class Comment {
   textContent: string
 
   @Field()
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
   @Field()
@@ -75,8 +80,6 @@ export class Comment {
   @Field()
   @Column({ default: 0 })
   upvoteCount: number
-
-  personalUpvoteCount: number
 
   @Field()
   upvoted: boolean

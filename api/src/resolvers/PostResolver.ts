@@ -19,7 +19,7 @@ import { User } from '@/entities/User'
 import { discordReport } from '@/DiscordBot'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
-import { PostUpvote } from '@/entities/PostUpvote'
+import { PostUpvote } from '@/entities/relations/PostUpvote'
 import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
 import { TimeFilter } from '@/types/TimeFilter'
@@ -30,6 +30,7 @@ import { Repository } from 'typeorm'
 import { Comment } from '@/entities/Comment'
 import { Notification } from '@/entities/Notification'
 import { Community } from '@/entities/Community'
+import { CommunityJoin } from '@/entities/relations/CommunityJoin'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -45,6 +46,8 @@ export class PostResolver {
   readonly notificationRepository: Repository<Notification>
   @InjectRepository(Community)
   readonly communityRepository: Repository<Community>
+  @InjectRepository(CommunityJoin)
+  readonly userCommunityRepository: Repository<CommunityJoin>
 
   @Query(() => String, { nullable: true })
   async getTitleAtUrl(@Arg('url') url: string) {
@@ -60,9 +63,9 @@ export class PostResolver {
       sort,
       time,
       feed,
-      community,
+      communities,
       tags,
-      username,
+      usernames,
       search
     }: FeedArgs,
     @Ctx() { userId }: Context
@@ -74,9 +77,9 @@ export class PostResolver {
       .leftJoinAndSelect('post.community', 'community')
       .leftJoinAndSelect('community.tags', 'tag')
 
-    if (community) {
-      qb.andWhere(':community ILIKE post.community', {
-        community
+    if (communities) {
+      qb.andWhere('post.community ILIKE ANY(:communities)', {
+        communities
       }).andWhere('post.sticky = false')
     }
 
@@ -110,17 +113,17 @@ export class PostResolver {
         .setParameter('query', search)
     }
 
-    if (username) {
-      const user = await this.userRepository
+    if (usernames && usernames.length > 0) {
+      const users = await this.userRepository
         .createQueryBuilder('user')
-        .where('user.username ILIKE :username', {
-          username: username.replace(/_/g, '\\_')
+        .where('user.username ILIKE ANY(:usernames)', {
+          usernames: usernames.map(username => username.replace(/_/g, '\\_'))
         })
-        .getOne()
+        .getMany()
 
-      if (!user) return []
+      if (!users || users.length === 0) return []
 
-      qb.andWhere('post.authorId = :id', { id: user.id })
+      qb.andWhere('post.authorId = ANY(:ids)', { ids: users.map(u => u.id) })
     }
 
     /*if (types.length === 1 || types.length === 2) {
@@ -133,7 +136,7 @@ export class PostResolver {
       qb.addOrderBy('post.createdAt', 'DESC')
     } else if (sort === PostSort.HOT) {
       qb.addSelect(
-        '(CAST(post.upvoteCount AS float) + 1)/((CAST((CAST(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) AS int) - CAST(EXTRACT(EPOCH FROM post.createdAt) AS int)+5000) AS FLOAT)/100.0)^(1.6))',
+        '(CAST(post.upvoteCount AS float) + 1)/((CAST((CAST(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) AS int) - CAST(EXTRACT(EPOCH FROM post.createdAt) AS int)+5000) AS FLOAT)/100.0)^(1.618))',
         'post_hotrank'
       )
       qb.addOrderBy('post_hotrank', 'DESC')
@@ -171,7 +174,6 @@ export class PostResolver {
       const user = await this.userRepository
         .createQueryBuilder('user')
         .whereInIds(userId)
-        .leftJoinAndSelect('user.communities', 'communities')
         .leftJoinAndSelect('user.mutedCommunities', 'mutedCommunity')
         .leftJoinAndSelect('user.blockedUsers', 'blockedUser')
         .leftJoinAndSelect('user.hiddenPosts', 'hiddenPost')
@@ -179,16 +181,21 @@ export class PostResolver {
 
       if (user) {
         const mutedCommunities = (await user.mutedCommunities).map(
-          community => community.name
+          community => (community.community as Community).name
         )
-        const blockedUsers = (await user.blockedUsers).map(user => user.id)
-        const hiddenPosts = (await user.hiddenPosts).map(post => post.id)
+        const blockedUsers = (await user.blockTo).map(
+          user => (user.to as User).id
+        )
+        const hiddenPosts = (await user.hiddenPosts).map(
+          post => (post.post as Post).id
+        )
 
-        if (!community && feed === Feed.JOINED) {
-          const communities = (await user.communities).map(
-            community => community.name
-          )
-          qb.andWhere('post.community = ANY(:communities)', { communities })
+        if (feed === Feed.JOINED) {
+          const sub = await this.userCommunityRepository
+            .createQueryBuilder('join')
+            .where(`"join"."user_id" = "${userId}"`)
+            .select('"join"."community_id"')
+          qb.andWhere(`community.id = ANY((${sub.getQuery()}))`)
         }
 
         if (mutedCommunities.length > 0) {
@@ -202,80 +209,29 @@ export class PostResolver {
         })
 
         qb.andWhere('NOT (post.id  = ANY(:hiddenPosts))', { hiddenPosts })
-
-        qb.loadRelationCountAndMap(
-          'post.personalUpvoteCount',
-          'post.upvotes',
-          'upvote',
-          qb => {
-            return qb
-              .andWhere('upvote.active = true')
-              .andWhere('upvote.userId = :userId', { userId })
-          }
-        )
-
-        qb.loadRelationCountAndMap(
-          'community.personalUserCount',
-          'community.users',
-          'user',
-          qb => {
-            return qb.andWhere('user.id  = :userId', { userId })
-          }
-        )
       }
     }
 
     let posts = await qb
       .skip(page * pageSize)
       .take(pageSize)
-      .loadRelationCountAndMap('community.userCount', 'community.users')
       .getMany()
 
-    if (community && page === 0) {
+    if (communities && communities.length === 1 && page === 0) {
       const stickiesQb = await this.postRepository
         .createQueryBuilder('post')
         .andWhere('post.sticky = true')
-        .andWhere('post.community = :community', {
-          community
-        })
         .leftJoinAndSelect('post.community', 'community')
+        .andWhere('post.community.name = :community', {
+          community: communities[0]
+        })
         .leftJoinAndSelect('community.tags', 'tag')
         .loadRelationCountAndMap('community.userCount', 'community.users')
         .addOrderBy('post.createdAt', 'DESC')
 
-      if (userId) {
-        stickiesQb.loadRelationCountAndMap(
-          'post.personalUpvoteCount',
-          'post.upvotes',
-          'upvote',
-          qb => {
-            return qb
-              .andWhere('upvote.active = true')
-              .andWhere('upvote.userId = :userId', { userId })
-          }
-        )
-
-        stickiesQb.loadRelationCountAndMap(
-          'community.personalUserCount',
-          'community.users',
-          'user',
-          qb => {
-            return qb.andWhere('user.id  = :userId', { userId })
-          }
-        )
-      }
-
       const stickies = await stickiesQb.getMany()
 
       posts = stickies.concat(posts)
-    }
-
-    for (const p of posts) {
-      p.upvoted = Boolean(p.personalUpvoteCount)
-      ;(await p.community).joined = Boolean(
-        (await p.community).personalUserCount
-      )
-      p.hidden = false
     }
 
     return posts
@@ -297,23 +253,7 @@ export class PostResolver {
       .createQueryBuilder('post')
       .whereInIds(posts.map(post => post.id))
 
-    qb.loadRelationCountAndMap(
-      'post.personalUpvoteCount',
-      'post.upvotes',
-      'upvote',
-      qb => {
-        return qb
-          .andWhere('upvote.active = true')
-          .andWhere('upvote.userId = :userId', { userId })
-      }
-    )
-
     posts = await qb.leftJoinAndSelect('post.community', 'community').getMany()
-
-    posts.forEach(post => {
-      post.upvoted = Boolean(post.personalUpvoteCount)
-      post.hidden = true
-    })
 
     return posts
   }
@@ -331,35 +271,9 @@ export class PostResolver {
       .loadRelationCountAndMap('community.userCount', 'community.users')
       .leftJoinAndSelect('community.tags', 'tag')
 
-    if (userId) {
-      qb.loadRelationCountAndMap(
-        'post.personalUpvoteCount',
-        'post.upvotes',
-        'upvote',
-        qb => {
-          return qb
-            .andWhere('upvote.active = true')
-            .andWhere('upvote.userId = :userId', { userId })
-        }
-      )
-      qb.loadRelationCountAndMap(
-        'community.personalUserCount',
-        'community.users',
-        'user',
-        qb => {
-          return qb.andWhere('user.id  = :userId', { userId })
-        }
-      )
-    }
-
     const post = await qb.getOne()
 
     if (!post) return null
-
-    post.upvoted = Boolean(post.personalUpvoteCount)
-    ;(await post.community).joined = Boolean(
-      (await post.community).personalUserCount
-    )
 
     if (post.deleted) {
       post.authorId = null
@@ -386,11 +300,12 @@ export class PostResolver {
     const cmmnty = await this.communityRepository
       .createQueryBuilder('community')
       .where('community.name = :community', { community })
-      .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
+      // .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
       .getOne()
-    const bannedUsers = await cmmnty.bannedUsers
+
+    /*const bannedUsers = await cmmnty.bannedUsers
     if (bannedUsers.map(u => u.id).includes(userId))
-      throw new Error('You have been banned from ' + cmmnty.name)
+      throw new Error('You have been banned from ' + cmmnty.name)*/
 
     if (textContent) {
       textContent = filterXSS(textContent, { whiteList })
@@ -400,7 +315,7 @@ export class PostResolver {
       title,
       link,
       textContent,
-      createdAt: new Date(),
+
       authorId: userId,
       communityId: cmmnty.id,
       upvoteCount: 1
@@ -420,9 +335,7 @@ export class PostResolver {
 
     this.postUpvoteRepository.save({
       postId: post.id,
-      userId: userId,
-      active: true,
-      createdAt: new Date()
+      userId: userId
     } as PostUpvote)
 
     this.userRepository.increment({ id: userId }, 'upvoteCount', 1)
@@ -486,34 +399,26 @@ export class PostResolver {
       .whereInIds(postId)
       .leftJoinAndSelect('post.author', 'author')
       .getOne()
-    if (!post) throw new Error('Invalid postId')
 
-    let active: boolean
+    if (!post) throw new Error('Post not found')
 
     const upvote = await this.postUpvoteRepository.findOne({
       postId,
       userId
     })
     if (upvote) {
-      await this.postUpvoteRepository.update(
-        { postId, userId },
-        { active: !upvote.active }
-      )
-      active = !upvote.active
+      await this.postUpvoteRepository.delete({ postId, userId })
     } else {
       await this.postUpvoteRepository.save({
         postId,
-        userId,
-        createdAt: new Date(),
-        active: true
+        userId
       })
-      active = true
     }
 
     this.postRepository.update(
       { id: postId },
       {
-        upvoteCount: active ? post.upvoteCount + 1 : post.upvoteCount - 1
+        upvoteCount: upvote ? post.upvoteCount - 1 : post.upvoteCount + 1
       }
     )
 
@@ -521,11 +426,11 @@ export class PostResolver {
     this.userRepository.update(
       { id: author.id },
       {
-        upvoteCount: active ? author.upvoteCount + 1 : author.upvoteCount - 1
+        upvoteCount: upvote ? author.upvoteCount - 1 : author.upvoteCount + 1
       }
     )
 
-    return active
+    return !upvote
   }
 
   @Authorized()
@@ -618,5 +523,14 @@ export class PostResolver {
   async author(@Root() post: Post, @Ctx() { userLoader }: Context) {
     if (!post.authorId) return null
     return userLoader.load(post.authorId)
+  }
+
+  @FieldResolver()
+  async upvoted(
+    @Root() post: Post,
+    @Ctx() { postUpvoteLoader, userId }: Context
+  ) {
+    if (!userId) return false
+    return postUpvoteLoader.load({ userId, postId: post.id })
   }
 }

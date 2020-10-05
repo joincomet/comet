@@ -24,7 +24,7 @@ export class AuthResolver {
     )
       throw new Error('Invalid username')
 
-    bannedWords.forEach((u) => {
+    bannedWords.forEach(u => {
       if (username.toLowerCase().includes(u.toLowerCase())) {
         throw new Error('Inappropriate Username')
       }
@@ -41,7 +41,7 @@ export class AuthResolver {
       username,
       email,
       passwordHash,
-      createdAt: new Date(),
+
       lastLogin: new Date(),
       profile: {
         bio: `My name is ${username} and I joined CometX.io on ${format(
@@ -65,7 +65,7 @@ export class AuthResolver {
     })
     if (!user) throw new Error('Invalid Login')
 
-    if (user.banned) throw new Error('Banned: ' + user.banReason)
+    // if (user.banned) throw new Error('Banned: ' + user.banReason)
 
     await this.userRepository
       .createQueryBuilder()

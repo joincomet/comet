@@ -18,7 +18,7 @@ import { User } from '@/entities/User'
 import { Notification } from '@/entities/Notification'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
-import { CommentUpvote } from '@/entities/CommentUpvote'
+import { CommentUpvote } from '@/entities/relations/CommentUpvote'
 import { flat } from '@/Flat'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
@@ -47,13 +47,14 @@ export class CommentResolver {
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.community', 'community')
-      .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
+      // .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
       .getOne()
-    const bannedUsers = await (await post.community).bannedUsers
-    if (bannedUsers.map((u) => u.id).includes(userId))
+
+    /*const bannedUsers = await (await post.community).bannedUsers
+    if (bannedUsers.map(u => u.id).includes(userId))
       throw new Error(
         'You have been banned from ' + (await post.community).name
-      )
+      )*/
 
     textContent = filterXSS(textContent, { whiteList })
 
@@ -62,16 +63,14 @@ export class CommentResolver {
       parentCommentId,
       postId,
       authorId: userId,
-      createdAt: new Date(),
+
       upvoted: true,
       upvoteCount: 1
     })
 
     this.commentUpvoteRepository.save({
       commentId: savedComment.id,
-      userId,
-      active: true,
-      createdAt: new Date()
+      userId
     } as CommentUpvote)
 
     this.userRepository.increment({ id: userId }, 'upvoteCount', 1)
@@ -88,7 +87,7 @@ export class CommentResolver {
           fromUserId: userId,
           toUserId: parentComment.authorId,
           postId,
-          createdAt: new Date(),
+
           parentCommentId
         } as Notification)
       }
@@ -99,8 +98,7 @@ export class CommentResolver {
           commentId: savedComment.id,
           fromUserId: userId,
           toUserId: post.authorId,
-          postId,
-          createdAt: new Date()
+          postId
         } as Notification)
       }
     }
@@ -122,24 +120,13 @@ export class CommentResolver {
       .where('comment.postId = :postId', { postId: post.id })
 
     if (userId) {
-      qb.loadRelationCountAndMap(
-        'comment.personalUpvoteCount',
-        'comment.upvotes',
-        'upvote',
-        (qb) => {
-          return qb
-            .andWhere('upvote.active = true')
-            .andWhere('upvote.userId = :userId', { userId })
-        }
-      )
-
       const blockedUsers = (
         await this.userRepository
           .createQueryBuilder()
           .relation(User, 'blockedUsers')
           .of(userId)
           .loadMany()
-      ).map((user) => user.id)
+      ).map(user => user.id)
 
       qb.andWhere('NOT (comment.authorId = ANY(:blockedUsers))', {
         blockedUsers
@@ -155,8 +142,7 @@ export class CommentResolver {
 
     const postComments = await qb.getMany()
 
-    postComments.forEach((comment) => {
-      comment.upvoted = Boolean(comment.personalUpvoteCount)
+    postComments.forEach(comment => {
       if (comment.deleted) {
         comment.textContent = `<p>[deleted]</p>`
         comment.authorId = null
@@ -172,9 +158,9 @@ export class CommentResolver {
     if (postComments.length === 0) return []
 
     const toRemove: any[] = []
-    const thread = postComments.filter((c) => c.parentCommentId === null)
+    const thread = postComments.filter(c => c.parentCommentId === null)
     let maxLevel = 0
-    const fun = (comments: any, level: number, parent: any) => {
+    const fun = (comments: any, level: number) => {
       if (level > maxLevel) maxLevel = level
       for (const comment of comments) {
         comment.childComments = postComments.filter(
@@ -187,11 +173,10 @@ export class CommentResolver {
         ) {
           toRemove.push(comment.id)
         }
-        fun(comment.childComments, level + 1, comment)
+        fun(comment.childComments, level + 1)
       }
     }
-    fun(thread, 0, null)
-    // return thread.reduce(flat, [])
+    fun(thread, 0)
     let comments = thread
       .reduce(flat, [])
       .filter((c: any) => !toRemove.includes(c.id))
@@ -273,34 +258,25 @@ export class CommentResolver {
       .whereInIds(commentId)
       .leftJoinAndSelect('comment.author', 'author')
       .getOne()
-    if (!comment) throw new Error('Invalid commentId')
-
-    let active: boolean
+    if (!comment) throw new Error('Comment not found')
 
     const upvote = await this.commentUpvoteRepository.findOne({
       commentId,
       userId
     })
     if (upvote) {
-      await this.commentUpvoteRepository.update(
-        { commentId, userId },
-        { active: !upvote.active }
-      )
-      active = !upvote.active
+      await this.commentUpvoteRepository.delete({ commentId, userId })
     } else {
       await this.commentUpvoteRepository.save({
         commentId,
-        userId,
-        createdAt: new Date(),
-        active: true
+        userId
       })
-      active = true
     }
 
     this.commentRepository.update(
       { id: commentId },
       {
-        upvoteCount: active ? comment.upvoteCount + 1 : comment.upvoteCount - 1
+        upvoteCount: upvote ? comment.upvoteCount - 1 : comment.upvoteCount + 1
       }
     )
 
@@ -308,11 +284,11 @@ export class CommentResolver {
     this.userRepository.update(
       { id: author.id },
       {
-        upvoteCount: active ? author.upvoteCount + 1 : author.upvoteCount - 1
+        upvoteCount: upvote ? author.upvoteCount - 1 : author.upvoteCount + 1
       }
     )
 
-    return active
+    return !upvote
   }
 
   @Authorized()
@@ -358,5 +334,14 @@ export class CommentResolver {
   @FieldResolver()
   async post(@Root() comment: Comment, @Ctx() { postLoader }: Context) {
     return postLoader.load(comment.postId)
+  }
+
+  @FieldResolver()
+  async upvoted(
+    @Root() comment: Comment,
+    @Ctx() { commentUpvoteLoader, userId }: Context
+  ) {
+    if (!userId) return false
+    return commentUpvoteLoader.load({ userId, commentId: comment.id })
   }
 }

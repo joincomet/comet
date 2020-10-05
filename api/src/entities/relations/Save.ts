@@ -4,28 +4,40 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  PrimaryColumn
+  PrimaryGeneratedColumn
 } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
+import { Comment } from '@/entities/Comment'
 
 @ObjectType()
 @Entity()
-export class SavedPost {
-  @ManyToOne(() => User, user => user.savedPosts)
+export class Save {
+  @Field(() => ID)
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  readonly id: number
+
+  @ManyToOne(() => User, user => user.saves)
   user: Lazy<User>
 
   @Field(() => ID)
-  @PrimaryColumn('bigint')
+  @Column('bigint')
   userId: number
 
-  @ManyToOne(() => Post, post => post.saves)
+  @ManyToOne(() => Post, post => post.saves, { nullable: true })
   post: Lazy<Post>
 
-  @Field(() => ID)
-  @PrimaryColumn('bigint')
+  @Field(() => ID, { nullable: true })
+  @Column('bigint', { nullable: true })
   postId: number
+
+  @ManyToOne(() => Comment, comment => comment.saves, { nullable: true })
+  comment: Lazy<Comment>
+
+  @Field(() => ID, { nullable: true })
+  @Column('bigint', { nullable: true })
+  commentId: number
 
   @Field()
   @CreateDateColumn({ type: 'timestamp' })

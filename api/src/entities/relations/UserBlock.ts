@@ -5,20 +5,20 @@ import { User } from '@/entities/User'
 
 @ObjectType()
 @Entity()
-export class BlockedUser {
-  @ManyToOne(() => User, user => user.blockedBy)
-  fromUser: Lazy<User>
+export class UserBlock {
+  @ManyToOne(() => User, user => user.blockTo)
+  from: Lazy<User>
 
   @Field(() => ID)
   @PrimaryColumn('bigint')
-  fromUserId: number
+  fromId: number
 
-  @ManyToOne(() => User, user => user.blocking)
-  toUser: Lazy<User>
+  @ManyToOne(() => User, user => user.blockFrom)
+  to: Lazy<User>
 
   @Field(() => ID)
   @PrimaryColumn('bigint')
-  toUserId: number
+  toId: number
 
   @Field()
   @CreateDateColumn({ type: 'timestamp' })

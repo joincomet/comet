@@ -15,14 +15,14 @@ export class FeedArgs extends PaginationArgs {
   @Field(() => Feed, { defaultValue: Feed.ALL })
   feed: Feed = Feed.ALL
 
-  @Field({ nullable: true })
-  community?: string
+  @Field(() => [String], { nullable: true })
+  communities?: string[]
 
   @Field(() => [String], { nullable: true })
   tags?: string[]
 
-  @Field({ nullable: true })
-  username?: string
+  @Field(() => [String], { nullable: true })
+  usernames?: string[]
 
   @Field({ nullable: true })
   search?: string

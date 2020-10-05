@@ -1,5 +1,5 @@
-query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $community: String, $username: String, $search: String, $tags: [String!]) {
-  feed(page: $page, sort: $sort, time: $time, feed: $feed, community: $community, username: $username, search: $search, tags: $tags) {
+query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $communities: [String!], $usernames: [String!], $search: String, $tags: [String!]) {
+  feed(page: $page, sort: $sort, time: $time, feed: $feed, communities: $communities, usernames: $usernames, search: $search, tags: $tags) {
     commentCount
     createdAt
     editedAt

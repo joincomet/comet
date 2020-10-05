@@ -42,7 +42,7 @@ export class NotificationResolver {
     const notifications = await qb.getMany()
 
     return notifications.filter(
-      (notification) =>
+      notification =>
         notification.comment !== null && notification.comment !== undefined
     )
   }

@@ -14,15 +14,15 @@ import { ModPermission } from '@/types/ModPermission'
 
 @ObjectType()
 @Entity()
-export class Moderator {
-  @ManyToOne(() => User, user => user.moderatedCommunities)
+export class AllowedPoster {
+  @ManyToOne(() => User, user => user.allowedCommunities)
   user: Lazy<User>
 
   @Field(() => ID)
   @PrimaryColumn('bigint')
   userId: number
 
-  @ManyToOne(() => Community, community => community.moderators)
+  @ManyToOne(() => Community, community => community.allowedPosters)
   community: Lazy<Community>
 
   @Field(() => ID)
@@ -32,8 +32,4 @@ export class Moderator {
   @Field()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
-
-  @Field(() => [ModPermission])
-  @Column('text', { array: true })
-  permissions: ModPermission[]
 }

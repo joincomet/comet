@@ -1,6 +1,6 @@
-export enum PostSort {
+export enum CommunitySort {
   NEW,
   TOP,
-  HOT,
-  COMMENTS
+  AZ,
+  TRENDING
 }

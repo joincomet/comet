@@ -6,7 +6,7 @@ import { Post } from '@/entities/Post'
 
 @ObjectType()
 @Entity()
-export class HiddenPost {
+export class PostHide {
   @ManyToOne(() => User, user => user.hiddenPosts)
   user: Lazy<User>
 
@@ -14,7 +14,7 @@ export class HiddenPost {
   @PrimaryColumn('bigint')
   userId: number
 
-  @ManyToOne(() => Post, post => post.hiders)
+  @ManyToOne(() => Post, post => post.hides)
   post: Lazy<Post>
 
   @Field(() => ID)

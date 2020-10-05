@@ -1,6 +1,7 @@
 import { Authorized, Field, ID, ObjectType } from 'type-graphql'
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -9,9 +10,11 @@ import {
 import { Comment } from '@/entities/Comment'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
-import { PostUpvote } from '@/entities/PostUpvote'
+import { PostUpvote } from '@/entities/relations/PostUpvote'
 import { Community } from '@/entities/Community'
 import { formatDistanceToNowStrict } from 'date-fns'
+import { Save } from '@/entities/relations/Save'
+import { PostHide } from '@/entities/relations/PostHide'
 
 @ObjectType()
 @Entity()
@@ -22,7 +25,7 @@ export class Post {
 
   @Field()
   get id36(): string {
-    return this.id.toString(36)
+    return BigInt(this.id).toString(36)
   }
 
   @Field()
@@ -50,7 +53,7 @@ export class Post {
   authorId: number
 
   @Field()
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
   @Field()
@@ -119,8 +122,11 @@ export class Post {
   @Column({ nullable: true })
   removedReason?: string
 
-  @Field()
-  hidden: boolean
+  @OneToMany(() => Save, save => save.post)
+  saves: Lazy<Save[]>
+
+  @OneToMany(() => PostHide, hide => hide.post)
+  hides: Lazy<PostHide[]>
 
   @Field()
   get relativeUrl(): string {
@@ -134,6 +140,4 @@ export class Post {
       .replace(/[_](.)\1+/g, '$1')
     return `/+${(this.community as Community).name}/post/${this.id36}/${slug}`
   }
-
-  personalUpvoteCount = 0
 }

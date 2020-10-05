@@ -1,24 +1,36 @@
 import currentUserGql from '@/gql/currentUser.graphql'
+import communitiesGql from '@/gql/communities.graphql'
 
 export const state = () => ({
-  currentUser: null
+  currentUser: null,
+  topCommunities: [],
+  joinedCommunities: []
 })
 
 export const mutations = {
   setCurrentUser (state, currentUser) {
     state.currentUser = currentUser
+  },
+  setTopCommunities (state, topCommunities) {
+    state.topCommunities = topCommunities
+  },
+  setJoinedCommunities (state, joinedCommunities) {
+    state.joinedCommunities = joinedCommunities
   }
 }
 
 export const actions = {
-  async nuxtServerInit ({ commit }, context) {
-    const client = context.app.apolloProvider.defaultClient
+  async nuxtServerInit ({ commit, dispatch, state }, context) {
+    await dispatch('fetchCurrentUser')
 
-    if (!context.app.$apolloHelpers.getToken()) { return }
-    const { data } = await client.query({ query: currentUserGql })
-    commit('setCurrentUser', data.currentUser)
-    if (!data.currentUser) {
+    if (!state.currentUser) {
       await context.app.$apolloHelpers.onLogout()
+
+      // Fetch top communities
+      await dispatch('fetchTopCommunities')
+    } else {
+      // Fetch joined communities
+      await dispatch('fetchJoinedCommunities')
     }
   },
   async fetchCurrentUser ({ commit }) {
@@ -32,6 +44,28 @@ export const actions = {
       fetchPolicy: 'network-only'
     })
     commit('setCurrentUser', data.currentUser)
+  },
+  async fetchTopCommunities ({ commit }) {
+    const client = this.app.apolloProvider.defaultClient
+    const { data } = await client.query({
+      query: communitiesGql,
+      variables: {
+        sort: 'TOP'
+      },
+      fetchPolicy: 'network-only'
+    })
+    commit('setTopCommunities', data.topCommunities)
+  },
+  async fetchJoinedCommunities ({ commit }) {
+    const client = this.app.apolloProvider.defaultClient
+    const { data } = await client.query({
+      query: communitiesGql,
+      variables: {
+        joined: true
+      },
+      fetchPolicy: 'network-only'
+    })
+    commit('setJoinedCommunities', data.joinedCommunities)
   }
 }
 

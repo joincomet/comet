@@ -13,7 +13,7 @@ import { Community } from '@/entities/Community'
 
 @ObjectType()
 @Entity()
-export class UserCommunity {
+export class CommunityJoin {
   @ManyToOne(() => User, user => user.communities)
   user: Lazy<User>
 

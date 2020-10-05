@@ -152,17 +152,37 @@ export default {
       routes.push(
         {
           name: 'user',
-          path: '/@:name',
+          path: '/@:username/:tab?',
           component: resolve(__dirname, 'src/pages/-user.vue')
         },
         {
           name: 'community',
-          path: '/+:name',
+          path: '/+:community/:sort?/:time?',
           component: resolve(__dirname, 'src/pages/-community.vue')
         },
         {
+          name: 'post',
+          path: '/+:community/post/:id/:title?',
+          component: resolve(__dirname, 'src/pages/-community/-post.vue')
+        },
+        {
+          name: 'community-settings',
+          path: '/+:community/settings',
+          component: resolve(__dirname, 'src/pages/-community/-settings.vue')
+        },
+        {
+          name: 'home',
+          path: '/:sort?/:time?',
+          component: resolve(__dirname, 'src/pages/-home.vue')
+        },
+        {
+          name: 'universe',
+          path: '/universe/:sort?/:time?',
+          component: resolve(__dirname, 'src/pages/-universe.vue')
+        },
+        {
           name: 'tag',
-          path: '/~:name',
+          path: '/~:tag/:sort?/:time?',
           component: resolve(__dirname, 'src/pages/-tag.vue')
         }
       )

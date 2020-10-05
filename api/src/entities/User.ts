@@ -1,21 +1,32 @@
 import { Authorized, Field, ID, ObjectType } from 'type-graphql'
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { Comment } from '@/entities/Comment'
 import { Lazy } from '@/Lazy'
 import { Post } from '@/entities/Post'
-import { PostUpvote } from '@/entities/PostUpvote'
-import { CommentUpvote } from '@/entities/CommentUpvote'
+import { PostUpvote } from '@/entities/relations/PostUpvote'
+import { CommentUpvote } from '@/entities/relations/CommentUpvote'
 import { Community } from '@/entities/Community'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { UserProfile } from '@/types/UserProfile'
 import { UserSettings } from '@/types/UserSettings'
+import { CommunityJoin } from '@/entities/relations/CommunityJoin'
+import { Moderator } from '@/entities/relations/Moderator'
+import { CommunityMute } from '@/entities/relations/CommunityMute'
+import { Save } from '@/entities/relations/Save'
+import { UserBlock } from '@/entities/relations/UserBlock'
+import { UserFollow } from '@/entities/relations/UserFollow'
+import { PostHide } from '@/entities/relations/PostHide'
+import { Ban } from '@/entities/moderation/Ban'
+import { AllowedPoster } from '@/entities/relations/AllowedPoster'
 
 @ObjectType()
 @Entity()
@@ -26,7 +37,7 @@ export class User {
 
   @Field()
   get id36(): string {
-    return this.id.toString(36)
+    return BigInt(this.id).toString(36)
   }
 
   @Field()
@@ -72,7 +83,7 @@ export class User {
   profile: UserProfile
 
   @Field()
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
   @Authorized()
@@ -86,20 +97,13 @@ export class User {
   @Column()
   passwordHash: string
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Authorized('ADMIN')
   @Field()
   @Column({ default: false })
   admin: boolean
-
-  @Authorized()
-  @Field()
-  @Column({ default: false })
-  banned: boolean
-
-  @Authorized()
-  @Field()
-  @Column({ nullable: true })
-  banReason?: string
 
   @OneToMany(() => Comment, comment => comment.author)
   comments: Lazy<Comment[]>
@@ -107,49 +111,44 @@ export class User {
   @OneToMany(() => Post, post => post.author)
   posts: Lazy<Post[]>
 
-  @Field(() => [Community])
-  @ManyToMany(() => Community, community => community.users)
-  communities: Lazy<Community[]>
+  @OneToMany(() => CommunityJoin, community => community.user)
+  communities: Lazy<CommunityJoin[]>
 
-  @Field(() => [Community])
-  @ManyToMany(() => Community, community => community.moderators)
-  moderatedCommunities: Lazy<Community[]>
+  @OneToMany(() => Moderator, moderator => moderator.user)
+  moderatedCommunities: Lazy<Moderator[]>
 
-  @ManyToMany(() => Community)
-  @JoinTable()
-  mutedCommunities: Lazy<Community[]>
+  @OneToMany(() => AllowedPoster, a => a.user)
+  allowedCommunities: Lazy<AllowedPoster[]>
 
-  @ManyToMany(() => Post)
-  @JoinTable()
-  savedPosts: Lazy<Post[]>
+  @OneToMany(() => Ban, ban => ban.user)
+  bans: Lazy<Ban[]>
 
-  @ManyToMany(() => Comment)
-  @JoinTable()
-  savedComments: Lazy<Comment[]>
+  @OneToMany(() => CommunityMute, mute => mute.user)
+  mutedCommunities: Lazy<CommunityMute[]>
 
-  @ManyToMany(() => Post)
-  @JoinTable()
-  hiddenPosts: Lazy<Post[]>
+  @OneToMany(() => Save, post => post.user)
+  saves: Lazy<Save[]>
 
-  @ManyToMany(() => User, user => user.following)
-  @JoinTable()
-  followers: Lazy<User[]>
+  @OneToMany(() => PostHide, hide => hide.user)
+  hiddenPosts: Lazy<PostHide[]>
 
-  @ManyToMany(() => User, user => user.followers)
-  following: Lazy<User[]>
+  @ManyToOne(() => UserBlock, block => block.from)
+  blockTo: Lazy<UserBlock[]>
 
-  @ManyToMany(() => User, user => user.blockedUsers)
-  @JoinTable()
-  blockedBy: Lazy<User[]>
+  @ManyToOne(() => UserBlock, block => block.to)
+  blockFrom: Lazy<UserBlock[]>
 
-  @ManyToMany(() => User, user => user.blockedBy)
-  blockedUsers: Lazy<User[]>
+  @ManyToOne(() => UserFollow, follow => follow.from)
+  followTo: Lazy<UserFollow[]>
 
-  /**
-   * Current user is following this user
-   */
+  @ManyToOne(() => UserFollow, follow => follow.to)
+  followFrom: Lazy<UserFollow[]>
+
   @Field()
-  isFollowing: boolean
+  following: boolean
+
+  @Field()
+  followed: boolean
 
   @Field()
   isCurrentUser: boolean
@@ -180,13 +179,13 @@ export class User {
    * Current user is blocked by this user
    */
   @Field()
-  isBlocked: boolean
+  blocked: boolean
 
   /**
    * Current user is blocking this user
    */
   @Field()
-  isBlocking: boolean
+  blocking: boolean
 
   @Field()
   get timeSinceCreated(): string {

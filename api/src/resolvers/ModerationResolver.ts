@@ -159,7 +159,9 @@ export class ModerationResolver {
     if (!user) throw new Error('User not found')
     if (
       (await user.moderatedCommunities).find(
-        (p) => p.name.toLowerCase() === community.toLowerCase()
+        p =>
+          (p.community as Community).name.toLowerCase() ===
+          community.toLowerCase()
       )
     ) {
       throw new Error(`${user.username} is already a moderator of ${community}`)

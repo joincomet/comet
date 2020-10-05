@@ -7,7 +7,14 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import { ApolloServer } from 'apollo-server-express'
 import { Context } from '@/Context'
-import { CommentLoader, PostLoader, UserLoader } from '@/Loaders'
+import {
+  CommentLoader,
+  CommentUpvoteLoader,
+  JoinedLoader,
+  PostLoader,
+  PostUpvoteLoader,
+  UserLoader
+} from '@/Loaders'
 import { graphqlUploadExpress } from 'graphql-upload'
 import fs from 'fs'
 import path from 'path'
@@ -17,6 +24,8 @@ import { TimeFilter } from '@/types/TimeFilter'
 import { Feed } from '@/types/Feed'
 import { CommentSort } from '@/types/CommentSort'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+import { CommunitySort } from '@/types/CommunitySort'
+import { ModPermission } from '@/types/ModPermission'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -85,6 +94,14 @@ async function bootstrap() {
       name: 'CommentSort'
     })
 
+    registerEnumType(CommunitySort, {
+      name: 'CommunitySort'
+    })
+
+    registerEnumType(ModPermission, {
+      name: 'ModPermission'
+    })
+
     // build TypeGraphQL executable schema
     const schema = await buildSchema({
       resolvers: [__dirname + '/resolvers/**/*.{ts,js}'],
@@ -126,7 +143,10 @@ async function bootstrap() {
           ...getUser(req),
           userLoader: UserLoader,
           postLoader: PostLoader,
-          commentLoader: CommentLoader
+          commentLoader: CommentLoader,
+          joinedLoader: JoinedLoader,
+          postUpvoteLoader: PostUpvoteLoader,
+          commentUpvoteLoader: CommentUpvoteLoader
         } as Context
       },
       uploads: false,

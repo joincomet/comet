@@ -2,14 +2,16 @@
   <div ref="btnRef" style="height: inherit">
     <slot name="activator" :on="handleClick" style="height: inherit" />
 
-    <div
-      ref="popoverRef"
-      class="z-50 block transition-opacity duration-150 ease-in-out"
-      :class="{ invisible: !popoverShow, 'opacity-1': popoverShow, 'opacity-0': !popoverShow }"
-      @click.stop.prevent="popoverShow = false"
-    >
-      <slot />
-    </div>
+    <transition name="fade">
+      <div
+        v-show="popoverShow"
+        ref="popoverRef"
+        class="z-50 block"
+        @click.stop.prevent="popoverShow = false"
+      >
+        <slot />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -108,4 +110,11 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .1s ease-in-out;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>

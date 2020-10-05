@@ -11,4 +11,7 @@ export interface Context {
   userLoader: DataLoader<number, User>
   postLoader: DataLoader<number, Post>
   commentLoader: DataLoader<number, Comment>
+  joinedLoader: any
+  postUpvoteLoader: any
+  commentUpvoteLoader: any
 }

@@ -1,5 +1,11 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from 'typeorm'
 import { Post } from '@/entities/Post'
 import { Lazy } from '@/Lazy'
 import { Comment } from '@/entities/Comment'
@@ -14,7 +20,7 @@ export class Notification {
 
   @Field()
   get id36(): string {
-    return this.id.toString(36)
+    return BigInt(this.id).toString(36)
   }
 
   @Field(() => User, { nullable: true })
@@ -54,7 +60,7 @@ export class Notification {
   read: boolean
 
   @Field()
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
   @Field(() => ID, { nullable: true })

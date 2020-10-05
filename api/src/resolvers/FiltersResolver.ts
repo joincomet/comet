@@ -19,7 +19,7 @@ export class FiltersResolver {
       .of(userId)
       .loadMany()
 
-    communities.forEach((community) => (community.muted = true))
+    communities.forEach(community => (community.muted = true))
 
     return communities
   }
@@ -36,9 +36,9 @@ export class FiltersResolver {
 
     if (blockedUsers.length === 0) return []
 
-    const blockedUsersIds = blockedUsers.map((u) => u.id)
+    const blockedUsersIds = blockedUsers.map(u => u.id)
 
-    const users = await this.userRepository
+    return this.userRepository
       .createQueryBuilder('user')
       .whereInIds(blockedUsersIds)
       .andWhere('user.banned = false')
@@ -48,21 +48,17 @@ export class FiltersResolver {
         'user.commentCount',
         'user.comments',
         'comment',
-        (qb) => {
+        qb => {
           return qb
             .andWhere('comment.deleted = false')
             .andWhere('comment.removed = false')
         }
       )
-      .loadRelationCountAndMap('user.postCount', 'user.posts', 'post', (qb) => {
+      .loadRelationCountAndMap('user.postCount', 'user.posts', 'post', qb => {
         return qb
           .andWhere('post.deleted = false')
           .andWhere('post.removed = false')
       })
       .getMany()
-
-    users.forEach((user) => (user.isBlocking = true))
-
-    return users
   }
 }

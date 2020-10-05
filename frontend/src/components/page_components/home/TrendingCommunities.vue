@@ -5,8 +5,8 @@
         Popular Planets
       </div>
     </div>
-    <div v-for="(community, index) in popularCommunities" :key="community.id" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
-      <div class="mx-5 py-4 flex flex-row flex-grow h-full items-center border-gray-200" :class="index < popularCommunities.length - 1 ? 'border-b' : ''">
+    <div v-for="(community, index) in communities" :key="community.id" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
+      <div class="mx-5 py-4 flex flex-row flex-grow h-full items-center border-gray-200" :class="index < communities.length - 1 ? 'border-b' : ''">
         <img class="object-cover w-10 h-10 rounded-lg p-1" :src="community.profile.avatar">
         <div class="flex flex-row items-center flex-grow community">
           <div class="flex flex-col ml-6">
@@ -31,7 +31,7 @@
 <script>
 export default {
   props: {
-    popularCommunities: {
+    communities: {
       type: Array,
       required: true
     }

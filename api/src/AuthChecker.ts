@@ -3,6 +3,7 @@ import { User } from '@/entities/User'
 import { AuthChecker } from 'type-graphql'
 import { Context } from '@/Context'
 import { Post } from '@/entities/Post'
+import { Community } from '@/entities/Community'
 
 export const authChecker: AuthChecker<Context> = async (
   { root, args, context, info },
@@ -45,7 +46,7 @@ export const authChecker: AuthChecker<Context> = async (
   // true if community arg is in list of moderated communities
   if (roles.includes('MOD') && args && args.community)
     return !!(await user.moderatedCommunities).find(
-      (community) => community.name === args.community
+      mod => (mod.community as Community).name === args.community
     )
 
   // false if no other conditions met

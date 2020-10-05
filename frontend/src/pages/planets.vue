@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import allCommunitiesGql from '@/gql/allCommunities.graphql'
+import allCommunitiesGql from '@/gql/communities.graphql'
 
 export default {
   async asyncData ({ app }) {

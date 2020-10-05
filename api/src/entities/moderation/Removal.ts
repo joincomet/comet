@@ -4,13 +4,13 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
-import { Post } from '../Post'
+import { Post } from '@/entities/Post'
+import { Comment } from '@/entities/Comment'
 
 @ObjectType()
 @Entity()

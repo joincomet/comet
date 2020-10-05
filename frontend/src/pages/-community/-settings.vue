@@ -1,10 +1,9 @@
 <template>
-$END$
+  <div>community settings</div>
 </template>
 
 <script>
 export default {
-name: "-settings.vue"
 }
 </script>
 

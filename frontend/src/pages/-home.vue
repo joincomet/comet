@@ -3,7 +3,7 @@
     <div class="fixed flex w-full z-10" style="bottom: 4rem">
       <div class="container grid grid-cols-12 gap-5">
         <div class="col-span-8 flex">
-          <div class="mx-auto px-6 py-3 font-medium flex flex-row items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition customtransform">
+          <div class="mx-auto px-8 py-2 font-medium flex flex-row items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition customtransform">
             <div class="mx-auto inline-flex flex-row items-center">
               <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -75,7 +75,7 @@
         </div>
       </div>
       <div class="col-span-3">
-        <PopularCommunities :popular-communities="popularCommunities" />
+        <TrendingCommunities :communities="trendingCommunities" />
         <div class="socialbutton patreon">
           <svg class="w-5 h-5 mr-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
             <path d="M15.386.524c-4.764 0-8.64 3.876-8.64 8.64 0 4.75 3.876 8.613 8.64 8.613 4.75 0 8.614-3.864 8.614-8.613C24 4.4 20.136.524 15.386.524M.003 23.537h4.22V.524H.003" />
@@ -96,8 +96,7 @@
 
 <script>
 import feedGql from '@/gql/feed.graphql'
-import communityGql from '@/gql/community.graphql'
-import popularCommunitiesGql from '@/gql/popularCommunities.graphql'
+import communitiesGql from '@/gql/communities.graphql'
 import { feedVars } from '@/util/feedVars'
 
 export default {
@@ -112,28 +111,23 @@ export default {
       })
     ).data.feed
 
-    const communityOfTheDay = (
+    console.log(feed)
+
+    const trendingCommunities = (
       await client.query({
-        query: communityGql,
+        query: communitiesGql,
         variables: {
-          name: 'HistoryInPictures'
+          sort: 'TRENDING'
         }
       })
-    ).data.community
+    ).data.communities
 
-    const popularCommunities = (
-      await client.query({
-        query: popularCommunitiesGql
-      })
-    ).data.popularCommunities
-
-    return { feed, communityOfTheDay, popularCommunities }
+    return { feed, trendingCommunities }
   },
   data () {
     return {
       feed: [],
-      communityOfTheDay: null,
-      popularCommunities: [],
+      trendingCommunities: [],
       tag: null,
       searchFocused: false
     }

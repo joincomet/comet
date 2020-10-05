@@ -3,11 +3,11 @@ import { CreateDateColumn, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
-import {Community} from "@/entities/Community";
+import { Community } from '@/entities/Community'
 
 @ObjectType()
 @Entity()
-export class MutedCommunity {
+export class CommunityMute {
   @ManyToOne(() => User, user => user.mutedCommunities)
   user: Lazy<User>
 

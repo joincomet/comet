@@ -1,11 +1,8 @@
-query allCommunities {
-  allCommunities {
+query communities($sort: CommunitySort, $joined: Boolean) {
+  communities(sort: $sort, joined: $joined) {
     profile {
       avatar
     }
     name
-    joined
-    userCount
-    createdAt
   }
 }
