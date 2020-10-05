@@ -1,5 +1,11 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
+import {
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn
+} from 'typeorm'
 import { Comment } from '@/entities/Comment'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
@@ -11,21 +17,21 @@ export class CommentUpvote {
   user: Lazy<User>
 
   @Field(() => ID)
-  @PrimaryColumn()
+  @PrimaryColumn('bigint')
   userId: number
 
   @ManyToOne(() => Comment, comment => comment.upvotes)
   comment: Lazy<Comment>
 
   @Field(() => ID)
-  @PrimaryColumn()
+  @PrimaryColumn('bigint')
   commentId: number
 
   @Field()
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
   @Field()
-  @Column({ default: true })
-  active: boolean
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
 }

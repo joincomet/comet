@@ -1,9 +1,9 @@
 <template>
-  <div class="container py-6 px-16 mx-auto">
+  <div class="container mx-auto p-5">
     <div class="fixed flex w-full z-10" style="bottom: 4rem">
-      <div class="container grid grid-cols-12 gap-12">
+      <div class="container grid grid-cols-12 gap-5">
         <div class="col-span-8 flex">
-          <div class="mx-auto px-6 py-3 font-medium flex flex-row items-center bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition customtransform">
+          <div class="mx-auto px-6 py-3 font-medium flex flex-row items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition customtransform">
             <div class="mx-auto inline-flex flex-row items-center">
               <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -15,58 +15,9 @@
       </div>
     </div>
 
-    <!--<div class="mb-6">
-      <div class="mb-6 font-bold text-md">
-        Ongoing Discussions
-      </div>
-      <div
-        class="grid grid-cols-1 grid-rows-4 gap-3 sm:grid-rows-1 sm:grid-cols-4"
-      >
-        <OngoingDiscussion v-for="post in topDiscussions" :key="post.id" :post="post" />
-      </div>
-    </div>-->
-
-    <div class="grid min-w-0 min-h-0 grid-cols-12 grid-rows-1 gap-5">
+    <div class="grid grid-cols-12 gap-5">
       <div class="col-span-9">
-        <!--<CommunityOfTheDay :community="communityOfTheDay" :posts="topDiscussions" class="mb-6" />-->
-
-        <!--<div class="rounded-xl bg-gradient-to-r from-gray-900 to-indigo-400 w-full h-48 relative mb-5">
-          <div class="absolute top-4 left-4 text-white text-xl font-medium">
-            Join our community
-          </div>
-          <div class="py-2 transform duration-150 hover:scale-105 ease-in-out cursor-pointer px-6 text-sm font-medium absolute left-5 bottom-5 rounded-full bg-white shadow-md text-indigo-600">
-            Sign Up
-          </div>
-        </div>-->
-
-        <div class="grid grid-cols-3 gap-5 mb-5">
-          <div class="actioncard" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://cdn.spacetelescope.org/archives/images/screen/heic0821b.jpg')">
-            <div class="absolute top-3 left-5 text-white text-lg">
-              Build your community
-            </div>
-            <div class="absolute bottom-3 right-5 text-sm text-gray-100">
-              Create a planet &nbsp;➤
-            </div>
-          </div>
-
-          <div class="actioncard" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://cdn.spacetelescope.org/archives/images/screen/opo0328a.jpg')">
-            <div class="absolute top-3 left-5 text-white text-lg">
-              Find your home
-            </div>
-            <div class="absolute bottom-3 right-5 text-sm text-gray-100">
-              Explore planets &nbsp;➤
-            </div>
-          </div>
-
-          <div class="actioncard" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://cdn.spacetelescope.org/archives/images/screen/heic2007a.jpg')">
-            <div class="absolute top-3 left-5 text-white text-lg">
-              Update notes - 10/3/20
-            </div>
-            <div class="absolute bottom-3 right-5 text-sm text-gray-100">
-              View latest announcement &nbsp;➤
-            </div>
-          </div>
-        </div>
+        <ActionCards />
 
         <div class="flex flex-grow items-center">
           <div class="inline-flex flex-grow relative h-10 mr-5">
@@ -90,12 +41,7 @@
             </svg>
           </div>
 
-          <div class="inline-flex flex-row items-center text-indigo-600 bg-white cursor-pointer px-6 rounded-full shadow border border-gray-200 h-10">
-            <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd" />
-            </svg>
-            <span class="font-medium text-sm">Hot</span>
-          </div>
+          <SortMenu />
         </div>
 
         <div class="mt-5">
@@ -130,11 +76,18 @@
       </div>
       <div class="col-span-3">
         <PopularCommunities :popular-communities="popularCommunities" />
-        <div class="rounded-lg w-full shadow px-6 h-10 inline-flex flex-row items-center mt-5 cursor-pointer transform transition duration-150 ease-in-out hover:scale-105" style="background-color: #F96854">
+        <div class="socialbutton patreon">
           <svg class="w-5 h-5 mr-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
             <path d="M15.386.524c-4.764 0-8.64 3.876-8.64 8.64 0 4.75 3.876 8.613 8.64 8.613 4.75 0 8.614-3.864 8.614-8.613C24 4.4 20.136.524 15.386.524M.003 23.537h4.22V.524H.003" />
           </svg>
           <span class="font-medium text-sm text-white">Support CometX on Patreon</span>
+        </div>
+
+        <div class="socialbutton discord">
+          <svg class="w-5 h-5 mr-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+            <path d="M20.222 0c1.406 0 2.54 1.137 2.607 2.475V24l-2.677-2.273-1.47-1.338-1.604-1.398.67 2.205H3.71c-1.402 0-2.54-1.065-2.54-2.476V2.48C1.17 1.142 2.31.003 3.715.003h16.5L20.222 0zm-6.118 5.683h-.03l-.202.2c2.073.6 3.076 1.537 3.076 1.537-1.336-.668-2.54-1.002-3.744-1.137-.87-.135-1.74-.064-2.475 0h-.2c-.47 0-1.47.2-2.81.735-.467.203-.735.336-.735.336s1.002-1.002 3.21-1.537l-.135-.135s-1.672-.064-3.477 1.27c0 0-1.805 3.144-1.805 7.02 0 0 1 1.74 3.743 1.806 0 0 .4-.533.805-1.002-1.54-.468-2.14-1.404-2.14-1.404s.134.066.335.2h.06c.03 0 .044.015.06.03v.006c.016.016.03.03.06.03.33.136.66.27.93.4.466.202 1.065.403 1.8.536.93.135 1.996.2 3.21 0 .6-.135 1.2-.267 1.8-.535.39-.2.87-.4 1.397-.737 0 0-.6.936-2.205 1.404.33.466.795 1 .795 1 2.744-.06 3.81-1.8 3.87-1.726 0-3.87-1.815-7.02-1.815-7.02-1.635-1.214-3.165-1.26-3.435-1.26l.056-.02zm.168 4.413c.703 0 1.27.6 1.27 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.334.002-.74.573-1.338 1.27-1.338zm-4.543 0c.7 0 1.266.6 1.266 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.334 0-.74.57-1.338 1.27-1.338z" />
+          </svg>
+          <span class="font-medium text-sm text-white">Join the CometX Discord</span>
         </div>
       </div>
     </div>
@@ -193,7 +146,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .thumbnail {
   @apply w-20 h-20 mr-6 sm:h-24 sm:w-24;
   min-width: 5rem;
@@ -212,8 +165,23 @@ export default {
 .customtransform {
 }
 
-.actioncard {
-  @apply relative h-32 col-span-1 p-4 bg-white border border-gray-200 bg-cover cursor-pointer transform transition duration-150 ease-in-out hover:-translate-y-1 opacity-75 hover:opacity-100;
-  border-radius: 16px;
+.socialbutton {
+  @apply rounded-lg w-full shadow px-6 h-10 inline-flex flex-row items-center mt-5 cursor-pointer transform transition duration-150 ease-in-out hover:scale-105;
+}
+
+.discord {
+  background-color: #7289DA;
+}
+
+.discord:hover {
+  background-color: scale-color(#7289DA, $lightness: -10%)
+}
+
+.patreon {
+  background-color: #F96854;
+}
+
+.patreon:hover {
+  background-color: scale-color(#F96854, $lightness: -10%)
 }
 </style>

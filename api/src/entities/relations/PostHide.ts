@@ -1,31 +1,27 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
+import { CreateDateColumn, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
 
 @ObjectType()
 @Entity()
-export class PostUpvote {
-  @ManyToOne(() => User, user => user.posts)
+export class HiddenPost {
+  @ManyToOne(() => User, user => user.hiddenPosts)
   user: Lazy<User>
 
   @Field(() => ID)
-  @PrimaryColumn()
+  @PrimaryColumn('bigint')
   userId: number
 
-  @ManyToOne(() => Post, post => post.upvotes)
+  @ManyToOne(() => Post, post => post.hiders)
   post: Lazy<Post>
 
   @Field(() => ID)
-  @PrimaryColumn()
+  @PrimaryColumn('bigint')
   postId: number
 
   @Field()
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
-
-  @Field()
-  @Column({ default: true })
-  active: boolean
 }
