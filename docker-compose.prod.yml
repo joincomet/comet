@@ -15,27 +15,20 @@ services:
     depends_on:
       - iframely
       - imageflow
-    
+
   frontend:
     image: registry.digitalocean.com/cometx/frontend:latest
     container_name: frontend
     restart: always
     expose:
       - "3000"
-    env_file: 
+    env_file:
       - .env
     volumes:
       - /usr/src/app/node_modules
       - /usr/src/app/.nuxt
     depends_on:
       - api
-  
-  redis:
-    image: "redis:alpine"
-    container_name: redis
-    restart: always
-    expose:
-      - "6379"
 
   iframely:
     image: registry.digitalocean.com/cometx/iframely:latest
@@ -43,8 +36,6 @@ services:
     restart: always
     expose:
       - "8061"
-    depends_on:
-      - redis
 
   imageflow:
     image: registry.digitalocean.com/cometx/imageflow:latest
@@ -54,7 +45,7 @@ services:
       - "12345"
     env_file:
       - .env
-  
+
   nginx:
     image: registry.digitalocean.com/cometx/nginx:latest
     container_name: nginx

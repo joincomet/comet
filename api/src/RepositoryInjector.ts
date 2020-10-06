@@ -7,7 +7,6 @@ import { PostUpvote } from '@/entities/relations/PostUpvote'
 import { CommentUpvote } from '@/entities/relations/CommentUpvote'
 import { Notification } from '@/entities/Notification'
 import { Community } from '@/entities/Community'
-import { Tag } from '@/entities/Tag'
 
 export class RepositoryInjector {
   @InjectRepository(User) readonly userRepository: Repository<User>
@@ -25,5 +24,4 @@ export class RepositoryInjector {
   @InjectRepository(Community) readonly communityRepository: Repository<
     Community
   >
-  @InjectRepository(Tag) readonly tagRepository: Repository<Tag>
 }

@@ -57,16 +57,16 @@
     - redis - https://github.com/mranney/node_redis.
     - memcached - https://github.com/3rd-Eden/node-memcached
     */
-    CACHE_ENGINE: 'redis',
+    CACHE_ENGINE: 'no-cache',
     CACHE_TTL: 0, // In seconds.
     // 0 = 'never expire' for memcached & node-cache to let cache engine decide itself when to evict the record
     // 0 = 'no cache' for redis. Use high enough (e.g. 365*24*60*60*1000) ttl for similar 'never expire' approach instead
 
     // Redis cache options.
-    REDIS_OPTIONS: {
+    /*REDIS_OPTIONS: {
         host: 'redis',
         port: 6379
-    },
+    },*/
 
     /*
     // Memcached options. See https://github.com/3rd-Eden/node-memcached#server-locations

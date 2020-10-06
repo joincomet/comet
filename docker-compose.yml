@@ -32,7 +32,7 @@ services:
       - "3000:3000"
     expose:
       - "3000"
-    env_file: 
+    env_file:
       - .env
     volumes:
       - ./frontend:/usr/src/app
@@ -44,12 +44,6 @@ services:
     depends_on:
       - api
 
-  redis:
-    image: "redis:alpine"
-    container_name: redis
-    expose:
-      - "6379"
-
   iframely:
     image: registry.digitalocean.com/cometx/iframely:latest
     container_name: iframely
@@ -57,8 +51,6 @@ services:
       - "8061:8061"
     expose:
       - "8061"
-    depends_on:
-      - redis
 
   postgres:
     image: "postgres:alpine"

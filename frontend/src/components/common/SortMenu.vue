@@ -86,7 +86,7 @@ export default {
 
 <style scoped lang="scss">
 .sortbutton {
-  @apply inline-flex flex-row items-center text-indigo-600 bg-white cursor-pointer px-6 rounded-full shadow hover:bg-gray-100 border border-gray-200 h-10;
+  @apply inline-flex border-gray-200 flex-row items-center text-indigo-600 bg-white cursor-pointer px-6 rounded-full shadow hover:bg-gray-100 border h-10;
 
   &__text {
     @apply font-medium text-sm;
@@ -98,8 +98,8 @@ export default {
 }
 
 .sortmenu {
-  @apply bg-white border border-gray-200 shadow;
-  border-radius: 16px;
+  @apply bg-white border shadow border-gray-200;
+  border-radius: 1rem;
 
   &__item {
     @apply flex flex-row items-center text-gray-500 px-6 h-10 hover:bg-gray-100 cursor-pointer;
@@ -114,13 +114,13 @@ export default {
   }
 
   &__item:first-child {
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
   }
 
   &__item:last-child {
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
   }
 
   &__item-active {

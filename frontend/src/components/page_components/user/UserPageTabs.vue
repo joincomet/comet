@@ -49,7 +49,7 @@ export default {
 
 <style scoped>
 .tab {
-  @apply select-none h-12 px-6 py-3 text-sm text-gray-500 dark:text-gray-300 transition duration-150 ease-in-out border-b-2 dark:border-gray-700 border-gray-200 cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-200;
+  @apply select-none border-gray-200 h-12 px-6 py-3 text-sm text-gray-500 dark:text-gray-300 transition duration-150 ease-in-out border-b-2 dark:border-gray-700 cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-200;
 }
 
 .tab-active {

@@ -7,7 +7,7 @@ html {
 }
 
 html.dark {
-  @apply text-white bg-gray-900;
+  @apply text-white;
 }
 
 .text-tiny {
@@ -99,15 +99,25 @@ html.dark {
 }
 
 .rounded-xl {
-  border-radius: 16px;
+  border-radius: 1rem;
 }
 
 .rounded-l-xl {
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
 }
 
 .rounded-r-xl {
-  border-top-right-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.rounded-t-xl {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.rounded-b-xl {
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
 }
