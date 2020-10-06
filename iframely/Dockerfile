@@ -4,7 +4,7 @@ EXPOSE 8061
 
 RUN apk update && apk add git
 
-RUN git clone https://github.com/itteco/iframely.git && mv iframely /iframely
+RUN git clone https://github.com/itteco/iframely.git && mv ./iframely /iframely
 
 WORKDIR /iframely
 
