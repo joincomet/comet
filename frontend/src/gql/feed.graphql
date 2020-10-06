@@ -12,7 +12,6 @@ query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $communi
     textContent
     title
     relativeUrl
-    hidden
     sticky
     author {
       id

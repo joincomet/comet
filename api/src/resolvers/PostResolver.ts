@@ -13,10 +13,9 @@ import {
 import { Post } from '@/entities/Post'
 import { SubmitPostArgs } from '@/args/SubmitPostArgs'
 import { Context } from '@/Context'
-import { getTitleAtUrl } from '@/iFramely'
+import { getTitleAtUrl } from '@/Iframely'
 import { FeedArgs } from '@/args/FeedArgs'
 import { User } from '@/entities/User'
-import { discordReport } from '@/DiscordBot'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
 import { PostUpvote } from '@/entities/relations/PostUpvote'
@@ -31,6 +30,7 @@ import { Comment } from '@/entities/Comment'
 import { Notification } from '@/entities/Notification'
 import { Community } from '@/entities/Community'
 import { CommunityJoin } from '@/entities/relations/CommunityJoin'
+import '@/discord'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -75,7 +75,6 @@ export class PostResolver {
       .andWhere('post.deleted = false')
       .andWhere('post.removed = false')
       .leftJoinAndSelect('post.community', 'community')
-      .leftJoinAndSelect('community.tags', 'tag')
 
     if (communities) {
       qb.andWhere('post.community ILIKE ANY(:communities)', {
@@ -225,7 +224,6 @@ export class PostResolver {
         .andWhere('post.community.name = :community', {
           community: communities[0]
         })
-        .leftJoinAndSelect('community.tags', 'tag')
         .loadRelationCountAndMap('community.userCount', 'community.users')
         .addOrderBy('post.createdAt', 'DESC')
 
@@ -269,7 +267,6 @@ export class PostResolver {
       .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.community', 'community')
       .loadRelationCountAndMap('community.userCount', 'community.users')
-      .leftJoinAndSelect('community.tags', 'tag')
 
     const post = await qb.getOne()
 
@@ -509,12 +506,12 @@ export class PostResolver {
   ) {
     const user = await this.userRepository.findOne(userId)
 
-    await discordReport(
+    /*await discordReport(
       user.username,
       process.env.NODE_ENV === 'production'
         ? `${process.env.ORIGIN_URL}/post/${postId}`
         : `http://localhost:3000/post/${postId}`
-    )
+    )*/
 
     return true
   }

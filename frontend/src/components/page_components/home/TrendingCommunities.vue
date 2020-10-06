@@ -2,7 +2,7 @@
   <div class="bg-white border rounded-xl myborder dark:bg-gray-800">
     <div class="flex flex-row items-center">
       <div class="px-5 py-4 flex flex-row flex-grow h-full items-center border-b border-gray-200 text-sm text-gray-700 font-medium">
-        Popular Planets
+        Trending Planets
       </div>
     </div>
     <div v-for="(community, index) in communities" :key="community.id" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -10,7 +10,7 @@
         <img class="object-cover w-10 h-10 rounded-lg p-1" :src="community.profile.avatar">
         <div class="flex flex-row items-center flex-grow community">
           <div class="flex flex-col ml-6">
-            <div class="leading-5 font-medium text-secondary">
+            <div class="text-sm leading-5 font-medium text-secondary">
               +{{ community.name }}
             </div>
             <div class="text-xs text-tertiary mt-1">

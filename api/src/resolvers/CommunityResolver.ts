@@ -79,7 +79,6 @@ export class CommunityResolver {
       })
       .loadRelationCountAndMap('community.userCount', 'community.users')
       .leftJoinAndSelect('community.moderators', 'moderator')
-      .leftJoinAndSelect('community.tags', 'tag')
 
     return qb.getOne()
   }

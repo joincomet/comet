@@ -10,16 +10,5 @@ query community($name: String!) {
       banner
       color
     }
-    moderators {
-      id
-      username
-      upvoteCount
-      createdAt
-      lastLogin
-      isCurrentUser
-      profile {
-        avatar
-      }
-    }
   }
 }

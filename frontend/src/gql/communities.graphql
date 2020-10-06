@@ -1,5 +1,5 @@
-query communities($sort: CommunitySort, $joined: Boolean) {
-  communities(sort: $sort, joined: $joined) {
+query communities($sort: CommunitySort, $joined: Boolean, $pageSize: Int) {
+  communities(sort: $sort, joined: $joined, pageSize: $pageSize) {
     profile {
       avatar
     }

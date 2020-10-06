@@ -1,9 +1,9 @@
 <template>
-  <div class="container mx-auto p-5">
-    <div class="fixed flex w-full z-10" style="bottom: 4rem">
-      <div class="container grid grid-cols-12 gap-5">
-        <div class="col-span-8 flex">
-          <div class="mx-auto px-8 py-2 font-medium flex flex-row items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition customtransform">
+  <div class="container mx-auto py-5 px-32">
+    <div class="grid grid-cols-7 gap-5">
+      <div class="col-span-5 relative">
+        <div class="z-10 fixed pr-5" style="bottom: 4rem; left: 50%; transform: translateX(-50%)">
+          <div class="px-8 py-2 font-medium flex flex-row items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition hover:scale-105 transform">
             <div class="mx-auto inline-flex flex-row items-center">
               <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -12,11 +12,7 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="grid grid-cols-12 gap-5">
-      <div class="col-span-9">
         <ActionCards />
 
         <div class="flex flex-grow items-center">
@@ -45,36 +41,48 @@
         </div>
 
         <div class="mt-5">
+          <div class="text-xs text-tertiary mb-3 px-3">
+            <span class="hover:underline cursor-pointer font-semibold">Cards</span> &middot;
+            <span class="hover:underline cursor-pointer">Small Cards</span> &middot;
+            <span class="hover:underline cursor-pointer">Traditional</span>
+          </div>
           <article v-for="post in feed" :key="post.id">
-            <div class="p-4 mb-3 bg-white border rounded-xl myborder dark:bg-gray-800">
-              <div class="flex flex-row cursor-pointer">
-                <div class="thumbnail">
-                  <div v-if="post.type === 'IMAGE'" class="flex flex-grow h-20 bg-cover rounded-lg sm:h-24" :style="`background-image: url(${post.link})`" />
-                  <div v-else class="flex flex-grow h-20 bg-gray-200 dark:bg-gray-800 sm:h-24">
-                    <div class="m-auto text-gray-400 dark:text-gray-700">
-                      <Icon v-if="post.type === 'TEXT'" size="48" name="text" />
-                      <Icon v-else-if="post.type === 'LINK' || post.type === 'IMAGE'" size="48" name="text" />
-                    </div>
+            <div class="mb-5 bg-white border border-gray-200 rounded-xl">
+              <div class="py-6 px-8 flex flex-row cursor-pointer">
+                <img :src="post.author.profile.avatar" class="object-cover w-8 h-8 rounded-full bg-gray-200">
+                <div class="flex flex-col ml-4">
+                  <div class="text-xs">
+                    <span class="text-tertiary font-semibold hover:underline">{{ post.author.username }}</span>
+                    <span class="text-tertiary">in</span>
+                    <span class="text-accent font-semibold hover:underline">+{{ post.community.name }}</span>
                   </div>
-                </div>
-
-                <div class="flex flex-col justify-start">
-                  <nuxt-link :to="post.relativeUrl" class="font-medium">
+                  <div class="text-xs" style="margin-top: 0.13rem">
+                    <span class="text-tertiary">{{ post.timeSince }} &middot; </span>
+                    <nuxt-link :to="post.relativeUrl" class="text-tertiary hover:underline">
+                      {{ post.commentCount }} comment{{ post.commentCount === 1 ? '' : 's' }}
+                    </nuxt-link>
+                  </div>
+                  <div class="text-base text-primary font-semibold mt-4">
                     {{ post.title }}
-                  </nuxt-link>
-                  <div
-                    v-if="post.textContent"
-                    class="mt-1 text-sm text-secondary line-clamp-2"
-                    v-html="post.textContent"
-                  />
-                  <PostAuthor class="pt-3 text-sm text-secondary" :post="post" />
+                  </div>
+                  <div v-if="post.textContent" class="text-primary line-clamp-3 text-sm mt-1" v-html="post.textContent" />
                 </div>
               </div>
+              <a :href="post.linkURL" target="_blank" rel="noreferrer noopener nofollow" class="bg-cover h-64 cursor-pointer block" :style="`background-image: url(${post.embed.imageURL}})`" />
+              <a :href="post.linkURL" target="_blank" rel="noreferrer noopener nofollow" class="bg-gray-200 px-4 py-3 rounded-b-xl cursor-pointer block">
+                <div class="text-sm text-secondary font-semibold">
+                  CometX – See what's in orbit.
+                </div>
+
+                <div class="text-xs text-tertiary" style="margin-top: 0.13rem">
+                  cometx.io
+                </div>
+              </a>
             </div>
           </article>
         </div>
       </div>
-      <div class="col-span-3">
+      <div class="col-span-2">
         <TrendingCommunities :communities="trendingCommunities" />
         <div class="socialbutton patreon">
           <svg class="w-5 h-5 mr-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
@@ -88,6 +96,36 @@
             <path d="M20.222 0c1.406 0 2.54 1.137 2.607 2.475V24l-2.677-2.273-1.47-1.338-1.604-1.398.67 2.205H3.71c-1.402 0-2.54-1.065-2.54-2.476V2.48C1.17 1.142 2.31.003 3.715.003h16.5L20.222 0zm-6.118 5.683h-.03l-.202.2c2.073.6 3.076 1.537 3.076 1.537-1.336-.668-2.54-1.002-3.744-1.137-.87-.135-1.74-.064-2.475 0h-.2c-.47 0-1.47.2-2.81.735-.467.203-.735.336-.735.336s1.002-1.002 3.21-1.537l-.135-.135s-1.672-.064-3.477 1.27c0 0-1.805 3.144-1.805 7.02 0 0 1 1.74 3.743 1.806 0 0 .4-.533.805-1.002-1.54-.468-2.14-1.404-2.14-1.404s.134.066.335.2h.06c.03 0 .044.015.06.03v.006c.016.016.03.03.06.03.33.136.66.27.93.4.466.202 1.065.403 1.8.536.93.135 1.996.2 3.21 0 .6-.135 1.2-.267 1.8-.535.39-.2.87-.4 1.397-.737 0 0-.6.936-2.205 1.404.33.466.795 1 .795 1 2.744-.06 3.81-1.8 3.87-1.726 0-3.87-1.815-7.02-1.815-7.02-1.635-1.214-3.165-1.26-3.435-1.26l.056-.02zm.168 4.413c.703 0 1.27.6 1.27 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.334.002-.74.573-1.338 1.27-1.338zm-4.543 0c.7 0 1.266.6 1.266 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.334 0-.74.57-1.338 1.27-1.338z" />
           </svg>
           <span class="font-medium text-sm text-white">Join the CometX Discord</span>
+        </div>
+
+        <div class="rounded-xl bg-white p-4 border border-gray-200 mt-5 text-xs font-medium text-secondary grid grid-cols-2 gap-4 sticky" style="top: 1.25rem">
+          <div class="col-span-1 flex flex-col border-r border-gray-200 space-y-1">
+            <nuxt-link to="/about/content" class="hover:underline cursor-pointer">
+              Content Policy
+            </nuxt-link>
+
+            <nuxt-link to="/about/privacy" class="hover:underline cursor-pointer">
+              Privacy Policy
+            </nuxt-link>
+
+            <nuxt-link to="/about/terms" class="hover:underline cursor-pointer">
+              Terms of Service
+            </nuxt-link>
+          </div>
+
+          <div class="col-span-1 flex flex-col space-y-1">
+            <a href="https://discord.gg/NPCMGSm" target="_blank" rel="noreferrer noopener nofollow" class="hover:underline cursor-pointer">
+              Discord
+            </a>
+
+            <a href="https://github.com/comet-app/cometx" target="_blank" rel="noreferrer noopener nofollow" class="hover:underline cursor-pointer">
+              GitHub
+            </a>
+
+            <a href="https://patreon.com/getcomet" target="_blank" rel="noreferrer noopener nofollow" class="hover:underline cursor-pointer">
+              Patreon
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -111,13 +149,12 @@ export default {
       })
     ).data.feed
 
-    console.log(feed)
-
     const trendingCommunities = (
       await client.query({
         query: communitiesGql,
         variables: {
-          sort: 'TRENDING'
+          sort: 'TRENDING',
+          pageSize: 5
         }
       })
     ).data.communities
@@ -153,10 +190,11 @@ export default {
 }
 
 .customtransform:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) translateX(-50%);
 }
 
 .customtransform {
+  transform: translateX(-50%);
 }
 
 .socialbutton {

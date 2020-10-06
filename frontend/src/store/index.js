@@ -50,22 +50,24 @@ export const actions = {
     const { data } = await client.query({
       query: communitiesGql,
       variables: {
-        sort: 'TOP'
+        sort: 'TOP',
+        pageSize: 5
       },
       fetchPolicy: 'network-only'
     })
-    commit('setTopCommunities', data.topCommunities)
+    commit('setTopCommunities', data.communities)
   },
   async fetchJoinedCommunities ({ commit }) {
     const client = this.app.apolloProvider.defaultClient
     const { data } = await client.query({
       query: communitiesGql,
       variables: {
-        joined: true
+        joined: true,
+        pageSize: 5
       },
       fetchPolicy: 'network-only'
     })
-    commit('setJoinedCommunities', data.joinedCommunities)
+    commit('setJoinedCommunities', data.communities)
   }
 }
 

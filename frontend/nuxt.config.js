@@ -75,7 +75,7 @@ export default {
   loading: { color: '#fff' },
 
   buildModules: [
-    '~/modules/theme',
+    /* '~/modules/theme', */
     '@nuxtjs/tailwindcss',
     '@nuxtjs/pwa',
     '@nuxtjs/eslint-module'
@@ -99,7 +99,7 @@ export default {
 
   css: ['@/assets/css/inter/inter.css', '@/assets/css/toast/themes/sugar/index.scss'],
 
-  plugins: ['@/plugins/toast.client.js', '@/plugins/theme.client.js', '@/plugins/theme.server.js'],
+  plugins: ['@/plugins/toast.client.js'/*, '@/plugins/theme.client.js', '@/plugins/theme.server.js' */],
 
   pwa: {
     manifest: {
@@ -151,42 +151,42 @@ export default {
     extendRoutes (routes, resolve) {
       routes.push(
         {
-          name: 'user',
-          path: '/@:username/:tab?',
-          component: resolve(__dirname, 'src/pages/-user.vue')
-        },
-        {
-          name: 'community',
-          path: '/+:community/:sort?/:time?',
-          component: resolve(__dirname, 'src/pages/-community.vue')
-        },
-        {
-          name: 'post',
-          path: '/+:community/post/:id/:title?',
-          component: resolve(__dirname, 'src/pages/-community/-post.vue')
-        },
-        {
-          name: 'community-settings',
-          path: '/+:community/settings',
-          component: resolve(__dirname, 'src/pages/-community/-settings.vue')
-        },
-        {
-          name: 'home',
-          path: '/:sort?/:time?',
-          component: resolve(__dirname, 'src/pages/-home.vue')
-        },
-        {
           name: 'universe',
           path: '/universe/:sort?/:time?',
           component: resolve(__dirname, 'src/pages/-universe.vue')
         },
         {
+          name: 'community-settings',
+          path: '/\+:community/settings',
+          component: resolve(__dirname, 'src/pages/-community/-settings.vue')
+        },
+        {
+          name: 'community-post',
+          path: '/\+:community/post/:id/:title?',
+          component: resolve(__dirname, 'src/pages/-community/-post.vue')
+        },
+        {
+          name: 'community',
+          path: '/\+:community/:sort?/:time?',
+          component: resolve(__dirname, 'src/pages/-community.vue')
+        },
+        {
+          name: 'user',
+          path: '/\@:username/:tab?',
+          component: resolve(__dirname, 'src/pages/-user.vue')
+        },
+        {
           name: 'tag',
-          path: '/~:tag/:sort?/:time?',
+          path: '/\~:tag/:sort?/:time?',
           component: resolve(__dirname, 'src/pages/-tag.vue')
+        },
+        {
+          name: 'home',
+          path: '/:sort?/:time?',
+          component: resolve(__dirname, 'src/pages/-home.vue')
         }
       )
-      sortRoutes(routes)
+      // sortRoutes(routes)
     }
   }
 }

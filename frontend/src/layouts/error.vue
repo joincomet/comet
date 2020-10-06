@@ -1,27 +1,19 @@
 <template>
-  <div id="app">
-    <AppBar />
+  <div class="container mx-auto p-5">
+    <div class="px-24 py-6">
+      <nuxt-link to="/">
+        <img src="~/assets/logo.svg" class="h-8 mx-auto mb-5">
+      </nuxt-link>
 
-    <div class="flex flex-row">
-      <NavDrawer />
-
-      <div class="flex flex-col items-center flex-grow mt-16">
-        <div class="px-24 py-6 text-center">
-          <nuxt-link to="/">
-            <Icon class="h-6 mb-3" name="comet-logo" />
-          </nuxt-link>
-
-          <div v-if="error.statusCode === 404" class="text-xl">
-            {{ pageNotFound }}
-          </div>
-          <div v-else class="text-xl">
-            {{ otherError }}
-          </div>
-          <nuxt-link to="/" class="underline text-accent">
-            Home page
-          </nuxt-link>
-        </div>
+      <div v-if="error.statusCode === 404" class="text-xl">
+        {{ pageNotFound }}
       </div>
+      <pre v-else class="text-xl">
+        {{ JSON.stringify(error, null, 4) }}
+      </pre>
+      <nuxt-link to="/" class="underline text-accent">
+        Home page
+      </nuxt-link>
     </div>
   </div>
 </template>

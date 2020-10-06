@@ -26,6 +26,7 @@ import { CommentSort } from '@/types/CommentSort'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { CommunitySort } from '@/types/CommunitySort'
 import { ModPermission } from '@/types/ModPermission'
+import { startDiscordBot } from '@/discord'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -77,6 +78,8 @@ async function bootstrap() {
           : undefined,
       namingStrategy: new SnakeNamingStrategy()
     })
+
+    await startDiscordBot()
 
     registerEnumType(PostSort, {
       name: 'PostSort'

@@ -16,7 +16,7 @@ export default {
     const community = (await client.query({
       query: communityGql,
       variables: {
-        name: params.name
+        name: params.community
       }
     })).data.community
 

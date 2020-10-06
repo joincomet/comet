@@ -65,31 +65,25 @@
       </div>
     </div>
 
-    <div class="px-6 mt-12 text-tiny font-bold tracking-widest uppercase text-tertiary">
-      {{ $store.state.currentUser ? 'My ' : 'Top ' }} Planets
+    <div class="px-5 mt-9 mb-3 flex flex-row items-center">
+      <div class="text-tiny font-bold tracking-widest uppercase text-tertiary">
+        {{ $store.state.currentUser ? 'My ' : 'Top ' }} Planets
+      </div>
+      <div class="ml-auto rounded-full border border-gray-200 text-tiny font-bold tracking-widest uppercase text-tertiary py-1 px-3 cursor-pointer hover:bg-gray-100">
+        EXPLORE
+      </div>
     </div>
 
     <nuxt-link v-for="community in ($store.state.currentUser ? $store.state.joinedCommunities : $store.state.topCommunities)" :key="community.id" :to="`/+${community.name}`" class="navitem">
-      <img :src="community.profile.avatar" class="w-6 h-6 mr-6 rounded-full">
-      +{{ community.name }}
+      <img :src="community.profile.avatar" class="w-6 h-6 mr-6 rounded-full bg-gray-200">
+      <span class="text-tertiary">+{{ community.name }}</span>
     </nuxt-link>
   </nav>
 </template>
 
 <script>
-import joinedCommunitiesGql from '@/gql/joinedCommunities.graphql'
-
 export default {
-  data () {
-    return {
-      joinedCommunities: []
-    }
-  },
-  apollo: {
-    joinedCommunities: {
-      query: joinedCommunitiesGql
-    }
-  }
+  name: 'NavDrawer'
 }
 </script>
 
