@@ -99,7 +99,7 @@
     /* From v1.4.0, Iframely supports HTTP/2 by default. Disable it, if you'd rather not.
        Alternatively, you can also disable per origin. See `proxy` option below.
     */
-    // DISABLE_HTTP2: true,
+    DISABLE_HTTP2: true,
 
     // Customize API calls to oembed endpoints.
     ADD_OEMBED_PARAMS: [{
