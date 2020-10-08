@@ -1,6 +1,6 @@
 FROM node:alpine
 
-RUN apk update && mkdir -p /usr/src/app
+RUN apk update && apk upgrade && mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json yarn.lock /usr/src/app/
