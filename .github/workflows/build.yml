@@ -93,7 +93,7 @@ jobs:
         run: docker push registry.digitalocean.com/cometx/nginx
 
   deploy:
-    needs: [frontend, api, imageflow, iframely, nginx]
+    needs: [frontend, api, imageflow, nginx]
     runs-on: ubuntu-latest
     steps:
       - uses: benc-uk/workflow-dispatch@v1

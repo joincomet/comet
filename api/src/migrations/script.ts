@@ -49,7 +49,7 @@ const run = async () => {
       ssl:
         process.env.NODE_ENV === 'production'
           ? {
-              ca: fs.readFileSync(path.resolve('../../ca-certificate.crt'), {
+              ca: fs.readFileSync(path.resolve('./ca-certificate.crt'), {
                 encoding: 'utf8'
               })
             }
