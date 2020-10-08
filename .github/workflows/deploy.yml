@@ -38,6 +38,5 @@ jobs:
             echo -e "$ENV" > .env
             mv docker-compose.prod.yml docker-compose.yml
             docker-compose pull -q
-            docker-compose down
-            docker-compose up -d
-            docker image prune -f
+            docker-compose down --remove-orphans
+            docker-compose up -d --force-recreate

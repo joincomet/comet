@@ -9,9 +9,6 @@ services:
       - "4000"
     env_file:
       - .env
-    volumes:
-      - /usr/src/app/node_modules
-      - /usr/src/app/dist
     depends_on:
       - imageflow
 
@@ -23,9 +20,6 @@ services:
       - "3000"
     env_file:
       - .env
-    volumes:
-      - /usr/src/app/node_modules
-      - /usr/src/app/.nuxt
     depends_on:
       - api
 
