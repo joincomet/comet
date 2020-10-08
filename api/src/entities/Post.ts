@@ -15,6 +15,7 @@ import { Community } from '@/entities/Community'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { Save } from '@/entities/relations/Save'
 import { PostHide } from '@/entities/relations/PostHide'
+import { Embed } from '@/types/post/Embed'
 
 @ObjectType()
 @Entity()
@@ -38,7 +39,23 @@ export class Post {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  link?: string
+  linkURL?: string
+
+  @Field(() => Embed, { nullable: true })
+  @Column('jsonb', {
+    nullable: true,
+    transformer: {
+      to: value => value,
+      from: value => {
+        try {
+          return JSON.parse(value) as Embed
+        } catch {
+          return value
+        }
+      }
+    }
+  })
+  embed?: Embed
 
   @Field(() => [String], { nullable: true })
   @Column('text', { array: true, nullable: true })

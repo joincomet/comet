@@ -12,11 +12,11 @@ import {
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
-import { CommunitySettings } from '@/types/CommunitySettings'
-import { CommunityProfile } from '@/types/CommunityProfile'
-import { CommunityJoin } from '@/entities/relations/CommunityJoin'
+import { CommunitySettings } from '@/types/community/CommunitySettings'
+import { CommunityProfile } from '@/types/community/CommunityProfile'
+import { CommunityUser } from '@/entities/relations/CommunityUser'
 import { CommunityMute } from '@/entities/relations/CommunityMute'
-import { Moderator } from '@/entities/relations/Moderator'
+import { CommunityModerator } from '@/entities/relations/CommunityModerator'
 import { AllowedPoster } from '@/entities/relations/AllowedPoster'
 import { Ban } from '@/entities/moderation/Ban'
 
@@ -85,8 +85,8 @@ export class Community {
   @OneToMany(() => Post, post => post.community)
   posts: Lazy<Post[]>
 
-  @OneToMany(() => CommunityJoin, user => user.community)
-  users: Lazy<CommunityJoin[]>
+  @OneToMany(() => CommunityUser, user => user.community)
+  users: Lazy<CommunityUser[]>
 
   @OneToMany(() => AllowedPoster, allowed => allowed.community)
   allowedPosters: Lazy<User[]>
@@ -101,8 +101,8 @@ export class Community {
   @Field({ nullable: true })
   userCount: number
 
-  @OneToMany(() => Moderator, mod => mod.community)
-  moderators: Lazy<Moderator[]>
+  @OneToMany(() => CommunityModerator, mod => mod.community)
+  moderators: Lazy<CommunityModerator[]>
 
   @OneToMany(() => CommunityMute, mute => mute.community)
   mutes: Lazy<CommunityMute[]>

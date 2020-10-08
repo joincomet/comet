@@ -17,8 +17,8 @@ import { bannedWords } from '@/BannedWords'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
 import { CommunitiesArgs } from '@/args/CommunitiesArgs'
-import { CommunitySort } from '@/types/CommunitySort'
-import { CommunityJoin } from '@/entities/relations/CommunityJoin'
+import { CommunitySort } from '@/types/community/CommunitySort'
+import { CommunityUser } from '@/entities/relations/CommunityUser'
 
 @Resolver(() => Community)
 export class CommunityResolver {
@@ -26,8 +26,8 @@ export class CommunityResolver {
     Community
   >
   @InjectRepository(User) readonly userRepository: Repository<User>
-  @InjectRepository(CommunityJoin) readonly userCommunityRepository: Repository<
-    CommunityJoin
+  @InjectRepository(CommunityUser) readonly userCommunityRepository: Repository<
+    CommunityUser
   >
 
   @Authorized()

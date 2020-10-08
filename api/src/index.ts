@@ -19,13 +19,13 @@ import { graphqlUploadExpress } from 'graphql-upload'
 import fs from 'fs'
 import path from 'path'
 import { authChecker } from '@/AuthChecker'
-import { PostSort } from '@/types/PostSort'
-import { TimeFilter } from '@/types/TimeFilter'
-import { Feed } from '@/types/Feed'
+import { PostSort } from '@/types/feed/PostSort'
+import { TimeFilter } from '@/types/feed/TimeFilter'
+import { Feed } from '@/types/feed/Feed'
 import { CommentSort } from '@/types/CommentSort'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
-import { CommunitySort } from '@/types/CommunitySort'
-import { ModPermission } from '@/types/ModPermission'
+import { CommunitySort } from '@/types/community/CommunitySort'
+import { ModPermission } from '@/types/community/ModPermission'
 import { startDiscordBot } from '@/discord'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
@@ -78,94 +78,95 @@ async function bootstrap() {
           : undefined,
       namingStrategy: new SnakeNamingStrategy()
     })
-
-    await startDiscordBot()
-
-    registerEnumType(PostSort, {
-      name: 'PostSort'
-    })
-
-    registerEnumType(TimeFilter, {
-      name: 'TimeFilter'
-    })
-
-    registerEnumType(Feed, {
-      name: 'Feed'
-    })
-
-    registerEnumType(CommentSort, {
-      name: 'CommentSort'
-    })
-
-    registerEnumType(CommunitySort, {
-      name: 'CommunitySort'
-    })
-
-    registerEnumType(ModPermission, {
-      name: 'ModPermission'
-    })
-
-    // build TypeGraphQL executable schema
-    const schema = await buildSchema({
-      resolvers: [__dirname + '/resolvers/**/*.{ts,js}'],
-      emitSchemaFile: false,
-      container: Container,
-      validate: true,
-      authChecker: authChecker,
-      authMode: 'null'
-    })
-
-    const app = express()
-
-    app.use(cookieParser())
-
-    app.use(
-      graphqlUploadExpress({
-        maxFileSize: 4 * 1024 * 1024,
-        maxFiles: 1
-      })
-    )
-
-    const logPlugin = {
-      requestDidStart(requestContext: any) {
-        const name = requestContext.request.operationName
-        if (name === 'IntrospectionQuery') return
-        console.log('GraphQL: ' + name)
-      }
-    }
-
-    const server = new ApolloServer({
-      plugins: [logPlugin],
-      schema,
-      playground: process.env.NODE_ENV !== 'production',
-      tracing: true,
-      context: ({ req, res }: { req: any; res: any }) => {
-        return {
-          req,
-          res,
-          ...getUser(req),
-          userLoader: UserLoader,
-          postLoader: PostLoader,
-          commentLoader: CommentLoader,
-          joinedLoader: JoinedLoader,
-          postUpvoteLoader: PostUpvoteLoader,
-          commentUpvoteLoader: CommentUpvoteLoader
-        } as Context
-      },
-      uploads: false,
-      introspection: true
-    })
-
-    server.applyMiddleware({
-      app
-    })
-
-    app.listen({ port: process.env.PORT || 4000 }, () => {
-      console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
-    })
   } catch (e) {
     console.error(e)
+    return process.exit(-1)
   }
+
+  await startDiscordBot()
+
+  registerEnumType(PostSort, {
+    name: 'PostSort'
+  })
+
+  registerEnumType(TimeFilter, {
+    name: 'TimeFilter'
+  })
+
+  registerEnumType(Feed, {
+    name: 'Feed'
+  })
+
+  registerEnumType(CommentSort, {
+    name: 'CommentSort'
+  })
+
+  registerEnumType(CommunitySort, {
+    name: 'CommunitySort'
+  })
+
+  registerEnumType(ModPermission, {
+    name: 'ModPermission'
+  })
+
+  // build TypeGraphQL executable schema
+  const schema = await buildSchema({
+    resolvers: [__dirname + '/resolvers/**/*.{ts,js}'],
+    emitSchemaFile: false,
+    container: Container,
+    validate: true,
+    authChecker: authChecker,
+    authMode: 'null'
+  })
+
+  const app = express()
+
+  app.use(cookieParser())
+
+  app.use(
+    graphqlUploadExpress({
+      maxFileSize: 4 * 1024 * 1024,
+      maxFiles: 1
+    })
+  )
+
+  const logPlugin = {
+    requestDidStart(requestContext: any) {
+      const name = requestContext.request.operationName
+      if (name === 'IntrospectionQuery') return
+      console.log('GraphQL: ' + name)
+    }
+  }
+
+  const server = new ApolloServer({
+    plugins: [logPlugin],
+    schema,
+    playground: process.env.NODE_ENV !== 'production',
+    tracing: true,
+    context: ({ req, res }: { req: any; res: any }) => {
+      return {
+        req,
+        res,
+        ...getUser(req),
+        userLoader: UserLoader,
+        postLoader: PostLoader,
+        commentLoader: CommentLoader,
+        joinedLoader: JoinedLoader,
+        postUpvoteLoader: PostUpvoteLoader,
+        commentUpvoteLoader: CommentUpvoteLoader
+      } as Context
+    },
+    uploads: false,
+    introspection: true
+  })
+
+  server.applyMiddleware({
+    app
+  })
+
+  app.listen({ port: process.env.PORT || 4000 }, () => {
+    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
+  })
 }
 
 bootstrap()

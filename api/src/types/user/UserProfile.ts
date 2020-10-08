@@ -1,7 +1,7 @@
 import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
-export class Usernames {
+class Usernames {
   @Field({ nullable: true })
   reddit?: string
 
@@ -49,4 +49,22 @@ export class Usernames {
 
   @Field({ nullable: true })
   vsco?: string
+}
+
+@ObjectType()
+export class UserProfile {
+  @Field({ nullable: true })
+  realName?: string
+
+  @Field({ nullable: true })
+  website?: string
+
+  @Field({ nullable: true })
+  bio?: string
+
+  @Field({ nullable: true })
+  avatarURL?: string
+
+  @Field({ nullable: true })
+  usernames?: Usernames
 }

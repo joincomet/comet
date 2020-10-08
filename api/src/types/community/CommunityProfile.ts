@@ -1,13 +1,13 @@
 import { Field, ObjectType } from 'type-graphql'
-import { CommunityRule } from '@/types/CommunityRule'
+import { CommunityRule } from '@/types/community/CommunityRule'
 
 @ObjectType()
 export class CommunityProfile {
   @Field({ nullable: true })
-  avatar?: string
+  avatarURL?: string
 
   @Field({ nullable: true })
-  banner?: string
+  bannerURL?: string
 
   @Field({ nullable: true })
   color?: string
@@ -19,7 +19,7 @@ export class CommunityProfile {
   customName?: string
 
   @Field({ nullable: true })
-  twitter?: string
+  twitterUsername?: string
 
   @Field({ nullable: true })
   discordInvite?: string

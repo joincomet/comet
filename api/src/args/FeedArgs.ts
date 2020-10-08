@@ -1,8 +1,8 @@
 import { ArgsType, Field, ID } from 'type-graphql'
 import { PaginationArgs } from '@/args/PaginationArgs'
-import { PostSort } from '@/types/PostSort'
-import { TimeFilter } from '@/types/TimeFilter'
-import { Feed } from '@/types/Feed'
+import { PostSort } from '@/types/feed/PostSort'
+import { TimeFilter } from '@/types/feed/TimeFilter'
+import { Feed } from '@/types/feed/Feed'
 
 @ArgsType()
 export class FeedArgs extends PaginationArgs {

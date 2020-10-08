@@ -3,8 +3,8 @@ ALTER TABLE "planet"
 UPDATE planet T
 SET profile = (SELECT to_json(concat(
         '{',
-        '"avatar": "', T."avatarImageUrl", '", ',
-        '"banner": "', T."bannerImageUrl", '", ',
+        '"avatarURL": "', T."avatarImageUrl", '", ',
+        '"bannerURL": "', T."bannerImageUrl", '", ',
         '"color": "', T."themeColor", '", ',
         '"customName": "', T."customName", '", ',
         '"description": ', (SELECT to_json(T."description")),
@@ -31,8 +31,7 @@ ALTER TABLE "user"
 UPDATE "user" T
 SET profile = (SELECT to_json(concat(
         '{',
-        '"avatar": "', T."profilePicUrl", '", ',
-        '"banner": "', T."bannerImageUrl", '", ',
+        '"avatarURL": "', T."profilePicUrl", '", ',
         '"bio": ', (SELECT to_json(T."bio")), ', ',
         '"tag": "', T."tag", '", ',
         '"tagColor": "', T."tagColor", '", ',
@@ -41,8 +40,6 @@ SET profile = (SELECT to_json(concat(
                FROM "user"
                WHERE "id" = T."id")
 WHERE 1 = 1;
-
-
 
 CREATE OR REPLACE FUNCTION drop_unneeded_tables() RETURNS void AS
 $$
@@ -193,6 +190,8 @@ BEGIN
         RENAME COLUMN "planetName" TO "planet_id";
     ALTER TABLE "post"
         RENAME COLUMN "removedReason" TO "removed_reason";
+    ALTER TABLE "post"
+        RENAME COLUMN "link" TO "link_url";
 
     ALTER TABLE "post_endorsement"
         RENAME COLUMN "userId" TO "user_id";
@@ -299,9 +298,9 @@ BEGIN
     ALTER TABLE planet
         RENAME TO community;
     ALTER TABLE planet_moderators_user
-        RENAME TO community_moderators_user;
+        RENAME TO community_moderator;
     ALTER TABLE planet_users_user
-        RENAME TO community_users_user;
+        RENAME TO community_user;
     ALTER TABLE post_endorsement
         RENAME TO post_upvote;
     ALTER TABLE comment_endorsement
@@ -376,3 +375,25 @@ DROP SEQUENCE "comment__id_seq" CASCADE;
 DROP SEQUENCE "planet__id_seq" CASCADE;
 DROP SEQUENCE "post__id_seq" CASCADE;
 DROP SEQUENCE "user__id_seq" CASCADE;
+ALTER TABLE "community" DROP CONSTRAINT "planet__id_key" CASCADE;
+ALTER TABLE "user" DROP CONSTRAINT "user__id_key" CASCADE;
+ALTER TABLE "comment" DROP CONSTRAINT "comment__id_key" CASCADE;
+ALTER TABLE "post" DROP CONSTRAINT "post__id_key" CASCADE;
+
+UPDATE "community" SET name = UPPER(SUBSTRING(name from 1 for 1)) || SUBSTRING(name from 2);
+
+DELETE FROM "post_upvote" WHERE "post_id" = ANY('{3780, 3639, 3881, 3222, 3881, 3880, 3879, 3878}'::bigint[]);
+DELETE FROM "comment_upvote" WHERE "comment_id" = ANY(SELECT "id" FROM "comment" WHERE "post_id" = ANY('{3780, 3639, 3881, 3222, 3881, 3880, 3879, 3878}'::bigint[]));
+DELETE FROM "comment" WHERE "post_id" = ANY('{3780, 3639, 3881, 3222, 3881, 3880, 3879, 3878}'::bigint[]);
+DELETE FROM "post" WHERE "id" = ANY('{3780, 3639, 3881, 3222, 3881, 3880, 3879, 3878}'::bigint[]);
+
+DELETE FROM "post_upvote" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
+DELETE FROM "comment_upvote" WHERE "comment_id" = ANY(SELECT "id" FROM "comment" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
+DELETE FROM "comment" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
+DELETE FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet');
+DELETE FROM "comment_upvote" T WHERE (SELECT "id" FROM "comment" WHERE "id" = T."comment_id") IS NULL;
+
+ALTER TABLE "post" ADD COLUMN "images" text[];
+UPDATE "post" T SET "images" = ('{'||(SELECT T."link_url")||'}')::text[] WHERE T."type" = 'IMAGE';
+UPDATE "post" T SET "link_url" = NULL WHERE T."type" = 'IMAGE';
+ALTER TABLE "post" DROP COLUMN "type";

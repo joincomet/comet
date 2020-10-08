@@ -7,7 +7,7 @@
     </div>
     <div v-for="(community, index) in communities" :key="community.id" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
       <div class="mx-5 py-4 flex flex-row flex-grow h-full items-center border-gray-200" :class="index < communities.length - 1 ? 'border-b' : ''">
-        <img class="object-cover w-10 h-10 rounded-lg p-1" :src="community.profile.avatar">
+        <img class="object-cover w-10 h-10 rounded-full bg-gray-200" :src="community.profile.avatarURL">
         <div class="flex flex-row items-center flex-grow community">
           <div class="flex flex-col ml-6">
             <div class="text-sm leading-5 font-medium text-secondary">

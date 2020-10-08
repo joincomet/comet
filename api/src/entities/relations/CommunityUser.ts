@@ -1,28 +1,28 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import {
-  Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
-  PrimaryColumn
+  PrimaryColumn,
+  UpdateDateColumn
 } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
-import { Post } from '@/entities/Post'
 import { Community } from '@/entities/Community'
-import { ModPermission } from '@/types/ModPermission'
 
 @ObjectType()
 @Entity()
-export class Moderator {
-  @ManyToOne(() => User, user => user.moderatedCommunities)
+export class CommunityUser {
+  @ManyToOne(() => User, user => user.communities)
   user: Lazy<User>
 
   @Field(() => ID)
   @PrimaryColumn('bigint')
   userId: number
 
-  @ManyToOne(() => Community, community => community.moderators)
+  @ManyToOne(() => Community, community => community.users, {
+    onDelete: 'CASCADE'
+  })
   community: Lazy<Community>
 
   @Field(() => ID)
@@ -33,7 +33,7 @@ export class Moderator {
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
-  @Field(() => [ModPermission])
-  @Column('text', { array: true })
-  permissions: ModPermission[]
+  @Field()
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
 }

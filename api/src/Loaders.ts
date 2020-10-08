@@ -4,7 +4,7 @@ import { User } from '@/entities/User'
 import { Comment } from '@/entities/Comment'
 import { Post } from '@/entities/Post'
 import { Community } from '@/entities/Community'
-import { CommunityJoin } from '@/entities/relations/CommunityJoin'
+import { CommunityUser } from '@/entities/relations/CommunityUser'
 import { PostUpvote } from '@/entities/relations/PostUpvote'
 import { CommentUpvote } from '@/entities/relations/CommentUpvote'
 
@@ -53,7 +53,7 @@ export const PostLoader = new DataLoader(async (keys: number[]) => {
 
 export const JoinedLoader = new DataLoader(
   async (keys: { userId: number; communityId: number }[]) => {
-    const entities = await getRepository(CommunityJoin)
+    const entities = await getRepository(CommunityUser)
       .createQueryBuilder('join')
       .andWhere('join.communityId = ANY(:communities)', {
         communities: keys.map(k => k.communityId)

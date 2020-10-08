@@ -1,16 +1,24 @@
 import * as TypeORM from 'typeorm'
+import { getRepository } from 'typeorm'
 import { Container } from 'typedi'
 import fs from 'fs'
 import path from 'path'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
-import { getRepository } from 'typeorm'
 import { Community } from '@/entities/Community'
+import { Post } from '@/entities/Post'
+import { runIframely } from '@/iframely/RunIframely'
+import { isURL } from '@/IsURL'
+import { Sema } from 'async-sema'
+
+// @ts-ignore
+process.env.UV_THREADPOOL_SIZE = 128
 
 TypeORM.useContainer(Container)
 
-const deleteUnusedCommunities = async () => {
+const run = async () => {
+  let connection
   try {
-    await TypeORM.createConnection({
+    connection = await TypeORM.createConnection({
       type: 'postgres',
       username:
         process.env.NODE_ENV === 'production'
@@ -23,7 +31,7 @@ const deleteUnusedCommunities = async () => {
       host:
         process.env.NODE_ENV === 'production'
           ? process.env.DB_HOST
-          : 'postgres',
+          : 'localhost',
       port:
         process.env.NODE_ENV === 'production'
           ? parseInt(process.env.DB_PORT)
@@ -33,9 +41,9 @@ const deleteUnusedCommunities = async () => {
           ? process.env.DB_DATABASE
           : 'postgres',
       // url: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'postgresql://postgres:password@postgres:5432/postgres',
-      entities: ['../entities/**/*.{ts,js}'],
+      entities: [__dirname + '/../entities/**/*.{ts,js}'],
       synchronize: true,
-      logging: process.env.NODE_ENV !== 'production',
+      logging: false,
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
       ssl:
@@ -50,9 +58,11 @@ const deleteUnusedCommunities = async () => {
     })
   } catch (e) {
     console.error(e)
+    return process.exit(-1)
   }
 
-  const communityRepo = getRepository<Community>(Community)
+  const communityRepo = getRepository(Community)
+  console.info('--- Deleting communities with 0 posts ---')
   const communitiesToDelete = (
     await communityRepo
       .createQueryBuilder('community')
@@ -61,7 +71,61 @@ const deleteUnusedCommunities = async () => {
   )
     .filter(c => c.postCount === 0)
     .map(c => c.id)
-  await communityRepo.delete(communitiesToDelete)
+
+  if (communitiesToDelete && communitiesToDelete.length > 0) {
+    await communityRepo.delete(communitiesToDelete)
+  }
+
+  const postRepo = getRepository(Post)
+
+  console.info('--- Retrieving embed data from existing link posts ---')
+  let posts = await postRepo
+    .createQueryBuilder('post')
+    .where('post.linkURL IS NOT NULL AND post.embed IS NULL')
+    .orderBy('post.createdAt', 'DESC')
+    .getMany()
+
+  if (posts) {
+    posts = posts.filter(p => isURL(p.linkURL))
+
+    const s = new Sema(16, { capacity: 100 })
+
+    async function fetchEmbedData(post: Post) {
+      await s.acquire()
+      try {
+        // console.log(s.nrWaiting() + ' calls to fetch are waiting')
+        const embed = await runIframely(post.linkURL)
+        await postRepo.update(post.id, { embed })
+      } finally {
+        s.release()
+      }
+    }
+
+    await Promise.all(posts.map(fetchEmbedData))
+
+    /*
+    const results = await mapLimit(
+      posts.map(p => p.linkURL),
+      50,
+      async url => runIframely(url)
+    )
+    console.log(results)*/
+
+    // console.log(results)
+  }
+
+  /*  for (const post of posts) {
+    try {
+      const embed = await runIframely(post.linkURL)
+      await postRepo.update(post.id, { embed })
+    } catch (e) {
+      console.warn(`Failed: ${post.linkURL}`)
+    }
+  }*/
+
+  console.info('--- Done ---')
+  connection.close()
+  return process.exit(0)
 }
 
-deleteUnusedCommunities()
+run()

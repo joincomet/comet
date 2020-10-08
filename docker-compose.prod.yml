@@ -13,7 +13,6 @@ services:
       - /usr/src/app/node_modules
       - /usr/src/app/dist
     depends_on:
-      - iframely
       - imageflow
 
   frontend:
@@ -29,13 +28,6 @@ services:
       - /usr/src/app/.nuxt
     depends_on:
       - api
-
-  iframely:
-    image: registry.digitalocean.com/cometx/iframely:latest
-    container_name: iframely
-    restart: always
-    expose:
-      - "8061"
 
   imageflow:
     image: registry.digitalocean.com/cometx/imageflow:latest

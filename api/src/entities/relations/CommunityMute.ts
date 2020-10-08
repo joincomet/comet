@@ -2,7 +2,6 @@ import { Field, ID, ObjectType } from 'type-graphql'
 import { CreateDateColumn, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
-import { Post } from '@/entities/Post'
 import { Community } from '@/entities/Community'
 
 @ObjectType()

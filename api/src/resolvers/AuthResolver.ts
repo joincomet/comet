@@ -10,7 +10,7 @@ import * as argon2 from 'argon2'
 import { SignUpArgs } from '@/args/SignUpArgs'
 import { bannedWords } from '@/BannedWords'
 import { format } from 'date-fns'
-import { UserProfile } from '@/types/UserProfile'
+import { UserProfile } from '@/types/user/UserProfile'
 
 @Resolver()
 export class AuthResolver {

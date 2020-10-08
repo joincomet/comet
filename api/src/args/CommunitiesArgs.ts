@@ -1,6 +1,6 @@
 import { ArgsType, Field } from 'type-graphql'
 import { PaginationArgs } from '@/args/PaginationArgs'
-import { CommunitySort } from '@/types/CommunitySort'
+import { CommunitySort } from '@/types/community/CommunitySort'
 
 @ArgsType()
 export class CommunitiesArgs extends PaginationArgs {

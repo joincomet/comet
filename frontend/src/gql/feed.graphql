@@ -8,7 +8,7 @@ query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $communi
     upvoteCount
     id
     upvoted
-    link
+    linkURL
     textContent
     title
     relativeUrl
@@ -18,7 +18,7 @@ query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $communi
       username
       isCurrentUser
       profile {
-        avatar
+        avatarURL
       }
     }
     community {
@@ -27,7 +27,19 @@ query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $communi
       createdAt
       joined
       profile {
-        avatar
+        avatarURL
+      }
+    }
+    embed {
+      meta {
+        site
+        description
+        site
+      }
+      links {
+        thumbnail {
+          href
+        }
       }
     }
   }

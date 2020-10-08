@@ -3,8 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn
@@ -14,12 +12,11 @@ import { Lazy } from '@/Lazy'
 import { Post } from '@/entities/Post'
 import { PostUpvote } from '@/entities/relations/PostUpvote'
 import { CommentUpvote } from '@/entities/relations/CommentUpvote'
-import { Community } from '@/entities/Community'
 import { formatDistanceToNowStrict } from 'date-fns'
-import { UserProfile } from '@/types/UserProfile'
-import { UserSettings } from '@/types/UserSettings'
-import { CommunityJoin } from '@/entities/relations/CommunityJoin'
-import { Moderator } from '@/entities/relations/Moderator'
+import { UserProfile } from '@/types/user/UserProfile'
+import { UserSettings } from '@/types/user/UserSettings'
+import { CommunityUser } from '@/entities/relations/CommunityUser'
+import { CommunityModerator } from '@/entities/relations/CommunityModerator'
 import { CommunityMute } from '@/entities/relations/CommunityMute'
 import { Save } from '@/entities/relations/Save'
 import { UserBlock } from '@/entities/relations/UserBlock'
@@ -111,11 +108,11 @@ export class User {
   @OneToMany(() => Post, post => post.author)
   posts: Lazy<Post[]>
 
-  @OneToMany(() => CommunityJoin, community => community.user)
-  communities: Lazy<CommunityJoin[]>
+  @OneToMany(() => CommunityUser, community => community.user)
+  communities: Lazy<CommunityUser[]>
 
-  @OneToMany(() => Moderator, moderator => moderator.user)
-  moderatedCommunities: Lazy<Moderator[]>
+  @OneToMany(() => CommunityModerator, moderator => moderator.user)
+  moderatedCommunities: Lazy<CommunityModerator[]>
 
   @OneToMany(() => AllowedPoster, a => a.user)
   allowedCommunities: Lazy<AllowedPoster[]>

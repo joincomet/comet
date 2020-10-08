@@ -13,7 +13,6 @@ import {
 import { Post } from '@/entities/Post'
 import { SubmitPostArgs } from '@/args/SubmitPostArgs'
 import { Context } from '@/Context'
-import { getTitleAtUrl } from '@/Iframely'
 import { FeedArgs } from '@/args/FeedArgs'
 import { User } from '@/entities/User'
 import { filterXSS } from 'xss'
@@ -21,16 +20,17 @@ import { whiteList } from '@/XSSWhiteList'
 import { PostUpvote } from '@/entities/relations/PostUpvote'
 import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
-import { TimeFilter } from '@/types/TimeFilter'
-import { PostSort } from '@/types/PostSort'
-import { Feed } from '@/types/Feed'
+import { TimeFilter } from '@/types/feed/TimeFilter'
+import { PostSort } from '@/types/feed/PostSort'
+import { Feed } from '@/types/feed/Feed'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
 import { Comment } from '@/entities/Comment'
 import { Notification } from '@/entities/Notification'
 import { Community } from '@/entities/Community'
-import { CommunityJoin } from '@/entities/relations/CommunityJoin'
-import '@/discord'
+import { CommunityUser } from '@/entities/relations/CommunityUser'
+import { Embed } from '@/types/post/Embed'
+import { runIframely } from '@/iframely/RunIframely'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -46,13 +46,8 @@ export class PostResolver {
   readonly notificationRepository: Repository<Notification>
   @InjectRepository(Community)
   readonly communityRepository: Repository<Community>
-  @InjectRepository(CommunityJoin)
-  readonly userCommunityRepository: Repository<CommunityJoin>
-
-  @Query(() => String, { nullable: true })
-  async getTitleAtUrl(@Arg('url') url: string) {
-    return getTitleAtUrl(url)
-  }
+  @InjectRepository(CommunityUser)
+  readonly userCommunityRepository: Repository<CommunityUser>
 
   @Query(() => [Post])
   async feed(
@@ -529,5 +524,14 @@ export class PostResolver {
   ) {
     if (!userId) return false
     return postUpvoteLoader.load({ userId, postId: post.id })
+  }
+
+  @Query(() => Embed)
+  async getURLEmbed(@Arg('URL') URL: string) {
+    const data = await runIframely(URL)
+    data.meta.themeColor = data.meta['theme-color']
+    delete data.meta['theme-color']
+
+    return data as Embed
   }
 }

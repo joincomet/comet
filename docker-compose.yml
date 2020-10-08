@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: ../Dockerfile.dev
+      dockerfile: Dockerfile.dev
     container_name: api
     ports:
       - "4000:4000"
@@ -18,7 +18,6 @@ services:
       - /usr/src/app/dist
     depends_on:
       - postgres
-      - iframely
     environment:
       - NODE_ENV=development
       - TS_NODE_PROJECT=tsconfig.dev.json
@@ -26,7 +25,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: ../Dockerfile.dev
+      dockerfile: Dockerfile.dev
     container_name: frontend
     ports:
       - "3000:3000"
@@ -43,14 +42,6 @@ services:
       - HOST=0.0.0.0
     depends_on:
       - api
-
-  iframely:
-    image: registry.digitalocean.com/cometx/iframely:latest
-    container_name: iframely
-    ports:
-      - "8061:8061"
-    expose:
-      - "8061"
 
   postgres:
     image: "postgres:alpine"

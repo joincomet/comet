@@ -10,7 +10,7 @@ import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
 import { Community } from '@/entities/Community'
-import { ModPermission } from '@/types/ModPermission'
+import { ModPermission } from '@/types/community/ModPermission'
 
 @ObjectType()
 @Entity()

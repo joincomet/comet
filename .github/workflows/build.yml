@@ -65,26 +65,6 @@ jobs:
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/imageflow
 
-  iframely:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@master
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
-
-      - name: Build container image
-        run: docker build ./iframely -t registry.digitalocean.com/cometx/iframely:latest
-
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/cometx/iframely
-
   nginx:
     runs-on: ubuntu-latest
     steps:

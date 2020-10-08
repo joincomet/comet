@@ -7,7 +7,7 @@ RUN apk update && apk upgrade
 
 COPY . /usr/src/app/
 
-RUN yarn
+RUN yarn global add node-gyp && yarn
 RUN yarn run build
 
 EXPOSE 4000

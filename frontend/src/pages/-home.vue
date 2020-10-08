@@ -49,7 +49,7 @@
           <article v-for="post in feed" :key="post.id">
             <div class="mb-5 bg-white border border-gray-200 rounded-xl">
               <div class="py-6 px-8 flex flex-row cursor-pointer">
-                <img :src="post.author.profile.avatar" class="object-cover w-8 h-8 rounded-full bg-gray-200">
+                <img :src="post.author.profile.avatarURL" class="object-cover w-8 h-8 rounded-full bg-gray-200">
                 <div class="flex flex-col ml-4">
                   <div class="text-xs">
                     <span class="text-tertiary font-semibold hover:underline">{{ post.author.username }}</span>
@@ -68,16 +68,18 @@
                   <div v-if="post.textContent" class="text-primary line-clamp-3 text-sm mt-1" v-html="post.textContent" />
                 </div>
               </div>
-              <a :href="post.linkURL" target="_blank" rel="noreferrer noopener nofollow" class="bg-cover h-64 cursor-pointer block" :style="`background-image: url(${post.embed.imageURL}})`" />
-              <a :href="post.linkURL" target="_blank" rel="noreferrer noopener nofollow" class="bg-gray-200 px-4 py-3 rounded-b-xl cursor-pointer block">
-                <div class="text-sm text-secondary font-semibold">
-                  CometX – See what's in orbit.
-                </div>
+              <div v-if="post.embed && post.embed.links && post.embed.links.thumbnail && post.embed.links.thumbnail.length > 0">
+                <a :href="post.linkURL" target="_blank" rel="noreferrer noopener nofollow" class="bg-cover bg-center h-64 cursor-pointer block" :style="`background-image: url(${post.embed.links.thumbnail[0].href})`" />
+                <a :href="post.linkURL" target="_blank" rel="noreferrer noopener nofollow" class="bg-gray-200 px-4 py-3 rounded-b-xl cursor-pointer block">
+                  <div class="text-sm text-secondary font-semibold">
+                    {{ post.embed.meta.title }}
+                  </div>
 
-                <div class="text-xs text-tertiary" style="margin-top: 0.13rem">
-                  cometx.io
-                </div>
-              </a>
+                  <div class="text-xs text-tertiary" style="margin-top: 0.13rem">
+                    {{ post.embed.meta.site }}
+                  </div>
+                </a>
+              </div>
             </div>
           </article>
         </div>
