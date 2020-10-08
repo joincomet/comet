@@ -35,6 +35,7 @@ query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $communi
         site
         description
         site
+        title
       }
       links {
         thumbnail {
