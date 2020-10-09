@@ -98,7 +98,7 @@ html.dark {
   @apply bg-white dark:bg-gray-800;
 }
 
-.rounded-xl {
+/*.rounded-xl {
   border-radius: 1rem;
 }
 
@@ -120,4 +120,4 @@ html.dark {
 .rounded-b-xl {
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
-}
+}*/

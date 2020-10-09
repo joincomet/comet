@@ -42,23 +42,6 @@ export class FiltersResolver {
       .createQueryBuilder('user')
       .whereInIds(blockedUsersIds)
       .andWhere('user.banned = false')
-      .loadRelationCountAndMap('user.followerCount', 'user.followers')
-      .loadRelationCountAndMap('user.followingCount', 'user.following')
-      .loadRelationCountAndMap(
-        'user.commentCount',
-        'user.comments',
-        'comment',
-        qb => {
-          return qb
-            .andWhere('comment.deleted = false')
-            .andWhere('comment.removed = false')
-        }
-      )
-      .loadRelationCountAndMap('user.postCount', 'user.posts', 'post', qb => {
-        return qb
-          .andWhere('post.deleted = false')
-          .andWhere('post.removed = false')
-      })
       .getMany()
   }
 }

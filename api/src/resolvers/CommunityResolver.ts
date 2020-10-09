@@ -77,7 +77,6 @@ export class CommunityResolver {
       .andWhere('community.name ILIKE :name', {
         name: name.replace(/_/g, '\\_')
       })
-      .loadRelationCountAndMap('community.userCount', 'community.users')
       .leftJoinAndSelect('community.moderators', 'moderator')
 
     return qb.getOne()
@@ -148,15 +147,7 @@ export class CommunityResolver {
     { sort, joined, names, search, tags, page, pageSize }: CommunitiesArgs,
     @Ctx() { userId }: Context
   ) {
-    const qb = this.communityRepository
-      .createQueryBuilder('community')
-      .loadRelationCountAndMap('community.userCount', 'community.users')
-      .loadRelationCountAndMap(
-        'community.postCount',
-        'community.posts',
-        'p',
-        qb => qb.andWhere('p.deleted = false AND p.removed = false')
-      )
+    const qb = this.communityRepository.createQueryBuilder('community')
 
     if (sort === CommunitySort.NEW) {
       qb.addOrderBy('community.createdAt', 'DESC')

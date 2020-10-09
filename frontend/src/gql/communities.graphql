@@ -4,5 +4,7 @@ query communities($sort: CommunitySort, $joined: Boolean, $pageSize: Int) {
       avatarURL
     }
     name
+    userCount
+    postCount
   }
 }

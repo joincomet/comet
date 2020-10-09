@@ -5,15 +5,15 @@
   >
     <div class="mx-5 pt-7 pb-5 mb-4 border-b border-gray-200 inline-flex flex-row items-center">
       <nuxt-link to="/" class="mr-auto">
-        <img src="~/assets/logo.svg" class="w-32" alt="CometX logo">
+        <img src="~/assets/logo.svg" class="w-40" alt="CometX logo">
       </nuxt-link>
       <nuxt-link to="/settings" class="hover:scale-125 transform duration-150 ease-in-out text-gray-500" active-class="text-indigo-600">
-        <svg style="width: 1.13rem; height: 1.13rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <svg class="w-0.5 h-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
         </svg>
       </nuxt-link>
       <div v-if="$store.state.currentUser" class="ml-4 hover:scale-125 transform duration-150 ease-in-out cursor-pointer">
-        <svg class="text-gray-500" style="width: 1.13rem; height: 1.13rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <svg class="text-gray-500 w-0.5 h-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
           <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
         </svg>
       </div>
@@ -47,16 +47,16 @@
         <img :src="$store.state.currentUser.profile.avatar" class="mr-6" alt="User Avatar">
         {{ $store.state.currentUser.profile.realName || $store.state.currentUser.username }}
       </nuxt-link>
-      <nuxt-link v-else to="/login" class="navitem" exact-active-class="navitem-active">
+      <div v-else class="navitem cursor-pointer" @click="$store.commit('setLoginDialog', true)">
         <svg class="w-6 h-6 mr-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
         </svg>
 
         <span class="text-green-600">Log In</span>
-      </nuxt-link>
+      </div>
     </div>
 
-    <div class="m-4 shadow-md px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm flex flex-row items-center cursor-pointer hover:scale-105 transform duration-150 ease-in-out">
+    <div class="m-4 shadow-md px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm flex flex-row items-center cursor-pointer hover:scale-105 transform duration-150 ease-in-out" @click="$store.commit('setLoginDialog', true)">
       <div class="mx-auto inline-flex flex-row items-center">
         <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -2,8 +2,8 @@
   <div class="container mx-auto py-5 px-32">
     <div class="grid grid-cols-7 gap-5">
       <div class="col-span-5 relative">
-        <div class="z-10 fixed pr-5" style="bottom: 4rem; left: 50%; transform: translateX(-50%)">
-          <div class="px-8 py-2 font-medium flex flex-row items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition hover:scale-105 transform">
+        <div class="z-10 fixed pr-5 -translate-x-1/2 left-1/2" style="bottom: 4rem">
+          <div class="px-8 py-2 font-medium flex flex-row items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition hover:scale-105 transform -translate-x-1/2">
             <div class="mx-auto inline-flex flex-row items-center">
               <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -30,8 +30,7 @@
               viewBox="0 0 20 20"
               fill="currentColor"
               :class="searchFocused ? 'text-indigo-600' : 'text-tertiary'"
-              class="transition duration-150 ease-in-out relative align-middle h-full ml-4"
-              style="width: 1.13rem"
+              class="transition duration-150 ease-in-out relative align-middle h-full w-4 ml-4"
             >
               <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
             </svg>
@@ -42,46 +41,11 @@
 
         <div class="mt-5">
           <div class="text-xs text-tertiary mb-3 px-3">
-            <span class="hover:underline cursor-pointer font-semibold">Cards</span> &middot;
-            <span class="hover:underline cursor-pointer">Small Cards</span> &middot;
-            <span class="hover:underline cursor-pointer">Traditional</span>
+            <span class="hover:underline cursor-pointer" :class="{'font-semibold': $layoutMode.preference === 'cards'}" @click="$layoutMode.preference = 'cards'">Cards</span> &middot;
+            <span class="hover:underline cursor-pointer" :class="{'font-semibold': $layoutMode.preference === 'small-cards'}" @click="$layoutMode.preference = 'small-cards'">Small Cards</span> &middot;
+            <span class="hover:underline cursor-pointer" :class="{'font-semibold': $layoutMode.preference === 'traditional'}" @click="$layoutMode.preference = 'traditional'">Traditional</span>
           </div>
-          <article v-for="post in feed" :key="post.id">
-            <div class="mb-5 bg-white border border-gray-200 rounded-xl">
-              <div class="py-6 px-8 flex flex-row cursor-pointer">
-                <img :src="post.author.profile.avatarURL" class="object-cover w-8 h-8 rounded-full bg-gray-200">
-                <div class="flex flex-col ml-4">
-                  <div class="text-xs">
-                    <span class="text-tertiary font-semibold hover:underline">{{ post.author.username }}</span>
-                    <span class="text-tertiary">in</span>
-                    <span class="text-accent font-semibold hover:underline">+{{ post.community.name }}</span>
-                  </div>
-                  <div class="text-xs" style="margin-top: 0.13rem">
-                    <span class="text-tertiary">{{ post.timeSince }} &middot; </span>
-                    <nuxt-link :to="post.relativeUrl" class="text-tertiary hover:underline">
-                      {{ post.commentCount }} comment{{ post.commentCount === 1 ? '' : 's' }}
-                    </nuxt-link>
-                  </div>
-                  <div class="text-base text-primary font-semibold mt-4">
-                    {{ post.title }}
-                  </div>
-                  <div v-if="post.textContent" class="text-primary line-clamp-3 text-sm mt-1" v-html="post.textContent" />
-                </div>
-              </div>
-              <div v-if="post.embed && post.embed.links && post.embed.links.thumbnail && post.embed.links.thumbnail.length > 0">
-                <a :href="post.linkURL" target="_blank" rel="noreferrer noopener nofollow" class="bg-cover bg-center h-64 cursor-pointer block" :style="`background-image: url(${post.embed.links.thumbnail[0].href})`" />
-                <a :href="post.linkURL" target="_blank" rel="noreferrer noopener nofollow" class="bg-gray-200 px-4 py-3 rounded-b-xl cursor-pointer block">
-                  <div class="text-sm text-secondary font-semibold">
-                    {{ post.embed.meta.title }}
-                  </div>
-
-                  <div class="text-xs text-tertiary" style="margin-top: 0.13rem">
-                    {{ post.embed.meta.site }}
-                  </div>
-                </a>
-              </div>
-            </div>
-          </article>
+          <Post v-for="post in feed" :key="post.id" :post="post" />
         </div>
       </div>
       <div class="col-span-2">
@@ -180,27 +144,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.thumbnail {
-  @apply w-20 h-20 mr-6 sm:h-24 sm:w-24;
-  min-width: 5rem;
-}
-
-@media (min-width: 640px) {
-    .thumbnail {
-      min-width: 6rem;
-    }
-}
-
-.customtransform:hover {
-  transform: scale(1.05) translateX(-50%);
-}
-
-.customtransform {
-  transform: translateX(-50%);
-}
-
 .socialbutton {
-  @apply rounded-lg w-full shadow px-6 h-10 inline-flex flex-row items-center mt-5 cursor-pointer transform transition duration-150 ease-in-out hover:scale-105;
+  @apply rounded-md w-full shadow px-6 h-10 inline-flex flex-row items-center mt-5 cursor-pointer transform transition duration-150 ease-in-out hover:scale-105;
 }
 
 .discord {

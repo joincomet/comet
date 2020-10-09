@@ -49,8 +49,6 @@ abstract class DiscordBot {
           .where('user.username ILIKE :username', {
             username: words[i + 1].replace(/_/g, '\\_')
           })
-          .loadRelationCountAndMap('user.postCount', 'user.posts')
-          .loadRelationCountAndMap('user.commentCount', 'user.comments')
           .getOne()
 
         if (user) {

@@ -4,10 +4,14 @@ import communitiesGql from '@/gql/communities.graphql'
 export const state = () => ({
   currentUser: null,
   topCommunities: [],
-  joinedCommunities: []
+  joinedCommunities: [],
+  loginDialog: false
 })
 
 export const mutations = {
+  setLoginDialog (state, loginDialog) {
+    state.loginDialog = loginDialog
+  },
   setCurrentUser (state, currentUser) {
     state.currentUser = currentUser
   },

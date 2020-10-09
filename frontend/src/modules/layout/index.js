@@ -3,12 +3,12 @@ import { promises as fsp } from 'fs'
 
 export default async function (moduleOptions) {
   const options = {
-    preference: 'system',
-    fallback: 'light',
-    hid: 'nuxt-color-mode-script',
-    globalName: '__NUXT_COLOR_MODE__',
+    preference: 'cards',
+    fallback: 'cards',
+    hid: 'nuxt-layout-mode-script',
+    globalName: '__NUXT_LAYOUT_MODE__',
     cookie: {
-      key: 'theme',
+      key: 'layout',
       options: {
         path: this.options.router.base,
         sameSite: 'lax'

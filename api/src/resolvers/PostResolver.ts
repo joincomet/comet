@@ -219,7 +219,6 @@ export class PostResolver {
         .andWhere('post.community.name = :community', {
           community: communities[0]
         })
-        .loadRelationCountAndMap('community.userCount', 'community.users')
         .addOrderBy('post.createdAt', 'DESC')
 
       const stickies = await stickiesQb.getMany()
@@ -261,7 +260,6 @@ export class PostResolver {
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.community', 'community')
-      .loadRelationCountAndMap('community.userCount', 'community.users')
 
     const post = await qb.getOne()
 

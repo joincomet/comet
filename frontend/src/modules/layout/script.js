@@ -1,23 +1,15 @@
-// Add dark / light detection that runs before loading Nuxt.js
+// Add layout preference detection that runs before loading Nuxt.js
 
 // Global variable minimizers
 const w = window
 const d = document
-const de = d.documentElement
 
-const knownColorSchemes = ['dark', 'light']
+const preference = getCookie('layout') || 'cards'
+const value = preference
 
-const preference = getCookie('theme') || 'system'
-const value = preference === 'system' ? getColorScheme() : preference
-
-addClass(value)
-
-w.__NUXT_COLOR_MODE__ = {
+w.__NUXT_LAYOUT_MODE__ = {
   preference,
-  value,
-  getColorScheme,
-  addClass,
-  removeClass
+  value
 }
 
 function getCookie (name) {
@@ -34,38 +26,4 @@ function getCookie (name) {
     }
   }
   return null
-}
-
-function addClass (value) {
-  const className = value
-  if (de.classList) {
-    de.classList.add(className)
-  } else {
-    de.className += ' ' + className
-  }
-}
-
-function removeClass (value) {
-  const className = value
-  if (de.classList) {
-    de.classList.remove(className)
-  } else {
-    de.className = de.className.replace(new RegExp(className, 'g'), '')
-  }
-}
-
-function prefersColorScheme (suffix) {
-  return w.matchMedia('(prefers-color-scheme' + suffix + ')')
-}
-
-function getColorScheme () {
-  if (w.matchMedia && prefersColorScheme('').media !== 'not all') {
-    for (const colorScheme of knownColorSchemes) {
-      if (prefersColorScheme(':' + colorScheme).matches) {
-        return colorScheme
-      }
-    }
-  }
-
-  return 'light'
 }

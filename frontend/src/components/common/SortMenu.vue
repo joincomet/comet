@@ -98,8 +98,7 @@ export default {
 }
 
 .sortmenu {
-  @apply bg-white border shadow border-gray-200;
-  border-radius: 1rem;
+  @apply bg-white border shadow border-gray-200 rounded-xl;
 
   &__item {
     @apply flex flex-row items-center text-gray-500 px-6 h-10 hover:bg-gray-100 cursor-pointer;
@@ -114,13 +113,11 @@ export default {
   }
 
   &__item:first-child {
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
+    @apply rounded-t-xl;
   }
 
   &__item:last-child {
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    @apply rounded-b-xl;
   }
 
   &__item-active {

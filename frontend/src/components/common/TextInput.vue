@@ -1,12 +1,12 @@
 <template>
-  <div class="mb-2">
+  <div>
     <label class="block mb-2 text-xs text-secondary" :for="label">
       {{ label }}
     </label>
     <input
       :id="label"
       v-model="text"
-      class="w-full px-3 py-2 mb-2 leading-tight border rounded appearance-none focus:outline-none focus:shadow-outline dark:bg-gray-900 dark:border-gray-700"
+      class="px-4 focus:border-indigo-600 origin-left transition duration-150 ease-in-out h-10 border border-gray-200 rounded-md text-sm text-tertiary w-full focus:outline-none"
       :class="error ? 'border-red-500' : ''"
       :type="type"
       :placeholder="placeholder"

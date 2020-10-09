@@ -11,8 +11,10 @@ query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $communi
     linkURL
     textContent
     title
-    relativeUrl
+    relativeURL
     sticky
+    images
+    domain
     author {
       id
       username

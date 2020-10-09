@@ -51,21 +51,6 @@ export class UserResolver {
         username: username.replace(/_/g, '\\_')
       })
       .andWhere('user.banned = false')
-      .loadRelationCountAndMap('user.followerCount', 'user.followers')
-      .loadRelationCountAndMap('user.followingCount', 'user.following')
-      .loadRelationCountAndMap(
-        'user.commentCount',
-        'user.comments',
-        'comment',
-        qb => {
-          return qb.andWhere('comment.deleted = false')
-        }
-      )
-      .loadRelationCountAndMap('user.postCount', 'user.posts', 'post', qb => {
-        return qb
-          .andWhere('post.deleted = false')
-          .andWhere('post.removed = false')
-      })
       .leftJoinAndSelect('user.moderatedCommunities', 'moderatedCommunity')
       .getOne()
   }

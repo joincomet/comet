@@ -37,11 +37,10 @@ export default {
 
 <style scoped lang="scss">
 .actioncard {
-  @apply shadow hover:shadow-md relative h-32 col-span-1 p-4 bg-white border bg-cover cursor-pointer transform transition duration-150 ease-in-out hover:-translate-y-1 border-gray-200;
-  border-radius: 1rem;
+  @apply shadow hover:shadow-md relative h-32 col-span-1 p-4 bg-white border bg-cover cursor-pointer transform transition duration-150 ease-in-out hover:-translate-y-1 border-gray-200 rounded-xl;
 
   &__title {
-    @apply absolute top-3 left-5 text-white text-base font-bold;
+    @apply absolute top-3 left-5 text-white text-base font-semibold;
   }
 
   &__action {

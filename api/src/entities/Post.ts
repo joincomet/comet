@@ -16,6 +16,7 @@ import { formatDistanceToNowStrict } from 'date-fns'
 import { Save } from '@/entities/relations/Save'
 import { PostHide } from '@/entities/relations/PostHide'
 import { Embed } from '@/types/post/Embed'
+import { URL } from 'url'
 
 @ObjectType()
 @Entity()
@@ -146,7 +147,7 @@ export class Post {
   hides: Lazy<PostHide[]>
 
   @Field()
-  get relativeUrl(): string {
+  get relativeURL(): string {
     const slug = this.title
       .toLowerCase()
       .trim()
@@ -156,5 +157,13 @@ export class Post {
       .replace(/[^a-z0-9_]+/gi, '')
       .replace(/[_](.)\1+/g, '$1')
     return `/+${(this.community as Community).name}/post/${this.id36}/${slug}`
+  }
+
+  @Field(() => String, { nullable: true })
+  get domain(): string | undefined {
+    if (!this.linkURL) return undefined
+    let domain = new URL(this.linkURL).host
+    if (domain.includes('www.')) domain = domain.split('www.')[1]
+    return domain
   }
 }

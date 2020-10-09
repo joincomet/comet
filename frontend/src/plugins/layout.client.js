@@ -1,62 +1,42 @@
 import Vue from 'vue'
 import { serialize } from 'cookie'
 
-const cookieKey = 'theme'
+const cookieKey = 'layout'
 const cookieOptions = {
   path: '/',
   sameSite: 'lax'
 }
-const colorMode = window.__NUXT_COLOR_MODE__
+const layoutMode = window.__NUXT_LAYOUT_MODE__
 
 export default function (ctx, inject) {
-  let data = ctx.nuxtState.colorMode
+  let data = ctx.nuxtState.layoutMode
   // For SPA mode or fallback
   if (!data) {
     data = {
-      preference: colorMode.preference,
-      value: colorMode.value,
-      unknown: colorMode.preference === 'system'
+      preference: layoutMode.preference,
+      value: layoutMode.value,
+      unknown: false
     }
   }
-  const $colorMode = new Vue({
+  const $layoutMode = new Vue({
     data,
     watch: {
       preference (preference) {
-        if (preference === 'system') {
-          this.value = colorMode.getColorScheme()
-          this._watchMedia()
-        } else {
-          this.value = preference
-        }
+        this.value = preference
 
         this._storePreference(preference)
-      },
-      value (newValue, oldValue) {
-        colorMode.removeClass(oldValue)
-        colorMode.addClass(newValue)
       }
+      /* value (newValue, oldValue) {
+        layoutMode.removeClass(oldValue)
+        layoutMode.addClass(newValue)
+      } */
     },
     beforeMount () {
-      if (this.preference === 'system') {
-        this._watchMedia()
-      }
       if (window.localStorage) {
         this._watchStorageChange()
       }
     },
     methods: {
-      _watchMedia () {
-        if (this._mediaWatcher || !window.matchMedia) {
-          return
-        }
-
-        this._darkWatcher = window.matchMedia('(prefers-color-scheme: dark)')
-        this._darkWatcher.addListener((e) => {
-          if (this.preference === 'system') {
-            this.value = colorMode.getColorScheme()
-          }
-        })
-      },
       _watchStorageChange () {
         window.addEventListener('storage', (e) => {
           if (e.key === cookieKey) {
@@ -76,12 +56,12 @@ export default function (ctx, inject) {
     }
   })
 
-  if ($colorMode.unknown) {
+  if ($layoutMode.unknown) {
     window.onNuxtReady(() => {
-      $colorMode.preference = colorMode.preference
-      $colorMode.value = colorMode.value
-      $colorMode.unknown = false
+      $layoutMode.preference = layoutMode.preference
+      $layoutMode.value = layoutMode.value
+      $layoutMode.unknown = false
     })
   }
-  inject('colorMode', $colorMode)
+  inject('layoutMode', $layoutMode)
 }

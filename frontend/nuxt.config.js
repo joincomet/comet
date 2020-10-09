@@ -76,6 +76,7 @@ export default {
 
   buildModules: [
     /* '~/modules/theme', */
+    '~/modules/layout',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/pwa',
     '@nuxtjs/eslint-module'
@@ -99,7 +100,7 @@ export default {
 
   css: ['@/assets/css/inter/inter.css', '@/assets/css/toast/themes/sugar/index.scss'],
 
-  plugins: ['@/plugins/toast.client.js'/*, '@/plugins/theme.client.js', '@/plugins/theme.server.js' */],
+  plugins: ['@/plugins/toast.client.js', '@/plugins/layout.client.js', '@/plugins/layout.server.js'],
 
   pwa: {
     manifest: {

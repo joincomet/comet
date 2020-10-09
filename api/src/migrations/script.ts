@@ -64,10 +64,7 @@ const run = async () => {
   const communityRepo = getRepository(Community)
   console.info('--- Deleting communities with 0 posts ---')
   const communitiesToDelete = (
-    await communityRepo
-      .createQueryBuilder('community')
-      .loadRelationCountAndMap('community.postCount', 'community.posts')
-      .getMany()
+    await communityRepo.createQueryBuilder('community').getMany()
   )
     .filter(c => c.postCount === 0)
     .map(c => c.id)

@@ -157,9 +157,11 @@ export class User {
   followingCount: number
 
   @Field()
+  @Column({ default: 0 })
   commentCount: number
 
   @Field()
+  @Column({ default: 0 })
   postCount: number
 
   @OneToMany(() => PostUpvote, upvote => upvote.user)

@@ -1,8 +1,8 @@
 import { parse } from 'cookie'
-const cookieKey = 'theme'
+const cookieKey = 'layout'
 
 export default function (ctx, inject) {
-  let preference = 'system'
+  let preference = 'cards'
 
   // Try to read from cookies
   if (ctx.req) {
@@ -13,15 +13,15 @@ export default function (ctx, inject) {
     }
   }
 
-  const colorMode = {
+  const layoutMode = {
     preference,
     value: preference,
-    unknown: process.static || !ctx.req || preference === 'system'
+    unknown: process.static || !ctx.req
   }
 
   ctx.beforeNuxtRender(({ nuxtState }) => {
-    nuxtState.colorMode = colorMode
+    nuxtState.layoutMode = layoutMode
   })
 
-  inject('colorMode', colorMode)
+  inject('layoutMode', layoutMode)
 }

@@ -3,8 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn
@@ -98,7 +96,8 @@ export class Community {
   @OneToMany(() => Ban, ban => ban.community)
   bans: Lazy<Ban[]>
 
-  @Field({ nullable: true })
+  @Field()
+  @Column('bigint', { default: 1 })
   userCount: number
 
   @OneToMany(() => CommunityModerator, mod => mod.community)
@@ -114,6 +113,7 @@ export class Community {
   joined: boolean
 
   @Field()
+  @Column({ default: 0 })
   postCount: number
 
   @Column('int', { select: false, default: 0 })

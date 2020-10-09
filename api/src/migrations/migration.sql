@@ -311,6 +311,12 @@ $$ LANGUAGE plpgsql;
 
 
 SELECT "drop_unneeded_tables"();
+
+DELETE FROM "post_endorsement" WHERE "postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
+DELETE FROM "comment_endorsement" WHERE "commentId" = ANY(SELECT "id" FROM "comment" WHERE "postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]));
+DELETE FROM "comment" WHERE "postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
+DELETE FROM "post" WHERE "id" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
+
 SELECT "drop_unneeded_columns"();
 SELECT "rename_columns"();
 SELECT "add_new_ids"();
@@ -382,11 +388,6 @@ ALTER TABLE "post" DROP CONSTRAINT "post__id_key" CASCADE;
 
 UPDATE "community" SET name = UPPER(SUBSTRING(name from 1 for 1)) || SUBSTRING(name from 2);
 
-DELETE FROM "post_upvote" WHERE "post_id" = ANY('{3780, 3639, 3881, 3222, 3881, 3880, 3879, 3878}'::bigint[]);
-DELETE FROM "comment_upvote" WHERE "comment_id" = ANY(SELECT "id" FROM "comment" WHERE "post_id" = ANY('{3780, 3639, 3881, 3222, 3881, 3880, 3879, 3878}'::bigint[]));
-DELETE FROM "comment" WHERE "post_id" = ANY('{3780, 3639, 3881, 3222, 3881, 3880, 3879, 3878}'::bigint[]);
-DELETE FROM "post" WHERE "id" = ANY('{3780, 3639, 3881, 3222, 3881, 3880, 3879, 3878}'::bigint[]);
-
 DELETE FROM "post_upvote" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
 DELETE FROM "comment_upvote" WHERE "comment_id" = ANY(SELECT "id" FROM "comment" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
 DELETE FROM "comment" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
@@ -397,3 +398,8 @@ ALTER TABLE "post" ADD COLUMN "images" text[];
 UPDATE "post" T SET "images" = ('{'||(SELECT T."link_url")||'}')::text[] WHERE T."type" = 'IMAGE';
 UPDATE "post" T SET "link_url" = NULL WHERE T."type" = 'IMAGE';
 ALTER TABLE "post" DROP COLUMN "type";
+
+UPDATE "community" T SET "name" = 'CometX' WHERE T."name" = 'Comet';
+
+ALTER TABLE "community" ADD COLUMN "user_count" bigint default 1;
+UPDATE "community" T SET "user_count" = (SELECT COUNT(*) FROM "community_user" T2 WHERE T2."community_id" = T."id");
