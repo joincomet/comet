@@ -9,10 +9,15 @@
     </transition>
 
     <transition name="modal">
-      <div v-show="loginDialog" class="rounded-xl bg-white shadow-xl z-10 m-auto h-full max-w-5xl w-full">
+      <div v-show="loginDialog" class="rounded-xl bg-white shadow-xl z-10 m-auto h-full max-w-5xl w-full relative">
+        <div class="absolute top-4 right-4 rounded-full p-1 hover:bg-gray-100 transition duration-150 ease-in-out cursor-pointer" @click="closeLogin">
+          <svg class="w-6 h-6 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
         <div class="grid grid-cols-12 h-full">
           <div class="col-span-4 bg-gradient-to-br to-red-400 from-indigo-500 h-full rounded-l-xl flex">
-            <div class="mx-auto mt-48">
+            <div class="m-auto h-2/3">
               <svg class="h-7 -translate-x-1/2" fill="#fff" version="1.1" viewBox="0 0 41.876 5.0521" xmlns="http://www.w3.org/2000/svg">
                 <g transform="translate(-56.423 -63.81)">
                   <g stroke-width=".26458" aria-label="C  METX.io">
@@ -39,22 +44,22 @@
             </div>
           </div>
           <div class="col-span-8 h-full rounder-r-xl flex">
-            <div class="space-y-7 mx-auto mt-48">
+            <div class="space-y-7 m-auto h-2/3">
               <h1 class="text-2xl font-medium">
                 Welcome to CometX.
               </h1>
 
               <TextInput placeholder="Username" />
-              <TextInput placeholder="Email (Optional)" />
+              <TextInput placeholder="Email(Optional)" />
               <TextInput placeholder="Password" type="password" class="mt-6" />
               <TextInput placeholder="Confirm Password" type="password" class="mt-6" />
 
               <div class="flex">
-                <div class="ml-auto cursor-pointer px-4 py-2 inline-flex items-center">
+                <div class="ml-auto cursor-pointer px-6 py-2 inline-flex items-center hover:bg-gray-200 transition duration-150 ease-in-out rounded-full">
                   <span class="mx-auto text-sm text-tertiary font-medium">Already have an account?</span>
                 </div>
-                <div class="ml-5 rounded-full bg-indigo-500 hover:bg-indigo-600 cursor-pointer px-4 py-2 inline-flex items-center">
-                  <span class="mx-auto text-sm text-white font-medium">Sign Up</span>
+                <div class="transform hover:scale-105 ml-3 rounded-full bg-indigo-500 hover:bg-white text-white hover:text-indigo-600 border border-indigo-600 cursor-pointer px-6 py-2 inline-flex items-center transition duration-300 ease-in-out">
+                  <span class="mx-auto text-sm font-semibold">Sign Up</span>
                 </div>
               </div>
 
@@ -76,39 +81,26 @@
 <script>
 export default {
   name: 'LoginDialog',
+  data() {
+    return {
+      tab: 'login'
+    }
+  },
   computed: {
     loginDialog: {
-      get () {
+      get() {
         return this.$store.state.loginDialog
       },
-      set (val) {
+      set(val) {
         this.$store.commit('setLoginDialog', val)
       }
     }
   },
-  watch: {
-    loginDialog (open) {
-      if (open) {
-        window.history.pushState(null, null, '/login')
-      } else {
-        // window.history.pushState(null, null, this.$route.path)
-      }
-    }
-  },
-  beforeMount () {
-    window.addEventListener('popstate', this.handleBack)
-  },
-  beforeDestroy () {
-    window.removeEventListener('popstate', this.handleBack)
-  },
   methods: {
-    openLogin () {
+    openLogin() {
       this.loginDialog = true
     },
-    closeLogin () {
-      this.loginDialog = false
-    },
-    handleBack (e) {
+    closeLogin() {
       this.loginDialog = false
     }
   }

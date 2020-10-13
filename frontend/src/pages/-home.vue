@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto py-5 px-32">
+  <div class="container py-5 px-5 2xl:px-64">
     <div class="grid grid-cols-7 gap-5">
       <div class="col-span-5 relative">
         <div class="z-10 fixed pr-5 -translate-x-1/2 left-1/2" style="bottom: 4rem">
@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="col-span-2">
-        <TrendingCommunities :communities="trendingCommunities" />
+        <TrendingPlanets :planets="trendingPlanets" />
         <div class="socialbutton patreon">
           <svg class="w-5 h-5 mr-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
             <path d="M15.386.524c-4.764 0-8.64 3.876-8.64 8.64 0 4.75 3.876 8.613 8.64 8.613 4.75 0 8.614-3.864 8.614-8.613C24 4.4 20.136.524 15.386.524M.003 23.537h4.22V.524H.003" />
@@ -99,44 +99,46 @@
 </template>
 
 <script>
-import feedGql from '@/gql/feed.graphql'
-import communitiesGql from '@/gql/communities.graphql'
 import { feedVars } from '@/util/feedVars'
+import postsGql from '~/gql/posts.graphql'
+import planetsGql from '~/gql/planets.graphql'
+import tailwindConfig from '~tailwind.config'
 
 export default {
-  async asyncData ({ app, route }) {
+  async asyncData({ app, route }) {
     const client = app.apolloProvider.defaultClient
 
     const feed = (
       await client.query({
-        query: feedGql,
+        query: postsGql,
         variables: { ...feedVars(route) },
         fetchPolicy: 'network-only'
       })
     ).data.feed
 
-    const trendingCommunities = (
+    const trendingPlanets = (
       await client.query({
-        query: communitiesGql,
+        query: planetsGql,
         variables: {
           sort: 'TRENDING',
           pageSize: 5
         }
       })
-    ).data.communities
+    ).data.planets
 
-    return { feed, trendingCommunities }
+    return { feed, trendingPlanets }
   },
-  data () {
+  data() {
     return {
       feed: [],
-      trendingCommunities: [],
+      trendingPlanets: [],
       tag: null,
-      searchFocused: false
+      searchFocused: false,
+      tailwindConfig
     }
   },
   computed: {
-    topDiscussions () {
+    topDiscussions() {
       return this.feed.slice(0, 4)
     }
   }
@@ -145,7 +147,7 @@ export default {
 
 <style scoped lang="scss">
 .socialbutton {
-  @apply rounded-md w-full shadow px-6 h-10 inline-flex flex-row items-center mt-5 cursor-pointer transform transition duration-150 ease-in-out hover:scale-105;
+  @apply rounded-md w-full shadow px-6 py-2.5 inline-flex flex-row items-center mt-5 cursor-pointer transform transition duration-150 ease-in-out hover:scale-105;
 }
 
 .discord {

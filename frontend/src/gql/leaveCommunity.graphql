@@ -1,3 +1,0 @@
-mutation leaveCommunity($name: String!) {
-  leaveCommunity(name: $name)
-}

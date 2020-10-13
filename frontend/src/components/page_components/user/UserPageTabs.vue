@@ -25,7 +25,7 @@ export default {
     }
   },
   computed: {
-    sort () {
+    sort() {
       if (this.$route.name === 'user-tab') {
         if (this.$route.params.tab === 'top') { return 'top' } else { return undefined }
       } else if (this.$route.name === 'user-tab-sort') {
@@ -34,13 +34,13 @@ export default {
         return undefined
       }
     },
-    tab () {
+    tab() {
       const { tab } = this.$route.params
       if (!tab) { return undefined }
       if (tab === 'top') { return undefined }
       return tab
     },
-    id () {
+    id() {
       return this.$route.params.id
     }
   }

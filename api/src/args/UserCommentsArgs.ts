@@ -1,6 +1,6 @@
 import { ArgsType, Field } from 'type-graphql'
 import { PaginationArgs } from '@/args/PaginationArgs'
-import { TimeFilter } from '@/types/feed/TimeFilter'
+import { TimeFilter } from '@/types/posts/TimeFilter'
 import { CommentSort } from '@/types/CommentSort'
 
 @ArgsType()

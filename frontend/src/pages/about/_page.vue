@@ -7,12 +7,12 @@
 
 <script>
 export default {
-  async asyncData ({ $content, params }) {
+  async asyncData({ $content, params }) {
     const document = await $content(params.page.toUpperCase()).fetch()
 
     return { document }
   },
-  data () {
+  data() {
     return {
       document: null
     }

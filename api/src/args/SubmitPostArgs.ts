@@ -25,12 +25,12 @@ export class SubmitPostArgs {
 
   @Field()
   @Matches(/^[a-zA-Z0-9_]+$/, {
-    message: 'Community name can only have letters, numbers, and underscores.'
+    message: 'Planet name can only have letters, numbers, and underscores.'
   })
   @Length(3, 21, {
-    message: 'Community name must be between 3 and 21 characters.'
+    message: 'Planet name must be between 3 and 21 characters.'
   })
-  community: string
+  planet: string
 
   @Field(() => GraphQLUpload, { nullable: true })
   image?: FileUpload

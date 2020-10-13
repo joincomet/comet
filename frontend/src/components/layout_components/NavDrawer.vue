@@ -74,9 +74,9 @@
       </div>
     </div>
 
-    <nuxt-link v-for="community in ($store.state.currentUser ? $store.state.joinedCommunities : $store.state.topCommunities)" :key="community.id" :to="`/+${community.name}`" class="navitem">
-      <img :src="community.profile.avatarURL" class="w-6 h-6 mr-6 rounded-full bg-gray-200">
-      <span class="text-tertiary">+{{ community.name }}</span>
+    <nuxt-link v-for="planet in ($store.state.currentUser ? $store.state.joinedPlanets : $store.state.topPlanets)" :key="planet.id" :to="`/+${planet.name}`" class="navitem">
+      <img :src="planet.profile.avatarURL" class="w-6 h-6 mr-6 rounded-full bg-gray-200">
+      <span class="text-tertiary">+{{ planet.name }}</span>
     </nuxt-link>
   </nav>
 </template>

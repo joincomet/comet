@@ -55,28 +55,28 @@
 export default {
   name: 'SortMenu',
   computed: {
-    hotRoute () {
+    hotRoute() {
       const params = Object.assign({}, this.$route.params)
       const { name } = this.$route
       delete params.sort
       delete params.time
       return { params, name }
     },
-    newRoute () {
+    newRoute() {
       const params = Object.assign({}, this.$route.params)
       const { name } = this.$route
       params.sort = 'new'
       delete params.time
       return { params, name }
     },
-    topRoute () {
+    topRoute() {
       const params = Object.assign({}, this.$route.params)
       const { name } = this.$route
       params.sort = 'top'
       delete params.time
       return { params, name }
     },
-    currentSort () {
+    currentSort() {
       const { sort } = this.$route.params
       if (sort === 'new') { return 'New' } else if (sort === 'top') { return 'Top' } else { return 'Hot' }
     }

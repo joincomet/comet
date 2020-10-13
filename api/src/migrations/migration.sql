@@ -141,7 +141,7 @@ BEGIN
     ALTER TABLE "comment"
         RENAME COLUMN "parentCommentId" TO "parent_comment_id";
     ALTER TABLE "comment"
-        RENAME COLUMN "endorsementCount" TO "upvote_count";
+        RENAME COLUMN "endorsementCount" TO "rocket_count";
     ALTER TABLE "comment"
         RENAME COLUMN "removedReason" TO "removed_reason";
 
@@ -185,7 +185,7 @@ BEGIN
     ALTER TABLE "post"
         RENAME COLUMN "postedToProfile" TO "posted_to_profile";
     ALTER TABLE "post"
-        RENAME COLUMN "endorsementCount" TO "upvote_count";
+        RENAME COLUMN "endorsementCount" TO "rocket_count";
     ALTER TABLE "post"
         RENAME COLUMN "planetName" TO "planet_id";
     ALTER TABLE "post"
@@ -209,7 +209,7 @@ BEGIN
     ALTER TABLE "user"
         RENAME COLUMN "banReason" TO "ban_reason";
     ALTER TABLE "user"
-        RENAME COLUMN "endorsementCount" TO "upvote_count";
+        RENAME COLUMN "endorsementCount" TO "rocket_count";
 
 END;
 $$ LANGUAGE plpgsql;
@@ -286,25 +286,17 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION renaming() RETURNS void AS
 $$
 BEGIN
-    ALTER TABLE planet_moderators_user
-        RENAME COLUMN "planet_id" TO "community_id";
-    ALTER TABLE planet_users_user
-        RENAME COLUMN "planet_id" TO "community_id";
-    ALTER TABLE post
-        RENAME COLUMN "planet_id" TO "community_id";
     ALTER TABLE planet
         RENAME COLUMN "temp_name" TO "name";
 
-    ALTER TABLE planet
-        RENAME TO community;
     ALTER TABLE planet_moderators_user
-        RENAME TO community_moderator;
+        RENAME TO planet_moderator;
     ALTER TABLE planet_users_user
-        RENAME TO community_user;
+        RENAME TO planet_user;
     ALTER TABLE post_endorsement
-        RENAME TO post_upvote;
+        RENAME TO post_rocket;
     ALTER TABLE comment_endorsement
-        RENAME TO comment_upvote;
+        RENAME TO comment_rocket;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -374,32 +366,43 @@ SELECT "update_entity"('post', 'PK_be5fda3aac270b134ff9c21cdee');
 SELECT renaming();
 
 ALTER TABLE "comment" ALTER COLUMN "id" DROP DEFAULT;
-ALTER TABLE "community" ALTER COLUMN "id" DROP DEFAULT;
+ALTER TABLE "planet" ALTER COLUMN "id" DROP DEFAULT;
 ALTER TABLE "post" ALTER COLUMN "id" DROP DEFAULT;
 ALTER TABLE "user" ALTER COLUMN "id" DROP DEFAULT;
 DROP SEQUENCE "comment__id_seq" CASCADE;
 DROP SEQUENCE "planet__id_seq" CASCADE;
 DROP SEQUENCE "post__id_seq" CASCADE;
 DROP SEQUENCE "user__id_seq" CASCADE;
-ALTER TABLE "community" DROP CONSTRAINT "planet__id_key" CASCADE;
+ALTER TABLE "planet" DROP CONSTRAINT "planet__id_key" CASCADE;
 ALTER TABLE "user" DROP CONSTRAINT "user__id_key" CASCADE;
 ALTER TABLE "comment" DROP CONSTRAINT "comment__id_key" CASCADE;
 ALTER TABLE "post" DROP CONSTRAINT "post__id_key" CASCADE;
 
-UPDATE "community" SET name = UPPER(SUBSTRING(name from 1 for 1)) || SUBSTRING(name from 2);
+UPDATE "planet" SET name = UPPER(SUBSTRING(name from 1 for 1)) || SUBSTRING(name from 2);
 
-DELETE FROM "post_upvote" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
-DELETE FROM "comment_upvote" WHERE "comment_id" = ANY(SELECT "id" FROM "comment" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
+DELETE FROM "post_rocket" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
+DELETE FROM "comment_rocket" WHERE "comment_id" = ANY(SELECT "id" FROM "comment" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
 DELETE FROM "comment" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
 DELETE FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet');
-DELETE FROM "comment_upvote" T WHERE (SELECT "id" FROM "comment" WHERE "id" = T."comment_id") IS NULL;
+DELETE FROM "comment_rocket" T WHERE (SELECT "id" FROM "comment" WHERE "id" = T."comment_id") IS NULL;
 
-ALTER TABLE "post" ADD COLUMN "images" text[];
-UPDATE "post" T SET "images" = ('{'||(SELECT T."link_url")||'}')::text[] WHERE T."type" = 'IMAGE';
+ALTER TABLE "post" ADD COLUMN "image_urls" text[];
+UPDATE "post" T SET "image_urls" = ('{'||(SELECT T."link_url")||'}')::text[] WHERE T."type" = 'IMAGE';
 UPDATE "post" T SET "link_url" = NULL WHERE T."type" = 'IMAGE';
 ALTER TABLE "post" DROP COLUMN "type";
 
-UPDATE "community" T SET "name" = 'CometX' WHERE T."name" = 'Comet';
+UPDATE "planet" T SET "name" = 'CometX' WHERE T."name" = 'Comet';
 
-ALTER TABLE "community" ADD COLUMN "user_count" bigint default 1;
-UPDATE "community" T SET "user_count" = (SELECT COUNT(*) FROM "community_user" T2 WHERE T2."community_id" = T."id");
+ALTER TABLE "planet" ADD COLUMN "user_count" bigint default 1;
+ALTER TABLE "planet" ADD COLUMN "post_count" bigint default 0;
+ALTER TABLE "user" ADD COLUMN "post_count" bigint default 0;
+ALTER TABLE "user" ADD COLUMN "comment_count" bigint default 0;
+UPDATE "planet" T SET "user_count" = (SELECT COUNT(*) FROM "planet_user" T2 WHERE T2."planet_id" = T."id");
+UPDATE "planet" T SET "post_count" = (SELECT COUNT(*) FROM "post" T2 WHERE T2."planet_id" = T."id" AND T2."deleted" = false AND T2."removed" = false);
+UPDATE "post" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" T2 WHERE T2."post_id" = T."id" AND T2."deleted" = false AND T2."removed" = false);
+UPDATE "post" T SET "rocket_count" = (SELECT COUNT(*) FROM "post_rocket" T2 WHERE T2."post_id" = T."id");
+UPDATE "comment" T SET "rocket_count" = (SELECT COUNT(*) FROM "comment_rocket" T2 WHERE T2."comment_id" = T."id");
+UPDATE "user" T SET "rocket_count" = (SELECT COUNT(*) FROM "comment_rocket" T2 WHERE T2."user_id" = T."id") + (SELECT COUNT(*) FROM "post_rocket" T2 WHERE T2."user_id" = T."id");
+UPDATE "user" T SET "post_count" = (SELECT COUNT(*) FROM "post" T2 WHERE T2."author_id" = T."id" AND T2."deleted" = false AND T2."removed" = false);
+UPDATE "user" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" T2 WHERE T2."author_id" = T."id" AND T2."deleted" = false AND T2."removed" = false);
+

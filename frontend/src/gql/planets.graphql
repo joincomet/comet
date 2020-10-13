@@ -1,0 +1,10 @@
+query planets($sort: PlanetSort, $joined: Boolean, $pageSize: Int) {
+  planets(sort: $sort, joined: $joined, pageSize: $pageSize) {
+    profile {
+      avatarURL
+    }
+    name
+    userCount
+    postCount
+  }
+}

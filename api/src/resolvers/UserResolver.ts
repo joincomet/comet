@@ -17,7 +17,7 @@ import { UserCommentsArgs } from '@/args/UserCommentsArgs'
 import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { TimeFilter } from '@/types/feed/TimeFilter'
+import { TimeFilter } from '@/types/posts/TimeFilter'
 import { CommentSort } from '@/types/CommentSort'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
@@ -51,7 +51,7 @@ export class UserResolver {
         username: username.replace(/_/g, '\\_')
       })
       .andWhere('user.banned = false')
-      .leftJoinAndSelect('user.moderatedCommunities', 'moderatedCommunity')
+      .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
       .getOne()
   }
 
@@ -99,7 +99,7 @@ export class UserResolver {
         default:
           break
       }
-      qb.addOrderBy('comment.upvoteCount', 'DESC')
+      qb.addOrderBy('comment.rocketCount', 'DESC')
     }
     qb.addOrderBy('comment.createdAt', 'DESC')
 

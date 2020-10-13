@@ -4,7 +4,7 @@ export const feedVars = (route) => {
     sort: params.sort ? params.sort.toUpperCase() : 'HOT',
     time: params.time ? params.time.toUpperCase() : 'ALL',
     filter: route.name === 'home' ? 'JOINED' : 'ALL',
-    community: params.community,
+    planet: params.planet,
     tag: params.tag,
     username: params.username,
     search: query.q

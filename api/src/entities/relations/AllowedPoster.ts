@@ -9,25 +9,25 @@ import {
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '@/entities/Post'
-import { Community } from '@/entities/Community'
-import { ModPermission } from '@/types/community/ModPermission'
+import { Planet } from '@/entities/Planet'
+import { ModPermission } from '@/types/planet/ModPermission'
 
 @ObjectType()
 @Entity()
 export class AllowedPoster {
-  @ManyToOne(() => User, user => user.allowedCommunities)
+  @ManyToOne(() => User, user => user.allowedPlanets)
   user: Lazy<User>
 
   @Field(() => ID)
   @PrimaryColumn('bigint')
   userId: number
 
-  @ManyToOne(() => Community, community => community.allowedPosters)
-  community: Lazy<Community>
+  @ManyToOne(() => Planet, planet => planet.allowedPosters)
+  planet: Lazy<Planet>
 
   @Field(() => ID)
   @PrimaryColumn('bigint')
-  communityId: number
+  planetId: number
 
   @Field()
   @CreateDateColumn({ type: 'timestamp' })

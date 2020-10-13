@@ -1,3 +1,0 @@
-mutation blockUser($blockedUsername: String!) {
-  blockUser(blockedUsername: $blockedUsername)
-}

@@ -8,7 +8,7 @@
 import tagGql from '@/gql/tag.graphql'
 
 export default {
-  async asyncData ({ app, params }) {
+  async asyncData({ app, params }) {
     const client = app.apolloProvider.defaultClient
 
     const tag = (
@@ -21,7 +21,7 @@ export default {
 
     return { tag }
   },
-  data () {
+  data() {
     return {
       tag: null
     }

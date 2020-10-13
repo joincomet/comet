@@ -5,22 +5,22 @@
         Trending Planets
       </div>
     </div>
-    <div v-for="(community, index) in communities" :key="community.id" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
-      <div class="mx-5 py-4 flex flex-row flex-grow h-full items-center border-gray-200" :class="index < communities.length - 1 ? 'border-b' : ''">
-        <img class="object-cover w-10 h-10 rounded-full bg-gray-200" :src="community.profile.avatarURL">
-        <div class="flex flex-row items-center flex-grow community">
+    <div v-for="(planet, index) in planets" :key="planet.id" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
+      <div class="mx-5 py-4 flex flex-row flex-grow h-full items-center border-gray-200" :class="index < planets.length - 1 ? 'border-b' : ''">
+        <img class="object-cover w-10 h-10 rounded-full bg-gray-200" :src="planet.profile.avatarURL">
+        <div class="flex flex-row items-center flex-grow planet">
           <div class="flex flex-col ml-6">
             <div class="text-sm leading-5 font-medium text-secondary">
-              +{{ community.name }}
+              +{{ planet.name }}
             </div>
             <div class="text-xs text-tertiary mt-1">
-              {{ community.userCount }} user{{ community.userCount == 1 ? '' : 's' }} &middot; {{ community.postCount }} post{{ community.postCount == 1 ? '' : 's' }} today
+              {{ planet.userCount }} user{{ planet.userCount == 1 ? '' : 's' }} &middot; {{ planet.postCount }} post{{ planet.postCount == 1 ? '' : 's' }} today
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="flex flex-row items-center border-t border-gray-200 hover:bg-gray-100">
+    <div class="flex flex-row items-center border-t border-gray-200 hover:bg-gray-100 rounded-b-xl">
       <nuxt-link to="/explore" class="px-5 py-4 flex flex-row flex-grow h-full items-center text-sm text-indigo-600 font-medium">
         Explore more planets
       </nuxt-link>
@@ -31,7 +31,7 @@
 <script>
 export default {
   props: {
-    communities: {
+    planets: {
       type: Array,
       required: true
     }

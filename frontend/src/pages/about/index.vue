@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  middleware ({ redirect }) {
+  middleware({ redirect }) {
     return redirect('/about/terms')
   }
 }

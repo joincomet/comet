@@ -1,3 +1,0 @@
-mutation createCommunity($name: String!, $description: String!, $tags: [String!]!) {
-  createCommunity(name: $name, description: $description, tags: $tags)
-}

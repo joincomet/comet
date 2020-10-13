@@ -1,5 +1,5 @@
 import { Arg, Authorized, ID, Mutation, UseMiddleware } from 'type-graphql'
-import { Community } from '@/entities/Community'
+import { Planet } from '@/entities/Planet'
 import { s3upload } from '@/S3Storage'
 import { Stream } from 'stream'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
@@ -13,14 +13,12 @@ export class ModerationResolver {
   @InjectRepository(User) readonly userRepository: Repository<User>
   @InjectRepository(Post) readonly postRepository: Repository<Post>
   @InjectRepository(Comment) readonly commentRepository: Repository<Comment>
-  @InjectRepository(Community) readonly communityRepository: Repository<
-    Community
-  >
+  @InjectRepository(Planet) readonly planetRepository: Repository<Planet>
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async removePost(
-    @Arg('community', () => ID) community: string,
+    @Arg('planet', () => ID) planet: string,
     @Arg('postId', () => ID) postId: number,
     @Arg('removedReason') removedReason: string
   ) {
@@ -31,7 +29,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async pinPost(
-    @Arg('community', () => ID) community: string,
+    @Arg('planet', () => ID) planet: string,
     @Arg('postId', () => ID) postId: number
   ) {
     await this.postRepository.update(postId, { sticky: true })
@@ -41,7 +39,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async unpinPost(
-    @Arg('community', () => ID) community: string,
+    @Arg('planet', () => ID) planet: string,
     @Arg('postId', () => ID) postId: number
   ) {
     await this.postRepository.update(postId, { sticky: false })
@@ -51,7 +49,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async removeComment(
-    @Arg('community', () => ID) community: string,
+    @Arg('planet', () => ID) planet: string,
     @Arg('commentId', () => ID) commentId: number,
     @Arg('removedReason') removedReason: string
   ) {
@@ -67,36 +65,36 @@ export class ModerationResolver {
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
-  async banUserFromCommunity(
-    @Arg('community', () => ID) community: string,
+  async banUserFromPlanet(
+    @Arg('planet', () => ID) planet: string,
     @Arg('bannedUserId', () => ID) bannedUserId: number
   ) {
-    await this.communityRepository
+    await this.planetRepository
       .createQueryBuilder()
-      .relation(Community, 'bannedUsers')
-      .of(community)
+      .relation(Planet, 'bannedUsers')
+      .of(planet)
       .add(bannedUserId)
     return true
   }
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
-  async unbanUserFromCommunity(
-    @Arg('community', () => ID) community: string,
+  async unbanUserFromPlanet(
+    @Arg('planet', () => ID) planet: string,
     @Arg('bannedUserId', () => ID) bannedUserId: number
   ) {
-    await this.communityRepository
+    await this.planetRepository
       .createQueryBuilder()
-      .relation(Community, 'bannedUsers')
-      .of(community)
+      .relation(Planet, 'bannedUsers')
+      .of(planet)
       .remove(bannedUserId)
     return true
   }
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
-  async uploadCommunityAvatarImage(
-    @Arg('community', () => ID) community: string,
+  async uploadPlanetAvatarImage(
+    @Arg('planet', () => ID) planet: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
     const { createReadStream, mimetype } = await file
@@ -108,7 +106,7 @@ export class ModerationResolver {
     createReadStream().pipe(outStream)
 
     const url = await s3upload(
-      `community/${community}/avatar.png`,
+      `planet/${planet}/avatar.png`,
       outStream,
       file.mimetype
     )
@@ -119,8 +117,8 @@ export class ModerationResolver {
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
-  async uploadCommunityBannerImage(
-    @Arg('community', () => ID) community: string,
+  async uploadPlanetBannerImage(
+    @Arg('planet', () => ID) planet: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
     const { createReadStream, mimetype } = await file
@@ -132,7 +130,7 @@ export class ModerationResolver {
     createReadStream().pipe(outStream)
 
     const url = await s3upload(
-      `community/${community}/banner.png`,
+      `planet/${planet}/banner.png`,
       outStream,
       file.mimetype
     )
@@ -144,7 +142,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async addModerator(
-    @Arg('community', () => ID) community: string,
+    @Arg('planet', () => ID) planet: string,
     @Arg('username') username: string
   ) {
     const user = await this.userRepository
@@ -153,28 +151,24 @@ export class ModerationResolver {
         username: username.replace(/_/g, '\\_')
       })
       .andWhere('user.banned = false')
-      .leftJoinAndSelect('user.moderatedCommunities', 'moderatedCommunity')
+      .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
       .getOne()
 
     if (!user) throw new Error('User not found')
     if (
-      (await user.moderatedCommunities).find(
-        p =>
-          (p.community as Community).name.toLowerCase() ===
-          community.toLowerCase()
+      (await user.moderatedPlanets).find(
+        p => (p.planet as Planet).name.toLowerCase() === planet.toLowerCase()
       )
     ) {
-      throw new Error(`${user.username} is already a moderator of ${community}`)
+      throw new Error(`${user.username} is already a moderator of ${planet}`)
     }
-    if ((await user.moderatedCommunities).length >= 3)
-      throw new Error(
-        `${user.username} cannot moderate more than 3 communities`
-      )
+    if ((await user.moderatedPlanets).length >= 3)
+      throw new Error(`${user.username} cannot moderate more than 3 planets`)
 
-    await this.communityRepository
+    await this.planetRepository
       .createQueryBuilder()
-      .relation(Community, 'moderators')
-      .of(community)
+      .relation(Planet, 'moderators')
+      .of(planet)
       .add(user.id)
     return true
   }

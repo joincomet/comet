@@ -11,7 +11,7 @@ import {
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
 import { Post } from '../Post'
-import { Community } from '@/entities/Community'
+import { Planet } from '@/entities/Planet'
 
 @ObjectType()
 @Entity()
@@ -34,12 +34,12 @@ export class Ban {
   @Column('bigint')
   userId: number
 
-  @ManyToOne(() => Community, community => community.bans, { nullable: true })
-  community?: Lazy<User> // null = sitewide ban
+  @ManyToOne(() => Planet, planet => planet.bans, { nullable: true })
+  planet?: Lazy<User> // null = sitewide ban
 
   @Field(() => ID, { nullable: true })
   @Column('bigint', { nullable: true })
-  communityId?: number
+  planetId?: number
 
   @Field({ nullable: true })
   @Column({ nullable: true })

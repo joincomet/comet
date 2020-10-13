@@ -46,13 +46,13 @@ export default {
       default: 'text'
     }
   },
-  data () {
+  data() {
     return {
       text: null
     }
   },
   watch: {
-    text (val) {
+    text(val) {
       this.$emit('input', val)
     }
   }

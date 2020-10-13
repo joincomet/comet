@@ -13,44 +13,44 @@ import {
 import { Post } from '@/entities/Post'
 import { SubmitPostArgs } from '@/args/SubmitPostArgs'
 import { Context } from '@/Context'
-import { FeedArgs } from '@/args/FeedArgs'
+import { PostsArgs } from '@/args/PostsArgs'
 import { User } from '@/entities/User'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
-import { PostUpvote } from '@/entities/relations/PostUpvote'
+import { PostRocket } from '@/entities/relations/PostRocket'
 import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
-import { TimeFilter } from '@/types/feed/TimeFilter'
-import { PostSort } from '@/types/feed/PostSort'
-import { Feed } from '@/types/feed/Feed'
+import { TimeFilter } from '@/types/posts/TimeFilter'
+import { PostSort } from '@/types/posts/PostSort'
+import { Feed } from '@/types/posts/Feed'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
 import { Comment } from '@/entities/Comment'
 import { Notification } from '@/entities/Notification'
-import { Community } from '@/entities/Community'
-import { CommunityUser } from '@/entities/relations/CommunityUser'
+import { Planet } from '@/entities/Planet'
+import { PlanetUser } from '@/entities/relations/PlanetUser'
 import { Embed } from '@/types/post/Embed'
 import { runIframely } from '@/iframely/RunIframely'
 
 @Resolver(() => Post)
 export class PostResolver {
   @InjectRepository(User)
-  readonly userRepository: Repository<User>
+  readonly userRepo: Repository<User>
   @InjectRepository(Post)
-  readonly postRepository: Repository<Post>
-  @InjectRepository(PostUpvote)
-  readonly postUpvoteRepository: Repository<PostUpvote>
+  readonly postRepo: Repository<Post>
+  @InjectRepository(PostRocket)
+  readonly postRocketRepo: Repository<PostRocket>
   @InjectRepository(Comment)
-  readonly commentRepository: Repository<Comment>
+  readonly commentRepo: Repository<Comment>
   @InjectRepository(Notification)
-  readonly notificationRepository: Repository<Notification>
-  @InjectRepository(Community)
-  readonly communityRepository: Repository<Community>
-  @InjectRepository(CommunityUser)
-  readonly userCommunityRepository: Repository<CommunityUser>
+  readonly notificationRepo: Repository<Notification>
+  @InjectRepository(Planet)
+  readonly planetRepo: Repository<Planet>
+  @InjectRepository(PlanetUser)
+  readonly planetUserRepo: Repository<PlanetUser>
 
   @Query(() => [Post])
-  async feed(
+  async posts(
     @Args()
     {
       page,
@@ -58,22 +58,22 @@ export class PostResolver {
       sort,
       time,
       feed,
-      communities,
+      planets,
       tags,
       usernames,
       search
-    }: FeedArgs,
+    }: PostsArgs,
     @Ctx() { userId }: Context
   ) {
-    const qb = this.postRepository
+    const qb = this.postRepo
       .createQueryBuilder('post')
       .andWhere('post.deleted = false')
       .andWhere('post.removed = false')
-      .leftJoinAndSelect('post.community', 'community')
+      .leftJoinAndSelect('post.planet', 'planet')
 
-    if (communities) {
-      qb.andWhere('post.community ILIKE ANY(:communities)', {
-        communities
+    if (planets) {
+      qb.andWhere('post.planet ILIKE ANY(:planets)', {
+        planets: planets
       }).andWhere('post.sticky = false')
     }
 
@@ -108,7 +108,7 @@ export class PostResolver {
     }
 
     if (usernames && usernames.length > 0) {
-      const users = await this.userRepository
+      const users = await this.userRepo
         .createQueryBuilder('user')
         .where('user.username ILIKE ANY(:usernames)', {
           usernames: usernames.map(username => username.replace(/_/g, '\\_'))
@@ -130,7 +130,7 @@ export class PostResolver {
       qb.addOrderBy('post.createdAt', 'DESC')
     } else if (sort === PostSort.HOT) {
       qb.addSelect(
-        '(CAST(post.upvoteCount AS float) + 1)/((CAST((CAST(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) AS int) - CAST(EXTRACT(EPOCH FROM post.createdAt) AS int)+5000) AS FLOAT)/100.0)^(1.618))',
+        '(CAST(post.rocketCount AS float) + 1)/((CAST((CAST(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) AS int) - CAST(EXTRACT(EPOCH FROM post.createdAt) AS int)+5000) AS FLOAT)/100.0)^(1.618))',
         'post_hotrank'
       )
       qb.addOrderBy('post_hotrank', 'DESC')
@@ -157,7 +157,7 @@ export class PostResolver {
           break
       }
       if (sort === PostSort.TOP) {
-        qb.addOrderBy('post.upvoteCount', 'DESC')
+        qb.addOrderBy('post.rocketCount', 'DESC')
       } else if (sort === PostSort.COMMENTS) {
         qb.addOrderBy('post.commentCount', 'DESC')
       }
@@ -165,17 +165,17 @@ export class PostResolver {
     }
 
     if (userId) {
-      const user = await this.userRepository
+      const user = await this.userRepo
         .createQueryBuilder('user')
         .whereInIds(userId)
-        .leftJoinAndSelect('user.mutedCommunities', 'mutedCommunity')
+        .leftJoinAndSelect('user.mutedPlanets', 'mutedPlanet')
         .leftJoinAndSelect('user.blockedUsers', 'blockedUser')
         .leftJoinAndSelect('user.hiddenPosts', 'hiddenPost')
         .getOne()
 
       if (user) {
-        const mutedCommunities = (await user.mutedCommunities).map(
-          community => (community.community as Community).name
+        const mutedPlanets = (await user.mutedPlanets).map(
+          planet => (planet.planet as Planet).name
         )
         const blockedUsers = (await user.blockTo).map(
           user => (user.to as User).id
@@ -185,16 +185,16 @@ export class PostResolver {
         )
 
         if (feed === Feed.JOINED) {
-          const sub = await this.userCommunityRepository
+          const sub = await this.planetUserRepo
             .createQueryBuilder('join')
             .where(`"join"."user_id" = "${userId}"`)
-            .select('"join"."community_id"')
-          qb.andWhere(`community.id = ANY((${sub.getQuery()}))`)
+            .select('"join"."planet_id"')
+          qb.andWhere(`planet.id = ANY((${sub.getQuery()}))`)
         }
 
-        if (mutedCommunities.length > 0) {
-          qb.andWhere('NOT (post.community = ANY(:mutedCommunities))', {
-            mutedCommunities
+        if (mutedPlanets.length > 0) {
+          qb.andWhere('NOT (post.planet = ANY(:mutedPlanets))', {
+            mutedPlanets
           })
         }
 
@@ -211,13 +211,13 @@ export class PostResolver {
       .take(pageSize)
       .getMany()
 
-    if (communities && communities.length === 1 && page === 0) {
-      const stickiesQb = await this.postRepository
+    if (planets && planets.length === 1 && page === 0) {
+      const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .andWhere('post.sticky = true')
-        .leftJoinAndSelect('post.community', 'community')
-        .andWhere('post.community.name = :community', {
-          community: communities[0]
+        .leftJoinAndSelect('post.planet', 'planet')
+        .andWhere('post.planet.name = :planet', {
+          planet: planets[0]
         })
         .addOrderBy('post.createdAt', 'DESC')
 
@@ -233,7 +233,7 @@ export class PostResolver {
   async hiddenPosts(@Ctx() { userId }: Context) {
     if (!userId) return []
 
-    let posts = await this.userRepository
+    let posts = await this.userRepo
       .createQueryBuilder()
       .relation(User, 'hiddenPosts')
       .of(userId)
@@ -241,11 +241,11 @@ export class PostResolver {
 
     if (posts.length === 0) return []
 
-    const qb = this.postRepository
+    const qb = this.postRepo
       .createQueryBuilder('post')
       .whereInIds(posts.map(post => post.id))
 
-    posts = await qb.leftJoinAndSelect('post.community', 'community').getMany()
+    posts = await qb.leftJoinAndSelect('post.planet', 'planet').getMany()
 
     return posts
   }
@@ -256,10 +256,10 @@ export class PostResolver {
 
     postId = parseInt(postId, 36)
 
-    const qb = this.postRepository
+    const qb = this.postRepo
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })
-      .leftJoinAndSelect('post.community', 'community')
+      .leftJoinAndSelect('post.planet', 'planet')
 
     const post = await qb.getOne()
 
@@ -284,13 +284,13 @@ export class PostResolver {
   @Mutation(() => Post)
   async submitPost(
     @Args()
-    { title, link, textContent, community, image }: SubmitPostArgs,
+    { title, link, textContent, planet, image }: SubmitPostArgs,
     @Ctx() { userId }: Context
   ) {
-    const cmmnty = await this.communityRepository
-      .createQueryBuilder('community')
-      .where('community.name = :community', { community })
-      // .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
+    const cmmnty = await this.planetRepo
+      .createQueryBuilder('planet')
+      .where('planet.name = :planet', { planet })
+      // .leftJoinAndSelect('planet.bannedUsers', 'bannedUser')
       .getOne()
 
     /*const bannedUsers = await cmmnty.bannedUsers
@@ -301,14 +301,14 @@ export class PostResolver {
       textContent = filterXSS(textContent, { whiteList })
     }
 
-    const post = await this.postRepository.save({
+    const post = await this.postRepo.save({
       title,
       link,
       textContent,
 
       authorId: userId,
-      communityId: cmmnty.id,
-      upvoteCount: 1
+      planetId: cmmnty.id,
+      rocketCount: 1
     })
 
     if (image) {
@@ -323,12 +323,12 @@ export class PostResolver {
       link = await s3upload(`uploads/${post.id}.png`, outStream, mimetype)
     }
 
-    this.postUpvoteRepository.save({
+    this.postRocketRepo.save({
       postId: post.id,
       userId: userId
-    } as PostUpvote)
+    } as PostRocket)
 
-    this.userRepository.increment({ id: userId }, 'upvoteCount', 1)
+    this.userRepo.increment({ id: userId }, 'rocketCount', 1)
 
     return post
   }
@@ -340,14 +340,14 @@ export class PostResolver {
     @Arg('newTextContent') newTextContent: string,
     @Ctx() { userId }: Context
   ) {
-    const post = await this.postRepository.findOne(postId)
-    const user = await this.userRepository.findOne(userId)
+    const post = await this.postRepo.findOne(postId)
+    const user = await this.userRepo.findOne(userId)
     if (post.authorId !== userId && !user.admin)
       throw new Error('Attempt to edit post by someone other than author')
 
     newTextContent = filterXSS(newTextContent, { whiteList })
 
-    await this.postRepository
+    await this.postRepo
       .createQueryBuilder()
       .update()
       .set({ editedAt: new Date(), textContent: newTextContent })
@@ -363,12 +363,12 @@ export class PostResolver {
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    const post = await this.postRepository.findOne(postId)
-    const user = await this.userRepository.findOne(userId)
+    const post = await this.postRepo.findOne(postId)
+    const user = await this.userRepo.findOne(userId)
     if (post.authorId !== userId && !user.admin)
       throw new Error('Attempt to delete post by someone other than author')
 
-    await this.postRepository
+    await this.postRepo
       .createQueryBuilder()
       .update()
       .set({ deleted: true })
@@ -384,7 +384,7 @@ export class PostResolver {
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    const post = await this.postRepository
+    const post = await this.postRepo
       .createQueryBuilder('post')
       .whereInIds(postId)
       .leftJoinAndSelect('post.author', 'author')
@@ -392,31 +392,31 @@ export class PostResolver {
 
     if (!post) throw new Error('Post not found')
 
-    const upvote = await this.postUpvoteRepository.findOne({
+    const upvote = await this.postRocketRepo.findOne({
       postId,
       userId
     })
     if (upvote) {
-      await this.postUpvoteRepository.delete({ postId, userId })
+      await this.postRocketRepo.delete({ postId, userId })
     } else {
-      await this.postUpvoteRepository.save({
+      await this.postRocketRepo.save({
         postId,
         userId
       })
     }
 
-    this.postRepository.update(
+    this.postRepo.update(
       { id: postId },
       {
-        upvoteCount: upvote ? post.upvoteCount - 1 : post.upvoteCount + 1
+        rocketCount: upvote ? post.rocketCount - 1 : post.rocketCount + 1
       }
     )
 
     const author = await post.author
-    this.userRepository.update(
+    this.userRepo.update(
       { id: author.id },
       {
-        upvoteCount: upvote ? author.upvoteCount - 1 : author.upvoteCount + 1
+        rocketCount: upvote ? author.rocketCount - 1 : author.rocketCount + 1
       }
     )
 
@@ -429,13 +429,13 @@ export class PostResolver {
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'hiddenPosts')
       .of(userId)
       .remove(postId)
 
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'hiddenPosts')
       .of(userId)
@@ -449,7 +449,7 @@ export class PostResolver {
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'hiddenPosts')
       .of(userId)
@@ -463,13 +463,13 @@ export class PostResolver {
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'savedPosts')
       .of(userId)
       .remove(postId)
 
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'savedPosts')
       .of(userId)
@@ -483,7 +483,7 @@ export class PostResolver {
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'savedPosts')
       .of(userId)
@@ -497,7 +497,7 @@ export class PostResolver {
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    const user = await this.userRepository.findOne(userId)
+    const user = await this.userRepo.findOne(userId)
 
     /*await discordReport(
       user.username,
@@ -516,7 +516,7 @@ export class PostResolver {
   }
 
   @FieldResolver()
-  async upvoted(
+  async rocketed(
     @Root() post: Post,
     @Ctx() { postUpvoteLoader, userId }: Context
   ) {

@@ -91,7 +91,7 @@ export default {
       default: null
     }
   },
-  data () {
+  data() {
     return {
       sortMenu: false
     }

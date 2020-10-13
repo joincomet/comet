@@ -6,38 +6,38 @@ import {
   On
 } from '@typeit/discord'
 import { MessageEmbed } from 'discord.js'
-import { Community } from '@/entities/Community'
+import { Planet } from '@/entities/Planet'
 import { getRepository } from 'typeorm'
 import { User } from '@/entities/User'
 
 @Discord()
 abstract class DiscordBot {
-  private communityRepository = getRepository(Community)
+  private planetRepository = getRepository(Planet)
   private userRepository = getRepository(User)
 
   @On('message')
-  private async community([message]: ArgsOf<'message'>) {
+  private async planet([message]: ArgsOf<'message'>) {
     const words = message.content.split(' ')
 
     for (let i = 0; i < words.length; i++) {
       const word = words[i]
 
       if (word.startsWith('+')) {
-        const community = await this.communityRepository
-          .createQueryBuilder('community')
-          .where('community.name ILIKE :name', {
+        const planet = await this.planetRepository
+          .createQueryBuilder('planet')
+          .where('planet.name ILIKE :name', {
             name: word.substring(1).replace(/_/g, '\\_')
           })
           .getOne()
 
-        if (community) {
+        if (planet) {
           await message.reply(
             new MessageEmbed()
-              .setTitle(`+${community.name}`)
-              .setDescription(community.profile.description)
-              .setColor(community.profile.color || 0x5a67d8)
-              .setURL(`https://www.cometx.io/+${community.name}`)
-              .setImage(community.profile.avatarURL)
+              .setTitle(`+${planet.name}`)
+              .setDescription(planet.profile.description)
+              .setColor(planet.profile.color || 0x5a67d8)
+              .setURL(`https://www.cometx.io/+${planet.name}`)
+              .setImage(planet.profile.avatarURL)
               .setFooter('CometX.io', 'https://dev.cometx.io/icon.png')
           )
         } else {

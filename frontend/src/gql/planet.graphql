@@ -1,0 +1,14 @@
+query planet($name: String!) {
+  planet(name: $name) {
+    name
+    joined
+    userCount
+    creatorId
+    createdAt
+    profile {
+      avatar
+      banner
+      color
+    }
+  }
+}

@@ -11,7 +11,7 @@
 
     <div class="actioncard" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.spacetelescope.org/archives/images/screen/heic1713a.jpg')">
       <div class="actioncard__title">
-        Build your community
+        Build your planet
       </div>
       <div class="actioncard__action">
         Create a planet &nbsp;➤

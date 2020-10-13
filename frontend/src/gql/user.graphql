@@ -4,7 +4,7 @@ query user($username: String!) {
     username
     commentCount
     postCount
-    upvoteCount
+    rocketCount
     createdAt
     lastLogin
     isBlocking
@@ -19,7 +19,7 @@ query user($username: String!) {
       realName
       website
     }
-    moderatedCommunities {
+    moderatedPlanets {
       name
       profile {
         avatar

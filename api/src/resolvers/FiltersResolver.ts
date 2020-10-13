@@ -1,7 +1,7 @@
 import { Ctx, Query, Resolver } from 'type-graphql'
 import { Context } from '@/Context'
 import { User } from '@/entities/User'
-import { Community } from '@/entities/Community'
+import { Planet } from '@/entities/Planet'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
 
@@ -9,19 +9,19 @@ import { Repository } from 'typeorm'
 export class FiltersResolver {
   @InjectRepository(User) readonly userRepository: Repository<User>
 
-  @Query(() => [Community])
-  async mutedCommunities(@Ctx() { userId }: Context) {
+  @Query(() => [Planet])
+  async mutedPlanets(@Ctx() { userId }: Context) {
     if (!userId) return []
 
-    const communities = await this.userRepository
+    const planets = await this.userRepository
       .createQueryBuilder()
-      .relation(User, 'mutedCommunities')
+      .relation(User, 'mutedPlanets')
       .of(userId)
       .loadMany()
 
-    communities.forEach(community => (community.muted = true))
+    planets.forEach(planet => (planet.muted = true))
 
-    return communities
+    return planets
   }
 
   @Query(() => [User])

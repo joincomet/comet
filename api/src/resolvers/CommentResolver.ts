@@ -13,12 +13,12 @@ import {
 import { Context } from '@/Context'
 import { Comment } from '@/entities/Comment'
 import { SubmitCommentArgs } from '@/args/SubmitCommentArgs'
-import { PostCommentsArgs } from '@/args/PostCommentsArgs'
+import { CommentsArgs } from '@/args/CommentsArgs'
 import { User } from '@/entities/User'
 import { Notification } from '@/entities/Notification'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
-import { CommentUpvote } from '@/entities/relations/CommentUpvote'
+import { CommentRocket } from '@/entities/relations/CommentRocket'
 import { flat } from '@/Flat'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
@@ -32,8 +32,8 @@ export class CommentResolver {
   readonly postRepository: Repository<Post>
   @InjectRepository(Comment)
   readonly commentRepository: Repository<Comment>
-  @InjectRepository(CommentUpvote)
-  readonly commentUpvoteRepository: Repository<CommentUpvote>
+  @InjectRepository(CommentRocket)
+  readonly commentUpvoteRepository: Repository<CommentRocket>
   @InjectRepository(Notification)
   readonly notificationRepository: Repository<Notification>
 
@@ -46,14 +46,14 @@ export class CommentResolver {
     const post = await this.postRepository
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })
-      .leftJoinAndSelect('post.community', 'community')
-      // .leftJoinAndSelect('community.bannedUsers', 'bannedUser')
+      .leftJoinAndSelect('post.planet', 'planet')
+      // .leftJoinAndSelect('planet.bannedUsers', 'bannedUser')
       .getOne()
 
-    /*const bannedUsers = await (await post.community).bannedUsers
+    /*const bannedUsers = await (await post.planet).bannedUsers
     if (bannedUsers.map(u => u.id).includes(userId))
       throw new Error(
-        'You have been banned from ' + (await post.community).name
+        'You have been banned from ' + (await post.planet).name
       )*/
 
     textContent = filterXSS(textContent, { whiteList })
@@ -64,16 +64,16 @@ export class CommentResolver {
       postId,
       authorId: userId,
 
-      upvoted: true,
-      upvoteCount: 1
+      rocketed: true,
+      rocketCount: 1
     })
 
     this.commentUpvoteRepository.save({
       commentId: savedComment.id,
       userId
-    } as CommentUpvote)
+    } as CommentRocket)
 
-    this.userRepository.increment({ id: userId }, 'upvoteCount', 1)
+    this.userRepository.increment({ id: userId }, 'rocketCount', 1)
 
     this.postRepository.increment({ id: postId }, 'commentCount', 1)
 
@@ -107,8 +107,8 @@ export class CommentResolver {
   }
 
   @Query(() => [Comment])
-  async postComments(
-    @Args() { postId, sort }: PostCommentsArgs,
+  async comments(
+    @Args() { postId, sort }: CommentsArgs,
     @Ctx() { userId }: Context
   ) {
     const post = await this.postRepository.findOne({ id: postId })
@@ -134,11 +134,11 @@ export class CommentResolver {
     }
 
     /*if (sort === Sort.TOP) {
-      qb.addOrderBy('comment.upvoteCount', 'DESC')
+      qb.addOrderBy('comment.rocketCount', 'DESC')
     }*/
 
     qb.addOrderBy('comment.createdAt', 'DESC')
-    qb.addOrderBy('comment.upvoteCount', 'DESC')
+    qb.addOrderBy('comment.rocketCount', 'DESC')
 
     const postComments = await qb.getMany()
 
@@ -276,7 +276,7 @@ export class CommentResolver {
     this.commentRepository.update(
       { id: commentId },
       {
-        upvoteCount: upvote ? comment.upvoteCount - 1 : comment.upvoteCount + 1
+        rocketCount: upvote ? comment.rocketCount - 1 : comment.rocketCount + 1
       }
     )
 
@@ -284,7 +284,7 @@ export class CommentResolver {
     this.userRepository.update(
       { id: author.id },
       {
-        upvoteCount: upvote ? author.upvoteCount - 1 : author.upvoteCount + 1
+        rocketCount: upvote ? author.rocketCount - 1 : author.rocketCount + 1
       }
     )
 
@@ -337,7 +337,7 @@ export class CommentResolver {
   }
 
   @FieldResolver()
-  async upvoted(
+  async rocketed(
     @Root() comment: Comment,
     @Ctx() { commentUpvoteLoader, userId }: Context
   ) {

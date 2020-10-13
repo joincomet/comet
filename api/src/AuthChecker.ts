@@ -3,7 +3,7 @@ import { User } from '@/entities/User'
 import { AuthChecker } from 'type-graphql'
 import { Context } from '@/Context'
 import { Post } from '@/entities/Post'
-import { Community } from '@/entities/Community'
+import { Planet } from '@/entities/Planet'
 
 export const authChecker: AuthChecker<Context> = async (
   { root, args, context, info },
@@ -18,7 +18,7 @@ export const authChecker: AuthChecker<Context> = async (
   const user = await getRepository(User)
     .createQueryBuilder('user')
     .whereInIds(context.userId)
-    .leftJoinAndSelect('user.moderatedCommunities', 'moderatedCommunity')
+    .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
     .getOne()
 
   // false if not logged in
@@ -43,10 +43,10 @@ export const authChecker: AuthChecker<Context> = async (
     }
   }
 
-  // true if community arg is in list of moderated communities
-  if (roles.includes('MOD') && args && args.community)
-    return !!(await user.moderatedCommunities).find(
-      mod => (mod.community as Community).name === args.community
+  // true if planet arg is in list of moderated planets
+  if (roles.includes('MOD') && args && args.planet)
+    return !!(await user.moderatedPlanets).find(
+      mod => (mod.planet as Planet).name === args.planet
     )
 
   // false if no other conditions met

@@ -12,7 +12,7 @@ w.__NUXT_LAYOUT_MODE__ = {
   value
 }
 
-function getCookie (name) {
+function getCookie(name) {
   const nameEQ = name + '='
   const cookies = d.cookie.split(';')
 

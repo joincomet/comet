@@ -19,7 +19,7 @@ query notifications($unreadOnly: Boolean!) {
     post {
       id
       title
-      community {
+      planet {
         name
       }
     }

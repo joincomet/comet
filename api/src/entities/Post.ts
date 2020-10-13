@@ -10,13 +10,13 @@ import {
 import { Comment } from '@/entities/Comment'
 import { Lazy } from '@/Lazy'
 import { User } from '@/entities/User'
-import { PostUpvote } from '@/entities/relations/PostUpvote'
-import { Community } from '@/entities/Community'
-import { formatDistanceToNowStrict } from 'date-fns'
+import { PostRocket } from '@/entities/relations/PostRocket'
+import { Planet } from '@/entities/Planet'
 import { Save } from '@/entities/relations/Save'
 import { PostHide } from '@/entities/relations/PostHide'
 import { Embed } from '@/types/post/Embed'
 import { URL } from 'url'
+import dayjs from 'dayjs'
 
 @ObjectType()
 @Entity()
@@ -60,7 +60,7 @@ export class Post {
 
   @Field(() => [String], { nullable: true })
   @Column('text', { array: true, nullable: true })
-  images?: string[]
+  imageURLs?: string[]
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.posts)
@@ -76,7 +76,8 @@ export class Post {
 
   @Field()
   get timeSince(): string {
-    return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+    // return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+    return dayjs(new Date(this.createdAt)).fromNow()
   }
 
   @Field({ nullable: true })
@@ -86,7 +87,8 @@ export class Post {
   @Field({ nullable: true })
   get editedTimeSince(): string | null {
     if (!this.editedAt) return null
-    return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
+    // return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
+    return dayjs(new Date(this.editedAt)).fromNow()
   }
 
   @Field()
@@ -101,29 +103,29 @@ export class Post {
   comments: Lazy<Comment[]>
 
   @Field()
-  @Column({ default: 0 })
+  @Column('bigint', { default: 0 })
   commentCount: number
 
-  @Field(() => Community, { nullable: true })
-  @ManyToOne(() => Community, community => community.posts, {
+  @Field(() => Planet, { nullable: true })
+  @ManyToOne(() => Planet, planet => planet.posts, {
     cascade: true,
     nullable: true
   })
-  community?: Lazy<Community>
+  planet?: Lazy<Planet>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
-  communityId?: number
+  planetId?: number
 
-  @OneToMany(() => PostUpvote, vote => vote.post)
-  upvotes: Lazy<PostUpvote[]>
-
-  @Field()
-  @Column({ default: 0 })
-  upvoteCount: number
+  @OneToMany(() => PostRocket, vote => vote.post)
+  rockets: Lazy<PostRocket[]>
 
   @Field()
-  upvoted: boolean
+  @Column('bigint', { default: 1 })
+  rocketCount: number
+
+  @Field()
+  rocketed: boolean
 
   @Authorized('ADMIN')
   @Field()
@@ -156,7 +158,7 @@ export class Post {
       .join('_')
       .replace(/[^a-z0-9_]+/gi, '')
       .replace(/[_](.)\1+/g, '$1')
-    return `/+${(this.community as Community).name}/post/${this.id36}/${slug}`
+    return `/+${(this.planet as Planet).name}/post/${this.id36}/${slug}`
   }
 
   @Field(() => String, { nullable: true })

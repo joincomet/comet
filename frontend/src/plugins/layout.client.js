@@ -8,7 +8,7 @@ const cookieOptions = {
 }
 const layoutMode = window.__NUXT_LAYOUT_MODE__
 
-export default function (ctx, inject) {
+export default function(ctx, inject) {
   let data = ctx.nuxtState.layoutMode
   // For SPA mode or fallback
   if (!data) {
@@ -21,7 +21,7 @@ export default function (ctx, inject) {
   const $layoutMode = new Vue({
     data,
     watch: {
-      preference (preference) {
+      preference(preference) {
         this.value = preference
 
         this._storePreference(preference)
@@ -31,20 +31,20 @@ export default function (ctx, inject) {
         layoutMode.addClass(newValue)
       } */
     },
-    beforeMount () {
+    beforeMount() {
       if (window.localStorage) {
         this._watchStorageChange()
       }
     },
     methods: {
-      _watchStorageChange () {
+      _watchStorageChange() {
         window.addEventListener('storage', (e) => {
           if (e.key === cookieKey) {
             this.preference = e.newValue
           }
         })
       },
-      _storePreference (preference) {
+      _storePreference(preference) {
         // Cookies for SSR
         document.cookie = serialize(cookieKey, preference, cookieOptions)
 

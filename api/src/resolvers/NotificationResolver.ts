@@ -28,7 +28,7 @@ export class NotificationResolver {
       .createQueryBuilder('notification')
       .leftJoinAndSelect('notification.fromUser', 'fromUser')
       .leftJoinAndSelect('notification.post', 'post')
-      .leftJoinAndSelect('post.community', 'community')
+      .leftJoinAndSelect('post.planet', 'planet')
       .leftJoinAndSelect(
         'notification.comment',
         'comment',

@@ -2,12 +2,18 @@
   <article>
     <div class="post">
       <div class="post__top">
-        <img :src="post.author.profile.avatarURL" class="object-cover object-center w-8 h-8 rounded-full bg-gray-200">
+        <nuxt-link :to="`/@${post.author.username}`">
+          <img :src="post.author.profile.avatarURL" class="object-cover object-center w-8 h-8 rounded-full bg-gray-200">
+        </nuxt-link>
         <div class="flex flex-col ml-4 pr-12 flex-grow">
           <div class="text-xs">
-            <span class="text-tertiary font-semibold hover:underline">{{ post.author.username }}</span>
+            <nuxt-link :to="`/@${post.author.username}`" class="text-tertiary font-semibold hover:underline">
+              {{ post.author.username }}
+            </nuxt-link>
             <span class="text-tertiary">in</span>
-            <span class="text-accent font-semibold hover:underline">+{{ post.community.name }}</span>
+            <nuxt-link :to="`/+${post.planet.name}`" class="text-accent font-semibold hover:underline">
+              +{{ post.planet.name }}
+            </nuxt-link>
           </div>
           <div class="text-xs mt-0.5">
             <span class="text-tertiary">{{ post.timeSince }} &middot; </span>
@@ -37,7 +43,7 @@
         </div>
         <div v-if="post.textContent" class="text-primary line-clamp-3 text-sm mt-1" v-html="post.textContent" />
 
-        <img v-if="post.images && post.images.length > 0" :src="post.images[0]" class="border border-gray-200 bg-gray-100 hover:bg-gray-200 transition duration-100 ease-in-out mt-4 object-contain object-center max-w-full w-full h-auto rounded-xl" style="max-height: 19.8125rem">
+        <img v-if="post.images && post.images.length > 0" :src="post.images[0]" class="border border-gray-200 bg-gray-100 hover:bg-gray-200 transition duration-100 ease-in-out mt-4 object-contain object-center max-w-full w-full h-auto rounded-xl" style="max-height: 19.8125rem" @click.stop.prevent="$store.dispatch('openImageDialog', post.images[0])">
 
         <a
           v-else-if="post.embed && post.embed.links && post.embed.links.thumbnail && post.embed.links.thumbnail.length > 0"
@@ -67,7 +73,7 @@
           <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
           </svg>
-          <span class="font-medium ml-2 text-sm">{{ post.upvoteCount }}</span>
+          <span class="font-medium ml-2 text-sm">{{ post.rocketCount }}</span>
         </div>
 
         <div class="ml-4 post__chip">
@@ -78,10 +84,10 @@
         </div>
 
         <div class="ml-4 px-3 py-1 text-gray-500 inline-flex flex-row items-center rounded-full hover:bg-gray-200 transition duration-150 ease-in-out">
-          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <svg class="w-5 h-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
           </svg>
-          <span class="ml-4 text-sm">Share</span>
+          <span class="ml-4 text-sm font-medium text-green-500">Share</span>
         </div>
 
         <div class="post__options">

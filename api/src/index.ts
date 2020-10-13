@@ -19,13 +19,13 @@ import { graphqlUploadExpress } from 'graphql-upload'
 import fs from 'fs'
 import path from 'path'
 import { authChecker } from '@/AuthChecker'
-import { PostSort } from '@/types/feed/PostSort'
-import { TimeFilter } from '@/types/feed/TimeFilter'
-import { Feed } from '@/types/feed/Feed'
+import { PostSort } from '@/types/posts/PostSort'
+import { TimeFilter } from '@/types/posts/TimeFilter'
+import { Feed } from '@/types/posts/Feed'
 import { CommentSort } from '@/types/CommentSort'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
-import { CommunitySort } from '@/types/community/CommunitySort'
-import { ModPermission } from '@/types/community/ModPermission'
+import { PlanetSort } from '@/types/planet/PlanetSort'
+import { ModPermission } from '@/types/planet/ModPermission'
 import { startDiscordBot } from '@/discord'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
@@ -101,8 +101,8 @@ async function bootstrap() {
     name: 'CommentSort'
   })
 
-  registerEnumType(CommunitySort, {
-    name: 'CommunitySort'
+  registerEnumType(PlanetSort, {
+    name: 'PlanetSort'
   })
 
   registerEnumType(ModPermission, {

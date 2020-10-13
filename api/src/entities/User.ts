@@ -10,20 +10,20 @@ import {
 import { Comment } from '@/entities/Comment'
 import { Lazy } from '@/Lazy'
 import { Post } from '@/entities/Post'
-import { PostUpvote } from '@/entities/relations/PostUpvote'
-import { CommentUpvote } from '@/entities/relations/CommentUpvote'
-import { formatDistanceToNowStrict } from 'date-fns'
+import { PostRocket } from '@/entities/relations/PostRocket'
+import { CommentRocket } from '@/entities/relations/CommentRocket'
 import { UserProfile } from '@/types/user/UserProfile'
 import { UserSettings } from '@/types/user/UserSettings'
-import { CommunityUser } from '@/entities/relations/CommunityUser'
-import { CommunityModerator } from '@/entities/relations/CommunityModerator'
-import { CommunityMute } from '@/entities/relations/CommunityMute'
+import { PlanetUser } from '@/entities/relations/PlanetUser'
+import { PlanetModerator } from '@/entities/relations/PlanetModerator'
+import { PlanetMute } from '@/entities/relations/PlanetMute'
 import { Save } from '@/entities/relations/Save'
 import { UserBlock } from '@/entities/relations/UserBlock'
 import { UserFollow } from '@/entities/relations/UserFollow'
 import { PostHide } from '@/entities/relations/PostHide'
 import { Ban } from '@/entities/moderation/Ban'
 import { AllowedPoster } from '@/entities/relations/AllowedPoster'
+import dayjs from 'dayjs'
 
 @ObjectType()
 @Entity()
@@ -108,20 +108,20 @@ export class User {
   @OneToMany(() => Post, post => post.author)
   posts: Lazy<Post[]>
 
-  @OneToMany(() => CommunityUser, community => community.user)
-  communities: Lazy<CommunityUser[]>
+  @OneToMany(() => PlanetUser, planet => planet.user)
+  planets: Lazy<PlanetUser[]>
 
-  @OneToMany(() => CommunityModerator, moderator => moderator.user)
-  moderatedCommunities: Lazy<CommunityModerator[]>
+  @OneToMany(() => PlanetModerator, moderator => moderator.user)
+  moderatedPlanets: Lazy<PlanetModerator[]>
 
   @OneToMany(() => AllowedPoster, a => a.user)
-  allowedCommunities: Lazy<AllowedPoster[]>
+  allowedPlanets: Lazy<AllowedPoster[]>
 
   @OneToMany(() => Ban, ban => ban.user)
   bans: Lazy<Ban[]>
 
-  @OneToMany(() => CommunityMute, mute => mute.user)
-  mutedCommunities: Lazy<CommunityMute[]>
+  @OneToMany(() => PlanetMute, mute => mute.user)
+  mutedPlanets: Lazy<PlanetMute[]>
 
   @OneToMany(() => Save, post => post.user)
   saves: Lazy<Save[]>
@@ -157,22 +157,22 @@ export class User {
   followingCount: number
 
   @Field()
-  @Column({ default: 0 })
+  @Column('bigint', { default: 0 })
   commentCount: number
 
   @Field()
-  @Column({ default: 0 })
+  @Column('bigint', { default: 0 })
   postCount: number
 
-  @OneToMany(() => PostUpvote, upvote => upvote.user)
-  postUpvotes: Lazy<PostUpvote[]>
+  @OneToMany(() => PostRocket, rocket => rocket.user)
+  postRockets: Lazy<PostRocket[]>
 
-  @OneToMany(() => CommentUpvote, upvote => upvote.user)
-  commentUpvotes: Lazy<CommentUpvote[]>
+  @OneToMany(() => CommentRocket, rocket => rocket.user)
+  commentRockets: Lazy<CommentRocket[]>
 
   @Field()
-  @Column({ default: 0 })
-  upvoteCount: number
+  @Column('bigint', { default: 0 })
+  rocketCount: number
 
   /**
    * Current user is blocked by this user
@@ -188,6 +188,7 @@ export class User {
 
   @Field()
   get timeSinceCreated(): string {
-    return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+    // return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+    return dayjs(new Date(this.createdAt)).fromNow()
   }
 }

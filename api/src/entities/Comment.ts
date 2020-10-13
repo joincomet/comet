@@ -9,10 +9,13 @@ import {
 } from 'typeorm'
 import { Lazy } from '@/Lazy'
 import { Post } from '@/entities/Post'
-import { CommentUpvote } from '@/entities/relations/CommentUpvote'
+import { CommentRocket } from '@/entities/relations/CommentRocket'
 import { User } from '@/entities/User'
-import { formatDistanceToNowStrict } from 'date-fns'
 import { Save } from '@/entities/relations/Save'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
 
 @ObjectType()
 @Entity()
@@ -55,7 +58,8 @@ export class Comment {
 
   @Field()
   get timeSince(): string {
-    return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+    //return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
+    return dayjs(new Date(this.createdAt)).fromNow()
   }
 
   @Field({ nullable: true })
@@ -65,7 +69,8 @@ export class Comment {
   @Field({ nullable: true })
   get editedTimeSince(): string | null {
     if (!this.editedAt) return null
-    return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
+    // return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
+    return dayjs(new Date(this.editedAt)).fromNow()
   }
 
   @Field(() => ID, { nullable: true })
@@ -74,15 +79,15 @@ export class Comment {
 
   childComments: Comment[] = []
 
-  @OneToMany(() => CommentUpvote, upvote => upvote.comment)
-  upvotes: Lazy<CommentUpvote[]>
+  @OneToMany(() => CommentRocket, upvote => upvote.comment)
+  rockets: Lazy<CommentRocket[]>
 
   @Field()
-  @Column({ default: 0 })
-  upvoteCount: number
+  @Column('bigint', { default: 1 })
+  rocketCount: number
 
   @Field()
-  upvoted: boolean
+  rocketed: boolean
 
   @Column({ default: false })
   deleted: boolean

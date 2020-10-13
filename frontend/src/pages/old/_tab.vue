@@ -3,7 +3,7 @@
     <div v-for="item in everything" :key="item.id">
       <div v-if="item.__typename === 'Post'">
         <div>{{ item.title }}</div>
-        <div>{{ item.relativeUrl }}</div>
+        <div>{{ item.relativeURL }}</div>
       </div>
       <div v-else-if="item.__typename === 'Comment'">
         {{ item.textContent }}
@@ -13,41 +13,41 @@
 </template>
 
 <script>
-import feedGql from '@/gql/feed.graphql'
-import userCommentsGql from '@/gql/userComments.graphql'
+import commentsGql from '@/gql/comments.graphql'
+import postsGql from '~/gql/posts.graphql'
 
 export default {
-  async asyncData ({ app, params }) {
+  async asyncData({ app, params }) {
     const client = app.apolloProvider.defaultClient
     let feed = []
-    let userComments = []
+    let comments = []
     if (!params.tab || params.tab === 'posts') {
       feed = (await client.query({
-        query: feedGql,
+        query: postsGql,
         variables: {
           username: params.id.substring(1)
         }
-      })).data.feed
+      })).data.posts
     }
     if (!params.tab || params.tab === 'comments') {
-      userComments = (await client.query({
-        query: userCommentsGql,
+      comments = (await client.query({
+        query: commentsGql,
         variables: {
           username: params.id.substring(1)
         }
-      })).data.userComments
+      })).data.comments
     }
-    return { feed, userComments }
+    return { feed, comments }
   },
-  data () {
+  data() {
     return {
       feed: [],
-      userComments: []
+      comments: []
     }
   },
   computed: {
-    everything () {
-      return this.feed.concat(this.userComments).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    everything() {
+      return this.feed.concat(this.comments).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     }
   }
 }

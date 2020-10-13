@@ -4,7 +4,7 @@ import { Container } from 'typedi'
 import fs from 'fs'
 import path from 'path'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
-import { Community } from '@/entities/Community'
+import { Planet } from '@/entities/Planet'
 import { Post } from '@/entities/Post'
 import { runIframely } from '@/iframely/RunIframely'
 import { isURL } from '@/IsURL'
@@ -61,16 +61,16 @@ const run = async () => {
     return process.exit(-1)
   }
 
-  const communityRepo = getRepository(Community)
-  console.info('--- Deleting communities with 0 posts ---')
-  const communitiesToDelete = (
-    await communityRepo.createQueryBuilder('community').getMany()
+  const planetRepo = getRepository(Planet)
+  console.info('--- Deleting planets with 0 posts ---')
+  const planetsToDelete = (
+    await planetRepo.createQueryBuilder('planet').getMany()
   )
     .filter(c => c.postCount === 0)
     .map(c => c.id)
 
-  if (communitiesToDelete && communitiesToDelete.length > 0) {
-    await communityRepo.delete(communitiesToDelete)
+  if (planetsToDelete && planetsToDelete.length > 0) {
+    await planetRepo.delete(planetsToDelete)
   }
 
   const postRepo = getRepository(Post)

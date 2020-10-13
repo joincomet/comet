@@ -6,7 +6,7 @@ query currentUser {
       avatar
     }
     admin
-    moderatedCommunities {
+    moderatedPlanets {
       name
       postCount
       profile {

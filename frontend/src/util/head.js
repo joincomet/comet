@@ -1,4 +1,4 @@
-export const head = (title, description, canonicalLink, banner, avatar, username, type, community, time) => {
+export const head = (title, description, canonicalLink, banner, avatar, username, type, planet, time) => {
   return {
     title,
     link: [
@@ -28,10 +28,10 @@ export const head = (title, description, canonicalLink, banner, avatar, username
         property: 'og:article:author',
         content: username
       } : undefined,
-      community && type === 'article' ? {
+      planet && type === 'article' ? {
         hid: 'og:article:section',
         property: 'og:article:section',
-        content: community
+        content: planet
       } : undefined,
       time ? {
         hid: 'og:article:published_time',

@@ -1,7 +1,7 @@
 import { parse } from 'cookie'
 const cookieKey = 'layout'
 
-export default function (ctx, inject) {
+export default function(ctx, inject) {
   let preference = 'cards'
 
   // Try to read from cookies

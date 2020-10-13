@@ -1,7 +1,7 @@
 import { parse } from 'cookie'
 const cookieKey = 'theme'
 
-export default function (ctx, inject) {
+export default function(ctx, inject) {
   let preference = 'system'
 
   // Try to read from cookies

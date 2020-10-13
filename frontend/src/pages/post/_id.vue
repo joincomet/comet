@@ -4,10 +4,10 @@
 
 <script>
 import postGql from '@/gql/post.graphql'
-import postCommentsGql from '@/gql/postComments.graphql'
+import postCommentsGql from '~/gql/comments.graphql'
 
 export default {
-  async asyncData ({ app, params }) {
+  async asyncData({ app, params }) {
     const post = (
       await app.apolloProvider.defaultClient.query({
         query: postGql,
@@ -27,7 +27,7 @@ export default {
     ).data.postComments
     return { post, postComments }
   },
-  data () {
+  data() {
     return {
       post: null,
       postComments: []

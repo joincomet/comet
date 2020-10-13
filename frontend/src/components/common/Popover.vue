@@ -57,27 +57,27 @@ export default {
       default: true
     }
   },
-  data () {
+  data() {
     return {
       popoverShow: this.value
     }
   },
   watch: {
-    popoverShow () {
+    popoverShow() {
       this.$emit('input', this.popoverShow)
     }
   },
-  mounted () {
+  mounted() {
     document.addEventListener('click', this.togglePopover)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     document.removeEventListener('click', this.togglePopover)
   },
   methods: {
-    handleClick () {
+    handleClick() {
 
     },
-    togglePopover (e) {
+    togglePopover(e) {
       this.$nextTick(() => {
         const { target } = e
         const btn = this.$refs.btnRef

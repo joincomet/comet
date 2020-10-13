@@ -1,3 +1,0 @@
-mutation unmuteCommunity($name: String!) {
-  unmuteCommunity(name: $name)
-}

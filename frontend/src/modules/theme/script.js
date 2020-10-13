@@ -20,7 +20,7 @@ w.__NUXT_COLOR_MODE__ = {
   removeClass
 }
 
-function getCookie (name) {
+function getCookie(name) {
   const nameEQ = name + '='
   const cookies = d.cookie.split(';')
 
@@ -36,7 +36,7 @@ function getCookie (name) {
   return null
 }
 
-function addClass (value) {
+function addClass(value) {
   const className = value
   if (de.classList) {
     de.classList.add(className)
@@ -45,7 +45,7 @@ function addClass (value) {
   }
 }
 
-function removeClass (value) {
+function removeClass(value) {
   const className = value
   if (de.classList) {
     de.classList.remove(className)
@@ -54,11 +54,11 @@ function removeClass (value) {
   }
 }
 
-function prefersColorScheme (suffix) {
+function prefersColorScheme(suffix) {
   return w.matchMedia('(prefers-color-scheme' + suffix + ')')
 }
 
-function getColorScheme () {
+function getColorScheme() {
   if (w.matchMedia && prefersColorScheme('').media !== 'not all') {
     for (const colorScheme of knownColorSchemes) {
       if (prefersColorScheme(':' + colorScheme).matches) {

@@ -8,7 +8,7 @@ const cookieOptions = {
 }
 const colorMode = window.__NUXT_COLOR_MODE__
 
-export default function (ctx, inject) {
+export default function(ctx, inject) {
   let data = ctx.nuxtState.colorMode
   // For SPA mode or fallback
   if (!data) {
@@ -21,7 +21,7 @@ export default function (ctx, inject) {
   const $colorMode = new Vue({
     data,
     watch: {
-      preference (preference) {
+      preference(preference) {
         if (preference === 'system') {
           this.value = colorMode.getColorScheme()
           this._watchMedia()
@@ -31,12 +31,12 @@ export default function (ctx, inject) {
 
         this._storePreference(preference)
       },
-      value (newValue, oldValue) {
+      value(newValue, oldValue) {
         colorMode.removeClass(oldValue)
         colorMode.addClass(newValue)
       }
     },
-    beforeMount () {
+    beforeMount() {
       if (this.preference === 'system') {
         this._watchMedia()
       }
@@ -45,7 +45,7 @@ export default function (ctx, inject) {
       }
     },
     methods: {
-      _watchMedia () {
+      _watchMedia() {
         if (this._mediaWatcher || !window.matchMedia) {
           return
         }
@@ -57,14 +57,14 @@ export default function (ctx, inject) {
           }
         })
       },
-      _watchStorageChange () {
+      _watchStorageChange() {
         window.addEventListener('storage', (e) => {
           if (e.key === cookieKey) {
             this.preference = e.newValue
           }
         })
       },
-      _storePreference (preference) {
+      _storePreference(preference) {
         // Cookies for SSR
         document.cookie = serialize(cookieKey, preference, cookieOptions)
 

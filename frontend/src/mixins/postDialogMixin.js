@@ -1,9 +1,9 @@
-import feedGql from '@/gql/feed'
 import postGql from '@/gql/post'
 import { feedVars } from '@/util/feedVars'
+import postsGql from '~/gql/posts'
 
 export default {
-  data () {
+  data() {
     return {
       feed: [],
       hasMore: true,
@@ -14,12 +14,12 @@ export default {
     }
   },
   computed: {
-    vars () {
+    vars() {
       return feedVars(this.$route)
     }
   },
   watch: {
-    dialog () {
+    dialog() {
       if (!this.dialog) {
         this.hideDialog()
         if (process.client) {
@@ -30,8 +30,8 @@ export default {
       }
     }
   },
-  beforeRouteLeave (to, from, next) {
-    if (to.name === 'p-communityname-comments-id-title') {
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'p-planetname-comments-id-title') {
       if (!this.dialog) {
         this.displayDialog(to)
       } else if (this.$device.isDesktop) {
@@ -43,7 +43,7 @@ export default {
     }
   },
   methods: {
-    async displayDialog (route) {
+    async displayDialog(route) {
       window.history.pushState({}, null, route.path)
       this.selectedPost = this.feed.find(p => p.id === route.params.id)
       if (!this.selectedPost) {
@@ -58,33 +58,33 @@ export default {
       }
       this.dialog = true
     },
-    hideDialog () {
+    hideDialog() {
       this.dialog = false
     },
-    toggleHidden () {
+    toggleHidden() {
       this.$apollo.provider.defaultClient.cache.writeQuery({
-        query: feedGql,
+        query: postsGql,
         variables: {
           ...this.vars
         },
         data: { feed: this.feed.filter(p => !p.hidden) }
       })
     },
-    toggleBlock () {
+    toggleBlock() {
       this.$apollo.provider.defaultClient.cache.writeQuery({
-        query: feedGql,
+        query: postsGql,
         variables: {
           ...this.vars
         },
         data: { feed: this.feed.filter(p => !p.author.isBlocking) }
       })
     },
-    async showMore () {
+    async showMore() {
       if (!this.hasMore || this.loadingMore) { return }
       this.loadingMore = true
       this.page++
       const { data } = await this.$apollo.query({
-        query: feedGql,
+        query: postsGql,
         variables: {
           page: this.page,
           ...this.vars

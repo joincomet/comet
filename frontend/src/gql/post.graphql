@@ -14,14 +14,14 @@ query post($postId: ID!) {
       editedAt
       timeSince
       editedTimeSince
-      upvoteCount
+      rocketCount
       id
-      upvoted
+      rocketed
       link
       textContent
       title
       sticky
-      community {
+      planet {
         name
         userCount
         createdAt

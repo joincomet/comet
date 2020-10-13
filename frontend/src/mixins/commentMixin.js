@@ -1,11 +1,11 @@
 import submitCommentGql from '@/gql/submitComment'
-import postCommentsGql from '@/gql/postComments'
 import recordPostViewGql from '@/gql/recordPostView'
 import { isEditorEmpty } from '@/util/isEditorEmpty'
 import editCommentGql from '@/gql/editComment'
+import postCommentsGql from '~/gql/comments'
 
 export default {
-  data () {
+  data() {
     return {
       replyHTML: null,
       replying: false,
@@ -16,15 +16,15 @@ export default {
     }
   },
   computed: {
-    isReplyEmpty () {
+    isReplyEmpty() {
       return isEditorEmpty(this.replyHTML)
     },
-    isEditEmpty () {
+    isEditEmpty() {
       return isEditorEmpty(this.editHTML)
     }
   },
   methods: {
-    startReply (comment) {
+    startReply(comment) {
       if (!this.$store.state.currentUser) {
         this.$store.dispatch('displaySnackbar', {
           message: 'Must log in to reply'
@@ -37,7 +37,7 @@ export default {
         this.$emit('startreply', comment)
       }
     },
-    async submitReply (comment) {
+    async submitReply(comment) {
       this.replyBtnLoading = true
       try {
         await this.$apollo.mutate({
@@ -88,7 +88,7 @@ export default {
       })
       this.replyBtnLoading = false
     },
-    startEdit (comment) {
+    startEdit(comment) {
       if (!this.$store.state.currentUser) {
         this.$store.dispatch('displaySnackbar', {
           message: 'Must log in to reply'
@@ -102,7 +102,7 @@ export default {
         this.$emit('startedit', comment)
       }
     },
-    async editComment (comment) {
+    async editComment(comment) {
       this.editBtnLoading = true
       await this.$apollo.mutate({
         mutation: editCommentGql,

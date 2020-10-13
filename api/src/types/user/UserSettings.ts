@@ -2,15 +2,15 @@ import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
 export class UserSettings {
-  @Field()
-  appearOffline: boolean = false
+  @Field(() => Boolean)
+  appearOffline = false
 
-  @Field()
-  nsfw: boolean = false
+  @Field(() => Boolean)
+  nsfw = false
 
-  @Field()
-  private: boolean = false
+  @Field(() => Boolean)
+  private = false
 
-  @Field()
-  profanity: boolean = false
+  @Field(() => Boolean)
+  profanity = false
 }

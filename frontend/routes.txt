@@ -25,7 +25,7 @@ cometx.io/about - Links to Discord, Twitter, policies
 cometx.io/about/content - Content policy
 cometx.io/about/terms - Terms of service
 cometx.io/about/privacy - Privacy policy
-cometx.io/about/mods - CommunityModerator guidelines
+cometx.io/about/mods - PlanetModerator guidelines
 
 cometx.io/settings -> cometx.io/settings/general
 cometx.io/settings/general - General settings (NSFW, appear offline)

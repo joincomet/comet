@@ -29,21 +29,21 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       open: this.value
     }
   },
   watch: {
-    open (val) {
+    open(val) {
       this.$emit('input', val)
     },
-    value (val) {
+    value(val) {
       this.open = val
     }
   },
   methods: {
-    openDialog () {
+    openDialog() {
       this.open = !this.open
     }
   }

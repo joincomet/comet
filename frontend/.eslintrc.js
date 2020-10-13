@@ -5,10 +5,14 @@ module.exports = {
     node: true
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: 'babel-eslint',
+    sourceType: 'module'
   },
   extends: [
     '@nuxtjs',
     'plugin:nuxt/recommended'
-  ]
+  ],
+  rules: {
+    'space-before-function-paren': [2, 'never']
+  }
 }

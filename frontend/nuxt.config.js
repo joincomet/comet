@@ -1,4 +1,4 @@
-import { sortRoutes } from '@nuxt/utils'
+// import { sortRoutes } from '@nuxt/utils'
 
 export default {
   srcDir: 'src/',
@@ -12,12 +12,12 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: 'Explore communities, posts, and comments on CometX'
+        content: 'Explore planets, posts, and comments on CometX'
       },
       {
         hid: 'og:description',
         name: 'og:description',
-        content: 'Explore communities, posts, and comments on CometX'
+        content: 'Explore planets, posts, and comments on CometX'
       },
       {
         hid: 'og:title',
@@ -57,7 +57,7 @@ export default {
       {
         hid: 'twitter:description',
         name: 'twitter:description',
-        content: 'Explore communitys, posts, and comments on CometX'
+        content: 'Explore planets, posts, and comments on CometX'
       },
       {
         hid: 'twitter:image',
@@ -79,17 +79,24 @@ export default {
     '~/modules/layout',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/pwa',
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+    ['@nuxtjs/google-analytics', {
+      id: 'UA-',
+      dev: false
+    }]
   ],
 
   modules: [
     '@nuxtjs/apollo',
     '@nuxtjs/device',
-    '@nuxt/content'
+    '@nuxt/content',
+    '@nuxtjs/toast'
   ],
 
   eslint: {
     cache: true
+    // emitError: false,
+    // emitWarning: false
   },
 
   tailwindcss: {
@@ -98,9 +105,9 @@ export default {
     configPath: '~~/tailwind.config.js'
   },
 
-  css: ['@/assets/css/inter/inter.css', '@/assets/css/toast/themes/sugar/index.scss'],
+  css: ['@/assets/css/inter/inter.css'],
 
-  plugins: ['@/plugins/toast.client.js', '@/plugins/layout.client.js', '@/plugins/layout.server.js'],
+  plugins: ['@/plugins/layout.client.js', '@/plugins/layout.server.js', '@/plugins/iconify.js'],
 
   pwa: {
     manifest: {
@@ -149,7 +156,7 @@ export default {
   },
 
   router: {
-    extendRoutes (routes, resolve) {
+    extendRoutes(routes, resolve) {
       routes.push(
         {
           name: 'universe',
@@ -157,19 +164,19 @@ export default {
           component: resolve(__dirname, 'src/pages/-universe.vue')
         },
         {
-          name: 'community-settings',
-          path: '/\+:community/settings',
-          component: resolve(__dirname, 'src/pages/-community/-settings.vue')
+          name: 'planet-settings',
+          path: '/\+:planet/settings',
+          component: resolve(__dirname, 'src/pages/-planet/-settings.vue')
         },
         {
-          name: 'community-post',
-          path: '/\+:community/post/:id/:title?',
-          component: resolve(__dirname, 'src/pages/-community/-post.vue')
+          name: 'planet-post',
+          path: '/\+:planet/post/:id/:title?',
+          component: resolve(__dirname, 'src/pages/-planet/-post.vue')
         },
         {
-          name: 'community',
-          path: '/\+:community/:sort?/:time?',
-          component: resolve(__dirname, 'src/pages/-community.vue')
+          name: 'planet',
+          path: '/\+:planet/:sort?/:time?',
+          component: resolve(__dirname, 'src/pages/-planet.vue')
         },
         {
           name: 'user',

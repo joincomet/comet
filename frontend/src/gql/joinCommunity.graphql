@@ -1,3 +1,0 @@
-mutation joinCommunity($name: String!) {
-  joinCommunity(name: $name)
-}

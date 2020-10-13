@@ -1,43 +1,48 @@
 import currentUserGql from '@/gql/currentUser.graphql'
-import communitiesGql from '@/gql/communities.graphql'
+import planetsGql from '@/gql/planets.graphql'
 
 export const state = () => ({
   currentUser: null,
   topCommunities: [],
-  joinedCommunities: [],
-  loginDialog: false
+  joinedPlanets: [],
+  loginDialog: false,
+  imageDialog: false,
+  imageURL: null
 })
 
 export const mutations = {
-  setLoginDialog (state, loginDialog) {
+  setLoginDialog(state, loginDialog) {
     state.loginDialog = loginDialog
   },
-  setCurrentUser (state, currentUser) {
+  setImageDialog(state, imageDialog) {
+    state.imageDialog = imageDialog
+  },
+  setImageURL(state, imageURL) {
+    state.imageURL = imageURL
+  },
+  setCurrentUser(state, currentUser) {
     state.currentUser = currentUser
   },
-  setTopCommunities (state, topCommunities) {
+  setTopPlanets(state, topCommunities) {
     state.topCommunities = topCommunities
   },
-  setJoinedCommunities (state, joinedCommunities) {
-    state.joinedCommunities = joinedCommunities
+  setJoinedPlanets(state, joinedCommunities) {
+    state.joinedPlanets = joinedCommunities
   }
 }
 
 export const actions = {
-  async nuxtServerInit ({ commit, dispatch, state }, context) {
+  async nuxtServerInit({ commit, dispatch, state }, context) {
     await dispatch('fetchCurrentUser')
 
     if (!state.currentUser) {
       await context.app.$apolloHelpers.onLogout()
-
-      // Fetch top communities
-      await dispatch('fetchTopCommunities')
+      await dispatch('fetchTopPlanets')
     } else {
-      // Fetch joined communities
-      await dispatch('fetchJoinedCommunities')
+      await dispatch('fetchJoinedPlanets')
     }
   },
-  async fetchCurrentUser ({ commit }) {
+  async fetchCurrentUser({ commit }) {
     if (!this.app.$apolloHelpers.getToken()) {
       commit('setCurrentUser', null)
       return
@@ -49,34 +54,38 @@ export const actions = {
     })
     commit('setCurrentUser', data.currentUser)
   },
-  async fetchTopCommunities ({ commit }) {
+  async fetchTopPlanets({ commit }) {
     const client = this.app.apolloProvider.defaultClient
     const { data } = await client.query({
-      query: communitiesGql,
+      query: planetsGql,
       variables: {
         sort: 'TOP',
         pageSize: 5
       },
       fetchPolicy: 'network-only'
     })
-    commit('setTopCommunities', data.communities)
+    commit('setTopPlanets', data.planets)
   },
-  async fetchJoinedCommunities ({ commit }) {
+  async fetchJoinedPlanets({ commit }) {
     const client = this.app.apolloProvider.defaultClient
     const { data } = await client.query({
-      query: communitiesGql,
+      query: planetsGql,
       variables: {
         joined: true,
         pageSize: 5
       },
       fetchPolicy: 'network-only'
     })
-    commit('setJoinedCommunities', data.communities)
+    commit('setJoinedPlanets', data.planets)
+  },
+  openImageDialog({ commit }, imageURL) {
+    commit('setImageURL', imageURL)
+    commit('setImageDialog', true)
   }
 }
 
 export const getters = {
-  isAdmin (state) {
+  isAdmin(state) {
     return state.currentUser && state.currentUser.admin
   }
 }

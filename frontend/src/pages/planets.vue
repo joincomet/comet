@@ -1,25 +1,25 @@
 <template>
   <div class="container py-6 mx-auto">
-    {{ allCommunities }}
+    {{ allPlanets }}
   </div>
 </template>
 
 <script>
-import allCommunitiesGql from '@/gql/communities.graphql'
+import allPlanetsGql from '~/gql/planets.graphql'
 
 export default {
-  async asyncData ({ app }) {
+  async asyncData({ app }) {
     const client = app.apolloProvider.defaultClient
-    let allCommunities = []
-    allCommunities = (await client.query({
-      query: allCommunitiesGql
-    })).data.allCommunities
+    let allPlanets = []
+    allPlanets = (await client.query({
+      query: allPlanetsGql
+    })).data.allPlanets
 
-    return { allCommunities }
+    return { allPlanets }
   },
-  data () {
+  data() {
     return {
-      allCommunities: []
+      allPlanets: []
     }
   }
 }

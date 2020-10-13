@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { promises as fsp } from 'fs'
 
-export default async function (moduleOptions) {
+export default async function(moduleOptions) {
   const options = {
     preference: 'cards',
     fallback: 'cards',

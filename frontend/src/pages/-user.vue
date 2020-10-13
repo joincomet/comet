@@ -8,7 +8,7 @@
 import userGql from '@/gql/user.graphql'
 
 export default {
-  async asyncData ({ app, params }) {
+  async asyncData({ app, params }) {
     const client = app.apolloProvider.defaultClient
     const user = (await client.query({
       query: userGql,
@@ -21,7 +21,7 @@ export default {
       user
     }
   },
-  data () {
+  data() {
     return {
       user: null
     }
