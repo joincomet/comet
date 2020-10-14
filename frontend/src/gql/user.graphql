@@ -7,14 +7,14 @@ query user($username: String!) {
     rocketCount
     createdAt
     lastLogin
-    isBlocking
-    isBlocked
+    blocked
+    blocking
     isCurrentUser
     timeSinceCreated
     followerCount
     followingCount
     profile {
-      avatar
+      avatarURL
       bio
       realName
       website

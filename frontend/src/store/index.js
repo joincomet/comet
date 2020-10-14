@@ -3,7 +3,7 @@ import planetsGql from '@/gql/planets.graphql'
 
 export const state = () => ({
   currentUser: null,
-  topCommunities: [],
+  topPlanets: [],
   joinedPlanets: [],
   loginDialog: false,
   imageDialog: false,
@@ -23,8 +23,8 @@ export const mutations = {
   setCurrentUser(state, currentUser) {
     state.currentUser = currentUser
   },
-  setTopPlanets(state, topCommunities) {
-    state.topCommunities = topCommunities
+  setTopPlanets(state, topPlanets) {
+    state.topPlanets = topPlanets
   },
   setJoinedPlanets(state, joinedCommunities) {
     state.joinedPlanets = joinedCommunities

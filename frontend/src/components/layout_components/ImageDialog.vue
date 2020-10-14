@@ -9,7 +9,7 @@
     </transition>
 
     <transition name="modal">
-      <img v-show="dialog" alt="Image popup" :src="$store.state.imageURL" class="cursor-pointer rounded-xl shadow-xl z-10 m-auto max-h-full max-w-5xl w-auto object-center object-contain" @click="dialog = false">
+      <img v-show="dialog" alt="Image popup" :src="$store.state.imageURL" class="cursor-pointer rounded-2xl shadow-xl z-10 m-auto max-h-full max-w-5xl w-auto object-center object-contain" @click="dialog = false">
     </transition>
   </div>
 </template>

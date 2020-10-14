@@ -8,10 +8,6 @@ module.exports = {
       '2xl': '1536px'
     },
     extend: {
-      borderRadius: {
-        xl: '1rem',
-        full: '9999px'
-      },
       fontSize: {
         tiny: '.625rem'
       }
@@ -21,7 +17,9 @@ module.exports = {
   experimental: 'all',
   future: {
     removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true
+    purgeLayersByDefault: true,
+    defaultLineHeights: true,
+    standardFontWeights: true
   },
   plugins: [
     require('@tailwindcss/typography')

@@ -45,7 +45,7 @@
             <span class="hover:underline cursor-pointer" :class="{'font-semibold': $layoutMode.preference === 'small-cards'}" @click="$layoutMode.preference = 'small-cards'">Small Cards</span> &middot;
             <span class="hover:underline cursor-pointer" :class="{'font-semibold': $layoutMode.preference === 'traditional'}" @click="$layoutMode.preference = 'traditional'">Traditional</span>
           </div>
-          <Post v-for="post in feed" :key="post.id" :post="post" />
+          <Post v-for="post in posts" :key="post.id" :post="post" />
         </div>
       </div>
       <div class="col-span-2">
@@ -64,7 +64,7 @@
           <span class="font-medium text-sm text-white">Join the CometX Discord</span>
         </div>
 
-        <div class="rounded-xl bg-white p-4 border border-gray-200 mt-5 text-xs font-medium text-secondary grid grid-cols-2 gap-4 sticky" style="top: 1.25rem">
+        <div class="rounded-2xl bg-white p-4 border border-gray-200 mt-5 text-xs font-medium text-secondary grid grid-cols-2 gap-4 sticky" style="top: 1.25rem">
           <div class="col-span-1 flex flex-col border-r border-gray-200 space-y-1">
             <nuxt-link to="/about/content" class="hover:underline cursor-pointer">
               Content Policy
@@ -99,22 +99,25 @@
 </template>
 
 <script>
-import { feedVars } from '@/util/feedVars'
 import postsGql from '~/gql/posts.graphql'
 import planetsGql from '~/gql/planets.graphql'
 import tailwindConfig from '~tailwind.config'
 
 export default {
-  async asyncData({ app, route }) {
+  async asyncData({ app, params }) {
     const client = app.apolloProvider.defaultClient
 
-    const feed = (
+    const posts = (
       await client.query({
         query: postsGql,
-        variables: { ...feedVars(route) },
+        variables: {
+          sort: params.sort ? params.sort.toUpperCase() : 'HOT',
+          time: params.time ? params.time.toUpperCase() : 'ALL',
+          filter: 'ALL'
+        },
         fetchPolicy: 'network-only'
       })
-    ).data.feed
+    ).data.posts
 
     const trendingPlanets = (
       await client.query({
@@ -126,20 +129,15 @@ export default {
       })
     ).data.planets
 
-    return { feed, trendingPlanets }
+    return { posts, trendingPlanets }
   },
   data() {
     return {
-      feed: [],
+      posts: [],
       trendingPlanets: [],
       tag: null,
       searchFocused: false,
       tailwindConfig
-    }
-  },
-  computed: {
-    topDiscussions() {
-      return this.feed.slice(0, 4)
     }
   }
 }

@@ -43,14 +43,14 @@
         </div>
         <div v-if="post.textContent" class="text-primary line-clamp-3 text-sm mt-1" v-html="post.textContent" />
 
-        <img v-if="post.images && post.images.length > 0" :src="post.images[0]" class="border border-gray-200 bg-gray-100 hover:bg-gray-200 transition duration-100 ease-in-out mt-4 object-contain object-center max-w-full w-full h-auto rounded-xl" style="max-height: 19.8125rem" @click.stop.prevent="$store.dispatch('openImageDialog', post.images[0])">
+        <img v-if="post.images && post.images.length > 0" :src="post.images[0]" class="border border-gray-200 bg-gray-100 hover:bg-gray-200 transition duration-100 ease-in-out mt-4 object-contain object-center max-w-full w-full h-auto rounded-2xl" style="max-height: 19.8125rem" @click.stop.prevent="$store.dispatch('openImageDialog', post.images[0])">
 
         <a
           v-else-if="post.embed && post.embed.links && post.embed.links.thumbnail && post.embed.links.thumbnail.length > 0"
           :href="post.linkURL"
           target="_blank"
           rel="noreferrer noopener nofollow"
-          class="rounded-xl mt-4 border border-gray-200 bg-gray-100 hover:bg-gray-200 transition duration-100 ease-in-out block"
+          class="rounded-2xl mt-4 border border-gray-200 bg-gray-100 hover:bg-gray-200 transition duration-100 ease-in-out block"
         >
           <img :src="post.embed.links.thumbnail[0].href" class="bg-white object-contain object-center max-w-full w-full h-auto rounded-t-xl" style="max-height: 19.8125rem">
           <div class="rounded-b-xl px-4 py-3 cursor-pointer">
@@ -114,7 +114,7 @@ export default {
 
 <style scoped lang="scss">
 .post {
-  @apply mb-5 bg-white border border-gray-200 rounded-xl pb-6 cursor-pointer;
+  @apply mb-5 bg-white border border-gray-200 rounded-2xl pb-6 cursor-pointer;
 
   &__top {
     @apply pt-6 pl-8 pr-6 flex flex-row;

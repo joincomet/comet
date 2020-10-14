@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col px-6 py-4 mb-4 rounded-lg card">
+  <div class="flex flex-col px-6 py-4 mb-4 rounded-2xl">
     <div class="font-semibold text-secondary text-md">
       Linked Accounts
     </div>

@@ -9,7 +9,7 @@
     </transition>
 
     <transition name="modal">
-      <div v-show="loginDialog" class="rounded-xl bg-white shadow-xl z-10 m-auto h-full max-w-5xl w-full relative">
+      <div v-show="loginDialog" class="rounded-2xl bg-white shadow-xl z-10 m-auto h-full max-w-5xl w-full relative">
         <div class="absolute top-4 right-4 rounded-full p-1 hover:bg-gray-100 transition duration-150 ease-in-out cursor-pointer" @click="closeLogin">
           <svg class="w-6 h-6 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

@@ -1,8 +1,8 @@
 <template>
-  <div class="container py-3 mx-auto">
-    <div class="grid grid-cols-12 gap-6">
-      <div class="col-span-2">
-        <div class="flex flex-col py-6 bg-white rounded-xl border border-gray-200">
+  <div class="container py-5 px-5 2xl:px-64">
+    <div class="grid grid-cols-12 gap-5">
+      <div class="col-span-3">
+        <div class="flex flex-col py-6 bg-white rounded-2xl border border-gray-200">
           <div class="px-6 pb-3 text-tiny font-bold tracking-widest uppercase text-tertiary">
             SETTINGS
           </div>
@@ -46,7 +46,7 @@
           </div>
         </div>
       </div>
-      <div class="col-span-10 px-6 py-3 bg-white rounded-xl border border-gray-200">
+      <div class="col-span-9 px-6 py-3 bg-white rounded-2xl border border-gray-200">
         <nuxt-child />
       </div>
     </div>

@@ -1,5 +1,5 @@
-query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $planets: [String!], $usernames: [String!], $search: String, $tags: [String!]) {
-  feed(page: $page, sort: $sort, time: $time, feed: $feed, planets: $planets, usernames: $usernames, search: $search, tags: $tags) {
+query($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $planets: [String!], $usernames: [String!], $search: String, $tags: [String!]) {
+  posts(page: $page, sort: $sort, time: $time, feed: $feed, planets: $planets, usernames: $usernames, search: $search, tags: $tags) {
     commentCount
     createdAt
     editedAt
@@ -13,7 +13,7 @@ query feed($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $planets
     title
     relativeURL
     sticky
-    images
+    imageURLs
     domain
     author {
       id

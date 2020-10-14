@@ -5,11 +5,11 @@ query post($postId: ID!) {
         username
         isCurrentUser
         profile {
-          avatar
+          avatarURL
         }
       }
       commentCount
-      relativeUrl
+      relativeURL
       createdAt
       editedAt
       timeSince
@@ -17,7 +17,8 @@ query post($postId: ID!) {
       rocketCount
       id
       rocketed
-      link
+      linkURL
+      imageURLs
       textContent
       title
       sticky
@@ -27,7 +28,7 @@ query post($postId: ID!) {
         createdAt
         joined
         profile {
-          avatar
+          avatarURL
         }
       }
     }

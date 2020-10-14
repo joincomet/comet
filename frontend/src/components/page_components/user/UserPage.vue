@@ -2,7 +2,7 @@
   <div class="container py-6 mx-auto">
     <div class="grid justify-center grid-cols-11 gap-4">
       <div class="col-span-8" :class="hasLinkedAccount || user.moderatedPlanets.length > 0 ? '' : 'col-start-2'">
-        <div class="flex flex-row p-6 rounded-lg card">
+        <div class="flex flex-row p-6 rounded-2xl">
           <img :src="user.profile.avatar" class="w-48 h-48 mr-12 rounded-full" style="min-width: 12rem; min-height: 12rem">
           <div class="py-2">
             <div class="inline-flex flex-row items-center mb-3">
