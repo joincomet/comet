@@ -10,9 +10,6 @@ import { runIframely } from '@/iframely/RunIframely'
 import { isURL } from '@/IsURL'
 import { Sema } from 'async-sema'
 
-// @ts-ignore
-process.env.UV_THREADPOOL_SIZE = 128
-
 TypeORM.useContainer(Container)
 
 const run = async () => {
@@ -85,7 +82,7 @@ const run = async () => {
   if (posts) {
     posts = posts.filter(p => isURL(p.linkURL))
 
-    const s = new Sema(16, { capacity: 100 })
+    const s = new Sema(32, { capacity: 100 })
 
     async function fetchEmbedData(post: Post) {
       await s.acquire()

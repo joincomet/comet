@@ -1,11 +1,10 @@
 <template>
   <nav
-    class="fixed z-20 flex flex-col overflow-y-auto bg-white dark:bg-gray-900 shadow-lg min-h-full h-full"
-    style="width: 17.5rem"
+    class="navdrawer"
   >
-    <div class="mx-5 pt-7 pb-5 mb-4 border-b border-gray-200 inline-flex flex-row items-center">
-      <nuxt-link to="/" class="mr-auto">
-        <img src="~/assets/logo.svg" class="w-40" alt="CometX logo">
+    <div class="mx-5 pt-7 pb-5 mb-4 border-b border-gray-200 flex flex-row items-center">
+      <nuxt-link to="/" class="ml-1.5 mr-auto">
+        <img src="~/assets/logo_angled_noio.svg" class="w-40" alt="CometX logo">
       </nuxt-link>
       <nuxt-link to="/settings" class="hover:scale-125 transform duration-150 ease-in-out text-gray-500" active-class="text-indigo-600">
         <iconify-icon icon="settings" class="w-4 h-4" />
@@ -97,5 +96,10 @@ export default {
 
 .navitem-active {
   @apply border-l-4 dark:text-white;
+}
+
+.navdrawer {
+  @apply fixed z-20 flex flex-col overflow-y-auto bg-white dark:bg-gray-900 shadow-lg min-h-full h-full hidden sm:block;
+  width: 17.5rem;
 }
 </style>

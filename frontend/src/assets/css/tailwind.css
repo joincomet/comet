@@ -14,6 +14,10 @@ html.dark {
   font-size: 0.625rem;
 }
 
+.delay-400 {
+  transition-delay: 400ms;
+}
+
 .text-accent {
   @apply text-indigo-500
 }
@@ -40,10 +44,6 @@ html.dark {
 
 .hovergrow-10 {
   @apply flex flex-col items-center transition duration-150 ease-in-out transform hover:scale-110;
-}
-
-.myborder {
-  @apply border-gray-200 dark:border-gray-800;
 }
 
 .line-clamp-3 {

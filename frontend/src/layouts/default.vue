@@ -7,7 +7,7 @@
       <LoginDialog />
       <ImageDialog />
 
-      <div class="flex flex-grow" style="margin-left: 17.5rem">
+      <div class="page">
         <nuxt />
       </div>
     </div>
@@ -21,5 +21,13 @@ export default {
 </script>
 
 <style scoped>
+@media(min-width: 640px) {
+  .page {
+    margin-left: 17.5rem
+  }
+}
 
+.page {
+  @apply flex flex-grow;
+}
 </style>

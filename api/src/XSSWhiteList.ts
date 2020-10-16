@@ -14,5 +14,6 @@ export const whiteList: any = {
   li: [],
   blockquote: [],
   pre: [],
-  hr: []
+  hr: [],
+  br: []
 }

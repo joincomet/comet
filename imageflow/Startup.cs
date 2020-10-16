@@ -22,7 +22,20 @@ namespace Imageflow.Server.ExampleDocker {
             }
 
             app.UseImageflow (new ImageflowMiddlewareOptions ()
-                .SetDefaultCacheControlString("public, max-age=2592000"));
+                .SetDefaultCacheControlString("public, max-age=2592000")
+                .AddCommandDefault("format", "webp")
+                .AddCommandDefault("webp.quality", "80")
+                .AddPreset(new PresetOptions("thumbnail", PresetPriority.DefaultValues)
+                                .SetCommand("width", "150")
+                                .SetCommand("height", "150")
+                                .SetCommand("format", "webp"))
+                                .SetCommand("webp.quality", "80"))
+                .AddPreset(new PresetOptions("avatar", PresetPriority.DefaultValues)
+                                .SetCommand("width", "32")
+                                .SetCommand("height", "32")
+                                .SetCommand("format", "webp"))
+                                .SetCommand("webp.quality", "80"))
+            );
 
             app.UseRouting ();
         }

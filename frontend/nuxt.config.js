@@ -156,6 +156,7 @@ export default {
   },
 
   router: {
+    middleware: 'router',
     extendRoutes(routes, resolve) {
       routes.push(
         {

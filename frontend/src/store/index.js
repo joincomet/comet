@@ -7,18 +7,26 @@ export const state = () => ({
   joinedPlanets: [],
   loginDialog: false,
   imageDialog: false,
-  imageURL: null
+  shareDialog: false,
+  imageURLs: [],
+  sharePost: null
 })
 
 export const mutations = {
-  setLoginDialog(state, loginDialog) {
-    state.loginDialog = loginDialog
+  setLoginDialog(state, dialog) {
+    state.loginDialog = dialog
   },
-  setImageDialog(state, imageDialog) {
-    state.imageDialog = imageDialog
+  setImageDialog(state, dialog) {
+    state.imageDialog = dialog
   },
-  setImageURL(state, imageURL) {
-    state.imageURL = imageURL
+  setImageURLs(state, imageURLs) {
+    state.imageURLs = imageURLs
+  },
+  setShareDialog(state, dialog) {
+    state.shareDialog = dialog
+  },
+  setSharePost(state, post) {
+    state.sharePost = post
   },
   setCurrentUser(state, currentUser) {
     state.currentUser = currentUser
@@ -78,9 +86,13 @@ export const actions = {
     })
     commit('setJoinedPlanets', data.planets)
   },
-  openImageDialog({ commit }, imageURL) {
-    commit('setImageURL', imageURL)
+  openImageDialog({ commit }, imageURLs) {
+    commit('setImageURLs', imageURLs)
     commit('setImageDialog', true)
+  },
+  openShareDialog({ commit }, post) {
+    commit('setSharePost', post)
+    commit('setShareDialog', true)
   }
 }
 

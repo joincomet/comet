@@ -43,7 +43,7 @@
         </div>
         <div v-if="post.textContent" class="text-primary line-clamp-3 text-sm mt-1" v-html="post.textContent" />
 
-        <img v-if="post.images && post.images.length > 0" :src="post.images[0]" class="border border-gray-200 bg-gray-100 hover:bg-gray-200 transition duration-100 ease-in-out mt-4 object-contain object-center max-w-full w-full h-auto rounded-2xl" style="max-height: 19.8125rem" @click.stop.prevent="$store.dispatch('openImageDialog', post.images[0])">
+        <img v-if="post.imageURLs && post.imageURLs.length > 0" :src="post.imageURLs[0]" class="border border-gray-200 bg-gray-100 hover:bg-gray-200 transition duration-100 ease-in-out mt-4 object-contain object-center max-w-full w-full h-auto rounded-2xl" style="max-height: 19.8125rem" @click.stop.prevent="$store.dispatch('openImageDialog', post.imageURLs)">
 
         <a
           v-else-if="post.embed && post.embed.links && post.embed.links.thumbnail && post.embed.links.thumbnail.length > 0"
@@ -70,8 +70,11 @@
       </div>
       <div class="post__bottom">
         <div class="post__chip">
-          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <!--          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+          </svg>-->
+          <svg class="w-5 h-5" fill="currentColor" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="m17.415 15.791s0-4.0376 0.0014-5.4164c0-4.3317-5.4164-7.5816-5.4164-7.5816s-5.4164 3.2499-5.4157 7.5823c0 3.2385 0.036062 5.4327 0.036062 5.4327s-3.2859 2.1489-3.2859 5.3988h17.331c0-3.2499-3.2506-5.4157-3.2506-5.4157zm-7.4154-5.2913c-9.404e-4 -1.1048 0.89494-2.0007 1.9997-1.9997 1.7821-2.829e-4 2.6744 2.1542 1.4144 3.4141-1.26 1.26-3.4144 0.36762-3.4141-1.4144z" />
           </svg>
           <span class="font-medium ml-2 text-sm">{{ post.rocketCount }}</span>
         </div>
@@ -114,18 +117,18 @@ export default {
 
 <style scoped lang="scss">
 .post {
-  @apply mb-5 bg-white border border-gray-200 rounded-2xl pb-6 cursor-pointer;
+  @apply bg-white border border-gray-200 sm:rounded-2xl shadow-sm sm:shadow sm:shadow-none pb-6 cursor-pointer;
 
   &__top {
-    @apply pt-6 pl-8 pr-6 flex flex-row;
+    @apply pt-5 pl-5 pr-5 sm:pt-6 sm:pl-8 sm:pr-6 flex flex-row;
   }
 
   &__content {
-    @apply px-20;
+    @apply px-5 sm:px-20;
   }
 
   &__bottom {
-    @apply mt-4 pl-20 pr-6 flex flex-row items-center;
+    @apply mt-5 sm:mt-4 sm:pl-20 sm:pr-6 pl-5 pr-5 flex flex-row items-center;
   }
 
   &__chip {

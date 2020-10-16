@@ -21,7 +21,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .moderated-planet {
   @apply flex flex-row items-center mt-4 hover:underline cursor-pointer;
 }

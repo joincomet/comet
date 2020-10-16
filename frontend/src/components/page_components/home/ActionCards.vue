@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-3 gap-5 mb-5">
+  <div class="sm:grid grid-cols-3 gap-5 mb-5 hidden">
     <div class="actioncard" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.spacetelescope.org/archives/images/screen/opo0328a.jpg')">
       <div class="actioncard__title">
         Find your home

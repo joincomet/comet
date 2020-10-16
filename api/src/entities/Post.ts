@@ -59,7 +59,7 @@ export class Post {
   embed?: Embed
 
   @Field(() => [String], { nullable: true })
-  @Column('text', { array: true, nullable: true })
+  @Column('text', { array: true, nullable: true, name: 'image_urls' })
   imageURLs?: string[]
 
   @Field(() => User, { nullable: true })

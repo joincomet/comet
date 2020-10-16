@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white border rounded-2xl myborder dark:bg-gray-800">
+  <div class="bg-white border rounded-2xl border-gray-200 dark:bg-gray-800">
     <div class="flex flex-row items-center">
       <div class="px-5 py-4 flex flex-row flex-grow h-full items-center border-b border-gray-200 text-sm text-gray-700 font-medium">
         Trending Planets
