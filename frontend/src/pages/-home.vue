@@ -8,7 +8,7 @@
 
         <SearchBar ref="searchBar" />
 
-        <div class="p-8 mt-5 transition duration-150 transform bg-white border border-gray-100 rounded-lg shadow cursor-pointer hover:scale-101">
+        <div class="p-8 mt-5 transition duration-150 transform bg-white border border-gray-100 sm:rounded-lg shadow cursor-pointer hover:scale-101">
           <div class="flex flex-row items-start">
             <img class="w-8 h-8 bg-gray-200 rounded-full">
             <div class="flex flex-col items-start ml-4">

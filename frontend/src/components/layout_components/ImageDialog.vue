@@ -51,6 +51,6 @@ export default {
 }
 
 .image {
-  @apply cursor-pointer sm:rounded-2xl shadow-xl z-10 m-auto max-h-full max-w-full sm:max-w-5xl w-auto object-center object-contain;
+  @apply cursor-pointer rounded-xl shadow-xl z-10 m-auto max-h-full max-w-full sm:max-w-5xl w-auto object-center object-contain;
 }
 </style>
