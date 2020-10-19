@@ -113,11 +113,11 @@ export default {
   }
 
   &__item:first-child {
-    @apply rounded-t-xl;
+    @apply rounded-t-2xl;
   }
 
   &__item:last-child {
-    @apply rounded-b-xl;
+    @apply rounded-b-2xl;
   }
 
   &__item-active {

@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-white border rounded-2xl border-gray-200 dark:bg-gray-800">
+  <div class="bg-white border rounded-2xl border-gray-100 shadow dark:bg-gray-800">
     <div class="flex flex-row items-center">
-      <div class="px-5 py-4 flex flex-row flex-grow h-full items-center border-b border-gray-200 text-sm text-gray-700 font-medium">
+      <div class="px-5 py-4 flex flex-row flex-grow h-full items-center border-b border-gray-100 text-sm text-gray-700 font-medium">
         Trending Planets
       </div>
     </div>
-    <div v-for="(planet, index) in planets" :key="planet.id" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
-      <div class="mx-5 py-4 flex flex-row flex-grow h-full items-center border-gray-200" :class="index < planets.length - 1 ? 'border-b' : ''">
+    <nuxt-link v-for="(planet, index) in planets" :key="planet.id" :to="{ name: 'planet', params: { sort: $route.params.sort, time: $route.params.time, planet: planet.name } }" class="flex flex-row items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
+      <div class="mx-5 py-4 flex flex-row flex-grow h-full items-center border-gray-100" :class="index < planets.length - 1 ? 'border-b' : ''">
         <img class="object-cover w-10 h-10 rounded-full bg-gray-200" :src="planet.profile.avatarURL">
         <div class="flex flex-row items-center flex-grow planet">
           <div class="flex flex-col ml-6">
@@ -19,8 +19,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="flex flex-row items-center border-t border-gray-200 hover:bg-gray-100 rounded-b-xl">
+    </nuxt-link>
+    <div class="flex flex-row items-center border-t border-gray-100 hover:bg-gray-100 rounded-b-2xl">
       <nuxt-link to="/explore" class="px-5 py-4 flex flex-row flex-grow h-full items-center text-sm text-indigo-600 font-medium">
         Explore more planets
       </nuxt-link>

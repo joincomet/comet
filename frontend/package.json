@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@nuxt/content": "^1.10.0",
-    "@nuxtjs/apollo": "^4.0.1-rc.3",
+    "@nuxtjs/apollo": "^4.0.1-rc.4",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/device": "^1.2.7",
@@ -28,9 +28,9 @@
     "date-fns": "^2.16.1",
     "email-validator": "^2.0.4",
     "graphql-tag": "^2.11.0",
-    "nuxt": "^2.14.6",
+    "nuxt": "^2.14.7",
     "tiptap": "^1.30.0",
-    "tiptap-extensions": "^1.33.1",
+    "tiptap-extensions": "^1.33.2",
     "v-lazy-image": "^1.4.0",
     "vue-infinite-loading": "^2.4.5",
     "vue-virtual-scroller": "^1.0.10"
@@ -42,8 +42,9 @@
     "@iconify/icons-heroicons-outline": "^1.0.4",
     "@iconify/icons-heroicons-solid": "^1.0.4",
     "@iconify/icons-simple-icons": "^1.0.52",
+    "@iconify/icons-teenyicons": "^1.0.1",
     "@iconify/vue": "^1.0.5",
-    "@nuxt/types": "^2.14.6",
+    "@nuxt/types": "^2.14.7",
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-module": "^3.0.0",
     "@nuxtjs/google-analytics": "^2.4.0",
@@ -53,6 +54,6 @@
     "eslint-plugin-nuxt": "^1.0.0",
     "node-sass": "^4.14.1",
     "sass-loader": "^10.0.3",
-    "tailwindcss": "^1.9.1"
+    "tailwindcss": "^1.9.4"
   }
 }

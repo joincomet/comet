@@ -397,12 +397,21 @@ ALTER TABLE "planet" ADD COLUMN "user_count" bigint default 1;
 ALTER TABLE "planet" ADD COLUMN "post_count" bigint default 0;
 ALTER TABLE "user" ADD COLUMN "post_count" bigint default 0;
 ALTER TABLE "user" ADD COLUMN "comment_count" bigint default 0;
-UPDATE "planet" T SET "user_count" = (SELECT COUNT(*) FROM "planet_user" T2 WHERE T2."planet_id" = T."id");
-UPDATE "planet" T SET "post_count" = (SELECT COUNT(*) FROM "post" T2 WHERE T2."planet_id" = T."id" AND T2."deleted" = false AND T2."removed" = false);
-UPDATE "post" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" T2 WHERE T2."post_id" = T."id" AND T2."deleted" = false AND T2."removed" = false);
-UPDATE "post" T SET "rocket_count" = (SELECT COUNT(*) FROM "post_rocket" T2 WHERE T2."post_id" = T."id");
-UPDATE "comment" T SET "rocket_count" = (SELECT COUNT(*) FROM "comment_rocket" T2 WHERE T2."comment_id" = T."id");
-UPDATE "user" T SET "rocket_count" = (SELECT COUNT(*) FROM "comment_rocket" T2 WHERE T2."user_id" = T."id") + (SELECT COUNT(*) FROM "post_rocket" T2 WHERE T2."user_id" = T."id");
-UPDATE "user" T SET "post_count" = (SELECT COUNT(*) FROM "post" T2 WHERE T2."author_id" = T."id" AND T2."deleted" = false AND T2."removed" = false);
-UPDATE "user" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" T2 WHERE T2."author_id" = T."id" AND T2."deleted" = false AND T2."removed" = false);
 
+ALTER TABLE "post" ALTER COLUMN "rocket_count" TYPE bigint;
+ALTER TABLE "post" ALTER COLUMN "comment_count" TYPE bigint;
+ALTER TABLE "comment" ALTER COLUMN "rocket_count" TYPE bigint;
+ALTER TABLE "user" ALTER COLUMN "rocket_count" TYPE bigint;
+
+UPDATE "planet" T SET "user_count" = (SELECT COUNT(*) FROM "planet_user" WHERE "planet_id" = T."id") WHERE 1=1;
+UPDATE "planet" T SET "post_count" = (SELECT COUNT(*) FROM "post" WHERE "planet_id" = T."id") WHERE 1=1;
+UPDATE "post" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" WHERE "post_id" = T."id" AND "deleted" = false AND "removed" = false) WHERE 1=1;
+UPDATE "post" T SET "rocket_count" = (SELECT COUNT(*) FROM "post_rocket" WHERE "post_id" = T."id") WHERE 1=1;
+UPDATE "comment" T SET "rocket_count" = (SELECT COUNT(*) FROM "comment_rocket" WHERE "comment_id" = T."id") WHERE 1=1;
+UPDATE "user" T SET "rocket_count" = (SELECT COUNT(*) FROM "comment_rocket" WHERE "user_id" = T."id") + (SELECT COUNT(*) FROM "post_rocket" WHERE "user_id" = T."id") WHERE 1=1;
+UPDATE "user" T SET "post_count" = (SELECT COUNT(*) FROM "post" WHERE "author_id" = T."id" AND "deleted" = false AND "removed" = false) WHERE 1=1;
+UPDATE "user" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" WHERE "author_id" = T."id" AND "deleted" = false AND "removed" = false) WHERE 1=1;
+
+DELETE FROM "planet_user" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
+DELETE FROM "planet_moderator" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
+DELETE FROM "planet" WHERE "post_count" = 0;

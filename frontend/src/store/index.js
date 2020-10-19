@@ -9,10 +9,14 @@ export const state = () => ({
   imageDialog: false,
   shareDialog: false,
   imageURLs: [],
-  sharePost: null
+  sharePost: null,
+  topBar: false
 })
 
 export const mutations = {
+  setTopBar(state, topBar) {
+    state.topBar = topBar
+  },
   setLoginDialog(state, dialog) {
     state.loginDialog = dialog
   },

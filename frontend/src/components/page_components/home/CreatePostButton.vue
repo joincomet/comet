@@ -2,9 +2,9 @@
   <div class="create-button">
     <div class="flex flex-row">
       <div class="page">
-        <div class="container py-5 px-5 2xl:px-64">
+        <div class="container mx-auto py-5 px-5 2xl:px-64">
           <div class="grid grid-cols-7 gap-5">
-            <div class="col-span-7 sm:col-span-5 flex">
+            <div class="col-span-7 flex">
               <div
                 class="px-8 py-2 font-medium mx-auto flex flex-row flex-grow-0 items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition hover:scale-105 transform"
               >
@@ -16,7 +16,7 @@
 
                   <template v-else>
                     <iconify-icon width="24" icon="signup" />
-                    <span class="ml-4">Sign up</span>
+                    <span class="ml-4">Sign Up</span>
                   </template>
                 </div>
               </div>
@@ -43,7 +43,8 @@ export default {
 <style scoped>
 @media(min-width: 640px) {
   .page {
-    margin-left: 17.5rem
+    margin-left: 17.5rem;
+    margin-right: 17.5rem;
   }
 }
 

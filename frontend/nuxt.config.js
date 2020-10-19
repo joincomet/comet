@@ -105,7 +105,7 @@ export default {
     configPath: '~~/tailwind.config.js'
   },
 
-  css: ['@/assets/css/inter/inter.css'],
+  css: ['@/assets/css/inter/inter.css', '@/assets/css/main.css'],
 
   plugins: ['@/plugins/layout.client.js', '@/plugins/layout.server.js', '@/plugins/iconify.js'],
 
@@ -151,8 +151,7 @@ export default {
 
   build: {
     cache: process.env.NODE_ENV !== 'production',
-    parallel: process.env.NODE_ENV !== 'production',
-    hardSource: process.env.NODE_ENV !== 'production'
+    parallel: process.env.NODE_ENV !== 'production'
   },
 
   router: {

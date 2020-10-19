@@ -6,8 +6,8 @@ query planet($name: String!) {
     creatorId
     createdAt
     profile {
-      avatar
-      banner
+      avatarURL
+      bannerURL
       color
     }
   }

@@ -43,6 +43,9 @@ query($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $planets: [St
         thumbnail {
           href
         }
+        icon {
+          href
+        }
       }
     }
   }

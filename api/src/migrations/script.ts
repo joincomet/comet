@@ -82,7 +82,7 @@ const run = async () => {
   if (posts) {
     posts = posts.filter(p => isURL(p.linkURL))
 
-    const s = new Sema(32, { capacity: 100 })
+    const s = new Sema(16, { capacity: 100 })
 
     async function fetchEmbedData(post: Post) {
       await s.acquire()
