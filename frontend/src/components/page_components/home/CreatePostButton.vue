@@ -2,13 +2,14 @@
   <div class="create-button">
     <div class="flex flex-row">
       <div class="page">
-        <div class="container mx-auto py-5 px-5 2xl:px-64">
+        <div class="container px-5 py-5 mx-auto 2xl:px-64">
           <div class="grid grid-cols-7 gap-5">
-            <div class="col-span-7 flex">
+            <div class="flex col-span-7">
               <div
-                class="px-8 py-2 font-medium mx-auto flex flex-row flex-grow-0 items-center bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-sm shadow-lg cursor-pointer duration-150 ease-in-out transition hover:scale-105 transform"
+                class="flex flex-row items-center flex-grow-0 px-8 py-2 mx-auto text-sm font-medium text-white transition duration-150 ease-in-out transform bg-indigo-500 rounded-full shadow-lg cursor-pointer hover:bg-indigo-600 hover:scale-105"
+                @click="$store.commit('setLoginDialog', true)"
               >
-                <div class="mx-auto inline-flex flex-row items-center">
+                <div class="inline-flex flex-row items-center mx-auto">
                   <template v-if="$store.state.currentUser">
                     <iconify-icon width="24" icon="create" />
                     <span class="ml-4">Create a post</span>

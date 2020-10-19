@@ -1,6 +1,6 @@
 <template>
   <div
-    class="px-0 top-10 bottom-10 left-0 fixed right-0 flex flex-col z-50 transform"
+    class="fixed left-0 right-0 z-50 flex flex-col px-0 transform top-10 bottom-10"
     style="height: calc(100% - 5rem)"
     :class="dialog ? '' : '-translate-x-full transition delay-400'"
   >
