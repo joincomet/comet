@@ -305,7 +305,7 @@ $$ LANGUAGE plpgsql;
 SELECT "drop_unneeded_tables"();
 
 DELETE FROM "post_endorsement" WHERE "postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
-DELETE FROM "comment_endorsement" WHERE "commentId" = ANY(SELECT "id" FROM "comment" WHERE "postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]));
+DELETE FROM "comment_endorsement" WHERE "commentId" = ANY(SELECT "id" FROM "comment" T WHERE T."postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]));
 DELETE FROM "comment" WHERE "postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
 DELETE FROM "post" WHERE "id" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
 
