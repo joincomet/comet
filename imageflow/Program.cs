@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Imageflow.Server.ExampleDocker {
+namespace Imageflow.Server.CometX {
     public class Program {
         public static void Main (string[] args) {
             CreateHostBuilder (args).Build ().Run ();

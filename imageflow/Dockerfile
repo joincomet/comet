@@ -13,4 +13,4 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic
 WORKDIR /app
 COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "Imageflow.Server.ExampleDocker.dll"]
+ENTRYPOINT ["dotnet", "Imageflow.Server.CometX.dll"]

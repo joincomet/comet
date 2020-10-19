@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Imageflow.Server.ExampleDocker {
+namespace Imageflow.Server.CometX {
     public class Startup {
         public void ConfigureServices (IServiceCollection services) {
             services.AddImageflowS3Service (new S3ServiceOptions (Environment.GetEnvironmentVariable ("AWS_ACCESS_KEY_ID"), Environment.GetEnvironmentVariable ("AWS_SECRET_ACCESS_KEY"))
