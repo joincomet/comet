@@ -85,7 +85,7 @@ export class Post {
   editedAt?: Date
 
   @Field({ nullable: true })
-  get editedTimeSince(): string | null {
+  get timeSinceEdited(): string | null {
     if (!this.editedAt) return null
     // return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
     return dayjs(new Date(this.editedAt)).fromNow()

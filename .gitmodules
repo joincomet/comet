@@ -1,3 +1,0 @@
-[submodule "frontend/src/content"]
-	path = frontend/src/content
-	url = https://github.com/comet-app/about.git

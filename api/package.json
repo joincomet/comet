@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "@cometx/api",
   "version": "0.0.1",
   "private": true,
   "engines": {
@@ -60,6 +60,7 @@
     "typeorm": "^0.2.28",
     "typeorm-naming-strategies": "^2.0.0",
     "typeorm-typedi-extensions": "^0.2.3",
+    "web-push": "^3.4.4",
     "xss": "^1.0.8"
   }
 }

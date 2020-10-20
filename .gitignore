@@ -1,6 +1,5 @@
 .idea
 .vscode
-dump.sql
 .env
 
 */node_modules
@@ -8,15 +7,10 @@ dump.sql
 
 api/dist
 
-frontend/src/static/sw.js
-frontend/.nuxt
-frontend/tailwind.css
-frontend/.graphqlconfig
-frontend/schema.graphql
+frontend/public/sw*
+frontend/public/workbox*
+frontend/.next
 
 imageflow/packages-microsoft-prod.deb
 imageflow/bin
 imageflow/obj
-
-ssl/cert.pem
-ssl/key.pem

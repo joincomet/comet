@@ -36,10 +36,13 @@ services:
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
-      - /usr/src/app/.nuxt
+      - /usr/src/app/.next
     environment:
       - NODE_ENV=development
       - HOST=0.0.0.0
+      - PORT=3000
+      - NEXT_TELEMETRY_DISABLED=1
+      - NODE_OPTIONS=--max_old_space_size=8192
     depends_on:
       - api
 
@@ -49,7 +52,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=password
     volumes:
-      - "db-data:/var/lib/postgresql/data"
+      - "db-data:/var/apollo/postgresql/data"
     expose:
       - "5432"
     ports:

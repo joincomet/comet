@@ -1,6 +1,6 @@
 FROM node:alpine
 
-RUN apk update && apk upgrade && apk add git && apk add make && apk add gcc && apk add g++ && apk add python2 && mkdir -p /usr/src/app
+RUN apk update && apk upgrade && apk add git make gcc g++ python2 && mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json yarn.lock /usr/src/app/

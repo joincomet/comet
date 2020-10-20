@@ -1,0 +1,52 @@
+query($page: Int, $sort: PostSort, $time: TimeFilter, $feed: Feed, $planets: [String!], $usernames: [String!], $search: String, $tags: [String!]) {
+  posts(page: $page, sort: $sort, time: $time, feed: $feed, planets: $planets, usernames: $usernames, search: $search, tags: $tags) {
+    commentCount
+    createdAt
+    editedAt
+    timeSince
+    timeSinceEdited
+    rocketCount
+    id
+    rocketed
+    linkURL
+    textContent
+    title
+    relativeURL
+    sticky
+    imageURLs
+    domain
+    author {
+      id
+      username
+      isCurrentUser
+      profile {
+        avatarURL
+      }
+    }
+    planet {
+      name
+      userCount
+      createdAt
+      joined
+      profile {
+        avatarURL
+      }
+    }
+    embed {
+      meta {
+        site
+        description
+        site
+        title
+      }
+      links {
+        thumbnail {
+          href
+        }
+        icon {
+          href
+        }
+      }
+    }
+  }
+}

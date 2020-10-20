@@ -1,0 +1,458 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AllowedPoster {
+  createdAt: DateTime!
+  planetId: ID!
+  userId: ID!
+}
+
+type Ban {
+  createdAt: DateTime!
+  duration: Float
+  expired: Boolean!
+  id: ID!
+  modId: ID!
+  planetId: ID
+  reason: String!
+  updatedAt: DateTime!
+  userId: ID!
+}
+
+type Comment {
+  author: User
+  authorId: ID
+  createdAt: DateTime!
+  editedAt: DateTime
+  timeSinceEdited: String
+  id: ID!
+  id36: String!
+  level: Float
+  parentCommentId: ID
+  post: Post
+  postId: ID
+  rocketCount: Float!
+  rocketed: Boolean!
+  textContent: String!
+  timeSince: String!
+}
+
+type CommentRocket {
+  commentId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  userId: ID!
+}
+
+type Embed {
+  html: String
+  links: EmbedLinks
+  meta: EmbedMeta
+  rel: [String!]
+}
+
+type EmbedIcon {
+  href: String!
+  media: EmbedMedia
+  rel: [String!]!
+  type: String!
+}
+
+type EmbedLinks {
+  icon: [EmbedIcon!]
+  player: [EmbedPlayer!]
+  thumbnail: [EmbedThumbnail!]
+}
+
+type EmbedMedia {
+  aspectRatio: Float
+  height: Int
+  scrolling: Boolean
+  width: Int
+}
+
+type EmbedMeta {
+  author: String
+  authorURL: String
+  canonical: String
+  description: String
+  keywords: String
+  media: String
+  shortlink: String
+  site: String
+  themeColor: String
+  title: String
+}
+
+type EmbedPlayer {
+  href: String!
+  html: String
+  media: EmbedMedia
+  rel: [String!]!
+  type: String!
+}
+
+type EmbedThumbnail {
+  href: String!
+  media: EmbedMedia
+  rel: [String!]!
+  type: String!
+}
+
+type LoginResponse {
+  accessToken: String!
+  user: User!
+}
+
+type Mutation {
+  addModerator(planet: ID!, username: String!): Boolean!
+  banAndPurgeUser(banReason: String!, bannedId: ID!): Boolean!
+  banUser(banReason: String!, bannedId: ID!): Boolean!
+  banUserFromPlanet(bannedUserId: ID!, planet: ID!): Boolean!
+  blockUser(blockedUsername: String!): Boolean!
+  changePassword(newPassword: String!, oldPassword: String!): LoginResponse!
+  createPlanet(description: String!, name: String!, tags: [String!]!): Boolean!
+  deleteComment(commentId: ID!): Boolean!
+  deletePost(postId: ID!): Boolean!
+  editComment(commentId: ID!, newTextContent: String!): Boolean!
+  editPost(newTextContent: String!, postId: ID!): Boolean!
+  followUser(followedId: ID!): Boolean!
+  hidePost(postId: ID!): Boolean!
+  joinPlanet(name: String!): Boolean!
+  leavePlanet(name: String!): Boolean!
+  login(password: String!, username: String!): LoginResponse!
+  markAllNotificationsRead: Boolean!
+  markNotificationRead(id: ID!): Boolean!
+  mutePlanet(name: String!): Boolean!
+  pinPost(planet: ID!, postId: ID!): Boolean!
+  removeComment(commentId: ID!, planet: ID!, removedReason: String!): Boolean!
+  removePost(planet: ID!, postId: ID!, removedReason: String!): Boolean!
+  reportPost(postId: ID!): Boolean!
+  saveComment(commentId: ID!): Boolean!
+  savePost(postId: ID!): Boolean!
+  signUp(email: String, password: String!, username: String!): LoginResponse!
+  submitComment(parentCommentId: ID, postId: ID!, textContent: String!): Comment!
+  submitPost(image: Upload, link: String, planet: String!, textContent: String, title: String!): Post!
+  toggleCommentUpvote(commentId: ID!): Boolean!
+  togglePostUpvote(postId: ID!): Boolean!
+  unbanUser(bannedId: ID!): Boolean!
+  unbanUserFromPlanet(bannedUserId: ID!, planet: ID!): Boolean!
+  unblockUser(blockedId: ID!): Boolean!
+  unfollowUser(followedId: ID!): Boolean!
+  unhidePost(postId: ID!): Boolean!
+  unmutePlanet(name: String!): Boolean!
+  unpinPost(planet: ID!, postId: ID!): Boolean!
+  unsaveComment(commentId: ID!): Boolean!
+  unsavePost(postId: ID!): Boolean!
+  uploadAvatar(file: Upload!): Boolean!
+  uploadPlanetAvatarImage(file: Upload!, planet: ID!): Boolean!
+  uploadPlanetBannerImage(file: Upload!, planet: ID!): Boolean!
+}
+
+type Notification {
+  comment: Comment
+  commentId: ID
+  createdAt: DateTime!
+  fromUser: User
+  fromUserId: ID
+  id: ID!
+  id36: String!
+  parentCommentId: ID
+  post: Post
+  postId: ID
+  read: Boolean!
+  toUser: User
+  toUserId: ID
+}
+
+type Planet {
+  createdAt: DateTime!
+  creator: User
+  creatorId: ID
+  id: ID!
+  id36: String!
+  joined: Boolean!
+  muted: Boolean!
+  name: String!
+  postCount: Float!
+  profile: PlanetProfile!
+  settings: PlanetSettings!
+  tags: [String!]
+  userCount: Float!
+}
+
+type PlanetModerator {
+  createdAt: DateTime!
+  permissions: [ModPermission!]
+  planetId: ID!
+  userId: ID!
+}
+
+type PlanetMute {
+  createdAt: DateTime!
+  planetId: ID!
+  userId: ID!
+}
+
+type PlanetProfile {
+  avatarURL: String
+  bannerURL: String
+  color: String
+  customName: String
+  description: String
+  discordInvite: String
+  rules: [PlanetRule!]
+  twitterUsername: String
+}
+
+type PlanetRule {
+  description: String!
+  name: String!
+}
+
+type PlanetSettings {
+  allowImages: Boolean!
+  allowLinks: Boolean!
+  allowText: Boolean!
+  allowedPostersOnly: Boolean!
+  nsfw: Boolean!
+  private: Boolean!
+}
+
+type PlanetUser {
+  createdAt: DateTime!
+  planetId: ID!
+  updatedAt: DateTime!
+  userId: ID!
+}
+
+type Post {
+  author: User
+  authorId: ID!
+  commentCount: Float!
+  createdAt: DateTime!
+  deleted: Boolean!
+  domain: String
+  editedAt: DateTime
+  timeSinceEdited: String
+  embed: Embed
+  id: ID!
+  id36: String!
+  imageURLs: [String!]
+  linkURL: String
+  planet: Planet
+  planetId: ID
+  postedToProfile: Boolean!
+  relativeURL: String!
+  removed: Boolean!
+  removedReason: String!
+  rocketCount: Float!
+  rocketed: Boolean!
+  sticky: Boolean!
+  textContent: String
+  timeSince: String!
+  title: String!
+}
+
+type PostHide {
+  createdAt: DateTime!
+  postId: ID!
+  userId: ID!
+}
+
+type PostRocket {
+  createdAt: DateTime!
+  postId: ID!
+  updatedAt: DateTime!
+  userId: ID!
+}
+
+type Query {
+  blockedUsers: [User!]!
+  comments(
+    "If provided, return thread of comments, starting at parent of given ID"
+    commentId: ID,
+    "If provided, return all comments for given post ID"
+    postId: ID,
+    "Sort by new or top"
+    sort: CommentSort = TOP,
+    "If provided, return all comments by given username, and their parent comments"
+    username: String
+  ): [Comment!]!
+  currentUser: User
+  getURLEmbed(URL: String!): Embed!
+  hiddenPosts: [Post!]!
+  mutedPlanets: [Planet!]!
+  notifications(unreadOnly: Boolean = false): [Notification!]!
+  planet(name: String!): Planet
+  planets(joined: Boolean = false, names: [String!], page: Int = 0, pageSize: Int = 20, search: String, sort: PlanetSort = AZ, tags: [String!]): [Planet!]!
+  post(postId: ID!): Post
+  posts(
+    "Show posts from everywhere, or only joined planets/users"
+    feed: Feed = ALL,
+    page: Int = 0,
+    pageSize: Int = 20,
+    "If provided, only posts from given planets will be returned"
+    planets: [String!],
+    "If provided, only posts matching given search term will be returned"
+    search: String,
+    "Sort by new, hot, top, most comments"
+    sort: PostSort = HOT,
+    "If provided, only posts from given tags will be returned"
+    tags: [String!],
+    "Filter by all, hour, day, week, month, year"
+    time: TimeFilter = ALL,
+    "If provided, only posts from given usernames will be returned"
+    usernames: [String!]
+  ): [Post!]!
+  user(username: String!): User
+  userComments(page: Int = 0, pageSize: Int = 20, sort: CommentSort = NEW, time: TimeFilter = ALL, username: String!): [Comment!]!
+}
+
+type Removal {
+  commentId: ID
+  createdAt: DateTime!
+  id: ID!
+  modId: ID!
+  postId: ID
+  reason: String!
+  updatedAt: DateTime!
+}
+
+type Save {
+  commentId: ID
+  createdAt: DateTime!
+  folder: String
+  id: ID!
+  postId: ID
+  userId: ID!
+}
+
+type User {
+  admin: Boolean!
+  blocked: Boolean!
+  blocking: Boolean!
+  commentCount: Float!
+  createdAt: DateTime!
+  email: String!
+  followed: Boolean!
+  followerCount: Float!
+  following: Boolean!
+  followingCount: Float!
+  id: ID!
+  id36: String!
+  isCurrentUser: Boolean!
+  lastLogin: DateTime
+  online: Boolean!
+  postCount: Float!
+  profile: UserProfile!
+  rocketCount: Float!
+  settings: UserSettings!
+  timeSinceCreated: String!
+  username: String!
+}
+
+type UserBlock {
+  createdAt: DateTime!
+  fromId: ID!
+  toId: ID!
+}
+
+type UserFollow {
+  createdAt: DateTime!
+  fromId: ID!
+  toId: ID!
+}
+
+type UserProfile {
+  avatarURL: String
+  bio: String
+  realName: String
+  usernames: Usernames
+  website: String
+}
+
+type UserSettings {
+  appearOffline: Boolean!
+  nsfw: Boolean!
+  private: Boolean!
+  profanity: Boolean!
+}
+
+type Usernames {
+  discord: String
+  facebook: String
+  github: String
+  instagram: String
+  linkedin: String
+  reddit: String
+  snapchat: String
+  soundcloud: String
+  spotify: String
+  steam: String
+  tiktok: String
+  tumblr: String
+  twitch: String
+  twitter: String
+  vsco: String
+  youtube: String
+}
+
+enum CommentSort {
+  NEW
+  TOP
+}
+
+enum Feed {
+  ALL
+  JOINED
+}
+
+enum ModPermission {
+  ADD_APPROVED_POSTER
+  ADD_MOD
+  ARCHIVE
+  BAN
+  CHANGE_PERMISSIONS
+  CUSTOMIZE
+  PURGE
+  REMOVE_COMMENT
+  REMOVE_POST
+  SETTINGS
+  STICKY_COMMENT
+  STICKY_POST
+}
+
+enum PlanetSort {
+  AZ
+  NEW
+  TOP
+  TRENDING
+}
+
+enum PostSort {
+  COMMENTS
+  HOT
+  NEW
+  TOP
+}
+
+enum TimeFilter {
+  ALL
+  DAY
+  HOUR
+  MONTH
+  WEEK
+  YEAR
+}
+
+
+"The javascript `Date` as string. Type represents date and time as the ISO Date string."
+scalar DateTime
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload
