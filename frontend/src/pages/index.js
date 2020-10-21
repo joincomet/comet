@@ -17,6 +17,8 @@ const POSTS = gql`
       linkURL
       imageURLs
       relativeURL
+      commentCount
+      rocketCount
       embed {
         links {
           icon {
@@ -70,6 +72,12 @@ function Posts({ initial }) {
 
   return (
     <DragDropContext>
+      <style jsx>{`
+        .virtual-list {
+          flex-basis: auto !important;
+        }
+      `}</style>
+
       <Droppable
         droppableId="droppable"
         mode="virtual"
@@ -88,13 +96,15 @@ function Posts({ initial }) {
             {({ height, isScrolling, onChildScroll, scrollTop }) => (
               <List
                 autoHeight
-                rowCount={posts.length}
                 height={height}
+                autoWidth
+                width={10000}
+                rowCount={posts.length}
                 isScrolling={isScrolling}
                 onScroll={onChildScroll}
                 scrollTop={scrollTop}
                 rowHeight={110}
-                width={1000}
+                className="virtual-list"
                 ref={ref => {
                   // react-virtualized has no way to get the list's ref that I can so
                   // So we use the `ReactDOM.findDOMNode(ref)` escape hatch to get the ref
@@ -120,7 +130,7 @@ export default function Home({ posts }) {
   return (
     <Layout>
       <div className="page">
-        <div className="container py-5 mx-auto sm:px-5 2xl:px-80">
+        <div className="container pt-5 mx-auto sm:px-5 2xl:px-80">
           <div>
             <Posts initial={posts} />
           </div>
@@ -134,12 +144,12 @@ export async function getServerSideProps() {
   const client = initializeApollo()
 
   const { data } = await client.query({
-    query: POSTS
+    query: POSTS,
   })
 
   return {
     props: {
       posts: data.posts,
-    }
+    },
   }
 }

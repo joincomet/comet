@@ -2,45 +2,50 @@ import { CSSTransition } from 'react-transition-group'
 import { FiX } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import SignUpForm from './SignUpForm'
+import { motion } from 'framer-motion'
 
 export default function LoginDialog() {
   const router = useRouter()
 
   return (
     <div
-      className={`fixed left-0 right-0 z-50 flex flex-col px-0 top-10 bottom-10 transform${
-        router.asPath === '/login'
-          ? ''
-          : ' -translate-x-full opacity-0 transition delay-400'
-      }`}
+      className={`fixed left-0 right-0 z-50 flex flex-col px-0 top-10 bottom-10 transform${router.asPath === '/login'
+        ? ''
+        : ' -translate-x-full opacity-0 transition delay-400'
+        }`}
       style={{ height: 'calc(100% - 5rem)' }}
     >
-      <CSSTransition
-        in={router.asPath === '/login'}
-        timeout={0}
-        classNames="bg"
-      >
+      <motion.div
+        initial={{ opacity: 1, }}
+        animate={{ opacity: 0 }}
+        transition={{
+          ease: "easeInOut", duration: '300ms', transitionEnd: {
+            display: "none",
+          },
+        }}>
         <div
-          className="absolute left-0 right-0"
-          style={{
-            bottom: '-3rem',
-            top: '-3rem',
-            background: 'rgba(16, 16, 16, 0.7)',
-          }}
+          className="absolute left-0 right-0 -top-12 -bottom-12 bg-opacity-75 bg-gray-900"
           onClick={() =>
             router.pathname === '/login'
               ? router.push('/')
               : router.push(router.pathname)
           }
         />
-      </CSSTransition>
+      </motion.div>
+      {/* <CSSTransition
+        in={router.asPath === '/login'}
+        timeout={0}
+        classNames="bg"
+      >
+
+      </CSSTransition> */}
 
       <CSSTransition
         in={router.asPath === '/login'}
         timeout={0}
         classNames="modal"
       >
-        <div className="relative z-10 w-full h-full max-w-5xl m-auto bg-white dark:bg-gray-800 shadow-xl rounded-2xl">
+        <div className="relative z-10 w-full h-full max-w-5xl m-auto bg-white shadow-xl dark:bg-gray-800 rounded-2xl">
           <div
             className="absolute p-1 transition duration-150 ease-in-out rounded-full cursor-pointer top-4 right-4 hover:bg-gray-100"
             onClick={() =>

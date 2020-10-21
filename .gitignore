@@ -7,8 +7,6 @@
 
 api/dist
 
-frontend/public/sw*
-frontend/public/workbox*
 frontend/.next
 
 imageflow/packages-microsoft-prod.deb

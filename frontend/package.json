@@ -14,36 +14,30 @@
     "@next/mdx": "^9.5.5",
     "@popperjs/core": "^2.5.3",
     "@tippyjs/react": "^4.2.0",
-    "base64-u8array-arraybuffer": "^1.0.2",
-    "clean-webpack-plugin": "^3.0.0",
     "draft-js": "^0.11.7",
     "draft-js-plugins-editor": "^3.0.0",
     "formik": "^2.2.0",
     "framer-motion": "^2.9.1",
     "graphql": "^15.3.0",
-    "next": "9.5.3",
+    "next": "9.5.5",
     "next-auth": "^3.1.0",
-    "next-pwa": "^3.1.5",
     "nextjs-progressbar": "^0.0.6",
     "overlayscrollbars": "^1.13.0",
     "overlayscrollbars-react": "^0.2.2",
-    "react": "16.13.1",
+    "react": "17.0.0",
     "react-beautiful-dnd": "^13.0.0",
-    "react-dom": "16.13.1",
+    "react-dom": "17.0.0",
     "react-icons": "^3.11.0",
     "react-intersection-observer": "^8.29.1",
     "react-modal": "^3.11.2",
     "react-popper": "^2.2.3",
     "react-toastify": "^6.0.9",
-    "react-transition-group": "^4.4.1",
     "react-virtualized": "^9.22.2",
     "sass": "^1.27.0",
     "use-dark-mode": "^2.3.1",
-    "use-debounce": "^5.0.1",
-    "web-push": "^3.4.4"
+    "use-debounce": "^5.0.1"
   },
   "devDependencies": {
-    "@tailwindcss/custom-forms": "^0.2.1",
     "@tailwindcss/typography": "^0.2.0",
     "@types/overlayscrollbars": "^1.12.0",
     "@types/react-beautiful-dnd": "^13.0.0",
@@ -58,6 +52,9 @@
     "postcss-flexbugs-fixes": "^4.2.1",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.1.2",
-    "tailwindcss": "^1.9.5"
+    "tailwindcss": "^2.0.0-alpha.1"
+  },
+  "resolutions": {
+    "webpack": "^5.0.0-beta.30"
   }
 }

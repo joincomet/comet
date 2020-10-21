@@ -17,28 +17,15 @@ module.exports = {
         104: '1.04',
       },
     },
-    colors: require('./colors'),
+    fontFamily: {
+      sans: ['Inter var', 'sans-serif']
+    }
   },
-  dark: 'class',
+  darkMode: 'class',
   experimental: 'all',
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-    defaultLineHeights: true,
-    standardFontWeights: true,
-  },
+  future: 'all',
   plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/custom-forms'),
+    require('@tailwindcss/typography')
   ],
-  purge: {
-    enabled: process.env.NODE_ENV === 'production',
-    options: {
-      whitelist: ['dark'],
-    },
-    content: [
-      './src/components/**/*.{js,ts,jsx,tsx}',
-      './src/pages/**/*.{js,ts,jsx,tsx}',
-    ],
-  },
+  purge: ['./src/components/**/*.{js,ts,jsx,tsx}', './src/pages/**/*.{js,ts,jsx,tsx}'],
 }

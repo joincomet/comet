@@ -2,15 +2,7 @@ import SearchBar from './SearchBar'
 
 export default function TopBar() {
   return (
-    <div>
-      <nav className="fixed z-10 top-0 inset-x-0 w-full h-16 bg-white shadow-md">
-        <div className="page h-full">
-          <div className="container mx-auto 2xl:px-80 flex items-center flex-grow h-full">
-            <SearchBar />
-          </div>
-        </div>
-      </nav>
-
+    <>
       <style jsx>{`
         @media (min-width: 640px) {
           .page {
@@ -23,6 +15,16 @@ export default function TopBar() {
           @apply flex flex-grow;
         }
       `}</style>
-    </div>
+
+      <div>
+        <nav className="fixed inset-x-0 top-0 z-10 w-full h-16 bg-white shadow-md">
+          <div className="h-full page">
+            <div className="container flex items-center flex-grow h-full mx-auto 2xl:px-80">
+              <SearchBar />
+            </div>
+          </div>
+        </nav>
+      </div>
+    </>
   )
 }

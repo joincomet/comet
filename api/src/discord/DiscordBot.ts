@@ -38,7 +38,7 @@ abstract class DiscordBot {
               .setColor(planet.profile.color || 0x5a67d8)
               .setURL(`https://www.cometx.io/+${planet.name}`)
               .setImage(planet.profile.avatarURL)
-              .setFooter('CometX.io', 'https://dev.cometx.io/icon.png')
+              .setFooter('CometX.io', 'https://cometx.io/icon.png')
           )
         } else {
           await message.reply('Planet not found')
@@ -59,7 +59,7 @@ abstract class DiscordBot {
               .setColor(0x5a67d8)
               .setURL(`https://www.cometx.io/@${user.username}`)
               .setImage(user.profile.avatarURL)
-              .setFooter('CometX.io', 'https://dev.cometx.io/icon.png')
+              .setFooter('CometX.io', 'https://cometx.io/icon.png')
               .addFields(
                 { name: '**Posts**', value: user.postCount, inline: true },
                 { name: '**Comments**', value: user.commentCount, inline: true }

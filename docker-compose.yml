@@ -52,7 +52,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=password
     volumes:
-      - "db-data:/var/apollo/postgresql/data"
+      - "db-data:/var/lib/postgresql/data"
     expose:
       - "5432"
     ports:

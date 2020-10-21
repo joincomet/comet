@@ -1,5 +1,5 @@
-import '../styles/index.css'
-import '../styles/app.css'
+import '@/styles/index.css'
+import '@/styles/test.css'
 import 'overlayscrollbars/css/OverlayScrollbars.css'
 import 'react-virtualized/styles.css'
 
