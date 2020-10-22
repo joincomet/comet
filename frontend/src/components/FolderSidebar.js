@@ -76,13 +76,13 @@ export default function FolderSidebar() {
           </a>
         </div>
 
-        <Droppable droppableId="folders">
-          {(provided, snapshot) => (
-            <div className="mt-6" ref={provided.innerRef}>
-              <div className="mx-5 mb-3 text-tiny text-tertiary font-bold uppercase tracking-widest">
-                FOLDERS
-              </div>
-              <div>
+        <div className="mt-6">
+          <div className="mx-5 mb-3 text-tiny text-tertiary font-bold uppercase tracking-widest">
+            FOLDERS
+          </div>
+          <Droppable droppableId="folders">
+            {(provided, snapshot) => (
+              <div ref={provided.innerRef}>
                 <div className="flex flex-row items-center text-secondary cursor-pointer transition duration-150 ease-in-out dark:hover:bg-gray-700 h-12 px-6 rounded">
                   <FiStar className="w-5 h-5 text-yellow-500" />
                   <span className="ml-6 text-sm font-medium">Favorites</span>
@@ -105,11 +105,15 @@ export default function FolderSidebar() {
                   <span className="ml-6 text-sm font-medium">New Folder</span>
                 </div>
               </div>
+            )}
+          </Droppable>
 
-              <div className="mx-5 mb-3 mt-6 text-tiny text-tertiary font-bold uppercase tracking-widest">
-                DIRECT MESSAGES
-              </div>
-              <div>
+          <div className="mx-5 mb-3 mt-6 text-tiny text-tertiary font-bold uppercase tracking-widest">
+            DIRECT MESSAGES
+          </div>
+          <Droppable droppableId="directmessages">
+            {(provided, snapshot) => (
+              <div ref={provided.innerRef}>
                 <div className="flex flex-row items-center text-secondary cursor-pointer transition duration-150 ease-in-out dark:hover:bg-gray-700 h-12 px-6 rounded">
                   <img
                     className="w-8 h-8 rounded-full object-cover"
@@ -126,9 +130,9 @@ export default function FolderSidebar() {
                   </span>
                 </div>
               </div>
-            </div>
-          )}
-        </Droppable>
+            )}
+          </Droppable>
+        </div>
       </nav>
     </>
   )
