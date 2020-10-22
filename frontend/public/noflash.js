@@ -8,12 +8,8 @@
   const classNameLight = 'light'
 
   function setClassOnDocumentElement(darkMode) {
-    document.documentElement.classList.add(
-      darkMode ? classNameDark : classNameLight
-    )
-    document.documentElement.classList.remove(
-      darkMode ? classNameLight : classNameDark
-    )
+    document.body.classList.add(darkMode ? classNameDark : classNameLight)
+    document.body.classList.remove(darkMode ? classNameLight : classNameDark)
   }
 
   const preferDarkQuery = '(prefers-color-scheme: dark)'

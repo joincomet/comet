@@ -1,12 +1,11 @@
 import '@/styles/index.css'
-import '@/styles/test.css'
 import 'overlayscrollbars/css/OverlayScrollbars.css'
 import 'react-virtualized/styles.css'
 
 import Head from 'next/head'
 import { ApolloProvider } from '@apollo/client'
-import { useApollo } from '../apollo/client'
-import LoginDialog from '../components/LoginDialog'
+import { useApollo } from '@/apollo/client'
+import LoginDialog from '@/components/LoginDialog'
 
 export default function App({ Component, pageProps }) {
   const apolloClient = useApollo(pageProps.initialApolloState)

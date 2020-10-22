@@ -2,30 +2,28 @@ module.exports = {
   theme: {
     extend: {
       fontSize: {
-        tiny: '.625rem',
+        tiny: '.625rem'
       },
       transitionDelay: {
         400: '400ms',
         600: '600ms',
         800: '800ms',
-        900: '900ms',
+        900: '900ms'
       },
       scale: {
         101: '1.01',
         102: '1.02',
         103: '1.03',
-        104: '1.04',
-      },
-    },
-    fontFamily: {
-      sans: ['Inter var', 'sans-serif']
+        104: '1.04'
+      }
     }
   },
   darkMode: 'class',
   experimental: 'all',
   future: 'all',
-  plugins: [
-    require('@tailwindcss/typography')
-  ],
-  purge: ['./src/components/**/*.{js,ts,jsx,tsx}', './src/pages/**/*.{js,ts,jsx,tsx}'],
+  plugins: [require('@tailwindcss/typography')],
+  purge: [
+    './src/components/**/*.{js,ts,jsx,tsx}',
+    './src/pages/**/*.{js,ts,jsx,tsx}'
+  ]
 }

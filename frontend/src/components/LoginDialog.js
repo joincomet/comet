@@ -9,20 +9,24 @@ export default function LoginDialog() {
 
   return (
     <div
-      className={`fixed left-0 right-0 z-50 flex flex-col px-0 top-10 bottom-10 transform${router.asPath === '/login'
-        ? ''
-        : ' -translate-x-full opacity-0 transition delay-400'
-        }`}
+      className={`fixed left-0 right-0 z-50 flex flex-col px-0 top-10 bottom-10 transform${
+        router.asPath === '/login'
+          ? ''
+          : ' -translate-x-full opacity-0 transition delay-400'
+      }`}
       style={{ height: 'calc(100% - 5rem)' }}
     >
-      <motion.div
-        initial={{ opacity: 1, }}
+      <div
+        initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
         transition={{
-          ease: "easeInOut", duration: '300ms', transitionEnd: {
-            display: "none",
-          },
-        }}>
+          ease: 'easeInOut',
+          duration: '300ms',
+          transitionEnd: {
+            display: 'none'
+          }
+        }}
+      >
         <div
           className="absolute left-0 right-0 -top-12 -bottom-12 bg-opacity-75 bg-gray-900"
           onClick={() =>
@@ -31,7 +35,7 @@ export default function LoginDialog() {
               : router.push(router.pathname)
           }
         />
-      </motion.div>
+      </div>
       {/* <CSSTransition
         in={router.asPath === '/login'}
         timeout={0}
@@ -59,7 +63,10 @@ export default function LoginDialog() {
           <div className="grid h-full grid-cols-12">
             <div className="hidden h-full col-span-4 sm:flex bg-gradient-to-br to-red-400 from-indigo-500 rounded-l-xl">
               <div className="m-auto h-2/3">
-                <img src="/logos/logo_white_noio.svg" className="h-8" />
+                <img
+                  src="/logos/logo_white_noio_nogradient.svg"
+                  className="h-8"
+                />
                 <div className="text-xl text-center text-white font-base mt-7">
                   See what's in orbit.
                 </div>

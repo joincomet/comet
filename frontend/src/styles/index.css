@@ -1,21 +1,18 @@
 @tailwind base;
 
 /* Write your own custom base styles here */
-:root { font-family: 'Inter', sans-serif; }
+body { font-family: 'Inter', sans-serif !important; }
 @supports (font-variation-settings: normal) {
-  :root { font-family: 'Inter var', sans-serif; }
-}
-
-html {
-  @apply text-black bg-gray-50;
-}
-
-html.dark {
-  @apply text-white bg-gray-900;
+  body { font-family: 'Inter var', sans-serif !important; }
 }
 
 body {
+  @apply text-black bg-gray-50;
   -webkit-tap-highlight-color: transparent;
+}
+
+body.dark {
+  @apply text-white bg-gray-900;
 }
 
 
@@ -24,35 +21,16 @@ body {
 /* Stop purging. */
 
 /* Write your own custom component styles here */
-
-.navitem {
-    @apply relative flex flex-row items-center px-6 py-3 mr-5 text-sm font-medium transition duration-150 ease-in-out origin-left transform rounded-r-full dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-105;
-  }
-  
-  .navitem-active::before {
-    content: "";
-    @apply absolute top-0 bottom-0 left-0 w-1;
-  }
-  
-  .navdrawer {
-    @apply fixed z-20 flex flex-col h-full min-h-full overflow-y-auto bg-white shadow-lg dark:bg-gray-800 sm:block;
-    width: 17.5rem;
-  }
-  
-  .text-field {
-    @apply w-full h-10 px-4 text-sm text-gray-500 transition duration-150 ease-in-out origin-left bg-white border border-gray-200 rounded-md dark:bg-gray-700 dark:border-gray-700 dark:text-gray-400 focus:outline-none;
-  }
-  
-  @media(min-width: 640px) {
-    .page {
-      margin-left: 17.5rem;
-      margin-right: 17.5rem;
-    }
-  }
-  
+@media(min-width: 640px) {
   .page {
-    @apply flex flex-grow;
-  }  
+    margin-left: 17.5rem;
+    margin-right: 17.5rem;
+  }
+}
+
+.page {
+  @apply flex flex-grow;
+}
 
 /* Start purging... */
 @tailwind utilities;
@@ -60,76 +38,78 @@ body {
 
 /* Your own custom utilities */
 .text-tertiary {
-    @apply text-gray-500 dark:text-gray-400;
-  }
-  
-  .text-secondary {
-    @apply text-gray-700 dark:text-gray-200;
-  }
-  
-  .text-primary {
-    @apply text-black dark:text-white;
-  }
+  @apply text-gray-600 dark:text-gray-400;
+}
 
-  .line-clamp-3 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* number of lines to show */
-    -webkit-box-orient: vertical;
-  
-    /* These are technically the same, but use both */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-  
-    -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-all;
-    /* Instead use this non-standard one: */
-    word-break: break-word;
-  
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
+.text-secondary {
+  @apply text-gray-800 dark:text-gray-200;
+}
+
+.text-primary {
+  @apply text-black dark:text-white;
+}
+
+.text-accent {
+  @apply text-blue-500;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  -webkit-box-orient: vertical;
+   /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.animate-online {
+  animation: online 5s cubic-bezier(0, 0, 0.2, 1) 5s infinite;
+}
+
+@keyframes online {
+  0% {
+    transform: scale(1);
+    opacity: 1;
   }
-  
-  .line-clamp-2 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* number of lines to show */
-    -webkit-box-orient: vertical;
-  
-    /* These are technically the same, but use both */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-  
-    -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-all;
-    /* Instead use this non-standard one: */
-    word-break: break-word;
-  
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
+  20%, 100% {
+    transform: scale(2);
+    opacity: 0;
   }
-  
-  .animate-online {
-    animation: online 5s cubic-bezier(0, 0, 0.2, 1) 5s infinite;
-  }
-  
-  @keyframes online {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    20%, 100% {
-      transform: scale(2);
-      opacity: 0;
-    }
-  }
+}

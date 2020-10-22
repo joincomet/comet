@@ -20,7 +20,8 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/no-unescaped-entities': 0,
     'react/display-name': 0,
-    'no-unused-vars': 'off'
+    'no-unused-vars': 'off',
+    'no-empty-catch-statements': 'off'
   },
   settings: {
     react: {
