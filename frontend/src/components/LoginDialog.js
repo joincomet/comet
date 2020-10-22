@@ -1,4 +1,3 @@
-import { CSSTransition } from 'react-transition-group'
 import { FiX } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import SignUpForm from './SignUpForm'
@@ -16,7 +15,7 @@ export default function LoginDialog() {
       }`}
       style={{ height: 'calc(100% - 5rem)' }}
     >
-      <div
+      <motion.div
         initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
         transition={{
@@ -35,20 +34,9 @@ export default function LoginDialog() {
               : router.push(router.pathname)
           }
         />
-      </div>
-      {/* <CSSTransition
-        in={router.asPath === '/login'}
-        timeout={0}
-        classNames="bg"
-      >
+      </motion.div>
 
-      </CSSTransition> */}
-
-      <CSSTransition
-        in={router.asPath === '/login'}
-        timeout={0}
-        classNames="modal"
-      >
+      <motion.div>
         <div className="relative z-10 w-full h-full max-w-5xl m-auto bg-white shadow-xl dark:bg-gray-800 rounded-2xl">
           <div
             className="absolute p-1 transition duration-150 ease-in-out rounded-full cursor-pointer top-4 right-4 hover:bg-gray-100"
@@ -90,7 +78,7 @@ export default function LoginDialog() {
             </div>
           </div>
         </div>
-      </CSSTransition>
+      </motion.div>
     </div>
   )
 }

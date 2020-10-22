@@ -8,16 +8,16 @@ function createIsomorphLink() {
     const { HttpLink } = require('@apollo/client/link/http')
     return new HttpLink({
       uri: 'http://api:4000/graphql',
-      credentials: 'same-origin',
+      credentials: 'same-origin'
     })
   } else {
     const { HttpLink } = require('@apollo/client/link/http')
     return new HttpLink({
       uri:
         process.env.NODE_ENV === 'production'
-          ? `https://${process.env.NGINX_URL}/graphql`
+          ? `${new URL(location.href).origin}/graphql`
           : 'http://localhost:4000/graphql',
-      credentials: 'same-origin',
+      credentials: 'same-origin'
     })
   }
 }
@@ -26,7 +26,7 @@ function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link: createIsomorphLink(),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache()
   })
 }
 

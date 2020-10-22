@@ -1,6 +1,6 @@
 import Layout from '../components/Layout'
 import ReactDOM from 'react-dom'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   WindowScroller,
   List,
@@ -62,7 +62,7 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 })
 
-const getRowRender = ({ posts, snapshot, provided }) => ({
+const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
   index,
   parent,
   style
@@ -83,10 +83,16 @@ const getRowRender = ({ posts, snapshot, provided }) => ({
             <motion.div
               animate={{ opacity: 0.5 }}
               style={{ margin: 0, ...style }}
+              transition={{ ease: 'easeInOut' }}
               className="react-beatiful-dnd-copy"
               ref={registerChild}
             >
-              <Post post={post} isDragging={false} index={index} />
+              <Post
+                post={post}
+                isDragging={false}
+                index={index}
+                mousePosition={mousePosition}
+              />
             </motion.div>
           )}
         </CellMeasurer>
@@ -101,6 +107,7 @@ const getRowRender = ({ posts, snapshot, provided }) => ({
                   post={post}
                   isDragging={snapshot.isDragging && !snapshot.isDropAnimating}
                   index={index}
+                  mousePosition={mousePosition}
                 />
               </div>
             ) : (
@@ -120,6 +127,7 @@ const getRowRender = ({ posts, snapshot, provided }) => ({
                         snapshot.isDragging && !snapshot.isDropAnimating
                       }
                       index={index}
+                      mousePosition={mousePosition}
                     />
                   </div>
                 )}
@@ -134,66 +142,90 @@ const getRowRender = ({ posts, snapshot, provided }) => ({
 
 function Posts({ initial }) {
   const [posts] = useState(() => initial)
+  const [mousePosition, setMousePosition] = useState(() => ({ x: 0, y: 0 }))
 
-  function onDragEnd(result) {}
+  const handleClick = event => {
+    const el = event.target
+    setMousePosition({
+      x: event.offsetX + el.offsetLeft,
+      y: event.offsetY + el.offsetTop
+    })
+  }
+
+  useEffect(() => {
+    window.addEventListener('mousedown', handleClick, {
+      capture: true,
+      passive: false
+    })
+    return () =>
+      window.removeEventListener('mousedown', handleClick, {
+        capture: true,
+        passive: false
+      })
+  })
 
   return (
     <div>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable
-          droppableId="droppable"
-          mode="virtual"
-          isDropDisabled={true}
-          renderClone={(provided, snapshot, rubric) => (
-            <div style={{ margin: 0 }} className="outline-none">
-              <Post
-                provided={provided}
-                snapshot={snapshot}
-                isDragging={snapshot.isDragging && !snapshot.isDropAnimating}
-                post={posts[rubric.source.index]}
-                index={rubric.source.index}
-              />
-            </div>
-          )}
-        >
-          {(provided, snapshot) => (
-            <WindowScroller>
-              {({ height, isScrolling, onChildScroll, scrollTop }) => (
-                <List
-                  autoHeight={true}
-                  height={height}
-                  autoWidth
-                  width={10000}
-                  rowCount={posts.length}
-                  isScrolling={isScrolling}
-                  onScroll={onChildScroll}
-                  scrollTop={scrollTop}
-                  rowHeight={cache.rowHeight}
-                  deferredMeasurementCache={cache}
-                  className="virtual-list outline-none"
-                  ref={ref => {
-                    // react-virtualized has no way to get the list's ref that I can so
-                    // So we use the `ReactDOM.findDOMNode(ref)` escape hatch to get the ref
-                    if (ref) {
-                      // eslint-disable-next-line react/no-find-dom-node
-                      const whatHasMyLifeComeTo = ReactDOM.findDOMNode(ref)
-                      if (whatHasMyLifeComeTo instanceof HTMLElement) {
-                        provided.innerRef(whatHasMyLifeComeTo)
-                      }
+      <Droppable
+        droppableId="droppable"
+        mode="virtual"
+        isDropDisabled={true}
+        renderClone={(provided, snapshot, rubric) => (
+          <div style={{ margin: 0 }} className="outline-none">
+            <Post
+              provided={provided}
+              snapshot={snapshot}
+              isDragging={snapshot.isDragging && !snapshot.isDropAnimating}
+              post={posts[rubric.source.index]}
+              index={rubric.source.index}
+              mousePosition={mousePosition}
+            />
+          </div>
+        )}
+      >
+        {(provided, snapshot) => (
+          <WindowScroller>
+            {({ height, isScrolling, onChildScroll, scrollTop }) => (
+              <List
+                autoHeight={true}
+                height={1080}
+                autoWidth
+                width={10000}
+                rowCount={posts.length}
+                isScrolling={isScrolling}
+                onScroll={onChildScroll}
+                scrollTop={scrollTop}
+                rowHeight={cache.rowHeight}
+                deferredMeasurementCache={cache}
+                className="virtual-list outline-none"
+                style={{ overflowX: 'hidden !important' }}
+                ref={ref => {
+                  if (ref) {
+                    // eslint-disable-next-line react/no-find-dom-node
+                    const domNode = ReactDOM.findDOMNode(ref)
+                    if (domNode instanceof HTMLElement) {
+                      provided.innerRef(domNode)
                     }
-                  }}
-                  rowRenderer={getRowRender({ posts, snapshot, provided })}
-                />
-              )}
-            </WindowScroller>
-          )}
-        </Droppable>
-      </DragDropContext>
+                  }
+                }}
+                rowRenderer={getRowRender({
+                  posts,
+                  snapshot,
+                  provided,
+                  mousePosition
+                })}
+              />
+            )}
+          </WindowScroller>
+        )}
+      </Droppable>
     </div>
   )
 }
 
 export default function Home({ posts }) {
+  function onDragEnd(result) {}
+
   return (
     <>
       <style jsx>{`
@@ -212,14 +244,16 @@ export default function Home({ posts }) {
       `}</style>
 
       <Layout>
-        <div className="page">
-          <div className="container pt-5 mx-auto sm:px-5 2xl:px-80">
-            <div>
-              <Posts initial={posts} />
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="page">
+            <div className="container pt-5 mx-auto sm:px-5 2xl:px-80">
+              <div>
+                <Posts initial={posts} />
+              </div>
             </div>
           </div>
-        </div>
-        <FolderSidebar />
+          <FolderSidebar />
+        </DragDropContext>
       </Layout>
     </>
   )

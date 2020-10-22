@@ -77,16 +77,10 @@ function LeftNavDrawer() {
               <Logo className="w-32 dark:text-gray-200 text-black" />
             </NavLink>
             <NavLink
-              href="/settings"
-              className="hover:scale-125 transform duration-150 ease-in-out text-gray-500"
-            >
-              <FiSettings className="w-4 h-4" />
-            </NavLink>
-            <NavLink
               href="/notifications"
-              className="ml-4 hover:scale-125 transform duration-150 ease-in-out text-gray-500"
+              className="ml-4 hover:scale-125 transform duration-150 ease-in-out text-tertiary"
             >
-              <FiBell className="w-4 h-4" />
+              <FiBell className="w-5 h-5" />
             </NavLink>
           </div>
           <div className="text-gray-500">

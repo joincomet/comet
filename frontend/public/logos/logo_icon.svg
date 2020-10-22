@@ -8,64 +8,64 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:export-ydpi="1549.3396"
-   inkscape:export-xdpi="1549.3396"
-   inkscape:export-filename="C:\Users\Dan\Desktop\discord_icon.png"
-   sodipodi:docname="logo_angled_icon.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   id="svg35"
+   width="6.3937702mm"
+   height="6.3937702mm"
+   viewBox="0 0 6.3937703 6.3937703"
    version="1.1"
-   viewBox="0 0 8.3937703 8.3937702"
-   height="8.3937702mm"
-   width="8.3937702mm">
+   id="svg35"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="logo_icon.svg"
+   inkscape:export-filename="C:\Users\Dan\Desktop\discord_icon.png"
+   inkscape:export-xdpi="1549.3396"
+   inkscape:export-ydpi="1549.3396">
   <defs
      id="defs29">
     <linearGradient
-       gradientTransform="rotate(32,323.88089,255.03921)"
-       gradientUnits="userSpaceOnUse"
-       y2="5.3857255"
-       x2="14.801991"
-       y1="5.3857255"
-       x1="7.7676954"
-       id="linearGradient971"
-       xlink:href="#linearGradient977"
-       inkscape:collect="always" />
-    <linearGradient
        inkscape:collect="always"
-       id="linearGradient977">
+       xlink:href="#linearGradient977"
+       id="linearGradient971"
+       x1="7.7676954"
+       y1="5.3857255"
+       x2="14.801991"
+       y2="5.3857255"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="rotate(32,322.68921,255.38092)" />
+    <linearGradient
+       id="linearGradient977"
+       inkscape:collect="always">
       <stop
-         style="stop-color:#6875f5;stop-opacity:1"
+         id="stop973"
          offset="0"
-         id="stop973" />
+         style="stop-color:#6875f5;stop-opacity:1" />
       <stop
-         style="stop-color:#f98080;stop-opacity:1"
+         id="stop975"
          offset="1"
-         id="stop975" />
+         style="stop-color:#f98080;stop-opacity:1" />
     </linearGradient>
   </defs>
   <sodipodi:namedview
-     inkscape:window-maximized="0"
-     inkscape:window-y="79"
-     inkscape:window-x="220"
-     inkscape:window-height="1040"
-     inkscape:window-width="1274"
-     fit-margin-bottom="1"
-     fit-margin-right="1"
-     fit-margin-left="1"
-     fit-margin-top="1"
-     showgrid="false"
-     inkscape:document-rotation="0"
-     inkscape:current-layer="layer1"
-     inkscape:document-units="mm"
-     inkscape:cy="24.78772"
-     inkscape:cx="19.403487"
-     inkscape:zoom="15.839192"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     borderopacity="1.0"
-     bordercolor="#666666"
+     id="base"
      pagecolor="#ffffff"
-     id="base" />
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="15.839192"
+     inkscape:cx="15.623963"
+     inkscape:cy="18.425219"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1274"
+     inkscape:window-height="1040"
+     inkscape:window-x="220"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata32">
     <rdf:RDF>
@@ -79,13 +79,13 @@
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(-187.05907,125.97775)"
-     id="layer1"
+     inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     inkscape:label="Layer 1">
+     id="layer1"
+     transform="translate(-188.05907,124.29434)">
     <path
-       d="m 192.00801,-124.29433 a 2.4814,2.526 32.000001 0 0 -0.37414,0.0274 1.9313,1.966 32.000001 0 1 0.33022,2.48925 1.9313,1.966 32.000001 0 1 -2.38229,0.7953 2.4814,2.526 32.000001 0 0 1.0387,1.34359 2.4814,2.526 32.000001 0 0 3.44268,-0.82683 2.4814,2.526 32.000001 0 0 -0.76584,-3.45715 2.4814,2.526 32.000001 0 0 -1.28933,-0.37155 z m -3.91087,0.15503 c -0.20116,-0.0233 0.37961,0.32545 2.10633,2.40243 0.31374,0.37744 0.9773,0.0996 1.26039,-0.35346 0.28309,-0.45304 0.24162,-1.1707 -0.23513,-1.28726 l -2.99827,-0.73329 c -0.0596,-0.0146 -0.10458,-0.0251 -0.13332,-0.0284 z"
+       id="path24"
        style="fill:url(#linearGradient971);fill-opacity:1;stroke-width:1"
-       id="path24" />
+       d="m 192.00801,-123.61092 a 2.4814,2.526 32.000001 0 0 -0.37414,0.0274 1.9313,1.966 32.000001 0 1 0.33022,2.48925 1.9313,1.966 32.000001 0 1 -2.38229,0.7953 2.4814,2.526 32.000001 0 0 1.0387,1.34359 2.4814,2.526 32.000001 0 0 3.44268,-0.82683 2.4814,2.526 32.000001 0 0 -0.76584,-3.45715 2.4814,2.526 32.000001 0 0 -1.28933,-0.37155 z m -3.91087,0.15503 c -0.20116,-0.0233 0.37961,0.32545 2.10633,2.40243 0.31374,0.37744 0.9773,0.0996 1.26039,-0.35346 0.28309,-0.45304 0.24162,-1.1707 -0.23513,-1.28726 l -2.99827,-0.73329 c -0.0596,-0.0146 -0.10458,-0.0251 -0.13332,-0.0284 z" />
   </g>
 </svg>
