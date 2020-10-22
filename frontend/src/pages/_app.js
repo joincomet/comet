@@ -1,6 +1,7 @@
 import '@/styles/index.css'
 import 'overlayscrollbars/css/OverlayScrollbars.css'
 import 'react-virtualized/styles.css'
+import 'tippy.js/dist/tippy.css';
 
 import Head from 'next/head'
 import { ApolloProvider } from '@apollo/client'

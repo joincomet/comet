@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   theme: {
     extend: {
@@ -16,6 +18,15 @@ module.exports = {
         103: '1.03',
         104: '1.04'
       }
+    },
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+
+      black: '#000',
+      white: '#fff',
+
+      ...colors
     }
   },
   darkMode: 'class',

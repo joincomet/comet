@@ -20,7 +20,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Build container image
-        run: docker build ./frontend -t registry.digitalocean.com/cometx/frontend:latest
+        run: docker buildx build ./frontend -t registry.digitalocean.com/cometx/frontend:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
@@ -40,7 +40,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Build container image
-        run: docker build ./api -t registry.digitalocean.com/cometx/api:latest
+        run: docker buildx build ./api -t registry.digitalocean.com/cometx/api:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/api
@@ -60,7 +60,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Build container image
-        run: docker build ./imageflow -t registry.digitalocean.com/cometx/imageflow:latest
+        run: docker buildx build ./imageflow -t registry.digitalocean.com/cometx/imageflow:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/imageflow
@@ -87,7 +87,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Build container image
-        run: docker build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
+        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/nginx
