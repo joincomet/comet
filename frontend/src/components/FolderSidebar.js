@@ -99,14 +99,14 @@ export default function FolderSidebar() {
                     Best Posts Ever
                   </span>
                 </div>
-
-                <div className="flex flex-row items-center text-tertiary cursor-pointer transition duration-150 ease-in-out dark:hover:bg-gray-700 h-12 px-6 rounded">
-                  <FiFolderPlus className="w-5 h-5" />
-                  <span className="ml-6 text-sm font-medium">New Folder</span>
-                </div>
               </div>
             )}
           </Droppable>
+
+          <div className="flex flex-row items-center text-tertiary cursor-pointer transition duration-150 ease-in-out dark:hover:bg-gray-700 h-12 px-6 rounded">
+            <FiFolderPlus className="w-5 h-5" />
+            <span className="ml-6 text-sm font-medium">New Folder</span>
+          </div>
 
           <div className="mx-5 mb-3 mt-6 text-tiny text-tertiary font-bold uppercase tracking-widest">
             DIRECT MESSAGES
@@ -123,15 +123,14 @@ export default function FolderSidebar() {
                     Michael Perino
                   </span>
                 </div>
-                <div className="flex flex-row items-center text-tertiary cursor-pointer transition duration-150 ease-in-out dark:hover:bg-gray-700 h-12 px-6 rounded">
-                  <FiUserPlus className="h-8 w-8 p-1" />
-                  <span className="ml-6 text-sm font-medium">
-                    New Direct Message
-                  </span>
-                </div>
               </div>
             )}
           </Droppable>
+
+          <div className="flex flex-row items-center text-tertiary cursor-pointer transition duration-150 ease-in-out dark:hover:bg-gray-700 h-12 px-6 rounded">
+            <FiUserPlus className="h-8 w-8 p-1" />
+            <span className="ml-6 text-sm font-medium">New Direct Message</span>
+          </div>
         </div>
       </nav>
     </>

@@ -2,6 +2,9 @@
   "name": "@cometx/frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "15.x.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -1,91 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="6.3937702mm"
-   height="6.3937702mm"
-   viewBox="0 0 6.3937703 6.3937703"
-   version="1.1"
-   id="svg35"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   sodipodi:docname="logo_icon.svg"
-   inkscape:export-filename="C:\Users\Dan\Desktop\discord_icon.png"
-   inkscape:export-xdpi="1549.3396"
-   inkscape:export-ydpi="1549.3396">
-  <defs
-     id="defs29">
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient977"
-       id="linearGradient971"
-       x1="7.7676954"
-       y1="5.3857255"
-       x2="14.801991"
-       y2="5.3857255"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="rotate(32,322.68921,255.38092)" />
-    <linearGradient
-       id="linearGradient977"
-       inkscape:collect="always">
-      <stop
-         id="stop973"
-         offset="0"
-         style="stop-color:#6875f5;stop-opacity:1" />
-      <stop
-         id="stop975"
-         offset="1"
-         style="stop-color:#f98080;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="15.839192"
-     inkscape:cx="15.623963"
-     inkscape:cy="18.425219"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
-     inkscape:window-width="1274"
-     inkscape:window-height="1040"
-     inkscape:window-x="220"
-     inkscape:window-y="0"
-     inkscape:window-maximized="0" />
-  <metadata
-     id="metadata32">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-188.05907,124.29434)">
-    <path
-       id="path24"
-       style="fill:url(#linearGradient971);fill-opacity:1;stroke-width:1"
-       d="m 192.00801,-123.61092 a 2.4814,2.526 32.000001 0 0 -0.37414,0.0274 1.9313,1.966 32.000001 0 1 0.33022,2.48925 1.9313,1.966 32.000001 0 1 -2.38229,0.7953 2.4814,2.526 32.000001 0 0 1.0387,1.34359 2.4814,2.526 32.000001 0 0 3.44268,-0.82683 2.4814,2.526 32.000001 0 0 -0.76584,-3.45715 2.4814,2.526 32.000001 0 0 -1.28933,-0.37155 z m -3.91087,0.15503 c -0.20116,-0.0233 0.37961,0.32545 2.10633,2.40243 0.31374,0.37744 0.9773,0.0996 1.26039,-0.35346 0.28309,-0.45304 0.24162,-1.1707 -0.23513,-1.28726 l -2.99827,-0.73329 c -0.0596,-0.0146 -0.10458,-0.0251 -0.13332,-0.0284 z" />
-  </g>
+<svg width="6.3938mm" height="6.3938mm" version="1.1" viewBox="0 0 6.3938 6.3938" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient971" x1="7.7677" x2="14.802" y1="5.3857" y2="5.3857" gradientTransform="rotate(32 322.69 255.38)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#6875f5" offset="0"/>
+   <stop stop-color="#f98080" offset="1"/>
+  </linearGradient>
+ </defs>
+ <g transform="translate(-188.06 124.29)">
+  <path d="m192.01-123.61a2.4814 2.526 32 0 0-0.37414 0.0274 1.9313 1.966 32 0 1 0.33022 2.4892 1.9313 1.966 32 0 1-2.3823 0.7953 2.4814 2.526 32 0 0 1.0387 1.3436 2.4814 2.526 32 0 0 3.4427-0.82683 2.4814 2.526 32 0 0-0.76584-3.4572 2.4814 2.526 32 0 0-1.2893-0.37155zm-3.9109 0.15503c-0.20116-0.0233 0.37961 0.32545 2.1063 2.4024 0.31374 0.37744 0.9773 0.0996 1.2604-0.35346 0.28309-0.45304 0.24162-1.1707-0.23513-1.2873l-2.9983-0.73329c-0.0596-0.0146-0.10458-0.0251-0.13332-0.0284z" fill="url(#linearGradient971)"/>
+ </g>
 </svg>
