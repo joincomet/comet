@@ -9,9 +9,12 @@ import {
   FiStar,
   FiUser
 } from 'react-icons/fi'
+import { CgInfinity } from 'react-icons/cg'
+import { BiHomeAlt } from 'react-icons/bi'
 import { gql, useQuery } from '@apollo/client'
 import { NavLink } from './NavLink'
 import Logo from '@/components/Logo'
+import SearchBar from '@/components/SearchBar'
 
 const TOP_PLANETS = gql`
   query TopPlanets {
@@ -118,11 +121,11 @@ function LeftNavDrawer() {
         </div>
         <div className="text-gray-500">
           <NavLink href="/" className={`${navitem} navitem-active`}>
-            <FiHome className="w-5 h-5" />
+            <BiHomeAlt className="w-5 h-5" />
             <span className="ml-6">Home</span>
           </NavLink>
           <NavLink href="/universe" className={navitem}>
-            <FiGlobe className="w-5 h-5" />
+            <CgInfinity className="w-5 h-5" />
             <span className="ml-6">Universe</span>
           </NavLink>
           <NavLink href="/activity" className={navitem}>
@@ -146,11 +149,15 @@ function LeftNavDrawer() {
           </div>
         </NavLink>
 
-        <div className="px-5 mt-9 mb-3 flex flex-row items-center">
+        <div className="px-5 mt-9 mb-4 flex flex-row items-center">
           <div className="text-xs text-tertiary font-mono font-base">
             Top Planets
           </div>
           <div className={exploreButton}>Explore</div>
+        </div>
+
+        <div className="px-4 pb-2">
+          <SearchBar className="w-full h-10 text-sm px-16 rounded-full dark:bg-gray-700 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500" />
         </div>
 
         <TopPlanets />

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 
-export default function SearchBar() {
+export default function SearchBar({ className }) {
   let [searchFocused, setSearchFocused] = useState(false)
   const inputRef = useRef(null)
 
@@ -28,8 +28,8 @@ export default function SearchBar() {
     <div className="inline-flex items-center relative flex-grow">
       <input
         ref={inputRef}
-        className="shadow-md w-full h-10 text-sm px-16 rounded-full dark:bg-gray-800 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500"
-        placeholder='Search everything (press "/" to focus)'
+        className={className}
+        placeholder=""
         onFocus={() => setSearchFocused(true)}
         onBlur={() => setSearchFocused(false)}
       />

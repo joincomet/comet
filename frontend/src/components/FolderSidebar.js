@@ -4,7 +4,8 @@ import {
   FiFolderPlus,
   FiStar,
   FiUsers,
-  FiUserPlus
+  FiUserPlus,
+  FiGlobe
 } from 'react-icons/fi'
 import { Droppable } from 'react-beautiful-dnd'
 import Tippy from '@tippyjs/react'
@@ -125,6 +126,15 @@ export default function FolderSidebar() {
                     </span>
                   </Tippy>
                 </div>
+                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
+                  <FiFolder className="w-8 h-8 p-1.5 text-orange-500" />
+                  <span className="ml-6 text-sm font-medium">Cool Pics</span>
+                  <Tippy content="Public folder">
+                    <span className="ml-auto">
+                      <FiGlobe className="w-4 h-4 text-tertiary" />
+                    </span>
+                  </Tippy>
+                </div>
               </div>
             )}
           </Droppable>
@@ -135,7 +145,7 @@ export default function FolderSidebar() {
           </div>
 
           <div className="mx-5 mt-6 mb-3 font-mono text-xs text-tertiary font-base">
-            Direct Messages
+            Direct Messages & Groups
           </div>
           <Droppable droppableId="directmessages">
             {(provided, snapshot) => (

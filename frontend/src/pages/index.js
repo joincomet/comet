@@ -24,6 +24,7 @@ import {
 import { RiFireLine } from 'react-icons/ri'
 import { AiOutlineFire } from 'react-icons/ai'
 import SearchBar from '@/components/SearchBar'
+import SortDropdown from '@/components/SortDropdown'
 
 const POSTS = gql`
   query Posts {
@@ -280,11 +281,12 @@ export default function Home({ posts }) {
               </div>
 
               <div className="flex items-center mb-5 text-tertiary">
-                <SearchBar />
+                <SearchBar className="shadow-md w-full h-10 text-sm px-16 rounded-full dark:bg-gray-800 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500" />
                 <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out">
                   <RiFireLine className="w-4 h-4 mr-4" />
                   Hot
                 </div>
+                {/*<SortDropdown />*/}
               </div>
 
               <div className="flex items-center text-xs text-tertiary font-mono space-x-5 mb-3 px-6">
