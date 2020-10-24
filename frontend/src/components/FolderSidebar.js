@@ -39,47 +39,62 @@ export default function FolderSidebar() {
         </div>
 
         <div className="flex items-center justify-between px-1 pb-3 mx-5 mt-3 border-b dark:border-gray-700">
-          <a
-            href="https://discord.gg/NPCMGSm"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={link}
-          >
-            <SiDiscord
-              className="w-5 h-5 mx-auto"
-              style={{ color: '#7289DA' }}
-            />
-          </a>
-          <a
-            href="https://www.patreon.com/cometx"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={link}
-          >
-            <SiPatreon
-              className="w-5 h-5 mx-auto"
-              style={{ color: '#F96854' }}
-            />
-          </a>
-          <a
-            href="https://twitter.com/CometX_io"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={link}
-          >
-            <SiTwitter
-              className="w-5 h-5 mx-auto"
-              style={{ color: '#1DA1F2' }}
-            />
-          </a>
-          <a
-            href="https://github.com/comet-app/cometx"
-            target="_blank noreferrer"
-            rel="noopener"
-            className={link}
-          >
-            <SiGithub className="w-5 h-5 mx-auto text-black dark:text-white" />
-          </a>
+          <Tippy content="CometX Discord server">
+            <a
+              href="https://discord.gg/NPCMGSm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${link} relative`}
+            >
+              <div
+                className="absolute inset-center w-3 h-3"
+                style={{ backgroundColor: '#F5F5F5' }}
+              />
+              <SiDiscord
+                className="w-5 h-5 mx-auto z-10"
+                style={{ color: '#7289DA' }}
+              />
+            </a>
+          </Tippy>
+
+          <Tippy content="CometX on Patreon">
+            <a
+              href="https://www.patreon.com/cometx"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={link}
+            >
+              <SiPatreon
+                className="w-5 h-5 mx-auto"
+                style={{ color: '#F96854' }}
+              />
+            </a>
+          </Tippy>
+
+          <Tippy content="@CometX">
+            <a
+              href="https://twitter.com/CometX_io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={link}
+            >
+              <SiTwitter
+                className="w-5 h-5 mx-auto"
+                style={{ color: '#1DA1F2' }}
+              />
+            </a>
+          </Tippy>
+
+          <Tippy content="CometX on GitHub">
+            <a
+              href="https://github.com/comet-app/cometx"
+              target="_blank noreferrer"
+              rel="noopener"
+              className={link}
+            >
+              <SiGithub className="w-5 h-5 mx-auto text-black dark:text-white" />
+            </a>
+          </Tippy>
         </div>
 
         <div className="mt-6">

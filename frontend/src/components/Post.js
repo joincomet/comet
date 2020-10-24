@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { NavLink } from './NavLink'
 import {
   FiFolderPlus,
@@ -39,8 +39,7 @@ function getStyle(provided, snapshot, style) {
 
   return {
     ...provided.draggableProps.style,
-    ...style,
-    transform: `${translate} scale(0)`
+    ...style
   }
 }
 
@@ -55,7 +54,7 @@ function Post({
   style,
   index,
   mousePosition,
-  onImageLoad
+  measure
 }) {
   const chip =
     'px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
@@ -65,9 +64,14 @@ function Post({
   if (!provided)
     provided = { innerRef: ref, draggableProps: {}, dragHandleProps: {} }
 
+  useEffect(() => {
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  })
+
   return (
     <article
-      className={`pb-5 select-none outline-none ${className || ''}`}
+      className={`pb-2 sm:pb-5 select-none outline-none ${className || ''}`}
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
@@ -136,8 +140,8 @@ function Post({
           </div>
           {post.textContent ? (
             <div
-              className="mt-1 text-sm text-primary line-clamp-3"
-              v-html="post.textContent"
+              className="mt-1 text-sm text-secondary line-clamp-3"
+              dangerouslySetInnerHTML={{ __html: post.textContent }}
             />
           ) : (
             ''
@@ -145,7 +149,7 @@ function Post({
 
           {post.imageURLs && post.imageURLs.length > 0 ? (
             <img
-              onLoad={onImageLoad}
+              onLoad={measure}
               alt={post.title}
               src={post.imageURLs[0]}
               style={{ maxHeight: '19.8125rem' }}
@@ -160,14 +164,14 @@ function Post({
                 href={post.linkURL}
                 target="_blank"
                 rel="noreferrer noopener nofollow"
-                className="flex flex-row items-start mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200"
+                className="flex flex-row items-start mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
               >
                 <img
                   src={post.embed.links.thumbnail[0].href}
                   className="object-cover object-center w-32 h-32 bg-white dark:bg-gray-800 rounded-l-lg"
                 />
                 <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
-                  <div className="text-sm font-semibold text-secondary line-clamp-2">
+                  <div className="text-sm font-semibold line-clamp-2 hover:text-blue-500 transition duration-150 ease-in-out">
                     {post.embed.meta.title}
                   </div>
 
@@ -181,8 +185,8 @@ function Post({
                       src={post.embed.links.icon[0].href}
                       className="object-contain w-4 h-4 mr-3 rounded-sm"
                     />
-                    <div className="text-xs text-tertiary font-mono">
-                      {post.domain}
+                    <div className="text-tertiary">
+                      <div className="text-xs font-mono">{post.domain}</div>
                     </div>
                   </div>
                 </div>
@@ -206,7 +210,7 @@ function Post({
           </div>
 
           <div className="inline-flex flex-row items-center px-3 py-2 ml-auto transition duration-150 ease-in-out rounded-full text-tertiary hover:bg-gray-200 dark:hover:bg-gray-700">
-            <FiMoreHorizontal className="w-5 h-5 text-tertiary" />
+            <FiMoreHorizontal className="w-5 h-5 text-disabled" />
           </div>
 
           <div className="inline-flex flex-row items-center px-3 py-2 ml-4 transition duration-150 ease-in-out rounded-full text-tertiary hover:bg-gray-200 dark:hover:bg-gray-700">

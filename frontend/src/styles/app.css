@@ -114,9 +114,28 @@ body.dark {
 }
 
 .tippy-box {
-  @apply bg-gray-900;
+  @apply bg-gray-900 shadow-lg;
 }
 
 .tippy-arrow {
-  @apply text-gray-900;
+  @apply text-gray-900 shadow-lg;
+}
+
+.inset-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.inset-x-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.inset-y-center {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }

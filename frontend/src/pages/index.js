@@ -15,6 +15,15 @@ import { initializeApollo } from '@/lib/apolloClient'
 import FolderSidebar from '@/components/FolderSidebar'
 import { motion } from 'framer-motion'
 import GalaxiesSlider from '@/components/GalaxiesSlider'
+import { FiEdit } from 'react-icons/fi'
+import {
+  HiOutlineClock,
+  HiOutlineFire,
+  HiOutlineSortAscending
+} from 'react-icons/hi'
+import { RiFireLine } from 'react-icons/ri'
+import { AiOutlineFire } from 'react-icons/ai'
+import SearchBar from '@/components/SearchBar'
 
 const POSTS = gql`
   query Posts {
@@ -59,7 +68,7 @@ const POSTS = gql`
 `
 
 const cache = new CellMeasurerCache({
-  defaultHeight: 400,
+  defaultHeight: 703,
   fixedWidth: true
 })
 
@@ -80,7 +89,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
           parent={parent}
           rowIndex={index}
         >
-          {({ registerChild, measure }) => (
+          {({ measure, registerChild }) => (
             <motion.div
               animate={{ opacity: 0.5 }}
               style={{ margin: 0, ...style }}
@@ -93,7 +102,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
                 isDragging={false}
                 index={index}
                 mousePosition={mousePosition}
-                onImageLoad={measure}
+                measure={measure}
               />
             </motion.div>
           )}
@@ -119,7 +128,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
                 parent={parent}
                 rowIndex={index}
               >
-                {({ registerChild, measure }) => (
+                {({ measure, registerChild }) => (
                   <div style={{ margin: 0, ...style }} ref={registerChild}>
                     <Post
                       provided={provided}
@@ -130,7 +139,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
                       }
                       index={index}
                       mousePosition={mousePosition}
-                      onImageLoad={measure}
+                      measure={measure}
                     />
                   </div>
                 )}
@@ -190,6 +199,7 @@ function Posts({ initial }) {
           <WindowScroller>
             {({ height, isScrolling, onChildScroll, scrollTop }) => (
               <List
+                overscanRowCount={20}
                 autoHeight={true}
                 height={1080}
                 autoWidth
@@ -227,6 +237,8 @@ function Posts({ initial }) {
 }
 
 export default function Home({ posts }) {
+  const [searchFocused, setSearchFocused] = useState(false)
+
   function onDragEnd(result) {}
 
   return (
@@ -251,9 +263,40 @@ export default function Home({ posts }) {
           <div className="page">
             <GalaxiesSlider />
             <div className="container pt-5 mx-auto sm:px-5 2xl:px-80">
-              <div>
-                <Posts initial={posts} />
+              <div className="sm:rounded-md dark:bg-gray-800 bg-white px-8 py-5 flex mb-2 sm:mb-5 cursor-pointer shadow-lg transform hover:scale-101 transition duration-150 ease-in-out">
+                <img
+                  src="https://pbs.twimg.com/profile_images/1312166598086598658/I2-2CTFg_400x400.jpg"
+                  className="w-12 h-12 rounded-full mr-7"
+                />
+                <div>
+                  <div className="text-base font-semibold inline-flex items-center">
+                    Share something with the community
+                    <FiEdit className="w-5 h-5 ml-5 text-tertiary" />
+                  </div>
+                  <div className="mt-1 text-xs font-mono text-tertiary">
+                    Post images, links, and text
+                  </div>
+                </div>
               </div>
+
+              <div className="flex items-center mb-5 text-tertiary">
+                <SearchBar />
+                <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out">
+                  <RiFireLine className="w-4 h-4 mr-4" />
+                  Hot
+                </div>
+              </div>
+
+              <div className="flex items-center text-xs text-tertiary font-mono space-x-5 mb-3 px-6">
+                <span className="font-bold cursor-pointer hover:underline">
+                  Cards
+                </span>
+                <span className="cursor-pointer hover:underline">
+                  Condensed
+                </span>
+              </div>
+
+              <Posts initial={posts} />
             </div>
           </div>
           <FolderSidebar />

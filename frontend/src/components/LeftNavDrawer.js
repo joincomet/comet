@@ -5,7 +5,7 @@ import {
   FiGlobe,
   FiHome,
   FiLogIn,
-  FiSettings,
+  FiActivity,
   FiStar,
   FiUser
 } from 'react-icons/fi'
@@ -25,8 +25,50 @@ const TOP_PLANETS = gql`
   }
 `
 
-const navitem =
-  'relative dark:text-gray-300 origin-left flex flex-row font-medium items-center h-12 px-6 text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
+const navitem = `
+  relative 
+  dark:text-gray-300 
+  origin-left 
+  flex 
+  flex-row 
+  font-medium 
+  items-center 
+  h-12 
+  px-6 
+  text-sm 
+  hover:bg-gray-200 
+  dark:hover:bg-gray-700 
+  transition 
+  duration-150 
+  ease-in-out
+`
+
+const exploreButton = `
+  text-blue-500
+  hover:text-gray-600
+  dark:hover:text-white
+  bg-transparent
+  hover:bg-blue-500
+  font-mono
+  font-base
+  text-xs
+  cursor-pointer
+  ml-auto
+  py-1
+  px-4
+  rounded-full
+  border
+  border-gray-200
+  dark:border-gray-700
+  hover:border-blue-500
+  transition 
+  ease-in-out 
+  duration-200 
+  inline-flex 
+  items-center
+  transform
+  hover:shadow-lg
+`
 
 function TopPlanets() {
   const { data, loading, error } = useQuery(TOP_PLANETS)
@@ -83,9 +125,9 @@ function LeftNavDrawer() {
             <FiGlobe className="w-5 h-5" />
             <span className="ml-6">Universe</span>
           </NavLink>
-          <NavLink href="/~Test" className={navitem}>
-            <FiStar className="w-5 h-5" />
-            <span className="ml-6">Galaxies</span>
+          <NavLink href="/activity" className={navitem}>
+            <FiActivity className="w-5 h-5" />
+            <span className="ml-6">Activity</span>
           </NavLink>
           <NavLink href="/login" className={navitem}>
             <FiLogIn className="w-5 h-5 text-blue-500" />
@@ -96,7 +138,7 @@ function LeftNavDrawer() {
         <NavLink
           href={router.pathname}
           as="/login"
-          className="m-4 shadow-md px-6 py-2.5 bg-blue-500 hover:bg-blue-600 rounded-full text-white text-sm flex flex-row items-center cursor-pointer hover:scale-105 transform duration-150 ease-in-out"
+          className="m-4 shadow-md px-6 py-2.5 bg-blue-500 hover:bg-blue-600 rounded-full text-white text-sm flex flex-row items-center cursor-pointer hover:scale-102 transform duration-150 ease-in-out"
         >
           <div className="mx-auto inline-flex flex-row items-center">
             <FiUser className="w-6 h-6 mr-4" />
@@ -108,9 +150,7 @@ function LeftNavDrawer() {
           <div className="text-xs text-tertiary font-mono font-base">
             Top Planets
           </div>
-          <div className="text-blue-500 font-mono font-base ml-auto rounded-full border border-gray-200 dark:border-gray-700 text-xs py-1 px-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition ease-in-out duration-100 inline-flex items-center">
-            Explore
-          </div>
+          <div className={exploreButton}>Explore</div>
         </div>
 
         <TopPlanets />
