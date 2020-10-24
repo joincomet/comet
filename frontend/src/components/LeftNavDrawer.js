@@ -149,18 +149,11 @@ function LeftNavDrawer() {
           </div>
         </NavLink>
 
-        <div className="px-5 mt-9 mb-4 flex flex-row items-center">
+        <div className="px-5 mt-10 mb-3 flex flex-row items-center">
           <div className="text-xs text-tertiary font-mono font-base">
             Top Planets
           </div>
           <div className={exploreButton}>Explore</div>
-        </div>
-
-        <div className="px-4 pb-2">
-          <SearchBar
-            slashFocus={false}
-            className="w-full h-10 text-sm px-16 rounded-full dark:bg-gray-700 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500"
-          />
         </div>
 
         <TopPlanets />
