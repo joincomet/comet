@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 
-export default function SearchBar({ className }) {
+export default function SearchBar({ className, slashFocus }) {
   let [searchFocused, setSearchFocused] = useState(false)
   const inputRef = useRef(null)
 
@@ -18,11 +18,13 @@ export default function SearchBar({ className }) {
     }
   }
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
+  if (slashFocus) {
+    useEffect(() => {
+      window.addEventListener('keydown', handleKeyDown)
 
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  })
+      return () => window.removeEventListener('keydown', handleKeyDown)
+    })
+  }
 
   return (
     <div className="inline-flex items-center relative flex-grow">

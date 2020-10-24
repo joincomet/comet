@@ -157,7 +157,10 @@ function LeftNavDrawer() {
         </div>
 
         <div className="px-4 pb-2">
-          <SearchBar className="w-full h-10 text-sm px-16 rounded-full dark:bg-gray-700 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500" />
+          <SearchBar
+            slashFocus={false}
+            className="w-full h-10 text-sm px-16 rounded-full dark:bg-gray-700 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500"
+          />
         </div>
 
         <TopPlanets />
