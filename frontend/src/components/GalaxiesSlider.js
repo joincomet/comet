@@ -77,7 +77,8 @@ export default function GalaxiesSlider() {
   const rightButtonEnabled = () => {
     if (!sliderRef.current) return true
     return (
-      scrollLeft < sliderRef.current.scrollWidth - sliderRef.current.offsetWidth
+      scrollLeft <
+      sliderRef.current.scrollWidth - sliderRef.current.offsetWidth - 1
     )
   }
 

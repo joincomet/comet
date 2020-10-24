@@ -54,7 +54,8 @@ function Post({
   isGroupedOver,
   style,
   index,
-  mousePosition
+  mousePosition,
+  onImageLoad
 }) {
   const chip =
     'px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
@@ -97,7 +98,7 @@ function Post({
           isDragging ? 'opacity-0 shadow-lg' : ''
         }`}
       >
-        <div className="flex flex-row pl-5 pr-5 sm:pl-8 sm:pr-20">
+        <div className="flex flex-row pl-5 pr-5 sm:pl-8 sm:pr-5">
           <NavLink href={`/@${post.author.username}`}>
             <img
               alt={post.author.username}
@@ -121,9 +122,12 @@ function Post({
                 +{post.planet.name}
               </NavLink>
             </div>
-            <div className="text-xs mt-0.5 font-mono">
+            <div className="text-xs mt-0.5">
               <span className="text-tertiary">{post.timeSince}</span>
             </div>
+          </div>
+          <div className="ml-auto font-mono text-xs text-disabled">
+            {index + 1}
           </div>
         </div>
         <div className="px-5 pt-3 pb-3 sm:pl-20 sm:pr-20">
@@ -141,6 +145,7 @@ function Post({
 
           {post.imageURLs && post.imageURLs.length > 0 ? (
             <img
+              onLoad={onImageLoad}
               alt={post.title}
               src={post.imageURLs[0]}
               style={{ maxHeight: '19.8125rem' }}

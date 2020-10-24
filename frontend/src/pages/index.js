@@ -80,7 +80,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
           parent={parent}
           rowIndex={index}
         >
-          {({ registerChild }) => (
+          {({ registerChild, measure }) => (
             <motion.div
               animate={{ opacity: 0.5 }}
               style={{ margin: 0, ...style }}
@@ -93,6 +93,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
                 isDragging={false}
                 index={index}
                 mousePosition={mousePosition}
+                onImageLoad={measure}
               />
             </motion.div>
           )}
@@ -118,7 +119,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
                 parent={parent}
                 rowIndex={index}
               >
-                {({ registerChild }) => (
+                {({ registerChild, measure }) => (
                   <div style={{ margin: 0, ...style }} ref={registerChild}>
                     <Post
                       provided={provided}
@@ -129,6 +130,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
                       }
                       index={index}
                       mousePosition={mousePosition}
+                      onImageLoad={measure}
                     />
                   </div>
                 )}
