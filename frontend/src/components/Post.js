@@ -64,11 +64,6 @@ function Post({
   if (!provided)
     provided = { innerRef: ref, draggableProps: {}, dragHandleProps: {} }
 
-  useEffect(() => {
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  })
-
   return (
     <article
       className={`pb-2 sm:pb-5 select-none outline-none ${className || ''}`}

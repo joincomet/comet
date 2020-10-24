@@ -13,7 +13,7 @@ import Post from '../components/Post'
 import { useState } from 'react'
 import { initializeApollo } from '@/lib/apolloClient'
 import FolderSidebar from '@/components/FolderSidebar'
-import { motion } from 'framer-motion'
+import { AnimateSharedLayout, motion } from 'framer-motion'
 import GalaxiesSlider from '@/components/GalaxiesSlider'
 import { FiEdit } from 'react-icons/fi'
 import {
@@ -25,6 +25,7 @@ import { RiFireLine } from 'react-icons/ri'
 import { AiOutlineFire } from 'react-icons/ai'
 import SearchBar from '@/components/SearchBar'
 import SortDropdown from '@/components/SortDropdown'
+import CreatePostCard from '@/components/CreatePostCard'
 
 const POSTS = gql`
   query Posts {
@@ -73,11 +74,13 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 })
 
-const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
-  index,
-  parent,
-  style
-}) => {
+const getRowRender = ({
+  posts,
+  snapshot,
+  provided,
+  mousePosition,
+  screenWidth
+}) => ({ index, parent, style }) => {
   const post = posts[index]
   const shouldRenderClone = post.id === snapshot.draggingFromThisWith
 
@@ -109,7 +112,12 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
           )}
         </CellMeasurer>
       ) : (
-        <Draggable draggableId={post.id} index={index} key={post.id}>
+        <Draggable
+          draggableId={post.id}
+          index={index}
+          key={post.id}
+          isDragDisabled={screenWidth < 640}
+        >
           {(provided, snapshot) =>
             snapshot.isDragging ? (
               <div style={{ margin: 0, ...style }}>
@@ -156,6 +164,7 @@ const getRowRender = ({ posts, snapshot, provided, mousePosition }) => ({
 function Posts({ initial }) {
   const [posts] = useState(() => initial)
   const [mousePosition, setMousePosition] = useState(() => ({ x: 0, y: 0 }))
+  const [screenWidth, setScreenWidth] = useState(1920)
 
   const handleClick = event => {
     const el = event.target
@@ -165,16 +174,24 @@ function Posts({ initial }) {
     })
   }
 
+  const handleResize = event => {
+    cache.clearAll()
+  }
+
   useEffect(() => {
+    setScreenWidth(screen.width)
+    window.addEventListener('resize', handleResize)
     window.addEventListener('mousedown', handleClick, {
       capture: true,
       passive: false
     })
-    return () =>
+    return () => {
+      window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousedown', handleClick, {
         capture: true,
         passive: false
       })
+    }
   })
 
   return (
@@ -226,7 +243,8 @@ function Posts({ initial }) {
                   posts,
                   snapshot,
                   provided,
-                  mousePosition
+                  mousePosition,
+                  screenWidth
                 })}
               />
             )}
@@ -264,44 +282,32 @@ export default function Home({ posts }) {
           <div className="page">
             <GalaxiesSlider />
             <div className="container pt-5 mx-auto sm:px-5 2xl:px-80">
-              <div className="sm:rounded-md dark:bg-gray-800 bg-white px-8 py-5 flex mb-2 sm:mb-5 cursor-pointer shadow-lg transform hover:scale-101 transition duration-150 ease-in-out">
-                <img
-                  src="https://pbs.twimg.com/profile_images/1312166598086598658/I2-2CTFg_400x400.jpg"
-                  className="w-12 h-12 rounded-full mr-7"
-                />
-                <div>
-                  <div className="text-base font-semibold inline-flex items-center">
-                    Share something with the community
-                    <FiEdit className="w-5 h-5 ml-5 text-tertiary" />
+              <CreatePostCard />
+
+              <div>
+                <div className="flex items-center mb-5 px-3 sm:px-0">
+                  <SearchBar
+                    slashFocus={true}
+                    className="shadow-md w-full h-10 text-sm px-16 rounded-full dark:bg-gray-800 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500"
+                  />
+                  <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out text-tertiary">
+                    <RiFireLine className="w-4 h-4 mr-4" />
+                    Hot
                   </div>
-                  <div className="mt-1 text-xs font-mono text-tertiary">
-                    Post images, links, and text
-                  </div>
+                  {/*<SortDropdown />*/}
                 </div>
-              </div>
 
-              <div className="flex items-center mb-5">
-                <SearchBar
-                  slashFocus={true}
-                  className="shadow-md w-full h-10 text-sm px-16 rounded-full dark:bg-gray-800 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500"
-                />
-                <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out text-tertiary">
-                  <RiFireLine className="w-4 h-4 mr-4" />
-                  Hot
+                <div className="flex items-center text-xs text-tertiary font-mono space-x-5 mb-3 px-6">
+                  <span className="font-bold cursor-pointer hover:underline">
+                    Cards
+                  </span>
+                  <span className="cursor-pointer hover:underline">
+                    Condensed
+                  </span>
                 </div>
-                {/*<SortDropdown />*/}
-              </div>
 
-              <div className="flex items-center text-xs text-tertiary font-mono space-x-5 mb-3 px-6">
-                <span className="font-bold cursor-pointer hover:underline">
-                  Cards
-                </span>
-                <span className="cursor-pointer hover:underline">
-                  Condensed
-                </span>
+                <Posts initial={posts} />
               </div>
-
-              <Posts initial={posts} />
             </div>
           </div>
           <FolderSidebar />
