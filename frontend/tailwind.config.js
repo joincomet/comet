@@ -27,6 +27,9 @@ module.exports = {
       white: '#fff',
 
       ...colors
+    },
+    fontFamily: {
+      mono: ['Space Mono', 'monospace']
     }
   },
   darkMode: 'class',

@@ -88,8 +88,8 @@ function LeftNavDrawer() {
             <span className="ml-6">Galaxies</span>
           </NavLink>
           <NavLink href="/login" className={navitem}>
-            <FiLogIn className="w-5 h-5 text-green-500" />
-            <span className="ml-6 text-green-500">Log In</span>
+            <FiLogIn className="w-5 h-5 text-blue-500" />
+            <span className="ml-6 text-blue-500">Log In</span>
           </NavLink>
         </div>
 
@@ -105,11 +105,11 @@ function LeftNavDrawer() {
         </NavLink>
 
         <div className="px-5 mt-9 mb-3 flex flex-row items-center">
-          <div className="text-tiny font-bold tracking-widest uppercase text-tertiary">
+          <div className="text-xs text-tertiary font-mono font-base">
             Top Planets
           </div>
-          <div className="ml-auto rounded-full border border-gray-200 dark:border-gray-700 text-tiny font-bold tracking-widest uppercase text-tertiary py-1 px-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition ease-in-out duration-100 inline-flex items-center">
-            EXPLORE
+          <div className="text-blue-500 font-mono font-base ml-auto rounded-full border border-gray-200 dark:border-gray-700 text-xs py-1 px-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition ease-in-out duration-100 inline-flex items-center">
+            Explore
           </div>
         </div>
 

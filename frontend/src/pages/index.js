@@ -10,10 +10,11 @@ import {
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd'
 import { gql } from '@apollo/client'
 import Post from '../components/Post'
-import { createRef, useState } from 'react'
-import { initializeApollo } from '@/apollo/client'
+import { useState } from 'react'
+import { initializeApollo } from '@/lib/apolloClient'
 import FolderSidebar from '@/components/FolderSidebar'
 import { motion } from 'framer-motion'
+import GalaxiesSlider from '@/components/GalaxiesSlider'
 
 const POSTS = gql`
   query Posts {
@@ -246,6 +247,7 @@ export default function Home({ posts }) {
       <Layout>
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="page">
+            <GalaxiesSlider />
             <div className="container pt-5 mx-auto sm:px-5 2xl:px-80">
               <div>
                 <Posts initial={posts} />

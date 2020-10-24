@@ -7,7 +7,12 @@ import {
   FiUserPlus
 } from 'react-icons/fi'
 import { Droppable } from 'react-beautiful-dnd'
-import Tippy from '@tippyjs/react';
+import Tippy from '@tippyjs/react'
+import { forwardRef } from 'react'
+
+const SharedFolderIcon = forwardRef((props, ref) => {
+  return <FiUsers className="w-4 h-4 ml-auto text-tertiary" ref={ref} />
+})
 
 export default function FolderSidebar() {
   const link =
@@ -78,47 +83,49 @@ export default function FolderSidebar() {
         </div>
 
         <div className="mt-6">
-          <div className="mx-5 mb-3 font-bold tracking-widest uppercase text-tiny text-tertiary">
-            FOLDERS
+          <div className="mx-5 mb-3 text-xs font-mono font-base text-tertiary">
+            Folders
           </div>
           <Droppable droppableId="folders">
             {(provided, snapshot) => (
               <div ref={provided.innerRef}>
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out rounded cursor-pointer text-secondary dark:hover:bg-gray-700">
-                  <FiStar className="w-5 h-5 text-yellow-500" />
+                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
+                  <FiStar className="w-8 h-8 p-1.5 text-yellow-500" />
                   <span className="ml-6 text-sm font-medium">Favorites</span>
                 </div>
 
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out rounded cursor-pointer text-secondary dark:hover:bg-gray-700">
-                  <FiFolder className="w-5 h-5 text-blue-500" />
+                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
+                  <FiFolder className="w-8 h-8 p-1.5 text-blue-500" />
                   <span className="ml-6 text-sm font-medium">Read Later</span>
                 </div>
 
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out rounded cursor-pointer text-secondary dark:hover:bg-gray-700">
-                  <FiFolder className="w-5 h-5 text-green-500" />
+                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
+                  <FiFolder className="w-8 h-8 p-1.5 text-green-500" />
                   <span className="ml-6 text-sm font-medium">
                     Best Posts Ever
                   </span>
                   <Tippy content="Shared folder">
-                    <FiUsers className="w-4 h-4 ml-auto text-tertiary" />
+                    <span className="ml-auto">
+                      <FiUsers className="w-4 h-4 text-tertiary" />
+                    </span>
                   </Tippy>
                 </div>
               </div>
             )}
           </Droppable>
 
-          <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out rounded cursor-pointer text-tertiary dark:hover:bg-gray-700">
-            <FiFolderPlus className="w-5 h-5" />
+          <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-tertiary dark:hover:bg-gray-700">
+            <FiFolderPlus className="w-8 h-8 p-1.5" />
             <span className="ml-6 text-sm font-medium">New Folder</span>
           </div>
 
-          <div className="mx-5 mt-6 mb-3 font-bold tracking-widest uppercase text-tiny text-tertiary">
-            DIRECT MESSAGES
+          <div className="mx-5 mt-6 mb-3 font-mono text-xs text-tertiary font-base">
+            Direct Messages
           </div>
           <Droppable droppableId="directmessages">
             {(provided, snapshot) => (
               <div ref={provided.innerRef}>
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out rounded cursor-pointer text-secondary dark:hover:bg-gray-700">
+                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
                   <img
                     className="object-cover w-8 h-8 rounded-full"
                     src="https://pbs.twimg.com/profile_images/1278741528425517057/oQbjgrA2_400x400.jpg"
@@ -131,7 +138,7 @@ export default function FolderSidebar() {
             )}
           </Droppable>
 
-          <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out rounded cursor-pointer text-tertiary dark:hover:bg-gray-700">
+          <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-tertiary dark:hover:bg-gray-700">
             <FiUserPlus className="w-8 h-8 p-1" />
             <span className="ml-6 text-sm font-medium">New Direct Message</span>
           </div>

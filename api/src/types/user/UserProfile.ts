@@ -66,5 +66,8 @@ export class UserProfile {
   avatarURL?: string
 
   @Field({ nullable: true })
+  bannerURL?: string
+
+  @Field({ nullable: true })
   usernames?: Usernames
 }

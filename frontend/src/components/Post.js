@@ -121,15 +121,8 @@ function Post({
                 +{post.planet.name}
               </NavLink>
             </div>
-            <div className="text-xs mt-0.5">
-              <span className="text-tertiary">{post.timeSince} &middot; </span>
-              <NavLink
-                href={post.relativeURL}
-                className="text-tertiary hover:underline"
-              >
-                {post.commentCount} comment
-                {post.commentCount === 1 ? '' : 's'}
-              </NavLink>
+            <div className="text-xs mt-0.5 font-mono">
+              <span className="text-tertiary">{post.timeSince}</span>
             </div>
           </div>
         </div>
@@ -183,7 +176,7 @@ function Post({
                       src={post.embed.links.icon[0].href}
                       className="object-contain w-4 h-4 mr-3 rounded-sm"
                     />
-                    <div className="text-xs font-semibold text-tertiary">
+                    <div className="text-xs text-tertiary font-mono">
                       {post.domain}
                     </div>
                   </div>
