@@ -37,8 +37,8 @@ jobs:
             cd $REPOSITORY
             echo -e "$ENV" > .env
             mv docker-compose.prod.yml docker-compose.yml
-            docker-compose pull -q
             docker system prune -f
+            docker-compose pull -q
             docker-compose down --remove-orphans
             docker-compose up -d --force-recreate
       - name: Send Discord Announcement
