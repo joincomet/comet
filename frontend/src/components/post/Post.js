@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NavLink } from '../NavLink'
 import {
   FiFolderPlus,
   FiMessageCircle,
   FiShare,
-  FiMoreHorizontal
+  FiMoreHorizontal,
+  FiFolder
 } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useDrag } from 'react-dnd'
 import { ItemTypes } from '@/lib/ItemTypes'
 import { getEmptyImage } from 'react-dnd-html5-backend'
@@ -15,6 +16,8 @@ import { getEmptyImage } from 'react-dnd-html5-backend'
 function Post({ post, className, style, index, measure }) {
   const chip =
     'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
+
+  const [toast, setToast] = useState(null)
 
   const [{ isDragging }, dragRef, preview] = useDrag({
     item: { post, type: ItemTypes.POST },
@@ -25,7 +28,8 @@ function Post({ post, className, style, index, measure }) {
       document.body.classList.remove('cursor-grabbing')
       const dropResult = monitor.getDropResult()
       if (item && dropResult) {
-        // alert(`You dropped ${item.post.id} into ${dropResult.name}!`)
+        setToast({ post: item.post, folder: dropResult })
+        setTimeout(() => setToast(null), 1000)
       }
     },
     collect: monitor => ({
@@ -35,19 +39,49 @@ function Post({ post, className, style, index, measure }) {
 
   useEffect(() => preview(getEmptyImage(), { captureDraggingState: true }), [])
 
-  const opacity = isDragging ? 0.4 : 1
-
   return (
     <article
       ref={dragRef}
-      className={`pb-2 sm:pb-5 select-none outline-none ${className || ''}`}
-      style={{ ...style, opacity }}
+      className={`relative pb-2 sm:pb-5 select-none outline-none ${
+        className || ''
+      }`}
+      style={style}
       data-index={index}
     >
+      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+        <AnimatePresence>
+          {toast && (
+            <motion.div
+              className="px-6 py-3 dark:bg-gray-800 border dark:border-gray-700 shadow-lg rounded-md text-medium text-sm inline-flex items-center flex-no-wrap"
+              initial={{
+                scale: 0.75,
+                opacity: 0
+              }}
+              animate={{
+                scale: 1,
+                opacity: 1
+              }}
+              exit={{
+                scale: 0.75,
+                opacity: 0
+              }}
+              transition={{ duration: 0.15, ease: 'easeInOut' }}
+            >
+              <FiFolder
+                className={`${
+                  toast.folder.color || 'text-blue-500'
+                } h-5 w-5 mr-6`}
+              />
+              {`Added to ${toast.folder.name}`}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       <div
-        className={`${
-          isDragging ? '' : 'cursor-grab'
-        } pt-5 pb-3 bg-white border border-gray-100 shadow dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl`}
+        className={`${isDragging ? '' : 'cursor-grab'} ${
+          isDragging || toast ? 'opacity-50' : 'opacity-100'
+        } duration-150 transition ease-in-out pt-5 pb-3 bg-white border border-gray-100 shadow dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl`}
       >
         <div className="flex flex-row pl-5 pr-5 sm:pl-8 sm:pr-5">
           <NavLink href={`/@${post.author.username}`}>

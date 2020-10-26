@@ -7,7 +7,7 @@ import Tippy from '@tippyjs/react'
 export default function Folder({ folder: { name, color, type } }) {
   const [{ canDrop, isOver }, dropRef] = useDrop({
     accept: ItemTypes.POST,
-    drop: () => ({ name }),
+    drop: () => ({ name, color, type }),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop()

@@ -1,7 +1,7 @@
 import Layout from '../components/Layout'
 import { gql } from '@apollo/client'
 import { initializeApollo } from '@/lib/apolloClient'
-import FolderSidebar from '@/components/FolderSidebar'
+import RightSidebar from '@/components/right-sidebar/RightSidebar'
 import GalaxiesSlider from '@/components/GalaxiesSlider'
 import { RiFireLine } from 'react-icons/ri'
 import SearchBar from '@/components/SearchBar'
@@ -91,7 +91,7 @@ export default function Home({ posts }) {
             </div>
           </div>
         </div>
-        <FolderSidebar />
+        <RightSidebar />
       </Layout>
     </>
   )
