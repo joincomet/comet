@@ -1,4 +1,3 @@
-import { SiDiscord, SiPatreon, SiTwitter, SiGithub } from 'react-icons/si'
 import {
   FiFolder,
   FiFolderPlus,
@@ -7,17 +6,13 @@ import {
   FiUserPlus,
   FiGlobe
 } from 'react-icons/fi'
-import { Droppable } from 'react-beautiful-dnd'
 import Tippy from '@tippyjs/react'
-import { forwardRef } from 'react'
-
-const SharedFolderIcon = forwardRef((props, ref) => {
-  return <FiUsers className="w-4 h-4 ml-auto text-tertiary" ref={ref} />
-})
+import React from 'react'
+import CometXLinks from '@/components/CometXLinks'
+import Folder from '@/components/Folder'
+import DirectMessage from '@/components/DirectMessage'
 
 export default function FolderSidebar() {
-  const link =
-    'rounded-full inline-flex place-items-center h-10 w-10 bg-gray-100 bg-gray-800 transition dark:hover:bg-gray-700 hover:bg-gray-200 transform ease-in-out duration-200 hover:scale-125'
   return (
     <>
       <nav
@@ -39,105 +34,28 @@ export default function FolderSidebar() {
           <div className="font-medium mt-0.5 text-tertiary text-sm ">@Dan</div>
         </div>
 
-        <div className="flex items-center justify-between px-1 pb-3 mx-5 mt-3 border-b dark:border-gray-700">
-          <Tippy content="CometX Discord server">
-            <a
-              href="https://discord.gg/NPCMGSm"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${link} relative`}
-            >
-              <div
-                className="absolute inset-center w-3 h-3"
-                style={{ backgroundColor: '#F5F5F5' }}
-              />
-              <SiDiscord
-                className="w-5 h-5 mx-auto z-10"
-                style={{ color: '#7289DA' }}
-              />
-            </a>
-          </Tippy>
-
-          <Tippy content="CometX on Patreon">
-            <a
-              href="https://www.patreon.com/cometx"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={link}
-            >
-              <SiPatreon
-                className="w-5 h-5 mx-auto"
-                style={{ color: '#F96854' }}
-              />
-            </a>
-          </Tippy>
-
-          <Tippy content="@CometX">
-            <a
-              href="https://twitter.com/CometX_io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={link}
-            >
-              <SiTwitter
-                className="w-5 h-5 mx-auto"
-                style={{ color: '#1DA1F2' }}
-              />
-            </a>
-          </Tippy>
-
-          <Tippy content="CometX on GitHub">
-            <a
-              href="https://github.com/comet-app/cometx"
-              target="_blank noreferrer"
-              rel="noopener"
-              className={link}
-            >
-              <SiGithub className="w-5 h-5 mx-auto text-black dark:text-white" />
-            </a>
-          </Tippy>
-        </div>
+        <CometXLinks />
 
         <div className="mt-6">
           <div className="mx-5 mb-3 text-xs font-mono font-base text-tertiary">
             Folders
           </div>
-          <Droppable droppableId="folders">
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef}>
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
-                  <FiStar className="w-8 h-8 p-1.5 text-yellow-500" />
-                  <span className="ml-6 text-sm font-medium">Favorites</span>
-                </div>
-
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
-                  <FiFolder className="w-8 h-8 p-1.5 text-blue-500" />
-                  <span className="ml-6 text-sm font-medium">Read Later</span>
-                </div>
-
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
-                  <FiFolder className="w-8 h-8 p-1.5 text-green-500" />
-                  <span className="ml-6 text-sm font-medium">
-                    Best Posts Ever
-                  </span>
-                  <Tippy content="Shared folder">
-                    <span className="ml-auto">
-                      <FiUsers className="w-4 h-4 text-tertiary" />
-                    </span>
-                  </Tippy>
-                </div>
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
-                  <FiFolder className="w-8 h-8 p-1.5 text-orange-500" />
-                  <span className="ml-6 text-sm font-medium">Cool Pics</span>
-                  <Tippy content="Public folder">
-                    <span className="ml-auto">
-                      <FiGlobe className="w-4 h-4 text-tertiary" />
-                    </span>
-                  </Tippy>
-                </div>
-              </div>
-            )}
-          </Droppable>
+          <Folder folder={{ name: 'Favorites', type: 'PRIVATE' }} />
+          <Folder folder={{ name: 'Read Later', type: 'PRIVATE' }} />
+          <Folder
+            folder={{
+              name: 'Best Posts Ever',
+              type: 'SHARED',
+              color: 'text-green-500'
+            }}
+          />
+          <Folder
+            folder={{
+              name: 'Cool Pics',
+              type: 'PUBLIC',
+              color: 'text-orange-500'
+            }}
+          />
 
           <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-tertiary dark:hover:bg-gray-700">
             <FiFolderPlus className="w-8 h-8 p-1.5" />
@@ -147,21 +65,16 @@ export default function FolderSidebar() {
           <div className="mx-5 mt-6 mb-3 font-mono text-xs text-tertiary font-base">
             Direct Messages & Groups
           </div>
-          <Droppable droppableId="directmessages">
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef}>
-                <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700">
-                  <img
-                    className="object-cover w-8 h-8 rounded-full"
-                    src="https://pbs.twimg.com/profile_images/1278741528425517057/oQbjgrA2_400x400.jpg"
-                  />
-                  <span className="ml-6 text-sm font-medium">
-                    Michael Perino
-                  </span>
-                </div>
-              </div>
-            )}
-          </Droppable>
+
+          <DirectMessage
+            user={{
+              profile: {
+                realName: 'Michael Perino',
+                avatarURL:
+                  'https://pbs.twimg.com/profile_images/1278741528425517057/oQbjgrA2_400x400.jpg'
+              }
+            }}
+          />
 
           <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-tertiary dark:hover:bg-gray-700">
             <FiUserPlus className="w-8 h-8 p-1" />

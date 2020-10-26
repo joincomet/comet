@@ -1,12 +1,10 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document'
-import { resetServerContext } from 'react-beautiful-dnd'
 
 const APP_NAME = 'CometX'
 const APP_DESCRIPTION = `See what's in orbit`
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
-    resetServerContext()
     const initialProps = await Document.getInitialProps(ctx)
     return { ...initialProps }
   }

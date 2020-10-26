@@ -15,17 +15,7 @@ export default function LoginDialog() {
       }`}
       style={{ height: 'calc(100% - 5rem)' }}
     >
-      <motion.div
-        initial={{ opacity: 1 }}
-        animate={{ opacity: 0 }}
-        transition={{
-          ease: 'easeInOut',
-          duration: '300ms',
-          transitionEnd: {
-            display: 'none'
-          }
-        }}
-      >
+      <div>
         <div
           className="absolute left-0 right-0 -top-12 -bottom-12 bg-opacity-75 bg-gray-900"
           onClick={() =>
@@ -34,9 +24,9 @@ export default function LoginDialog() {
               : router.push(router.pathname)
           }
         />
-      </motion.div>
+      </div>
 
-      <motion.div>
+      <div>
         <div className="relative z-10 w-full h-full max-w-5xl m-auto bg-white shadow-xl dark:bg-gray-800 rounded-2xl">
           <div
             className="absolute p-1 transition duration-150 ease-in-out rounded-full cursor-pointer top-4 right-4 hover:bg-gray-100"
@@ -78,7 +68,7 @@ export default function LoginDialog() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

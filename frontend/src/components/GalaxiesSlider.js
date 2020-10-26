@@ -115,7 +115,7 @@ export default function GalaxiesSlider() {
         >
           {galaxies.map(galaxy => (
             <span
-              className="inline-flex flex-row items-center h-8 whitespace-no-wrap cursor-pointer hover:text-blue-500 transition duration-100 ease-in-out"
+              className="inline-flex flex-row items-center h-8 whitespace-nowrap cursor-pointer hover:text-blue-500 transition duration-100 ease-in-out"
               key={galaxy}
             >
               {galaxy}

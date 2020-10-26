@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { NavLink } from './NavLink'
+import { NavLink } from '../NavLink'
 import {
   FiFolderPlus,
   FiMessageCircle,
@@ -8,94 +8,46 @@ import {
 } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
 import { motion } from 'framer-motion'
+import { useDrag } from 'react-dnd'
+import { ItemTypes } from '@/lib/ItemTypes'
+import { getEmptyImage } from 'react-dnd-html5-backend'
 
-/*function getStyle(provided, snapshot, style) {
-  if (!snapshot || !snapshot.isDropAnimating) {
-    return {
-      ...provided.draggableProps.style,
-      ...style
-    }
-  }
-  const { moveTo, curve, duration } = snapshot.dropAnimation
-  const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`
-
-  return {
-    ...provided.draggableProps.style,
-    ...style,
-    transform: `${translate}`,
-    transition: `all ${curve} ${duration}s`
-  }
-}*/
-
-function getStyle(provided, snapshot, style) {
-  if (!style) {
-    return {
-      ...provided.draggableProps.style
-    }
-  }
-
-  const { moveTo, curve, duration } = snapshot.dropAnimation
-  const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`
-
-  return {
-    ...provided.draggableProps.style,
-    ...style
-  }
-}
-
-function Post({
-  post,
-  className,
-  isDragging,
-  provided,
-  snapshot,
-  isClone,
-  isGroupedOver,
-  style,
-  index,
-  mousePosition,
-  measure
-}) {
+function Post({ post, className, style, index, measure }) {
   const chip =
-    'px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
+    'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
-  const ref = useRef(null)
+  const [{ isDragging }, dragRef, preview] = useDrag({
+    item: { post, type: ItemTypes.POST },
+    begin: () => {
+      document.body.classList.add('cursor-grabbing')
+    },
+    end: (item, monitor) => {
+      document.body.classList.remove('cursor-grabbing')
+      const dropResult = monitor.getDropResult()
+      if (item && dropResult) {
+        // alert(`You dropped ${item.post.id} into ${dropResult.name}!`)
+      }
+    },
+    collect: monitor => ({
+      isDragging: monitor.isDragging()
+    })
+  })
 
-  if (!provided)
-    provided = { innerRef: ref, draggableProps: {}, dragHandleProps: {} }
+  useEffect(() => preview(getEmptyImage(), { captureDraggingState: true }), [])
+
+  const opacity = isDragging ? 0.4 : 1
 
   return (
     <article
+      ref={dragRef}
       className={`pb-2 sm:pb-5 select-none outline-none ${className || ''}`}
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-      style={
-        snapshot && snapshot.isDragging
-          ? getStyle(provided, snapshot, style)
-          : {}
-      }
-      data-is-dragging={isDragging}
-      data-testid={post.id}
+      style={{ ...style, opacity }}
       data-index={index}
     >
-      <motion.div
-        animate={{
-          scale: isDragging ? 0.5 : 1,
-          opacity: isDragging ? 0.3 : 1
-        }}
-        transition={{ duration: isDragging ? 0.15 : 0, ease: 'easeInOut' }}
-        style={
-          mousePosition
-            ? {
-                originX: `${mousePosition.x}px`,
-                originY: `${mousePosition.y}px`
-              }
-            : {}
-        }
-        className={`pt-5 pb-3 bg-white border border-gray-100 shadow cursor-grab dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ${
-          isDragging ? 'opacity-0 shadow-lg' : ''
-        }`}
+      <div
+        className={`${
+          isDragging ? '' : 'cursor-grab'
+        } pt-5 pb-3 bg-white border border-gray-100 shadow dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl`}
       >
         <div className="flex flex-row pl-5 pr-5 sm:pl-8 sm:pr-5">
           <NavLink href={`/@${post.author.username}`}>
@@ -204,19 +156,19 @@ function Post({
             </span>
           </div>
 
-          <div className="inline-flex flex-row items-center px-3 py-2 ml-auto transition duration-150 ease-in-out rounded-full text-tertiary hover:bg-gray-200 dark:hover:bg-gray-700">
+          <div className={`${chip} ml-auto`}>
             <FiMoreHorizontal className="w-5 h-5 text-disabled" />
           </div>
 
-          <div className="inline-flex flex-row items-center px-3 py-2 ml-4 transition duration-150 ease-in-out rounded-full text-tertiary hover:bg-gray-200 dark:hover:bg-gray-700">
+          <div className={`${chip} ml-4`}>
             <FiShare className="w-5 h-5 text-green-500" />
           </div>
 
-          <div className="inline-flex flex-row items-center px-3 py-2 ml-4 transition duration-150 ease-in-out rounded-full text-tertiary hover:bg-gray-200 dark:hover:bg-gray-700">
+          <div className={`${chip} ml-4`}>
             <FiFolderPlus className="w-5 h-5 text-blue-500" />
           </div>
         </div>
-      </motion.div>
+      </div>
     </article>
   )
 }

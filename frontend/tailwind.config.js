@@ -1,8 +1,13 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
 
 module.exports = {
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter var', 'Inter', ...defaultTheme.fontFamily.sans],
+        mono: ['Space Mono', ...defaultTheme.fontFamily.mono]
+      },
       fontSize: {
         tiny: '.625rem'
       },
@@ -17,6 +22,10 @@ module.exports = {
         102: '1.02',
         103: '1.03',
         104: '1.04'
+      },
+      cursor: {
+        grab: 'grab',
+        grabbing: 'grabbing'
       }
     },
     colors: {
@@ -27,9 +36,6 @@ module.exports = {
       white: '#fff',
 
       ...colors
-    },
-    fontFamily: {
-      mono: ['Space Mono', 'monospace']
     }
   },
   darkMode: 'class',

@@ -1,12 +1,3 @@
-.font-mono {
-  font-family: 'Space Mono', monospace !important;
-}
-
-body { font-family: 'Inter', sans-serif !important; }
-@supports (font-variation-settings: normal) {
-  body { font-family: 'Inter var', sans-serif !important; }
-}
-
 body {
   @apply text-black bg-gray-50;
   -webkit-tap-highlight-color: transparent;
