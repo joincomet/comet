@@ -28,7 +28,6 @@ type Comment {
   authorId: ID
   createdAt: DateTime!
   editedAt: DateTime
-  timeSinceEdited: String
   id: ID!
   id36: String!
   level: Float
@@ -39,6 +38,7 @@ type Comment {
   rocketed: Boolean!
   textContent: String!
   timeSince: String!
+  timeSinceEdited: String
 }
 
 type CommentRocket {
@@ -238,8 +238,8 @@ type Post {
   deleted: Boolean!
   domain: String
   editedAt: DateTime
-  timeSinceEdited: String
   embed: Embed
+  embedThumbnailURL: String
   id: ID!
   id36: String!
   imageURLs: [String!]
@@ -254,7 +254,9 @@ type Post {
   rocketed: Boolean!
   sticky: Boolean!
   textContent: String
+  thumbnailURL: String
   timeSince: String!
+  timeSinceEdited: String
   title: String!
 }
 
@@ -370,6 +372,7 @@ type UserFollow {
 
 type UserProfile {
   avatarURL: String
+  bannerURL: String
   bio: String
   realName: String
   usernames: Usernames

@@ -168,4 +168,29 @@ export class Post {
     if (domain.includes('www.')) domain = domain.split('www.')[1]
     return domain
   }
+
+  @Field(() => String, { nullable: true })
+  get thumbnailURL(): string | undefined {
+    if (this.imageURLs && this.imageURLs.length > 0) return this.imageURLs[0]
+    if (
+      this.embed &&
+      this.embed.links &&
+      this.embed.links.thumbnail &&
+      this.embed.links.thumbnail.length > 0
+    )
+      return this.embed.links.thumbnail[0].href
+    return undefined
+  }
+
+  @Field(() => String, { nullable: true })
+  get embedThumbnailURL(): string | undefined {
+    if (
+      this.embed &&
+      this.embed.links &&
+      this.embed.links.thumbnail &&
+      this.embed.links.thumbnail.length > 0
+    )
+      return this.embed.links.thumbnail[0].href
+    return undefined
+  }
 }

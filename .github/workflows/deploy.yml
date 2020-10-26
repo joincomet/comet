@@ -41,7 +41,7 @@ jobs:
             docker system prune
             docker-compose down --remove-orphans
             docker-compose up -d --force-recreate
-      - name: send custom message with args
+      - name: Send Discord Announcement
         uses: appleboy/discord-action@master
         with:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}

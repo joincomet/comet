@@ -9,7 +9,11 @@ module.exports = {
         mono: ['Space Mono', ...defaultTheme.fontFamily.mono]
       },
       fontSize: {
+        xxs: '.6875rem',
         tiny: '.625rem'
+      },
+      spacing: {
+        18: '4.5rem'
       },
       transitionDelay: {
         400: '400ms',
@@ -26,6 +30,16 @@ module.exports = {
       cursor: {
         grab: 'grab',
         grabbing: 'grabbing'
+      },
+      opacity: {
+        45: '.45',
+        40: '.40',
+        35: '.35',
+        30: '.30',
+        20: '.20',
+        15: '.15',
+        10: '.10',
+        5: '.05'
       }
     },
     colors: {

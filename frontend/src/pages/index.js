@@ -20,6 +20,8 @@ const POSTS = gql`
       relativeURL
       commentCount
       rocketCount
+      thumbnailURL
+      embedThumbnailURL
       embed {
         links {
           icon {
