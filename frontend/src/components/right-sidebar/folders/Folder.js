@@ -4,10 +4,10 @@ import { FiFolder, FiGlobe, FiStar, FiUsers } from 'react-icons/fi'
 import React from 'react'
 import Tippy from '@tippyjs/react'
 
-export default function Folder({ folder: { name, color, type } }) {
+export default function Folder({ folder }) {
   const [{ canDrop, isOver }, dropRef] = useDrop({
     accept: ItemTypes.POST,
-    drop: () => ({ name, color, type }),
+    drop: () => ({ folder }),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop()
@@ -15,6 +15,8 @@ export default function Folder({ folder: { name, color, type } }) {
   })
 
   const isActive = canDrop && isOver
+
+  const { name, color, type } = folder
 
   return (
     <div

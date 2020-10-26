@@ -2,14 +2,10 @@ import { useDrop } from 'react-dnd'
 import { ItemTypes } from '@/lib/ItemTypes'
 import React from 'react'
 
-export default function DirectMessage({
-  user: {
-    profile: { realName, avatarURL }
-  }
-}) {
+export default function DirectMessage({ user }) {
   const [{ canDrop, isOver }, dropRef] = useDrop({
     accept: ItemTypes.POST,
-    drop: () => ({ name: realName }),
+    drop: () => ({ user }),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop()
@@ -17,6 +13,8 @@ export default function DirectMessage({
   })
 
   const isActive = canDrop && isOver
+
+  const { realName, avatarURL } = user.profile
 
   return (
     <div

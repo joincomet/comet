@@ -28,8 +28,12 @@ function Post({ post, className, style, index, measure }) {
       document.body.classList.remove('cursor-grabbing')
       const dropResult = monitor.getDropResult()
       if (item && dropResult) {
-        setToast({ post: item.post, folder: dropResult })
-        setTimeout(() => setToast(null), 1000)
+        setToast({
+          post: item.post,
+          folder: dropResult.folder,
+          user: dropResult.user
+        })
+        setTimeout(() => setToast(null), 1500)
       }
     },
     collect: monitor => ({
@@ -67,12 +71,30 @@ function Post({ post, className, style, index, measure }) {
               }}
               transition={{ duration: 0.15, ease: 'easeInOut' }}
             >
-              <FiFolder
-                className={`${
-                  toast.folder.color || 'text-blue-500'
-                } h-5 w-5 mr-6`}
-              />
-              {`Added to ${toast.folder.name}`}
+              {toast.folder && (
+                <>
+                  <FiFolder
+                    className={`${
+                      toast.folder.color || 'text-blue-500'
+                    } h-5 w-5 mr-6`}
+                  />
+                  {`Added to ${toast.folder.name}`}
+                  <span className="hover:underline cursor-pointer ml-6 text-tertiary">
+                    Undo
+                  </span>
+                </>
+              )}
+
+              {toast.user && (
+                <>
+                  <img
+                    alt={toast.user.profile.realName}
+                    className="object-cover w-8 h-8 rounded-full mr-6"
+                    src={toast.user.profile.avatarURL}
+                  />
+                  {`Sent to ${toast.user.profile.realName}`}
+                </>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
