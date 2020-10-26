@@ -20,7 +20,7 @@ jobs:
           port: 22
           source: "docker-compose.prod.yml"
           target: ${{ github.event.repository.name }}
-          
+
       - name: Start containers
         uses: appleboy/ssh-action@master
         env:
@@ -41,3 +41,10 @@ jobs:
             docker system prune
             docker-compose down --remove-orphans
             docker-compose up -d --force-recreate
+      - name: send custom message with args
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "Deployment Notifier"
+          message: "@everyone a new version has been deployed"
