@@ -12,11 +12,7 @@ export const createAccessToken = (user: User) => {
 }
 
 export const getUser = (req: any) => {
-  const authorization = req.headers['authorization']
-
-  if (!authorization) return null
-
-  const token = authorization.split(' ')[1]
+  const token = req.cookies.token
 
   if (!token) return null
 

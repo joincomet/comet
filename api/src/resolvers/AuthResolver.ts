@@ -17,7 +17,10 @@ export class AuthResolver {
   @InjectRepository(User) readonly userRepository: Repository<User>
 
   @Mutation(() => LoginResponse)
-  async signUp(@Args() { username, password, email }: SignUpArgs) {
+  async signUp(
+    @Args() { username, password, email }: SignUpArgs,
+    @Ctx() { res }: Context
+  ) {
     if (
       username.toLowerCase() === 'null' ||
       username.toLowerCase() === 'undefined'
@@ -52,14 +55,24 @@ export class AuthResolver {
       }
     } as User)
 
+    const accessToken = createAccessToken(user)
+    res.cookie('token', accessToken, {
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      httpOnly: true
+    })
+
     return {
-      accessToken: createAccessToken(user),
+      accessToken,
       user
     } as LoginResponse
   }
 
   @Mutation(() => LoginResponse)
-  async login(@Args() { username, password }: LoginArgs) {
+  async login(
+    @Args() { username, password }: LoginArgs,
+    @Ctx() { res }: Context
+  ) {
     const user = await this.userRepository.findOne({
       where: `"username" ILIKE '${username.replace(/_/g, '\\_')}'`
     })
@@ -78,8 +91,15 @@ export class AuthResolver {
 
     if (!match) throw new Error('Invalid Login')
 
+    const accessToken = createAccessToken(user)
+    res.cookie('token', accessToken, {
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      httpOnly: true
+    })
+
     return {
-      accessToken: createAccessToken(user),
+      accessToken,
       user
     } as LoginResponse
   }

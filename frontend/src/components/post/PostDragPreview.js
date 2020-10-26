@@ -20,9 +20,10 @@ export const PostDragPreview = memo(({ post, show }) => {
               opacity: 0
             }}
             transition={{ duration: 0.15, ease: 'easeInOut' }}
-            className="bg-blue-500 bg-opacity-75 rounded-md shadow-lg text-white text-sm font-medium px-6 h-10 inline-flex items-center"
+            className="bg-blue-500 bg-opacity-75 rounded-md shadow-lg text-white text-sm font-medium h-10 px-6 inline-flex items-center"
+            style={{ width: '24rem', textOverflow: 'ellipsis' }}
           >
-            {post && post.title}
+            <span className="truncate inline-block">{post && post.title}</span>
           </motion.div>
         )}
       </AnimatePresence>
