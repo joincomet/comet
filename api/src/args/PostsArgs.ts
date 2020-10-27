@@ -2,7 +2,6 @@ import { ArgsType, Field, ID } from 'type-graphql'
 import { PaginationArgs } from '@/args/PaginationArgs'
 import { PostSort } from '@/types/posts/PostSort'
 import { TimeFilter } from '@/types/posts/TimeFilter'
-import { Feed } from '@/types/posts/Feed'
 
 @ArgsType()
 export class PostsArgs extends PaginationArgs {
@@ -18,29 +17,35 @@ export class PostsArgs extends PaginationArgs {
   })
   time: TimeFilter = TimeFilter.ALL
 
-  @Field(() => Feed, {
-    defaultValue: Feed.ALL,
-    description: 'Show posts from everywhere, or only joined planets/users'
+  @Field(() => Boolean, {
+    defaultValue: false,
+    description: 'Show universe'
   })
-  feed: Feed = Feed.ALL
+  universe: Boolean = false
 
-  @Field(() => [String], {
+  @Field({
     nullable: true,
-    description: 'If provided, only posts from given planets will be returned'
+    description: 'If provided, only posts from given planet will be returned'
   })
-  planets?: string[]
+  planet?: string
 
-  @Field(() => [String], {
+  @Field({
     nullable: true,
-    description: 'If provided, only posts from given tags will be returned'
+    description: 'If provided, only posts from given galaxy will be returned'
   })
-  tags?: string[]
+  galaxy?: string
 
-  @Field(() => [String], {
+  @Field(() => ID, {
     nullable: true,
-    description: 'If provided, only posts from given usernames will be returned'
+    description: 'If provided, only posts from given folder ID will be returned'
   })
-  usernames?: string[]
+  folderId?: number
+
+  @Field({
+    nullable: true,
+    description: 'If provided, only posts from given username will be returned'
+  })
+  username?: string
 
   @Field({
     nullable: true,

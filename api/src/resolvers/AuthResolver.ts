@@ -104,6 +104,13 @@ export class AuthResolver {
     } as LoginResponse
   }
 
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { res }: Context) {
+    res.clearCookie('token')
+
+    return true
+  }
+
   @Authorized()
   @Mutation(() => LoginResponse)
   async changePassword(

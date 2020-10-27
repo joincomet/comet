@@ -1,32 +1,11 @@
 import { useRouter } from 'next/router'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
-import {
-  FiBell,
-  FiGlobe,
-  FiHome,
-  FiLogIn,
-  FiActivity,
-  FiStar,
-  FiUser
-} from 'react-icons/fi'
+import { FiBell, FiLogIn, FiActivity, FiUser } from 'react-icons/fi'
 import { CgInfinity } from 'react-icons/cg'
 import { BiHomeAlt } from 'react-icons/bi'
-import { gql, useQuery } from '@apollo/client'
 import { NavLink } from './NavLink'
 import Logo from '@/components/Logo'
-import SearchBar from '@/components/SearchBar'
-
-const TOP_PLANETS = gql`
-  query TopPlanets {
-    planets(sort: TOP, pageSize: 5) {
-      id
-      name
-      profile {
-        avatarURL
-      }
-    }
-  }
-`
+import { usePlanets } from '@/hooks/usePlanets'
 
 const navitem = `
   relative 
@@ -74,13 +53,16 @@ const exploreButton = `
 `
 
 function TopPlanets() {
-  const { data, loading, error } = useQuery(TOP_PLANETS)
+  const { isLoading, isError, data, error } = usePlanets({
+    sort: 'TOP',
+    pageSize: 5
+  })
 
-  if (loading || error) return null
+  if (isLoading || isError) return null
 
   return (
     <div>
-      {data.planets.map(planet => (
+      {data.map(planet => (
         <NavLink
           className={navitem}
           key={planet.id}

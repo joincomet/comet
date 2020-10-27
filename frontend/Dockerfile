@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:14-alpine
 
 RUN apk update && apk upgrade && mkdir -p /usr/src/app
 WORKDIR /usr/src/app

@@ -21,7 +21,6 @@ import path from 'path'
 import { authChecker } from '@/AuthChecker'
 import { PostSort } from '@/types/posts/PostSort'
 import { TimeFilter } from '@/types/posts/TimeFilter'
-import { Feed } from '@/types/posts/Feed'
 import { CommentSort } from '@/types/CommentSort'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { PlanetSort } from '@/types/planet/PlanetSort'
@@ -91,10 +90,6 @@ async function bootstrap() {
 
   registerEnumType(TimeFilter, {
     name: 'TimeFilter'
-  })
-
-  registerEnumType(Feed, {
-    name: 'Feed'
   })
 
   registerEnumType(CommentSort, {

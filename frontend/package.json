@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "15.x.x"
+    "node": "14.x.x"
   },
   "scripts": {
     "dev": "next dev",
@@ -12,7 +12,6 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
-    "@apollo/client": "^3.2.5",
     "@headlessui/react": "^0.2.0",
     "@next/bundle-analyzer": "^9.5.5",
     "@popperjs/core": "^2.5.3",
@@ -21,6 +20,7 @@
     "draft-js-plugins-editor": "^3.0.0",
     "framer-motion": "^2.9.4",
     "graphql": "^15.3.0",
+    "graphql-request": "^3.2.0",
     "next": "9.5.5",
     "nextjs-progressbar": "^0.0.6",
     "nookies": "^2.4.1",
@@ -34,19 +34,18 @@
     "react-hook-form": "^6.9.5",
     "react-icons": "^3.11.0",
     "react-intersection-observer": "^8.29.1",
-    "react-modal": "^3.11.2",
     "react-popper": "^2.2.3",
-    "react-toastify": "^6.0.9",
+    "react-query": "^2.25.2",
+    "react-query-devtools": "^2.6.0",
+    "react-use": "^15.3.4",
     "react-virtualized": "^9.22.2",
     "sass": "^1.27.0",
     "use-dark-mode": "^2.3.1",
-    "use-debounce": "^5.0.1",
     "webpack": "^5.0.0-beta.30"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.2.0",
     "@types/overlayscrollbars": "^1.12.0",
-    "@types/react-transition-group": "^4.4.0",
     "@types/react-virtualized": "^9.21.10",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.11.0",

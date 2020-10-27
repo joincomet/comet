@@ -12,7 +12,10 @@ import React from 'react'
 export default function PostClassicLayout({ post, index, measure }) {
   return (
     <div className="flex flex-row pb-2">
-      <div className="flex flex-col items-center text-tertiary pt-1">
+      <div className="text-xs text-disabled font-mono pt-6 mt-1.5 pr-3">
+        <span style={{ marginTop: '-1px' }}>{index + 1}</span>
+      </div>
+      <div className="flex flex-col items-center text-disabled pt-1">
         <BiRocket className="w-5 h-5 cursor-pointer" />
         <div className="pt-1.5 text-xs font-semibold">{post.rocketCount}</div>
       </div>
@@ -33,7 +36,7 @@ export default function PostClassicLayout({ post, index, measure }) {
             }}
             className="object-cover"
             onLoad={measure}
-            alt={post.title}
+            alt="Post Thumbnail"
             src={post.thumbnailURL}
           />
         ) : (
@@ -71,9 +74,6 @@ export default function PostClassicLayout({ post, index, measure }) {
             add to folder
           </span>
         </div>
-      </div>
-      <div className="ml-auto font-mono text-xs text-disabled pt-0.5">
-        {index + 1}
       </div>
     </div>
   )

@@ -164,9 +164,13 @@ export class Post {
   @Field(() => String, { nullable: true })
   get domain(): string | undefined {
     if (!this.linkURL) return undefined
-    let domain = new URL(this.linkURL).host
-    if (domain.includes('www.')) domain = domain.split('www.')[1]
-    return domain
+    try {
+      let domain = new URL(this.linkURL).host
+      if (domain.includes('www.')) domain = domain.split('www.')[1]
+      return domain
+    } catch {
+      return undefined
+    }
   }
 
   @Field(() => String, { nullable: true })

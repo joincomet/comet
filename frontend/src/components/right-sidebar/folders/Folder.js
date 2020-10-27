@@ -1,5 +1,5 @@
 import { useDrop } from 'react-dnd'
-import { ItemTypes } from '@/lib/ItemTypes'
+import { ItemTypes } from '@/ItemTypes'
 import { FiFolder, FiGlobe, FiStar, FiUsers } from 'react-icons/fi'
 import React from 'react'
 import Tippy from '@tippyjs/react'

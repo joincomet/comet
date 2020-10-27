@@ -7,9 +7,8 @@ import {
   FiUser
 } from 'react-icons/fi'
 import React, { useState } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { gql, useQuery } from '@apollo/client'
 import Dropdown from '@/components/Dropdown'
+import { usePlanets } from '@/hooks/usePlanets'
 
 function AliasDropdown() {
   return (
@@ -42,22 +41,13 @@ function AliasDropdown() {
   )
 }
 
-const TOP_PLANETS = gql`
-  query TopPlanets {
-    planets(sort: TOP, pageSize: 5) {
-      id
-      name
-      profile {
-        avatarURL
-      }
-    }
-  }
-`
-
 function PlanetDropdown() {
-  const { data, loading, error } = useQuery(TOP_PLANETS)
+  const { isLoading, isError, data, error } = usePlanets({
+    sort: 'TOP',
+    pageSize: 5
+  })
 
-  if (loading || error) return null
+  if (isLoading || isError) return null
 
   return (
     <Dropdown
@@ -79,7 +69,7 @@ function PlanetDropdown() {
           My Profile
         </div>
       ].concat(
-        data.planets.map(planet => (
+        data.map(planet => (
           <div
             key={planet.id}
             className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"

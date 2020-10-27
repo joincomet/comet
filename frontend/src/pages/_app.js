@@ -5,16 +5,19 @@ import '@/styles/tailwind.css'
 import '@/styles/app.css'
 
 import Head from 'next/head'
-import { ApolloProvider } from '@apollo/client'
-import { useApollo } from '@/lib/apolloClient'
 import LoginDialog from '@/components/LoginDialog'
 import { DndProvider } from 'react-dnd'
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { CustomDragLayer } from '@/components/CustomDragLayer'
+import { ReactQueryCacheProvider, QueryCache } from 'react-query'
+import { dehydrate, Hydrate } from 'react-query/hydration'
+import App from 'next/app'
+import { ReactQueryDevtools } from 'react-query-devtools'
+import { fetchCurrentUser } from '@/hooks/useCurrentUser'
 
-export default function App({ Component, pageProps }) {
-  const apolloClient = useApollo(pageProps.initialApolloState)
+const queryCache = new QueryCache()
 
+function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
@@ -37,18 +40,39 @@ export default function App({ Component, pageProps }) {
         />
       </Head>
 
-      <ApolloProvider client={apolloClient}>
-        <DndProvider
-          backend={TouchBackend}
-          options={{ enableTouchEvents: false, enableMouseEvents: true }}
-        >
-          <div>
-            <LoginDialog />
-            <Component {...pageProps} />
-            <CustomDragLayer />
-          </div>
-        </DndProvider>
-      </ApolloProvider>
+      <ReactQueryCacheProvider queryCache={queryCache}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <DndProvider
+            backend={TouchBackend}
+            options={{ enableTouchEvents: false, enableMouseEvents: true }}
+          >
+            <div>
+              <LoginDialog />
+              <Component {...pageProps} />
+              <CustomDragLayer />
+            </div>
+          </DndProvider>
+        </Hydrate>
+
+        <ReactQueryDevtools initialIsOpen />
+      </ReactQueryCacheProvider>
     </>
   )
 }
+
+MyApp.getInitialProps = async appContext => {
+  // calls page's `getInitialProps` and fills `appProps.pageProps`
+  const appProps = await App.getInitialProps(appContext)
+
+  const queryCache = new QueryCache()
+  await queryCache.prefetchQuery(['currentUser'], fetchCurrentUser)
+
+  return {
+    ...appProps,
+    props: {
+      dehydratedState: dehydrate(queryCache)
+    }
+  }
+}
+
+export default MyApp

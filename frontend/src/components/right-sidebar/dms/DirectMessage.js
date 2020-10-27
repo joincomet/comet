@@ -1,5 +1,5 @@
 import { useDrop } from 'react-dnd'
-import { ItemTypes } from '@/lib/ItemTypes'
+import { ItemTypes } from '@/ItemTypes'
 import React from 'react'
 
 export default function DirectMessage({ user }) {

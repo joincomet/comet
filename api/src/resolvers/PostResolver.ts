@@ -22,7 +22,6 @@ import { Stream } from 'stream'
 import { s3upload } from '@/S3Storage'
 import { TimeFilter } from '@/types/posts/TimeFilter'
 import { PostSort } from '@/types/posts/PostSort'
-import { Feed } from '@/types/posts/Feed'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
 import { Comment } from '@/entities/Comment'
@@ -31,6 +30,7 @@ import { Planet } from '@/entities/Planet'
 import { PlanetUser } from '@/entities/relations/PlanetUser'
 import { Embed } from '@/types/post/Embed'
 import { runIframely } from '@/iframely/RunIframely'
+import { PostsResponse } from '@/responses/PostsResponse'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -49,7 +49,7 @@ export class PostResolver {
   @InjectRepository(PlanetUser)
   readonly planetUserRepo: Repository<PlanetUser>
 
-  @Query(() => [Post])
+  @Query(() => PostsResponse)
   async posts(
     @Args()
     {
@@ -57,10 +57,11 @@ export class PostResolver {
       pageSize,
       sort,
       time,
-      feed,
-      planets,
-      tags,
-      usernames,
+      universe,
+      folderId,
+      galaxy,
+      planet,
+      username,
       search
     }: PostsArgs,
     @Ctx() { userId }: Context
@@ -71,15 +72,10 @@ export class PostResolver {
       .andWhere('post.removed = false')
       .leftJoinAndSelect('post.planet', 'planet')
 
-    if (planets) {
-      qb.andWhere('post.planet ILIKE ANY(:planets)', {
-        planets: planets
+    if (planet) {
+      qb.andWhere('planet.name ILIKE :planet', {
+        planet: planet.replace(/_/g, '\\_')
       }).andWhere('post.sticky = false')
-    }
-
-    if (tags && tags.length > 0) {
-      // TODO Tag filters
-      // qb.andWhere(':galaxyName ILIKE galaxy.name', { galaxyName })
     }
 
     if (search) {
@@ -107,11 +103,11 @@ export class PostResolver {
         .setParameter('query', search)
     }
 
-    if (usernames && usernames.length > 0) {
+    if (username) {
       const users = await this.userRepo
         .createQueryBuilder('user')
-        .where('user.username ILIKE ANY(:usernames)', {
-          usernames: usernames.map(username => username.replace(/_/g, '\\_'))
+        .where('user.username ILIKE :username', {
+          username: username.replace(/_/g, '\\_')
         })
         .getMany()
 
@@ -184,7 +180,7 @@ export class PostResolver {
           post => (post.post as Post).id
         )
 
-        if (feed === Feed.JOINED) {
+        if (!universe) {
           const sub = await this.planetUserRepo
             .createQueryBuilder('join')
             .where(`"join"."user_id" = "${userId}"`)
@@ -211,13 +207,13 @@ export class PostResolver {
       .take(pageSize)
       .getMany()
 
-    if (planets && planets.length === 1 && page === 0) {
+    if (planet && page === 0) {
       const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .andWhere('post.sticky = true')
         .leftJoinAndSelect('post.planet', 'planet')
-        .andWhere('post.planet.name = :planet', {
-          planet: planets[0]
+        .andWhere('post.planet.name ILIKE :planet', {
+          planet: planet.replace(/_/g, '\\_')
         })
         .addOrderBy('post.createdAt', 'DESC')
 
@@ -226,7 +222,11 @@ export class PostResolver {
       posts = stickies.concat(posts)
     }
 
-    return posts
+    return {
+      page: page,
+      nextPage: page + 1,
+      posts
+    } as PostsResponse
   }
 
   @Query(() => [Post])

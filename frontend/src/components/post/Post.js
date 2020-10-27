@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FiFolder, FiStar } from 'react-icons/fi'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useDrag } from 'react-dnd'
-import { ItemTypes } from '@/lib/ItemTypes'
+import { ItemTypes } from '@/ItemTypes'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import PostCardLayout from '@/components/post/PostCardLayout'
 import PostClassicLayout from '@/components/post/PostClassicLayout'
@@ -16,7 +16,6 @@ function Post({ post, className, style, index, measure }) {
   const [{ isDragging }, dragRef, preview] = useDrag({
     item: { post, type: ItemTypes.POST },
     begin: () => {
-      console.log('begin')
       document.body.classList.add('cursor-grabbing')
     },
     end: (item, monitor) => {
@@ -71,25 +70,28 @@ function Post({ post, className, style, index, measure }) {
               }}
               transition={{ duration: 0.15, ease: 'easeInOut' }}
             >
-              <div className="transform -translate-x-1/2 pr-6 h-12 dark:bg-black shadow-xl rounded-full text-medium text-sm inline-flex items-center flex-no-wrap whitespace-nowrap">
+              <div className="transform -translate-x-1/2 pr-6 h-12 bg-blue-500 shadow-xl rounded-md text-medium text-sm inline-flex items-center flex-no-wrap whitespace-nowrap">
                 {toast.folder && (
                   <>
-                    {toast.folder.name === 'Favorites' ? (
-                      <FiStar
-                        className={`${
-                          toast.folder.color || 'text-yellow-500'
-                        } h-5 w-5 mx-6`}
-                      />
-                    ) : (
-                      <FiFolder
-                        className={`${
-                          toast.folder.color || 'text-blue-500'
-                        } h-5 w-5 mx-6`}
-                      />
-                    )}
+                    <div className="w-9 h-9 bg-white mx-4 rounded-full inline-flex items-center shadow">
+                      {toast.folder.name === 'Favorites' ? (
+                        <FiStar
+                          className={`${
+                            toast.folder.color || 'text-yellow-500'
+                          } h-5 w-5 m-auto`}
+                        />
+                      ) : (
+                        <FiFolder
+                          className={`${
+                            toast.folder.color || 'text-blue-500'
+                          } h-5 w-5 m-auto`}
+                        />
+                      )}
+                    </div>
 
-                    {`Added to ${toast.folder.name}`}
-                    <span className="hover:underline cursor-pointer ml-6 text-tertiary">
+                    <span className="text-white">{`Added to ${toast.folder.name}`}</span>
+
+                    <span className="hover:underline cursor-pointer ml-6 text-white">
                       Undo
                     </span>
                   </>
@@ -99,7 +101,7 @@ function Post({ post, className, style, index, measure }) {
                   <>
                     <img
                       alt={toast.user.profile.realName}
-                      className="object-cover w-12 h-12 rounded-full mr-6"
+                      className="object-cover w-9 h-9 rounded-full mx-4 shadow"
                       src={toast.user.profile.avatarURL}
                     />
                     {`Sent to ${toast.user.profile.realName}`}

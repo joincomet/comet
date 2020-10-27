@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDragLayer } from 'react-dnd'
-import { ItemTypes } from '@/lib/ItemTypes'
+import { ItemTypes } from '@/ItemTypes'
 import { PostDragPreview } from '@/components/post/PostDragPreview'
 const layerStyles = {
   position: 'fixed',

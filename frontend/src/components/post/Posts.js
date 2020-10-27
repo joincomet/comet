@@ -3,13 +3,23 @@ import Post from '@/components/post/Post'
 import {
   CellMeasurer,
   CellMeasurerCache,
+  InfiniteLoader,
   List,
   WindowScroller
 } from 'react-virtualized'
-import { useWindowSize } from '@/hooks/useWindowSize'
+import { useWindowSize } from 'react-use'
+import { usePosts } from '@/hooks/usePosts'
 
-export default function Posts({ initial }) {
-  const [posts] = useState(() => initial)
+export default function Posts({ variables }) {
+  const {
+    status,
+    data,
+    error,
+    isFetching,
+    isFetchingMore,
+    fetchMore,
+    canFetchMore
+  } = usePosts(variables)
 
   const handleResize = event => {
     cache.clearAll()
@@ -24,32 +34,42 @@ export default function Posts({ initial }) {
 
   const windowSize = useWindowSize()
 
+  if (!data) return null
+
+  const posts = () => data.map(page => page.posts).flat()
+
   return (
-    <div>
-      <WindowScroller>
-        {({ isScrolling, onChildScroll, scrollTop }) => (
-          <List
-            overscanRowCount={10}
-            autoHeight={true}
-            height={1080}
-            autoWidth
-            width={10000}
-            rowCount={posts.length}
-            isScrolling={isScrolling}
-            onScroll={onChildScroll}
-            scrollTop={scrollTop}
-            rowHeight={cache.rowHeight}
-            deferredMeasurementCache={cache}
-            className="virtual-list outline-none"
-            style={{ overflowX: 'hidden !important' }}
-            rowRenderer={getRowRender({
-              posts,
-              windowSize
-            })}
-          />
-        )}
-      </WindowScroller>
-    </div>
+    <InfiniteLoader
+      isRowLoaded={index => posts().length > index}
+      loadMoreRows={() => fetchMore()}
+      rowCount={posts().length}
+      minimumBatchSize={1}
+    >
+      {({ onRowsRendered, registerChild }) => (
+        <WindowScroller>
+          {({ height, isScrolling, onChildScroll, scrollTop }) => (
+            <List
+              ref={registerChild}
+              onRowsRendered={onRowsRendered}
+              overscanRowCount={10}
+              autoHeight={true}
+              height={height || 1080}
+              autoWidth
+              width={10000}
+              rowCount={posts().length}
+              isScrolling={isScrolling}
+              onScroll={onChildScroll}
+              scrollTop={scrollTop}
+              rowHeight={cache.rowHeight}
+              deferredMeasurementCache={cache}
+              className="virtual-list outline-none"
+              style={{ overflowX: 'hidden !important' }}
+              rowRenderer={getRowRender(posts())}
+            />
+          )}
+        </WindowScroller>
+      )}
+    </InfiniteLoader>
   )
 }
 
@@ -58,11 +78,7 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 })
 
-const getRowRender = ({ posts, mousePosition }) => ({
-  index,
-  parent,
-  style
-}) => {
+const getRowRender = posts => ({ index, parent, style }) => {
   const post = posts[index]
 
   return (
@@ -75,13 +91,7 @@ const getRowRender = ({ posts, mousePosition }) => ({
       >
         {({ measure, registerChild }) => (
           <div style={{ margin: 0, ...style }} ref={registerChild}>
-            <Post
-              post={post}
-              isDragging={false}
-              index={index}
-              mousePosition={mousePosition}
-              measure={measure}
-            />
+            <Post post={post} index={index} measure={measure} />
           </div>
         )}
       </CellMeasurer>

@@ -125,6 +125,7 @@ type Mutation {
   joinPlanet(name: String!): Boolean!
   leavePlanet(name: String!): Boolean!
   login(password: String!, username: String!): LoginResponse!
+  logout: Boolean!
   markAllNotificationsRead: Boolean!
   markNotificationRead(id: ID!): Boolean!
   mutePlanet(name: String!): Boolean!
@@ -273,6 +274,12 @@ type PostRocket {
   userId: ID!
 }
 
+type PostsResponse {
+  nextPage: Int!
+  page: Int!
+  posts: [Post!]!
+}
+
 type Query {
   blockedUsers: [User!]!
   comments(
@@ -294,23 +301,25 @@ type Query {
   planets(joined: Boolean = false, names: [String!], page: Int = 0, pageSize: Int = 20, search: String, sort: PlanetSort = AZ, tags: [String!]): [Planet!]!
   post(postId: ID!): Post
   posts(
-    "Show posts from everywhere, or only joined planets/users"
-    feed: Feed = ALL,
+    "If provided, only posts from given folder ID will be returned"
+    folderId: ID,
+    "If provided, only posts from given galaxy will be returned"
+    galaxy: String,
     page: Int = 0,
     pageSize: Int = 20,
-    "If provided, only posts from given planets will be returned"
-    planets: [String!],
+    "If provided, only posts from given planet will be returned"
+    planet: String,
     "If provided, only posts matching given search term will be returned"
     search: String,
     "Sort by new, hot, top, most comments"
     sort: PostSort = HOT,
-    "If provided, only posts from given tags will be returned"
-    tags: [String!],
     "Filter by all, hour, day, week, month, year"
     time: TimeFilter = ALL,
-    "If provided, only posts from given usernames will be returned"
-    usernames: [String!]
-  ): [Post!]!
+    "Show universe"
+    universe: Boolean = false,
+    "If provided, only posts from given username will be returned"
+    username: String
+  ): PostsResponse!
   user(username: String!): User
   userComments(page: Int = 0, pageSize: Int = 20, sort: CommentSort = NEW, time: TimeFilter = ALL, username: String!): [Comment!]!
 }
@@ -408,11 +417,6 @@ type Usernames {
 enum CommentSort {
   NEW
   TOP
-}
-
-enum Feed {
-  ALL
-  JOINED
 }
 
 enum ModPermission {
