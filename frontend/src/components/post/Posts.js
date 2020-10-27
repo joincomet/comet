@@ -66,6 +66,7 @@ export default function Posts({ variables, layout }) {
               className="virtual-list outline-none"
               style={{ overflowX: 'hidden !important' }}
               rowRenderer={getRowRender(posts(), layout)}
+              data={layout}
             />
           )}
         </WindowScroller>

@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       message:
+        required: false
         description: "Commit message"
 
 jobs:
@@ -50,4 +51,4 @@ jobs:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "Deployment Notifier"
-          message: "@everyone a new version has been deployed: \"${{ github.event.inputs.logLevel }}\""
+          message: "@everyone a new version has been deployed: \"${{ github.event.inputs.message }}\""
