@@ -10,14 +10,12 @@ import { DndProvider } from 'react-dnd'
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { CustomDragLayer } from '@/components/CustomDragLayer'
 import { ReactQueryCacheProvider, QueryCache } from 'react-query'
-import { dehydrate, Hydrate } from 'react-query/hydration'
-import App from 'next/app'
+import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query-devtools'
-import { fetchCurrentUser } from '@/hooks/useCurrentUser'
 
 const queryCache = new QueryCache()
 
-function MyApp({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
@@ -59,20 +57,3 @@ function MyApp({ Component, pageProps }) {
     </>
   )
 }
-
-MyApp.getInitialProps = async appContext => {
-  // calls page's `getInitialProps` and fills `appProps.pageProps`
-  const appProps = await App.getInitialProps(appContext)
-
-  const queryCache = new QueryCache()
-  await queryCache.prefetchQuery(['currentUser'], fetchCurrentUser)
-
-  return {
-    ...appProps,
-    props: {
-      dehydratedState: dehydrate(queryCache)
-    }
-  }
-}
-
-export default MyApp

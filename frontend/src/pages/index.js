@@ -9,9 +9,25 @@ import { QueryCache } from 'react-query'
 import { dehydrate } from 'react-query/hydration'
 import { fetchPosts, usePosts } from '@/hooks/usePosts'
 import { useRouter } from 'next/router'
+import { setCookie } from 'nookies'
+import { useState } from 'react'
+import { fetchCurrentUser } from '@/hooks/useCurrentUser'
+import nookies from 'nookies'
 
-export default function Home() {
+export default function Home({ cookies }) {
   const router = useRouter()
+
+  const [layout, setLayout] = useState(
+    cookies && cookies.layout ? cookies.layout : 'cards'
+  )
+
+  const changeLayout = l => {
+    setLayout(l)
+    setCookie(null, 'layout', l, {
+      maxAge: 60 * 60 * 24 * 365 * 10,
+      path: '/'
+    })
+  }
 
   const { isLoading, isError, data, error } = usePosts(router.query)
 
@@ -43,16 +59,42 @@ export default function Home() {
               {/*<SortDropdown />*/}
             </div>
 
-            <div className="flex items-center text-xs text-tertiary font-mono space-x-5 mb-3 px-6">
-              <span className="font-bold cursor-pointer hover:underline">
+            <div className="flex items-center text-xs text-tertiary font-mono mb-5 mx-3 sm:mb-3 sm:mx-0">
+              <div
+                onClick={() => changeLayout('cards')}
+                className={`mr-5 cursor-pointer hover:underline ${
+                  layout === 'cards' ? 'font-bold text-blue-500' : ''
+                }`}
+              >
                 Cards
-              </span>
-              <span className="cursor-pointer hover:underline">Condensed</span>
+              </div>
+              <div
+                onClick={() => changeLayout('small_cards')}
+                className={`mr-5 cursor-pointer hover:underline ${
+                  layout === 'small_cards' ? 'font-bold text-blue-500' : ''
+                }`}
+              >
+                Small Cards
+              </div>
+              <div
+                onClick={() => changeLayout('classic')}
+                className={`mr-auto cursor-pointer hover:underline ${
+                  layout === 'classic' ? 'font-bold text-blue-500' : ''
+                }`}
+              >
+                Classic
+              </div>
             </div>
           </div>
 
-          <div className="pt-5 sm:px-3">
-            <Posts variables={router.query} />
+          <div
+            className={`${
+              layout === 'cards' || layout === 'small_cards'
+                ? 'px-0 sm:px-5 2xl:px-80'
+                : 'px-3'
+            }`}
+          >
+            <Posts layout={layout} variables={router.query} />
           </div>
         </div>
         <RightSidebar />
@@ -61,15 +103,17 @@ export default function Home() {
   )
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(ctx) {
   const queryCache = new QueryCache()
-  await queryCache.prefetchQuery(['posts', query], fetchPosts, {
+  await queryCache.prefetchQuery(['posts', ctx.query], fetchPosts, {
     infinite: true,
-    getFetchMore: (lastPage, allPages) => [query, lastPage.nextPage]
+    getFetchMore: (lastPage, allPages) => [ctx.query, lastPage.nextPage]
   })
+  await queryCache.prefetchQuery(['currentUser'], fetchCurrentUser)
 
   return {
     props: {
+      cookies: nookies.get(ctx),
       dehydratedState: dehydrate(queryCache)
     }
   }

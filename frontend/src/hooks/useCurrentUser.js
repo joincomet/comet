@@ -18,7 +18,7 @@ export const fetchCurrentUser = async () => {
       }
     `
   )
-  return posts
+  return posts || null
 }
 
 export const useCurrentUser = () => {

@@ -11,8 +11,8 @@ import React from 'react'
 
 export default function PostClassicLayout({ post, index, measure }) {
   return (
-    <div className="flex flex-row pb-2">
-      <div className="text-xs text-disabled font-mono pt-6 mt-1.5 pr-3">
+    <div className="flex flex-row">
+      <div className="hidden sm:block text-xs text-disabled font-mono pt-6 mt-1.5 pr-3">
         <span style={{ marginTop: '-1px' }}>{index + 1}</span>
       </div>
       <div className="flex flex-col items-center text-disabled pt-1">
@@ -47,7 +47,7 @@ export default function PostClassicLayout({ post, index, measure }) {
           </div>
         )}
       </div>
-      <div className="flex flex-col flex-grow pr-8 ml-3">
+      <div className="flex flex-col flex-grow ml-3">
         <div className="text-base font-medium text-primary">{post.title}</div>
         <div className="text-xxs">
           <span className="text-tertiary">submitted {post.timeSince} by </span>

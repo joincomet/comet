@@ -8,20 +8,22 @@ export default function Folders() {
       <div className="mx-5 mb-3 text-xs font-mono font-base text-tertiary">
         Folders
       </div>
-      <Folder folder={{ name: 'Favorites', type: 'PRIVATE' }} />
+      <Folder
+        folder={{ name: 'Favorites', type: 'PRIVATE', color: 'yellow-500' }}
+      />
       <Folder folder={{ name: 'Read Later', type: 'PRIVATE' }} />
       <Folder
         folder={{
           name: 'Best Posts Ever',
           type: 'SHARED',
-          color: 'text-green-500'
+          color: 'green-500'
         }}
       />
       <Folder
         folder={{
           name: 'Cool Pics',
           type: 'PUBLIC',
-          color: 'text-orange-500'
+          color: 'orange-500'
         }}
       />
 

@@ -100,3 +100,4 @@ jobs:
         with:
           workflow: Deploy
           token: ${{ secrets.WORKFLOW_PAT }}
+          inputs: '{ "message": "${{ github.event.head_commit.message }}" }'

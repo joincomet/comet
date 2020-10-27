@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Post from '@/components/post/Post'
 import {
   CellMeasurer,
@@ -7,10 +7,9 @@ import {
   List,
   WindowScroller
 } from 'react-virtualized'
-import { useWindowSize } from 'react-use'
 import { usePosts } from '@/hooks/usePosts'
 
-export default function Posts({ variables }) {
+export default function Posts({ variables, layout }) {
   const {
     status,
     data,
@@ -20,6 +19,10 @@ export default function Posts({ variables }) {
     fetchMore,
     canFetchMore
   } = usePosts(variables)
+
+  useEffect(() => {
+    cache.clearAll()
+  }, [layout])
 
   const handleResize = event => {
     cache.clearAll()
@@ -31,8 +34,6 @@ export default function Posts({ variables }) {
       window.removeEventListener('resize', handleResize)
     }
   })
-
-  const windowSize = useWindowSize()
 
   if (!data) return null
 
@@ -64,7 +65,7 @@ export default function Posts({ variables }) {
               deferredMeasurementCache={cache}
               className="virtual-list outline-none"
               style={{ overflowX: 'hidden !important' }}
-              rowRenderer={getRowRender(posts())}
+              rowRenderer={getRowRender(posts(), layout)}
             />
           )}
         </WindowScroller>
@@ -78,7 +79,7 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 })
 
-const getRowRender = posts => ({ index, parent, style }) => {
+const getRowRender = (posts, layout) => ({ index, parent, style }) => {
   const post = posts[index]
 
   return (
@@ -91,7 +92,7 @@ const getRowRender = posts => ({ index, parent, style }) => {
       >
         {({ measure, registerChild }) => (
           <div style={{ margin: 0, ...style }} ref={registerChild}>
-            <Post post={post} index={index} measure={measure} />
+            <Post layout={layout} post={post} index={index} measure={measure} />
           </div>
         )}
       </CellMeasurer>

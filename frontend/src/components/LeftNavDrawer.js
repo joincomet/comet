@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { FiBell, FiLogIn, FiActivity, FiUser } from 'react-icons/fi'
 import { CgInfinity } from 'react-icons/cg'
-import { BiHomeAlt } from 'react-icons/bi'
+import { BiHomeAlt, BiAtom } from 'react-icons/bi'
 import { NavLink } from './NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/hooks/usePlanets'
@@ -110,9 +110,9 @@ function LeftNavDrawer() {
             <CgInfinity className="w-5 h-5" />
             <span className="ml-6">Universe</span>
           </NavLink>
-          <NavLink href="/activity" className={navitem}>
-            <FiActivity className="w-5 h-5" />
-            <span className="ml-6">Activity</span>
+          <NavLink href="/orbit" className={`${navitem} text-disabled`}>
+            <BiAtom className="w-5 h-5" />
+            <span className="ml-6">Orbit (Coming Soon)</span>
           </NavLink>
           <NavLink href="/login" className={navitem}>
             <FiLogIn className="w-5 h-5 text-blue-500" />

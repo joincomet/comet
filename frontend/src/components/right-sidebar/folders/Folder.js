@@ -26,9 +26,9 @@ export default function Folder({ folder }) {
       } flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700`}
     >
       {name === 'Favorites' ? (
-        <FiStar className={`w-8 h-8 p-1.5 ${color || 'text-yellow-500'}`} />
+        <FiStar className={`w-8 h-8 p-1.5 text-${color || 'yellow-500'}`} />
       ) : (
-        <FiFolder className={`w-8 h-8 p-1.5 ${color || 'text-blue-500'}`} />
+        <FiFolder className={`w-8 h-8 p-1.5 text-${color || 'blue-500'}`} />
       )}
 
       <span className="ml-6 text-sm font-medium">{name}</span>
