@@ -108,6 +108,7 @@ jobs:
             AWS_ENDPOINT=${{ secrets.AWS_ENDPOINT }}
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
             DATABASE_NAME=${{ secrets.DATABASE_NAME }}
           NGINX_ENV: STAGING_SUBDOMAIN=${{ secrets.STAGING_SUBDOMAIN }}
         with:
