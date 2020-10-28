@@ -117,6 +117,7 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
+            touch prod.env
             echo -e "$ENV" >> staging.env
             echo -e "$NGINX_ENV" >> nginx.env
             docker-compose pull -q
