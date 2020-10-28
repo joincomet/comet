@@ -60,6 +60,11 @@ services:
       - "443:443"
     env_file:
       - nginx.env
+    depends_on:
+      - api-staging
+      - frontend-staging
+      - api
+      - frontend
 
 volumes:
   next-cache:
