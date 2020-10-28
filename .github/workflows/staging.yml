@@ -9,14 +9,14 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@master
-      - name: Build container image
-        run: docker buildx build ./frontend -t registry.digitalocean.com/cometx/frontend:staging
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+      - name: Build container image
+        run: docker buildx build ./frontend -t registry.digitalocean.com/cometx/frontend:staging
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
   api:
@@ -24,14 +24,14 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@master
-      - name: Build container image
-        run: docker buildx build ./api -t registry.digitalocean.com/cometx/api:staging
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+      - name: Build container image
+        run: docker buildx build ./api -t registry.digitalocean.com/cometx/api:staging
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/api
   nginx:
@@ -45,14 +45,14 @@ jobs:
         env:
           SSL_CERT: ${{ secrets.SSL_CERT }}
           SSL_KEY: ${{ secrets.SSL_KEY }}
-      - name: Build container image
-        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+      - name: Build container image
+        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/nginx
   deploy:
