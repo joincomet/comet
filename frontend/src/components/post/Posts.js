@@ -1,3 +1,4 @@
+import 'react-virtualized/styles.css'
 import React, { useEffect } from 'react'
 import Post from '@/components/post/Post'
 import {
@@ -45,14 +46,16 @@ export default function Posts({ variables, layout }) {
       loadMoreRows={() => fetchMore()}
       rowCount={posts().length}
       minimumBatchSize={1}
+      layout={layout}
+      threshold={5}
     >
       {({ onRowsRendered, registerChild }) => (
-        <WindowScroller>
+        <WindowScroller layout={layout}>
           {({ height, isScrolling, onChildScroll, scrollTop }) => (
             <List
               ref={registerChild}
               onRowsRendered={onRowsRendered}
-              overscanRowCount={10}
+              overscanRowCount={20}
               autoHeight={true}
               height={height || 1080}
               autoWidth
@@ -66,7 +69,7 @@ export default function Posts({ variables, layout }) {
               className="virtual-list outline-none"
               style={{ overflowX: 'hidden !important' }}
               rowRenderer={getRowRender(posts(), layout)}
-              data={layout}
+              layout={layout}
             />
           )}
         </WindowScroller>

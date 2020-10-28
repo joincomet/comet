@@ -1,6 +1,7 @@
 import DirectMessage from '@/components/right-sidebar/dms/DirectMessage'
 import { FiUserPlus } from 'react-icons/fi'
 import React from 'react'
+import Tippy from '@tippyjs/react'
 
 export default function DirectMessages() {
   return (
@@ -19,10 +20,12 @@ export default function DirectMessages() {
         }}
       />*/}
 
-      <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-disabled dark:hover:bg-gray-700">
-        <FiUserPlus className="w-8 h-8 p-1" />
-        <span className="ml-6 text-sm font-medium">Coming Soon...</span>
-      </div>
+      <Tippy content="This feature is coming soon">
+        <div className="flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-disabled dark:hover:bg-gray-700">
+          <FiUserPlus className="w-8 h-8 p-1" />
+          <span className="ml-6 text-sm font-medium">Coming Soon...</span>
+        </div>
+      </Tippy>
     </>
   )
 }

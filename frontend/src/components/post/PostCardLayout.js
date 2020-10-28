@@ -1,4 +1,4 @@
-import { NavLink } from '@/components/NavLink'
+import NavLink from '@/components/NavLink'
 import { BiRocket } from 'react-icons/bi'
 import {
   FiFolderPlus,
@@ -7,6 +7,7 @@ import {
   FiShare
 } from 'react-icons/fi'
 import React from 'react'
+import Image from 'next/image'
 
 export default function PostCardLayout({ post, index, measure }) {
   const chip =
@@ -16,10 +17,9 @@ export default function PostCardLayout({ post, index, measure }) {
     <div className="pb-3 bg-white border border-gray-100 shadow cursor-grab dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ">
       <div className="flex flex-row pt-5 pl-5 pr-5 sm:pl-8 sm:pr-8">
         <NavLink href={`/@${post.author.username}`}>
-          <img
-            alt={post.author.username}
-            src={post.author.profile.avatarURL}
-            className="object-cover object-center w-8 h-8 bg-gray-200 rounded-full"
+          <div
+            style={{ backgroundImage: `url(${post.author.profile.avatarURL})` }}
+            className="bg-cover bg-center w-8 h-8 bg-gray-200 rounded-full"
           />
         </NavLink>
         <div className="flex flex-col flex-grow pr-12 ml-4">
@@ -58,45 +58,48 @@ export default function PostCardLayout({ post, index, measure }) {
         )}
 
         {post.imageURLs && post.imageURLs.length > 0 ? (
-          <img
-            onLoad={measure}
+          <Image
             alt={post.title}
             src={post.imageURLs[0]}
             style={{ maxHeight: '19.8125rem' }}
             className="object-contain object-center w-full mt-4 max-w-full bg-gray-100 dark:bg-gray-900 dark:border-gray-800 border border-gray-200 hover:bg-gray-200 rounded-2xl"
           />
         ) : (
-          post.embed &&
-          post.embed.links &&
-          post.embed.links.thumbnail &&
-          post.embed.links.thumbnail.length > 0 && (
+          post.embed && (
             <a
               href={post.linkURL}
               target="_blank"
               rel="noreferrer noopener nofollow"
               className="flex flex-row items-start mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
             >
-              <img
-                src={post.embed.links.thumbnail[0].href}
-                className="object-cover object-center w-32 h-32 bg-white dark:bg-gray-800 rounded-l-lg"
+              <div
+                style={{
+                  backgroundImage: `url(${post.embed.thumbnailURL})`,
+                  minWidth: '8rem'
+                }}
+                className="bg-cover bg-center w-32 h-32 bg-white dark:bg-gray-800 rounded-l-lg"
               />
               <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
                 <div className="text-sm font-semibold line-clamp-2 hover:text-blue-500 transition duration-150 ease-in-out">
-                  {post.embed.meta.title}
+                  {post.embed.title}
                 </div>
 
                 <div className="mt-1 text-xs font-medium text-tertiary line-clamp-2">
-                  {post.embed.meta.description}
+                  {post.embed.description}
                 </div>
 
                 <div className="flex flex-row items-start mt-auto">
-                  <img
-                    v-if="post.embed.links.icon && post.embed.links.icon.length > 0"
-                    src={post.embed.links.icon[0].href}
-                    className="object-contain w-4 h-4 mr-3 rounded-sm"
-                  />
+                  {post.embed.faviconURL && (
+                    <div
+                      style={{
+                        backgroundImage: `url(${post.embed.faviconURL})`
+                      }}
+                      className="bg-contain bg-center w-4 h-4 mr-3 rounded-sm"
+                    />
+                  )}
+
                   <div className="text-tertiary">
-                    <div className="text-xs font-mono">{post.domain}</div>
+                    <div className="text-xs font-mono">{post.embed.domain}</div>
                   </div>
                 </div>
               </div>

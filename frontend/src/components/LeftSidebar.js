@@ -1,11 +1,13 @@
+import 'overlayscrollbars/css/OverlayScrollbars.css'
 import { useRouter } from 'next/router'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { FiBell, FiLogIn, FiActivity, FiUser } from 'react-icons/fi'
 import { CgInfinity } from 'react-icons/cg'
 import { BiHomeAlt, BiAtom } from 'react-icons/bi'
-import { NavLink } from './NavLink'
+import NavLink from './NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/hooks/usePlanets'
+import Tippy from '@tippyjs/react'
 
 const navitem = `
   relative 
@@ -81,7 +83,7 @@ function TopPlanets() {
   )
 }
 
-function LeftNavDrawer() {
+function LeftSidebar() {
   const router = useRouter()
 
   return (
@@ -110,10 +112,13 @@ function LeftNavDrawer() {
             <CgInfinity className="w-5 h-5" />
             <span className="ml-6">Universe</span>
           </NavLink>
-          <NavLink href="/orbit" className={`${navitem} text-disabled`}>
-            <BiAtom className="w-5 h-5" />
-            <span className="ml-6">Orbit (Coming Soon)</span>
-          </NavLink>
+          <Tippy content="This feature is coming soon">
+            <div className={`${navitem} text-disabled cursor-pointer`}>
+              <BiAtom className="w-5 h-5" />
+              <span className="ml-6">Orbit (Coming Soon)</span>
+            </div>
+          </Tippy>
+
           <NavLink href="/login" className={navitem}>
             <FiLogIn className="w-5 h-5 text-blue-500" />
             <span className="ml-6 text-blue-500">Log In</span>
@@ -144,4 +149,4 @@ function LeftNavDrawer() {
   )
 }
 
-export default LeftNavDrawer
+export default LeftSidebar

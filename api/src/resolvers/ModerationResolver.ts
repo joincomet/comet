@@ -1,6 +1,6 @@
 import { Arg, Authorized, ID, Mutation, UseMiddleware } from 'type-graphql'
 import { Planet } from '@/entities/Planet'
-import { s3upload } from '@/S3Storage'
+import { uploadImage } from '@/S3Storage'
 import { Stream } from 'stream'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { InjectRepository } from 'typeorm-typedi-extensions'
@@ -105,7 +105,7 @@ export class ModerationResolver {
     const outStream = new Stream.PassThrough()
     createReadStream().pipe(outStream)
 
-    const url = await s3upload(
+    const url = await uploadImage(
       `planet/${planet}/avatar.png`,
       outStream,
       file.mimetype
@@ -129,7 +129,7 @@ export class ModerationResolver {
     const outStream = new Stream.PassThrough()
     createReadStream().pipe(outStream)
 
-    const url = await s3upload(
+    const url = await uploadImage(
       `planet/${planet}/banner.png`,
       outStream,
       file.mimetype

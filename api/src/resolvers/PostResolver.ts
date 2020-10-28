@@ -19,7 +19,7 @@ import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
 import { PostRocket } from '@/entities/relations/PostRocket'
 import { Stream } from 'stream'
-import { s3upload } from '@/S3Storage'
+import { uploadImage } from '@/S3Storage'
 import { TimeFilter } from '@/types/posts/TimeFilter'
 import { PostSort } from '@/types/posts/PostSort'
 import { InjectRepository } from 'typeorm-typedi-extensions'
@@ -28,7 +28,7 @@ import { Comment } from '@/entities/Comment'
 import { Notification } from '@/entities/Notification'
 import { Planet } from '@/entities/Planet'
 import { PlanetUser } from '@/entities/relations/PlanetUser'
-import { Embed } from '@/types/post/Embed'
+import { EmbedResponse } from '@/types/post/EmbedResponse'
 import { runIframely } from '@/iframely/RunIframely'
 import { PostsResponse } from '@/responses/PostsResponse'
 
@@ -320,7 +320,7 @@ export class PostResolver {
       const outStream = new Stream.PassThrough()
       createReadStream().pipe(outStream)
 
-      link = await s3upload(`uploads/${post.id}.png`, outStream, mimetype)
+      link = await uploadImage(`uploads/${post.id}.png`, outStream, mimetype)
     }
 
     this.postRocketRepo.save({
@@ -524,12 +524,12 @@ export class PostResolver {
     return postUpvoteLoader.load({ userId, postId: post.id })
   }
 
-  @Query(() => Embed)
+  @Query(() => EmbedResponse)
   async getURLEmbed(@Arg('URL') URL: string) {
     const data = await runIframely(URL)
     data.meta.themeColor = data.meta['theme-color']
     delete data.meta['theme-color']
 
-    return data as Embed
+    return data as EmbedResponse
   }
 }

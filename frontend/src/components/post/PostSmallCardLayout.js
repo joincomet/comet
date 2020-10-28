@@ -1,4 +1,4 @@
-import { NavLink } from '@/components/NavLink'
+import NavLink from '@/components/NavLink'
 import { BiRocket } from 'react-icons/bi'
 import {
   FiFolderPlus,
@@ -15,19 +15,14 @@ export default function PostSmallCardLayout({ post, index, measure }) {
   return (
     <div className="pb-2 bg-white border border-gray-100 shadow cursor-grab dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ">
       <div className="inline-flex flex-row px-5 pt-3 pb-3 w-full">
-        {post.author.profile.avatarURL ? (
-          <img
-            className="w-8 h-8 rounded-full bg-gray-700 mr-5 mt-0.5 object-cover"
-            src={post.author.profile.avatarURL}
-            alt="Profile Picture"
-          />
-        ) : (
-          <img
-            className="w-8 h-8 rounded-full bg-purple-300 border-2 border-purple-300 mr-5 mt-0.5 object-contain"
-            src="/logos/astronaut.png"
-            alt="Profile Picture"
-          />
-        )}
+        <div
+          className="w-8 h-8 rounded-full bg-gray-700 mr-5 mt-0.5 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${
+              post.author.profile.avatarURL || '/logos/astronaut.png'
+            })`
+          }}
+        />
 
         <div className="mr-5">
           <div className="text-base font-semibold text-primary">
@@ -40,10 +35,9 @@ export default function PostSmallCardLayout({ post, index, measure }) {
         </div>
 
         {post.thumbnailURL && (
-          <img
-            alt="Thumbnail"
-            className="w-12 h-12 sm:w-20 sm:h-20 rounded-lg ml-auto object-cover"
-            src={post.thumbnailURL}
+          <div
+            className="w-12 h-12 sm:w-20 sm:h-20 rounded-lg ml-auto bg-cover bg-center"
+            style={{ backgroundImage: `url(${post.thumbnailURL})` }}
           />
         )}
       </div>

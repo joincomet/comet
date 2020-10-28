@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiChevronDown,
+  FiMenu
+} from 'react-icons/fi'
+import Dropdown from '@/components/Dropdown'
 
 const galaxies = [
   'activism',
@@ -111,7 +117,7 @@ export default function GalaxiesSlider() {
         <div
           ref={sliderRef}
           onScroll={e => setScrollLeft(e.target.scrollLeft)}
-          className="h-8 w-full flex flex-row flex-grow flex-no-wrap items-center slider overflow-x-scroll overflow-y-hidden text-tertiary text-xs font-mono space-x-8 uppercase"
+          className="h-8 w-full flex flex-row flex-grow flex-nowrap items-center slider overflow-x-scroll overflow-y-hidden text-tertiary text-xs font-mono space-x-8 uppercase"
         >
           {galaxies.map(galaxy => (
             <span
@@ -132,6 +138,18 @@ export default function GalaxiesSlider() {
             }`}
           />
         </div>
+        <Dropdown
+          button={
+            <div className="inline-flex items-center cursor-pointer pr-4 pl-4 h-8">
+              <FiMenu
+                className={`w-5 h-5 transition duration-100 ease-in-out text-tertiary`}
+              />
+            </div>
+          }
+        >
+          <div className="w-64 h-16 bg-gray-700" />
+          <div />
+        </Dropdown>
       </div>
     </>
   )

@@ -1,4 +1,4 @@
-import { Authorized, Field, ID, ObjectType } from 'type-graphql'
+import { Authorized, Field, ID, Int, ObjectType } from 'type-graphql'
 import {
   Column,
   CreateDateColumn,
@@ -96,7 +96,7 @@ export class Planet {
   @OneToMany(() => Ban, ban => ban.planet)
   bans: Lazy<Ban[]>
 
-  @Field()
+  @Field(() => Int)
   @Column('bigint', { default: 1 })
   userCount: number
 
@@ -112,10 +112,10 @@ export class Planet {
   @Field()
   joined: boolean
 
-  @Field()
+  @Field(() => Int)
   @Column('bigint', { default: 0 })
   postCount: number
 
-  @Column('int', { select: false, default: 0 })
-  total: number
+  /*@Column('int', { select: false, default: 0 })
+  total: number*/
 }

@@ -1,9 +1,9 @@
-import LeftNavDrawer from './LeftNavDrawer'
+import LeftSidebar from './LeftSidebar'
 
 export default function Layout({ children }) {
   return (
     <div>
-      <LeftNavDrawer />
+      <LeftSidebar />
 
       <main>{children}</main>
     </div>

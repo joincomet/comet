@@ -1,4 +1,4 @@
-import { Authorized, Field, ID, ObjectType } from 'type-graphql'
+import { Authorized, Field, ID, Int, ObjectType } from 'type-graphql'
 import {
   Column,
   CreateDateColumn,
@@ -150,18 +150,18 @@ export class User {
   @Field()
   isCurrentUser: boolean
 
-  @Field()
+  @Field(() => Int)
   followerCount: number
 
-  @Field()
+  @Field(() => Int)
   followingCount: number
 
-  @Field()
-  @Column('bigint', { default: 0 })
+  @Field(() => Int)
+  @Column({ default: 0 })
   commentCount: number
 
-  @Field()
-  @Column('bigint', { default: 0 })
+  @Field(() => Int)
+  @Column({ default: 0 })
   postCount: number
 
   @OneToMany(() => PostRocket, rocket => rocket.user)
@@ -170,8 +170,8 @@ export class User {
   @OneToMany(() => CommentRocket, rocket => rocket.user)
   commentRockets: Lazy<CommentRocket[]>
 
-  @Field()
-  @Column('bigint', { default: 0 })
+  @Field(() => Int)
+  @Column({ default: 0 })
   rocketCount: number
 
   /**

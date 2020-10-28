@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
-export const PostDragPreview = memo(({ post, show }) => {
+function PostDragPreview({ post, show }) {
   return (
     <div className="transform -translate-x-1/2 -translate-y-full">
       <AnimatePresence>
@@ -29,4 +29,6 @@ export const PostDragPreview = memo(({ post, show }) => {
       </AnimatePresence>
     </div>
   )
-})
+}
+
+export default React.memo(PostDragPreview)

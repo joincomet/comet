@@ -1,3 +1,4 @@
+import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
@@ -5,14 +6,14 @@ const defaultProps = {
   activeClassName: '',
 }
 
-export const NavLink = ({
+function NavLink({
   href,
   children,
   className,
   activeClassName,
   shallow,
   as,
-}) => {
+}) {
   const router = useRouter()
 
   return (
@@ -29,3 +30,5 @@ export const NavLink = ({
 }
 
 NavLink.defaultProps = defaultProps
+
+export default React.memo(NavLink)

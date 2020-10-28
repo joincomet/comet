@@ -1,4 +1,4 @@
-import { NavLink } from '@/components/NavLink'
+import NavLink from '@/components/NavLink'
 import { BiRocket } from 'react-icons/bi'
 import {
   FiFolderPlus,
@@ -28,16 +28,15 @@ export default function PostClassicLayout({ post, index, measure }) {
         }}
       >
         {post.thumbnailURL ? (
-          <img
+          <div
             style={{
               maxHeight: '4.5rem',
+              minHeight: '3rem',
               minWidth: '4.5rem',
-              width: '4.5rem'
+              width: '4.5rem',
+              backgroundImage: `url(${post.thumbnailURL})`
             }}
-            className="object-cover"
-            onLoad={measure}
-            alt="Post Thumbnail"
-            src={post.thumbnailURL}
+            className="bg-cover bg-center"
           />
         ) : (
           <div className="min-w-full h-full inline-flex">

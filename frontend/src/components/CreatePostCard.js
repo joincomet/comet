@@ -13,7 +13,7 @@ import { usePlanets } from '@/hooks/usePlanets'
 function AliasDropdown() {
   return (
     <Dropdown
-      button={() => (
+      button={(
         <div className="focus:outline-none rounded-md shadow-sm focus:outline-none mr-auto sm:mr-0 px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
           <img
             src="https://pbs.twimg.com/profile_images/1312166598086598658/I2-2CTFg_400x400.jpg"
@@ -51,7 +51,7 @@ function PlanetDropdown() {
 
   return (
     <Dropdown
-      button={() => (
+      button={(
         <div className="focus:outline-none px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
           <FiUser className="w-6 h-6 p-0.5 mr-3 text-blue-500" />
           My Profile

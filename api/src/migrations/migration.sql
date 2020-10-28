@@ -395,13 +395,13 @@ UPDATE "planet" T SET "name" = 'CometX' WHERE T."name" = 'Comet';
 
 ALTER TABLE "planet" ADD COLUMN "user_count" bigint default 1;
 ALTER TABLE "planet" ADD COLUMN "post_count" bigint default 0;
-ALTER TABLE "user" ADD COLUMN "post_count" bigint default 0;
-ALTER TABLE "user" ADD COLUMN "comment_count" bigint default 0;
+ALTER TABLE "user" ADD COLUMN "post_count" integer default 0;
+ALTER TABLE "user" ADD COLUMN "comment_count" integer default 0;
 
-ALTER TABLE "post" ALTER COLUMN "rocket_count" TYPE bigint;
-ALTER TABLE "post" ALTER COLUMN "comment_count" TYPE bigint;
-ALTER TABLE "comment" ALTER COLUMN "rocket_count" TYPE bigint;
-ALTER TABLE "user" ALTER COLUMN "rocket_count" TYPE bigint;
+ALTER TABLE "post" ALTER COLUMN "rocket_count" TYPE integer;
+ALTER TABLE "post" ALTER COLUMN "comment_count" TYPE integer;
+ALTER TABLE "comment" ALTER COLUMN "rocket_count" TYPE integer;
+ALTER TABLE "user" ALTER COLUMN "rocket_count" TYPE integer;
 
 UPDATE "planet" T SET "user_count" = (SELECT COUNT(*) FROM "planet_user" WHERE "planet_id" = T."id") WHERE 1=1;
 UPDATE "planet" T SET "post_count" = (SELECT COUNT(*) FROM "post" WHERE "planet_id" = T."id") WHERE 1=1;

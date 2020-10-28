@@ -1,4 +1,4 @@
-import { Embed } from '@/types/post/Embed'
+import { EmbedResponse } from '@/types/post/EmbedResponse'
 const _ = require('lodash')
 const mkdirp = require('mkdirp')
 const fs = require('fs-extra')
@@ -36,7 +36,7 @@ fs.copySync(
 
 const iframely = require('iframely')
 
-export const runIframely = (url: string): Promise<Embed> => {
+export const runIframely = (url: string): Promise<EmbedResponse> => {
   return new Promise(resolve => {
     // console.log(url)
     iframely.run(
@@ -98,7 +98,7 @@ export const runIframely = (url: string): Promise<Embed> => {
             }
           }
         }
-        resolve(res as Embed)
+        resolve(res as EmbedResponse)
       }
     )
   })

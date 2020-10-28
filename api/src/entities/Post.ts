@@ -1,4 +1,4 @@
-import { Authorized, Field, ID, ObjectType } from 'type-graphql'
+import { Authorized, Field, ID, Int, ObjectType } from 'type-graphql'
 import {
   Column,
   CreateDateColumn,
@@ -58,9 +58,40 @@ export class Post {
   })
   embed?: Embed
 
-  @Field(() => [String], { nullable: true })
-  @Column('text', { array: true, nullable: true, name: 'image_urls' })
-  imageURLs?: string[]
+  @Field({ nullable: true })
+  get thumbnailURL() {
+    if (!this.linkURL && this.imageCount === 0) return null
+    return `https://${process.env.IMAGES_DOMAIN}/${this.id36}/thumb.png`
+  }
+
+  @Field({ nullable: true })
+  get faviconURL() {
+    if (!this.linkURL) return null
+    return `https://${process.env.IMAGES_DOMAIN}/favicons/${this.domain}.png`
+  }
+
+  @Field(() => [String])
+  get imageURLs(): string[] {
+    if (this.imageCount === 0) return []
+    if (this.imageCount === 1)
+      return [`https://${process.env.IMAGES_DOMAIN}/${this.id36}.png`]
+    return [...Array(this.imageCount).keys()].map(
+      i => `https://${process.env.IMAGES_DOMAIN}/${this.id36}/${i}.png`
+    )
+  }
+
+  @Field({ nullable: true })
+  get domain() {
+    try {
+      return new URL(this.linkURL).hostname
+    } catch {
+      return null
+    }
+  }
+
+  @Field(() => Int)
+  @Column({ default: 0 })
+  imageCount: number
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.posts)
@@ -102,8 +133,8 @@ export class Post {
   @OneToMany(() => Comment, comment => comment.post)
   comments: Lazy<Comment[]>
 
-  @Field()
-  @Column('bigint', { default: 0 })
+  @Field(() => Int)
+  @Column({ default: 0 })
   commentCount: number
 
   @Field(() => Planet, { nullable: true })
@@ -120,8 +151,8 @@ export class Post {
   @OneToMany(() => PostRocket, vote => vote.post)
   rockets: Lazy<PostRocket[]>
 
-  @Field()
-  @Column('bigint', { default: 1 })
+  @Field(() => Int)
+  @Column({ default: 1 })
   rocketCount: number
 
   @Field()
@@ -159,42 +190,5 @@ export class Post {
       .replace(/[^a-z0-9_]+/gi, '')
       .replace(/[_](.)\1+/g, '$1')
     return `/+${(this.planet as Planet).name}/post/${this.id36}/${slug}`
-  }
-
-  @Field(() => String, { nullable: true })
-  get domain(): string | undefined {
-    if (!this.linkURL) return undefined
-    try {
-      let domain = new URL(this.linkURL).host
-      if (domain.includes('www.')) domain = domain.split('www.')[1]
-      return domain
-    } catch {
-      return undefined
-    }
-  }
-
-  @Field(() => String, { nullable: true })
-  get thumbnailURL(): string | undefined {
-    if (this.imageURLs && this.imageURLs.length > 0) return this.imageURLs[0]
-    if (
-      this.embed &&
-      this.embed.links &&
-      this.embed.links.thumbnail &&
-      this.embed.links.thumbnail.length > 0
-    )
-      return this.embed.links.thumbnail[0].href
-    return undefined
-  }
-
-  @Field(() => String, { nullable: true })
-  get embedThumbnailURL(): string | undefined {
-    if (
-      this.embed &&
-      this.embed.links &&
-      this.embed.links.thumbnail &&
-      this.embed.links.thumbnail.length > 0
-    )
-      return this.embed.links.thumbnail[0].href
-    return undefined
   }
 }

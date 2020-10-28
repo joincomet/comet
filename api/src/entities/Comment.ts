@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, Int, ObjectType } from 'type-graphql'
 import {
   Column,
   CreateDateColumn,
@@ -82,8 +82,8 @@ export class Comment {
   @OneToMany(() => CommentRocket, upvote => upvote.comment)
   rockets: Lazy<CommentRocket[]>
 
-  @Field()
-  @Column('bigint', { default: 1 })
+  @Field(() => Int)
+  @Column({ default: 1 })
   rocketCount: number
 
   @Field()

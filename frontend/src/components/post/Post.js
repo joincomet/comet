@@ -77,7 +77,7 @@ function Post({ post, className, style, index, measure, layout }) {
                 <div
                   className={`bg-${
                     toast.folder.color || 'blue-500'
-                  } transform -translate-x-1/2 pr-6 h-12 shadow-xl rounded-md text-medium text-sm inline-flex items-center flex-no-wrap whitespace-nowrap`}
+                  } transform -translate-x-1/2 pr-6 h-12 shadow-xl rounded-md text-medium text-sm inline-flex items-center flex-nowrap whitespace-nowrap`}
                 >
                   {toast.folder && (
                     <>

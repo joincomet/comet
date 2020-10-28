@@ -2,18 +2,16 @@ version: "3.8"
 
 services:
   api:
-    image: registry.digitalocean.com/cometx/api:latest
+    image: registry.digitalocean.com/cometx/api:prod
     container_name: api
     restart: always
     expose:
       - "4000"
     env_file:
       - .env
-    depends_on:
-      - imageflow
 
   frontend:
-    image: registry.digitalocean.com/cometx/frontend:latest
+    image: registry.digitalocean.com/cometx/frontend:prod
     container_name: frontend
     restart: always
     expose:
@@ -23,14 +21,25 @@ services:
     depends_on:
       - api
 
-  imageflow:
-    image: registry.digitalocean.com/cometx/imageflow:latest
-    container_name: imageflow
+  api-staging:
+    image: registry.digitalocean.com/cometx/api:staging
+    container_name: api-staging
     restart: always
     expose:
-      - "12345"
+      - "4000"
     env_file:
-      - .env
+      - staging.env
+
+  frontend-staging:
+    image: registry.digitalocean.com/cometx/frontend:staging
+    container_name: frontend-staging
+    restart: always
+    expose:
+      - "3000"
+    env_file:
+      - staging.env
+    depends_on:
+      - api-staging
 
   nginx:
     image: registry.digitalocean.com/cometx/nginx:latest

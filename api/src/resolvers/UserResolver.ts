@@ -15,7 +15,7 @@ import { User } from '@/entities/User'
 import { Comment } from '@/entities/Comment'
 import { UserCommentsArgs } from '@/args/UserCommentsArgs'
 import { Stream } from 'stream'
-import { s3upload } from '@/S3Storage'
+import { uploadImage } from '@/S3Storage'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { TimeFilter } from '@/types/posts/TimeFilter'
 import { CommentSort } from '@/types/CommentSort'
@@ -120,7 +120,7 @@ export class UserResolver {
     const outStream = new Stream.PassThrough()
     createReadStream().pipe(outStream)
 
-    const url = await s3upload(
+    const url = await uploadImage(
       `user/${userId}/avatar.png`,
       outStream,
       file.mimetype

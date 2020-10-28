@@ -9,6 +9,10 @@ import { Post } from '@/entities/Post'
 import { runIframely } from '@/iframely/RunIframely'
 import { isURL } from '@/IsURL'
 import { Sema } from 'async-sema'
+import { Embed } from '@/types/post/Embed'
+import { URL } from 'url'
+import { hasFile, uploadImage } from '@/S3Storage'
+import got from 'got'
 
 TypeORM.useContainer(Container)
 
@@ -87,8 +91,54 @@ const run = async () => {
     async function fetchEmbedData(post: Post) {
       await s.acquire()
       try {
-        // console.log(s.nrWaiting() + ' calls to fetch are waiting')
-        const embed = await runIframely(post.linkURL)
+        const embedResponse = await runIframely(post.linkURL)
+        if (!embedResponse || !embedResponse.meta || !embedResponse.links) {
+          return
+        }
+        const { title, description } = embedResponse.meta
+
+        if (!title) return
+
+        let domain
+        try {
+          domain = new URL(post.linkURL).host
+          if (domain.includes('www.')) domain = domain.split('www.')[1]
+        } catch {}
+
+        if (
+          !embedResponse.links.thumbnail ||
+          embedResponse.links.thumbnail.length === 0
+        )
+          return
+        const thumbnailSourceURL = embedResponse.links.thumbnail[0].href
+        let thumbnailURL
+
+        if (thumbnailSourceURL) {
+          const contentType = embedResponse.links.thumbnail[0].type
+          const key = `${post.id36}/thumb.${contentType.replace('image/', '')}`
+          if (!(await hasFile(key))) {
+            const body = await got.get(thumbnailSourceURL)
+            thumbnailURL = await uploadImage(key, body, contentType)
+          }
+        }
+
+        let faviconSourceURL, faviconURL
+        if (embedResponse.links.icon && embedResponse.links.icon.length > 0)
+          faviconSourceURL = embedResponse.links.icon[0].href
+
+        if (faviconSourceURL) {
+          const contentType = embedResponse.links.icon[0].type
+          const key = `favicons/${domain}.${contentType.replace('image/', '')}`
+          if (!(await hasFile(key))) {
+            const body = await got.get(faviconSourceURL)
+            faviconURL = await uploadImage(key, body, contentType)
+          }
+        }
+
+        const embed: Embed = {
+          title,
+          description
+        }
         await postRepo.update(post.id, { embed })
       } finally {
         s.release()
@@ -96,26 +146,7 @@ const run = async () => {
     }
 
     await Promise.all(posts.map(fetchEmbedData))
-
-    /*
-    const results = await mapLimit(
-      posts.map(p => p.linkURL),
-      50,
-      async url => runIframely(url)
-    )
-    console.log(results)*/
-
-    // console.log(results)
   }
-
-  /*  for (const post of posts) {
-    try {
-      const embed = await runIframely(post.linkURL)
-      await postRepo.update(post.id, { embed })
-    } catch (e) {
-      console.warn(`Failed: ${post.linkURL}`)
-    }
-  }*/
 
   console.info('--- Done ---')
   connection.close()

@@ -2,7 +2,7 @@ import React from 'react';
 import useDarkMode from 'use-dark-mode';
 import { FiMoon, FiSun } from "react-icons/fi";
 
-const DarkModeToggle = () => {
+function DarkModeToggle() {
   const darkMode = useDarkMode(false, { classNameDark: 'dark', classNameLight: 'light' });
 
   return (
@@ -10,6 +10,6 @@ const DarkModeToggle = () => {
       {darkMode.value ? <FiMoon /> : <FiSun /> }
     </div>
   );
-};
+}
 
-export default DarkModeToggle;
+export default React.memo(DarkModeToggle);

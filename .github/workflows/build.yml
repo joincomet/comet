@@ -2,7 +2,11 @@ name: "Build & Deploy"
 
 on:
   workflow_dispatch:
-  push:
+    inputs:
+      environment:
+        required: false
+        description: "\"prod\" or \"staging\""
+        default: "staging"
 
 jobs:
   frontend:
@@ -20,7 +24,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Build container image
-        run: docker buildx build ./frontend -t registry.digitalocean.com/cometx/frontend:latest
+        run: docker buildx build ./frontend -t registry.digitalocean.com/cometx/frontend:${{ github.event.inputs.environment }}
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
@@ -40,30 +44,10 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Build container image
-        run: docker buildx build ./api -t registry.digitalocean.com/cometx/api:latest
+        run: docker buildx build ./api -t registry.digitalocean.com/cometx/api:${{ github.event.inputs.environment }}
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/api
-
-  imageflow:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@master
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
-
-      - name: Build container image
-        run: docker buildx build ./imageflow -t registry.digitalocean.com/cometx/imageflow:latest
-
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/cometx/imageflow
 
   nginx:
     runs-on: ubuntu-latest
@@ -93,11 +77,11 @@ jobs:
         run: docker push registry.digitalocean.com/cometx/nginx
 
   deploy:
-    needs: [frontend, api, imageflow, nginx]
+    needs: [frontend, api, nginx]
     runs-on: ubuntu-latest
     steps:
       - uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: Deploy
+          workflow: ${{ github.event.inputs.environment }}
           token: ${{ secrets.WORKFLOW_PAT }}
           inputs: '{ "message": "${{ github.event.head_commit.message }}" }'

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDragLayer } from 'react-dnd'
-import { ItemTypes } from '@/ItemTypes'
-import { PostDragPreview } from '@/components/post/PostDragPreview'
+import PostDragPreview from '@/components/post/PostDragPreview'
 const layerStyles = {
   position: 'fixed',
   pointerEvents: 'none',
@@ -32,7 +31,7 @@ function getItemStyles(
   }
 }
 
-export const CustomDragLayer = () => {
+function CustomDragLayer() {
   const [mouseDownPosition, setMouseDownPosition] = useState({ x: 0, y: 0 })
   const [mouseUpPosition, setMouseUpPosition] = useState({ x: 0, y: 0 })
 
@@ -79,3 +78,5 @@ export const CustomDragLayer = () => {
     </div>
   )
 }
+
+export default React.memo(CustomDragLayer)

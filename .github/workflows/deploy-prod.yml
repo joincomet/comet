@@ -1,4 +1,4 @@
-name: "Deploy"
+name: prod
 
 on:
   workflow_dispatch:
@@ -43,8 +43,10 @@ jobs:
             mv docker-compose.prod.yml docker-compose.yml
             docker system prune -f
             docker-compose pull -q
-            docker-compose down --remove-orphans
-            docker-compose up -d --force-recreate
+            docker-compose rm -fs frontend
+            docker-compose rm -fs api
+            docker-compose up -d --no-deps api
+            docker-compose up -d --no-deps frontend
       - name: Send Discord Announcement
         uses: appleboy/discord-action@master
         with:

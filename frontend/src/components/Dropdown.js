@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function Dropdown({ button, children, className, style }) {
   return (
-    <div className="relative inline-block">
+    <div className="relative">
       <Menu>
         {({ open }) => (
           <>
@@ -21,7 +21,7 @@ export default function Dropdown({ button, children, className, style }) {
               <Menu.Items
                 static
                 style={style}
-                className={`absolute right-0 w-full origin-top z-10 outline-none ${className}`}
+                className={`absolute right-0 w-full origin-top outline-none ${className}`}
               >
                 {children.map((item, index) => (
                   <Menu.Item key={index}>{item}</Menu.Item>
