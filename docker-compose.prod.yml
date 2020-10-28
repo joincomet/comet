@@ -26,20 +26,25 @@ services:
     container_name: api-staging
     restart: always
     expose:
-      - "4000"
+      - "4001"
     env_file:
       - staging.env
+    environment:
+      - PORT=4001
 
   frontend-staging:
     image: registry.digitalocean.com/cometx/frontend:staging
     container_name: frontend-staging
     restart: always
     expose:
-      - "3000"
+      - "3001"
     env_file:
       - staging.env
     depends_on:
       - api-staging
+    environment:
+      - PORT=3001
+
 
   nginx:
     image: registry.digitalocean.com/cometx/nginx:latest

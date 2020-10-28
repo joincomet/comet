@@ -7,8 +7,6 @@ COPY . /usr/src/app/
 
 RUN yarn && yarn run build
 
-EXPOSE 4000
-
 ENV NODE_ENV=production \
     PGSSLMODE=require \
     TS_NODE_PROJECT=tsconfig.prod.json
