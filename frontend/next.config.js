@@ -5,6 +5,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer({
   compress: false,
   images: {
-    domains: [process.env.DOMAIN, process.env.IMAGES_DOMAIN]
+    domains: [new URL(process.env.IMAGES_DOMAIN).hostname]
   }
 })
