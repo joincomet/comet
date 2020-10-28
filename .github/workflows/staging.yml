@@ -130,8 +130,8 @@ jobs:
           script: |
             cd $REPOSITORY
             touch prod.env
-            echo -e "$ENV" >> staging.env
-            echo -e "$NGINX_ENV" >> nginx.env
+            echo -e "$ENV" > staging.env
+            echo -e "$NGINX_ENV" > nginx.env
             docker-compose pull -q
             docker-compose rm -fs nginx
             docker-compose rm -fs frontend-staging
