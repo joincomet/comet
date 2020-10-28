@@ -1,13 +1,46 @@
 name: Update Production
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       message:
-        description: Discord announcement
+        description: Message
         required: true
 
 jobs:
+  prep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+      - name: Copy docker-compose files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.DROPLET_KEY }}
+          passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
+          port: 22
+          source: "docker-compose.prod.yml"
+          target: ${{ github.event.repository.name }}
+      - name: Rename docker-compose file and prune Docker
+        uses: appleboy/ssh-action@master
+        env:
+          REPOSITORY: ${{ github.event.repository.name }}
+        with:
+          envs: REPOSITORY
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.DROPLET_KEY }}
+          passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
+          port: 22
+          script: |
+            cd $REPOSITORY
+            mv docker-compose.prod.yml docker-compose.yml
+            docker system prune -f
   frontend:
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +53,7 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Build container image
-        run: docker buildx build ./frontend -f ./frontend/Dockerfile.staging -t registry.digitalocean.com/cometx/frontend:prod
+        run: docker buildx build ./frontend -t registry.digitalocean.com/cometx/frontend:prod
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
   api:
@@ -38,8 +71,28 @@ jobs:
         run: docker buildx build ./api -t registry.digitalocean.com/cometx/api:prod
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/api
+  nginx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+      - name: Copy SSL certs
+        run: 'echo -e "$SSL_KEY" > ./nginx/key.pem'
+        shell: bash
+        env:
+          SSL_KEY: ${{ secrets.SSL_KEY }}
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+      - name: Build container image
+        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/cometx/nginx
   deploy:
-    needs: [frontend, api]
+    needs: [prep, frontend, api, nginx]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
@@ -56,8 +109,9 @@ jobs:
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+          NGINX_ENV: STAGING_SUBDOMAIN=${{ secrets.STAGING_SUBDOMAIN }}
         with:
-          envs: REPOSITORY, ENV
+          envs: REPOSITORY, ENV, NGINX_ENV
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
@@ -65,7 +119,9 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
+            touch staging.env
             echo -e "$ENV" >> prod.env
+            echo -e "$NGINX_ENV" >> nginx.env
             docker-compose pull -q
             docker-compose rm -fs nginx
             docker-compose rm -fs frontend
@@ -79,4 +135,4 @@ jobs:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "Deployment Notifier"
-          message: '@everyone Updated Production (https://cometx.io): "${{ github.event.inputs.message }}"'
+          message: '@everyone Updated Production (https://cometx.io): ${{ github.event.head_commit.message }}${{ github.event.inputs.message }}'

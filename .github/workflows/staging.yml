@@ -2,18 +2,22 @@ name: Update Staging
 
 on:
   push:
+    branches:
+      - staging
   workflow_dispatch:
     inputs:
       message:
-        description: Discord announcement
+        description: Message
         required: true
 
 jobs:
   prep:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
+      - name: Checkout staging
         uses: actions/checkout@v2
+        with:
+          ref: staging
       - name: Copy docker-compose files
         uses: appleboy/scp-action@master
         with:
@@ -42,8 +46,10 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
+      - name: Checkout staging
+        uses: actions/checkout@v2
+        with:
+          ref: staging
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -57,8 +63,10 @@ jobs:
   api:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
+      - name: Checkout staging
+        uses: actions/checkout@v2
+        with:
+          ref: staging
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -72,8 +80,10 @@ jobs:
   nginx:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
+      - name: Checkout staging
+        uses: actions/checkout@v2
+        with:
+          ref: staging
       - name: Copy SSL certs
         run: 'echo -e "$SSL_KEY" > ./nginx/key.pem'
         shell: bash
@@ -93,8 +103,10 @@ jobs:
     needs: [prep, frontend, api, nginx]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
+      - name: Checkout staging
         uses: actions/checkout@v2
+        with:
+          ref: staging
       - name: Start containers
         uses: appleboy/ssh-action@master
         env:
@@ -133,4 +145,4 @@ jobs:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "Deployment Notifier"
-          message: '@everyone Updated Staging (https://${{ secrets.STAGING_SUBDOMAIN }}.cometx.io): "${{ github.event.head_commit.message }}${{ github.event.inputs.message }}"'
+          message: '@everyone Updated Staging (https://${{ secrets.STAGING_SUBDOMAIN }}.cometx.io): ${{ github.event.head_commit.message }}${{ github.event.inputs.message }}'
