@@ -4,12 +4,6 @@ import { PlanetRule } from '@/types/planet/PlanetRule'
 @ObjectType()
 export class PlanetProfile {
   @Field({ nullable: true })
-  avatarURL?: string
-
-  @Field({ nullable: true })
-  bannerURL?: string
-
-  @Field({ nullable: true })
   color?: string
 
   @Field({ nullable: true })

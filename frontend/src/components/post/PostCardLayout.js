@@ -17,7 +17,7 @@ export default function PostCardLayout({ post, index, measure }) {
     <div className="pb-3 bg-white border border-gray-100 shadow cursor-grab dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ">
       <div className="flex flex-row pt-5 pl-5 pr-5 sm:pl-8 sm:pr-8">
         <NavLink href={`/@${post.author.username}`}>
-          <Image src={post.author.profile.avatarURL} width={32} height={32} className="w-8 h-8 bg-gray-200 rounded-full" />
+          {post.author.avatarURL ? (<Image src={post.author.avatarURL} width={32} height={32} className="w-8 h-8 bg-gray-200 rounded-full" />) : (<div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700" /> )}
         </NavLink>
         <div className="flex flex-col flex-grow pr-12 ml-4">
           <div className="text-xs">
@@ -83,12 +83,12 @@ export default function PostCardLayout({ post, index, measure }) {
                 </div>
 
                 <div className="flex flex-row items-start mt-auto">
-                  {post.embed.faviconURL && (
+                  {post.faviconURL && (
                     <Image src={post.faviconURL} width={16} height={16} className="w-4 h-4 mr-3 rounded-sm" />
                   )}
 
                   <div className="text-tertiary">
-                    <div className="font-mono text-xs">{post.embed.domain}</div>
+                    <div className="font-mono text-xs">{post.domain}</div>
                   </div>
                 </div>
               </div>

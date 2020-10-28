@@ -33,21 +33,19 @@ export const fetchPosts = async (
             relativeURL
             commentCount
             rocketCount
+            thumbnailURL
+            faviconURL
+            domain
             embed {
               title
               description
-              thumbnailURL
-              faviconURL
-              domain
             }
             planet {
               name
             }
             author {
               username
-              profile {
-                avatarURL
-              }
+              avatarURL
             }
             timeSince
             timeSinceEdited

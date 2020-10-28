@@ -63,11 +63,5 @@ export class UserProfile {
   bio?: string
 
   @Field({ nullable: true })
-  avatarURL?: string
-
-  @Field({ nullable: true })
-  bannerURL?: string
-
-  @Field({ nullable: true })
   usernames?: Usernames
 }

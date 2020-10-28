@@ -13,9 +13,7 @@ export const fetchPlanets = async (_, { sort, pageSize }) => {
         ) {
           id
           name
-          profile {
-            avatarURL
-          }
+          avatarURL
         }
       }
     `

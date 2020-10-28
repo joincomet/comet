@@ -9,14 +9,18 @@ import {
 import React, { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { usePlanets } from '@/hooks/usePlanets'
+import Image from 'next/image'
 
 function AliasDropdown() {
   return (
     <Dropdown
       button={(
         <div className="focus:outline-none rounded-md shadow-sm focus:outline-none mr-auto sm:mr-0 px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
-          <img
-            src="https://pbs.twimg.com/profile_images/1312166598086598658/I2-2CTFg_400x400.jpg"
+          <Image
+            width={24}
+            height={24}
+            alt="Profile picture"
+            src="/avatar.jpg"
             className="w-6 h-6 mr-3 rounded-full object-cover"
           />
           Dan Beneventano
@@ -26,8 +30,11 @@ function AliasDropdown() {
       className="bg-gray-800 border border-gray-700 rounded-md shadow-lg"
     >
       <div className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out">
-        <img
-          src="https://pbs.twimg.com/profile_images/1312166598086598658/I2-2CTFg_400x400.jpg"
+        <Image
+          width={24}
+          height={24}
+          alt="Profile picture"
+          src="/avatar.jpg"
           className="w-6 h-6 mr-3 rounded-full object-cover"
         />
         Dan Beneventano
@@ -74,9 +81,11 @@ function PlanetDropdown() {
             key={planet.id}
             className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
           >
-            <img
+            <Image
+              width={24}
+              height={24}
               alt={planet.name}
-              src={planet.profile.avatarURL}
+              src={planet.avatarURL}
               className="w-6 h-6 mr-3 rounded-full"
             />
             +{planet.name}
@@ -99,8 +108,11 @@ export default function CreatePostCard() {
         }`}
       >
         <div className="flex">
-          <img
-            src="https://pbs.twimg.com/profile_images/1312166598086598658/I2-2CTFg_400x400.jpg"
+          <Image
+            width={48}
+            height={48}
+            alt="Profile Picture"
+            src="/avatar.jpg"
             className="w-12 h-12 rounded-full mr-5"
           />
           <div>

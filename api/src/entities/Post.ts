@@ -59,13 +59,13 @@ export class Post {
   embed?: Embed
 
   @Field({ nullable: true })
-  get thumbnailURL() {
+  get thumbnailURL(): string | null {
     if (!this.linkURL && this.imageCount === 0) return null
     return `https://${process.env.IMAGES_DOMAIN}/${this.id36}/thumb.png`
   }
 
   @Field({ nullable: true })
-  get faviconURL() {
+  get faviconURL(): string | null {
     if (!this.linkURL) return null
     return `https://${process.env.IMAGES_DOMAIN}/favicons/${this.domain}.png`
   }
@@ -74,14 +74,14 @@ export class Post {
   get imageURLs(): string[] {
     if (this.imageCount === 0) return []
     if (this.imageCount === 1)
-      return [`https://${process.env.IMAGES_DOMAIN}/${this.id36}.png`]
+      return [`https://${process.env.IMAGES_DOMAIN}/post/${this.id36}.png`]
     return [...Array(this.imageCount).keys()].map(
-      i => `https://${process.env.IMAGES_DOMAIN}/${this.id36}/${i}.png`
+      i => `https://${process.env.IMAGES_DOMAIN}/post/${this.id36}/${i}.png`
     )
   }
 
   @Field({ nullable: true })
-  get domain() {
+  get domain(): string | null {
     try {
       return new URL(this.linkURL).hostname
     } catch {

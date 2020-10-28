@@ -7,6 +7,7 @@ import { getEmptyImage } from 'react-dnd-html5-backend'
 import PostCardLayout from '@/components/post/PostCardLayout'
 import PostClassicLayout from '@/components/post/PostClassicLayout'
 import PostSmallCardLayout from '@/components/post/PostSmallCardLayout'
+import Image from 'next/image'
 
 function Post({ post, className, style, index, measure, layout }) {
   const [toast, setToast] = useState(null)
@@ -107,10 +108,12 @@ function Post({ post, className, style, index, measure, layout }) {
 
                   {toast.user && (
                     <>
-                      <img
+                      <Image
+                        width={36}
+                        height={36}
                         alt={toast.user.profile.realName}
                         className="object-cover w-9 h-9 rounded-full mx-4 shadow"
-                        src={toast.user.profile.avatarURL}
+                        src={toast.user.avatarURL}
                       />
                       {`Sent to ${toast.user.profile.realName}`}
                     </>

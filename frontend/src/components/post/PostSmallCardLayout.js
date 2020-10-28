@@ -19,7 +19,7 @@ export default function PostSmallCardLayout({ post, index, measure }) {
           className="w-8 h-8 rounded-full bg-gray-700 mr-5 mt-0.5 bg-cover bg-center"
           style={{
             backgroundImage: `url(${
-              post.author.profile.avatarURL || '/logos/astronaut.png'
+              post.author.avatarURL || '/logos/astronaut.png'
             })`
           }}
         />

@@ -10,9 +10,7 @@ export const fetchCurrentUser = async () => {
         currentUser {
           id
           username
-          profile {
-            avatarURL
-          }
+          avatarURL
           admin
         }
       }

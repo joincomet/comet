@@ -32,6 +32,7 @@ UPDATE "user" T
 SET profile = (SELECT to_json(concat(
         '{',
         '"avatarURL": "', T."profilePicUrl", '", ',
+        '"bannerURL": "', T."bannerImageUrl", '", ',
         '"bio": ', (SELECT to_json(T."bio")), ', ',
         '"tag": "', T."tag", '", ',
         '"tagColor": "', T."tagColor", '", ',
@@ -303,12 +304,6 @@ $$ LANGUAGE plpgsql;
 
 
 SELECT "drop_unneeded_tables"();
-
-DELETE FROM "post_endorsement" WHERE "postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
-DELETE FROM "comment_endorsement" WHERE "commentId" = ANY(SELECT "id" FROM "comment" T WHERE T."postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]));
-DELETE FROM "comment" WHERE "postId" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
-DELETE FROM "post" WHERE "id" = ANY('{Vn0-PwoEW, fAbJ3KMYA, 4P_7lhcu2, niCc4E3Or, 7dFy40Ta1, GLBZSNLKK, ChZnMrL_-, 4hXd15q59, rpWQjZeBY, 0VOXt-wl4, cndx6Jq__, D_ZCyLgko, _vN4k876l, AVx1ZRCF1, XNshnb-vi, NN5QT2hKK, _jGsfhZar, SCS4HcKx6}'::varchar[]);
-
 SELECT "drop_unneeded_columns"();
 SELECT "rename_columns"();
 SELECT "add_new_ids"();
@@ -386,9 +381,7 @@ DELETE FROM "comment" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "autho
 DELETE FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet');
 DELETE FROM "comment_rocket" T WHERE (SELECT "id" FROM "comment" WHERE "id" = T."comment_id") IS NULL;
 
-ALTER TABLE "post" ADD COLUMN "image_urls" text[];
-UPDATE "post" T SET "image_urls" = ('{'||(SELECT T."link_url")||'}')::text[] WHERE T."type" = 'IMAGE';
-UPDATE "post" T SET "link_url" = NULL WHERE T."type" = 'IMAGE';
+ALTER TABLE "post" ADD COLUMN "image_url" text;
 ALTER TABLE "post" DROP COLUMN "type";
 
 UPDATE "planet" T SET "name" = 'CometX' WHERE T."name" = 'Comet';

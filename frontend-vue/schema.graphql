@@ -34,7 +34,7 @@ type Comment {
   parentCommentId: ID
   post: Post
   postId: ID
-  rocketCount: Float!
+  rocketCount: Int!
   rocketed: Boolean!
   textContent: String!
   timeSince: String!
@@ -50,9 +50,6 @@ type CommentRocket {
 
 type Embed {
   description: String
-  domain: String
-  faviconURL: String
-  thumbnailURL: String
   title: String
 }
 
@@ -179,6 +176,8 @@ type Notification {
 }
 
 type Planet {
+  avatarURL: String
+  bannerURL: String
   createdAt: DateTime!
   creator: User
   creatorId: ID
@@ -187,11 +186,11 @@ type Planet {
   joined: Boolean!
   muted: Boolean!
   name: String!
-  postCount: Float!
+  postCount: Int!
   profile: PlanetProfile!
   settings: PlanetSettings!
   tags: [String!]
-  userCount: Float!
+  userCount: Int!
 }
 
 type PlanetModerator {
@@ -208,8 +207,6 @@ type PlanetMute {
 }
 
 type PlanetProfile {
-  avatarURL: String
-  bannerURL: String
   color: String
   customName: String
   description: String
@@ -242,14 +239,17 @@ type PlanetUser {
 type Post {
   author: User
   authorId: ID!
-  commentCount: Float!
+  commentCount: Int!
   createdAt: DateTime!
   deleted: Boolean!
+  domain: String
   editedAt: DateTime
   embed: Embed
+  faviconURL: String
   id: ID!
   id36: String!
-  imageURLs: [String!]
+  imageCount: Int!
+  imageURLs: [String!]!
   linkURL: String
   planet: Planet
   planetId: ID
@@ -257,10 +257,11 @@ type Post {
   relativeURL: String!
   removed: Boolean!
   removedReason: String!
-  rocketCount: Float!
+  rocketCount: Int!
   rocketed: Boolean!
   sticky: Boolean!
   textContent: String
+  thumbnailURL: String
   timeSince: String!
   timeSinceEdited: String
   title: String!
@@ -350,23 +351,25 @@ type Save {
 
 type User {
   admin: Boolean!
+  avatarURL: String
+  bannerURL: String
   blocked: Boolean!
   blocking: Boolean!
-  commentCount: Float!
+  commentCount: Int!
   createdAt: DateTime!
   email: String!
   followed: Boolean!
-  followerCount: Float!
+  followerCount: Int!
   following: Boolean!
-  followingCount: Float!
+  followingCount: Int!
   id: ID!
   id36: String!
   isCurrentUser: Boolean!
   lastLogin: DateTime
   online: Boolean!
-  postCount: Float!
+  postCount: Int!
   profile: UserProfile!
-  rocketCount: Float!
+  rocketCount: Int!
   settings: UserSettings!
   timeSinceCreated: String!
   username: String!
@@ -385,8 +388,6 @@ type UserFollow {
 }
 
 type UserProfile {
-  avatarURL: String
-  bannerURL: String
   bio: String
   realName: String
   usernames: Usernames

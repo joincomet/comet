@@ -1,13 +1,15 @@
 import 'overlayscrollbars/css/OverlayScrollbars.css'
 import { useRouter } from 'next/router'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
-import { FiBell, FiLogIn, FiActivity, FiUser } from 'react-icons/fi'
+import { FiBell, FiLogIn, FiUser } from 'react-icons/fi'
 import { CgInfinity } from 'react-icons/cg'
 import { BiHomeAlt, BiAtom } from 'react-icons/bi'
 import NavLink from './NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/hooks/usePlanets'
 import Tippy from '@tippyjs/react'
+import Image from 'next/image'
+import React from "react";
 
 const navitem = `
   relative 
@@ -71,11 +73,14 @@ function TopPlanets() {
           href="/+[planet]"
           as={`/+${planet.name}`}
         >
-          <img
-            src={planet.profile.avatarURL}
+          {planet.avatarURL ? (<Image
+            width={32}
+            height={32}
+            src={planet.avatarURL}
             className="w-8 h-8 mr-6 rounded-full bg-gray-200 dark:bg-gray-700"
             alt={planet.name}
-          />
+          />) : (<div className="w-8 h-8 mr-6 rounded-full bg-gray-200 dark:bg-gray-700" /> )}
+
           <span className="text-secondary">+{planet.name}</span>
         </NavLink>
       ))}

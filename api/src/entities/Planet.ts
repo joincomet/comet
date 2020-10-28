@@ -118,4 +118,24 @@ export class Planet {
 
   /*@Column('int', { select: false, default: 0 })
   total: number*/
+
+  @Column({ default: -1 })
+  avatarVersion: number
+
+  @Field({ nullable: true })
+  get avatarURL(): string | null {
+    return this.avatarVersion >= 0
+      ? `https://${process.env.IMAGES_DOMAIN}/p/${this.id36}/avatar-${this.avatarVersion}.png`
+      : null
+  }
+
+  @Column({ default: -1 })
+  bannerVersion: number
+
+  @Field({ nullable: true })
+  get bannerURL(): string | null {
+    return this.bannerVersion >= 0
+      ? `https://${process.env.IMAGES_DOMAIN}/p/${this.id36}/banner-${this.bannerVersion}.png`
+      : null
+  }
 }
