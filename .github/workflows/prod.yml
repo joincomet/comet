@@ -1,13 +1,41 @@
-name: Update Production
+name: Update Prof
 
 on:
-  workflow_dispatch:
-    inputs:
-      message:
-        description: Discord announcement message
-        required: true
+  push:
 
 jobs:
+  prep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+      - name: Copy files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.DROPLET_KEY }}
+          passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
+          port: 22
+          source: "docker-compose.prod.yml"
+          target: ${{ github.event.repository.name }}
+      - name: Copy .env
+        uses: appleboy/ssh-action@master
+        env:
+          ENV: ${{ secrets.ENV }}
+          REPOSITORY: ${{ github.event.repository.name }}
+        with:
+          envs: ENV,REPOSITORY
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.DROPLET_KEY }}
+          passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
+          port: 22
+          script: |
+            cd $REPOSITORY
+            echo -e "$ENV" > .env
+            mv docker-compose.prod.yml docker-compose.yml
+            docker system prune -f
   frontend:
     runs-on: ubuntu-latest
     steps:
@@ -38,47 +66,16 @@ jobs:
         run: docker buildx build ./api -t registry.digitalocean.com/cometx/api:prod
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/api
-  nginx:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@master
-      - name: Copy SSL certs
-        run: 'echo -e "$SSL_CERT" > ./nginx/cert.pem && echo -e "$SSL_KEY" > ./nginx/key.pem'
-        shell: bash
-        env:
-          SSL_CERT: ${{ secrets.SSL_CERT }}
-          SSL_KEY: ${{ secrets.SSL_KEY }}
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
-      - name: Build container image
-        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/cometx/nginx
   deploy:
-    needs: [frontend, api, nginx]
+    needs: [prep, frontend, api]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
-      - name: Copy files
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: root
-          key: ${{ secrets.DROPLET_KEY }}
-          passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
-          port: 22
-          source: "docker-compose.prod.yml"
-          target: ${{ github.event.repository.name }}
       - name: Start containers
         uses: appleboy/ssh-action@master
         env:
-          ENV: ${{ secrets.ENV }}
+          ENV: ${{ secrets.ENV_STAGING }}
           REPOSITORY: ${{ github.event.repository.name }}
         with:
           envs: ENV,REPOSITORY
@@ -89,9 +86,6 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
-            echo -e "$ENV" > .env
-            mv docker-compose.prod.yml docker-compose.yml
-            docker system prune -f
             docker-compose pull -q
             docker-compose rm -fs nginx
             docker-compose rm -fs frontend
@@ -105,4 +99,4 @@ jobs:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "Deployment Notifier"
-          message: '@everyone production has been updated: "${{ github.event.inputs.message }}"'
+          message: '@everyone staging has been updated: "${{ github.event.inputs.message }}"'

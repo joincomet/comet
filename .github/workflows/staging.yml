@@ -4,6 +4,38 @@ on:
   push:
 
 jobs:
+  prep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+      - name: Copy files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.DROPLET_KEY }}
+          passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
+          port: 22
+          source: "docker-compose.prod.yml"
+          target: ${{ github.event.repository.name }}
+      - name: Copy .env
+        uses: appleboy/ssh-action@master
+        env:
+          ENV: ${{ secrets.ENV_STAGING }}
+          REPOSITORY: ${{ github.event.repository.name }}
+        with:
+          envs: ENV,REPOSITORY
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.DROPLET_KEY }}
+          passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
+          port: 22
+          script: |
+            cd $REPOSITORY
+            echo -e "$ENV" > staging.env
+            mv docker-compose.prod.yml docker-compose.yml
+            docker system prune -f
   frontend:
     runs-on: ubuntu-latest
     steps:
@@ -56,21 +88,11 @@ jobs:
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/nginx
   deploy:
-    needs: [frontend, api, nginx]
+    needs: [prep, frontend, api, nginx]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
-      - name: Copy files
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: root
-          key: ${{ secrets.DROPLET_KEY }}
-          passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
-          port: 22
-          source: "docker-compose.prod.yml"
-          target: ${{ github.event.repository.name }}
       - name: Start containers
         uses: appleboy/ssh-action@master
         env:
@@ -85,9 +107,6 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
-            echo -e "$ENV" > staging.env
-            mv docker-compose.prod.yml docker-compose.yml
-            docker system prune -f
             docker-compose pull -q
             docker-compose rm -fs nginx
             docker-compose rm -fs frontend-staging
