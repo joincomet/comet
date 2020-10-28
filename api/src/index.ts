@@ -25,7 +25,6 @@ import { CommentSort } from '@/types/CommentSort'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { PlanetSort } from '@/types/planet/PlanetSort'
 import { ModPermission } from '@/types/planet/ModPermission'
-import { startDiscordBot } from '@/discord'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -81,8 +80,6 @@ async function bootstrap() {
     console.error(e)
     return process.exit(-1)
   }
-
-  await startDiscordBot()
 
   registerEnumType(PostSort, {
     name: 'PostSort'

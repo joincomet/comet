@@ -33,7 +33,6 @@
     "typescript": "^4.0.5"
   },
   "dependencies": {
-    "@typeit/discord": "^4.0.8",
     "apollo-server-express": "^2.18.2",
     "argon2": "^0.27.0",
     "async-sema": "^3.1.0",
@@ -43,7 +42,6 @@
     "dataloader": "^2.0.0",
     "date-fns": "^2.16.1",
     "dayjs": "^1.9.4",
-    "discord.js": "^12.4.1",
     "express": "^4.17.1",
     "got": "^11.8.0",
     "graphql": "^15.4.0",
