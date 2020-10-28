@@ -23,7 +23,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
-   api:
+  api:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
@@ -38,7 +38,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/api
-   nginx:
+  nginx:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
