@@ -8,6 +8,7 @@ import {
   FiAlignLeft
 } from 'react-icons/fi'
 import React from 'react'
+import Image from 'next/image'
 
 export default function PostClassicLayout({ post, index, measure }) {
   return (
@@ -15,7 +16,7 @@ export default function PostClassicLayout({ post, index, measure }) {
       <div className="hidden sm:block text-xs text-disabled font-mono pt-6 mt-1.5 pr-3">
         <span style={{ marginTop: '-1px' }}>{index + 1}</span>
       </div>
-      <div className="flex flex-col items-center text-disabled pt-1">
+      <div className="flex flex-col items-center pt-1 text-disabled">
         <BiRocket className="w-5 h-5 cursor-pointer" />
         <div className="pt-1.5 text-xs font-semibold">{post.rocketCount}</div>
       </div>
@@ -28,20 +29,21 @@ export default function PostClassicLayout({ post, index, measure }) {
         }}
       >
         {post.thumbnailURL ? (
-          <div
+          <Image
+            src={post.thumbnailURL}
+            unsized
+            className="bg-center bg-cover"
             style={{
               maxHeight: '4.5rem',
               minHeight: '3rem',
               minWidth: '4.5rem',
-              width: '4.5rem',
-              backgroundImage: `url(${post.thumbnailURL})`
+              width: '4.5rem'
             }}
-            className="bg-cover bg-center"
           />
         ) : (
-          <div className="min-w-full h-full inline-flex">
-            <div className="w-12 h-12 bg-gray-800 rounded-full inline-flex items-center mx-auto">
-              <FiAlignLeft className="w-6 h-6 text-tertiary mx-auto" />
+          <div className="inline-flex h-full min-w-full">
+            <div className="inline-flex items-center w-12 h-12 mx-auto bg-gray-800 rounded-full">
+              <FiAlignLeft className="w-6 h-6 mx-auto text-tertiary" />
             </div>
           </div>
         )}
@@ -65,11 +67,11 @@ export default function PostClassicLayout({ post, index, measure }) {
           </NavLink>
         </div>
         <div className="text-xxs text-tertiary font-semibold pt-0.5">
-          <span className="hover:underline cursor-pointer">{`${
+          <span className="cursor-pointer hover:underline">{`${
             post.commentCount
           } comment${post.commentCount === 1 ? '' : 's'}`}</span>
-          <span className="hover:underline ml-2 cursor-pointer">share</span>
-          <span className="hover:underline ml-2 cursor-pointer">
+          <span className="ml-2 cursor-pointer hover:underline">share</span>
+          <span className="ml-2 cursor-pointer hover:underline">
             add to folder
           </span>
         </div>

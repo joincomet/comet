@@ -17,10 +17,7 @@ export default function PostCardLayout({ post, index, measure }) {
     <div className="pb-3 bg-white border border-gray-100 shadow cursor-grab dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ">
       <div className="flex flex-row pt-5 pl-5 pr-5 sm:pl-8 sm:pr-8">
         <NavLink href={`/@${post.author.username}`}>
-          <div
-            style={{ backgroundImage: `url(${post.author.profile.avatarURL})` }}
-            className="bg-cover bg-center w-8 h-8 bg-gray-200 rounded-full"
-          />
+          <Image src={post.author.profile.avatarURL} width={32} height={32} className="w-8 h-8 bg-gray-200 rounded-full" />
         </NavLink>
         <div className="flex flex-col flex-grow pr-12 ml-4">
           <div className="text-xs">
@@ -62,7 +59,8 @@ export default function PostCardLayout({ post, index, measure }) {
             alt={post.title}
             src={post.imageURLs[0]}
             style={{ maxHeight: '19.8125rem' }}
-            className="object-contain object-center w-full mt-4 max-w-full bg-gray-100 dark:bg-gray-900 dark:border-gray-800 border border-gray-200 hover:bg-gray-200 rounded-2xl"
+            unsized
+            className="object-contain object-center w-full max-w-full mt-4 bg-gray-100 border border-gray-200 dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200 rounded-2xl"
           />
         ) : (
           post.embed && (
@@ -72,15 +70,11 @@ export default function PostCardLayout({ post, index, measure }) {
               rel="noreferrer noopener nofollow"
               className="flex flex-row items-start mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
             >
-              <div
-                style={{
-                  backgroundImage: `url(${post.embed.thumbnailURL})`,
+              <Image src={post.thumbnailURL} unsized style={{
                   minWidth: '8rem'
-                }}
-                className="bg-cover bg-center w-32 h-32 bg-white dark:bg-gray-800 rounded-l-lg"
-              />
+                }} className="w-32 h-32 bg-white bg-center bg-cover rounded-l-lg dark:bg-gray-800" />
               <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
-                <div className="text-sm font-semibold line-clamp-2 hover:text-blue-500 transition duration-150 ease-in-out">
+                <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
                   {post.embed.title}
                 </div>
 
@@ -90,16 +84,11 @@ export default function PostCardLayout({ post, index, measure }) {
 
                 <div className="flex flex-row items-start mt-auto">
                   {post.embed.faviconURL && (
-                    <div
-                      style={{
-                        backgroundImage: `url(${post.embed.faviconURL})`
-                      }}
-                      className="bg-contain bg-center w-4 h-4 mr-3 rounded-sm"
-                    />
+                    <Image src={post.faviconURL} width={16} height={16} className="w-4 h-4 mr-3 rounded-sm" />
                   )}
 
                   <div className="text-tertiary">
-                    <div className="text-xs font-mono">{post.embed.domain}</div>
+                    <div className="font-mono text-xs">{post.embed.domain}</div>
                   </div>
                 </div>
               </div>
@@ -107,7 +96,7 @@ export default function PostCardLayout({ post, index, measure }) {
           )
         )}
       </div>
-      <div className="flex flex-row items-center px-5 sm:px-20 -mr-3 -ml-3">
+      <div className="flex flex-row items-center px-5 -ml-3 -mr-3 sm:px-20">
         <div className={chip}>
           <BiRocket className="w-5 h-5" />
           <span className="ml-3 text-sm font-semibold">{post.rocketCount}</span>
