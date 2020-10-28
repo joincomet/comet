@@ -123,7 +123,9 @@ jobs:
             docker-compose rm -fs nginx
             docker-compose rm -fs frontend-staging
             docker-compose rm -fs api-staging
-            docker-compose up -d --remove-orphans
+            docker-compose up -d --no-deps --remove-orphans api-staging
+            docker-compose up -d --no-deps frontend-staging
+            docker-compose up -d --no-deps nginx
       - name: Send Discord Announcement
         uses: appleboy/discord-action@master
         with:

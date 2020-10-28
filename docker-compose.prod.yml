@@ -58,9 +58,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    depends_on:
-      - frontend
-      - frontend-staging
     env_file:
       - nginx.env
 
