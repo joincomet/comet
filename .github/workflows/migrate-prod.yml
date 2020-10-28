@@ -39,10 +39,3 @@ jobs:
             pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require ./latest.dump
             psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
             docker run --env-file ./prod.env registry.digitalocean.com/cometx/api:prod "yarn run migrate"
-      - name: Send Discord Announcement
-        uses: appleboy/discord-action@master
-        with:
-          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-          username: "Deployment Notifier"
-          message: '@everyone Updated Production (https://cometx.io): ${{ github.event.head_commit.message }}${{ github.event.inputs.message }}'
