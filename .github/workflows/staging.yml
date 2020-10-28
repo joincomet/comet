@@ -2,6 +2,11 @@ name: Update Staging
 
 on:
   push:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: Discord announcement
+        required: true
 
 jobs:
   prep:
@@ -22,10 +27,11 @@ jobs:
       - name: Copy .env
         uses: appleboy/ssh-action@master
         env:
-          ENV: ${{ secrets.ENV_STAGING }}
+          ENV: ${{ secrets.ENV }}
+          ENV_STAGING: ${{ secrets.ENV_STAGING }}
           REPOSITORY: ${{ github.event.repository.name }}
         with:
-          envs: ENV,REPOSITORY
+          envs: ENV,ENV_STAGING,REPOSITORY
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
@@ -33,7 +39,8 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
-            echo -e "$ENV" > staging.env
+            echo -e "$ENV" > .env
+            echo -e "$ENV_STAGING" > staging.env
             mv docker-compose.prod.yml docker-compose.yml
             docker system prune -f
   frontend:
@@ -96,10 +103,9 @@ jobs:
       - name: Start containers
         uses: appleboy/ssh-action@master
         env:
-          ENV: ${{ secrets.ENV_STAGING }}
           REPOSITORY: ${{ github.event.repository.name }}
         with:
-          envs: ENV,REPOSITORY
+          envs: REPOSITORY
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
@@ -120,4 +126,4 @@ jobs:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "Deployment Notifier"
-          message: '@everyone staging has been updated: "${{ github.event.head_commit.message }}"'
+          message: '@everyone staging has been updated: "${{ github.event.head_commit.message }}${{ github.event.inputs.message }}"'
