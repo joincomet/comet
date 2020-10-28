@@ -1,73 +1,22 @@
 import * as TypeORM from 'typeorm'
 import { getRepository } from 'typeorm'
 import { Container } from 'typedi'
-import fs from 'fs'
-import path from 'path'
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { Planet } from '@/entities/Planet'
 import { Post } from '@/entities/Post'
 import { runIframely } from '@/iframely/RunIframely'
-import { isImageURL, isURL } from '@/IsURL'
+import { isImageURL, isURL, isImageContentType } from '@/IsURL'
 import { Sema } from 'async-sema'
 import { Embed } from '@/types/post/Embed'
 import { URL } from 'url'
 import { hasFile, uploadImage } from '@/S3Storage'
 import got from 'got'
 import { User } from '@/entities/User'
+import { connectDatabase } from '@/ConnectDatabase'
 
 TypeORM.useContainer(Container)
 
-const isValidContentType = (contentType: string | null | undefined) => {
-  if (!contentType) return false
-  const ext = contentType.replace('image/', '')
-  return ext === 'jpeg' || ext === 'jpg' || ext === 'png' || ext === 'webp'
-}
-
 const run = async () => {
-  let connection
-  try {
-    connection = await TypeORM.createConnection({
-      type: 'postgres',
-      username:
-        process.env.NODE_ENV === 'production'
-          ? process.env.DB_USERNAME
-          : 'postgres',
-      password:
-        process.env.NODE_ENV === 'production'
-          ? process.env.DB_PASSWORD
-          : 'password',
-      host:
-        process.env.NODE_ENV === 'production'
-          ? process.env.DB_HOST
-          : 'localhost',
-      port:
-        process.env.NODE_ENV === 'production'
-          ? parseInt(process.env.DB_PORT)
-          : 5432,
-      database:
-        process.env.NODE_ENV === 'production'
-          ? process.env.DB_DATABASE
-          : 'postgres',
-      // url: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'postgresql://postgres:password@postgres:5432/postgres',
-      entities: [__dirname + '/../entities/**/*.{ts,js}'],
-      synchronize: true,
-      logging: false,
-      dropSchema: false, // CLEARS DATABASE ON START
-      cache: true,
-      ssl:
-        process.env.NODE_ENV === 'production'
-          ? {
-              ca: fs.readFileSync(path.resolve('./ca-certificate.crt'), {
-                encoding: 'utf8'
-              })
-            }
-          : undefined,
-      namingStrategy: new SnakeNamingStrategy()
-    })
-  } catch (e) {
-    console.error(e)
-    return process.exit(-1)
-  }
+  const connection = await connectDatabase()
 
   const planetRepo = getRepository(Planet)
   console.info('--- Deleting planets with 0 posts ---')
@@ -111,7 +60,7 @@ const run = async () => {
             return
           const { headers } = res
           const contentType = headers['content-type']
-          if (!isValidContentType(contentType)) return
+          if (!isImageContentType(contentType)) return
 
           const key = `post/${post.id36}.png`
 
@@ -148,7 +97,7 @@ const run = async () => {
 
           if (thumbnailSourceURL) {
             const contentType = embedResponse.links.thumbnail[0].type
-            if (isValidContentType(contentType)) {
+            if (isImageContentType(contentType)) {
               const key = `post/${post.id36}/thumb.png`
               if (!(await hasFile(key))) {
                 try {
@@ -170,7 +119,7 @@ const run = async () => {
 
           if (faviconSourceURL) {
             const contentType = embedResponse.links.icon[0].type
-            if (isValidContentType(contentType)) {
+            if (isImageContentType(contentType)) {
               const key = `favicons/${domain}.png`
               if (!(await hasFile(key))) {
                 try {
@@ -213,7 +162,7 @@ const run = async () => {
           try {
             const { headers } = await got.get(avatarURL, { timeout: 5000 })
             const contentType = headers['content-type']
-            if (isValidContentType(contentType)) {
+            if (isImageContentType(contentType)) {
               const key = `user/${user.id36}/avatar-0.png`
               if (!(await hasFile(key))) {
                 await uploadImage(
@@ -230,7 +179,7 @@ const run = async () => {
           try {
             const { headers } = await got.get(bannerURL, { timeout: 5000 })
             const contentType = headers['content-type']
-            if (isValidContentType(contentType)) {
+            if (isImageContentType(contentType)) {
               const key = `user/${user.id36}/banner-0.png`
               if (!(await hasFile(key))) {
                 await uploadImage(
@@ -265,7 +214,7 @@ const run = async () => {
           try {
             const { headers } = await got.get(avatarURL, { timeout: 5000 })
             const contentType = headers['content-type']
-            if (isValidContentType(contentType)) {
+            if (isImageContentType(contentType)) {
               const key = `planet/${planet.id36}/avatar-0.png`
               if (!(await hasFile(key))) {
                 await uploadImage(
@@ -282,7 +231,7 @@ const run = async () => {
           try {
             const { headers } = await got.get(bannerURL, { timeout: 5000 })
             const contentType = headers['content-type']
-            if (isValidContentType(contentType)) {
+            if (isImageContentType(contentType)) {
               const key = `planet/${planet.id36}/banner-0.png`
               if (!(await hasFile(key))) {
                 await uploadImage(

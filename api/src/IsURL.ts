@@ -1,6 +1,12 @@
 import { URL } from 'url'
 import got from 'got'
 
+export const isImageContentType = (contentType: string | null | undefined) => {
+  if (!contentType) return false
+  const ext = contentType.replace('image/', '')
+  return ext === 'jpeg' || ext === 'jpg' || ext === 'png' || ext === 'webp'
+}
+
 export const isURL = url => {
   try {
     new URL(url)

@@ -37,6 +37,7 @@ services:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/.next
+      - "next-cache:/usr/src/app/.next/cache"
     environment:
       - NODE_ENV=development
       - HOST=0.0.0.0
@@ -60,3 +61,4 @@ services:
 
 volumes:
   db-data:
+  next-cache:

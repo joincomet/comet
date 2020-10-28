@@ -1,5 +1,0 @@
-query tag($name: String!) {
-  tag (name: $name) {
-    name
-  }
-}

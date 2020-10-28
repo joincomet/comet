@@ -11,7 +11,7 @@ export const s3 = new AWS.S3({
 })
 
 export const hasFile = async (key: string) => {
-  const domain = process.env.IMAGES_DOMAIN
+  const domain = process.env.MEDIA_DOMAIN
   if (domain.includes('/')) key = domain.split('/')[1] + '/' + key
 
   try {
@@ -35,7 +35,7 @@ export const uploadImage = async (
   body: any,
   contentType: string
 ): Promise<string> => {
-  const domain = process.env.IMAGES_DOMAIN
+  const domain = process.env.MEDIA_DOMAIN
   if (domain.includes('/')) key = domain.split('/')[1] + '/' + key
 
   const upload = s3.upload({
@@ -53,7 +53,7 @@ export const uploadImage = async (
           reject(err)
         }
 
-        resolve(`https://${process.env.IMAGES_DOMAIN}/${key}`)
+        resolve(`https://${process.env.MEDIA_DOMAIN}/${key}`)
       })
     })
   } catch (e) {

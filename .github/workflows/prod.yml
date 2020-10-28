@@ -1,4 +1,4 @@
-name: Update Prod
+name: Update Production
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Build container image
-        run: docker buildx build ./frontend -t registry.digitalocean.com/cometx/frontend:prod
+        run: docker buildx build ./frontend -f ./frontend/Dockerfile.staging -t registry.digitalocean.com/cometx/frontend:prod
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
   api:
@@ -48,8 +48,16 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           REPOSITORY: ${{ github.event.repository.name }}
+          ENV: |
+            ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}
+            BUCKET=${{ secrets.BUCKET }}
+            MEDIA_DOMAIN=${{ secrets.MEDIA_DOMAIN }}
+            AWS_ENDPOINT=${{ secrets.AWS_ENDPOINT }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            DATABASE_NAME=${{ secrets.DATABASE_NAME }}
         with:
-          envs: REPOSITORY
+          envs: REPOSITORY, ENV
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
@@ -57,17 +65,16 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
+            echo -e "$ENV" >> prod.env
             docker-compose pull -q
             docker-compose rm -fs nginx
             docker-compose rm -fs frontend
             docker-compose rm -fs api
-            docker-compose up -d --no-deps --remove-orphans api
-            docker-compose up -d --no-deps frontend
-            docker-compose up -d --no-deps nginx
+            docker-compose up -d --remove-orphans
       - name: Send Discord Announcement
         uses: appleboy/discord-action@master
         with:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "Deployment Notifier"
-          message: '@everyone staging has been updated: "${{ github.event.inputs.message }}"'
+          message: '@everyone Updated Production (https://cometx.io): "${{ github.event.inputs.message }}"'

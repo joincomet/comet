@@ -1,6 +1,5 @@
 import 'reflect-metadata'
 import { buildSchema, registerEnumType } from 'type-graphql'
-import * as TypeORM from 'typeorm'
 import { Container } from 'typedi'
 import { getUser } from '@/Auth'
 import express from 'express'
@@ -16,15 +15,14 @@ import {
   UserLoader
 } from '@/Loaders'
 import { graphqlUploadExpress } from 'graphql-upload'
-import fs from 'fs'
-import path from 'path'
+import * as TypeORM from 'typeorm'
 import { authChecker } from '@/AuthChecker'
 import { PostSort } from '@/types/posts/PostSort'
 import { TimeFilter } from '@/types/posts/TimeFilter'
 import { CommentSort } from '@/types/CommentSort'
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { PlanetSort } from '@/types/planet/PlanetSort'
 import { ModPermission } from '@/types/planet/ModPermission'
+import { connectDatabase } from './ConnectDatabase'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -36,50 +34,7 @@ if (!process.env.ACCESS_TOKEN_SECRET) {
 TypeORM.useContainer(Container)
 
 async function bootstrap() {
-  try {
-    await TypeORM.createConnection({
-      type: 'postgres',
-      username:
-        process.env.NODE_ENV === 'production'
-          ? process.env.DB_USERNAME
-          : 'postgres',
-      password:
-        process.env.NODE_ENV === 'production'
-          ? process.env.DB_PASSWORD
-          : 'password',
-      host:
-        process.env.NODE_ENV === 'production'
-          ? process.env.DB_HOST
-          : 'postgres',
-      port:
-        process.env.NODE_ENV === 'production'
-          ? parseInt(process.env.DB_PORT)
-          : 5432,
-      database:
-        process.env.NODE_ENV === 'production'
-          ? process.env.DB_DATABASE
-          : 'postgres',
-      // url: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'postgresql://postgres:password@postgres:5432/postgres',
-      entities: [__dirname + '/entities/**/*.{ts,js}'],
-      synchronize: true,
-      logging: process.env.NODE_ENV !== 'production',
-      dropSchema: false, // CLEARS DATABASE ON START
-      cache: true,
-      ssl:
-        process.env.NODE_ENV === 'production'
-          ? {
-              ca: fs.readFileSync(
-                path.resolve(__dirname, '../ca-certificate.crt'),
-                { encoding: 'utf8' }
-              )
-            }
-          : undefined,
-      namingStrategy: new SnakeNamingStrategy()
-    })
-  } catch (e) {
-    console.error(e)
-    return process.exit(-1)
-  }
+  await connectDatabase()
 
   registerEnumType(PostSort, {
     name: 'PostSort'
@@ -157,7 +112,11 @@ async function bootstrap() {
   })
 
   app.listen({ port: process.env.PORT || 4000 }, () => {
-    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
+    console.log(
+      `Server ready at http://localhost:${process.env.PORT || 4000}${
+        server.graphqlPath
+      }`
+    )
   })
 }
 

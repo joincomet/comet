@@ -1,6 +1,6 @@
 .idea
 .vscode
-*.env
+.env
 
 */node_modules
 */yarn-error.log
@@ -8,7 +8,3 @@
 api/dist
 
 frontend/.next
-
-imageflow/packages-microsoft-prod.deb
-imageflow/bin
-imageflow/obj
