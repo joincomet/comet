@@ -9,6 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start-staging": "next start -p 3001",
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
