@@ -47,7 +47,7 @@ export const uploadImage = async (
           reject(err)
         }
 
-        resolve(`https://${process.env.NEXT_IMAGES_DOMAIN}/${key}`)
+        resolve(`https://${process.env.IMAGES_DOMAIN}/${key}`)
       })
     })
   } catch (e) {

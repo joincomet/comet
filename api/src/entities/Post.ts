@@ -61,22 +61,22 @@ export class Post {
   @Field({ nullable: true })
   get thumbnailURL() {
     if (!this.linkURL && this.imageCount === 0) return null
-    return `https://${process.env.NEXT_IMAGES_DOMAIN}/${this.id36}/thumb.png`
+    return `https://${process.env.IMAGES_DOMAIN}/${this.id36}/thumb.png`
   }
 
   @Field({ nullable: true })
   get faviconURL() {
     if (!this.linkURL) return null
-    return `https://${process.env.NEXT_IMAGES_DOMAIN}/favicons/${this.domain}.png`
+    return `https://${process.env.IMAGES_DOMAIN}/favicons/${this.domain}.png`
   }
 
   @Field(() => [String])
   get imageURLs(): string[] {
     if (this.imageCount === 0) return []
     if (this.imageCount === 1)
-      return [`https://${process.env.NEXT_IMAGES_DOMAIN}/${this.id36}.png`]
+      return [`https://${process.env.IMAGES_DOMAIN}/${this.id36}.png`]
     return [...Array(this.imageCount).keys()].map(
-      i => `https://${process.env.NEXT_IMAGES_DOMAIN}/${this.id36}/${i}.png`
+      i => `https://${process.env.IMAGES_DOMAIN}/${this.id36}/${i}.png`
     )
   }
 
