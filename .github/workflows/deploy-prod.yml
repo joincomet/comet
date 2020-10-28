@@ -45,8 +45,9 @@ jobs:
             docker-compose pull -q
             docker-compose rm -fs frontend
             docker-compose rm -fs api
-            docker-compose up -d --no-deps api
+            docker-compose up -d --no-deps --remove-orphans api
             docker-compose up -d --no-deps frontend
+            docker-compose restart nginx
       - name: Send Discord Announcement
         uses: appleboy/discord-action@master
         with:
