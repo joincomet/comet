@@ -9,7 +9,7 @@ export const connectDatabase = async () => {
       type: 'postgres',
       url:
         process.env.NODE_ENV === 'production'
-          ? `${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`
+          ? `${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}?sslmode=require`
           : 'postgresql://postgres:password@postgres:5432/postgres',
       entities: [__dirname + '/entities/**/*.{ts,js}'],
       synchronize: true,
