@@ -26,7 +26,7 @@ jobs:
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
-          source: "docker-compose.prod.yml"
+          source: "docker-compose.staging.yml"
           target: ${{ github.event.repository.name }}
       - name: Rename docker-compose file and prune Docker
         uses: appleboy/ssh-action@master
@@ -41,7 +41,7 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
-            mv docker-compose.prod.yml docker-compose.yml
+            mv docker-compose.staging.yml docker-compose.yml
             docker system prune -f
   frontend:
     runs-on: ubuntu-latest
