@@ -25,8 +25,9 @@ jobs:
           REPOSITORY: ${{ github.event.repository.name }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          ENV: "-e DATABASE_URL=${{ secrets.DATABASE_URL }} -e DATABASE_NAME=${{ secrets.DATABASE_NAME }} -e BUCKET=${{ secrets.BUCKET }} -e MEDIA_DOMAIN=${{ secrets.MEDIA_DOMAIN }} -e AWS_ENDPOINT=${{ secrets.AWS_ENDPOINT }} -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
         with:
-          envs: REPOSITORY, DATABASE_URL, DATABASE_NAME
+          envs: REPOSITORY, DATABASE_URL, DATABASE_NAME, ENV
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
@@ -44,4 +45,4 @@ jobs:
             docker exec postgres psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
             docker stop postgres
             docker rm postgres
-            docker exec api yarn run migrate
+            docker exec ${ENV} api yarn run migrate

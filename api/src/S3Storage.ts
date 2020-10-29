@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk'
 
-const Bucket = process.env.AWS_S3_BUCKET
+const Bucket = process.env.BUCKET
 
 export const s3 = new AWS.S3({
   credentials: {
@@ -11,9 +11,6 @@ export const s3 = new AWS.S3({
 })
 
 export const hasFile = async (key: string) => {
-  const domain = process.env.MEDIA_DOMAIN
-  if (domain.includes('/')) key = domain.split('/')[1] + '/' + key
-
   try {
     await s3
       .headObject({
@@ -35,9 +32,6 @@ export const uploadImage = async (
   body: any,
   contentType: string
 ): Promise<string> => {
-  const domain = process.env.MEDIA_DOMAIN
-  if (domain.includes('/')) key = domain.split('/')[1] + '/' + key
-
   const upload = s3.upload({
     Bucket,
     Key: key,
