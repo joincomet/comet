@@ -37,6 +37,8 @@ jobs:
             doctl databases db delete -f cometx $DATABASE_NAME
             doctl databases db create cometx $DATABASE_NAME
             docker run -d -e POSTGRES_HOST_AUTH_METHOD=trust --name postgres postgres:alpine
+            docker cp ./latest.dump postgres:/latest.dump
+            docker cp ./migration.sql postgres:/migration.sql
             docker exec postgres pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require ./latest.dump
             docker exec postgres psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
             docker stop postgres
