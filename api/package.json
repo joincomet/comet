@@ -10,7 +10,8 @@
     "start": "node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/index.js",
     "deploy": "yarn run build && yarn run start",
     "dev": "ts-node-dev --experimental-specifier-resolution=node --harmony --respawn --no-notify -r tsconfig-paths/register src/index.ts",
-    "migrate": "ts-node -r tsconfig-paths/register src/migrations/script.ts"
+    "migrate": "node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/migrations/script.js",
+    "migrate-dev": "ts-node -r tsconfig-paths/register src/migrations/script.ts"
   },
   "main": "dist/index.js",
   "license": "MIT",
