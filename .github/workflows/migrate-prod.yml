@@ -34,7 +34,7 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
-            doctl databases db delete cometx $DATABASE_NAME
+            doctl databases db delete -f cometx $DATABASE_NAME
             doctl databases db create cometx $DATABASE_NAME
             docker run -d --name postgres postgres:alpine
             docker exec -it postgres pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require ./latest.dump
