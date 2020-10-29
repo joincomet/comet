@@ -21,23 +21,31 @@ jobs:
           port: 22
           source: "./api/src/migrations/migration.sql"
           target: ${{ github.event.repository.name }}
-      - name: Start containers
+      - name: Run migration
         uses: appleboy/ssh-action@master
         env:
           REPOSITORY: ${{ github.event.repository.name }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_NAME: ${{ secrets.STAGING_DATABASE_NAME }}
+          ENV: "-e DATABASE_URL=${{ secrets.DATABASE_URL }} -e DATABASE_NAME=${{ secrets.STAGING_DATABASE_NAME }} -e BUCKET=${{ secrets.STAGING_BUCKET }} -e MEDIA_DOMAIN=${{ secrets.STAGING_MEDIA_DOMAIN }} -e AWS_ENDPOINT=${{ secrets.AWS_ENDPOINT }} -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
         with:
-          envs: REPOSITORY, DATABASE_URL, DATABASE_NAME
+          envs: REPOSITORY, DATABASE_URL, DATABASE_NAME, ENV
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
+          command_timeout: 200m
           script: |
             cd $REPOSITORY
-            doctl databases db delete $DATABASE_NAME
-            doctl databases db create $DATABASE_NAME
-            pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require ./latest.dump
-            psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
-            docker run --env-file ./staging.env registry.digitalocean.com/cometx/api:staging "yarn run migrate"
+            mv ./api/src/migrations/migration.sql ./migration.sql
+            doctl databases db delete -f 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
+            doctl databases db create 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
+            docker run -d -e POSTGRES_HOST_AUTH_METHOD=trust --name postgres postgres:alpine
+            docker cp ./latest.dump postgres:/latest.dump
+            docker cp ./migration.sql postgres:/migration.sql
+            docker exec postgres pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require ./latest.dump
+            docker exec postgres psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
+            docker stop postgres
+            docker rm postgres
+            docker exec ${ENV} api-staging yarn run migrate
