@@ -57,7 +57,7 @@
     "postcss-flexbugs-fixes": "^4.2.1",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.1.2",
-    "tailwindcss": "^2.0.0-alpha.3"
+    "tailwindcss": "^2.0.0-alpha.4"
   },
   "resolutions": {
     "webpack": "^5.0.0-beta.30"

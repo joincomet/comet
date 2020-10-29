@@ -41,7 +41,7 @@ function Post({ post, className, style, index, measure, layout }) {
   return (
     <article
       ref={dragRef}
-      className={`${layout === 'cards' && 'pb-2 sm:pb-5'} ${
+      className={`flex ${layout === 'cards' && 'pb-2 sm:pb-5'} ${
         layout === 'small_cards' && 'pb-2'
       } ${layout === 'classic' && 'pb-2 sm:pb-3'} select-none outline-none ${
         className || ''
@@ -49,7 +49,7 @@ function Post({ post, className, style, index, measure, layout }) {
       style={style}
       data-index={index}
     >
-      <div className="relative">
+      <div className="relative flex-shrink mx-auto">
         <div
           className={`absolute inset-x-0 top-1/2 z-50 -translate-y-1/2 transform transition ${
             toast ? 'translate-x-0' : '-translate-x-full delay-150'
@@ -108,7 +108,7 @@ function Post({ post, className, style, index, measure, layout }) {
 
                   {toast.user && (
                     <>
-                      <Image
+                      <Image loading="eager"
                         width={36}
                         height={36}
                         alt={toast.user.profile.realName}

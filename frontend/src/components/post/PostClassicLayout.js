@@ -29,16 +29,11 @@ export default function PostClassicLayout({ post, index, measure }) {
         }}
       >
         {post.thumbnailURL ? (
-          <Image
+          <Image loading="eager"
             src={post.thumbnailURL}
-            unsized
+                 width={72}
+                 height={56}
             className="bg-center bg-cover"
-            style={{
-              maxHeight: '4.5rem',
-              minHeight: '3rem',
-              minWidth: '4.5rem',
-              width: '4.5rem'
-            }}
           />
         ) : (
           <div className="inline-flex h-full min-w-full">

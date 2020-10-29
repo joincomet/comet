@@ -60,13 +60,21 @@ export class Post {
 
   @Field({ nullable: true })
   get thumbnailURL(): string | null {
-    if (!this.linkURL && this.imageCount === 0) return null
-    return `https://${process.env.MEDIA_DOMAIN}/${this.id36}/thumb.png`
+    if (this.imageCount === 1)
+      return `https://${process.env.MEDIA_DOMAIN}/post/${this.id36}.png`
+    if (this.imageCount > 1)
+      return `https://${process.env.MEDIA_DOMAIN}/post/${this.id36}/0.png`
+    if (this.linkURL)
+      return `https://${process.env.MEDIA_DOMAIN}/post/${this.id36}/thumb.png`
+    return null
   }
+
+  @Column({ default: false })
+  hasFavicon: boolean
 
   @Field({ nullable: true })
   get faviconURL(): string | null {
-    if (!this.linkURL) return null
+    if (!this.hasFavicon || !this.domain) return null
     return `https://${process.env.MEDIA_DOMAIN}/favicons/${this.domain}.png`
   }
 
@@ -82,6 +90,7 @@ export class Post {
 
   @Field({ nullable: true })
   get domain(): string | null {
+    if (!this.linkURL) return null
     try {
       return new URL(this.linkURL).hostname
     } catch {

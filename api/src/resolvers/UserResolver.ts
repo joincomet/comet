@@ -45,14 +45,16 @@ export class UserResolver {
   async user(@Arg('username') username: string) {
     if (!username) return null
 
-    return this.userRepository
-      .createQueryBuilder('user')
-      .where('user.username ILIKE :username', {
-        username: username.replace(/_/g, '\\_')
-      })
-      .andWhere('user.banned = false')
-      .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
-      .getOne()
+    return (
+      this.userRepository
+        .createQueryBuilder('user')
+        .where('user.username ILIKE :username', {
+          username: username.replace(/_/g, '\\_')
+        })
+        //.andWhere('user.banned = false')
+        //.leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
+        .getOne()
+    )
   }
 
   @Query(() => [Comment])

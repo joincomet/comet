@@ -198,7 +198,7 @@ export class User {
   @Field({ nullable: true })
   get avatarURL(): string | null {
     return this.avatarVersion >= 0
-      ? `https://${process.env.MEDIA_DOMAIN}/u/${this.id36}/avatar-${this.avatarVersion}.png`
+      ? `https://${process.env.MEDIA_DOMAIN}/user/${this.id36}/avatar-${this.avatarVersion}.png`
       : null
   }
 
@@ -208,7 +208,7 @@ export class User {
   @Field({ nullable: true })
   get bannerURL(): string | null {
     return this.bannerVersion >= 0
-      ? `https://${process.env.MEDIA_DOMAIN}/u/${this.id36}/banner-${this.bannerVersion}.png`
+      ? `https://${process.env.MEDIA_DOMAIN}/user/${this.id36}/banner-${this.bannerVersion}.png`
       : null
   }
 }

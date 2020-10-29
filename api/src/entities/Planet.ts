@@ -125,7 +125,7 @@ export class Planet {
   @Field({ nullable: true })
   get avatarURL(): string | null {
     return this.avatarVersion >= 0
-      ? `https://${process.env.MEDIA_DOMAIN}/p/${this.id36}/avatar-${this.avatarVersion}.png`
+      ? `https://${process.env.MEDIA_DOMAIN}/planet/${this.id36}/avatar-${this.avatarVersion}.png`
       : null
   }
 
@@ -135,7 +135,7 @@ export class Planet {
   @Field({ nullable: true })
   get bannerURL(): string | null {
     return this.bannerVersion >= 0
-      ? `https://${process.env.MEDIA_DOMAIN}/p/${this.id36}/banner-${this.bannerVersion}.png`
+      ? `https://${process.env.MEDIA_DOMAIN}/planet/${this.id36}/banner-${this.bannerVersion}.png`
       : null
   }
 }

@@ -21,7 +21,7 @@ jobs:
       - name: Copy docker-compose files
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.DROPLET_HOST }}
+          host: ${{ secrets.STAGING_DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
@@ -34,7 +34,7 @@ jobs:
           REPOSITORY: ${{ github.event.repository.name }}
         with:
           envs: REPOSITORY
-          host: ${{ secrets.DROPLET_HOST }}
+          host: ${{ secrets.STAGING_DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
@@ -96,7 +96,7 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Build container image
-        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
+        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:staging
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/nginx
   deploy:
@@ -120,30 +120,24 @@ jobs:
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             DATABASE_NAME=${{ secrets.STAGING_DATABASE_NAME }}
-          NGINX_ENV: STAGING_SUBDOMAIN=${{ secrets.STAGING_SUBDOMAIN }}
+            DOMAIN=${{ secrets.STAGING_DOMAIN }}
         with:
-          envs: REPOSITORY, ENV, NGINX_ENV
-          host: ${{ secrets.DROPLET_HOST }}
+          envs: REPOSITORY, ENV
+          host: ${{ secrets.STAGING_DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
             cd $REPOSITORY
-            touch prod.env
-            echo -e "$ENV" > staging.env
-            echo -e "$NGINX_ENV" > nginx.env
+            echo -e "$ENV" > .env
             docker-compose pull -q
-            docker-compose rm -fs nginx
-            docker-compose rm -fs frontend-staging
-            docker-compose rm -fs api-staging
-            docker-compose up -d --no-deps --remove-orphans api-staging
-            docker-compose up -d --no-deps frontend-staging
-            docker-compose up -d --no-deps nginx
+            docker-compose down --remove-orphans
+            docker-compose up -d
       - name: Send Discord Announcement
         uses: appleboy/discord-action@master
         with:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "Deployment Notifier"
-          message: '@everyone Updated Staging (https://${{ secrets.STAGING_SUBDOMAIN }}.cometx.io): ${{ github.event.head_commit.message }}${{ github.event.inputs.message }}'
+          message: '@everyone Updated Staging (https://${{ secrets.STAGING_DOMAIN }}): ${{ github.event.head_commit.message }}${{ github.event.inputs.message }}'

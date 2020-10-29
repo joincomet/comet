@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   api:
-    image: registry.digitalocean.com/cometx/api:prod
+    image: registry.digitalocean.com/cometx/api:staging
     container_name: api
     restart: always
     expose:
@@ -11,7 +11,7 @@ services:
       - .env
 
   frontend:
-    image: registry.digitalocean.com/cometx/frontend:prod
+    image: registry.digitalocean.com/cometx/frontend:staging
     container_name: frontend
     restart: always
     expose:
@@ -24,7 +24,7 @@ services:
       - "next-cache:/usr/src/app/.next/cache"
 
   nginx:
-    image: registry.digitalocean.com/cometx/nginx:prod
+    image: registry.digitalocean.com/cometx/nginx:staging
     container_name: nginx
     restart: always
     ports:

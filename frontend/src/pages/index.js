@@ -44,7 +44,7 @@ export default function Home({ cookies }) {
       <Layout>
         <div className="page">
           <GalaxiesSlider />
-          <div className="container pt-5 mx-auto sm:px-5 2xl:px-80">
+          <div className="px-5">
             <CreatePostCard />
 
             <div className="flex items-center mb-5 px-3 sm:px-0">
@@ -90,7 +90,7 @@ export default function Home({ cookies }) {
           <div
             className={`${
               layout === 'cards' || layout === 'small_cards'
-                ? 'px-0 sm:px-5 2xl:px-80'
+                ? 'px-5'
                 : 'px-3'
             }`}
           >

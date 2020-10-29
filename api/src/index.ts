@@ -4,7 +4,7 @@ import { Container } from 'typedi'
 import { getUser } from '@/Auth'
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express'
 import { Context } from '@/Context'
 import {
   CommentLoader,
@@ -72,7 +72,7 @@ async function bootstrap() {
 
   app.use(
     graphqlUploadExpress({
-      maxFileSize: 4 * 1024 * 1024,
+      maxFileSize: 16 * 1024 * 1024,
       maxFiles: 1
     })
   )
@@ -105,7 +105,7 @@ async function bootstrap() {
     },
     uploads: false,
     introspection: true
-  })
+  } as ApolloServerExpressConfig)
 
   server.applyMiddleware({
     app

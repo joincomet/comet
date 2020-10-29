@@ -17,7 +17,7 @@ export default function PostCardLayout({ post, index, measure }) {
     <div className="pb-3 bg-white border border-gray-100 shadow cursor-grab dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ">
       <div className="flex flex-row pt-5 pl-5 pr-5 sm:pl-8 sm:pr-8">
         <NavLink href={`/@${post.author.username}`}>
-          {post.author.avatarURL ? (<Image src={post.author.avatarURL} width={32} height={32} className="w-8 h-8 bg-gray-200 rounded-full" />) : (<div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700" /> )}
+          {post.author.avatarURL ? (<Image loading="eager" src={post.author.avatarURL} width={32} height={32} className="w-8 h-8 bg-gray-200 rounded-full" />) : (<div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700" /> )}
         </NavLink>
         <div className="flex flex-col flex-grow pr-12 ml-4">
           <div className="text-xs">
@@ -43,7 +43,7 @@ export default function PostCardLayout({ post, index, measure }) {
           {index + 1}
         </div>
       </div>
-      <div className="px-5 pt-3 pb-3 sm:pl-20 sm:pr-20">
+      <div className="mx-5 mt-3 mb-3 sm:ml-20 sm:mr-20 max-w-prose" style={{ maxHeight: '36.5625ch'}}>
         <div className="text-base font-semibold text-primary">{post.title}</div>
         {post.textContent ? (
           <div
@@ -55,13 +55,18 @@ export default function PostCardLayout({ post, index, measure }) {
         )}
 
         {post.imageURLs && post.imageURLs.length > 0 ? (
-          <Image
-            alt={post.title}
-            src={post.imageURLs[0]}
-            style={{ maxHeight: '19.8125rem' }}
-            unsized
-            className="object-contain object-center w-full max-w-full mt-4 bg-gray-100 border border-gray-200 dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200 rounded-2xl"
-          />
+          <div className="w-full mt-4 bg-gray-100 border border-gray-200 dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200 rounded-lg">
+            <Image
+              loading="eager"
+              alt="Image"
+              src={post.imageURLs[0]}
+              width={1600}
+              height={900}
+              onLoad={measure}
+              className="rounded-lg"
+            />
+          </div>
+
         ) : (
           post.embed && (
             <a
@@ -70,9 +75,12 @@ export default function PostCardLayout({ post, index, measure }) {
               rel="noreferrer noopener nofollow"
               className="flex flex-row items-start mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
             >
-              <Image src={post.thumbnailURL} unsized style={{
-                  minWidth: '8rem'
-                }} className="w-32 h-32 bg-white bg-center bg-cover rounded-l-lg dark:bg-gray-800" />
+              <div className="w-32 h-32" style={{
+                minWidth: '8rem'
+              }}>
+                <Image loading="eager" src={post.thumbnailURL} width={128} height={128} className="bg-white object-center object-cover rounded-l-lg dark:bg-gray-800" />
+              </div>
+
               <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
                 <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
                   {post.embed.title}
@@ -84,7 +92,9 @@ export default function PostCardLayout({ post, index, measure }) {
 
                 <div className="flex flex-row items-start mt-auto">
                   {post.faviconURL && (
-                    <Image src={post.faviconURL} width={16} height={16} className="w-4 h-4 mr-3 rounded-sm" />
+                    <div className="mr-3 inline-block w-4 h-4 rounded-sm">
+                      <Image loading="eager" src={post.faviconURL} width={16} height={16} className="rounded-sm" />
+                    </div>
                   )}
 
                   <div className="text-tertiary">
