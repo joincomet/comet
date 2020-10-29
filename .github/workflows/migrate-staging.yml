@@ -46,4 +46,4 @@ jobs:
             docker exec postgres psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
             docker stop postgres
             docker rm postgres
-            docker run --env-file ./staging.env registry.digitalocean.com/cometx/api:staging "yarn run migrate"
+            docker exec api-staging yarn run migrate
