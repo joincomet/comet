@@ -37,8 +37,8 @@ jobs:
             doctl databases db delete -f cometx $DATABASE_NAME
             doctl databases db create cometx $DATABASE_NAME
             docker run -d -e POSTGRES_HOST_AUTH_METHOD=trust --name postgres postgres:alpine
-            docker exec -it postgres pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require ./latest.dump
-            docker exec -it postgres psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
+            docker exec postgres pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require ./latest.dump
+            docker exec postgres psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
             docker stop postgres
             docker rm postgres
             docker run -d --env-file ./prod.env registry.digitalocean.com/cometx/api:prod "yarn run migrate"
