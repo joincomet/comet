@@ -36,6 +36,7 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
+            mv ./api/src/migrations/migration.sql ./migration.sql
             doctl databases db delete -f 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             doctl databases db create 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             docker run -d -e POSTGRES_HOST_AUTH_METHOD=trust --name postgres postgres:alpine
@@ -45,4 +46,4 @@ jobs:
             docker exec postgres psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f ./migration.sql
             docker stop postgres
             docker rm postgres
-            docker run -d --env-file ./staging.env registry.digitalocean.com/cometx/api:staging "yarn run migrate"
+            docker run --env-file ./staging.env registry.digitalocean.com/cometx/api:staging "yarn run migrate"

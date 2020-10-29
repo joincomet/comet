@@ -34,6 +34,7 @@ jobs:
           port: 22
           script: |
             cd $REPOSITORY
+            mv ./api/src/migrations/migration.sql ./migration.sql
             doctl databases db delete -f cometx $DATABASE_NAME
             doctl databases db create cometx $DATABASE_NAME
             docker run -d -e POSTGRES_HOST_AUTH_METHOD=trust --name postgres postgres:alpine
