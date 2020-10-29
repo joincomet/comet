@@ -51,28 +51,30 @@ const run = async () => {
 
       try {
         if (await isImageURL(post.linkURL)) {
-          const res = await got.get(post.linkURL, { timeout: 5000 })
-          if (
-            !res ||
-            !(res.statusCode >= 200 && res.statusCode < 300) ||
-            !res.headers
-          )
-            return
-          const { headers } = res
-          const contentType = headers['content-type']
-          if (!isImageContentType(contentType)) return
-
-          const key = `post/${post.id36}.png`
-
-          if (!(await hasFile(key))) {
-            await uploadImage(
-              key,
-              await got.get(post.linkURL, { timeout: 5000 }).buffer(),
-              contentType
+          try {
+            const res = await got.get(post.linkURL, { timeout: 5000 })
+            if (
+              !res ||
+              !(res.statusCode >= 200 && res.statusCode < 300) ||
+              !res.headers
             )
-          }
+              return
+            const { headers } = res
+            const contentType = headers['content-type']
+            if (!isImageContentType(contentType)) return
 
-          await postRepo.update(post.id, { imageCount: 1, linkURL: null })
+            const key = `post/${post.id36}.png`
+
+            if (!(await hasFile(key))) {
+              await uploadImage(
+                key,
+                await got.get(post.linkURL, { timeout: 5000 }).buffer(),
+                contentType
+              )
+            }
+
+            await postRepo.update(post.id, { imageCount: 1, linkURL: null })
+          } catch {}
         } else {
           const embedResponse = await runIframely(post.linkURL)
           if (!embedResponse || !embedResponse.meta || !embedResponse.links) {
@@ -139,6 +141,7 @@ const run = async () => {
           }
           await postRepo.update(post.id, { embed })
         }
+      } catch {
       } finally {
         s.release()
       }
