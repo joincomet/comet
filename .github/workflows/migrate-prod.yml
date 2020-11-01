@@ -19,6 +19,7 @@ jobs:
           port: 22
           source: "api/src/migrations/from-getcomet/migration.sql"
           target: cometx
+          strip_components: 4
       - name: Run migration
         uses: appleboy/ssh-action@master
         env:
@@ -35,10 +36,7 @@ jobs:
           command_timeout: 200m
           script_stop: true
           script: |
-            mkdir -p cometx
             cd cometx
-            mv api/src/migrations/from-getcomet/migration.sql migration.sql
-            rm -rf api
             doctl databases db delete -f 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             doctl databases db create 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require latest.dump
