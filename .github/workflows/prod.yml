@@ -118,8 +118,8 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
-            mkdir cometx
-            cd cometx
+            mkdir /root/cometx
+            cd /root/cometx
             echo -e "$ENV" > .env
             docker-compose pull -q
             docker-compose down --remove-orphans
