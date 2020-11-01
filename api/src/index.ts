@@ -1,28 +1,21 @@
 import 'reflect-metadata'
-import { buildSchema, registerEnumType } from 'type-graphql'
+import { buildSchema } from 'type-graphql'
 import { Container } from 'typedi'
-import { getUser } from '@/Auth'
+import { getUser } from '@/auth/AuthTokens'
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express'
 import { Context } from '@/Context'
-import {
-  CommentLoader,
-  CommentUpvoteLoader,
-  JoinedLoader,
-  PostLoader,
-  PostUpvoteLoader,
-  UserLoader
-} from '@/Loaders'
 import { graphqlUploadExpress } from 'graphql-upload'
 import * as TypeORM from 'typeorm'
-import { authChecker } from '@/AuthChecker'
-import { PostSort } from '@/types/posts/PostSort'
-import { TimeFilter } from '@/types/posts/TimeFilter'
-import { CommentSort } from '@/types/CommentSort'
-import { PlanetSort } from '@/types/planet/PlanetSort'
-import { ModPermission } from '@/types/planet/ModPermission'
+import { authChecker } from '@/auth/AuthChecker'
 import { connectDatabase } from './ConnectDatabase'
+import { userLoader } from '@/user/UserLoader'
+import { postLoader } from '@/post/PostLoader'
+import { commentLoader } from '@/comment/CommentLoader'
+import { userJoinedPlanetLoader } from '@/planet/UserJoinedPlanetLoader'
+import { postRocketLoader } from '@/post/PostRocketLoader'
+import { commentRocketLoader } from '@/comment/CommentRocketLoader'
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
@@ -36,29 +29,9 @@ TypeORM.useContainer(Container)
 async function bootstrap() {
   await connectDatabase()
 
-  registerEnumType(PostSort, {
-    name: 'PostSort'
-  })
-
-  registerEnumType(TimeFilter, {
-    name: 'TimeFilter'
-  })
-
-  registerEnumType(CommentSort, {
-    name: 'CommentSort'
-  })
-
-  registerEnumType(PlanetSort, {
-    name: 'PlanetSort'
-  })
-
-  registerEnumType(ModPermission, {
-    name: 'ModPermission'
-  })
-
   // build TypeGraphQL executable schema
   const schema = await buildSchema({
-    resolvers: [__dirname + '/resolvers/**/*.{ts,js}'],
+    resolvers: [__dirname + '/**/*.Resolver.{ts,js}'],
     emitSchemaFile: false,
     container: Container,
     validate: true,
@@ -72,7 +45,7 @@ async function bootstrap() {
 
   app.use(
     graphqlUploadExpress({
-      maxFileSize: 4 * 1024 * 1024,
+      maxFileSize: 16 * 1024 * 1024,
       maxFiles: 1
     })
   )
@@ -95,17 +68,17 @@ async function bootstrap() {
         req,
         res,
         ...getUser(req),
-        userLoader: UserLoader,
-        postLoader: PostLoader,
-        commentLoader: CommentLoader,
-        joinedLoader: JoinedLoader,
-        postUpvoteLoader: PostUpvoteLoader,
-        commentUpvoteLoader: CommentUpvoteLoader
+        userLoader,
+        postLoader,
+        commentLoader,
+        userJoinedPlanetLoader,
+        postRocketLoader,
+        commentRocketLoader
       } as Context
     },
     uploads: false,
     introspection: true
-  })
+  } as ApolloServerExpressConfig)
 
   server.applyMiddleware({
     app

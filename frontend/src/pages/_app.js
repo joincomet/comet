@@ -11,9 +11,15 @@ import { ReactQueryCacheProvider, QueryCache } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query-devtools'
 
-const queryCache = new QueryCache()
+const queryCache = new QueryCache({
+  defaultConfig: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+})
 
-export default function MyApp({ Component, pageProps }) {
+export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>

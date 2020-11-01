@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  api:
+    image: registry.digitalocean.com/cometx/api:staging
+    container_name: api
+    restart: always
+    expose:
+      - "4000"
+    env_file:
+      - .env
+
+  frontend:
+    image: registry.digitalocean.com/cometx/frontend:staging
+    container_name: frontend
+    restart: always
+    expose:
+      - "3000"
+    env_file:
+      - .env
+    depends_on:
+      - api
+    volumes:
+      - "next-cache:/usr/src/app/.next/cache"
+
+  nginx:
+    image: registry.digitalocean.com/cometx/nginx:staging
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file:
+      - .env
+    depends_on:
+      - api
+      - frontend
+
+volumes:
+  next-cache:

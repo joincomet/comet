@@ -8,7 +8,7 @@ services:
     expose:
       - "4000"
     env_file:
-      - prod.env
+      - .env
 
   frontend:
     image: registry.digitalocean.com/cometx/frontend:prod
@@ -17,55 +17,24 @@ services:
     expose:
       - "3000"
     env_file:
-      - prod.env
+      - .env
     depends_on:
       - api
     volumes:
       - "next-cache:/usr/src/app/.next/cache"
 
-  api-staging:
-    image: registry.digitalocean.com/cometx/api:staging
-    container_name: api-staging
-    restart: always
-    expose:
-      - "4001"
-    env_file:
-      - staging.env
-    environment:
-      - PORT=4001
-      - STAGING=true
-
-  frontend-staging:
-    image: registry.digitalocean.com/cometx/frontend:staging
-    container_name: frontend-staging
-    restart: always
-    expose:
-      - "3001"
-    env_file:
-      - staging.env
-    depends_on:
-      - api-staging
-    environment:
-      - PORT=3001
-      - NEXT_STAGING=true
-    volumes:
-      - "next-cache-staging:/usr/src/app/.next/cache"
-
   nginx:
-    image: registry.digitalocean.com/cometx/nginx:latest
+    image: registry.digitalocean.com/cometx/nginx:prod
     container_name: nginx
     restart: always
     ports:
       - "80:80"
       - "443:443"
     env_file:
-      - nginx.env
+      - .env
     depends_on:
-      - api-staging
-      - frontend-staging
       - api
       - frontend
 
 volumes:
   next-cache:
-  next-cache-staging:

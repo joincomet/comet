@@ -8,7 +8,7 @@ import {
   List,
   WindowScroller
 } from 'react-virtualized'
-import { usePosts } from '@/hooks/usePosts'
+import { usePosts } from '@/components/post/usePosts'
 
 export default function Posts({ variables, layout }) {
   const {

@@ -88,7 +88,7 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Build container image
-        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:latest
+        run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:prod
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/nginx
   deploy:
@@ -100,7 +100,6 @@ jobs:
       - name: Start containers
         uses: appleboy/ssh-action@master
         env:
-          REPOSITORY: ${{ github.event.repository.name }}
           ENV: |
             ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}
             BUCKET=${{ secrets.BUCKET }}
@@ -110,26 +109,21 @@ jobs:
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             DATABASE_NAME=${{ secrets.DATABASE_NAME }}
-          NGINX_ENV: STAGING_SUBDOMAIN=${{ secrets.STAGING_SUBDOMAIN }}
+            DOMAIN=cometx.io
         with:
-          envs: REPOSITORY, ENV, NGINX_ENV
+          envs: ENV
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
-            cd $REPOSITORY
-            touch staging.env
-            echo -e "$ENV" > prod.env
-            echo -e "$NGINX_ENV" > nginx.env
+            mkdir /root/cometx
+            cd /root/cometx
+            echo -e "$ENV" > .env
             docker-compose pull -q
-            docker-compose rm -fs nginx
-            docker-compose rm -fs frontend
-            docker-compose rm -fs api
-            docker-compose up -d --no-deps --remove-orphans api
-            docker-compose up -d --no-deps frontend
-            docker-compose up -d --no-deps nginx
+            docker-compose down --remove-orphans
+            docker-compose up -d
       - name: Send Discord Announcement
         uses: appleboy/discord-action@master
         with:

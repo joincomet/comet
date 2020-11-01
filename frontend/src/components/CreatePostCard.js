@@ -21,9 +21,9 @@ function AliasDropdown() {
             height={24}
             alt="Profile picture"
             src="/avatar.jpg"
-            className="w-6 h-6 mr-3 rounded-full object-cover"
+            className="w-6 h-6 rounded-full object-cover"
           />
-          Dan Beneventano
+          <span className="ml-3">Dan Beneventano</span>
           <FiChevronDown className="w-4 h-4 ml-3" />
         </div>
       )}
@@ -35,9 +35,9 @@ function AliasDropdown() {
           height={24}
           alt="Profile picture"
           src="/avatar.jpg"
-          className="w-6 h-6 mr-3 rounded-full object-cover"
+          className="w-6 h-6 rounded-full object-cover"
         />
-        Dan Beneventano
+        <span className="ml-3">Dan Beneventano</span>
       </div>
 
       <div className="focus:outline-none text-blue-500 w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out">
@@ -86,9 +86,9 @@ function PlanetDropdown() {
               height={24}
               alt={planet.name}
               src={planet.avatarURL}
-              className="w-6 h-6 mr-3 rounded-full"
+              className="w-6 h-6 rounded-full"
             />
-            +{planet.name}
+            <span className="ml-3">+{planet.name}</span>
           </div>
         ))
       )}
@@ -103,9 +103,7 @@ export default function CreatePostCard() {
     <>
       <div
         onClick={() => setClicked(true)}
-        className={`sm:rounded-md dark:bg-gray-800 bg-white px-5 py-5 mb-5 cursor-pointer shadow-lg z-20 relative transform transition duration-300 ease-in-out ${
-          clicked ? 'sm:scale-102' : 'sm:hover:scale-102'
-        }`}
+        className={`sm:rounded-md dark:bg-gray-800 bg-white px-5 py-5 mb-5 cursor-pointer shadow-lg z-20 relative`}
       >
         <div className="flex">
           <Image
@@ -113,9 +111,9 @@ export default function CreatePostCard() {
             height={48}
             alt="Profile Picture"
             src="/avatar.jpg"
-            className="w-12 h-12 rounded-full mr-5"
+            className="w-12 h-12 rounded-full"
           />
-          <div>
+          <div className="ml-5">
             <div className="text-base font-semibold inline-flex items-start">
               Share something with the community
               <FiEdit className="w-5 h-5 ml-5 text-tertiary" />

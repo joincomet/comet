@@ -1,13 +1,7 @@
 import { URL } from 'url'
-import got from 'got'
 
-export const isImageContentType = (contentType: string | null | undefined) => {
-  if (!contentType) return false
-  const ext = contentType.replace('image/', '')
-  return ext === 'jpeg' || ext === 'jpg' || ext === 'png' || ext === 'webp'
-}
-
-export const isURL = url => {
+export const isURL = (url: string | null | undefined) => {
+  if (!url) return false
   try {
     new URL(url)
     return true
@@ -16,6 +10,13 @@ export const isURL = url => {
   }
 }
 
+/*export const isImageContentType = (contentType: string | null | undefined) => {
+  if (!contentType) return false
+  const ext = contentType.replace('image/', '')
+  return ext === 'jpeg' || ext === 'jpg' || ext === 'png' || ext === 'webp'
+}*/
+
+/*
 export const isImageURL = async url => {
   if (!isURL(url)) return false
   const http = url.lastIndexOf('http')
@@ -35,3 +36,4 @@ export const isImageURL = async url => {
     return false
   }
 }
+*/

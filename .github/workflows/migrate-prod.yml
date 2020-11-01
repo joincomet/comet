@@ -17,17 +17,16 @@ jobs:
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
-          source: "./api/src/migrations/migration.sql"
-          target: ${{ github.event.repository.name }}
+          source: "./api/src/migrations/from-getcomet/migration.sql"
+          target: /root/cometx
       - name: Run migration
         uses: appleboy/ssh-action@master
         env:
-          REPOSITORY: ${{ github.event.repository.name }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           ENV: "-e DATABASE_URL=${{ secrets.DATABASE_URL }} -e DATABASE_NAME=${{ secrets.DATABASE_NAME }} -e BUCKET=${{ secrets.BUCKET }} -e MEDIA_DOMAIN=${{ secrets.MEDIA_DOMAIN }} -e AWS_ENDPOINT=${{ secrets.AWS_ENDPOINT }} -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
         with:
-          envs: REPOSITORY, DATABASE_URL, DATABASE_NAME, ENV
+          envs: DATABASE_URL, DATABASE_NAME, ENV
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
@@ -35,7 +34,7 @@ jobs:
           port: 22
           command_timeout: 200m
           script: |
-            cd $REPOSITORY
+            cd /root/cometx
             mv ./api/src/migrations/migration.sql ./migration.sql
             doctl databases db delete -f 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             doctl databases db create 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
