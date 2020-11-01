@@ -20,7 +20,7 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           source: "./api/src/migrations/from-getcomet/migration.sql"
-          target: /root/cometx
+          target: cometx
       - name: Run migration
         uses: appleboy/ssh-action@master
         env:
@@ -36,8 +36,7 @@ jobs:
           port: 22
           command_timeout: 200m
           script: |
-            pwd
-            cd /root/cometx
+            cd cometx
             mv ./api/src/migrations/from-getcomet/migration.sql ./migration.sql
             rm -rf api
             doctl databases db delete -f 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
