@@ -1,12 +1,12 @@
-import { Post } from '@/entities/Post'
+import { Post } from '@/post/Post.Entity'
 import { InjectRepository } from 'typeorm-typedi-extensions'
-import { User } from '@/entities/User'
+import { User } from '@/user/User.Entity'
 import { Repository } from 'typeorm'
-import { Comment } from '@/entities/Comment'
-import { PostRocket } from '@/entities/relations/PostRocket'
-import { CommentRocket } from '@/entities/relations/CommentRocket'
-import { Notification } from '@/entities/Notification'
-import { Planet } from '@/entities/Planet'
+import { Comment } from '@/comment/Comment.Entity'
+import { PostRocket } from '@/post/PostRocket.Entity'
+import { CommentRocket } from '@/comment/CommentRocket.Entity'
+import { Notification } from '@/notification/Notification.Entity'
+import { Planet } from '@/planet/Planet.Entity'
 
 export class RepositoryInjector {
   @InjectRepository(User) readonly userRepository: Repository<User>

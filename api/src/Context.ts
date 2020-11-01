@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
-import { User } from '@/entities/User'
-import { Comment } from '@/entities/Comment'
-import { Post } from '@/entities/Post'
+import { User } from '@/user/User.Entity'
+import { Comment } from '@/comment/Comment.Entity'
+import { Post } from '@/post/Post.Entity'
 
 export interface Context {
   req: any
@@ -11,7 +11,13 @@ export interface Context {
   userLoader: DataLoader<number, User>
   postLoader: DataLoader<number, Post>
   commentLoader: DataLoader<number, Comment>
-  joinedLoader: any
-  postUpvoteLoader: any
-  commentUpvoteLoader: any
+  userJoinedPlanetLoader: DataLoader<
+    { userId: number; planetId: number },
+    boolean
+  >
+  postRocketLoader: DataLoader<{ userId: number; postId: number }, -1 | 0 | 1>
+  commentRocketLoader: DataLoader<
+    { userId: number; commentId: number },
+    -1 | 0 | 1
+  >
 }

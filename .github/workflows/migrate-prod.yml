@@ -17,7 +17,7 @@ jobs:
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
-          source: "./api/src/migrations/migration.sql"
+          source: "./api/src/migrations/from-getcomet/migration.sql"
           target: ${{ github.event.repository.name }}
       - name: Run migration
         uses: appleboy/ssh-action@master

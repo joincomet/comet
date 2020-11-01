@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:15-alpine
 
 RUN apk update && apk upgrade && apk add git make gcc g++ python2 && mkdir -p /usr/src/app
 WORKDIR /usr/src/app

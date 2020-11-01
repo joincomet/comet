@@ -3,15 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "engines": {
-    "node": "14.x.x"
+    "node": "15.x.x"
   },
   "scripts": {
     "build": "tsc",
     "start": "node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/index.js",
     "deploy": "yarn run build && yarn run start",
     "dev": "ts-node-dev --experimental-specifier-resolution=node --harmony --respawn --no-notify -r tsconfig-paths/register src/index.ts",
-    "migrate": "node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/migrations/script.js",
-    "migrate-dev": "ts-node -r tsconfig-paths/register src/migrations/script.ts"
+    "migrate": "node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/migrations/from-getcomet/script.js",
+    "migrate-dev": "ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
   "main": "dist/index.js",
   "license": "MIT",
@@ -44,7 +44,7 @@
     "date-fns": "^2.16.1",
     "dayjs": "^1.9.4",
     "express": "^4.17.1",
-    "got": "^11.8.0",
+    "file-type": "^16.0.0",
     "graphql": "^15.4.0",
     "graphql-tools": "^7.0.1",
     "graphql-type-json": "^0.3.2",
@@ -59,7 +59,6 @@
     "typeorm": "^0.2.28",
     "typeorm-naming-strategies": "^2.0.0",
     "typeorm-typedi-extensions": "^0.2.3",
-    "web-push": "^3.4.4",
     "xss": "^1.0.8"
   }
 }

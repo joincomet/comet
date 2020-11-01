@@ -15,11 +15,7 @@ function Post({ post, className, style, index, measure, layout }) {
 
   const [{ isDragging }, dragRef, preview] = useDrag({
     item: { post, type: ItemTypes.POST },
-    begin: () => {
-      document.body.classList.add('cursor-grabbing')
-    },
     end: (item, monitor) => {
-      document.body.classList.remove('cursor-grabbing')
       const dropResult = monitor.getDropResult()
       if (item && dropResult) {
         setToast({
@@ -108,7 +104,8 @@ function Post({ post, className, style, index, measure, layout }) {
 
                   {toast.user && (
                     <>
-                      <Image loading="eager"
+                      <Image
+                        loading="eager"
                         width={36}
                         height={36}
                         alt={toast.user.profile.realName}
@@ -125,7 +122,7 @@ function Post({ post, className, style, index, measure, layout }) {
         </div>
 
         <div
-          className={`${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${
+          className={`${
             isDragging || toast ? 'opacity-40' : 'opacity-100'
           } duration-150 transition ease-in-out`}
         >

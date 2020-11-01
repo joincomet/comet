@@ -3,7 +3,10 @@ import fs from 'fs'
 import path from 'path'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
-export const connectDatabase = async () => {
+export const connectDatabase = async (
+  synchronize = true,
+  logging: boolean = process.env.NODE_ENV !== 'production'
+) => {
   try {
     return TypeORM.createConnection({
       type: 'postgres',
@@ -11,9 +14,9 @@ export const connectDatabase = async () => {
         process.env.NODE_ENV === 'production'
           ? `${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}?sslmode=require`
           : 'postgresql://postgres:password@postgres:5432/postgres',
-      entities: [__dirname + '/entities/**/*.{ts,js}'],
-      synchronize: true,
-      logging: process.env.NODE_ENV !== 'production',
+      entities: [__dirname + '/**/*.Entity.{ts,js}'],
+      synchronize,
+      logging,
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
       ssl:

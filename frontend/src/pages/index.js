@@ -7,7 +7,7 @@ import CreatePostCard from '@/components/CreatePostCard'
 import Posts from '@/components/post/Posts'
 import { QueryCache } from 'react-query'
 import { dehydrate } from 'react-query/hydration'
-import { fetchPosts, usePosts } from '@/hooks/usePosts'
+import { fetchPosts, usePosts } from '@/components/post/usePosts'
 import { useRouter } from 'next/router'
 import { setCookie } from 'nookies'
 import { useState } from 'react'
@@ -89,9 +89,7 @@ export default function Home({ cookies }) {
 
           <div
             className={`${
-              layout === 'cards' || layout === 'small_cards'
-                ? 'px-5'
-                : 'px-3'
+              layout === 'cards' || layout === 'small_cards' ? 'px-5' : 'px-3'
             }`}
           >
             <Posts layout={layout} variables={router.query} />

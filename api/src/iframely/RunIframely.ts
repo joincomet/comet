@@ -1,4 +1,5 @@
-import { EmbedResponse } from '@/types/post/EmbedResponse'
+import { IframelyResponse } from '@/iframely/IframelyResponse'
+
 const _ = require('lodash')
 const mkdirp = require('mkdirp')
 const fs = require('fs-extra')
@@ -36,7 +37,7 @@ fs.copySync(
 
 const iframely = require('iframely')
 
-export const runIframely = (url: string): Promise<EmbedResponse> => {
+export const runIframely = (url: string): Promise<IframelyResponse> => {
   return new Promise(resolve => {
     // console.log(url)
     iframely.run(
@@ -90,15 +91,31 @@ export const runIframely = (url: string): Promise<EmbedResponse> => {
           res.meta.authorURL = res.meta['author_url']
           delete res.meta['author_url']
         }
-        if (res.links.player && res.links.player.length > 0) {
-          for (const player of res.links.player) {
-            if (player.media && player.media['aspect-ratio']) {
-              player.media.aspectRatio = player.media['aspect-ratio']
-              delete player.media['aspect-ratio']
+
+        let { thumbnail, icon, player } = res.links
+
+        if (player) {
+          player = [player].flat()
+          for (const p of player) {
+            if (p.media && p.media['aspect-ratio']) {
+              p.media.aspectRatio = p.media['aspect-ratio']
+              delete p.media['aspect-ratio']
             }
           }
+          res.links.player = player
         }
-        resolve(res as EmbedResponse)
+
+        if (icon) {
+          icon = [icon].flat()
+          res.links.icon = icon
+        }
+
+        if (thumbnail) {
+          thumbnail = [thumbnail].flat()
+          res.links.thumbnail = thumbnail
+        }
+
+        resolve(res as IframelyResponse)
       }
     )
   })

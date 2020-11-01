@@ -4,7 +4,8 @@ import {
   FiFolderPlus,
   FiMessageCircle,
   FiMoreHorizontal,
-  FiShare
+  FiShare,
+  FiLink
 } from 'react-icons/fi'
 import React from 'react'
 import Image from 'next/image'
@@ -14,10 +15,16 @@ export default function PostCardLayout({ post, index, measure }) {
     'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
   return (
-    <div className="pb-3 bg-white border border-gray-100 shadow cursor-grab dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ">
+    <div className="pb-3 bg-white border border-gray-100 shadow dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ">
       <div className="flex flex-row pt-5 pl-5 pr-5 sm:pl-8 sm:pr-8">
         <NavLink href={`/@${post.author.username}`}>
-          {post.author.avatarURL ? (<Image loading="eager" src={post.author.avatarURL} width={32} height={32} className="w-8 h-8 bg-gray-200 rounded-full" />) : (<div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700" /> )}
+          <Image
+            loading="eager"
+            src={post.author.avatarURL || '/astronaut.png'}
+            width={32}
+            height={32}
+            className="w-8 h-8 rounded-full bg-blue-500"
+          />
         </NavLink>
         <div className="flex flex-col flex-grow pr-12 ml-4">
           <div className="text-xs">
@@ -43,7 +50,7 @@ export default function PostCardLayout({ post, index, measure }) {
           {index + 1}
         </div>
       </div>
-      <div className="mx-5 mt-3 mb-3 sm:ml-20 sm:mr-20 max-w-prose" style={{ maxHeight: '36.5625ch'}}>
+      <div className="mx-5 mt-3 mb-3 sm:ml-20 sm:mr-20 max-w-prose w-prose">
         <div className="text-base font-semibold text-primary">{post.title}</div>
         {post.textContent ? (
           <div
@@ -54,46 +61,69 @@ export default function PostCardLayout({ post, index, measure }) {
           ''
         )}
 
-        {post.imageURLs && post.imageURLs.length > 0 ? (
+        {post.imageURLs.length > 0 ? (
           <div className="w-full mt-4 bg-gray-100 border border-gray-200 dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200 rounded-lg">
             <Image
               loading="eager"
               alt="Image"
               src={post.imageURLs[0]}
-              width={1600}
-              height={900}
-              onLoad={measure}
-              className="rounded-lg"
+              width={648}
+              height={365}
+              className="rounded-lg object-contain"
             />
           </div>
-
         ) : (
-          post.embed && (
+          post.linkURL && (
             <a
               href={post.linkURL}
               target="_blank"
               rel="noreferrer noopener nofollow"
               className="flex flex-row items-start mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
             >
-              <div className="w-32 h-32" style={{
-                minWidth: '8rem'
-              }}>
-                <Image loading="eager" src={post.thumbnailURL} width={128} height={128} className="bg-white object-center object-cover rounded-l-lg dark:bg-gray-800" />
+              <div
+                className="w-32 h-32"
+                style={{
+                  minWidth: '8rem'
+                }}
+              >
+                {post.thumbnailURL || post.embed.faviconURL ? (
+                  <Image
+                    loading="eager"
+                    src={post.thumbnailURL || post.embed.faviconURL}
+                    width={128}
+                    height={128}
+                    className="bg-white object-center object-cover rounded-l-lg dark:bg-gray-800"
+                  />
+                ) : (
+                  <div className="w-32 h-32 dark:bg-gray-700 flex rounded-l-lg">
+                    <FiLink className="w-8 h-8 text-tertiary m-auto" />
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
                 <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
-                  {post.embed.title}
+                  {post.embed && post.embed.title
+                    ? post.embed.title
+                    : post.linkURL}
                 </div>
 
                 <div className="mt-1 text-xs font-medium text-tertiary line-clamp-2">
-                  {post.embed.description}
+                  {post.embed && post.embed.description
+                    ? post.embed.description
+                    : 'Could not embed this link'}
                 </div>
 
                 <div className="flex flex-row items-start mt-auto">
-                  {post.faviconURL && (
+                  {post.embed.faviconURL && (
                     <div className="mr-3 inline-block w-4 h-4 rounded-sm">
-                      <Image loading="eager" src={post.faviconURL} width={16} height={16} className="rounded-sm" />
+                      <Image
+                        loading="eager"
+                        src={post.embed.faviconURL}
+                        width={16}
+                        height={16}
+                        className="rounded-sm"
+                      />
                     </div>
                   )}
 

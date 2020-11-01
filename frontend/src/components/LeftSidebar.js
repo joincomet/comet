@@ -9,7 +9,7 @@ import Logo from '@/components/Logo'
 import { usePlanets } from '@/hooks/usePlanets'
 import Tippy from '@tippyjs/react'
 import Image from 'next/image'
-import React from "react";
+import React from 'react'
 
 const navitem = `
   relative 
@@ -35,9 +35,10 @@ const exploreButton = `
   dark:hover:text-white
   bg-transparent
   hover:bg-blue-500
-  font-mono
-  font-base
-  text-xs
+  font-bold
+  text-tiny
+  uppercase
+  tracking-widest
   cursor-pointer
   ml-auto
   py-1
@@ -68,20 +69,26 @@ function TopPlanets() {
     <div>
       {data.map(planet => (
         <NavLink
-          className={navitem}
+          className="dark:hover:bg-gray-900 px-6 py-2 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
           key={planet.id}
           href="/+[planet]"
           as={`/+${planet.name}`}
         >
-          {planet.avatarURL ? (<Image
-            width={32}
-            height={32}
-            src={planet.avatarURL}
-            className="w-8 h-8 mr-6 rounded-full bg-gray-200 dark:bg-gray-700"
-            alt={planet.name}
-          />) : (<div className="w-8 h-8 mr-6 rounded-full bg-gray-200 dark:bg-gray-700" /> )}
+          {planet.avatarURL ? (
+            <Image
+              width={20}
+              height={20}
+              src={planet.avatarURL}
+              className="w-5 h-5 rounded-full"
+              alt={planet.name}
+            />
+          ) : (
+            <div className="w-8 h-8 mr-6 rounded-full bg-gray-200 dark:bg-gray-700" />
+          )}
 
-          <span className="text-secondary">+{planet.name}</span>
+          <span className="text-xs ml-6 font-semibold tracking-wide">
+            {planet.name}
+          </span>
         </NavLink>
       ))}
     </div>
@@ -141,8 +148,8 @@ function LeftSidebar() {
           </div>
         </NavLink>
 
-        <div className="px-5 mt-10 mb-3 flex flex-row items-center">
-          <div className="text-xs text-tertiary font-mono font-base">
+        <div className="px-6 mt-10 mb-3 flex flex-row items-center">
+          <div className="text-tiny text-tertiary font-bold tracking-widest uppercase">
             Top Planets
           </div>
           <div className={exploreButton}>Explore</div>

@@ -5,6 +5,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer({
   compress: false,
   images: {
-    domains: ['cometx.io', 'getcomet.net']
+    domains: [
+      'media.cometx.io',
+      'media-staging.cometx.io',
+      'media-dev.cometx.io',
+      'i.getcomet.net'
+    ]
   }
 })
