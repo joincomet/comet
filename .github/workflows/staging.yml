@@ -27,20 +27,16 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           source: "docker-compose.staging.yml"
-          target: ${{ github.event.repository.name }}
+          target: /root
       - name: Rename docker-compose file and prune Docker
         uses: appleboy/ssh-action@master
-        env:
-          REPOSITORY: ${{ github.event.repository.name }}
         with:
-          envs: REPOSITORY
           host: ${{ secrets.STAGING_DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
-            cd $REPOSITORY
             mv docker-compose.staging.yml docker-compose.yml
             docker system prune -f
   frontend:
@@ -128,8 +124,6 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
-            mkdir -p cometx
-            cd cometx
             echo -e "$ENV" > .env
             docker-compose pull -q
             docker-compose down --remove-orphans

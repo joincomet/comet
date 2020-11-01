@@ -20,7 +20,7 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           source: "api/src/migrations/from-getcomet/migration.sql"
-          target: cometx
+          target: /root
           strip_components: 4
       - name: Run migration
         uses: appleboy/ssh-action@master
@@ -38,9 +38,8 @@ jobs:
           command_timeout: 200m
           script_stop: true
           script: |
-            cd cometx
             doctl databases db delete -f 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             doctl databases db create 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
-            pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require latest.dump
-            psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f migration.sql
+            pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require /root/latest.dump
+            psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f /root/migration.sql
             docker exec ${ENV} api yarn run migrate
