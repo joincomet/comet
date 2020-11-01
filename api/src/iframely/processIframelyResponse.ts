@@ -41,7 +41,7 @@ export const processIframelyResponse = async (
     }
 
     let { icon } = res.links
-    icon = icon.filter(i => i.type === 'image/png')
+    if (icon) icon = icon.filter(i => i.type === 'image/png')
 
     if (icon && icon.length > 0 && post.domain) {
       try {
