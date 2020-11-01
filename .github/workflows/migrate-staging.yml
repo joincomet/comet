@@ -38,7 +38,8 @@ jobs:
           command_timeout: 200m
           script: |
             cd $REPOSITORY
-            mv ./api/src/migrations/migration.sql ./migration.sql
+            mv ./api/src/migrations/from-getcomet/migration.sql ./migration.sql
+            rm -rf api
             doctl databases db delete -f 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             doctl databases db create 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             docker run -d -e POSTGRES_HOST_AUTH_METHOD=trust --name postgres postgres:alpine
