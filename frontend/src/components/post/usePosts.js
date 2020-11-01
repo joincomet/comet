@@ -34,11 +34,11 @@ export const fetchPosts = async (
             commentCount
             rocketCount
             thumbnailURL
+            faviconURL
             domain
             embed {
               title
               description
-              faviconURL
             }
             planet {
               name

@@ -23,7 +23,7 @@ export default function PostCardLayout({ post, index, measure }) {
             src={post.author.avatarURL || '/astronaut.png'}
             width={32}
             height={32}
-            className="w-8 h-8 rounded-full bg-blue-500"
+            className="w-8 h-8 bg-blue-500 rounded-full"
           />
         </NavLink>
         <div className="flex flex-col flex-grow pr-12 ml-4">
@@ -62,14 +62,14 @@ export default function PostCardLayout({ post, index, measure }) {
         )}
 
         {post.imageURLs.length > 0 ? (
-          <div className="w-full mt-4 bg-gray-100 border border-gray-200 dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200 rounded-lg">
+          <div className="w-full mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
             <Image
               loading="eager"
               alt="Image"
               src={post.imageURLs[0]}
               width={648}
               height={365}
-              className="rounded-lg object-contain"
+              className="object-contain rounded-lg"
             />
           </div>
         ) : (
@@ -86,17 +86,17 @@ export default function PostCardLayout({ post, index, measure }) {
                   minWidth: '8rem'
                 }}
               >
-                {post.thumbnailURL || post.embed.faviconURL ? (
+                {post.thumbnailURL || post.faviconURL ? (
                   <Image
                     loading="eager"
-                    src={post.thumbnailURL || post.embed.faviconURL}
+                    src={post.thumbnailURL || post.faviconURL}
                     width={128}
                     height={128}
-                    className="bg-white object-center object-cover rounded-l-lg dark:bg-gray-800"
+                    className="object-cover object-center bg-white rounded-l-lg dark:bg-gray-800"
                   />
                 ) : (
-                  <div className="w-32 h-32 dark:bg-gray-700 flex rounded-l-lg">
-                    <FiLink className="w-8 h-8 text-tertiary m-auto" />
+                  <div className="flex w-32 h-32 rounded-l-lg dark:bg-gray-700">
+                    <FiLink className="w-8 h-8 m-auto text-tertiary" />
                   </div>
                 )}
               </div>
@@ -115,11 +115,11 @@ export default function PostCardLayout({ post, index, measure }) {
                 </div>
 
                 <div className="flex flex-row items-start mt-auto">
-                  {post.embed.faviconURL && (
-                    <div className="mr-3 inline-block w-4 h-4 rounded-sm">
+                  {post.faviconURL && (
+                    <div className="inline-block w-4 h-4 mr-3 rounded-sm">
                       <Image
                         loading="eager"
-                        src={post.embed.faviconURL}
+                        src={post.faviconURL}
                         width={16}
                         height={16}
                         className="rounded-sm"

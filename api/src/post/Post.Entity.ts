@@ -66,6 +66,13 @@ export class Post {
     return null
   }
 
+  @Field({ nullable: true })
+  get faviconURL(): string | null {
+    if (!this.linkURL) return null
+    if (this.embed && this.embed.faviconURL) return this.embed.faviconURL
+    return null
+  }
+
   @Field(() => [String])
   @Column('text', {
     array: true,
