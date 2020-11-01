@@ -76,7 +76,11 @@ export class Post {
 
   @Field({ nullable: true })
   get domain(): string | null {
-    if (isURL(this.linkURL)) return new URL(this.linkURL).hostname
+    if (isURL(this.linkURL)) {
+      let domain = new URL(this.linkURL).hostname
+      if (domain.startsWith('www.')) domain = domain.substring(4)
+      return domain
+    }
     return null
   }
 

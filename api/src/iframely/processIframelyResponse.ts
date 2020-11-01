@@ -20,7 +20,7 @@ export const processIframelyResponse = async (
     const { title, description } = res.meta
     embed = {
       title: title || null,
-      description: description.replace(/(<([^>]+)>)/gi, '') || null // Strip HTML tags
+      description: description ? description.replace(/(<([^>]+)>)/gi, '') : null // Strip HTML tags
     }
   }
   if (res.links) {
