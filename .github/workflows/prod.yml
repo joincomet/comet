@@ -100,7 +100,6 @@ jobs:
       - name: Start containers
         uses: appleboy/ssh-action@master
         env:
-          REPOSITORY: ${{ github.event.repository.name }}
           ENV: |
             ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}
             BUCKET=${{ secrets.BUCKET }}
@@ -112,14 +111,14 @@ jobs:
             DATABASE_NAME=${{ secrets.DATABASE_NAME }}
             DOMAIN=cometx.io
         with:
-          envs: REPOSITORY, ENV
+          envs: ENV
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
-            cd $REPOSITORY
+            cd cometx
             echo -e "$ENV" > .env
             docker-compose pull -q
             docker-compose down --remove-orphans
