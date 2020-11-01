@@ -53,7 +53,7 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Build container image
-        run: docker buildx build ./frontend -f ./frontend/Dockerfile.staging -t registry.digitalocean.com/cometx/frontend:staging
+        run: docker buildx build ./frontend -t registry.digitalocean.com/cometx/frontend:staging
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/frontend
   api:
