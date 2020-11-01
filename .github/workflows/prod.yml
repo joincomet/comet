@@ -118,6 +118,7 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
+            mkdir cometx
             cd cometx
             echo -e "$ENV" > .env
             docker-compose pull -q
