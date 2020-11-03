@@ -24,14 +24,6 @@ jobs:
           target: .
           strip_components: 4
 
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
-
       - name: Run migration
         uses: appleboy/ssh-action@master
         env:
@@ -52,4 +44,4 @@ jobs:
             doctl databases db create 4b0712e1-e8b9-415d-be5e-aa9e081d4072 $DATABASE_NAME
             pg_restore --verbose --clean --no-acl --no-owner -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require latest.dump
             psql -d ${DATABASE_URL}/${DATABASE_NAME}?sslmode=require -f migration.sql
-            docker exec ${ENV} api yarn run migrate
+            docker exec ${ENV} api yarn workspace api run migrate
