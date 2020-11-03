@@ -35,7 +35,7 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           source: "docker-compose.staging.yml"
-          target: ${{ github.event.repository.name }}
+          target: .
       - name: Rename docker-compose file and prune Docker
         uses: appleboy/ssh-action@master
         with:
