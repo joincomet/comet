@@ -50,7 +50,7 @@ export default function PostCardLayout({ post, index, measure }) {
           {index + 1}
         </div>
       </div>
-      <div className="mx-5 mt-3 mb-3 sm:ml-20 sm:mr-20 max-w-prose w-prose">
+      <div className="mx-5 mt-3 mb-3 sm:ml-20 sm:mr-20">
         <div className="text-base font-semibold text-primary">{post.title}</div>
         {post.textContent ? (
           <div
@@ -86,10 +86,10 @@ export default function PostCardLayout({ post, index, measure }) {
                   minWidth: '8rem'
                 }}
               >
-                {post.thumbnailURL || post.faviconURL ? (
+                {post.thumbnailURL || post.logoURL ? (
                   <Image
                     loading="eager"
-                    src={post.thumbnailURL || post.faviconURL}
+                    src={post.thumbnailURL || post.logoURL}
                     width={128}
                     height={128}
                     className="object-cover object-center bg-white rounded-l-lg dark:bg-gray-800"
@@ -128,7 +128,7 @@ export default function PostCardLayout({ post, index, measure }) {
                   )}
 
                   <div className="text-tertiary">
-                    <div className="font-mono text-xs">{post.domain}</div>
+                    <div className="font-header">{post.domain}</div>
                   </div>
                 </div>
               </div>

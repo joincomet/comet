@@ -10,11 +10,12 @@ import React, { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { usePlanets } from '@/hooks/usePlanets'
 import Image from 'next/image'
+import Tippy from '@tippyjs/react'
 
 function AliasDropdown() {
   return (
     <Dropdown
-      button={(
+      button={
         <div className="focus:outline-none rounded-md shadow-sm focus:outline-none mr-auto sm:mr-0 px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
           <Image
             width={24}
@@ -26,10 +27,10 @@ function AliasDropdown() {
           <span className="ml-3">Dan Beneventano</span>
           <FiChevronDown className="w-4 h-4 ml-3" />
         </div>
-      )}
+      }
       className="bg-gray-800 border border-gray-700 rounded-md shadow-lg"
     >
-      <div className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out">
+      <div className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 dark:hover:bg-gray-700 rounded-t-md transition duration-150 ease-in-out">
         <Image
           width={24}
           height={24}
@@ -40,10 +41,12 @@ function AliasDropdown() {
         <span className="ml-3">Dan Beneventano</span>
       </div>
 
-      <div className="focus:outline-none text-blue-500 w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out">
-        <FiPlus className="w-6 h-6 p-0.5 mr-3" />
-        Create Alias
-      </div>
+      <Tippy content="This feature is coming soon" placement="right">
+        <div className="focus:outline-none text-disabled w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 rounded-b-md dark:hover:bg-gray-900 transition duration-150 ease-in-out">
+          <FiPlus className="w-6 h-6 p-0.5 mr-3" />
+          Alias (Coming soon)
+        </div>
+      </Tippy>
     </Dropdown>
   )
 }
@@ -58,13 +61,13 @@ function PlanetDropdown() {
 
   return (
     <Dropdown
-      button={(
+      button={
         <div className="focus:outline-none px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
           <FiUser className="w-6 h-6 p-0.5 mr-3 text-blue-500" />
           My Profile
           <FiChevronDown className="w-4 h-4 ml-3" />
         </div>
-      )}
+      }
       className="bg-gray-800 border border-gray-700 rounded-md shadow-lg"
     >
       {[
@@ -103,7 +106,7 @@ export default function CreatePostCard() {
     <>
       <div
         onClick={() => setClicked(true)}
-        className={`sm:rounded-md dark:bg-gray-800 bg-white px-5 py-5 mb-5 cursor-pointer shadow-lg z-20 relative`}
+        className={`sm:rounded-md dark:bg-gray-800 bg-white px-5 py-5 mb-5 cursor-pointer shadow-md z-20 relative`}
       >
         <div className="flex">
           <Image
@@ -118,7 +121,7 @@ export default function CreatePostCard() {
               Share something with the community
               <FiEdit className="w-5 h-5 ml-5 text-tertiary" />
             </div>
-            <div className="mt-1 text-xs font-mono text-tertiary">
+            <div className="mt-1 font-header text-tertiary">
               Post images, links, and text
             </div>
           </div>

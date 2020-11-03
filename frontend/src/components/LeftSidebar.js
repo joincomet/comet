@@ -21,7 +21,7 @@ const navitem = `
   items-center 
   h-12 
   px-6 
-  text-sm 
+  font-header
   hover:bg-gray-200 
   dark:hover:bg-gray-700 
   transition 
@@ -31,14 +31,10 @@ const navitem = `
 
 const exploreButton = `
   text-blue-500
-  hover:text-gray-600
-  dark:hover:text-white
+  hover:text-white
   bg-transparent
   hover:bg-blue-500
-  font-bold
-  text-tiny
-  uppercase
-  tracking-widest
+  font-header
   cursor-pointer
   ml-auto
   py-1
@@ -69,7 +65,7 @@ function TopPlanets() {
     <div>
       {data.map(planet => (
         <NavLink
-          className="dark:hover:bg-gray-900 px-6 py-2 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
+          className="sidebar-item"
           key={planet.id}
           href="/+[planet]"
           as={`/+${planet.name}`}
@@ -86,9 +82,7 @@ function TopPlanets() {
             <div className="w-8 h-8 mr-6 rounded-full bg-gray-200 dark:bg-gray-700" />
           )}
 
-          <span className="text-xs ml-6 font-semibold tracking-wide">
-            {planet.name}
-          </span>
+          <span className="ml-6">{planet.name}</span>
         </NavLink>
       ))}
     </div>
@@ -116,43 +110,30 @@ function LeftSidebar() {
           </NavLink>
         </div>
         <div className="text-gray-500">
-          <NavLink href="/" className={`${navitem} navitem-active`}>
+          <NavLink href="/" className={`sidebar-item navitem-active`}>
             <BiHomeAlt className="w-5 h-5" />
             <span className="ml-6">Home</span>
           </NavLink>
-          <NavLink href="/universe" className={navitem}>
+          <NavLink href="/universe" className="sidebar-item">
             <CgInfinity className="w-5 h-5" />
             <span className="ml-6">Universe</span>
           </NavLink>
           <Tippy content="This feature is coming soon">
-            <div className={`${navitem} text-disabled cursor-pointer`}>
-              <BiAtom className="w-5 h-5" />
-              <span className="ml-6">Orbit (Coming Soon)</span>
+            <div className="sidebar-item cursor-pointer">
+              <BiAtom className="w-5 h-5 text-disabled" />
+              <span className="ml-6 text-disabled">Orbit (Coming Soon)</span>
             </div>
           </Tippy>
 
-          <NavLink href="/login" className={navitem}>
+          <NavLink href="/login" className="sidebar-item">
             <FiLogIn className="w-5 h-5 text-blue-500" />
-            <span className="ml-6 text-blue-500">Log In</span>
+            <span className="ml-6 text-blue-500">Log In/Sign Up</span>
           </NavLink>
         </div>
 
-        <NavLink
-          href={router.pathname}
-          as="/login"
-          className="m-4 shadow-md px-6 py-2.5 bg-blue-500 hover:bg-blue-600 rounded-full text-white text-sm flex flex-row items-center cursor-pointer hover:scale-102 transform duration-150 ease-in-out"
-        >
-          <div className="mx-auto inline-flex flex-row items-center">
-            <FiUser className="w-6 h-6 mr-4" />
-            <span className="font-medium">Sign Up</span>
-          </div>
-        </NavLink>
-
-        <div className="px-6 mt-10 mb-3 flex flex-row items-center">
-          <div className="text-tiny text-tertiary font-bold tracking-widest uppercase">
-            Top Planets
-          </div>
-          <div className={exploreButton}>Explore</div>
+        <div className="px-6 mt-5 mb-3 flex flex-row items-center">
+          <div className="text-tertiary font-header">Top Planets</div>
+          <div className={exploreButton}>More</div>
         </div>
 
         <TopPlanets />

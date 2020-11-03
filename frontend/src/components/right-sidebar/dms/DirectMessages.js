@@ -6,7 +6,7 @@ import Tippy from '@tippyjs/react'
 export default function DirectMessages() {
   return (
     <>
-      <div className="mx-5 mt-6 mb-3 font-mono text-xs text-disabled font-base">
+      <div className="mx-5 mt-6 mb-3 font-header text-disabled">
         Direct Messages & Groups
       </div>
 

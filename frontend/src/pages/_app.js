@@ -5,7 +5,7 @@ import '@/styles/app.css'
 import Head from 'next/head'
 import LoginDialog from '@/components/LoginDialog'
 import { DndProvider } from 'react-dnd'
-import { TouchBackend } from 'react-dnd-touch-backend'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 import CustomDragLayer from '@/components/CustomDragLayer'
 import { ReactQueryCacheProvider, QueryCache } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
@@ -29,6 +29,7 @@ export default function App({ Component, pageProps }) {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
         />
         <link rel="dns-prefetch" href="//rsms.me" />
+        <link rel="preconnect" href="https://rsms.me/" crossOrigin="true" />
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -44,10 +45,7 @@ export default function App({ Component, pageProps }) {
 
       <ReactQueryCacheProvider queryCache={queryCache}>
         <Hydrate state={pageProps.dehydratedState}>
-          <DndProvider
-            backend={TouchBackend}
-            options={{ enableTouchEvents: false, enableMouseEvents: true }}
-          >
+          <DndProvider backend={HTML5Backend}>
             <div>
               <LoginDialog />
               <Component {...pageProps} />

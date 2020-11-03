@@ -14,10 +14,10 @@ import { PostRocket } from '@/post/PostRocket.Entity'
 import { Planet } from '@/planet/Planet.Entity'
 import { Save } from '@/folder/Save.Entity'
 import { PostHide } from '@/filter/PostHide.Entity'
-import { Embed } from '@/post/Embed'
 import { URL } from 'url'
 import dayjs from 'dayjs'
 import { isURL } from '@/IsURL'
+import {Metadata} from "@/metascraper/Metadata";
 
 @ObjectType()
 @Entity()
@@ -43,33 +43,33 @@ export class Post {
   @Column({ nullable: true })
   linkURL?: string
 
-  @Field(() => Embed, { nullable: true })
+  @Field(() => Metadata, { nullable: true })
   @Column('jsonb', {
     nullable: true,
     transformer: {
       to: value => value,
       from: value => {
         try {
-          return JSON.parse(value) as Embed
+          return JSON.parse(value) as Metadata
         } catch {
           return value
         }
       }
     }
   })
-  embed?: Embed
+  meta?: Metadata
 
   @Field({ nullable: true })
   get thumbnailURL(): string | null {
     if (this.imageURLs.length > 0) return this.imageURLs[0]
-    if (this.embed && this.embed.thumbnailURL) return this.embed.thumbnailURL
+    if (this.meta && this.meta.image) return this.meta.image
     return null
   }
 
   @Field({ nullable: true })
-  get faviconURL(): string | null {
+  get logoURL(): string | null {
     if (!this.linkURL) return null
-    if (this.embed && this.embed.faviconURL) return this.embed.faviconURL
+    if (this.meta && this.meta.logo) return this.meta.logo
     return null
   }
 

@@ -44,13 +44,13 @@ export default function Home({ cookies }) {
       <Layout>
         <div className="page">
           <GalaxiesSlider />
-          <div className="px-5">
+          <div className="py-5 px-5 sm:px-72">
             <CreatePostCard />
 
             <div className="flex items-center mb-5 px-3 sm:px-0">
               <SearchBar
                 slashFocus={true}
-                className="shadow-md w-full h-10 text-sm px-16 rounded-full dark:bg-gray-800 outline-none transition duration-200 ease-in-out border border-gray-800 focus:border-blue-500"
+                className="shadow w-full h-10 text-sm px-16 rounded-full dark:bg-gray-800 outline-none transition duration-200 ease-in-out border border-gray-300 dark:border-gray-800 focus:border-blue-500"
               />
               <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out text-tertiary">
                 <RiFireLine className="w-4 h-4 mr-4" />
@@ -59,7 +59,7 @@ export default function Home({ cookies }) {
               {/*<SortDropdown />*/}
             </div>
 
-            <div className="flex items-center text-xs text-tertiary font-mono mb-5 mx-3 sm:mb-3 sm:mx-0">
+            <div className="flex items-center font-header text-disabled pb-5 px-3">
               <div
                 onClick={() => changeLayout('cards')}
                 className={`mr-5 cursor-pointer hover:underline ${
@@ -85,13 +85,7 @@ export default function Home({ cookies }) {
                 Classic
               </div>
             </div>
-          </div>
 
-          <div
-            className={`${
-              layout === 'cards' || layout === 'small_cards' ? 'px-5' : 'px-3'
-            }`}
-          >
             <Posts layout={layout} variables={router.query} />
           </div>
         </div>

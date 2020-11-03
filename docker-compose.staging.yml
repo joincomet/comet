@@ -2,16 +2,17 @@ version: "3.8"
 
 services:
   api:
-    image: registry.digitalocean.com/cometx/api:staging
+    image: registry.digitalocean.com/cometx/cometx:staging
     container_name: api
     restart: always
     expose:
       - "4000"
     env_file:
       - .env
+    command: yarn workspace api run start
 
   frontend:
-    image: registry.digitalocean.com/cometx/frontend:staging
+    image: registry.digitalocean.com/cometx/cometx:staging
     container_name: frontend
     restart: always
     expose:
@@ -21,7 +22,8 @@ services:
     depends_on:
       - api
     volumes:
-      - "next-cache:/usr/src/app/.next/cache"
+      - "next-cache:/usr/src/app/frontend/.next/cache"
+    command: yarn workspace frontend run start
 
   nginx:
     image: registry.digitalocean.com/cometx/nginx:staging

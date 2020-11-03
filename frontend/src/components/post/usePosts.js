@@ -34,9 +34,9 @@ export const fetchPosts = async (
             commentCount
             rocketCount
             thumbnailURL
-            faviconURL
+            logoURL
             domain
-            embed {
+            meta {
               title
               description
             }

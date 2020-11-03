@@ -36,7 +36,6 @@ function Post({ post, className, style, index, measure, layout }) {
 
   return (
     <article
-      ref={dragRef}
       className={`flex ${layout === 'cards' && 'pb-2 sm:pb-5'} ${
         layout === 'small_cards' && 'pb-2'
       } ${layout === 'classic' && 'pb-2 sm:pb-3'} select-none outline-none ${
@@ -45,7 +44,7 @@ function Post({ post, className, style, index, measure, layout }) {
       style={style}
       data-index={index}
     >
-      <div className="relative flex-shrink mx-auto">
+      <div ref={dragRef} className="relative flex-shrink w-full">
         <div
           className={`absolute inset-x-0 top-1/2 z-50 -translate-y-1/2 transform transition ${
             toast ? 'translate-x-0' : '-translate-x-full delay-150'
@@ -72,24 +71,21 @@ function Post({ post, className, style, index, measure, layout }) {
                 transition={{ duration: 0.15, ease: 'easeInOut' }}
               >
                 <div
-                  className={`bg-${
-                    toast.folder.color || 'blue-500'
-                  } transform -translate-x-1/2 pr-6 h-12 shadow-xl rounded-md text-medium text-sm inline-flex items-center flex-nowrap whitespace-nowrap`}
+                  style={{ backgroundColor: toast.folder.color || '#3b82f6' }}
+                  className={`transform -translate-x-1/2 pr-6 h-12 shadow-xl rounded-md text-medium text-sm inline-flex items-center flex-nowrap whitespace-nowrap`}
                 >
                   {toast.folder && (
                     <>
                       <div className="w-9 h-9 bg-gray-800 mx-4 rounded-full inline-flex items-center shadow">
                         {toast.folder.name === 'Favorites' ? (
                           <FiStar
-                            className={`text-${
-                              toast.folder.color || 'yellow-500'
-                            } h-5 w-5 m-auto`}
+                            style={{ color: toast.folder.color || '#eab308' }}
+                            className={`h-5 w-5 m-auto`}
                           />
                         ) : (
                           <FiFolder
-                            className={`text-${
-                              toast.folder.color || 'blue-500'
-                            } h-5 w-5 m-auto`}
+                            style={{ color: toast.folder.color || '#3b82f6' }}
+                            className={`h-5 w-5 m-auto`}
                           />
                         )}
                       </div>

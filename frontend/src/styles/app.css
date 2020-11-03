@@ -1,5 +1,5 @@
 body {
-  @apply text-black bg-gray-50;
+  @apply text-black bg-gray-200;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -36,6 +36,10 @@ body.dark {
 
 .text-accent {
   @apply text-blue-500;
+}
+
+.font-header {
+  @apply text-tiny font-semibold tracking-wider uppercase;
 }
 
 .line-clamp-3 {
@@ -129,4 +133,24 @@ body.dark {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+}
+
+.transition-100 {
+  @apply transition duration-100 ease-in-out;
+}
+
+.transition-150 {
+  @apply transition duration-150 ease-in-out;
+}
+
+.transition-200 {
+  @apply transition duration-200 ease-in-out;
+}
+
+.transition-300 {
+  @apply transition duration-300 ease-in-out;
+}
+
+.sidebar-item {
+  @apply relative text-xs font-semibold tracking-wide dark:hover:bg-gray-900 hover:bg-gray-200 px-6 py-2 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition-150;
 }

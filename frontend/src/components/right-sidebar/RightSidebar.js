@@ -14,6 +14,7 @@ import DirectMessage from '@/components/right-sidebar/dms/DirectMessage'
 import DirectMessages from '@/components/right-sidebar/dms/DirectMessages'
 import Folders from '@/components/right-sidebar/folders/Folders'
 import UserInfo from '@/components/right-sidebar/UserInfo'
+import DarkModeToggle from '@/components/DarkModeToggle'
 
 export default function RightSidebar() {
   return (
@@ -30,6 +31,7 @@ export default function RightSidebar() {
           <Folders />
 
           <DirectMessages />
+          <DarkModeToggle />
         </div>
       </nav>
     </>

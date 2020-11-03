@@ -2,8 +2,7 @@ import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
 import { isURL } from '@/IsURL'
 import { Sema } from 'async-sema'
-import { runIframely } from '@/iframely/RunIframely'
-import { processIframelyResponse } from '@/iframely/processIframelyResponse'
+import {scrapeMetadata} from "@/metascraper/scrapeMetadata";
 
 export const migratePosts = async (postRepo: Repository<Post>) => {
   console.info(
@@ -26,9 +25,8 @@ export const migratePosts = async (postRepo: Repository<Post>) => {
 
     await sema.acquire()
     try {
-      const iframelyResponse = await runIframely(post.linkURL)
-      const embed = await processIframelyResponse(iframelyResponse, post)
-      await postRepo.update(post.id, { embed })
+      const meta = await scrapeMetadata(post.linkURL)
+      await postRepo.update(post.id, { meta })
     } finally {
       sema.release()
     }

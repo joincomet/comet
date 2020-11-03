@@ -103,7 +103,7 @@ export default function GalaxiesSlider() {
           }
         `}
       </style>
-      <div className="z-10 h-8 flex flex-row items-center bg-gray-800 shadow-md select-none">
+      <div className="z-10 h-8 flex flex-row items-center bg-white dark:bg-gray-800 shadow-md select-none">
         <div
           className="inline-block cursor-pointer pl-4 pr-8"
           onClick={() => scroll(true)}
@@ -117,7 +117,7 @@ export default function GalaxiesSlider() {
         <div
           ref={sliderRef}
           onScroll={e => setScrollLeft(e.target.scrollLeft)}
-          className="h-8 w-full flex flex-row flex-grow flex-nowrap items-center slider overflow-x-scroll overflow-y-hidden text-tertiary text-xs font-mono space-x-8 uppercase"
+          className="h-8 w-full flex flex-row flex-grow flex-nowrap items-center slider overflow-x-scroll overflow-y-hidden text-tertiary font-header space-x-8"
         >
           {galaxies.map(galaxy => (
             <span
