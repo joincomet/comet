@@ -62,6 +62,9 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+      - name: Cache Docker layers
+        uses: satackey/action-docker-layer-caching@v0.0.8
+        continue-on-error: true
       - name: Build container image
         run: docker buildx build . -t registry.digitalocean.com/cometx/cometx:staging
       - name: Push image to DigitalOcean Container Registry
