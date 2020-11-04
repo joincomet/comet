@@ -1,7 +1,6 @@
 FROM node:15
 
 ENV NODE_ENV=development \
-    TS_NODE_PROJECT=tsconfig.dev.json \
     NEXT_TELEMETRY_DISABLED=1
 
 RUN mkdir -p /usr/src/app

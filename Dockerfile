@@ -2,7 +2,6 @@ FROM node:15
 
 ENV NODE_ENV=production \
     PGSSLMODE=require \
-    TS_NODE_PROJECT=tsconfig.prod.json \
     NEXT_TELEMETRY_DISABLED=1 \
     HOST=0.0.0.0
 
