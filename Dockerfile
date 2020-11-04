@@ -17,5 +17,4 @@ RUN yarn install
 
 COPY api api
 COPY frontend frontend
-RUN yarn workspace api build
 RUN yarn workspace frontend build

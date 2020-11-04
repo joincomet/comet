@@ -6,13 +6,10 @@
     "node": "15.x.x"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/index.js",
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "migrate": "node --experimental-specifier-resolution=node --harmony -r tsconfig-paths/register dist/migrations/from-getcomet/script.js",
-    "migrate-dev": "ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
+    "migrate": "ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
-  "main": "dist/index.js",
   "license": "MIT",
   "devDependencies": {
     "@types/async": "^3.2.3",

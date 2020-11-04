@@ -9,7 +9,7 @@ services:
       - "4000"
     env_file:
       - .env
-    command: yarn workspace api run start
+    command: yarn workspace api start
 
   frontend:
     image: registry.digitalocean.com/cometx/cometx:staging
@@ -23,7 +23,7 @@ services:
       - api
     volumes:
       - "next-cache:/usr/src/app/frontend/.next/cache"
-    command: yarn workspace frontend run start
+    command: yarn workspace frontend start
 
   nginx:
     image: registry.digitalocean.com/cometx/nginx:staging
