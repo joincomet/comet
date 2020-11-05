@@ -7,11 +7,6 @@ export const connectDatabase = async (
   synchronize = true,
   logging: boolean = process.env.NODE_ENV !== 'production'
 ) => {
-  console.log(fs.readFileSync(
-      path.resolve(__dirname, '../ca-certificate.crt'),
-      { encoding: 'utf8' }
-  ))
-
   try {
     return TypeORM.createConnection({
       type: 'postgres',
@@ -27,13 +22,13 @@ export const connectDatabase = async (
       ssl:
         process.env.NODE_ENV === 'production'
           ? {
-              ca: fs.readFileSync(
+              /*ca: fs.readFileSync(
                 path.resolve(__dirname, '../ca-certificate.crt'),
                 { encoding: 'utf8' }
-              ),
+              )*/
               rejectUnauthorized: false
-            }
-          : undefined,
+      }
+          : false,
       namingStrategy: new SnakeNamingStrategy()
     })
   } catch (e) {
