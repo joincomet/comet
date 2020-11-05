@@ -8,6 +8,9 @@ ENV NODE_ENV=production \
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
+COPY api/ca-certificate.crt /etc/ssl/certs/ca-certificate.crt
+RUN update-ca-certificates
+
 COPY package.json yarn.lock .pnp.js .yarnrc.yml ./
 COPY .yarn .yarn
 COPY api/package.json api/package.json
