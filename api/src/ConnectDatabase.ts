@@ -30,7 +30,8 @@ export const connectDatabase = async (
               ca: fs.readFileSync(
                 path.resolve(__dirname, '../ca-certificate.crt'),
                 { encoding: 'utf8' }
-              )
+              ),
+              rejectUnauthorized: false
             }
           : undefined,
       namingStrategy: new SnakeNamingStrategy()
