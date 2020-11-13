@@ -11,24 +11,6 @@ import Tippy from '@tippyjs/react'
 import Image from 'next/image'
 import React from 'react'
 
-const navitem = `
-  relative 
-  dark:text-gray-300 
-  origin-left 
-  flex 
-  flex-row 
-  font-medium 
-  items-center 
-  h-12 
-  px-6 
-  font-header
-  hover:bg-gray-200 
-  dark:hover:bg-gray-700 
-  transition 
-  duration-150 
-  ease-in-out
-`
-
 const exploreButton = `
   text-blue-500
   hover:text-white
@@ -79,7 +61,7 @@ function TopPlanets() {
               alt={planet.name}
             />
           ) : (
-            <div className="w-8 h-8 mr-6 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700" />
           )}
 
           <span className="ml-6">{planet.name}</span>

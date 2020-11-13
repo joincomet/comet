@@ -10,9 +10,54 @@ import { dehydrate } from 'react-query/hydration'
 import { fetchPosts, usePosts } from '@/components/post/usePosts'
 import { useRouter } from 'next/router'
 import { setCookie } from 'nookies'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { fetchCurrentUser } from '@/hooks/useCurrentUser'
 import nookies from 'nookies'
+import { InView } from 'react-intersection-observer'
+
+function Header({ children, sticky = false, className, ...rest }) {
+  const [isSticky, setIsSticky] = useState(false)
+  const ref = React.createRef()
+
+  // mount
+  useEffect(() => {
+    const cachedRef = ref.current,
+      observer = new IntersectionObserver(
+        ([e]) => setIsSticky(e.intersectionRatio < 1),
+        { threshold: [1] }
+      )
+
+    observer.observe(cachedRef)
+
+    // unmount
+    return function () {
+      observer.unobserve(cachedRef)
+    }
+  }, [])
+
+  return (
+    <header
+      style={{ top: '-1px' }}
+      className={`sticky h-16 px-5 sm:px-72 flex items-center transition-150 ${
+        isSticky ? 'z-10 dark:bg-gray-800 shadow-lg' : 'dark:bg-gray-900'
+      }`}
+      ref={ref}
+      {...rest}
+    >
+      <SearchBar
+        slashFocus={true}
+        className={`shadow w-full h-10 text-sm px-16 rounded-full outline-none transition duration-200 ease-in-out border border-gray-300 dark:border-gray-800 focus:border-blue-500 ${
+          isSticky ? 'dark:bg-gray-700' : 'dark:bg-gray-800'
+        }`}
+      />
+      <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out text-tertiary">
+        <RiFireLine className="w-4 h-4 mr-4" />
+        Hot
+      </div>
+      {/*<SortDropdown />*/}
+    </header>
+  )
+}
 
 export default function Home({ cookies }) {
   const router = useRouter()
@@ -20,6 +65,8 @@ export default function Home({ cookies }) {
   const [layout, setLayout] = useState(
     cookies && cookies.layout ? cookies.layout : 'cards'
   )
+
+  const [showTopBar, setShowTopBar] = useState(false)
 
   const changeLayout = l => {
     setLayout(l)
@@ -41,24 +88,17 @@ export default function Home({ cookies }) {
         }
       `}</style>
 
-      <Layout>
+      <Layout showTopBar={showTopBar}>
         <div className="page">
           <GalaxiesSlider />
-          <div className="py-5 px-5 sm:px-72">
+          <div className="pt-5 px-5 sm:px-72">
             <CreatePostCard />
+          </div>
+          {/*<InView onChange={(inView, entry) => setShowTopBar(!inView)}>
 
-            <div className="flex items-center mb-5 px-3 sm:px-0">
-              <SearchBar
-                slashFocus={true}
-                className="shadow w-full h-10 text-sm px-16 rounded-full dark:bg-gray-800 outline-none transition duration-200 ease-in-out border border-gray-300 dark:border-gray-800 focus:border-blue-500"
-              />
-              <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out text-tertiary">
-                <RiFireLine className="w-4 h-4 mr-4" />
-                Hot
-              </div>
-              {/*<SortDropdown />*/}
-            </div>
-
+            </InView>*/}
+          <Header />
+          <div className="py-5 px-5 sm:px-72">
             <div className="flex items-center font-header text-disabled pb-5 px-3">
               <div
                 onClick={() => changeLayout('cards')}
@@ -85,7 +125,6 @@ export default function Home({ cookies }) {
                 Classic
               </div>
             </div>
-
             <Posts layout={layout} variables={router.query} />
           </div>
         </div>

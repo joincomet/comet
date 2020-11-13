@@ -22,11 +22,10 @@ export const connectDatabase = async (
       ssl:
         process.env.NODE_ENV === 'production'
           ? {
-              /*ca: fs.readFileSync(
+              ca: fs.readFileSync(
                 path.resolve(__dirname, '../ca-certificate.crt'),
                 { encoding: 'utf8' }
-              )*/
-              rejectUnauthorized: false
+              )
       }
           : false,
       namingStrategy: new SnakeNamingStrategy()

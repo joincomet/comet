@@ -37,8 +37,8 @@ function Post({ post, className, style, index, measure, layout }) {
   return (
     <article
       className={`flex ${layout === 'cards' && 'pb-2 sm:pb-5'} ${
-        layout === 'small_cards' && 'pb-2'
-      } ${layout === 'classic' && 'pb-2 sm:pb-3'} select-none outline-none ${
+        layout === 'small_cards' && 'pb-3'
+      } ${layout === 'classic' && 'pb-2 sm:pb-3'} outline-none ${
         className || ''
       }`}
       style={style}

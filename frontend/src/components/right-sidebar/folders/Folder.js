@@ -19,12 +19,7 @@ export default function Folder({ folder }) {
   const { name, color, type } = folder
 
   return (
-    <div
-      ref={dropRef}
-      className={`${
-        isActive ? 'dark:bg-gray-900' : 'dark:bg-gray-800'
-      } flex flex-row items-center py-2 px-6 transition duration-150 ease-in-out cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:bg-gray-900`}
-    >
+    <div ref={dropRef} className={`sidebar-item`}>
       {name === 'Favorites' ? (
         <FiStar
           width={20}

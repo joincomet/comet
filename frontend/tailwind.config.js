@@ -14,7 +14,8 @@ module.exports = {
       },
       spacing: {
         18: '4.5rem',
-        prose: '65ch'
+        prose: '65ch',
+        nav: '17.5rem'
       },
       transitionDelay: {
         400: '400ms',

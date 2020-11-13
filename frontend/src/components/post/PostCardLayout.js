@@ -10,7 +10,7 @@ import {
 import React from 'react'
 import Image from 'next/image'
 
-export default function PostCardLayout({ post, index, measure }) {
+export default function PostCardLayout({ post, index }) {
   const chip =
     'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
@@ -51,7 +51,12 @@ export default function PostCardLayout({ post, index, measure }) {
         </div>
       </div>
       <div className="mx-5 mt-3 mb-3 sm:ml-20 sm:mr-20">
-        <div className="text-base font-semibold text-primary">{post.title}</div>
+        <NavLink
+          href={post.relativeURL}
+          className="font-semibold transition-150 text-black dark:text-white hover:text-blue-500"
+        >
+          {post.title}
+        </NavLink>
         {post.textContent ? (
           <div
             className="mt-1 text-sm text-secondary line-clamp-3"
@@ -62,14 +67,13 @@ export default function PostCardLayout({ post, index, measure }) {
         )}
 
         {post.imageURLs.length > 0 ? (
-          <div className="w-full mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
+          <div className="relative aspect-ratio-16/9 object-contain w-full mt-4 bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
             <Image
               loading="eager"
               alt="Image"
+              layout="fill"
               src={post.imageURLs[0]}
-              width={648}
-              height={365}
-              className="object-contain rounded-lg"
+              className="rounded-md object-contain"
             />
           </div>
         ) : (
@@ -78,7 +82,7 @@ export default function PostCardLayout({ post, index, measure }) {
               href={post.linkURL}
               target="_blank"
               rel="noreferrer noopener nofollow"
-              className="flex flex-row items-start mt-4 bg-gray-100 border border-gray-200 rounded-lg dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
+              className="flex flex-row items-start mt-4 bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
             >
               <div
                 className="w-32 h-32"
@@ -92,10 +96,10 @@ export default function PostCardLayout({ post, index, measure }) {
                     src={post.thumbnailURL || post.logoURL}
                     width={128}
                     height={128}
-                    className="object-cover object-center bg-white rounded-l-lg dark:bg-gray-800"
+                    className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
                   />
                 ) : (
-                  <div className="flex w-32 h-32 rounded-l-lg dark:bg-gray-700">
+                  <div className="flex w-32 h-32 rounded-l-md dark:bg-gray-700">
                     <FiLink className="w-8 h-8 m-auto text-tertiary" />
                   </div>
                 )}

@@ -4,66 +4,97 @@ import {
   FiFolderPlus,
   FiMessageCircle,
   FiMoreHorizontal,
-  FiShare
+  FiShare2,
+  FiLink,
+  FiAlignLeft
 } from 'react-icons/fi'
 import React from 'react'
+import Image from 'next/image'
 
 export default function PostSmallCardLayout({ post, index, measure }) {
   const chip =
     'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
   return (
-    <div className="pb-2 bg-white border border-gray-100 shadow cursor-grab dark:border-gray-800 dark:bg-gray-800 sm:rounded-xl ">
-      <div className="inline-flex flex-row px-5 pt-3 pb-3 w-full">
-        <div
-          className="w-8 h-8 rounded-full bg-gray-700 mr-5 mt-0.5 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${
-              post.author.avatarURL || '/logos/astronaut.png'
-            })`
-          }}
+    <div className="flex bg-white dark:bg-gray-800 sm:rounded-md shadow border border-gray-100 dark:border-gray-800 w-full p-4">
+      <div
+        className={`w-8 h-8 rounded-full mr-5 mt-0.5 ${
+          post.author.avatarURL ? '' : 'bg-blue-500'
+        }`}
+        style={{ minWidth: '2rem' }}
+      >
+        <Image
+          src={post.author.avatarURL || '/logos/astronaut.png'}
+          height={64}
+          width={64}
+          className="rounded-full object-cover object-center"
+          loading="eager"
         />
+      </div>
 
-        <div className="mr-5">
-          <div className="text-base font-semibold text-primary">
-            {post.title}
-          </div>
-          <div className="mt-0.5 text-xs text-tertiary">
-            {post.author.username} &middot; {post.timeSince} &middot;{' '}
-            <span className="text-blue-500">+{post.planet.name}</span>
-          </div>
+      <div className="flex flex-col flex-grow">
+        <div className="text-base font-semibold text-primary">{post.title}</div>
+        <div className="mt-0.5 text-xs text-tertiary">
+          {post.author.username} &middot; {post.timeSince} &middot;{' '}
+          <span className="text-blue-500">+{post.planet.name}</span>
         </div>
 
-        {post.thumbnailURL && (
+        {post.textContent && (
           <div
-            className="w-12 h-12 sm:w-20 sm:h-20 rounded-lg ml-auto bg-cover bg-center"
-            style={{ backgroundImage: `url(${post.thumbnailURL})` }}
+            className="mt-1 text-sm text-secondary line-clamp-2"
+            dangerouslySetInnerHTML={{ __html: post.textContent }}
           />
         )}
+
+        <div className="flex flex-row items-center -mr-3 -ml-3 mt-auto -mb-2 pt-5">
+          <div className={chip}>
+            <BiRocket className="w-4 h-4" />
+            <span className="ml-3 text-xs font-medium">{post.rocketCount}</span>
+          </div>
+
+          <div className={`ml-4 ${chip}`}>
+            <FiMessageCircle className="w-4 h-4" />
+            <span className="ml-3 text-xs font-medium">
+              {post.commentCount}
+            </span>
+          </div>
+
+          <div className={`${chip} ml-auto`}>
+            <FiMoreHorizontal className="w-4 h-4 text-disabled" />
+          </div>
+
+          <div className={`${chip} ml-4`}>
+            <FiShare2 className="w-4 h-4 text-green-500" />
+          </div>
+
+          <div className={`${chip} ml-4`}>
+            <FiFolderPlus className="w-4 h-4 text-blue-500" />
+          </div>
+        </div>
       </div>
-      <div className="flex flex-row items-center pl-16 pr-5 -mr-3 -ml-1">
-        <div className={chip}>
-          <BiRocket className="w-5 h-5" />
-          <span className="ml-3 text-sm font-semibold">{post.rocketCount}</span>
-        </div>
 
-        <div className={`ml-4 ${chip}`}>
-          <FiMessageCircle className="w-5 h-5" />
-          <span className="ml-3 text-sm font-semibold">
-            {post.commentCount}
-          </span>
-        </div>
-
-        <div className={`${chip} ml-auto`}>
-          <FiMoreHorizontal className="w-5 h-5 text-disabled" />
-        </div>
-
-        <div className={`${chip} ml-4`}>
-          <FiShare className="w-5 h-5 text-green-500" />
-        </div>
-
-        <div className={`${chip} ml-4`}>
-          <FiFolderPlus className="w-5 h-5 text-blue-500" />
+      <div className="ml-auto pl-10">
+        <div
+          className="flex w-24 h-24"
+          style={{ minWidth: '6rem', minHeight: '6rem' }}
+        >
+          {post.thumbnailURL ? (
+            <Image
+              src={post.thumbnailURL}
+              width={256}
+              height={256}
+              className="rounded-md object-cover dark:bg-gray-700 w-36 h-36"
+              loading="eager"
+            />
+          ) : (
+            <div className="dark:bg-gray-700 w-full h-full rounded-md flex">
+              {post.linkURL ? (
+                <FiLink size={32} className="m-auto text-gray-500" />
+              ) : (
+                <FiAlignLeft size={32} className="m-auto text-gray-500" />
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

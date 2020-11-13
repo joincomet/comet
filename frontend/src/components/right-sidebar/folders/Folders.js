@@ -25,9 +25,11 @@ export default function Folders() {
         }}
       />
 
-      <div className="flex flex-row items-center h-12 px-6 transition-150 cursor-pointer text-tertiary dark:hover:bg-gray-700">
-        <FiFolderPlus className="w-8 h-8 p-1.5" />
-        <span className="ml-6 text-sm font-medium">New Folder</span>
+      <div className="sidebar-item">
+        <FiFolderPlus className="w-5 h-5 p-0.5" />
+        <span className="text-xs ml-6 font-semibold tracking-wide">
+          New Folder
+        </span>
       </div>
     </>
   )
