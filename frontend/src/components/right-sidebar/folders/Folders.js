@@ -26,10 +26,8 @@ export default function Folders() {
       />
 
       <div className="sidebar-item">
-        <FiFolderPlus className="w-5 h-5 p-0.5" />
-        <span className="text-xs ml-6 font-semibold tracking-wide">
-          New Folder
-        </span>
+        <FiFolderPlus className="w-5 h-5" />
+        <span className="ml-6">New Folder</span>
       </div>
     </>
   )

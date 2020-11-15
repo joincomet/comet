@@ -23,7 +23,7 @@ export default function Posts({ variables, layout }) {
 
   useEffect(() => {
     cache.clearAll()
-  }, [layout])
+  }, [layout, variables])
 
   const handleResize = event => {
     cache.clearAll()
@@ -55,7 +55,7 @@ export default function Posts({ variables, layout }) {
             <List
               ref={registerChild}
               onRowsRendered={onRowsRendered}
-              overscanRowCount={20}
+              overscanRowCount={10}
               autoHeight={true}
               height={height || 1080}
               autoWidth
@@ -87,7 +87,7 @@ const getRowRender = (posts, layout) => ({ index, parent, style }) => {
   const post = posts[index]
 
   return (
-    <div key={index} style={{}}>
+    <div key={post.id} style={{}}>
       <CellMeasurer
         cache={cache}
         columnIndex={0}

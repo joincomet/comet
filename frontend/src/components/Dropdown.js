@@ -2,6 +2,8 @@ import { Menu, Transition } from '@headlessui/react'
 import React from 'react'
 
 export default function Dropdown({ button, children, className, style }) {
+  if (!Array.isArray(children)) children = [children]
+
   return (
     <div className="relative">
       <Menu>

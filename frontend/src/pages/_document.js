@@ -35,7 +35,7 @@ class MyDocument extends Document {
           <link rel="shortcut icon" href="/icons/favicon.ico" />
         </Head>
         <body>
-          <script src="noflash.js" />
+          {/*<script src="noflash.js" />*/}
           <Main />
           <NextScript />
         </body>

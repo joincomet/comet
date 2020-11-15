@@ -6,7 +6,7 @@ module.exports = withBundleAnalyzer({
   compress: false,
   experimental: {
     modern: true,
-    polyfillsOptimization: true,
+    polyfillsOptimization: true
   },
   images: {
     domains: [

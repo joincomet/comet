@@ -1,5 +1,5 @@
 body {
-  @apply text-black bg-gray-200;
+  @apply text-black bg-gray-100;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -15,7 +15,7 @@ body.dark {
 }
 
 .page {
-  @apply flex flex-col;
+  @apply flex flex-col h-full min-h-full;
 }
 
 .text-tertiary {
@@ -39,7 +39,7 @@ body.dark {
 }
 
 .font-header {
-  @apply text-tiny font-semibold tracking-wider uppercase;
+  @apply text-tiny font-semibold uppercase tracking-widest;
 }
 
 .line-clamp-3 {
@@ -152,7 +152,11 @@ body.dark {
 }
 
 .sidebar-item {
-  @apply cursor-pointer relative text-xs font-semibold tracking-wide dark:hover:bg-gray-900 hover:bg-gray-200 px-6 py-2 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition-150;
+  @apply cursor-pointer relative text-sm font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-11 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition-150;
+}
+
+.sidebar-item-small {
+  @apply cursor-pointer relative text-xs font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-8 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition-150;
 }
 
 .aspect-ratio-16\/9 {

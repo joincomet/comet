@@ -12,93 +12,6 @@ import { usePlanets } from '@/hooks/usePlanets'
 import Image from 'next/image'
 import Tippy from '@tippyjs/react'
 
-function AliasDropdown() {
-  return (
-    <Dropdown
-      button={
-        <div className="focus:outline-none rounded-md shadow-sm focus:outline-none mr-auto sm:mr-0 px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
-          <Image
-            width={24}
-            height={24}
-            alt="Profile picture"
-            src="/avatar.jpg"
-            className="w-6 h-6 rounded-full object-cover"
-          />
-          <span className="ml-3">Dan Beneventano</span>
-          <FiChevronDown className="w-4 h-4 ml-3" />
-        </div>
-      }
-      className="bg-gray-800 border border-gray-700 rounded-md shadow-lg"
-    >
-      <div className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 dark:hover:bg-gray-700 rounded-t-md transition duration-150 ease-in-out">
-        <Image
-          width={24}
-          height={24}
-          alt="Profile picture"
-          src="/avatar.jpg"
-          className="w-6 h-6 rounded-full object-cover"
-        />
-        <span className="ml-3">Dan Beneventano</span>
-      </div>
-
-      <Tippy content="This feature is coming soon" placement="right">
-        <div className="focus:outline-none text-disabled w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 rounded-b-md dark:hover:bg-gray-900 transition duration-150 ease-in-out">
-          <FiPlus className="w-6 h-6 p-0.5 mr-3" />
-          Alias (Coming soon)
-        </div>
-      </Tippy>
-    </Dropdown>
-  )
-}
-
-function PlanetDropdown() {
-  const { isLoading, isError, data, error } = usePlanets({
-    sort: 'TOP',
-    pageSize: 5
-  })
-
-  if (isLoading || isError) return null
-
-  return (
-    <Dropdown
-      button={
-        <div className="focus:outline-none px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
-          <FiUser className="w-6 h-6 p-0.5 mr-3 text-blue-500" />
-          My Profile
-          <FiChevronDown className="w-4 h-4 ml-3" />
-        </div>
-      }
-      className="bg-gray-800 border border-gray-700 rounded-md shadow-lg"
-    >
-      {[
-        <div
-          key="__myprofile"
-          className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
-        >
-          <FiUser className="w-6 h-6 p-0.5 mr-3 rounded-full text-blue-500" />
-          My Profile
-        </div>
-      ].concat(
-        data.map(planet => (
-          <div
-            key={planet.id}
-            className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
-          >
-            <Image
-              width={24}
-              height={24}
-              alt={planet.name}
-              src={planet.avatarURL}
-              className="w-6 h-6 rounded-full"
-            />
-            <span className="ml-3">+{planet.name}</span>
-          </div>
-        ))
-      )}
-    </Dropdown>
-  )
-}
-
 export default function CreatePostCard() {
   const [clicked, setClicked] = useState(false)
 
@@ -106,7 +19,7 @@ export default function CreatePostCard() {
     <>
       <div
         onClick={() => setClicked(true)}
-        className={`sm:rounded-md dark:bg-gray-800 bg-white px-5 py-5 mb-5 cursor-pointer shadow-md z-20 relative`}
+        className={`sm:rounded-md dark:bg-gray-800 bg-white px-5 py-5 mb-5 cursor-pointer shadow z-20 relative`}
       >
         <div className="flex">
           <Image
@@ -197,5 +110,92 @@ export default function CreatePostCard() {
         />
       </div>
     </>
+  )
+}
+
+function AliasDropdown() {
+  return (
+    <Dropdown
+      button={
+        <div className="focus:outline-none rounded-md shadow-sm focus:outline-none mr-auto sm:mr-0 px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
+          <Image
+            width={24}
+            height={24}
+            alt="Profile picture"
+            src="/avatar.jpg"
+            className="w-6 h-6 rounded-full object-cover"
+          />
+          <span className="ml-3">Dan Beneventano</span>
+          <FiChevronDown className="w-4 h-4 ml-3" />
+        </div>
+      }
+      className="bg-gray-800 border border-gray-700 rounded-md shadow-lg"
+    >
+      <div className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 dark:hover:bg-gray-700 rounded-t-md transition duration-150 ease-in-out">
+        <Image
+          width={24}
+          height={24}
+          alt="Profile picture"
+          src="/avatar.jpg"
+          className="w-6 h-6 rounded-full object-cover"
+        />
+        <span className="ml-3">Dan Beneventano</span>
+      </div>
+
+      <Tippy content="This feature is coming soon" placement="right">
+        <div className="focus:outline-none text-disabled w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 rounded-b-md dark:hover:bg-gray-900 transition duration-150 ease-in-out">
+          <FiPlus className="w-6 h-6 p-0.5 mr-3" />
+          Alias (Coming soon)
+        </div>
+      </Tippy>
+    </Dropdown>
+  )
+}
+
+function PlanetDropdown() {
+  const { isLoading, isError, data, error } = usePlanets({
+    sort: 'TOP',
+    pageSize: 5
+  })
+
+  if (isLoading || isError) return null
+
+  return (
+    <Dropdown
+      button={
+        <div className="focus:outline-none px-4 py-1.5 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
+          <FiUser className="w-6 h-6 p-0.5 mr-3 text-blue-500" />
+          My Profile
+          <FiChevronDown className="w-4 h-4 ml-3" />
+        </div>
+      }
+      className="bg-gray-800 border border-gray-700 rounded-md shadow-lg"
+    >
+      {[
+        <div
+          key="__myprofile"
+          className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
+        >
+          <FiUser className="w-6 h-6 p-0.5 mr-3 rounded-full text-blue-500" />
+          My Profile
+        </div>
+      ].concat(
+        data.map(planet => (
+          <div
+            key={planet.id}
+            className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
+          >
+            <Image
+              width={24}
+              height={24}
+              alt={planet.name}
+              src={planet.avatarURL}
+              className="w-6 h-6 rounded-full"
+            />
+            <span className="ml-3">+{planet.name}</span>
+          </div>
+        ))
+      )}
+    </Dropdown>
   )
 }

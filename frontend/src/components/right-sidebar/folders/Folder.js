@@ -24,19 +24,19 @@ export default function Folder({ folder }) {
         <FiStar
           width={20}
           height={20}
-          className={`w-5 h-5 p-0.5`}
+          className={`w-5 h-5`}
           style={{ color: color || '#eab308' }}
         />
       ) : (
         <FiFolder
           width={20}
           height={20}
-          className={`w-5 h-5 p-0.5`}
+          className={`w-5 h-5`}
           style={{ color: color || '#3b82f6' }}
         />
       )}
 
-      <span className="text-xs ml-6 font-semibold tracking-wide">{name}</span>
+      <span className="ml-6">{name}</span>
 
       {type && type !== 'PRIVATE' ? (
         <Tippy content={type === 'PUBLIC' ? 'Public folder' : 'Shared folder'}>

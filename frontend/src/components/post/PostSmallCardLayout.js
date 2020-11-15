@@ -16,27 +16,48 @@ export default function PostSmallCardLayout({ post, index, measure }) {
     'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
   return (
-    <div className="flex bg-white dark:bg-gray-800 sm:rounded-md shadow border border-gray-100 dark:border-gray-800 w-full p-4">
-      <div
-        className={`w-8 h-8 rounded-full mr-5 mt-0.5 ${
+    <div className="mx-5 sm:mx-72 flex bg-white dark:bg-gray-800 sm:rounded-md shadow border border-gray-100 dark:border-gray-800 p-4">
+      <NavLink
+        href={`@${post.author.username}`}
+        className={`w-8 h-8 flex-shrink-0 rounded-full mt-0.5 ${
           post.author.avatarURL ? '' : 'bg-blue-500'
         }`}
-        style={{ minWidth: '2rem' }}
       >
         <Image
           src={post.author.avatarURL || '/logos/astronaut.png'}
           height={64}
           width={64}
-          className="rounded-full object-cover object-center"
+          className="rounded-full object-cover object-center block h-8 w-8"
           loading="eager"
         />
-      </div>
+      </NavLink>
 
-      <div className="flex flex-col flex-grow">
-        <div className="text-base font-semibold text-primary">{post.title}</div>
+      <div className="flex flex-col flex-grow ml-5">
+        <NavLink
+          href={post.relativeURL}
+          className="text-base font-semibold text-primary"
+        >
+          {post.title}
+        </NavLink>
         <div className="mt-0.5 text-xs text-tertiary">
           {post.author.username} &middot; {post.timeSince} &middot;{' '}
-          <span className="text-blue-500">+{post.planet.name}</span>
+          <NavLink
+            href={`/${post.planet.name}`}
+            className="text-blue-500 hover:underline"
+          >
+            +{post.planet.name}
+          </NavLink>
+          {post.domain && (
+            <span>
+              &nbsp;&middot;&nbsp;
+              <NavLink
+                href={post.relativeURL}
+                className="text-tertiary hover:underline"
+              >
+                {post.domain}
+              </NavLink>
+            </span>
+          )}
         </div>
 
         {post.textContent && (
@@ -87,11 +108,11 @@ export default function PostSmallCardLayout({ post, index, measure }) {
               loading="eager"
             />
           ) : (
-            <div className="dark:bg-gray-700 w-full h-full rounded-md flex">
+            <div className="dark:bg-gray-700 bg-gray-100 w-full h-full rounded-md flex">
               {post.linkURL ? (
-                <FiLink size={32} className="m-auto text-gray-500" />
+                <FiLink size={32} className="m-auto text-disabled" />
               ) : (
-                <FiAlignLeft size={32} className="m-auto text-gray-500" />
+                <FiAlignLeft size={32} className="m-auto text-disabled" />
               )}
             </div>
           )}

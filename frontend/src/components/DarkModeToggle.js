@@ -10,7 +10,8 @@ function DarkModeToggle() {
 
   return (
     <div onClick={darkMode.toggle} className="cursor-pointer">
-      {darkMode.value ? <FiMoon size={24} /> : <FiSun size={24} />}
+      {/*{darkMode.value ? <FiMoon size={24} /> : <FiSun size={24} />}*/}
+      Dark mode
     </div>
   )
 }

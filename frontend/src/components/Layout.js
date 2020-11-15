@@ -1,25 +1,14 @@
 import LeftSidebar from './LeftSidebar'
-import TopBar from '@/components/TopBar'
-import { AnimatePresence, motion } from 'framer-motion'
+import RightSidebar from '@/components/right-sidebar/RightSidebar'
 
-export default function Layout({ children, showTopBar }) {
+export default function Layout({ children }) {
   return (
     <div>
-      <AnimatePresence>
-        {showTopBar && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <TopBar />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <LeftSidebar />
 
-      <main>{children}</main>
+      <main className="h-full min-h-full page">{children}</main>
+
+      <RightSidebar />
     </div>
   )
 }

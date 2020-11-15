@@ -17,7 +17,7 @@ import { PostHide } from '@/filter/PostHide.Entity'
 import { URL } from 'url'
 import dayjs from 'dayjs'
 import { isURL } from '@/IsURL'
-import {Metadata} from "@/metascraper/Metadata";
+import { Metadata } from '@/metascraper/Metadata'
 
 @ObjectType()
 @Entity()
@@ -184,9 +184,9 @@ export class Post {
       .trim()
       .split(' ')
       .slice(0, 9)
-      .join('_')
+      .join('-')
       .replace(/[^a-z0-9_]+/gi, '')
-      .replace(/[_](.)\1+/g, '$1')
+      .replace(/[-](.)\1+/g, '$1')
     return `/+${(this.planet as Planet).name}/post/${this.id36}/${slug}`
   }
 }

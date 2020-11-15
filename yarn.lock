@@ -3326,7 +3326,7 @@ __metadata:
     apollo-server-express: ^2.19.0
     argon2: ^0.27.0
     async-sema: ^3.1.0
-    aws-sdk: ^2.791.0
+    aws-sdk: ^2.792.0
     class-validator: ^0.12.2
     cookie-parser: ^1.4.5
     dataloader: ^2.0.0
@@ -3354,7 +3354,7 @@ __metadata:
     metascraper-title: ^5.14.22
     metascraper-url: ^5.14.22
     node-fetch: ^2.6.1
-    pg: ^8.5.0
+    pg: ^8.5.1
     prettier: ^2.1.2
     reflect-metadata: ^0.1.13
     ts-node: ^9.0.0
@@ -3870,9 +3870,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.791.0":
-  version: 2.791.0
-  resolution: "aws-sdk@npm:2.791.0"
+"aws-sdk@npm:^2.792.0":
+  version: 2.792.0
+  resolution: "aws-sdk@npm:2.792.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -3883,7 +3883,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 4f4732149d49af6c293b0e5c2183791b6665dda4cbe3f003b16a8cc10195d2f7d57bf4774ae0d6a5b7aeec4caf25d9c39e0d26456727d64e78b041e5dda3fd64
+  checksum: 99bf8e9e5ed23add678e73af90b4e51922193db257effabd0fd455150f4b98c020456b7e72b26880162a54ef581d795cc0b52243eead844624eed1f785c3bf3e
   languageName: node
   linkType: hard
 
@@ -7009,8 +7009,8 @@ __metadata:
     react-dnd: ^11.1.3
     react-dnd-html5-backend: ^11.1.3
     react-dnd-touch-backend: ^11.1.3
-    react-dom: 17.0.1
-    react-hook-form: ^6.11.0
+    react-dom: ^17.0.1
+    react-hook-form: ^6.11.1
     react-icons: ^3.11.0
     react-intersection-observer: ^8.30.3
     react-lite-youtube-embed: ^0.4.3
@@ -7023,7 +7023,7 @@ __metadata:
     sass: ^1.29.0
     sharp: ^0.26.2
     styled-jsx: ^3.3.1
-    tailwindcss: ^2.0.0-alpha.16
+    tailwindcss: ^2.0.0-alpha.20
     tippy.js: ^6.2.7
     use-dark-mode: ^2.3.1
     webpack: ^5.4.0
@@ -10564,9 +10564,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"pg@npm:^8.5.0":
-  version: 8.5.0
-  resolution: "pg@npm:8.5.0"
+"pg@npm:^8.5.1":
+  version: 8.5.1
+  resolution: "pg@npm:8.5.1"
   dependencies:
     buffer-writer: 2.0.0
     packet-reader: 1.0.0
@@ -10580,7 +10580,7 @@ fsevents@~2.1.2:
   peerDependenciesMeta:
     pg-native:
       optional: true
-  checksum: 545e3e2b8436281e6f6badb16d79034acd3f6611ef469654a5ef0347ca05e0d3ccced0c2a69f9743661cde47563fb8f0a4fd57872a60d029b61b7198b7b61dd0
+  checksum: b8eed3cd3831ea8cce051fcc58a56f39e7c24545c18466c89e64e4f90c8c2d386e3c51c33e22b0d2e39bf51156bdd4d5ade16c6e0edad1fbff97bd89f2bd86f2
   languageName: node
   linkType: hard
 
@@ -11577,7 +11577,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-dom@npm:17.0.1":
+"react-dom@npm:^17.0.1":
   version: 17.0.1
   resolution: "react-dom@npm:17.0.1"
   dependencies:
@@ -11597,12 +11597,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^6.11.0":
-  version: 6.11.0
-  resolution: "react-hook-form@npm:6.11.0"
+"react-hook-form@npm:^6.11.1":
+  version: 6.11.1
+  resolution: "react-hook-form@npm:6.11.1"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 300c2bdd3eb5969d68206ceb6cf795fa5581a525f5bf3c5fd66290a94dea5cdd7c05fea783fd2dde3e897efefdf5ab884f492b402ce304a10e66fa8bcbe283ff
+  checksum: 5785b6b7bd48ea1a4af9e586dfd52dbb747aceb0d93d2ed0b6817f544873b8c9732fafb6f1fd5d20395f9f77f3b45cfee29e380b29cdc914eb564b0f20a7ff06
   languageName: node
   linkType: hard
 
@@ -13318,9 +13318,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^2.0.0-alpha.16":
-  version: 2.0.0-alpha.16
-  resolution: "tailwindcss@npm:2.0.0-alpha.16"
+"tailwindcss@npm:^2.0.0-alpha.20":
+  version: 2.0.0-alpha.20
+  resolution: "tailwindcss@npm:2.0.0-alpha.20"
   dependencies:
     "@fullhuman/postcss-purgecss": ^3.0.0
     autoprefixer: ^9.8.6
@@ -13347,7 +13347,7 @@ fsevents@~2.1.2:
   bin:
     tailwind: lib/cli.js
     tailwindcss: lib/cli.js
-  checksum: 8aafe147ae80338b46f1ad145b9a0c737d59dfd5e186c167ecb7884617043fae0b84bb1493a2e1eb16812a3fec7368d71d561d4a5df9504567195424db172386
+  checksum: 9701e1e666ece6c2f4e94a3c737f8a84064dfd3ac2b8ea552ad64f6c531ece55402252cc7a8bc384c139644fe6aadcddd679c20dcb51f48033699c7d6277fed9
   languageName: node
   linkType: hard
 

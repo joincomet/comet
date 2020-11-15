@@ -3,7 +3,6 @@ import '@/styles/tailwind.css'
 import '@/styles/app.css'
 
 import Head from 'next/head'
-import LoginDialog from '@/components/LoginDialog'
 import { DndProvider } from 'react-dnd'
 import { TouchBackend } from 'react-dnd-touch-backend'
 import CustomDragLayer from '@/components/CustomDragLayer'
@@ -50,7 +49,6 @@ export default function App({ Component, pageProps }) {
             options={{ enableTouchEvents: false, enableMouseEvents: true }}
           >
             <div>
-              <LoginDialog />
               <Component {...pageProps} />
               <CustomDragLayer />
             </div>

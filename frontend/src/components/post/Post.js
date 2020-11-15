@@ -54,17 +54,14 @@ function Post({ post, className, style, index, measure, layout }) {
             {toast && (
               <motion.div
                 initial={{
-                  scale: 0.75,
                   opacity: 0,
                   x: 0
                 }}
                 animate={{
-                  scale: 1,
                   opacity: 1,
                   x: '50%'
                 }}
                 exit={{
-                  scale: 0.75,
                   opacity: 0,
                   x: '100%'
                 }}
