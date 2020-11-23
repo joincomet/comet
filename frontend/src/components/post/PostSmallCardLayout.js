@@ -16,53 +16,38 @@ export default function PostSmallCardLayout({ post, index, measure }) {
     'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
   return (
-    <div className="mx-5 sm:mx-72 flex bg-white dark:bg-gray-800 sm:rounded-md shadow border border-gray-100 dark:border-gray-800 p-4">
+    <div className="mx-5 sm:mx-72 flex bg-white dark:bg-gray-800 sm:rounded-md shadow border border-gray-100 dark:border-gray-800 p-3">
       <NavLink
         href={`@${post.author.username}`}
-        className={`w-8 h-8 flex-shrink-0 rounded-full mt-0.5 ${
-          post.author.avatarURL ? '' : 'bg-blue-500'
+        className={`w-10 h-10 flex-shrink-0 rounded-full ${
+          post.author.avatarURL ? '' : 'bg-gray-200'
         }`}
       >
         <Image
           src={post.author.avatarURL || '/logos/astronaut.png'}
-          height={64}
-          width={64}
+          height={40}
+          width={40}
           className="rounded-full object-cover object-center block h-8 w-8"
           loading="eager"
         />
       </NavLink>
 
-      <div className="flex flex-col flex-grow ml-5">
+      <div className="flex flex-col flex-grow ml-3">
+        <div className="text-tertiary text-xs font-semibold mb-0.5">
+          {post.author.username} to{' '}
+          <span className="text-accent">{post.planet.name}</span>{' '}
+          {post.timeSince}
+        </div>
         <NavLink
           href={post.relativeURL}
           className="text-base font-semibold text-primary"
         >
           {post.title}
         </NavLink>
-        <div className="mt-0.5 text-xs text-tertiary">
-          {post.author.username} &middot; {post.timeSince} &middot;{' '}
-          <NavLink
-            href={`/${post.planet.name}`}
-            className="text-blue-500 hover:underline"
-          >
-            +{post.planet.name}
-          </NavLink>
-          {post.domain && (
-            <span>
-              &nbsp;&middot;&nbsp;
-              <NavLink
-                href={post.relativeURL}
-                className="text-tertiary hover:underline"
-              >
-                {post.domain}
-              </NavLink>
-            </span>
-          )}
-        </div>
 
         {post.textContent && (
           <div
-            className="mt-1 text-sm text-secondary line-clamp-2"
+            className="text-primary prose-sm line-clamp-3"
             dangerouslySetInnerHTML={{ __html: post.textContent }}
           />
         )}

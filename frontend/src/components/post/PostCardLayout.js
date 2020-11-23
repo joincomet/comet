@@ -107,14 +107,14 @@ export default function PostCardLayout({ post, index }) {
 
               <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
                 <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
-                  {post.embed && post.embed.title
-                    ? post.embed.title
+                  {post.meta && post.meta.title
+                    ? post.meta.title
                     : post.linkURL}
                 </div>
 
                 <div className="mt-1 text-xs font-medium text-tertiary line-clamp-2">
-                  {post.embed && post.embed.description
-                    ? post.embed.description
+                  {post.meta && post.meta.description
+                    ? post.meta.description
                     : 'Could not embed this link'}
                 </div>
 

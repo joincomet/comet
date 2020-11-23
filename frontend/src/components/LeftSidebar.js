@@ -62,12 +62,6 @@ function LeftSidebar() {
             <CgInfinity className="w-5 h-5" />
             <span className="ml-6">Universe</span>
           </NavLink>
-          <Tippy content="This feature is coming soon">
-            <div className="sidebar-item cursor-pointer">
-              <BiAtom className="w-5 h-5 text-disabled" />
-              <span className="ml-6 text-disabled">Orbit (Coming Soon)</span>
-            </div>
-          </Tippy>
 
           <NavLink href="/login" className="sidebar-item">
             <FiLogIn className="w-5 h-5 text-blue-500" />

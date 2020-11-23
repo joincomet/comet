@@ -1,8 +1,6 @@
 export default function CometXLogo({ className }) {
   return (
     <svg
-      width="36.617mm"
-      height="5.0518mm"
       className={`text-black dark:text-gray-200 fill-current ${className}`}
       version="1.1"
       viewBox="0 0 36.617 5.0518"

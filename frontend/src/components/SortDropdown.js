@@ -1,4 +1,3 @@
-import { Menu, Transition } from '@headlessui/react'
 import { RiFireLine } from 'react-icons/ri'
 import { FiClock } from 'react-icons/fi'
 import Dropdown from '@/components/Dropdown'
@@ -27,7 +26,7 @@ export default function SortDropdown() {
         </div>
       }
     >
-      <div className="rounded shadow-md bg-white border border-gray-700 dark:bg-gray-800 text-secondary">
+      <div className="rounded shadow-md bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-800 text-secondary">
         <NavLink
           href={{ query: { sort: ['hot'] } }}
           className="h-10 pl-8 flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out"

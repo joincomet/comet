@@ -55,7 +55,7 @@ export default function App({ Component, pageProps }) {
           </DndProvider>
         </Hydrate>
 
-        <ReactQueryDevtools initialIsOpen />
+        {/*<ReactQueryDevtools position="top-left" />*/}
       </ReactQueryCacheProvider>
     </>
   )

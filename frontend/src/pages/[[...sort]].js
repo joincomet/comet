@@ -13,6 +13,52 @@ import { fetchCurrentUser } from '@/hooks/useCurrentUser'
 import nookies from 'nookies'
 import SortDropdown from '@/components/SortDropdown'
 
+export default function HomePage({ cookies }) {
+  const router = useRouter()
+
+  const [layout, setLayout] = useState(
+    cookies && cookies.layout ? cookies.layout : 'cards'
+  )
+
+  const changeLayout = l => {
+    setLayout(l)
+    setCookie(null, 'layout', l, {
+      maxAge: 60 * 60 * 24 * 365 * 10,
+      path: '/'
+    })
+
+    window.scrollTo({ top: window.scrollY + 1 })
+    window.scrollTo({ top: window.scrollY - 1 })
+  }
+
+  const { isLoading, isError, data, error } = usePosts(
+    getVariables(router.query)
+  )
+
+  if (isLoading || isError) return null
+
+  return (
+    <>
+      <style jsx>{`
+        .virtual-list {
+          flex-basis: auto !important;
+        }
+      `}</style>
+
+      <Layout>
+        <GalaxiesSlider />
+        <div className="pt-5 px-5 sm:px-72">
+          <CreatePostCard />
+        </div>
+        <Header />
+        <div>
+          <Posts layout={layout} variables={getVariables(router.query)} />
+        </div>
+      </Layout>
+    </>
+  )
+}
+
 function Header({ children, sticky = false, className, ...rest }) {
   const [isSticky, setIsSticky] = useState(false)
   const ref = React.createRef()
@@ -52,78 +98,6 @@ function Header({ children, sticky = false, className, ...rest }) {
       />
       <SortDropdown />
     </header>
-  )
-}
-
-export default function HomePage({ cookies }) {
-  const router = useRouter()
-
-  const [layout, setLayout] = useState(
-    cookies && cookies.layout ? cookies.layout : 'cards'
-  )
-
-  const changeLayout = l => {
-    setLayout(l)
-    setCookie(null, 'layout', l, {
-      maxAge: 60 * 60 * 24 * 365 * 10,
-      path: '/'
-    })
-
-    window.scrollTo({ top: window.scrollY + 1 })
-    window.scrollTo({ top: window.scrollY - 1 })
-  }
-
-  const { isLoading, isError, data, error } = usePosts(
-    getVariables(router.query)
-  )
-
-  if (isLoading || isError) return null
-
-  return (
-    <>
-      <style jsx>{`
-        .virtual-list {
-          flex-basis: auto !important;
-        }
-      `}</style>
-
-      <Layout>
-        <GalaxiesSlider />
-        <div className="pt-5 px-5 sm:px-72">
-          <CreatePostCard />
-        </div>
-        <Header />
-        <div className="pt-3 px-5 sm:px-72">
-          <div className="flex items-center font-header text-disabled pb-5 px-3">
-            <div
-              onClick={() => changeLayout('cards')}
-              className={`mr-5 cursor-pointer hover:underline ${
-                layout === 'cards' ? 'font-bold text-blue-500' : ''
-              }`}
-            >
-              Cards
-            </div>
-            <div
-              onClick={() => changeLayout('small_cards')}
-              className={`mr-5 cursor-pointer hover:underline ${
-                layout === 'small_cards' ? 'font-bold text-blue-500' : ''
-              }`}
-            >
-              Small Cards
-            </div>
-            <div
-              onClick={() => changeLayout('classic')}
-              className={`mr-auto cursor-pointer hover:underline ${
-                layout === 'classic' ? 'font-bold text-blue-500' : ''
-              }`}
-            >
-              Classic
-            </div>
-          </div>
-        </div>
-        <Posts layout={layout} variables={getVariables(router.query)} />
-      </Layout>
-    </>
   )
 }
 

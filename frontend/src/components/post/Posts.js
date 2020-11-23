@@ -10,12 +10,8 @@ import {
 } from 'react-virtualized'
 import { usePosts } from '@/components/post/usePosts'
 
-export default function Posts({ variables, layout }) {
+export default function Posts({ variables }) {
   const { data, fetchMore } = usePosts(variables)
-
-  useEffect(() => {
-    cache.clearAll()
-  }, [layout])
 
   const handleResize = event => {
     cache.clearAll()
@@ -30,19 +26,18 @@ export default function Posts({ variables, layout }) {
 
   if (!data) return null
 
-  const posts = () => data.map(page => page.posts).flat()
+  const posts = data.map(page => page.posts).flat()
 
   return (
     <InfiniteLoader
-      isRowLoaded={index => posts().length > index}
+      isRowLoaded={index => posts.length > index}
       loadMoreRows={() => fetchMore()}
-      rowCount={posts().length}
+      rowCount={posts.length}
       minimumBatchSize={1}
-      layout={layout}
       threshold={5}
     >
       {({ onRowsRendered, registerChild }) => (
-        <WindowScroller layout={layout}>
+        <WindowScroller>
           {({ height, isScrolling, onChildScroll, scrollTop }) => (
             <List
               ref={registerChild}
@@ -52,7 +47,7 @@ export default function Posts({ variables, layout }) {
               height={height || 1080}
               autoWidth
               width={10000}
-              rowCount={posts().length}
+              rowCount={posts.length}
               isScrolling={isScrolling}
               onScroll={onChildScroll}
               scrollTop={scrollTop}
@@ -60,8 +55,7 @@ export default function Posts({ variables, layout }) {
               deferredMeasurementCache={cache}
               className="virtual-list outline-none"
               style={{ overflowX: 'hidden !important' }}
-              rowRenderer={getRowRender(posts(), layout)}
-              layout={layout}
+              rowRenderer={getRowRender(posts)}
             />
           )}
         </WindowScroller>

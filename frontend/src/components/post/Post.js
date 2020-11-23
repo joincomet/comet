@@ -36,9 +36,7 @@ function Post({ post, className, style, index, measure, layout }) {
 
   return (
     <article
-      className={`flex ${layout === 'cards' && 'pb-2 sm:pb-5'} ${
-        layout === 'small_cards' && 'pb-3'
-      } ${layout === 'classic' && 'pb-1'} outline-none ${className || ''}`}
+      className={`flex pb-3 outline-none ${className || ''}`}
       style={style}
       data-index={index}
     >
@@ -117,15 +115,7 @@ function Post({ post, className, style, index, measure, layout }) {
             isDragging || toast ? 'opacity-40' : 'opacity-100'
           } duration-150 transition ease-in-out`}
         >
-          {layout === 'cards' && (
-            <PostCardLayout post={post} index={index} measure={measure} />
-          )}
-          {layout === 'small_cards' && (
-            <PostSmallCardLayout post={post} index={index} measure={measure} />
-          )}
-          {layout === 'classic' && (
-            <PostClassicLayout post={post} index={index} measure={measure} />
-          )}
+          <PostSmallCardLayout post={post} index={index} measure={measure} />
         </div>
       </div>
     </article>

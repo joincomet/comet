@@ -19,7 +19,7 @@ export default function CreatePostCard() {
     <>
       <div
         onClick={() => setClicked(true)}
-        className={`sm:rounded-md dark:bg-gray-800 bg-white px-5 py-5 mb-5 cursor-pointer shadow z-20 relative`}
+        className={`sm:rounded-md dark:bg-gray-800 bg-white px-5 py-5 cursor-pointer shadow z-20 relative`}
       >
         <div className="flex">
           <Image

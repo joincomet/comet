@@ -1,5 +1,5 @@
 import { gql, request } from 'graphql-request'
-import { useInfiniteQuery, useQuery } from 'react-query'
+import { useInfiniteQuery } from 'react-query'
 import { ENDPOINT } from '@/Endpoint'
 
 export const fetchPosts = async (

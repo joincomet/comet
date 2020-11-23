@@ -138,7 +138,7 @@ export default function GalaxiesSlider() {
             }`}
           />
         </div>
-        <Dropdown
+        {/*<Dropdown
           button={
             <div className="inline-flex items-center cursor-pointer pr-4 pl-4 h-8">
               <FiMenu
@@ -149,7 +149,7 @@ export default function GalaxiesSlider() {
         >
           <div className="w-64 h-16 bg-gray-700" />
           <div />
-        </Dropdown>
+        </Dropdown>*/}
       </div>
     </>
   )
