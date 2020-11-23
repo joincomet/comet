@@ -26,7 +26,9 @@ export const migratePosts = async (postRepo: Repository<Post>) => {
     await sema.acquire()
     try {
       const meta = await scrapeMetadata(post.linkURL)
-      await postRepo.update(post.id, { meta })
+      if (meta) {
+        await postRepo.update(post.id, { meta })
+      }
     } finally {
       sema.release()
     }

@@ -4,7 +4,7 @@ import {
   FiFolderPlus,
   FiMessageCircle,
   FiMoreHorizontal,
-  FiShare2,
+  FiShare,
   FiLink,
   FiAlignLeft
 } from 'react-icons/fi'
@@ -69,27 +69,27 @@ export default function PostSmallCardLayout({ post, index, measure }) {
 
         <div className="flex flex-row items-center -mr-3 -ml-3 mt-auto -mb-2 pt-5">
           <div className={chip}>
-            <BiRocket className="w-4 h-4" />
+            <BiRocket className="w-5 h-5" />
             <span className="ml-3 text-xs font-medium">{post.rocketCount}</span>
           </div>
 
           <div className={`ml-4 ${chip}`}>
-            <FiMessageCircle className="w-4 h-4" />
+            <FiMessageCircle className="w-5 h-5" />
             <span className="ml-3 text-xs font-medium">
               {post.commentCount}
             </span>
           </div>
 
           <div className={`${chip} ml-auto`}>
-            <FiMoreHorizontal className="w-4 h-4 text-disabled" />
+            <FiMoreHorizontal className="w-5 h-5 text-disabled" />
           </div>
 
           <div className={`${chip} ml-4`}>
-            <FiShare2 className="w-4 h-4 text-green-500" />
+            <FiShare className="w-5 h-5 text-green-500" />
           </div>
 
           <div className={`${chip} ml-4`}>
-            <FiFolderPlus className="w-4 h-4 text-blue-500" />
+            <FiFolderPlus className="w-5 h-5 text-blue-500" />
           </div>
         </div>
       </div>
@@ -104,15 +104,15 @@ export default function PostSmallCardLayout({ post, index, measure }) {
               src={post.thumbnailURL}
               width={256}
               height={256}
-              className="rounded-md object-cover dark:bg-gray-700 w-36 h-36"
+              className="rounded object-cover dark:bg-gray-700 w-36 h-36"
               loading="eager"
             />
           ) : (
-            <div className="dark:bg-gray-700 bg-gray-100 w-full h-full rounded-md flex">
+            <div className="dark:bg-gray-700 bg-gray-100 w-full h-full rounded flex">
               {post.linkURL ? (
-                <FiLink size={32} className="m-auto text-disabled" />
+                <FiLink size={32} className="m-auto text-mid" />
               ) : (
-                <FiAlignLeft size={32} className="m-auto text-disabled" />
+                <FiAlignLeft size={32} className="m-auto text-mid" />
               )}
             </div>
           )}

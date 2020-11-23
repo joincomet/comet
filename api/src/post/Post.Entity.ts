@@ -185,8 +185,8 @@ export class Post {
       .split(' ')
       .slice(0, 9)
       .join('-')
-      .replace(/[^a-z0-9_]+/gi, '')
+      .replace(/[^a-z0-9-]+/gi, '')
       .replace(/[-](.)\1+/g, '$1')
-    return `/+${(this.planet as Planet).name}/post/${this.id36}/${slug}`
+    return `/planet/${(this.planet as Planet).name}/post/${this.id36}/${slug}`
   }
 }

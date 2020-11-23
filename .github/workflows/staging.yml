@@ -69,6 +69,8 @@ jobs:
         run: docker buildx build . -t registry.digitalocean.com/cometx/cometx:staging
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/cometx
+      - name: Run Garbage Collection on Container Registry
+        run: doctl registry garbage-collection start
 
   nginx:
     runs-on: ubuntu-latest

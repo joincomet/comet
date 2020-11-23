@@ -1,7 +1,5 @@
 import Layout from '../components/Layout'
-import RightSidebar from '@/components/right-sidebar/RightSidebar'
 import GalaxiesSlider from '@/components/GalaxiesSlider'
-import { RiFireLine } from 'react-icons/ri'
 import SearchBar from '@/components/SearchBar'
 import CreatePostCard from '@/components/CreatePostCard'
 import Posts from '@/components/post/Posts'
@@ -13,7 +11,6 @@ import { setCookie } from 'nookies'
 import React, { useState, useEffect } from 'react'
 import { fetchCurrentUser } from '@/hooks/useCurrentUser'
 import nookies from 'nookies'
-import { InView } from 'react-intersection-observer'
 import SortDropdown from '@/components/SortDropdown'
 
 function Header({ children, sticky = false, className, ...rest }) {
@@ -53,10 +50,6 @@ function Header({ children, sticky = false, className, ...rest }) {
             : 'dark:bg-gray-800 bg-white'
         }`}
       />
-      {/*<div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm text-blue-500 transition duration-150 ease-in-out">
-        <RiFireLine className="w-4 h-4 mr-4" />
-        Hot
-      </div>*/}
       <SortDropdown />
     </header>
   )
@@ -75,6 +68,9 @@ export default function HomePage({ cookies }) {
       maxAge: 60 * 60 * 24 * 365 * 10,
       path: '/'
     })
+
+    window.scrollTo({ top: window.scrollY + 1 })
+    window.scrollTo({ top: window.scrollY - 1 })
   }
 
   const { isLoading, isError, data, error } = usePosts(
@@ -96,9 +92,6 @@ export default function HomePage({ cookies }) {
         <div className="pt-5 px-5 sm:px-72">
           <CreatePostCard />
         </div>
-        {/*<InView onChange={(inView, entry) => setShowTopBar(!inView)}>
-
-            </InView>*/}
         <Header />
         <div className="pt-3 px-5 sm:px-72">
           <div className="flex items-center font-header text-disabled pb-5 px-3">

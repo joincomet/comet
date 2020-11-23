@@ -11,19 +11,11 @@ import {
 import { usePosts } from '@/components/post/usePosts'
 
 export default function Posts({ variables, layout }) {
-  const {
-    status,
-    data,
-    error,
-    isFetching,
-    isFetchingMore,
-    fetchMore,
-    canFetchMore
-  } = usePosts(variables)
+  const { data, fetchMore } = usePosts(variables)
 
   useEffect(() => {
     cache.clearAll()
-  }, [layout, variables])
+  }, [layout])
 
   const handleResize = event => {
     cache.clearAll()
@@ -54,7 +46,7 @@ export default function Posts({ variables, layout }) {
           {({ height, isScrolling, onChildScroll, scrollTop }) => (
             <List
               ref={registerChild}
-              onRowsRendered={onRowsRendered}
+              onRowsRendered={() => {}}
               overscanRowCount={10}
               autoHeight={true}
               height={height || 1080}

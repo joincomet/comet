@@ -30,6 +30,10 @@ body.dark {
   @apply text-black dark:text-white;
 }
 
+.text-mid {
+  @apply text-gray-500;
+}
+
 .text-disabled {
   @apply text-gray-400 dark:text-gray-600
 }

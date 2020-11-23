@@ -5,7 +5,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer({
   compress: false,
   experimental: {
-    modern: true,
     polyfillsOptimization: true
   },
   images: {
