@@ -20,7 +20,7 @@ export default function LoginPage() {
           <div className="relative inset-center">
             <div
               style={{ zIndex: -1 }}
-              className="absolute rounded-md transform -rotate-6 shadow-md w-full h-full inset-0 bg-gradient-to-br to-red-400 from-indigo-500"
+              className="absolute rounded-md transform -rotate-6 shadow-md w-full h-full inset-0 bg-gradient-to-br to-red-400 from-blue-500"
             />
 
             <SignUpForm />

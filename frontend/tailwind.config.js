@@ -5,8 +5,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter var', 'Inter', ...defaultTheme.fontFamily.sans],
-        mono: ['Space Mono', ...defaultTheme.fontFamily.mono]
+        sans: ['Inter var', 'Inter', ...defaultTheme.fontFamily.sans]
       },
       fontSize: {
         xxs: '.6875rem',
@@ -51,7 +50,9 @@ module.exports = {
       black: '#000',
       white: '#fff',
 
-      ...colors
+      blue: colors.blue,
+      red: colors.red,
+      gray: colors.gray
     }
   },
   darkMode: 'class',

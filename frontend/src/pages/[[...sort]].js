@@ -12,6 +12,8 @@ import React, { useState, useEffect } from 'react'
 import { fetchCurrentUser } from '@/hooks/useCurrentUser'
 import nookies from 'nookies'
 import SortDropdown from '@/components/SortDropdown'
+import GoogleOneTap from '@/components/GoogleOneTap'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function HomePage({ cookies }) {
   const router = useRouter()
@@ -44,6 +46,8 @@ export default function HomePage({ cookies }) {
           flex-basis: auto !important;
         }
       `}</style>
+
+      <GoogleOneTap />
 
       <Layout>
         <GalaxiesSlider />
@@ -80,24 +84,46 @@ function Header({ children, sticky = false, className, ...rest }) {
   }, [])
 
   return (
-    <header
-      style={{ top: '-1px' }}
-      className={`z-10 sticky h-16 px-5 sm:px-72 flex items-center transition-150 ${
-        isSticky ? 'dark:bg-gray-800 bg-white shadow-lg' : 'dark:bg-gray-900'
-      }`}
-      ref={ref}
-      {...rest}
-    >
-      <SearchBar
-        slashFocus={true}
-        className={`w-full h-10 text-sm px-16 rounded-full outline-none transition duration-200 ease-in-out border border-gray-200 dark:border-gray-800 focus:border-blue-500 ${
-          isSticky
-            ? 'dark:bg-gray-700 bg-gray-100'
-            : 'dark:bg-gray-800 bg-white'
+    <>
+      <AnimatePresence>
+        {isSticky && (
+          <motion.div
+            initial={{
+              opacity: 0
+            }}
+            animate={{
+              opacity: 1
+            }}
+            exit={{
+              opacity: 0
+            }}
+            transition={{ duration: 0.15, ease: 'easeInOut' }}
+            className="fixed inset-x-center bottom-8 px-16 py-2 text-white font-medium text-sm rounded-full bg-blue-500 shadow z-10 cursor-pointer"
+          >
+            Create post
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <header
+        style={{ top: '-1px' }}
+        className={`z-10 sticky h-16 px-5 sm:px-72 flex items-center transition ${
+          isSticky ? 'dark:bg-gray-800 bg-white shadow-md' : 'bg-transparent'
         }`}
-      />
-      <SortDropdown />
-    </header>
+        ref={ref}
+        {...rest}
+      >
+        <SearchBar
+          slashFocus={true}
+          className={`w-full h-10 text-sm px-16 rounded-full outline-none transition duration-200 ease-in-out border border-gray-200 dark:border-gray-800 focus:border-blue-500 ${
+            isSticky
+              ? 'dark:bg-gray-700 bg-gray-100'
+              : 'dark:bg-gray-800 bg-white'
+          }`}
+        />
+        <SortDropdown />
+      </header>
+    </>
   )
 }
 

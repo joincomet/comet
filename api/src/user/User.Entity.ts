@@ -12,8 +12,8 @@ import { Lazy } from '@/Lazy'
 import { Post } from '@/post/Post.Entity'
 import { PostRocket } from '@/post/PostRocket.Entity'
 import { CommentRocket } from '@/comment/CommentRocket.Entity'
-import { UserProfile } from '@/user/UserProfile'
-import { UserSettings } from '@/user/UserSettings'
+import { UserProfile } from '@/user/data/UserProfile'
+import { UserSettings } from '@/user/data/UserSettings'
 import { PlanetUser } from '@/planet/PlanetUser.Entity'
 import { PlanetModerator } from '@/moderation/PlanetModerator.Entity'
 import { PlanetMute } from '@/filter/PlanetMute.Entity'
@@ -24,6 +24,7 @@ import { PostHide } from '@/filter/PostHide.Entity'
 import { Ban } from '@/moderation/Ban.Entity'
 import { PlanetAllowedPoster } from '@/planet/PlanetAllowedPoster.Entity'
 import dayjs from 'dayjs'
+import { UserBadges } from '@/user/data/UserBadges'
 
 @ObjectType()
 @Entity()
@@ -78,6 +79,22 @@ export class User {
     }
   })
   profile: UserProfile
+
+  @Field()
+  @Column('jsonb', {
+    default: new UserBadges(),
+    transformer: {
+      to: value => value,
+      from: value => {
+        try {
+          return JSON.parse(value) as UserBadges
+        } catch {
+          return value
+        }
+      }
+    }
+  })
+  badges: UserBadges
 
   @Field()
   @CreateDateColumn({ type: 'timestamp' })

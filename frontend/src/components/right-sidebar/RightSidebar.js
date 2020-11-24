@@ -56,7 +56,7 @@ function UserInfo() {
           <div className="text-xs mt-0.5 text-tertiary font-medium">@Dan</div>
         </div>
 
-        <div className="ml-auto mr-1.5 p-1.5 transition-150 transform hover:rotate-12 hover:scale-110 dark:hover:bg-gray-900 hover:bg-gray-200 rounded-full">
+        <div className="ml-auto mr-1.5 p-1.5 transition transform hover:rotate-12 hover:scale-110 dark:hover:bg-gray-900 hover:bg-gray-200 rounded-full">
           <HiCog size={20} className="text-disabled" />
         </div>
       </div>

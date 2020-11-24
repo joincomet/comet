@@ -9,6 +9,7 @@ import CustomDragLayer from '@/components/CustomDragLayer'
 import { ReactQueryCacheProvider, QueryCache } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query-devtools'
+import { Provider } from 'next-auth/client'
 
 const queryCache = new QueryCache({
   defaultConfig: {
@@ -42,21 +43,21 @@ export default function App({ Component, pageProps }) {
         />
       </Head>
 
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <DndProvider
-            backend={TouchBackend}
-            options={{ enableTouchEvents: false, enableMouseEvents: true }}
-          >
-            <div>
+      <Provider session={pageProps.session}>
+        <ReactQueryCacheProvider queryCache={queryCache}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <DndProvider
+              backend={TouchBackend}
+              options={{ enableTouchEvents: false, enableMouseEvents: true }}
+            >
               <Component {...pageProps} />
               <CustomDragLayer />
-            </div>
-          </DndProvider>
-        </Hydrate>
+            </DndProvider>
+          </Hydrate>
 
-        {/*<ReactQueryDevtools position="top-left" />*/}
-      </ReactQueryCacheProvider>
+          {/*<ReactQueryDevtools position="top-left" />*/}
+        </ReactQueryCacheProvider>
+      </Provider>
     </>
   )
 }

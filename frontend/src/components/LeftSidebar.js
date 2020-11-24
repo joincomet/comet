@@ -82,7 +82,7 @@ function LeftSidebar() {
 
 function CometXLinks() {
   const link =
-    'rounded-full inline-flex place-items-center h-10 w-10 transition-150 hover:bg-gray-200 dark:hover:bg-gray-700'
+    'rounded-full inline-flex place-items-center h-10 w-10 transition hover:bg-gray-200 dark:hover:bg-gray-700'
 
   return (
     <div className="fixed bottom-0 left-0 w-nav bg-white dark:bg-gray-800">
