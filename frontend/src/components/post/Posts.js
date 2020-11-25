@@ -26,13 +26,13 @@ export default function Posts({ variables }) {
 
   if (!data) return null
 
-  const posts = data.map(page => page.posts).flat()
+  const posts = () => data.map(page => page.posts).flat()
 
   return (
     <InfiniteLoader
-      isRowLoaded={index => posts.length > index}
+      isRowLoaded={index => posts().length > index}
       loadMoreRows={() => fetchMore()}
-      rowCount={posts.length}
+      rowCount={posts().length}
       minimumBatchSize={1}
       threshold={5}
     >
@@ -47,7 +47,7 @@ export default function Posts({ variables }) {
               height={height || 1080}
               autoWidth
               width={10000}
-              rowCount={posts.length}
+              rowCount={posts().length}
               isScrolling={isScrolling}
               onScroll={onChildScroll}
               scrollTop={scrollTop}
@@ -55,7 +55,7 @@ export default function Posts({ variables }) {
               deferredMeasurementCache={cache}
               className="virtual-list outline-none"
               style={{ overflowX: 'hidden !important' }}
-              rowRenderer={getRowRender(posts)}
+              rowRenderer={getRowRender(posts())}
             />
           )}
         </WindowScroller>

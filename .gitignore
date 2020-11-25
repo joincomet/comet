@@ -4,16 +4,12 @@
 .env
 
 api/dist
+api/node_modules
+
 frontend/.next
+frontend/node_modules
 
 latest.dump
 
 .graphqlconfig
 schema.graphql
-
-.yarn/*
-!.yarn/cache
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions

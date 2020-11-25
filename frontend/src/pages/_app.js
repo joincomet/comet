@@ -6,12 +6,12 @@ import Head from 'next/head'
 import { DndProvider } from 'react-dnd'
 import { TouchBackend } from 'react-dnd-touch-backend'
 import CustomDragLayer from '@/components/CustomDragLayer'
-import { ReactQueryCacheProvider, QueryCache } from 'react-query'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query-devtools'
 import { Provider } from 'next-auth/client'
 
-const queryCache = new QueryCache({
+const queryClient = new QueryClient({
   defaultConfig: {
     queries: {
       refetchOnWindowFocus: false
@@ -44,7 +44,7 @@ export default function App({ Component, pageProps }) {
       </Head>
 
       <Provider session={pageProps.session}>
-        <ReactQueryCacheProvider queryCache={queryCache}>
+        <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <DndProvider
               backend={TouchBackend}
@@ -55,8 +55,8 @@ export default function App({ Component, pageProps }) {
             </DndProvider>
           </Hydrate>
 
-          {/*<ReactQueryDevtools position="top-left" />*/}
-        </ReactQueryCacheProvider>
+          <ReactQueryDevtools position="top-left" />
+        </QueryClientProvider>
       </Provider>
     </>
   )
