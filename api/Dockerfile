@@ -15,8 +15,6 @@ RUN npm install --no-optional
 
 COPY . /opt/app
 
-RUN npm run build
-
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S apiuser -u 1001
 
