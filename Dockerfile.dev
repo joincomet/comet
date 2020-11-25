@@ -1,0 +1,16 @@
+FROM node:15
+
+ENV NODE_ENV=development \
+    NEXT_TELEMETRY_DISABLED=1
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json yarn.lock .pnp.js .yarnrc.yml ./
+COPY .yarn .yarn
+COPY api/package.json api/package.json
+COPY frontend/package.json frontend/package.json
+RUN yarn install
+
+COPY api api
+COPY frontend frontend

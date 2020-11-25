@@ -9,4 +9,4 @@ function generate_env
     INLINE_ENV=$(echo $(grep -v -E '^(#.*|[[:space:]]*|.*=\s*)$' "./.env" | while read line; do echo "-e $line"; done))
     echo "$INLINE_ENV"
 }
-docker exec ${generate_env} api yarn run migrate-dev
+docker exec ${generate_env} api yarn workspace api run migrate

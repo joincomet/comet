@@ -33,9 +33,12 @@ class MyDocument extends Document {
           />
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" href="/icons/favicon.ico" />
+
+          <script src="https://accounts.google.com/gsi/client" async defer />
         </Head>
         <body>
           <script src="noflash.js" />
+
           <Main />
           <NextScript />
         </body>

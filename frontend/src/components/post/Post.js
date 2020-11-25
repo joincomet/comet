@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { FiFolder, FiStar } from 'react-icons/fi'
+import {
+  FiFolder,
+  FiStar,
+  FiUser,
+  FiLink,
+  FiAlignLeft,
+  FiMessageCircle,
+  FiMoreHorizontal,
+  FiShare,
+  FiFolderPlus,
+  FiEye,
+  FiArrowRight
+} from 'react-icons/fi'
+import { BsArrowRight } from 'react-icons/bs'
+import { BiRocket } from 'react-icons/bi'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useDrag } from 'react-dnd'
 import { ItemTypes } from '@/ItemTypes'
 import { getEmptyImage } from 'react-dnd-html5-backend'
-import PostCardLayout from '@/components/post/PostCardLayout'
-import PostClassicLayout from '@/components/post/PostClassicLayout'
-import PostSmallCardLayout from '@/components/post/PostSmallCardLayout'
 import Image from 'next/image'
+import NavLink from '@/components/NavLink'
+
+const chip =
+  'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
 function Post({ post, className, style, index, measure, layout }) {
   const [toast, setToast] = useState(null)
@@ -36,16 +51,11 @@ function Post({ post, className, style, index, measure, layout }) {
 
   return (
     <article
-      ref={dragRef}
-      className={`flex ${layout === 'cards' && 'pb-2 sm:pb-5'} ${
-        layout === 'small_cards' && 'pb-2'
-      } ${layout === 'classic' && 'pb-2 sm:pb-3'} select-none outline-none ${
-        className || ''
-      }`}
+      className={`flex outline-none ${className || ''}`}
       style={style}
       data-index={index}
     >
-      <div className="relative flex-shrink mx-auto">
+      <div ref={dragRef} className="relative flex-shrink w-full">
         <div
           className={`absolute inset-x-0 top-1/2 z-50 -translate-y-1/2 transform transition ${
             toast ? 'translate-x-0' : '-translate-x-full delay-150'
@@ -55,41 +65,35 @@ function Post({ post, className, style, index, measure, layout }) {
             {toast && (
               <motion.div
                 initial={{
-                  scale: 0.75,
                   opacity: 0,
                   x: 0
                 }}
                 animate={{
-                  scale: 1,
                   opacity: 1,
                   x: '50%'
                 }}
                 exit={{
-                  scale: 0.75,
                   opacity: 0,
                   x: '100%'
                 }}
                 transition={{ duration: 0.15, ease: 'easeInOut' }}
               >
                 <div
-                  className={`bg-${
-                    toast.folder.color || 'blue-500'
-                  } transform -translate-x-1/2 pr-6 h-12 shadow-xl rounded-md text-medium text-sm inline-flex items-center flex-nowrap whitespace-nowrap`}
+                  style={{ backgroundColor: toast.folder.color || '#3b82f6' }}
+                  className={`transform -translate-x-1/2 pr-6 h-12 shadow-xl rounded-md text-medium text-sm inline-flex items-center flex-nowrap whitespace-nowrap`}
                 >
                   {toast.folder && (
                     <>
                       <div className="w-9 h-9 bg-gray-800 mx-4 rounded-full inline-flex items-center shadow">
                         {toast.folder.name === 'Favorites' ? (
                           <FiStar
-                            className={`text-${
-                              toast.folder.color || 'yellow-500'
-                            } h-5 w-5 m-auto`}
+                            style={{ color: toast.folder.color || '#eab308' }}
+                            className={`h-5 w-5 m-auto`}
                           />
                         ) : (
                           <FiFolder
-                            className={`text-${
-                              toast.folder.color || 'blue-500'
-                            } h-5 w-5 m-auto`}
+                            style={{ color: toast.folder.color || '#3b82f6' }}
+                            className={`h-5 w-5 m-auto`}
                           />
                         )}
                       </div>
@@ -126,15 +130,156 @@ function Post({ post, className, style, index, measure, layout }) {
             isDragging || toast ? 'opacity-40' : 'opacity-100'
           } duration-150 transition ease-in-out`}
         >
-          {layout === 'cards' && (
-            <PostCardLayout post={post} index={index} measure={measure} />
-          )}
-          {layout === 'small_cards' && (
-            <PostSmallCardLayout post={post} index={index} measure={measure} />
-          )}
-          {layout === 'classic' && (
-            <PostClassicLayout post={post} index={index} measure={measure} />
-          )}
+          <div
+            style={{ marginTop: '-1px' }}
+            className="mx-5 sm:mx-72 flex bg-white dark:bg-gray-800 border-t border-l border-r border-gray-200 dark:border-gray-900 pl-3 py-3 pr-16"
+          >
+            <NavLink
+              href={`/user/${post.author.username}`}
+              className={`w-10 h-10 flex-shrink-0 rounded-full ${
+                post.author.avatarURL ? '' : 'bg-gray-200 dark:bg-gray-700'
+              }`}
+            >
+              {post.author.avatarURL ? (
+                <Image
+                  src={post.author.avatarURL}
+                  height={40}
+                  width={40}
+                  className="rounded-full object-cover object-center block h-8 w-8"
+                  loading="eager"
+                />
+              ) : (
+                <FiUser size={20} className="m-2.5 text-gray-500" />
+              )}
+            </NavLink>
+
+            <div className="flex flex-col flex-grow ml-3">
+              <div className="text-tertiary text-xs font-semibold flex items-center">
+                {post.author.username}&nbsp;
+                <BsArrowRight size={16} />
+                &nbsp;
+                <span className="text-accent">
+                  {post.planet.name}&nbsp;&middot;&nbsp;
+                </span>
+                {post.timeSince}&nbsp;&middot;&nbsp;100k views
+              </div>
+              <NavLink
+                href={post.relativeURL}
+                className="text-base font-semibold text-primary mt-1"
+              >
+                {post.title}
+              </NavLink>
+
+              {post.textContent && (
+                <div
+                  dangerouslySetInnerHTML={{ __html: post.textContent }}
+                  className="prose-sm p-3 rounded-md border dark:border-gray-700 mt-3 text-primary"
+                />
+              )}
+
+              {post.imageURLs.length > 0 && (
+                <div className="relative aspect-ratio-16/9 object-contain w-full mt-4 bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
+                  <Image
+                    loading="eager"
+                    alt="Image"
+                    layout="fill"
+                    src={post.imageURLs[0]}
+                    className="rounded-md object-contain"
+                  />
+                </div>
+              )}
+
+              {post.linkURL && (
+                <a
+                  href={post.linkURL}
+                  target="_blank"
+                  rel="noreferrer noopener nofollow"
+                  className="rounded-md flex flex-row items-start mt-3 bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
+                >
+                  <div
+                    className="w-32 h-32"
+                    style={{
+                      minWidth: '8rem'
+                    }}
+                  >
+                    {post.thumbnailURL || post.logoURL ? (
+                      <Image
+                        loading="eager"
+                        src={post.thumbnailURL || post.logoURL}
+                        width={256}
+                        height={256}
+                        className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
+                      />
+                    ) : (
+                      <div className="flex w-32 h-32 rounded-l-md dark:bg-gray-700">
+                        <FiLink className="w-8 h-8 m-auto text-tertiary" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
+                    <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
+                      {post.meta && post.meta.title
+                        ? post.meta.title
+                        : post.linkURL}
+                    </div>
+
+                    <div className="mt-1 text-xs font-medium text-secondary line-clamp-2">
+                      {post.meta && post.meta.description
+                        ? post.meta.description
+                        : 'Could not embed this link'}
+                    </div>
+
+                    <div className="flex flex-row items-center mt-auto text-tertiary text-xs">
+                      {post.logoURL && (
+                        <div className="inline-block w-4 h-4 mr-3">
+                          <Image
+                            loading="eager"
+                            src={post.logoURL}
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                      )}
+                      {post.domain}
+                    </div>
+                  </div>
+                </a>
+              )}
+
+              <div className="flex flex-row items-center justify-between -mx-3 -ml-3 mt-auto pt-3">
+                <div className={chip}>
+                  <BiRocket className="w-5 h-5" />
+                  <span className="ml-3 text-sm font-medium">
+                    {post.rocketCount}
+                  </span>
+                </div>
+
+                <div className={`${chip}`}>
+                  <FiMessageCircle className="w-5 h-5" />
+                  <span className="ml-3 text-sm font-medium">
+                    {post.commentCount}
+                  </span>
+                </div>
+
+                {/*<div className={`${chip}`}>
+                  <FiMoreHorizontal className="w-5 h-5 text-disabled" />
+                </div>*/}
+
+                <div className={`${chip} group`}>
+                  <FiShare className="w-5 h-5 group-hover:text-green-500 transition duration-150 ease-in-out" />
+                </div>
+
+                <div className={`${chip} group`}>
+                  <FiFolderPlus className="w-5 h-5 group-hover:text-blue-500 transition duration-150 ease-in-out" />
+                </div>
+
+                <div className={`${chip} text-disabled`}>
+                  <FiMoreHorizontal className="w-5 h-5" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </article>

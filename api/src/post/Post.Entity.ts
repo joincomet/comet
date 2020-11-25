@@ -14,10 +14,10 @@ import { PostRocket } from '@/post/PostRocket.Entity'
 import { Planet } from '@/planet/Planet.Entity'
 import { Save } from '@/folder/Save.Entity'
 import { PostHide } from '@/filter/PostHide.Entity'
-import { Embed } from '@/post/Embed'
 import { URL } from 'url'
 import dayjs from 'dayjs'
 import { isURL } from '@/IsURL'
+import { Metadata } from '@/metascraper/Metadata'
 
 @ObjectType()
 @Entity()
@@ -43,26 +43,33 @@ export class Post {
   @Column({ nullable: true })
   linkURL?: string
 
-  @Field(() => Embed, { nullable: true })
+  @Field(() => Metadata, { nullable: true })
   @Column('jsonb', {
     nullable: true,
     transformer: {
       to: value => value,
       from: value => {
         try {
-          return JSON.parse(value) as Embed
+          return JSON.parse(value) as Metadata
         } catch {
           return value
         }
       }
     }
   })
-  embed?: Embed
+  meta?: Metadata
 
   @Field({ nullable: true })
   get thumbnailURL(): string | null {
     if (this.imageURLs.length > 0) return this.imageURLs[0]
-    if (this.embed && this.embed.thumbnailURL) return this.embed.thumbnailURL
+    if (this.meta && this.meta.image) return this.meta.image
+    return null
+  }
+
+  @Field({ nullable: true })
+  get logoURL(): string | null {
+    if (!this.linkURL) return null
+    if (this.meta && this.meta.logo) return this.meta.logo
     return null
   }
 
@@ -76,7 +83,11 @@ export class Post {
 
   @Field({ nullable: true })
   get domain(): string | null {
-    if (isURL(this.linkURL)) return new URL(this.linkURL).hostname
+    if (isURL(this.linkURL)) {
+      let domain = new URL(this.linkURL).hostname
+      if (domain.startsWith('www.')) domain = domain.substring(4)
+      return domain
+    }
     return null
   }
 
@@ -173,9 +184,9 @@ export class Post {
       .trim()
       .split(' ')
       .slice(0, 9)
-      .join('_')
-      .replace(/[^a-z0-9_]+/gi, '')
-      .replace(/[_](.)\1+/g, '$1')
-    return `/+${(this.planet as Planet).name}/post/${this.id36}/${slug}`
+      .join('-')
+      .replace(/[^a-z0-9-]+/gi, '')
+      .replace(/[-](.)\1+/g, '$1')
+    return `/planet/${(this.planet as Planet).name}/post/${this.id36}/${slug}`
   }
 }

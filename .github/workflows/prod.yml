@@ -11,6 +11,14 @@ on:
         required: true
 
 jobs:
+  cancel-previous:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
   prep:
     runs-on: ubuntu-latest
     steps:
@@ -25,20 +33,16 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           source: "docker-compose.prod.yml"
-          target: ${{ github.event.repository.name }}
+          target: /root
       - name: Rename docker-compose file and prune Docker
         uses: appleboy/ssh-action@master
-        env:
-          REPOSITORY: ${{ github.event.repository.name }}
         with:
-          envs: REPOSITORY
           host: ${{ secrets.DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
-            cd $REPOSITORY
             mv docker-compose.prod.yml docker-compose.yml
             docker system prune -f
   frontend:
@@ -118,8 +122,6 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           script: |
-            mkdir /root/cometx
-            cd /root/cometx
             echo -e "$ENV" > .env
             docker-compose pull -q
             docker-compose down --remove-orphans

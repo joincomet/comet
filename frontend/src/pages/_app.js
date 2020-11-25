@@ -3,13 +3,13 @@ import '@/styles/tailwind.css'
 import '@/styles/app.css'
 
 import Head from 'next/head'
-import LoginDialog from '@/components/LoginDialog'
 import { DndProvider } from 'react-dnd'
 import { TouchBackend } from 'react-dnd-touch-backend'
 import CustomDragLayer from '@/components/CustomDragLayer'
 import { ReactQueryCacheProvider, QueryCache } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query-devtools'
+import { Provider } from 'next-auth/client'
 
 const queryCache = new QueryCache({
   defaultConfig: {
@@ -29,6 +29,7 @@ export default function App({ Component, pageProps }) {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
         />
         <link rel="dns-prefetch" href="//rsms.me" />
+        <link rel="preconnect" href="https://rsms.me/" crossOrigin="true" />
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -42,22 +43,21 @@ export default function App({ Component, pageProps }) {
         />
       </Head>
 
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <DndProvider
-            backend={TouchBackend}
-            options={{ enableTouchEvents: false, enableMouseEvents: true }}
-          >
-            <div>
-              <LoginDialog />
+      <Provider session={pageProps.session}>
+        <ReactQueryCacheProvider queryCache={queryCache}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <DndProvider
+              backend={TouchBackend}
+              options={{ enableTouchEvents: false, enableMouseEvents: true }}
+            >
               <Component {...pageProps} />
               <CustomDragLayer />
-            </div>
-          </DndProvider>
-        </Hydrate>
+            </DndProvider>
+          </Hydrate>
 
-        <ReactQueryDevtools initialIsOpen />
-      </ReactQueryCacheProvider>
+          {/*<ReactQueryDevtools position="top-left" />*/}
+        </ReactQueryCacheProvider>
+      </Provider>
     </>
   )
 }

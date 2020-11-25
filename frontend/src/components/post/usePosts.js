@@ -10,49 +10,49 @@ export const fetchPosts = async (
   const { posts } = await request(
     ENDPOINT(),
     gql`
-      query Posts {
-        posts(
-          sort: ${sort || 'HOT'},
-          page: ${page},
-          time: ${time || 'ALL'},
-          universe: ${universe || false},
-          planet: ${planet || null},
-          galaxy: ${galaxy || null},
-          username: ${username || null},
-          search: ${search || null}
-        ) {
-          page
-          nextPage,
-          posts {
-            id
-            id36
-            title
-            textContent
-            linkURL
-            imageURLs
-            relativeURL
-            commentCount
-            rocketCount
-            thumbnailURL
-            domain
-            embed {
+        query Posts {
+          posts(
+            sort: ${sort || 'HOT'},
+            page: ${page},
+            time: ${time || 'ALL'},
+            universe: ${universe || false},
+            planet: ${planet || null},
+            galaxy: ${galaxy || null},
+            username: ${username || null},
+            search: ${search || null}
+          ) {
+            page
+            nextPage,
+            posts {
+              id
+              id36
               title
-              description
-              faviconURL
+              textContent
+              linkURL
+              imageURLs
+              relativeURL
+              commentCount
+              rocketCount
+              thumbnailURL
+              logoURL
+              domain
+              meta {
+                title
+                description
+              }
+              planet {
+                name
+              }
+              author {
+                username
+                avatarURL
+              }
+              timeSince
+              timeSinceEdited
             }
-            planet {
-              name
-            }
-            author {
-              username
-              avatarURL
-            }
-            timeSince
-            timeSinceEdited
           }
         }
-      }
-    `
+      `
   )
   return posts
 }

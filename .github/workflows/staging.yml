@@ -11,6 +11,14 @@ on:
         required: true
 
 jobs:
+  cancel-previous:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
   prep:
     runs-on: ubuntu-latest
     steps:
@@ -27,23 +35,21 @@ jobs:
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
           source: "docker-compose.staging.yml"
-          target: ${{ github.event.repository.name }}
+          target: .
       - name: Rename docker-compose file and prune Docker
         uses: appleboy/ssh-action@master
-        env:
-          REPOSITORY: ${{ github.event.repository.name }}
         with:
-          envs: REPOSITORY
           host: ${{ secrets.STAGING_DROPLET_HOST }}
           username: root
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
+          script_stop: true
           script: |
-            cd $REPOSITORY
             mv docker-compose.staging.yml docker-compose.yml
             docker system prune -f
-  frontend:
+
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout staging
@@ -56,27 +62,16 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+      - name: Cache Docker layers
+        uses: satackey/action-docker-layer-caching@v0.0.8
+        continue-on-error: true
       - name: Build container image
-        run: docker buildx build ./frontend -f ./frontend/Dockerfile.staging -t registry.digitalocean.com/cometx/frontend:staging
+        run: docker buildx build . -t registry.digitalocean.com/cometx/cometx:staging
       - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/cometx/frontend
-  api:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout staging
-        uses: actions/checkout@v2
-        with:
-          ref: staging
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
-      - name: Build container image
-        run: docker buildx build ./api -t registry.digitalocean.com/cometx/api:staging
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/cometx/api
+        run: docker push registry.digitalocean.com/cometx/cometx
+      - name: Run Garbage Collection on Container Registry
+        run: doctl registry garbage-collection start
+
   nginx:
     runs-on: ubuntu-latest
     steps:
@@ -99,14 +94,16 @@ jobs:
         run: docker buildx build ./nginx -t registry.digitalocean.com/cometx/nginx:staging
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/cometx/nginx
+
   deploy:
-    needs: [prep, frontend, api, nginx]
+    needs: [prep, build, nginx]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout staging
         uses: actions/checkout@v2
         with:
           ref: staging
+
       - name: Start containers
         uses: appleboy/ssh-action@master
         env:
@@ -127,13 +124,13 @@ jobs:
           key: ${{ secrets.DROPLET_KEY }}
           passphrase: ${{ secrets.DROPLET_PASSPHRASE }}
           port: 22
+          script_stop: true
           script: |
-            mkdir /root/cometx
-            cd /root/cometx
             echo -e "$ENV" > .env
             docker-compose pull -q
             docker-compose down --remove-orphans
             docker-compose up -d
+
       - name: Send Discord Announcement
         uses: appleboy/discord-action@master
         with:

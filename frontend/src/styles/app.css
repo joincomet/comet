@@ -1,5 +1,5 @@
 body {
-  @apply text-black bg-gray-50;
+  @apply text-black bg-gray-100;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -15,7 +15,7 @@ body.dark {
 }
 
 .page {
-  @apply flex flex-col;
+  @apply flex flex-col h-full min-h-full;
 }
 
 .text-tertiary {
@@ -30,12 +30,20 @@ body.dark {
   @apply text-black dark:text-white;
 }
 
+.text-mid {
+  @apply text-gray-500;
+}
+
 .text-disabled {
   @apply text-gray-400 dark:text-gray-600
 }
 
 .text-accent {
   @apply text-blue-500;
+}
+
+.font-header {
+  @apply text-tiny font-semibold uppercase tracking-widest;
 }
 
 .line-clamp-3 {
@@ -84,6 +92,30 @@ body.dark {
   hyphens: auto;
 }
 
+.line-clamp-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
 .animate-online {
   animation: online 5s cubic-bezier(0, 0, 0.2, 1) 5s infinite;
 }
@@ -113,20 +145,25 @@ body.dark {
 }
 
 .inset-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  @apply transform left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
 }
 
 .inset-x-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  @apply transform left-1/2 -translate-x-1/2;
 }
 
 .inset-y-center {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  @apply transform top-1/2 -translate-y-1/2;
+}
+
+.sidebar-item {
+  @apply cursor-pointer relative text-sm font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-11 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition;
+}
+
+.sidebar-item-small {
+  @apply cursor-pointer relative text-xs font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-8 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition;
+}
+
+.aspect-ratio-16\/9 {
+  padding-bottom: 56.25%;
 }

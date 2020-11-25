@@ -26,8 +26,8 @@ export const connectDatabase = async (
                 path.resolve(__dirname, '../ca-certificate.crt'),
                 { encoding: 'utf8' }
               )
-            }
-          : undefined,
+      }
+          : false,
       namingStrategy: new SnakeNamingStrategy()
     })
   } catch (e) {

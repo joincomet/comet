@@ -19,19 +19,24 @@ export default function Folder({ folder }) {
   const { name, color, type } = folder
 
   return (
-    <div
-      ref={dropRef}
-      className={`${
-        isActive ? 'dark:bg-gray-700' : 'dark:bg-gray-800'
-      } flex flex-row items-center h-12 px-6 transition duration-150 ease-in-out cursor-pointer text-secondary dark:hover:bg-gray-700`}
-    >
+    <div ref={dropRef} className={`sidebar-item`}>
       {name === 'Favorites' ? (
-        <FiStar className={`w-8 h-8 p-1.5 text-${color || 'yellow-500'}`} />
+        <FiStar
+          width={20}
+          height={20}
+          className={`w-5 h-5`}
+          style={{ color: color || '#eab308' }}
+        />
       ) : (
-        <FiFolder className={`w-8 h-8 p-1.5 text-${color || 'blue-500'}`} />
+        <FiFolder
+          width={20}
+          height={20}
+          className={`w-5 h-5`}
+          style={{ color: color || '#3b82f6' }}
+        />
       )}
 
-      <span className="ml-6 text-sm font-medium">{name}</span>
+      <span className="ml-6">{name}</span>
 
       {type && type !== 'PRIVATE' ? (
         <Tippy content={type === 'PUBLIC' ? 'Public folder' : 'Shared folder'}>

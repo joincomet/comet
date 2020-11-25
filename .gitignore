@@ -1,15 +1,19 @@
 .idea
 .vscode
+
 .env
 
-*/node_modules
-*/yarn-error.log
-
 api/dist
-
 frontend/.next
 
 latest.dump
 
 .graphqlconfig
 schema.graphql
+
+.yarn/*
+!.yarn/cache
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions

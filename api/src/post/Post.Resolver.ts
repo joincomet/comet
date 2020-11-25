@@ -28,9 +28,9 @@ import { Comment } from '@/comment/Comment.Entity'
 import { Notification } from '@/notification/Notification.Entity'
 import { Planet } from '@/planet/Planet.Entity'
 import { PlanetUser } from '@/planet/PlanetUser.Entity'
-import { IframelyResponse } from '@/iframely/IframelyResponse'
-import { runIframely } from '@/iframely/RunIframely'
 import { PostsResponse } from '@/post/PostsResponse'
+import {Metadata} from "@/metascraper/Metadata";
+import {scrapeMetadata} from "@/metascraper/scrapeMetadata";
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -524,12 +524,8 @@ export class PostResolver {
     return postRocketLoader.load({ userId, postId: post.id })
   }
 
-  @Query(() => IframelyResponse)
+  @Query(() => Metadata)
   async getURLEmbed(@Arg('URL') URL: string) {
-    const data = await runIframely(URL)
-    data.meta.themeColor = data.meta['theme-color']
-    delete data.meta['theme-color']
-
-    return data as IframelyResponse
+    return scrapeMetadata(URL)
   }
 }

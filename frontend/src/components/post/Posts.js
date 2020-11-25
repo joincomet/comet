@@ -10,20 +10,8 @@ import {
 } from 'react-virtualized'
 import { usePosts } from '@/components/post/usePosts'
 
-export default function Posts({ variables, layout }) {
-  const {
-    status,
-    data,
-    error,
-    isFetching,
-    isFetchingMore,
-    fetchMore,
-    canFetchMore
-  } = usePosts(variables)
-
-  useEffect(() => {
-    cache.clearAll()
-  }, [layout])
+export default function Posts({ variables }) {
+  const { data, fetchMore } = usePosts(variables)
 
   const handleResize = event => {
     cache.clearAll()
@@ -38,29 +26,28 @@ export default function Posts({ variables, layout }) {
 
   if (!data) return null
 
-  const posts = () => data.map(page => page.posts).flat()
+  const posts = data.map(page => page.posts).flat()
 
   return (
     <InfiniteLoader
-      isRowLoaded={index => posts().length > index}
+      isRowLoaded={index => posts.length > index}
       loadMoreRows={() => fetchMore()}
-      rowCount={posts().length}
+      rowCount={posts.length}
       minimumBatchSize={1}
-      layout={layout}
       threshold={5}
     >
       {({ onRowsRendered, registerChild }) => (
-        <WindowScroller layout={layout}>
+        <WindowScroller>
           {({ height, isScrolling, onChildScroll, scrollTop }) => (
             <List
               ref={registerChild}
-              onRowsRendered={onRowsRendered}
-              overscanRowCount={20}
+              onRowsRendered={() => {}}
+              overscanRowCount={10}
               autoHeight={true}
               height={height || 1080}
               autoWidth
               width={10000}
-              rowCount={posts().length}
+              rowCount={posts.length}
               isScrolling={isScrolling}
               onScroll={onChildScroll}
               scrollTop={scrollTop}
@@ -68,8 +55,7 @@ export default function Posts({ variables, layout }) {
               deferredMeasurementCache={cache}
               className="virtual-list outline-none"
               style={{ overflowX: 'hidden !important' }}
-              rowRenderer={getRowRender(posts(), layout)}
-              layout={layout}
+              rowRenderer={getRowRender(posts)}
             />
           )}
         </WindowScroller>
@@ -87,7 +73,7 @@ const getRowRender = (posts, layout) => ({ index, parent, style }) => {
   const post = posts[index]
 
   return (
-    <div key={index} style={{}}>
+    <div key={post.id} style={{}}>
       <CellMeasurer
         cache={cache}
         columnIndex={0}
