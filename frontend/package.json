@@ -6,7 +6,7 @@
     "node": "15.x.x"
   },
   "scripts": {
-  	"postinstall": "npx next telemetry disable",
+    "postinstall": "npx next telemetry disable",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
