@@ -6,8 +6,7 @@
     "node": "15.x.x"
   },
   "scripts": {
-    "postinstall": "npx next telemetry disable",
-    "dev": "next dev",
+    "dev": "next",
     "build": "next build",
     "start": "next start",
     "analyze": "ANALYZE=true next build"
@@ -54,6 +53,7 @@
     "@types/next-auth": "^3.1.17",
     "@types/overlayscrollbars": "^1.12.0",
     "@types/react-virtualized": "^9.21.10",
+    "autoprefixer": "^10.0.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
@@ -61,8 +61,6 @@
     "eslint-plugin-react": "^7.21.5",
     "graphql-tag": "^2.11.0",
     "postcss": "^8.1.10",
-    "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-preset-env": "^6.7.0",
     "prettier": "^2.2.0",
     "tailwindcss": "^2.0.1"
   }

@@ -1,16 +1,16 @@
 FROM node:latest
 
-RUN mkdir -p /opt/app
+RUN mkdir -p /usr/src/app
 ENV NODE_ENV=production PORT=3000
 EXPOSE 3000
 
-WORKDIR /opt/app
+WORKDIR /usr/src/app
 
-COPY package.json yarn.lock /opt/app/
+COPY package.json yarn.lock /usr/src/app/
 
 RUN yarn
 
-COPY . /opt/app
+COPY . /usr/src/app
 
 RUN yarn run build && npx next telemetry disable
 

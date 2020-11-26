@@ -10,8 +10,6 @@ module.exports = withBundleAnalyzer({
   images: {
     domains: [
       'media.cometx.io',
-      'media-staging.cometx.io',
-      'media-dev.cometx.io',
       'i.getcomet.net'
     ]
   }
