@@ -25,7 +25,7 @@ const providers = [
     }
   }),
   Providers.Google({
-    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET
   }),
   Providers.Twitter({
@@ -56,7 +56,8 @@ const callbacks = {
         avatar: user.image
       }
 
-      user.accessToken = await getTokenFromYourAPIServer('discord', discordUser)
+      //user.accessToken = await getTokenFromYourAPIServer('discord', discordUser)
+      user.accessToken = 'abc'
       return true
     }
 
@@ -64,7 +65,8 @@ const callbacks = {
   },
   session: async (session, user) => {
     session.accessToken = user.accessToken
-    session.user = await getUserFromTheAPIServer(session.accessToken)
+    //session.user = await getUserFromTheAPIServer(session.accessToken)
+    session.user = { username: 'jsmith' }
     return session
   },
   jwt: (token, user, account, profile, isNewUser) => {

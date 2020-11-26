@@ -12,6 +12,6 @@ RUN yarn
 
 COPY . /usr/src/app
 
-RUN yarn run build && npx next telemetry disable
+RUN yarn build && npx next telemetry disable
 
 CMD [ "yarn", "start" ]

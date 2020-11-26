@@ -6,7 +6,8 @@
     "node": "15.x.x"
   },
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register src/index.ts",
+    "build": "tsc",
+    "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 TS_NODE_PROJECT=tsconfig.prod.json node -r tsconfig-paths/register dist/index.js",
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "migrate": "ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
