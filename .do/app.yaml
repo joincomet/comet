@@ -14,6 +14,9 @@ services:
   - key: DATABASE_URL
     scope: RUN_TIME
     value: ${db.DATABASE_URL}
+  - key: CA_CERT
+    scope: RUN_TIME
+    value: ${db.CA_CERT}
 - name: frontend
   github:
     repo: cometx-io/cometx
