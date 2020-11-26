@@ -58,7 +58,7 @@ module.exports = {
   darkMode: 'class',
   experimental: 'all',
   future: 'all',
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/aspect-ratio'), require('@tailwindcss/typography')],
   purge: [
     './src/components/**/*.{js,ts,jsx,tsx}',
     './src/pages/**/*.{js,ts,jsx,tsx}'
