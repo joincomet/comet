@@ -15,6 +15,9 @@
     "@headlessui/react": "^0.2.0",
     "@next/bundle-analyzer": "^10.0.3",
     "@popperjs/core": "^2.5.4",
+    "@tailwindcss/aspect-ratio": "^0.2.0",
+    "@tailwindcss/forms": "^0.2.1",
+    "@tailwindcss/typography": "^0.3.1",
     "@tippyjs/react": "^4.2.0",
     "draft-js": "^0.11.7",
     "draft-js-plugins-editor": "^3.0.0",
@@ -43,13 +46,11 @@
     "react-use": "^15.3.4",
     "react-virtualized": "^9.22.2",
     "sass": "^1.29.0",
+    "tailwindcss": "^2.0.1",
     "use-dark-mode": "^2.3.1",
     "webpack": "^4.44.2"
   },
   "devDependencies": {
-    "@tailwindcss/aspect-ratio": "^0.2.0",
-    "@tailwindcss/forms": "^0.2.1",
-    "@tailwindcss/typography": "^0.3.1",
     "@types/next-auth": "^3.1.17",
     "@types/overlayscrollbars": "^1.12.0",
     "@types/react-virtualized": "^9.21.10",
@@ -61,7 +62,9 @@
     "eslint-plugin-react": "^7.21.5",
     "graphql-tag": "^2.11.0",
     "postcss": "^8.1.10",
-    "prettier": "^2.2.0",
-    "tailwindcss": "^2.0.1"
+    "prettier": "^2.2.0"
+  },
+  "resolutions": {
+    "webpack": "^5.7.0"
   }
 }
