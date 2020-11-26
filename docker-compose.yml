@@ -3,8 +3,8 @@ version: "3.8"
 services:
   api:
     build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: api
+      dockerfile: dev.Dockerfile
     container_name: api
     ports:
       - "4000:4000"
@@ -13,16 +13,14 @@ services:
     env_file:
       - .env
     volumes:
-      - ./api:/usr/src/app/api
-      - /usr/src/app/api/dist
+      - ./api:/opt/app
     depends_on:
       - postgres
-    command: yarn workspace api run dev
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: frontend
+      dockerfile: dev.Dockerfile
     container_name: frontend
     ports:
       - "3000:3000"
@@ -31,12 +29,9 @@ services:
     env_file:
       - .env
     volumes:
-      - ./frontend:/usr/src/app/frontend
-      - /usr/src/app/frontend/.next
-      - "next-cache:/usr/src/app/frontend/.next/cache"
+      - ./frontend:/opt/app
     depends_on:
       - api
-    command: yarn workspace frontend run dev
 
   postgres:
     image: "postgres:alpine"
@@ -52,4 +47,3 @@ services:
 
 volumes:
   db-data:
-  next-cache:

@@ -59,7 +59,7 @@ async function bootstrap() {
   }
 
   const server = new ApolloServer({
-    plugins: [logPlugin],
+    plugins: process.env.NODE_ENV === 'production' ? [] : [logPlugin],
     schema,
     playground: process.env.NODE_ENV !== 'production',
     tracing: true,

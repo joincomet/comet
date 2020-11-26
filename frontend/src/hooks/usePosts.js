@@ -3,17 +3,16 @@ import { useInfiniteQuery, useQuery } from 'react-query'
 import { ENDPOINT } from '@/Endpoint'
 
 export const fetchPosts = async (
-  _,
-  { sort, time, universe, planet, galaxy, username, search },
-  page = 0
+  { queryKey, pageParam = 0 }
 ) => {
+  const [_key, { sort, time, universe, planet, galaxy, username, search }] = queryKey
   const { posts } = await request(
     ENDPOINT(),
     gql`
         query Posts {
           posts(
             sort: ${sort || 'HOT'},
-            page: ${page},
+            page: ${pageParam},
             time: ${time || 'ALL'},
             universe: ${universe || false},
             planet: ${planet || null},
@@ -59,6 +58,6 @@ export const fetchPosts = async (
 
 export const usePosts = variables => {
   return useInfiniteQuery(['posts', variables], fetchPosts, {
-    getFetchMore: (lastPage, allPages) => lastPage.nextPage
+    getNextPageParam: (lastPage, pages) => lastPage.nextPage
   })
 }

@@ -196,18 +196,12 @@ function Post({ post, className, style, index, measure, layout }) {
                   rel="noreferrer noopener nofollow"
                   className="rounded-md flex flex-row items-start mt-3 bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
                 >
-                  <div
-                    className="w-32 h-32"
-                    style={{
-                      minWidth: '8rem'
-                    }}
-                  >
+                  <div className="w-32 h-32 relative">
                     {post.thumbnailURL || post.logoURL ? (
                       <Image
                         loading="eager"
                         src={post.thumbnailURL || post.logoURL}
-                        width={256}
-                        height={256}
+                        layout="fill"
                         className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
                       />
                     ) : (

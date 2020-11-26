@@ -2,7 +2,7 @@ import React from 'react'
 import useDarkMode from 'use-dark-mode'
 import { FiMoon, FiSun } from 'react-icons/fi'
 
-function DarkModeToggle() {
+export default function DarkModeToggle() {
   const darkMode = useDarkMode(false, {
     classNameDark: 'dark',
     classNameLight: 'light'
@@ -15,5 +15,3 @@ function DarkModeToggle() {
     </div>
   )
 }
-
-export default React.memo(DarkModeToggle)

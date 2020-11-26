@@ -30,7 +30,7 @@ export const scrapeMetadata = async (targetURL: string): Promise<Metadata> => {
 
   const { body: html, url } = res
   if (!isURL(url)) return null
-  
+
   let meta
   try {
     meta = (await metascraper({ html, url })) as Metadata
@@ -50,12 +50,12 @@ export const scrapeMetadata = async (targetURL: string): Promise<Metadata> => {
       const buffer = await response.buffer()
       const type = await fileType.fromBuffer(buffer)
       meta.image = await uploadImage(
-        `meta/${uploadUUID}/image.${type.ext}`,
+        `${uploadUUID}.${type.ext}`,
         buffer,
         type.mime
       )
     } catch {
-      console.error(`Failed to retrieve or upload image for ${meta.image}`)
+      delete meta.image
     }
   }
 
@@ -65,12 +65,12 @@ export const scrapeMetadata = async (targetURL: string): Promise<Metadata> => {
       const buffer = await response.buffer()
       const type = await fileType.fromBuffer(buffer)
       meta.logo = await uploadImage(
-        `metascraper/${uploadUUID}/logo.${type.ext}`,
+        `${uploadUUID}.${type.ext}`,
         buffer,
         type.mime
       )
     } catch {
-      console.error(`Failed to retrieve or upload image for ${meta.logo}`)
+      delete meta.logo
     }
   }
 

@@ -1,6 +1,4 @@
 import * as TypeORM from 'typeorm'
-import fs from 'fs'
-import path from 'path'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 export const connectDatabase = async (
@@ -12,22 +10,17 @@ export const connectDatabase = async (
       type: 'postgres',
       url:
         process.env.NODE_ENV === 'production'
-          ? `${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}?sslmode=require`
+          ? process.env.DATABASE_URL
           : 'postgresql://postgres:password@postgres:5432/postgres',
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { ca: process.env.CA_CERT }
+          : false,
       entities: [__dirname + '/**/*.Entity.{ts,js}'],
       synchronize,
       logging,
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
-      ssl:
-        process.env.NODE_ENV === 'production'
-          ? {
-              ca: fs.readFileSync(
-                path.resolve(__dirname, '../ca-certificate.crt'),
-                { encoding: 'utf8' }
-              )
-      }
-          : false,
       namingStrategy: new SnakeNamingStrategy()
     })
   } catch (e) {

@@ -2,7 +2,8 @@ import { gql, request } from 'graphql-request'
 import { useQuery } from 'react-query'
 import { ENDPOINT } from '@/Endpoint'
 
-export const fetchPlanets = async (_, { sort, pageSize }) => {
+export const fetchPlanets = async ({ queryKey }) => {
+  const [_key, { sort, pageSize }] = queryKey
   const { planets } = await request(
     ENDPOINT(),
     gql`

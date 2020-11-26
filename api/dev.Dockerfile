@@ -1,7 +1,7 @@
 FROM node:alpine
 
 RUN mkdir -p /opt/app
-ENV NODE_ENV=production PORT=4000
+ENV NODE_ENV=development PORT=4000
 EXPOSE 4000
 
 WORKDIR /opt/app
@@ -12,4 +12,4 @@ RUN yarn
 
 COPY . /opt/app
 
-CMD [ "yarn", "start" ]
+CMD [ "yarn", "run", "dev" ]

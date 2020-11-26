@@ -1,7 +1,7 @@
 export const ENDPOINT = () => {
   if (typeof window === 'undefined') {
-    return 'http://api:4000/graphql'
+    return process.env.NODE_ENV === 'production' ? `${process.env.API_PRIVATE_URL}/graphql` : 'http://api:4000/graphql'
   } else {
-    return process.env.NODE_ENV === 'production' ? `https://${new URL(location.href).hostname}/graphql` : 'http://localhost:4000/graphql'
+    return process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_API_PUBLIC_URL : 'http://localhost:4000/graphql'
   }
 }

@@ -1,27 +1,17 @@
-FROM node:alpine
+FROM node:latest
 
 RUN mkdir -p /opt/app
-RUN apk add --no-cache libc6-compat
-ENV NODE_ENV production
-ENV PORT 3000
+ENV NODE_ENV=production PORT=3000
 EXPOSE 3000
 
 WORKDIR /opt/app
 
-COPY package.json /opt/app
-COPY package-lock.json /opt/app
+COPY package.json yarn.lock /opt/app/
 
-RUN npm install
+RUN yarn
 
 COPY . /opt/app
 
-RUN npm run build
+RUN yarn run build && npx next telemetry disable
 
-RUN npx next telemetry disable
-
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-
-USER nextjs
-
-CMD [ "npm", "start" ]
+CMD [ "yarn", "start" ]

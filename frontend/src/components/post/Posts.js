@@ -8,10 +8,10 @@ import {
   List,
   WindowScroller
 } from 'react-virtualized'
-import { usePosts } from '@/components/post/usePosts'
+import { usePosts } from '@/hooks/usePosts'
 
 export default function Posts({ variables }) {
-  const { data, fetchMore } = usePosts(variables)
+  const { data, fetchNextPage } = usePosts(variables)
 
   const handleResize = event => {
     cache.clearAll()
@@ -26,12 +26,15 @@ export default function Posts({ variables }) {
 
   if (!data) return null
 
-  const posts = () => data.map(page => page.posts).flat()
+  const posts = () => {
+    if (data.pages) return data.pages.map(page => page.posts).flat()
+    else return data.posts
+  }
 
   return (
     <InfiniteLoader
-      isRowLoaded={index => posts().length > index}
-      loadMoreRows={() => fetchMore()}
+      isRowLoaded={index => !!posts()[index]}
+      loadMoreRows={() => fetchNextPage()}
       rowCount={posts().length}
       minimumBatchSize={1}
       threshold={5}
@@ -41,7 +44,7 @@ export default function Posts({ variables }) {
           {({ height, isScrolling, onChildScroll, scrollTop }) => (
             <List
               ref={registerChild}
-              onRowsRendered={() => {}}
+              onRowsRendered={onRowsRendered}
               overscanRowCount={10}
               autoHeight={true}
               height={height || 1080}
@@ -53,8 +56,8 @@ export default function Posts({ variables }) {
               scrollTop={scrollTop}
               rowHeight={cache.rowHeight}
               deferredMeasurementCache={cache}
-              className="virtual-list outline-none"
-              style={{ overflowX: 'hidden !important' }}
+              className="outline-none"
+              style={{ overflowX: 'hidden !important', flexBasis: 'auto !important' }}
               rowRenderer={getRowRender(posts())}
             />
           )}
@@ -69,7 +72,7 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 })
 
-const getRowRender = (posts, layout) => ({ index, parent, style }) => {
+const getRowRender = (posts) => ({ index, parent, style }) => {
   const post = posts[index]
 
   return (
@@ -82,7 +85,7 @@ const getRowRender = (posts, layout) => ({ index, parent, style }) => {
       >
         {({ measure, registerChild }) => (
           <div style={{ margin: 0, ...style }} ref={registerChild}>
-            <Post layout={layout} post={post} index={index} measure={measure} />
+            <Post post={post} index={index} measure={measure} />
           </div>
         )}
       </CellMeasurer>
