@@ -7,10 +7,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 TS_NODE_PROJECT=tsconfig.prod.json node -r tsconfig-paths/register dist/index.js",
-    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
-    "migrate": "NODE_TLS_REJECT_UNAUTHORIZED=0 TS_NODE_PROJECT=tsconfig.prod.json node -r tsconfig-paths/register dist/migrations/from-getcomet/script.ts",
-    "migrate-dev": "ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
+    "start": "NODE_ENV=production TS_NODE_PROJECT=tsconfig.prod.json node -r tsconfig-paths/register dist/index.js",
+    "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "migrate": "NODE_ENV=development ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
   "dependencies": {
     "apollo-server-express": "^2.19.0",

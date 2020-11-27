@@ -6,10 +6,10 @@
     "node": "15.x.x"
   },
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "analyze": "ANALYZE=true next build"
+    "dev": "NODE_ENV=development next",
+    "build": "NODE_ENV=production next build",
+    "start": "NODE_ENV=production next start",
+    "analyze": "NODE_ENV=production ANALYZE=true next build"
   },
   "dependencies": {
     "@headlessui/react": "^0.2.0",
