@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "NODE_ENV=production TS_NODE_PROJECT=tsconfig.prod.json node -r tsconfig-paths/register dist/index.js",
+    "start": "NODE_ENV=production TS_NODE_PROJECT=tsconfig.prod.json NODE_TLS_REJECT_UNAUTHORIZED=0 node -r tsconfig-paths/register dist/index.js",
     "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
     "migrate": "NODE_ENV=development ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
