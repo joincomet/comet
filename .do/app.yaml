@@ -11,7 +11,7 @@ services:
   run_command: yarn start
   http_port: 4000
   routes:
-  - path: /api
+  - path: /backend
   envs:
   - key: DATABASE_URL
     value: ${db.DATABASE_URL}

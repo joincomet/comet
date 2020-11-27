@@ -1,40 +1,15 @@
 import 'overlayscrollbars/css/OverlayScrollbars.css'
-import { useRouter } from 'next/router'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
-import { FiBell, FiLogIn, FiUser } from 'react-icons/fi'
+import { FiBell, FiLogIn } from 'react-icons/fi'
 import { SiDiscord, SiPatreon, SiGithub, SiTwitter } from 'react-icons/si'
 import { CgInfinity } from 'react-icons/cg'
-import { BiHomeAlt, BiAtom } from 'react-icons/bi'
+import { BiHomeAlt } from 'react-icons/bi'
 import NavLink from './NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/hooks/usePlanets'
 import Tippy from '@tippyjs/react'
 import Image from 'next/image'
 import React from 'react'
-
-const exploreButton = `
-  text-blue-500
-  hover:text-white
-  bg-transparent
-  hover:bg-blue-500
-  font-header
-  cursor-pointer
-  ml-auto
-  py-1
-  px-4
-  rounded-full
-  border
-  border-gray-200
-  dark:border-gray-700
-  hover:border-blue-500
-  transition 
-  ease-in-out 
-  duration-200 
-  inline-flex 
-  items-center
-  transform
-  hover:shadow-lg
-`
 
 function LeftSidebar() {
   return (
@@ -71,7 +46,7 @@ function LeftSidebar() {
 
         <div className="px-6 mt-5 mb-3 flex flex-row items-center">
           <div className="text-tertiary font-header">Top Planets</div>
-          <div className={exploreButton}>More</div>
+          <div className="text-blue-500 hover:text-white bg-transparent hover:bg-blue-500 font-header cursor-pointer ml-auto py-1 px-4 rounded-full border border-gray-200 dark:border-gray-700 hover:border-blue-500 transition inline-flex items-center hover:shadow-lg">More</div>
         </div>
 
         <TopPlanets />
