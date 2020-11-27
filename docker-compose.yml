@@ -13,7 +13,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./api:/opt/app
+      - ./api:/usr/src/app
     depends_on:
       - postgres
 
@@ -29,7 +29,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./frontend:/opt/app
+      - ./frontend:/usr/src/app
     depends_on:
       - api
 

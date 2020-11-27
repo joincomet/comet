@@ -6,16 +6,16 @@ services:
     branch: main
     deploy_on_push: true
   source_dir: api
-  dockerfile_path: api/Dockerfile
+  environment_slug: node-js
+  build_command: yarn build
+  run_command: yarn start
   http_port: 4000
   routes:
   - path: /api
   envs:
   - key: DATABASE_URL
-    scope: RUN_TIME
     value: ${db.DATABASE_URL}
   - key: CA_CERT
-    scope: RUN_TIME
     value: ${db.CA_CERT}
 - name: frontend
   github:
@@ -23,16 +23,16 @@ services:
     branch: main
     deploy_on_push: true
   source_dir: frontend
-  dockerfile_path: frontend/Dockerfile
+  environment_slug: node-js
+  build_command: yarn build
+  run_command: yarn start
   http_port: 3000
   routes:
   - path: /
   envs:
   - key: API_PRIVATE_URL
-    scope: RUN_TIME
     value: ${api.PRIVATE_URL}
   - key: NEXT_PUBLIC_API_PUBLIC_URL
-    scope: RUN_TIME
     value: ${api.PUBLIC_URL}
 databases:
 - name: db

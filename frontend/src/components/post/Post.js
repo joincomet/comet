@@ -165,7 +165,7 @@ function Post({ post, className, style, index, measure, layout }) {
               </div>
               <NavLink
                 href={post.relativeURL}
-                className="text-base font-semibold text-primary mt-1"
+                className="text-base font-semibold text-primary mt-0.5"
               >
                 {post.title}
               </NavLink>
@@ -196,7 +196,7 @@ function Post({ post, className, style, index, measure, layout }) {
                   rel="noreferrer noopener nofollow"
                   className="rounded-md flex flex-row items-start mt-3 bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
                 >
-                  <div className="w-32 h-32 relative">
+                  <div className="w-32 h-32 relative flex-shrink-0">
                     {post.thumbnailURL || post.logoURL ? (
                       <Image
                         loading="eager"

@@ -1,3 +1,3 @@
 export default function PlanetPage() {
-    return (<div>Planet post page</div>)
+    return (<div>User post page</div>)
 }
