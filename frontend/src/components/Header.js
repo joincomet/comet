@@ -47,7 +47,7 @@ export default function Header({ children, sticky = false, className, ...rest })
 
       <header
         style={{ top: '-1px' }}
-        className={`z-10 sticky h-16 px-5 sm:px-72 flex items-center transition ${
+        className={`z-10 sticky h-16 px-3 2xl:px-72 flex items-center transition ${
           isSticky ? 'dark:bg-gray-800 bg-white shadow-md' : 'bg-transparent'
         }`}
         ref={ref}

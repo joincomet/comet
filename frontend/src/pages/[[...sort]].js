@@ -19,7 +19,7 @@ export default function HomePage() {
 
       <Layout>
         <GalaxiesSlider />
-        <div className="pt-5 px-5 sm:px-72">
+        <div className="pt-3 px-3 2xl:px-72">
           <CreatePostCard />
         </div>
         <Header />

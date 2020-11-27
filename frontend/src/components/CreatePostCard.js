@@ -17,7 +17,7 @@ import Image from 'next/image'
 import Tippy from '@tippyjs/react'
 import NavLink from "@/components/NavLink";
 
-const button = "p-2.5 cursor-pointer transition dark:hover:bg-gray-700 rounded-full mr-3"
+const button = "p-2.5 cursor-pointer transition dark:hover:bg-gray-700 rounded-full mr-3 hover:text-blue-500"
 
 export default function CreatePostCard() {
   return (

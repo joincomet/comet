@@ -20,6 +20,9 @@ import { ItemTypes } from '@/ItemTypes'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import Image from 'next/image'
 import NavLink from '@/components/NavLink'
+import { TwitterTweetEmbed } from 'react-twitter-embed'
+import ReactPlayer from 'react-player/youtube'
+import useDarkMode from 'use-dark-mode'
 
 const chip =
   'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
@@ -48,6 +51,22 @@ function Post({ post, className, style, index, measure, layout }) {
   })
 
   useEffect(() => preview(getEmptyImage(), { captureDraggingState: true }), [])
+
+  const isTwitter = () =>
+    post.linkURL &&
+    !!post.linkURL.match(
+      /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)(?:\/.*)?$/i
+    )
+  const tweetId = () =>
+    isTwitter() ? post.linkURL.split('/status/')[1].split('/')[0] : null
+
+  const isCustomEmbed = () =>
+    post.linkURL && (isTwitter() || ReactPlayer.canPlay(post.linkURL))
+
+  const darkMode = useDarkMode(false, {
+    classNameDark: 'dark',
+    classNameLight: 'light'
+  })
 
   return (
     <article
@@ -130,9 +149,7 @@ function Post({ post, className, style, index, measure, layout }) {
             isDragging || toast ? 'opacity-40' : 'opacity-100'
           } duration-150 transition ease-in-out pb-3`}
         >
-          <div
-            className="mx-5 sm:mx-72 flex bg-white dark:bg-gray-800 pl-3 py-3 pr-16 rounded-md shadow-md"
-          >
+          <div className="mx-3 2xl:mx-72 flex bg-white dark:bg-gray-800 pl-3 py-3 pr-16 rounded-md shadow-md">
             <NavLink
               href={`/user/${post.author.username}`}
               className={`w-10 h-10 flex-shrink-0 rounded-full ${
@@ -188,12 +205,28 @@ function Post({ post, className, style, index, measure, layout }) {
                 </div>
               )}
 
-              {post.linkURL && (
+              {isCustomEmbed() && (
+                <div className="mt-3">
+                  {isTwitter() && (
+                    <TwitterTweetEmbed
+                      tweetId={tweetId()}
+                      onLoad={measure}
+                      options={{ theme: darkMode.value ? 'dark' : 'light' }}
+                    />
+                  )}
+
+                  {ReactPlayer.canPlay(post.linkURL) && (
+                    <ReactPlayer controls={true} url={post.linkURL} />
+                  )}
+                </div>
+              )}
+
+              {post.linkURL && !isCustomEmbed() && (
                 <a
                   href={post.linkURL}
                   target="_blank"
                   rel="noreferrer noopener nofollow"
-                  className="rounded-md flex flex-row items-start mt-3 bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
+                  className="mt-3 rounded-md flex flex-row items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
                 >
                   <div className="w-32 h-32 relative flex-shrink-0">
                     {post.thumbnailURL || post.logoURL ? (
