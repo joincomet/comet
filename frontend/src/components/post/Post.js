@@ -128,11 +128,10 @@ function Post({ post, className, style, index, measure, layout }) {
         <div
           className={`${
             isDragging || toast ? 'opacity-40' : 'opacity-100'
-          } duration-150 transition ease-in-out`}
+          } duration-150 transition ease-in-out pb-3`}
         >
           <div
-            style={{ marginTop: '-1px' }}
-            className="mx-5 sm:mx-72 flex bg-white dark:bg-gray-800 border-t border-l border-r border-gray-200 dark:border-gray-900 pl-3 py-3 pr-16"
+            className="mx-5 sm:mx-72 flex bg-white dark:bg-gray-800 pl-3 py-3 pr-16 rounded-md shadow-md"
           >
             <NavLink
               href={`/user/${post.author.username}`}
