@@ -216,12 +216,14 @@ function Post({ post, className, style, index, measure, layout }) {
                   )}
 
                   {ReactPlayer.canPlay(post.linkURL) && (
-                    <ReactPlayer controls={true} url={post.linkURL} />
+                    <div className="rounded-md overflow-hidden">
+                      <ReactPlayer controls={true} url={post.linkURL} />
+                    </div>
                   )}
                 </div>
               )}
 
-              {post.linkURL && !isCustomEmbed() && (
+              {post.linkURL && !isCustomEmbed() && post.meta.title && (
                 <a
                   href={post.linkURL}
                   target="_blank"
@@ -253,7 +255,7 @@ function Post({ post, className, style, index, measure, layout }) {
                     <div className="mt-1 text-xs font-medium text-secondary line-clamp-2">
                       {post.meta && post.meta.description
                         ? post.meta.description
-                        : 'Could not embed this link'}
+                        : ''}
                     </div>
 
                     <div className="flex flex-row items-center mt-auto text-tertiary text-xs">
@@ -270,6 +272,17 @@ function Post({ post, className, style, index, measure, layout }) {
                       {post.domain}
                     </div>
                   </div>
+                </a>
+              )}
+
+              {post.linkURL && !isCustomEmbed() && !post.meta.title && (
+                <a
+                  href={post.linkURL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline cursor-pointer mt-3 text-sm break-all"
+                >
+                  {post.linkURL}
                 </a>
               )}
 
