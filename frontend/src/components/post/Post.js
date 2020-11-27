@@ -12,7 +12,7 @@ import {
   FiEye,
   FiArrowRight
 } from 'react-icons/fi'
-import { BsArrowRight } from 'react-icons/bs'
+import { CgArrowRight } from 'react-icons/cg'
 import { BiRocket } from 'react-icons/bi'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useDrag } from 'react-dnd'
@@ -155,7 +155,7 @@ function Post({ post, className, style, index, measure, layout }) {
             <div className="flex flex-col flex-grow ml-3">
               <div className="text-tertiary text-xs font-semibold flex items-center">
                 {post.author.username}&nbsp;
-                <BsArrowRight size={16} />
+                <CgArrowRight size={16} />
                 &nbsp;
                 <span className="text-accent">
                   {post.planet.name}&nbsp;&middot;&nbsp;
