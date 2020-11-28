@@ -1,9 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {AnimatePresence, motion} from "framer-motion";
-import SearchBar from "@/components/SearchBar";
-import SortDropdown from "@/components/SortDropdown";
+import React, { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import SearchBar from '@/components/SearchBar'
+import SortDropdown from '@/components/SortDropdown'
 
-export default function Header({ children, sticky = false, className, ...rest }) {
+export default function Header({
+  children,
+  sticky = false,
+  className,
+  ...rest
+}) {
   const [isSticky, setIsSticky] = useState(false)
   const ref = React.createRef()
 
@@ -38,7 +43,7 @@ export default function Header({ children, sticky = false, className, ...rest })
               opacity: 0
             }}
             transition={{ duration: 0.15, ease: 'easeInOut' }}
-            className="fixed inset-x-center bottom-8 px-16 py-2 text-white font-medium text-sm rounded-full bg-blue-500 shadow z-10 cursor-pointer"
+            className="hidden sm:block fixed inline-flex items-center flex-nowrap inset-x-center bottom-8 px-12 h-10 text-white select-none font-medium text-sm rounded-full transition bg-blue-500 hover:bg-blue-600 shadow z-10 cursor-pointer"
           >
             Create post
           </motion.div>
@@ -47,7 +52,7 @@ export default function Header({ children, sticky = false, className, ...rest })
 
       <header
         style={{ top: '-1px' }}
-        className={`z-10 sticky h-16 px-3 2xl:px-72 flex items-center transition ${
+        className={`hidden sm:block z-10 sticky h-16 px-3 2xl:px-72 flex items-center transition ${
           isSticky ? 'dark:bg-gray-800 bg-white shadow-md' : 'bg-transparent'
         }`}
         ref={ref}

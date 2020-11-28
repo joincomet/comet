@@ -5,8 +5,8 @@ import {
   SiReddit,
   SiDiscord
 } from 'react-icons/si'
-import CometXLogo from '@/components/CometXLogo'
 import { signIn, signOut, useSession, csrfToken } from 'next-auth/client'
+import Logo from '@/components/Logo'
 
 const oauthButton =
   'px-6 h-10 w-full rounded-md shadow-sm text-white text-sm font-medium inline-flex items-center cursor-pointer transition'
@@ -16,7 +16,7 @@ export default function SignUpForm({ csrfToken }) {
     <div className="rounded-md shadow-xl z-10 bg-white dark:bg-gray-800 py-6 flex flex-col sm:py-12 px-12">
       <div className="flex">
         <div className="border-r border-gray-200 dark:border-gray-700 pr-6">
-          <CometXLogo className="mb-4 w-40" />
+          <Logo className="mb-4 w-40" />
           <div className="text-secondary font-medium text-lg mb-6">
             See what's in orbit.
           </div>

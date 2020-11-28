@@ -103,7 +103,7 @@ export default function GalaxiesSlider() {
           }
         `}
       </style>
-      <div className="z-10 h-8 flex flex-row items-center bg-white dark:bg-gray-800 shadow-md select-none">
+      <div className="hidden sm:block z-10 h-8 flex flex-row items-center bg-white dark:bg-gray-800 shadow-md select-none">
         <div
           className="inline-block cursor-pointer pl-4 pr-8"
           onClick={() => scroll(true)}

@@ -46,7 +46,9 @@ function LeftSidebar() {
 
         <div className="px-6 mt-5 mb-3 flex flex-row items-center">
           <div className="text-tertiary font-header">Top Planets</div>
-          <div className="text-blue-500 hover:text-white bg-transparent hover:bg-blue-500 font-header cursor-pointer ml-auto py-1 px-4 rounded-full border border-gray-200 dark:border-gray-700 hover:border-blue-500 transition inline-flex items-center hover:shadow-lg">More</div>
+          <div className="text-blue-500 hover:text-white bg-transparent hover:bg-blue-500 font-header cursor-pointer ml-auto py-1 px-4 rounded-full border border-gray-200 dark:border-gray-700 hover:border-blue-500 transition inline-flex items-center hover:shadow-lg">
+            More
+          </div>
         </div>
 
         <TopPlanets />
@@ -70,7 +72,7 @@ function CometXLinks() {
             className={`${link} relative`}
           >
             <div
-              className="absolute inset-center w-3 h-3"
+              className="absolute m-1 w-3 h-3"
               style={{ backgroundColor: '#F5F5F5' }}
             />
             <SiDiscord

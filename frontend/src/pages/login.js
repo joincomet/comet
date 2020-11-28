@@ -1,6 +1,5 @@
 import Layout from '../components/Layout'
 import SignUpForm from '@/components/SignUpForm'
-import CometXLogo from '@/components/CometXLogo'
 
 export default function LoginPage() {
   return (

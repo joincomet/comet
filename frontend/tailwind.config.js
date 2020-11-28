@@ -31,34 +31,27 @@ module.exports = {
       cursor: {
         grab: 'grab',
         grabbing: 'grabbing'
-      },
-      opacity: {
-        45: '.45',
-        40: '.40',
-        35: '.35',
-        30: '.30',
-        20: '.20',
-        15: '.15',
-        10: '.10',
-        5: '.05'
       }
     },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
-
-      black: '#000',
-      white: '#fff',
-
+      black: colors.black,
+      white: colors.white,
       blue: colors.blue,
       red: colors.red,
-      gray: colors.gray
+      gray: colors.gray,
+      green: colors.green
     }
   },
   darkMode: 'class',
   experimental: 'all',
   future: 'all',
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/aspect-ratio'), require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/typography')
+  ],
   purge: [
     './src/components/**/*.{js,ts,jsx,tsx}',
     './src/pages/**/*.{js,ts,jsx,tsx}'

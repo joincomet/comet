@@ -4,13 +4,10 @@ import {
   FiStar,
   FiUser,
   FiLink,
-  FiAlignLeft,
   FiMessageCircle,
   FiMoreHorizontal,
   FiShare,
-  FiFolderPlus,
-  FiEye,
-  FiArrowRight
+  FiFolderPlus
 } from 'react-icons/fi'
 import { CgArrowRight } from 'react-icons/cg'
 import { BiRocket } from 'react-icons/bi'
@@ -20,14 +17,17 @@ import { ItemTypes } from '@/ItemTypes'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import Image from 'next/image'
 import NavLink from '@/components/NavLink'
-import { TwitterTweetEmbed } from 'react-twitter-embed'
+import { Tweet } from 'react-twitter-widgets'
 import ReactPlayer from 'react-player/youtube'
 import useDarkMode from 'use-dark-mode'
+import { useMountedState } from 'react-use'
 
 const chip =
   'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
 function Post({ post, className, style, index, measure, layout }) {
+  const isMounted = useMountedState()
+
   const [toast, setToast] = useState(null)
   const [timeoutId, setTimeoutId] = useState(null)
 
@@ -149,34 +149,37 @@ function Post({ post, className, style, index, measure, layout }) {
             isDragging || toast ? 'opacity-40' : 'opacity-100'
           } duration-150 transition ease-in-out pb-3`}
         >
-          <div className="mx-3 2xl:mx-72 flex bg-white dark:bg-gray-800 pl-3 py-3 pr-16 rounded-md shadow-md">
-            <NavLink
-              href={`/user/${post.author.username}`}
-              className={`w-10 h-10 flex-shrink-0 rounded-full ${
-                post.author.avatarURL ? '' : 'bg-gray-200 dark:bg-gray-700'
-              }`}
-            >
-              {post.author.avatarURL ? (
-                <Image
-                  src={post.author.avatarURL}
-                  height={40}
-                  width={40}
-                  className="rounded-full object-cover object-center block h-8 w-8"
-                  loading="eager"
-                />
-              ) : (
-                <FiUser size={20} className="m-2.5 text-gray-500" />
-              )}
-            </NavLink>
-
-            <div className="flex flex-col flex-grow ml-3">
+          <div className="sm:mx-3 2xl:mx-72 flex bg-white dark:bg-gray-800 pl-3 py-3 pr-3 sm:pr-16 sm:rounded-md shadow-md">
+            <div className="flex flex-col flex-grow">
               <div className="text-tertiary text-xs font-semibold flex items-center">
+                <NavLink
+                  href={`/user/${post.author.username}`}
+                  className={`w-10 h-10 flex-shrink-0 rounded-full ${
+                    post.author.avatarURL ? '' : 'bg-gray-200 dark:bg-gray-700'
+                  }`}
+                >
+                  {post.author.avatarURL ? (
+                    <Image
+                      src={post.author.avatarURL}
+                      height={40}
+                      width={40}
+                      className="rounded-full object-cover object-center block h-8 w-8"
+                      loading="eager"
+                    />
+                  ) : (
+                    <FiUser size={20} className="m-2.5 text-gray-500" />
+                  )}
+                </NavLink>
                 {post.author.username}&nbsp;
                 <CgArrowRight size={16} />
                 &nbsp;
-                <span className="text-accent">
-                  {post.planet.name}&nbsp;&middot;&nbsp;
+                <span className="text-accent">{post.planet.name}</span>
+                <span className="hidden sm:inline-block">
+                  &nbsp;&middot;&nbsp;{post.timeSince}&nbsp;&middot;&nbsp;100k
+                  views
                 </span>
+              </div>
+              <div className="block sm:hidden text-tertiary text-xs font-semibold mt-0.5">
                 {post.timeSince}&nbsp;&middot;&nbsp;100k views
               </div>
               <NavLink
@@ -208,10 +211,19 @@ function Post({ post, className, style, index, measure, layout }) {
               {isCustomEmbed() && (
                 <div className="mt-3">
                   {isTwitter() && (
-                    <TwitterTweetEmbed
+                    <Tweet
                       tweetId={tweetId()}
-                      onLoad={measure}
-                      options={{ theme: darkMode.value ? 'dark' : 'light' }}
+                      onLoad={() => {
+                        measure()
+                        setInterval(() => {
+                          if (isMounted()) measure()
+                        }, 500)
+                      }}
+                      options={{
+                        align: 'center',
+                        dnt: true,
+                        theme: darkMode.value ? 'dark' : 'light'
+                      }}
                     />
                   )}
 
@@ -223,70 +235,75 @@ function Post({ post, className, style, index, measure, layout }) {
                 </div>
               )}
 
-              {post.linkURL && !isCustomEmbed() && post.meta.title && (
-                <a
-                  href={post.linkURL}
-                  target="_blank"
-                  rel="noreferrer noopener nofollow"
-                  className="mt-3 rounded-md flex flex-row items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
-                >
-                  <div className="w-32 h-32 relative flex-shrink-0">
-                    {post.thumbnailURL || post.logoURL ? (
-                      <Image
-                        loading="eager"
-                        src={post.thumbnailURL || post.logoURL}
-                        layout="fill"
-                        className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
-                      />
-                    ) : (
-                      <div className="flex w-32 h-32 rounded-l-md dark:bg-gray-700">
-                        <FiLink className="w-8 h-8 m-auto text-tertiary" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
-                    <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
-                      {post.meta && post.meta.title
-                        ? post.meta.title
-                        : post.linkURL}
-                    </div>
-
-                    <div className="mt-1 text-xs font-medium text-secondary line-clamp-2">
-                      {post.meta && post.meta.description
-                        ? post.meta.description
-                        : ''}
-                    </div>
-
-                    <div className="flex flex-row items-center mt-auto text-tertiary text-xs">
-                      {post.logoURL && (
-                        <div className="inline-block w-4 h-4 mr-3">
-                          <Image
-                            loading="eager"
-                            src={post.logoURL}
-                            width={16}
-                            height={16}
-                          />
+              {post.linkURL &&
+                !isCustomEmbed() &&
+                post.meta &&
+                post.meta.title && (
+                  <a
+                    href={post.linkURL}
+                    target="_blank"
+                    rel="noreferrer noopener nofollow"
+                    className="mt-3 rounded-md flex flex-row items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
+                  >
+                    <div className="w-32 h-32 relative flex-shrink-0">
+                      {post.thumbnailURL || post.logoURL ? (
+                        <Image
+                          loading="eager"
+                          src={post.thumbnailURL || post.logoURL}
+                          layout="fill"
+                          className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
+                        />
+                      ) : (
+                        <div className="flex w-32 h-32 rounded-l-md dark:bg-gray-700">
+                          <FiLink className="w-8 h-8 m-auto text-tertiary" />
                         </div>
                       )}
-                      {post.domain}
                     </div>
-                  </div>
-                </a>
-              )}
 
-              {post.linkURL && !isCustomEmbed() && !post.meta.title && (
-                <a
-                  href={post.linkURL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline cursor-pointer mt-3 text-sm break-all"
-                >
-                  {post.linkURL}
-                </a>
-              )}
+                    <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
+                      <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
+                        {post.meta && post.meta.title
+                          ? post.meta.title
+                          : post.linkURL}
+                      </div>
 
-              <div className="flex flex-row items-center justify-between -mx-3 -ml-3 mt-auto pt-3">
+                      <div className="mt-1 text-xs font-medium text-secondary line-clamp-2">
+                        {post.meta && post.meta.description
+                          ? post.meta.description
+                          : ''}
+                      </div>
+
+                      <div className="flex flex-row items-center mt-auto text-tertiary text-xs">
+                        {post.logoURL && (
+                          <div className="inline-block w-4 h-4 mr-3">
+                            <Image
+                              loading="eager"
+                              src={post.logoURL}
+                              width={16}
+                              height={16}
+                            />
+                          </div>
+                        )}
+                        {post.domain}
+                      </div>
+                    </div>
+                  </a>
+                )}
+
+              {post.linkURL &&
+                !isCustomEmbed() &&
+                (!post.meta || !post.meta.title) && (
+                  <a
+                    href={post.linkURL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline cursor-pointer mt-3 text-sm break-all"
+                  >
+                    {post.linkURL}
+                  </a>
+                )}
+
+              <div className="flex flex-row items-center justify-between sm:-mx-3 sm:-ml-3 mt-auto pt-3">
                 <div className={chip}>
                   <BiRocket className="w-5 h-5" />
                   <span className="ml-3 text-sm font-medium">
@@ -313,7 +330,7 @@ function Post({ post, className, style, index, measure, layout }) {
                   <FiFolderPlus className="w-5 h-5 group-hover:text-blue-500 transition duration-150 ease-in-out" />
                 </div>
 
-                <div className={`${chip} text-disabled`}>
+                <div className={`${chip} text-disabled hidden sm:inline-block`}>
                   <FiMoreHorizontal className="w-5 h-5" />
                 </div>
               </div>

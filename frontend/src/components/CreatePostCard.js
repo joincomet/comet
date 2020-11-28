@@ -8,27 +8,31 @@ import {
   FiBarChart2,
   FiVideo
 } from 'react-icons/fi'
-import {RiFileGifLine} from 'react-icons/ri'
-import {CgArrowLeft} from 'react-icons/cg'
+import { RiFileGifLine } from 'react-icons/ri'
+import { CgArrowLeft } from 'react-icons/cg'
 import React from 'react'
 import Dropdown from '@/components/Dropdown'
 import { usePlanets } from '@/hooks/usePlanets'
 import Image from 'next/image'
 import Tippy from '@tippyjs/react'
-import NavLink from "@/components/NavLink";
+import NavLink from '@/components/NavLink'
 
-const button = "p-2.5 cursor-pointer transition dark:hover:bg-gray-700 rounded-full mr-3 hover:text-blue-500"
+const button =
+  'p-2.5 cursor-pointer transition dark:hover:bg-gray-700 rounded-full mr-3 hover:text-blue-500'
 
 export default function CreatePostCard() {
   return (
-    <div className="pt-3 pb-2 rounded-md shadow-md dark:bg-gray-800">
-      <div className="flex pl-3 pr-16">
+    <div className="pt-3 pb-2 sm:rounded-md shadow-md dark:bg-gray-800">
+      <div className="flex pl-3 pr-3 sm:pr-16">
         <div
           className={`w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 dark:bg-gray-700`}
         >
           <FiUser size={20} className="m-2.5 text-gray-500" />
         </div>
-        <textarea placeholder="Share something with the community" className="w-full rounded-xl px-4 dark:bg-gray-900 border-none text-sm ml-3 h-16 resize-none" />
+        <textarea
+          placeholder="Share something with the community"
+          className="w-full rounded-xl px-4 dark:bg-gray-900 border-none text-sm ml-3 h-16 resize-none"
+        />
       </div>
       <div className="flex text-tertiary pl-16 mt-2 items-center">
         <Tippy content="Upload Images" placement="bottom">
@@ -58,15 +62,16 @@ export default function CreatePostCard() {
         </Tippy>
 
         <div className="inline-flex items-center ml-auto mr-16 opacity-50">
-          <div className="cursor-pointer px-4 h-8 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition rounded-full text-sm font-medium">
+          <div className="cursor-pointer px-4 h-8 whitespace-nowrap inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition rounded-full text-sm font-medium">
             <FiUser className="w-6 h-6 p-0.5 mr-3 text-blue-500" />
             My Profile
             <FiChevronDown className="w-4 h-4 ml-3" />
           </div>
           <CgArrowLeft size={20} className="ml-1.5" />
-          <div className="ml-1.5 bg-blue-500 rounded-full shadow px-4 h-8 text-white text-sm font-medium inline-flex items-center">Post</div>
+          <div className="ml-1.5 bg-blue-500 rounded-full shadow px-4 h-8 text-white text-sm font-medium inline-flex items-center">
+            Post
+          </div>
         </div>
-
       </div>
     </div>
   )
