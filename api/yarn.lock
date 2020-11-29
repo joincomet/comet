@@ -574,10 +574,10 @@
     "@graphql-tools/utils" "^7.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/delegate@^7.0.0", "@graphql-tools/delegate@^7.0.1", "@graphql-tools/delegate@^7.0.3", "@graphql-tools/delegate@^7.0.5":
-  version "7.0.5"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-7.0.5.tgz#624a536255ec4adee7f237821a30003fcb41f7cb"
-  integrity sha512-wkB/L9cRxlPB4m9k9WQJZYPbnRxfEu2bkxvI9pVGHMsmoQxMZiM2GkhCBHDTBYJb7cxCS6Wv3LJb1w0iEqw24w==
+"@graphql-tools/delegate@^7.0.0", "@graphql-tools/delegate@^7.0.1", "@graphql-tools/delegate@^7.0.3", "@graphql-tools/delegate@^7.0.6":
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-7.0.6.tgz#dfead3ee89db9f6622ae159a699c4915a825cff0"
+  integrity sha512-KqhES4UFOyEhNkvcyv12y9mklKX3eMa43xS6VbdiXlTqsXdzJ7BaXHFDZPhiMhFIEs070HQE38CGG12SREfTXg==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     "@graphql-tools/batch-execute" "^7.0.0"
@@ -681,10 +681,10 @@
     unixify "1.0.0"
     valid-url "1.0.9"
 
-"@graphql-tools/merge@^6.2.5":
-  version "6.2.5"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.2.5.tgz#a03d6711f2a468b8de97c0fe9092469280ca66c9"
-  integrity sha512-T2UEm7L5MeS1ggbGKBkdV9kTqLqSHQM13RrjPzIAYzkFL/mK837sf+oq8h2+R8B+senuHX8akUhMTcU85kcMvw==
+"@graphql-tools/merge@^6.2.5", "@graphql-tools/merge@^6.2.6":
+  version "6.2.6"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.2.6.tgz#f10b8958523687440536ecf166f2959d2f094d0f"
+  integrity sha512-G6x0QlIzFHoJ3dyF9a4gxmBtaEYJ+EoAAGqXHsE/drRr58K1jscQdfKZdF1wZWZgxkgakHqgt1+oFMeQg/O6ug==
   dependencies:
     "@graphql-tools/schema" "^7.0.0"
     "@graphql-tools/utils" "^7.0.0"
@@ -741,13 +741,13 @@
     tslib "~2.0.1"
 
 "@graphql-tools/stitch@^7.0.1":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/stitch/-/stitch-7.1.0.tgz#c3deab0850aee5c1310c744b70aa041d7dafc9cf"
-  integrity sha512-89A+5OxvN0dRZzPdp9gOHcryT/4ujF4svOX/T7ZHlCbOlswjepTREKNCFrmlCgQgAvGnXWzikLXDtBJU0D+Ozg==
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/stitch/-/stitch-7.1.1.tgz#ba37e4dd877ac205af91573682b1e1b8df654384"
+  integrity sha512-NqPS99Zmgp9iEiTm2/ttZ4cr2MP1DW4SmP/78M9G4Mx7YL1OyvN93VHgjcZYHrIfR0TvA8FQR8yW+tz5fVP3bA==
   dependencies:
     "@graphql-tools/batch-delegate" "^7.0.0"
-    "@graphql-tools/delegate" "^7.0.5"
-    "@graphql-tools/merge" "^6.2.5"
+    "@graphql-tools/delegate" "^7.0.6"
+    "@graphql-tools/merge" "^6.2.6"
     "@graphql-tools/schema" "^7.1.0"
     "@graphql-tools/utils" "^7.1.0"
     "@graphql-tools/wrap" "^7.0.0"
@@ -2203,6 +2203,13 @@ dateformat@~1.0.4-1.2.3:
     get-stdin "^4.0.1"
     meow "^3.3.0"
 
+dayjs-twitter@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/dayjs-twitter/-/dayjs-twitter-0.4.0.tgz#06871e7470df842c3f31f5fb4de26afa23ac679b"
+  integrity sha512-dg6Tks+XFNd8xqn4obHGWRGgYvSgx6pobQhg0FgrlXmTd/xW2p/nt7tjpIsdBBdYrz8lwezZEOgzGyGftOtVqg==
+  dependencies:
+    duration-js "^4.0.0"
+
 dayjs@^1.8.29, dayjs@^1.9.6:
   version "1.9.6"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.9.6.tgz#6f0c77d76ac1ff63720dd1197e5cb87b67943d70"
@@ -2377,6 +2384,11 @@ dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
+
+duration-js@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/duration-js/-/duration-js-4.0.0.tgz#ab91575a4f1a6b096034685cfc6ea9aca99cd63f"
+  integrity sha1-q5FXWk8aawlgNGhc/G6prKmc1j8=
 
 dynamic-dedupe@^0.3.0:
   version "0.3.0"
@@ -3783,14 +3795,14 @@ metascraper-author@^5.14.22:
     lodash "~4.17.20"
 
 metascraper-clearbit@^5.14.24:
-  version "5.14.24"
-  resolved "https://registry.yarnpkg.com/metascraper-clearbit/-/metascraper-clearbit-5.14.24.tgz#6bfdf5eb4a2a5796320bcee41282d9f1cd72d7c8"
-  integrity sha512-2uIwessrLHlogWCvoYuPzinz6Pmy/EjodbYAx9DIZWsIzlLJhnZtseY8SJoi4CjyKb2G01iEDSJB5HtV/btX+Q==
+  version "5.14.25"
+  resolved "https://registry.yarnpkg.com/metascraper-clearbit/-/metascraper-clearbit-5.14.25.tgz#8cd6f83a660df481c2be9e6f6d0780a62648b7cf"
+  integrity sha512-TGqPOPIWUkr2/lRTvNYkGN1qUHpJinlrN7p+8bR699qjpZCJyukPT3eoPtgFBzTuDYENaHkN+TnITAvYNAeAfw==
   dependencies:
     "@metascraper/helpers" "^5.14.22"
     got "~11.8.0"
     lodash "~4.17.20"
-    tldts "~5.6.71"
+    tldts "~5.6.73"
 
 metascraper-date@^5.14.22:
   version "5.14.22"
@@ -4940,9 +4952,9 @@ spdx-expression-parse@^3.0.0:
     spdx-license-ids "^3.0.0"
 
 spdx-license-ids@^3.0.0:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.6.tgz#c80757383c28abf7296744998cbc106ae8b854ce"
-  integrity sha512-+orQK83kyMva3WyPf59k1+Y525csj5JejicWut55zeTWANuN17qSiSLUXWtzHeNWORSvT7GLDJ/E/XiIWoXBTw==
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.7.tgz#e9c18a410e5ed7e12442a549fbd8afa767038d65"
+  integrity sha512-U+MTEOO0AiDzxwFvoa4JVnMV6mZlJKk2sBLt90s7G0Gd0Mlknc7kxEn3nuDPNZRta7O2uy8oLcZLVT+4sqNZHQ==
 
 split2@^3.1.1:
   version "3.2.2"
@@ -5197,7 +5209,7 @@ tldts-core@^5.6.73:
   resolved "https://registry.yarnpkg.com/tldts-core/-/tldts-core-5.6.73.tgz#0bc71f4b93f6e7d53ba8d4ec5314aebccf0de922"
   integrity sha512-fNLyl2Heuo1mvs/QYhUMrteLxUJGkR/hOlOF1M3ZXiB6Na8AfPrkJi/jUr697400Ob7zhmD/rtKwJcix5As4Pg==
 
-tldts@~5.6.71:
+tldts@~5.6.73:
   version "5.6.73"
   resolved "https://registry.yarnpkg.com/tldts/-/tldts-5.6.73.tgz#c6f2af200b6b0b03db6f68aa971ee0bc957502c1"
   integrity sha512-/5c4cd0f/o6lycmQ+q+mq9pDFcW67qmBeCAFvDd1xNLo2BD2hP7GQ0MyIxMVZQKgjOip2Ekky8Rtm0Sg5IhFwQ==

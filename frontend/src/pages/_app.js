@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query-devtools'
 import { Provider } from 'next-auth/client'
+import { LayoutTree } from '@moxy/next-layout'
 
 const queryClient = new QueryClient({
   defaultConfig: {
@@ -50,7 +51,7 @@ export default function App({ Component, pageProps }) {
               backend={TouchBackend}
               options={{ enableTouchEvents: false, enableMouseEvents: true }}
             >
-              <Component {...pageProps} />
+              <LayoutTree Component={Component} pageProps={pageProps} />
               <CustomDragLayer />
             </DndProvider>
           </Hydrate>

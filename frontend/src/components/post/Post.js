@@ -7,8 +7,10 @@ import {
   FiMessageCircle,
   FiMoreHorizontal,
   FiShare,
-  FiFolderPlus
+  FiFolderPlus,
+  FiRepeat
 } from 'react-icons/fi'
+import { HiSwitchHorizontal } from 'react-icons/hi'
 import { CgArrowRight } from 'react-icons/cg'
 import { BiRocket } from 'react-icons/bi'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -149,161 +151,183 @@ function Post({ post, className, style, index, measure, layout }) {
             isDragging || toast ? 'opacity-40' : 'opacity-100'
           } duration-150 transition ease-in-out pb-3`}
         >
-          <div className="sm:mx-3 2xl:mx-72 flex bg-white dark:bg-gray-800 pl-3 py-3 pr-3 sm:pr-16 sm:rounded-md shadow-md">
+          <div className="sm:mx-3 2xl:mx-72 flex bg-white dark:bg-gray-800 sm:rounded-md shadow-md">
             <div className="flex flex-col flex-grow">
-              <div className="text-tertiary text-xs font-semibold flex items-center">
+              <div className="flex items-start m-3">
                 <NavLink
                   href={`/user/${post.author.username}`}
-                  className={`w-10 h-10 flex-shrink-0 rounded-full ${
+                  className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full ${
                     post.author.avatarURL ? '' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
                   {post.author.avatarURL ? (
                     <Image
                       src={post.author.avatarURL}
-                      height={40}
-                      width={40}
-                      className="rounded-full object-cover object-center block h-8 w-8"
+                      layout="fill"
+                      className="rounded-full object-cover object-center"
                       loading="eager"
                     />
                   ) : (
                     <FiUser size={20} className="m-2.5 text-gray-500" />
                   )}
                 </NavLink>
-                {post.author.username}&nbsp;
-                <CgArrowRight size={16} />
-                &nbsp;
-                <span className="text-accent">{post.planet.name}</span>
-                <span className="hidden sm:inline-block">
-                  &nbsp;&middot;&nbsp;{post.timeSince}&nbsp;&middot;&nbsp;100k
-                  views
-                </span>
-              </div>
-              <div className="block sm:hidden text-tertiary text-xs font-semibold mt-0.5">
-                {post.timeSince}&nbsp;&middot;&nbsp;100k views
-              </div>
-              <NavLink
-                href={post.relativeURL}
-                className="text-base font-semibold text-primary mt-0.5"
-              >
-                {post.title}
-              </NavLink>
+                <div className="flex flex-col">
+                  <div className="inline-flex items-center text-sm">
+                    <span className="text-secondary font-semibold hover:underline cursor-pointer">
+                      {post.author.username}
+                    </span>
+                    &nbsp;
+                    <span className="text-tertiary hidden sm:block">
+                      @{post.author.username}
+                    </span>
+                    &nbsp;
+                    <CgArrowRight size={16} className="text-tertiary" />
+                    &nbsp;
+                    <span className="text-accent font-medium hover:underline cursor-pointer">
+                      {post.planet.name}
+                    </span>
+                    <span className="text-tertiary hidden sm:block">
+                      &nbsp;&middot;&nbsp;{post.timeSince}
+                    </span>
+                  </div>
 
-              {post.textContent && (
-                <div
-                  dangerouslySetInnerHTML={{ __html: post.textContent }}
-                  className="prose-sm p-3 rounded-md border dark:border-gray-700 mt-3 text-primary"
-                />
-              )}
+                  <span className="text-tertiary sm:hidden block text-xs">
+                    @{post.author.username}&nbsp;&middot;&nbsp;{post.timeSince}
+                  </span>
 
-              {post.imageURLs.length > 0 && (
-                <div className="relative aspect-ratio-16/9 object-contain w-full mt-4 bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
-                  <Image
-                    loading="eager"
-                    alt="Image"
-                    layout="fill"
-                    src={post.imageURLs[0]}
-                    className="rounded-md object-contain"
-                  />
-                </div>
-              )}
-
-              {isCustomEmbed() && (
-                <div className="mt-3">
-                  {isTwitter() && (
-                    <Tweet
-                      tweetId={tweetId()}
-                      onLoad={() => {
-                        measure()
-                        setInterval(() => {
-                          if (isMounted()) measure()
-                        }, 500)
-                      }}
-                      options={{
-                        align: 'center',
-                        dnt: true,
-                        theme: darkMode.value ? 'dark' : 'light'
-                      }}
-                    />
-                  )}
-
-                  {ReactPlayer.canPlay(post.linkURL) && (
-                    <div className="rounded-md overflow-hidden">
-                      <ReactPlayer controls={true} url={post.linkURL} />
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {post.linkURL &&
-                !isCustomEmbed() &&
-                post.meta &&
-                post.meta.title && (
-                  <a
-                    href={post.linkURL}
-                    target="_blank"
-                    rel="noreferrer noopener nofollow"
-                    className="mt-3 rounded-md flex flex-row items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
+                  <NavLink
+                    href={post.relativeURL}
+                    className="text-base font-medium text-primary hidden sm:block"
                   >
-                    <div className="w-32 h-32 relative flex-shrink-0">
-                      {post.thumbnailURL || post.logoURL ? (
-                        <Image
-                          loading="eager"
-                          src={post.thumbnailURL || post.logoURL}
-                          layout="fill"
-                          className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
-                        />
-                      ) : (
-                        <div className="flex w-32 h-32 rounded-l-md dark:bg-gray-700">
-                          <FiLink className="w-8 h-8 m-auto text-tertiary" />
-                        </div>
-                      )}
-                    </div>
+                    {post.title}
+                  </NavLink>
+                </div>
+              </div>
 
-                    <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
-                      <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
-                        {post.meta && post.meta.title
-                          ? post.meta.title
-                          : post.linkURL}
+              <div className="mx-3 sm:mx-16">
+                <NavLink
+                  href={post.relativeURL}
+                  className="text-base font-medium text-primary sm:hidden block mb-3"
+                >
+                  {post.title}
+                </NavLink>
+
+                {post.textContent && (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: post.textContent }}
+                    className="prose-sm p-3 rounded-md border dark:border-gray-700 text-primary"
+                  />
+                )}
+
+                {post.imageURLs.length > 0 && (
+                  <div className="relative aspect-ratio-16/9 object-contain w-full bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
+                    <Image
+                      loading="eager"
+                      alt="Image"
+                      layout="fill"
+                      src={post.imageURLs[0]}
+                      className="rounded-md object-contain"
+                    />
+                  </div>
+                )}
+
+                {isCustomEmbed() && (
+                  <div>
+                    {isTwitter() && (
+                      <Tweet
+                        tweetId={tweetId()}
+                        onLoad={() => {
+                          measure()
+                          setInterval(() => {
+                            if (isMounted()) measure()
+                          }, 500)
+                        }}
+                        options={{
+                          align: 'center',
+                          dnt: true,
+                          theme: darkMode.value ? 'dark' : 'light'
+                        }}
+                      />
+                    )}
+
+                    {ReactPlayer.canPlay(post.linkURL) && (
+                      <div className="rounded-md overflow-hidden">
+                        <ReactPlayer controls={true} url={post.linkURL} />
                       </div>
+                    )}
+                  </div>
+                )}
 
-                      <div className="mt-1 text-xs font-medium text-secondary line-clamp-2">
-                        {post.meta && post.meta.description
-                          ? post.meta.description
-                          : ''}
-                      </div>
-
-                      <div className="flex flex-row items-center mt-auto text-tertiary text-xs">
-                        {post.logoURL && (
-                          <div className="inline-block w-4 h-4 mr-3">
-                            <Image
-                              loading="eager"
-                              src={post.logoURL}
-                              width={16}
-                              height={16}
-                            />
+                {post.linkURL &&
+                  !isCustomEmbed() &&
+                  post.meta &&
+                  post.meta.title && (
+                    <a
+                      href={post.linkURL}
+                      target="_blank"
+                      rel="noreferrer noopener nofollow"
+                      className="rounded-md flex flex-row items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 hover:text-blue-500"
+                    >
+                      <div className="w-32 h-32 relative flex-shrink-0">
+                        {post.thumbnailURL || post.logoURL ? (
+                          <Image
+                            loading="eager"
+                            src={post.thumbnailURL || post.logoURL}
+                            layout="fill"
+                            className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
+                          />
+                        ) : (
+                          <div className="flex w-32 h-32 rounded-l-md dark:bg-gray-700">
+                            <FiLink className="w-8 h-8 m-auto text-tertiary" />
                           </div>
                         )}
-                        {post.domain}
                       </div>
-                    </div>
-                  </a>
-                )}
 
-              {post.linkURL &&
-                !isCustomEmbed() &&
-                (!post.meta || !post.meta.title) && (
-                  <a
-                    href={post.linkURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline cursor-pointer mt-3 text-sm break-all"
-                  >
-                    {post.linkURL}
-                  </a>
-                )}
+                      <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
+                        <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
+                          {post.meta && post.meta.title
+                            ? post.meta.title
+                            : post.linkURL}
+                        </div>
 
-              <div className="flex flex-row items-center justify-between sm:-mx-3 sm:-ml-3 mt-auto pt-3">
+                        <div className="mt-1 text-xs font-medium text-secondary line-clamp-2">
+                          {post.meta && post.meta.description
+                            ? post.meta.description
+                            : ''}
+                        </div>
+
+                        <div className="flex flex-row items-center mt-auto text-tertiary text-xs">
+                          {post.logoURL && (
+                            <div className="inline-block w-4 h-4 mr-3">
+                              <Image
+                                loading="eager"
+                                src={post.logoURL}
+                                width={16}
+                                height={16}
+                              />
+                            </div>
+                          )}
+                          {post.domain}
+                        </div>
+                      </div>
+                    </a>
+                  )}
+
+                {post.linkURL &&
+                  !isCustomEmbed() &&
+                  (!post.meta || !post.meta.title) && (
+                    <a
+                      href={post.linkURL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline cursor-pointer mt-3 text-sm break-all"
+                    >
+                      {post.linkURL}
+                    </a>
+                  )}
+              </div>
+
+              <div className="flex flex-row items-center justify-between mx-3 sm:mx-16 mt-auto py-3">
                 <div className={chip}>
                   <BiRocket className="w-5 h-5" />
                   <span className="ml-3 text-sm font-medium">
@@ -318,20 +342,19 @@ function Post({ post, className, style, index, measure, layout }) {
                   </span>
                 </div>
 
-                {/*<div className={`${chip}`}>
-                  <FiMoreHorizontal className="w-5 h-5 text-disabled" />
-                </div>*/}
-
-                <div className={`${chip} group`}>
-                  <FiShare className="w-5 h-5 group-hover:text-green-500 transition duration-150 ease-in-out" />
+                <div className={`${chip} hidden sm:inline-flex`}>
+                  <FiRepeat className="w-5 h-5" />
+                  <span className="ml-3 text-sm font-medium">
+                    {post.commentCount}
+                  </span>
                 </div>
 
                 <div className={`${chip} group`}>
                   <FiFolderPlus className="w-5 h-5 group-hover:text-blue-500 transition duration-150 ease-in-out" />
                 </div>
 
-                <div className={`${chip} text-disabled hidden sm:inline-block`}>
-                  <FiMoreHorizontal className="w-5 h-5" />
+                <div className={`${chip} group`}>
+                  <FiShare className="w-5 h-5 group-hover:text-green-500 transition duration-150 ease-in-out" />
                 </div>
               </div>
             </div>

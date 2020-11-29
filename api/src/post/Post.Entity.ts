@@ -106,7 +106,8 @@ export class Post {
   @Field()
   get timeSince(): string {
     // return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
-    return dayjs(new Date(this.createdAt)).fromNow()
+    // @ts-ignore
+    return dayjs(new Date(this.createdAt)).twitter()
   }
 
   @Field({ nullable: true })

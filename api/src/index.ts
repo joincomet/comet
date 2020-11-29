@@ -16,6 +16,10 @@ import { commentLoader } from '@/comment/CommentLoader'
 import { userJoinedPlanetLoader } from '@/planet/UserJoinedPlanetLoader'
 import { postRocketLoader } from '@/post/PostRocketLoader'
 import { commentRocketLoader } from '@/comment/CommentRocketLoader'
+import dayjs from 'dayjs'
+import dayjsTwitter from 'dayjs-twitter'
+
+dayjs.extend(dayjsTwitter)
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(

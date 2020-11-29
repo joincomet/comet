@@ -156,14 +156,6 @@ body.dark {
   @apply transform top-1/2 -translate-y-1/2;
 }
 
-.sidebar-item {
-  @apply cursor-pointer relative text-sm font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-11 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition;
-}
-
-.sidebar-item-small {
-  @apply cursor-pointer relative text-xs font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-8 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition;
-}
-
 .aspect-ratio-16\/9 {
   padding-bottom: 56.25%;
 }

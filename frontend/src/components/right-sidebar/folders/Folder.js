@@ -4,6 +4,9 @@ import { FiFolder, FiGlobe, FiStar, FiUsers } from 'react-icons/fi'
 import React from 'react'
 import Tippy from '@tippyjs/react'
 
+export const folderClass =
+  'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-10 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-tertiary transition'
+
 export default function Folder({ folder }) {
   const [{ canDrop, isOver }, dropRef] = useDrop({
     accept: ItemTypes.POST,
@@ -19,7 +22,7 @@ export default function Folder({ folder }) {
   const { name, color, type } = folder
 
   return (
-    <div ref={dropRef} className={`sidebar-item`}>
+    <div ref={dropRef} className={folderClass}>
       {name === 'Favorites' ? (
         <FiStar
           width={20}

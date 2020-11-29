@@ -22,7 +22,7 @@ const button =
 
 export default function CreatePostCard() {
   return (
-    <div className="pt-3 pb-2 sm:rounded-md shadow-md dark:bg-gray-800">
+    <div className="pt-3 pb-2 sm:rounded-md shadow-md bg-white dark:bg-gray-800">
       <div className="flex pl-3 pr-3 sm:pr-16">
         <div
           className={`w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 dark:bg-gray-700`}
@@ -31,7 +31,7 @@ export default function CreatePostCard() {
         </div>
         <textarea
           placeholder="Share something with the community"
-          className="w-full rounded-xl px-4 dark:bg-gray-900 border-none text-sm ml-3 h-16 resize-none"
+          className="w-full rounded-xl px-4 bg-gray-100 dark:bg-gray-900 border-none text-sm ml-3 h-16 resize-none"
         />
       </div>
       <div className="flex text-tertiary pl-16 mt-2 items-center">

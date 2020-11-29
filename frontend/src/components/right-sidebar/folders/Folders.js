@@ -1,4 +1,4 @@
-import Folder from '@/components/right-sidebar/folders/Folder'
+import Folder, { folderClass } from '@/components/right-sidebar/folders/Folder'
 import { FiFolderPlus } from 'react-icons/fi'
 import React from 'react'
 
@@ -25,7 +25,7 @@ export default function Folders() {
         }}
       />
 
-      <div className="sidebar-item">
+      <div className={folderClass}>
         <FiFolderPlus className="w-5 h-5" />
         <span className="ml-6">New Folder</span>
       </div>
