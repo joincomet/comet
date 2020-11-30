@@ -71,7 +71,7 @@ async function bootstrap() {
       return {
         req,
         res,
-        ...getUser(req),
+        ...getUser(req.cookies.sessionToken),
         userLoader,
         postLoader,
         commentLoader,

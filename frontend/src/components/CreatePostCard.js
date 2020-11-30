@@ -18,7 +18,7 @@ import Tippy from '@tippyjs/react'
 import NavLink from '@/components/NavLink'
 
 const button =
-  'p-2.5 cursor-pointer transition dark:hover:bg-gray-700 rounded-full mr-3 hover:text-blue-500'
+  'p-2.5 cursor-pointer transition dark:hover:bg-gray-700 rounded-full mr-3 text-blue-500'
 
 export default function CreatePostCard() {
   return (
@@ -31,7 +31,7 @@ export default function CreatePostCard() {
         </div>
         <textarea
           placeholder="Share something with the community"
-          className="w-full rounded-xl px-4 bg-gray-100 dark:bg-gray-900 border-none text-sm ml-3 h-16 resize-none"
+          className="w-full rounded-xl px-4 bg-gray-100 dark:bg-gray-900 border-none text-sm ml-3 h-16 resize-none transition"
         />
       </div>
       <div className="flex text-tertiary pl-16 mt-2 items-center">

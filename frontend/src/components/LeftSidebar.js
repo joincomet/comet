@@ -36,7 +36,7 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
         )}
       </AnimatePresence>
       <nav
-        className={`w-nav pb-16 fixed z-30 flex flex-col overflow-y-auto bg-white dark:bg-gray-800 shadow-lg min-h-full h-full transform transition ${
+        className={`w-nav pb-12 fixed z-30 flex flex-col overflow-y-auto bg-white dark:bg-gray-800 shadow-lg min-h-full h-full transform transition ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
         }`}
       >
@@ -145,8 +145,17 @@ function CometXLinks() {
   )
 }
 
+const colors = [
+  'hover:text-red-500 dark:hover:text-red-500',
+  'hover:text-amber-500 dark:hover:text-amber-500',
+  'hover:text-green-500 dark:hover:text-green-500',
+  'hover:text-blue-500 dark:hover:text-blue-500',
+  'hover:text-purple-500 dark:hover:text-purple-500',
+  'hover:text-pink-500 dark:hover:text-pink-500'
+]
+
 const planetClass =
-  'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-8 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-gray-600 dark:text-gray-400 transition'
+  'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-8 flex items-center text-gray-600 dark:text-gray-400 transition'
 
 function TopPlanets() {
   const { isLoading, isError, data, error } = usePlanets({
@@ -157,7 +166,7 @@ function TopPlanets() {
   if (isLoading || isError) return null
 
   return (
-    <div className="mt-3 h-full">
+    <div className="py-3 h-full">
       <div className="mx-5 px-3 border-b dark:border-gray-700 relative mb-3">
         <div className="h-8 absolute left-0 top-0 bottom-0 inline-flex items-center ml-1.5">
           <FiSearch size={16} className="text-disabled" />
@@ -170,12 +179,11 @@ function TopPlanets() {
         />
       </div>
 
-      {data.map(planet => (
+      {data.map((planet, index) => (
         <NavLink
-          className={planetClass}
+          className={`${planetClass} ${colors[index % colors.length]}`}
           key={planet.id}
-          href="/+[planet]"
-          as={`/+${planet.name}`}
+          href={`/planet/${planet.name}`}
         >
           {planet.avatarURL ? (
             <Image

@@ -56,7 +56,9 @@ export default function App({ Component, pageProps }) {
             </DndProvider>
           </Hydrate>
 
-          {/*{process.env.NODE_ENV !== 'production' && (<ReactQueryDevtools position="top-left" />)}*/}
+          {process.env.NODE_ENV !== 'production' && (
+            <ReactQueryDevtools position="top-left" />
+          )}
         </QueryClientProvider>
       </Provider>
     </>

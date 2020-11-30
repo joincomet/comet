@@ -5,13 +5,22 @@ import {
   SiReddit,
   SiDiscord
 } from 'react-icons/si'
-import { signIn, signOut, useSession, csrfToken } from 'next-auth/client'
+import { signIn, signOut, useSession } from 'next-auth/client'
+import { useForm } from 'react-hook-form'
 import Logo from '@/components/Logo'
 
 const oauthButton =
-  'px-6 h-10 w-full rounded-md shadow-sm text-white text-sm font-medium inline-flex items-center cursor-pointer transition'
+  'px-6 h-9 w-full rounded-md shadow-sm text-white text-sm font-medium inline-flex items-center cursor-pointer transition'
 
-export default function SignUpForm({ csrfToken }) {
+const textBox =
+  'bg-gray-200 dark:bg-gray-700 rounded-md h-9 px-3 w-full border-none transition text-sm'
+
+export default function SignUpForm() {
+  const [session] = useSession()
+
+  const { register, handleSubmit, watch, errors } = useForm()
+  const onSubmit = data => signIn('credentials', data)
+
   return (
     <div className="rounded-md shadow-xl z-10 bg-white dark:bg-gray-800 py-6 flex flex-col sm:py-12 px-12">
       <div className="flex">
@@ -21,21 +30,18 @@ export default function SignUpForm({ csrfToken }) {
             See what's in orbit.
           </div>
 
-          <form
-            method="post"
-            action="/api/auth/callback/credentials"
-            className="w-full"
-          >
-            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+          <p>{JSON.stringify(session ? session.user : '')}</p>
 
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full">
             <label>
               <div className="text-xs pb-2 uppercase font-medium text-tertiary">
-                Username or Email
+                Username
               </div>
               <input
                 name="username"
                 type="text"
-                className="bg-gray-200 dark:bg-gray-700 rounded-md h-10 px-6 w-full"
+                className={textBox}
+                ref={register({ required: true })}
               />
             </label>
 
@@ -46,7 +52,8 @@ export default function SignUpForm({ csrfToken }) {
               <input
                 name="password"
                 type="password"
-                className="bg-gray-200 dark:bg-gray-700 rounded-md h-10 px-6 w-full"
+                className={textBox}
+                ref={register({ required: true })}
               />
             </label>
 
@@ -56,9 +63,16 @@ export default function SignUpForm({ csrfToken }) {
 
             <button
               type="submit"
-              className="rounded-md bg-gradient-to-br to-red-400 from-blue-500 flex items-center mt-6 text-white h-10"
+              className="w-full focus:outline-none rounded-md bg-gradient-to-br to-red-400 from-blue-500 flex items-center mt-6 text-white h-9 text-sm"
             >
               <div className="m-auto">Log In</div>
+            </button>
+
+            <button
+              type="submit"
+              className="w-full focus:outline-none rounded-md border border-gray-200 dark:border-gray-700 transition bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white flex items-center mt-3 h-9 text-sm"
+            >
+              <div className="m-auto">Create Account</div>
             </button>
           </form>
         </div>
@@ -111,10 +125,4 @@ export default function SignUpForm({ csrfToken }) {
       </div>
     </div>
   )
-}
-
-SignUpForm.getInitialProps = async context => {
-  return {
-    csrfToken: await csrfToken(context)
-  }
 }

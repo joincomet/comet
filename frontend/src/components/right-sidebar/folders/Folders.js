@@ -5,7 +5,7 @@ import React from 'react'
 export default function Folders() {
   return (
     <>
-      <div className="mx-6 mb-3 font-header text-tertiary">Folders</div>
+      <div className="mx-6 mb-3 font-header text-tertiary">My Folders</div>
       <Folder
         folder={{ name: 'Favorites', type: 'PRIVATE', color: '#eab308' }}
       />

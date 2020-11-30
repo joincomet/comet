@@ -1,4 +1,4 @@
-import Layout from '../components/Layout'
+import Layout from '@/components/Layout'
 import GalaxiesSlider from '@/components/GalaxiesSlider'
 import CreatePostCard from '@/components/CreatePostCard'
 import Posts from '@/components/post/Posts'
@@ -6,13 +6,8 @@ import { QueryClient } from 'react-query'
 import { dehydrate } from 'react-query/hydration'
 import { fetchPosts } from '@/hooks/usePosts'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import GoogleOneTap from '@/components/GoogleOneTap'
+import React from 'react'
 import Header from '@/components/Header'
-import { FiEdit } from 'react-icons/fi'
-import Image from 'next/image'
-import NavLink from '@/components/NavLink'
-import { usePlanets } from '@/hooks/usePlanets'
 import { withLayout } from '@moxy/next-layout'
 import CreatePostFAB from '@/components/CreatePostFAB'
 
@@ -21,8 +16,6 @@ function HomePage() {
 
   return (
     <div>
-      <GoogleOneTap />
-
       <GalaxiesSlider />
       <div className="pt-3 sm:px-3 2xl:px-72 hidden sm:block">
         <CreatePostCard />
@@ -67,40 +60,4 @@ export async function getServerSideProps(ctx) {
       dehydratedState
     }
   }
-}
-
-function TopPlanets() {
-  const { isLoading, isError, data, error } = usePlanets({
-    sort: 'TOP',
-    pageSize: 50
-  })
-
-  if (isLoading || isError) return null
-
-  return (
-    <div>
-      {data.map(planet => (
-        <NavLink
-          className="flex items-center text-xs font-medium text-tertiary h-8"
-          key={planet.id}
-          href="/+[planet]"
-          as={`/+${planet.name}`}
-        >
-          {planet.avatarURL ? (
-            <Image
-              width={20}
-              height={20}
-              src={planet.avatarURL}
-              className="w-5 h-5 rounded-full"
-              alt={planet.name}
-            />
-          ) : (
-            <div className="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700" />
-          )}
-
-          <span className="ml-6">{planet.name}</span>
-        </NavLink>
-      ))}
-    </div>
-  )
 }

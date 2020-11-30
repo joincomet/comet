@@ -31,12 +31,11 @@ export default function SearchBar({ className, slashFocus }) {
       <input
         ref={inputRef}
         className={className}
-        placeholder=""
         onFocus={() => setSearchFocused(true)}
         onBlur={() => setSearchFocused(false)}
       />
       <button
-        className={`absolute left-6 transform focus:outline-none transition duration-200 ease-in-out ${
+        className={`absolute left-6 transform focus:outline-none transition ${
           searchFocused ? 'text-blue-500' : 'text-tertiary'
         }`}
         style={{ top: '0.8125rem' }}

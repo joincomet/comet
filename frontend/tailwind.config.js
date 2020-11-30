@@ -38,10 +38,15 @@ module.exports = {
       current: 'currentColor',
       black: colors.black,
       white: colors.white,
-      blue: colors.blue,
-      red: colors.red,
       gray: colors.gray,
-      green: colors.green
+
+      red: colors.red,
+      amber: colors.amber,
+      yellow: colors.yellow,
+      green: colors.green,
+      blue: colors.blue,
+      purple: colors.purple,
+      pink: colors.pink
     }
   },
   darkMode: 'class',

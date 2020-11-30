@@ -114,7 +114,7 @@ export class User {
   @Column({ default: false })
   deleted: boolean
 
-  @Authorized('ADMIN')
+  // @Authorized('ADMIN')
   @Field()
   @Column({ default: false })
   admin: boolean

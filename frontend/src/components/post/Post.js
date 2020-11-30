@@ -24,14 +24,24 @@ import ReactPlayer from 'react-player/youtube'
 import useDarkMode from 'use-dark-mode'
 import { useMountedState } from 'react-use'
 
+const colors = [
+  'text-red-500',
+  'text-amber-500',
+  'text-green-500',
+  'text-blue-500',
+  'text-purple-500',
+  'text-pink-500'
+]
+
 const chip =
-  'cursor-pointer px-3 py-2 text-tertiary inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
+  'cursor-pointer px-3 h-8 inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
 
 function Post({ post, className, style, index, measure, layout }) {
   const isMounted = useMountedState()
 
   const [toast, setToast] = useState(null)
   const [timeoutId, setTimeoutId] = useState(null)
+  const [rocketed, setRocketed] = useState(false)
 
   const [{ isDragging }, dragRef, preview] = useDrag({
     item: { post, type: ItemTypes.POST },
@@ -183,7 +193,11 @@ function Post({ post, className, style, index, measure, layout }) {
                     &nbsp;
                     <CgArrowRight size={16} className="text-tertiary" />
                     &nbsp;
-                    <span className="text-accent font-medium hover:underline cursor-pointer">
+                    <span
+                      className={`font-medium hover:underline cursor-pointer ${
+                        colors[index % 6]
+                      }`}
+                    >
                       {post.planet.name}
                     </span>
                     <span className="text-tertiary hidden sm:block">
@@ -327,34 +341,39 @@ function Post({ post, className, style, index, measure, layout }) {
                   )}
               </div>
 
-              <div className="flex flex-row items-center justify-between mx-3 sm:mx-16 mt-auto py-3">
-                <div className={chip}>
-                  <BiRocket className="w-5 h-5" />
+              <div className="flex flex-row items-center mx-3 sm:mx-16 mt-auto py-3">
+                <div
+                  className={`${chip} mr-3 ${
+                    rocketed ? 'text-red-500' : 'text-tertiary'
+                  }`}
+                  onClick={() => setRocketed(!rocketed)}
+                >
+                  <BiRocket className={`w-4.5 h-4.5`} />
                   <span className="ml-3 text-sm font-medium">
                     {post.rocketCount}
                   </span>
                 </div>
 
-                <div className={`${chip}`}>
-                  <FiMessageCircle className="w-5 h-5" />
+                <div className={`${chip} text-tertiary mr-3`}>
+                  <FiMessageCircle className="w-4.5 h-4.5" />
                   <span className="ml-3 text-sm font-medium">
                     {post.commentCount}
                   </span>
                 </div>
 
-                <div className={`${chip} hidden sm:inline-flex`}>
-                  <FiRepeat className="w-5 h-5" />
+                <div className={`${chip} text-tertiary hidden sm:inline-flex`}>
+                  <FiRepeat className="w-4.5 h-4.5" />
                   <span className="ml-3 text-sm font-medium">
                     {post.commentCount}
                   </span>
                 </div>
 
-                <div className={`${chip} group`}>
-                  <FiFolderPlus className="w-5 h-5 group-hover:text-blue-500 transition duration-150 ease-in-out" />
+                <div className={`${chip} text-tertiary group ml-auto mr-3`}>
+                  <FiFolderPlus className="w-4.5 h-4.5 group-hover:text-blue-500 transition duration-150 ease-in-out" />
                 </div>
 
-                <div className={`${chip} group`}>
-                  <FiShare className="w-5 h-5 group-hover:text-green-500 transition duration-150 ease-in-out" />
+                <div className={`${chip} text-tertiary group`}>
+                  <FiShare className="w-4.5 h-4.5 group-hover:text-green-500 transition duration-150 ease-in-out" />
                 </div>
               </div>
             </div>

@@ -1,30 +1,21 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
+import { getUserFromToken, login } from '@/hooks/useLogin'
 
 const providers = [
   Providers.Credentials({
     name: 'Credentials',
     credentials: {
-      username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+      username: { label: 'Username', type: 'text' },
       password: { label: 'Password', type: 'password' }
     },
-    authorize: async credentials => {
-      const user = credentials => {
-        return {
-          id: 1,
-          username: 'jsmith',
-          name: 'J Smith',
-          email: 'jsmith@example.com'
-        }
-      }
-      if (user) {
-        return Promise.resolve(user)
-      } else {
-        return Promise.resolve(null)
-      }
+    authorize: async ({ username, password }) => {
+      const { accessToken, user } = await login({ username, password })
+      user.accessToken = accessToken
+      return user
     }
-  }),
-  Providers.Google({
+  })
+  /*Providers.Google({
     clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET
   }),
@@ -32,10 +23,6 @@ const providers = [
     clientId: process.env.TWITTER_CLIENT_ID,
     clientSecret: process.env.TWITTER_CLIENT_SECRET
   }),
-  /*Providers.Reddit({
-    clientId: process.env.REDDIT_CLIENT_ID,
-    clientSecret: process.env.REDDIT_CLIENT_SECRET
-  }),*/
   Providers.Discord({
     clientId: process.env.DISCORD_CLIENT_ID,
     clientSecret: process.env.DISCORD_CLIENT_SECRET
@@ -43,30 +30,16 @@ const providers = [
   Providers.GitHub({
     clientId: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET
-  })
+  })*/
 ]
 
 const callbacks = {
   signIn: async (user, account, profile) => {
-    if (account.provider === 'discord') {
-      const discordUser = {
-        id: profile.id,
-        login: profile.login,
-        name: profile.name,
-        avatar: user.image
-      }
-
-      //user.accessToken = await getTokenFromYourAPIServer('discord', discordUser)
-      user.accessToken = 'abc'
-      return true
-    }
-
-    return false
+    return !!user
   },
   session: async (session, user) => {
     session.accessToken = user.accessToken
-    //session.user = await getUserFromTheAPIServer(session.accessToken)
-    session.user = { username: 'jsmith' }
+    session.user = await getUserFromToken(session.accessToken)
     return session
   },
   jwt: (token, user, account, profile, isNewUser) => {

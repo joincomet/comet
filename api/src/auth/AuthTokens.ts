@@ -11,13 +11,11 @@ export const createAccessToken = (user: User) => {
   )
 }
 
-export const getUser = (req: any) => {
-  const token = req.cookies.token
-
-  if (!token) return null
+export const getUser = (accessToken: string) => {
+  if (!accessToken) return null
 
   try {
-    const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET)
+    const payload: any = verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
     return { userId36: payload.userId36, userId: payload.userId }
   } catch {
     return null

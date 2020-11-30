@@ -20,6 +20,7 @@ import { TimeFilter } from '@/TimeFilter'
 import { CommentSort } from '@/comment/CommentSort'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
+import { getUser } from '@/auth/AuthTokens'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -38,6 +39,22 @@ export class UserResolver {
       .createQueryBuilder('user')
       .whereInIds(userId)
       .getOne()
+  }
+
+  @Query(() => User, { nullable: true })
+  async getUserFromToken(@Arg('accessToken') accessToken: string) {
+    if (!accessToken) return null
+
+    const { userId } = getUser(accessToken)
+
+    return (
+      this.userRepository
+        .createQueryBuilder('user')
+        .whereInIds(userId)
+        //.andWhere('user.banned = false')
+        //.leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
+        .getOne()
+    )
   }
 
   @Query(() => User, { nullable: true })

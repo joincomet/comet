@@ -2,10 +2,11 @@ import { gql, request } from 'graphql-request'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { ENDPOINT } from '@/Endpoint'
 
-export const fetchPosts = async (
-  { queryKey, pageParam = 0 }
-) => {
-  const [_key, { sort, time, universe, planet, galaxy, username, search }] = queryKey
+export const fetchPosts = async ({ queryKey, pageParam = 0 }) => {
+  const [
+    _key,
+    { sort, time, universe, planet, galaxy, username, search }
+  ] = queryKey
   const { posts } = await request(
     ENDPOINT(),
     gql`

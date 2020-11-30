@@ -37,7 +37,7 @@ class MyDocument extends Document {
           <script src="https://accounts.google.com/gsi/client" async defer />
         </Head>
         <body>
-          <script src="noflash.js" />
+          {/*<script src="noflash.js" />*/}
 
           <Main />
           <NextScript />
