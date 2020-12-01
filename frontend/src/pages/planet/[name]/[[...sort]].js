@@ -14,6 +14,14 @@ import { fetchPlanet, usePlanet } from '@/hooks/usePlanet'
 import Image from 'next/image'
 import { FiPlusCircle } from 'react-icons/fi'
 import Tippy from '@tippyjs/react'
+import { FiMessageCircle, FiFolder, FiBook } from 'react-icons/fi'
+import { BiPlanet } from 'react-icons/bi'
+
+const tab =
+  'transform hover:bg-blue-500 dark:hover:bg-blue-500 rounded-full hover:-translate-y-0.5 bg-white dark:bg-gray-900 hover:text-white dark:hover:text-white transition px-6 h-9 inline-flex items-center text-sm select-none cursor-pointer'
+
+const selectedTab = 'text-blue-500 font-semibold'
+const unselectedTab = 'text-gray-600 dark:text-gray-400'
 
 function PlanetPage() {
   const router = useRouter()
@@ -29,8 +37,8 @@ function PlanetPage() {
     <div>
       <GalaxiesSlider />
 
-      <div className="relative mx-3 2xl:mx-24 mt-3 rounded-xl shadow-md h-64">
-        <div className="bg-gradient-to-b from-transparent to-gray-900 absolute inset-0 z-10 opacity-90" />
+      <div className="relative mx-3 mt-3 rounded-xl h-64 shadow-md bg-gray-200 dark:bg-gray-800">
+        <div className="bg-gradient-to-b from-transparent to-gray-100 dark:to-gray-900 absolute inset-0 z-10 opacity-90" />
 
         <div className="absolute right-3 bottom-3 z-10 flex space-x-3">
           <Tippy content="@Dan">
@@ -55,18 +63,18 @@ function PlanetPage() {
         </div>
 
         <div className="z-10 absolute inset-center flex flex-col items-center">
-          <div className="h-28 w-28 shadow-md rounded-full relative ring-4 ring-amber-500 transition transform cursor-pointer hover:scale-102">
+          <div className="h-28 w-28 shadow-md rounded-full relative ring-4 ring-blue-500 transition transform cursor-pointer hover:scale-102">
             <Image
               src={planet.avatarURL}
               layout="fill"
               className="rounded-full object-cover object-center"
             />
           </div>
-          <div className="mt-3 text-2xl font-semibold inline-flex items-center">
+          <div className="mt-3 text-2xl font-semibold inline-flex items-center text-primary">
             {planet.name}
-            <FiPlusCircle size={20} className="text-amber-500 ml-1.5" />
+            <FiPlusCircle size={20} className="text-blue-500 ml-1.5" />
           </div>
-          <div className="text-secondary text-sm">
+          <div className="text-secondary text-sm line-clamp-2">
             {planet.profile.description}
           </div>
           <div className="mt-1 text-xs text-secondary inline-flex items-center">
@@ -86,6 +94,27 @@ function PlanetPage() {
         ) : (
           <div>No banner</div>
         )}
+      </div>
+
+      <div className="mt-3 2xl:mx-72 flex items-center">
+        <div className="inline-flex space-x-3 mx-auto">
+          <div className={`${tab} ${selectedTab}`}>
+            <BiPlanet size={20} className="mr-3" />
+            Feed
+          </div>
+          <div className={`${tab} ${unselectedTab}`}>
+            <FiBook size={20} className="mr-3" />
+            Rules
+          </div>
+          <div className={`${tab} ${unselectedTab}`}>
+            <FiFolder size={20} className="mr-3" />
+            Folders
+          </div>
+          <div className={`${tab} ${unselectedTab}`}>
+            <FiMessageCircle size={20} className="mr-3" />
+            Chat
+          </div>
+        </div>
       </div>
 
       <div className="pt-3 sm:px-3 2xl:px-72 hidden sm:block">

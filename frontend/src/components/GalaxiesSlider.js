@@ -109,7 +109,7 @@ export default function GalaxiesSlider() {
           onClick={() => scroll(true)}
         >
           <FiChevronLeft
-            className={`w-5 h-5 transition duration-100 ease-in-out ${
+            className={`w-5 h-5 transition duration-100  ${
               leftButtonEnabled() ? 'text-tertiary' : 'text-disabled'
             }`}
           />
@@ -121,7 +121,7 @@ export default function GalaxiesSlider() {
         >
           {galaxies.map(galaxy => (
             <span
-              className="inline-flex flex-row items-center h-8 whitespace-nowrap cursor-pointer hover:text-blue-500 transition duration-100 ease-in-out"
+              className="inline-flex flex-row items-center h-8 whitespace-nowrap cursor-pointer hover:text-blue-500 transition duration-100 "
               key={galaxy}
             >
               {galaxy}
@@ -133,7 +133,7 @@ export default function GalaxiesSlider() {
           onClick={() => scroll(false)}
         >
           <FiChevronRight
-            className={`w-5 h-5 transition duration-100 ease-in-out ${
+            className={`w-5 h-5 transition duration-100  ${
               rightButtonEnabled() ? 'text-tertiary' : 'text-disabled'
             }`}
           />
@@ -142,7 +142,7 @@ export default function GalaxiesSlider() {
           button={
             <div className="inline-flex items-center cursor-pointer pr-4 pl-4 h-8">
               <FiMenu
-                className={`w-5 h-5 transition duration-100 ease-in-out text-tertiary`}
+                className={`w-5 h-5 transition duration-100  text-tertiary`}
               />
             </div>
           }

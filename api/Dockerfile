@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:latest
 
 RUN mkdir -p /usr/src/app
 ENV NODE_ENV=production PORT=4000

@@ -9,6 +9,10 @@ api/node_modules
 frontend/.next
 frontend/node_modules
 
+landing/.next
+landing/node_modules
+landing/out
+
 latest.dump
 
 .graphqlconfig

@@ -1,12 +1,13 @@
 {
   "name": "frontend",
   "version": "1.0.0",
+  "license": "MPL-2.0",
   "private": true,
   "engines": {
     "node": "15.x.x"
   },
   "scripts": {
-    "dev": "NODE_ENV=development next",
+    "dev": "NODE_ENV=development next dev",
     "build": "NODE_ENV=production next build",
     "start": "NODE_ENV=production next start",
     "analyze": "NODE_ENV=production ANALYZE=true next build"
@@ -50,8 +51,7 @@
     "slate-history": "^0.59.0",
     "slate-react": "^0.59.0",
     "tailwindcss": "^2.0.1",
-    "use-dark-mode": "^2.3.1",
-    "webpack": "^5.7.0"
+    "webpack": "^5.9.0"
   },
   "devDependencies": {
     "@types/next-auth": "^3.1.17",
@@ -65,6 +65,6 @@
     "prettier": "^2.2.0"
   },
   "resolutions": {
-    "webpack": "^5.7.0"
+    "webpack": "^5.9.0"
   }
 }

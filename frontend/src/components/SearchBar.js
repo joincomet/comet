@@ -35,12 +35,11 @@ export default function SearchBar({ className, slashFocus }) {
         onBlur={() => setSearchFocused(false)}
       />
       <button
-        className={`absolute left-6 transform focus:outline-none transition ${
+        className={`absolute right-6 transform focus:outline-none transition ${
           searchFocused ? 'text-blue-500' : 'text-tertiary'
         }`}
-        style={{ top: '0.8125rem' }}
       >
-        <FiSearch className="h-4 w-4" />
+        <FiSearch size={16} />
       </button>
     </div>
   )

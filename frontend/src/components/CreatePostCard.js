@@ -88,7 +88,7 @@ function PlanetDropdown() {
   return (
     <Dropdown
       button={
-        <div className="focus:outline-none px-4 h-8 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition duration-150 ease-in-out rounded-full text-sm font-medium">
+        <div className="focus:outline-none px-4 h-8 inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition   rounded-full text-sm font-medium">
           <FiUser className="w-6 h-6 p-0.5 mr-3 text-blue-500" />
           My Profile
           <FiChevronDown className="w-4 h-4 ml-3" />
@@ -99,7 +99,7 @@ function PlanetDropdown() {
       {[
         <div
           key="__myprofile"
-          className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
+          className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition  "
         >
           <FiUser className="w-6 h-6 p-0.5 mr-3 rounded-full text-blue-500" />
           My Profile
@@ -108,7 +108,7 @@ function PlanetDropdown() {
         data.map(planet => (
           <div
             key={planet.id}
-            className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
+            className="focus:outline-none text-secondary w-full h-full font-medium inline-flex items-center text-sm px-4 py-2 hover:bg-gray-700 transition  "
           >
             <Image
               width={24}

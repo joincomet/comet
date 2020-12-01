@@ -37,7 +37,8 @@ export const uploadImage = async (
     Key: key,
     Body: body,
     ContentType: contentType,
-    ACL: 'public-read'
+    ACL: 'public-read',
+    CacheControl: 'max-age=2592000'
   })
 
   try {

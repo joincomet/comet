@@ -1,0 +1,63 @@
+html, body {
+  @apply bg-gray-900 text-white;
+}
+
+.text-tertiary {
+  @apply text-gray-400;
+}
+
+.text-secondary {
+  @apply text-gray-300;
+}
+
+.text-primary {
+  @apply text-white;
+}
+
+.text-mid {
+  @apply text-gray-500;
+}
+
+.text-disabled {
+  @apply text-gray-600
+}
+
+.text-accent {
+  @apply text-blue-500;
+}
+
+.tippy-box {
+  @apply bg-gray-900 shadow-lg;
+}
+
+.tippy-arrow {
+  @apply text-gray-900 shadow-lg;
+}
+
+.line-clamp-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.aspect-ratio-16\/9 {
+  padding-bottom: 56.25%;
+}

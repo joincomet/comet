@@ -1,0 +1,47 @@
+{
+  "name": "landing",
+  "version": "1.0.0",
+  "license": "MPL-2.0",
+  "private": true,
+  "engines": {
+    "node": "15.x.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export"
+  },
+  "dependencies": {
+    "@headlessui/react": "^0.2.0",
+    "@tailwindcss/aspect-ratio": "^0.2.0",
+    "@tailwindcss/forms": "^0.2.1",
+    "@tailwindcss/typography": "^0.3.1",
+    "@tippyjs/react": "^4.2.0",
+    "autoprefixer": "^10.0.4",
+    "framer-motion": "^2.9.4",
+    "next": "10.0.3",
+    "next-seo": "^4.17.0",
+    "postcss": "^8.1.10",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-hook-form": "^6.12.1",
+    "react-icons": "^4.1.0",
+    "react-intersection-observer": "^8.31.0",
+    "react-tsparticles": "^1.18.11",
+    "react-twitter-widgets": "^1.9.5",
+    "react-use": "^15.3.4",
+    "sass": "^1.29.0",
+    "tailwindcss": "^2.0.1",
+    "webpack": "^5.9.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.21.5",
+    "prettier": "^2.2.1"
+  },
+  "resolutions": {
+    "webpack": "^5.9.0"
+  }
+}

@@ -21,8 +21,8 @@ import Image from 'next/image'
 import NavLink from '@/components/NavLink'
 import { Tweet } from 'react-twitter-widgets'
 import ReactPlayer from 'react-player/youtube'
-import useDarkMode from 'use-dark-mode'
 import { useMountedState } from 'react-use'
+import { useTheme } from '@/components/ThemeContext'
 
 const colors = [
   'text-red-500',
@@ -34,10 +34,11 @@ const colors = [
 ]
 
 const chip =
-  'cursor-pointer px-3 h-8 inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-150 ease-in-out'
+  'cursor-pointer px-3 h-8 inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition  '
 
-function Post({ post, className, style, index, measure, layout }) {
+function Post({ post, className, style, index, measure }) {
   const isMounted = useMountedState()
+  const { theme } = useTheme()
 
   const [toast, setToast] = useState(null)
   const [timeoutId, setTimeoutId] = useState(null)
@@ -74,11 +75,6 @@ function Post({ post, className, style, index, measure, layout }) {
 
   const isCustomEmbed = () =>
     post.linkURL && (isTwitter() || ReactPlayer.canPlay(post.linkURL))
-
-  const darkMode = useDarkMode(false, {
-    classNameDark: 'dark',
-    classNameLight: 'light'
-  })
 
   return (
     <article
@@ -159,7 +155,7 @@ function Post({ post, className, style, index, measure, layout }) {
         <div
           className={`${
             isDragging || toast ? 'opacity-40' : 'opacity-100'
-          } duration-150 transition ease-in-out pb-3`}
+          }  transition  pb-3`}
         >
           <div className="sm:mx-3 2xl:mx-72 flex bg-white dark:bg-gray-800 sm:rounded-md shadow-md">
             <div className="flex flex-col flex-grow">
@@ -259,7 +255,7 @@ function Post({ post, className, style, index, measure, layout }) {
                         options={{
                           align: 'center',
                           dnt: true,
-                          theme: darkMode.value ? 'dark' : 'light'
+                          theme
                         }}
                       />
                     )}
@@ -298,7 +294,7 @@ function Post({ post, className, style, index, measure, layout }) {
                       </div>
 
                       <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
-                        <div className="text-sm font-semibold transition duration-150 ease-in-out line-clamp-2 hover:text-blue-500">
+                        <div className="text-sm font-semibold transition line-clamp-2 text-primary hover:text-blue-500">
                           {post.meta && post.meta.title
                             ? post.meta.title
                             : post.linkURL}
@@ -369,11 +365,11 @@ function Post({ post, className, style, index, measure, layout }) {
                 </div>
 
                 <div className={`${chip} text-tertiary group ml-auto mr-3`}>
-                  <FiFolderPlus className="w-4.5 h-4.5 group-hover:text-blue-500 transition duration-150 ease-in-out" />
+                  <FiFolderPlus className="w-4.5 h-4.5 group-hover:text-blue-500 transition  " />
                 </div>
 
                 <div className={`${chip} text-tertiary group`}>
-                  <FiShare className="w-4.5 h-4.5 group-hover:text-green-500 transition duration-150 ease-in-out" />
+                  <FiShare className="w-4.5 h-4.5 group-hover:text-green-500 transition  " />
                 </div>
               </div>
             </div>

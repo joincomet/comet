@@ -20,7 +20,7 @@ export default function SortDropdown() {
   return (
     <Dropdown
       button={
-        <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm text-blue-500 transition duration-150 ease-in-out">
+        <div className="h-10 px-8 inline-flex items-center cursor-pointer text-sm text-blue-500 transition  ">
           <RiFireLine className="w-4 h-4 mr-4" />
           {sort.charAt(0).toUpperCase() + sort.substring(1).toLowerCase()}
         </div>
@@ -29,7 +29,7 @@ export default function SortDropdown() {
       <div className="rounded shadow-md bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-800 text-secondary">
         <NavLink
           href={{ query: { sort: ['hot'] } }}
-          className="h-10 pl-8 flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out"
+          className="h-10 pl-8 flex items-center cursor-pointer text-sm hover:text-blue-500 transition  "
         >
           <RiFireLine className="w-4 h-4 mr-4" />
           Hot
@@ -37,7 +37,7 @@ export default function SortDropdown() {
 
         <NavLink
           href={{ query: { sort: ['new'] } }}
-          className="h-10 pl-8 flex items-center cursor-pointer text-sm hover:text-blue-500 transition duration-150 ease-in-out"
+          className="h-10 pl-8 flex items-center cursor-pointer text-sm hover:text-blue-500 transition  "
         >
           <FiClock className="w-4 h-4 mr-4" />
           New

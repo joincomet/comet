@@ -49,7 +49,7 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
             </NavLink>
             <NavLink
               href="/notifications"
-              className="ml-4 hover:scale-125 transform duration-150 ease-in-out text-tertiary rounded-full hover:bg-gray-700 transition w-9 h-9 p-2"
+              className="ml-4 hover:scale-125 transform   text-tertiary rounded-full hover:bg-gray-700 transition w-9 h-9 p-2"
             >
               <FiBell className="w-5 h-5" />
             </NavLink>

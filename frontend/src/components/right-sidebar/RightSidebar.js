@@ -15,7 +15,7 @@ import Folder from '@/components/right-sidebar/folders/Folder'
 import DirectMessage from '@/components/right-sidebar/dms/DirectMessage'
 import DirectMessages from '@/components/right-sidebar/dms/DirectMessages'
 import Folders from '@/components/right-sidebar/folders/Folders'
-import DarkModeToggle from '@/components/DarkModeToggle'
+import ToggleTheme from '@/components/ToggleTheme'
 import Image from 'next/image'
 
 export default function RightSidebar() {
@@ -28,7 +28,7 @@ export default function RightSidebar() {
           <Folders />
 
           <DirectMessages />
-          <DarkModeToggle />
+          <ToggleTheme />
         </div>
       </div>
     </nav>

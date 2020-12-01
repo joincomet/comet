@@ -11,6 +11,7 @@ import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query-devtools'
 import { Provider } from 'next-auth/client'
 import { LayoutTree } from '@moxy/next-layout'
+import { ThemeProvider } from '@/components/ThemeContext'
 
 const queryClient = new QueryClient({
   defaultConfig: {
@@ -31,36 +32,34 @@ export default function App({ Component, pageProps }) {
         />
         <link rel="dns-prefetch" href="//rsms.me" />
         <link rel="preconnect" href="https://rsms.me/" crossOrigin="true" />
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        {/*<link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com/"
           crossOrigin="true"
-        />
+        />*/}
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-        />
       </Head>
 
-      <Provider session={pageProps.session}>
-        <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-            <DndProvider
-              backend={TouchBackend}
-              options={{ enableTouchEvents: false, enableMouseEvents: true }}
-            >
-              <LayoutTree Component={Component} pageProps={pageProps} />
-              <CustomDragLayer />
-            </DndProvider>
-          </Hydrate>
+      <ThemeProvider>
+        <Provider session={pageProps.session}>
+          <QueryClientProvider client={queryClient}>
+            <Hydrate state={pageProps.dehydratedState}>
+              <DndProvider
+                backend={TouchBackend}
+                options={{ enableTouchEvents: false, enableMouseEvents: true }}
+              >
+                <LayoutTree Component={Component} pageProps={pageProps} />
+                <CustomDragLayer />
+              </DndProvider>
+            </Hydrate>
 
-          {process.env.NODE_ENV !== 'production' && (
-            <ReactQueryDevtools position="top-left" />
-          )}
-        </QueryClientProvider>
-      </Provider>
+            {process.env.NODE_ENV !== 'production' && (
+              <ReactQueryDevtools position="top-left" />
+            )}
+          </QueryClientProvider>
+        </Provider>
+      </ThemeProvider>
     </>
   )
 }
