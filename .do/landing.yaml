@@ -8,4 +8,4 @@ static_sites:
     deploy_on_push: true
   build_command: yarn build
   source_dir: landing
-  output_dir: landing/out
+  output_dir: out
