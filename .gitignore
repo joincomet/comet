@@ -13,6 +13,8 @@ landing/.next
 landing/node_modules
 landing/out
 
+wwwredirect/node_modules
+
 latest.dump
 
 .graphqlconfig
