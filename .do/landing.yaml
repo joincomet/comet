@@ -1,3 +1,4 @@
+name: cometx_landing
 static_sites:
 - name: landing
   environment_slug: html
