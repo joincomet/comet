@@ -122,8 +122,9 @@ export default function HomePage() {
                 See what's in orbit.
               </div>
             </h1>
-            <p className="text-white text-xl max-w-lg">
-              Take a stand against Twitter, Reddit, and Big Tech.
+            <p className="text-white text-xl max-w-screen-md">
+              No matter who you are, CometX lets you find or create a community
+              for your passions and share your thoughts and creations.
             </p>
             <div className="inline-flex items-center space-x-6">
               <a
@@ -220,7 +221,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <h1 className="mb-6 text-3xl font-semibold tracking-tight text-center">
+        {/*<h1 className="mb-6 text-3xl font-semibold tracking-tight text-center">
           Dedicated to Protecting the{' '}
           <span className="text-blue-500 hover:underline cursor-pointer">
             Spirit of Free Speech
@@ -241,10 +242,10 @@ export default function HomePage() {
               grievances.
             </p>
           </div>
-        </div>
+        </div>*/}
       </div>
 
-      <People />
+      {/*<People />*/}
     </div>
   )
 }
