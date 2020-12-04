@@ -1,0 +1,29 @@
+import { request } from '@/lib/Request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
+
+const signUp = async variables => {
+  const { signUp } = await request(
+    null,
+    gql`
+      mutation signUp($username: String!, $email: String, $password: String!) {
+        signUp(username: $username, email: $email, password: $password) {
+          accessToken
+          user {
+            id
+            admin
+            username
+            avatarURL
+            profile {
+              realName
+            }
+          }
+        }
+      }
+    `,
+    variables
+  )
+  return signUp
+}
+
+export const useSignUpMutation = () => useMutation(signUp)[0]

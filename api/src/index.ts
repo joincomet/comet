@@ -56,6 +56,8 @@ async function bootstrap() {
 
   const logPlugin = {
     requestDidStart(requestContext: any) {
+      const { query, variables } = requestContext.request
+      console.log({ query, variables })
       const name = requestContext.request.operationName
       if (!name || name === 'IntrospectionQuery') return
       console.log('GraphQL: ' + name)
@@ -63,7 +65,7 @@ async function bootstrap() {
   }
 
   const server = new ApolloServer({
-    plugins: process.env.NODE_ENV === 'production' ? [] : [logPlugin],
+    // plugins: process.env.NODE_ENV === 'production' ? [] : [logPlugin],
     schema,
     playground: process.env.NODE_ENV !== 'production',
     tracing: true,
@@ -71,7 +73,7 @@ async function bootstrap() {
       return {
         req,
         res,
-        ...getUser(req.cookies.sessionToken),
+        ...getUser(req.cookies.accessToken),
         userLoader,
         postLoader,
         commentLoader,
@@ -85,7 +87,14 @@ async function bootstrap() {
   } as ApolloServerExpressConfig)
 
   server.applyMiddleware({
-    app
+    app,
+    cors: {
+      origin:
+        process.env.NODE_ENV === 'production'
+          ? process.env.CORS_ORIGIN
+          : 'http://localhost:3000',
+      credentials: true
+    }
   })
 
   app.listen({ port: process.env.PORT || 4000 }, () => {

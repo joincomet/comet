@@ -25,22 +25,22 @@ export class FiltersResolver {
   }
 
   @Query(() => [User])
-  async blockedUsers(@Ctx() { userId }: Context) {
+  async blockTo(@Ctx() { userId }: Context) {
     if (!userId) return []
 
-    const blockedUsers = await this.userRepository
+    const blockTo = await this.userRepository
       .createQueryBuilder()
-      .relation(User, 'blockedUsers')
+      .relation(User, 'blockTo')
       .of(userId)
       .loadMany()
 
-    if (blockedUsers.length === 0) return []
+    if (blockTo.length === 0) return []
 
-    const blockedUsersIds = blockedUsers.map(u => u.id)
+    const blockToIds = blockTo.map(u => u.id)
 
     return this.userRepository
       .createQueryBuilder('user')
-      .whereInIds(blockedUsersIds)
+      .whereInIds(blockToIds)
       .andWhere('user.banned = false')
       .getMany()
   }

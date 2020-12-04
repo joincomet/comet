@@ -1,5 +1,5 @@
 import { useDrop } from 'react-dnd'
-import { ItemTypes } from '@/ItemTypes'
+import { DragItemTypes } from '@/lib/DragItemTypes'
 import { FiFolder, FiGlobe, FiStar, FiUsers } from 'react-icons/fi'
 import React from 'react'
 import Tippy from '@tippyjs/react'
@@ -9,7 +9,7 @@ export const folderClass =
 
 export default function Folder({ folder }) {
   const [{ canDrop, isOver }, dropRef] = useDrop({
-    accept: ItemTypes.POST,
+    accept: DragItemTypes.POST,
     drop: () => ({ folder }),
     collect: monitor => ({
       isOver: monitor.isOver(),

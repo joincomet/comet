@@ -12,7 +12,7 @@ import { RiFileGifLine } from 'react-icons/ri'
 import { CgArrowLeft } from 'react-icons/cg'
 import React from 'react'
 import Dropdown from '@/components/Dropdown'
-import { usePlanets } from '@/hooks/usePlanets'
+import { usePlanets } from '@/lib/usePlanets'
 import Image from 'next/image'
 import Tippy from '@tippyjs/react'
 import NavLink from '@/components/NavLink'
@@ -40,26 +40,26 @@ export default function CreatePostCard() {
             <FiImage size={20} />
           </div>
         </Tippy>
-        <Tippy content="Add Gif" placement="bottom">
+        {/*<Tippy content="Add Gif" placement="bottom">
           <div className={button}>
             <RiFileGifLine size={20} />
           </div>
-        </Tippy>
-        <Tippy content="Upload Video" placement="bottom">
+        </Tippy>*/}
+        {/*<Tippy content="Upload Video" placement="bottom">
           <div className={button}>
             <FiVideo size={20} />
           </div>
-        </Tippy>
+        </Tippy>*/}
         <Tippy content="Add Link" placement="bottom">
           <div className={button}>
             <FiLink size={20} />
           </div>
         </Tippy>
-        <Tippy content="Add Poll" placement="bottom">
+        {/*<Tippy content="Add Poll" placement="bottom">
           <div className={button}>
             <FiBarChart2 size={20} />
           </div>
-        </Tippy>
+        </Tippy>*/}
 
         <div className="inline-flex items-center ml-auto mr-16 opacity-50">
           <div className="cursor-pointer px-4 h-8 whitespace-nowrap inline-flex items-center text-secondary hover:text-white bg-transparent border dark:border-gray-700 dark:hover:bg-gray-700 transition rounded-full text-sm font-medium">

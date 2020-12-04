@@ -24,9 +24,8 @@ import { PlanetUser } from '@/planet/PlanetUser.Entity'
 export class PlanetResolver {
   @InjectRepository(Planet) readonly planetRepository: Repository<Planet>
   @InjectRepository(User) readonly userRepository: Repository<User>
-  @InjectRepository(PlanetUser) readonly userPlanetRepository: Repository<
-    PlanetUser
-  >
+  @InjectRepository(PlanetUser)
+  readonly userPlanetRepository: Repository<PlanetUser>
 
   @Authorized()
   @Mutation(() => Boolean)

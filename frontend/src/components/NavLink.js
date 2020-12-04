@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 const defaultProps = {
-  activeClassName: '',
+  activeClassName: ''
 }
 
 function NavLink({
@@ -11,13 +11,23 @@ function NavLink({
   children,
   className,
   activeClassName,
-  shallow,
+  shallow = false,
   as,
+  scroll = true,
+  replace = false,
+  prefetch
 }) {
   const router = useRouter()
 
   return (
-    <Link href={href} shallow={shallow} as={as}>
+    <Link
+      href={href}
+      shallow={shallow}
+      as={as}
+      scroll={scroll}
+      replace={replace}
+      prefetch={prefetch}
+    >
       <a
         className={`${className || ''}${
           router.pathname === href ? ' ' + (activeClassName || '') : ''

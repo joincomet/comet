@@ -2,20 +2,20 @@ import GalaxiesSlider from '@/components/GalaxiesSlider'
 import CreatePostCard from '@/components/CreatePostCard'
 import Posts from '@/components/post/Posts'
 import { QueryClient } from 'react-query'
-import { dehydrate } from 'react-query/hydration'
-import { fetchPosts } from '@/hooks/usePosts'
+import { fetchPosts } from '@/lib/usePosts'
 import { useRouter } from 'next/router'
 import React from 'react'
 import Header from '@/components/Header'
 import { withLayout } from '@moxy/next-layout'
 import CreatePostFAB from '@/components/CreatePostFAB'
 import Layout from '@/components/Layout'
-import { fetchPlanet, usePlanet } from '@/hooks/usePlanet'
+import { fetchPlanet, usePlanet } from '@/lib/usePlanet'
 import Image from 'next/image'
 import { FiPlusCircle } from 'react-icons/fi'
 import Tippy from '@tippyjs/react'
 import { FiMessageCircle, FiFolder, FiBook } from 'react-icons/fi'
 import { BiPlanet } from 'react-icons/bi'
+import { dehydrate } from '@/lib/dehydrate'
 
 const tab =
   'transform hover:bg-blue-500 dark:hover:bg-blue-500 rounded-full hover:-translate-y-0.5 bg-white dark:bg-gray-900 hover:text-white dark:hover:text-white transition px-6 h-9 inline-flex items-center text-sm select-none cursor-pointer'
@@ -156,10 +156,6 @@ export async function getServerSideProps(ctx) {
   )
 
   const dehydratedState = dehydrate(queryClient)
-  for (const query of dehydratedState.queries) {
-    if (query.state.fetchMeta === undefined) query.state.fetchMeta = null
-    if (query.state.data === undefined) query.state.data = null
-  }
 
   return {
     props: {

@@ -17,6 +17,8 @@ services:
     value: ${db.DATABASE_URL}
   - key: CA_CERT
     value: ${db.CA_CERT}
+  - key: CORS_ORIGIN
+    value: ${frontend.PUBLIC_URL}
 - name: frontend
   github:
     repo: cometx-io/cometx

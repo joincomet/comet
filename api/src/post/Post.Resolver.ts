@@ -29,8 +29,8 @@ import { Notification } from '@/notification/Notification.Entity'
 import { Planet } from '@/planet/Planet.Entity'
 import { PlanetUser } from '@/planet/PlanetUser.Entity'
 import { PostsResponse } from '@/post/PostsResponse'
-import {Metadata} from "@/metascraper/Metadata";
-import {scrapeMetadata} from "@/metascraper/scrapeMetadata";
+import { Metadata } from '@/metascraper/Metadata'
+import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -104,23 +104,10 @@ export class PostResolver {
     }
 
     if (username) {
-      const users = await this.userRepo
-        .createQueryBuilder('user')
-        .where('user.username ILIKE :username', {
-          username: username.replace(/_/g, '\\_')
-        })
-        .getMany()
-
-      if (!users || users.length === 0) return []
-
-      qb.andWhere('post.authorId = ANY(:ids)', { ids: users.map(u => u.id) })
-    }
-
-    /*if (types.length === 1 || types.length === 2) {
-      qb.andWhere('post.type = ANY(:types)', {
-        types: types.map((type) => type.toUpperCase())
+      qb.andWhere('author.username ILIKE :username', {
+        username: username.replace(/_/g, '\\_')
       })
-    }*/
+    }
 
     if (sort === PostSort.NEW) {
       qb.addOrderBy('post.createdAt', 'DESC')
@@ -165,7 +152,7 @@ export class PostResolver {
         .createQueryBuilder('user')
         .whereInIds(userId)
         .leftJoinAndSelect('user.mutedPlanets', 'mutedPlanet')
-        .leftJoinAndSelect('user.blockedUsers', 'blockedUser')
+        .leftJoinAndSelect('user.blockTo', 'blockedUser')
         .leftJoinAndSelect('user.hiddenPosts', 'hiddenPost')
         .getOne()
 
@@ -173,7 +160,7 @@ export class PostResolver {
         const mutedPlanets = (await user.mutedPlanets).map(
           planet => (planet.planet as Planet).name
         )
-        const blockedUsers = (await user.blockTo).map(
+        const blockTo = ((await user.blockTo) || []).map(
           user => (user.to as User).id
         )
         const hiddenPosts = (await user.hiddenPosts).map(
@@ -183,7 +170,7 @@ export class PostResolver {
         if (!universe) {
           const sub = await this.planetUserRepo
             .createQueryBuilder('join')
-            .where(`"join"."user_id" = "${userId}"`)
+            .where(`"join"."user_id" = ${userId}`)
             .select('"join"."planet_id"')
           qb.andWhere(`planet.id = ANY((${sub.getQuery()}))`)
         }
@@ -194,8 +181,8 @@ export class PostResolver {
           })
         }
 
-        qb.andWhere('NOT (post.authorId = ANY(:blockedUsers))', {
-          blockedUsers
+        qb.andWhere('NOT (post.authorId = ANY(:blockTo))', {
+          blockTo
         })
 
         qb.andWhere('NOT (post.id  = ANY(:hiddenPosts))', { hiddenPosts })

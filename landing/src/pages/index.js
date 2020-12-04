@@ -9,15 +9,24 @@ import { MoveDirection, OutMode, ShapeType } from 'tsparticles'
 import Grass from '@/components/Grass'
 import Telescope from '@/components/Telescope'
 import Meteors from '@/components/Meteors'
+import React, { useEffect, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
   'p-3 hover:bg-gray-700 transition rounded-full cursor-pointer'
+const link = 'hover:underline cursor-pointer flex items-center'
 
 export default function HomePage() {
+  const { ref, inView, entry } = useInView()
+
   return (
     <div className="relative flex flex-col items-center">
-      <div className="fixed right-0 top-0 left-0 z-50">
+      <div
+        className={`fixed top-0 left-0 right-0 z-50 bg-gray-900 transition ${
+          inView ? 'bg-opacity-0' : 'bg-opacity-90'
+        }`}
+      >
         <div className="h-1 bg-gradient-to-r from-blue-500 to-red-500 w-full" />
 
         <div className="px-24 h-16 flex items-center">
@@ -62,7 +71,13 @@ export default function HomePage() {
         }}
         className="overflow-hidden py-64 w-full relative"
       >
-        <Grass className="absolute bottom-0 left-0 right-0 text-gray-900 -mb-16 z-10" />
+        <div
+          ref={ref}
+          className="flex absolute bottom-0 left-0 right-0 -mb-8 z-10 text-gray-900"
+        >
+          <Grass className="w-1/2" />
+          <Grass className="w-1/2" />
+        </div>
         <Telescope className="absolute bottom-0 right-32 text-gray-900 z-10 h-96" />
         <Meteors />
 
@@ -151,8 +166,8 @@ export default function HomePage() {
       {/*<div className="w-full h-6 bg-gradient-to-r from-blue-500 to-red-500 mb-12" />*/}
 
       <div className="flex flex-col items-center my-12 z-10">
-        <div className="grid grid-cols-2 gap-6 mb-12 mx-72">
-          <h1 className="col-span-1 pl-24">
+        <div className="mb-12 mx-72 px-72">
+          <h1>
             <div className="text-3xl font-semibold tracking-tight mb-6">
               Explore Communities
             </div>
@@ -163,7 +178,7 @@ export default function HomePage() {
             <Planet className="ml-32 mt-6" />
           </h1>
 
-          <div className="col-span-1 relative">
+          <div className="relative">
             <div className="text-3xl font-semibold tracking-tight mb-6">
               Join the Discussion
             </div>
@@ -243,6 +258,44 @@ export default function HomePage() {
             </p>
           </div>
         </div>*/}
+      </div>
+
+      <div className="w-full bg-blue-600">
+        <div
+          className={`${container} py-12 px-64 text-sm flex flex-col justify-center divide-y divide-blue-500`}
+        >
+          <div className="space-y-3 pb-6">
+            <a className="hover:underline cursor-pointer block">
+              Content Policy
+            </a>
+            <a className="hover:underline cursor-pointer block">
+              Privacy Policy
+            </a>
+            <a className="hover:underline cursor-pointer block">
+              Terms of Service
+            </a>
+            <div>© {new Date().getFullYear()} CometX, LLC</div>
+          </div>
+
+          <div className="space-y-3 pt-6">
+            <a className={link}>
+              <SiGithub size={16} className="mr-3" />
+              GitHub
+            </a>
+            <a className={link}>
+              <SiDiscord size={16} className="mr-3" />
+              Discord
+            </a>
+            <a className={link}>
+              <SiPatreon size={16} className="mr-3" />
+              Patreon
+            </a>
+            <a className={link}>
+              <SiDiscord size={16} className="mr-3" />
+              Discord
+            </a>
+          </div>
+        </div>
       </div>
 
       {/*<People />*/}

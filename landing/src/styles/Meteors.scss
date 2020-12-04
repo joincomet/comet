@@ -1,4 +1,4 @@
-$n: 15; // 流星數量
+$n: 7; // 流星數量
 
 $shadow: ();
 
@@ -14,7 +14,7 @@ $shadow: ();
     width: 300px;
     height: 1px;
     transform: rotate(-45deg);
-    background-image: linear-gradient(to right, #fff, rgba(255,255,255,0));
+    background-image: linear-gradient(to right, #3B82F6, rgba(#EF4444 ,0));
     animation: meteor $d+s linear  infinite;
     &:before {
       content: "";
@@ -23,8 +23,8 @@ $shadow: ();
       height: 5px;
       border-radius: 50%;
       margin-top: -2px;
-      background: rgba(#fff,.7);
-      box-shadow: 0 0 15px 3px #fff;
+      background: rgba(#EF4444,.7);
+      box-shadow: 0 0 15px 3px #3B82F6;
     }
 
   }
@@ -36,10 +36,10 @@ $shadow: ();
     margin-top: -300px;
     margin-right: -300px;
   }
-  12% {
+  24% {
     opacity: 0;
   }
-  15% {
+  30% {
     margin-top: 300px;
     margin-left: -600px;
     opacity: 0;

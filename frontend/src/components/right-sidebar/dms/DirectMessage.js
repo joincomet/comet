@@ -1,5 +1,5 @@
 import { useDrop } from 'react-dnd'
-import { ItemTypes } from '@/ItemTypes'
+import { DragItemTypes } from '@/lib/DragItemTypes'
 import React from 'react'
 import Image from 'next/image'
 
@@ -8,7 +8,7 @@ const dmClass =
 
 export default function DirectMessage({ user }) {
   const [{ canDrop, isOver }, dropRef] = useDrop({
-    accept: ItemTypes.POST,
+    accept: DragItemTypes.POST,
     drop: () => ({ user }),
     collect: monitor => ({
       isOver: monitor.isOver(),

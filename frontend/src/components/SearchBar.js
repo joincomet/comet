@@ -35,7 +35,7 @@ export default function SearchBar({ className, slashFocus }) {
         onBlur={() => setSearchFocused(false)}
       />
       <button
-        className={`absolute right-6 transform focus:outline-none transition ${
+        className={`absolute left-6 transform focus:outline-none transition ${
           searchFocused ? 'text-blue-500' : 'text-tertiary'
         }`}
       >

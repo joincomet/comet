@@ -8,7 +8,7 @@ import {
   List,
   WindowScroller
 } from 'react-virtualized'
-import { usePosts } from '@/hooks/usePosts'
+import { usePosts } from '@/lib/usePosts'
 
 export default function Posts({ variables }) {
   const { data, fetchNextPage } = usePosts(variables)
@@ -57,7 +57,10 @@ export default function Posts({ variables }) {
               rowHeight={cache.rowHeight}
               deferredMeasurementCache={cache}
               className="outline-none"
-              style={{ overflowX: 'hidden !important', flexBasis: 'auto !important' }}
+              style={{
+                overflowX: 'hidden !important',
+                flexBasis: 'auto !important'
+              }}
               rowRenderer={getRowRender(posts())}
             />
           )}
@@ -68,11 +71,11 @@ export default function Posts({ variables }) {
 }
 
 const cache = new CellMeasurerCache({
-  defaultHeight: 703,
+  defaultHeight: 300,
   fixedWidth: true
 })
 
-const getRowRender = (posts) => ({ index, parent, style }) => {
+const getRowRender = posts => ({ index, parent, style }) => {
   const post = posts[index]
 
   return (

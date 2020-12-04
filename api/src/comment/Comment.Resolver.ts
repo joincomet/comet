@@ -136,16 +136,16 @@ export class CommentResolver {
       .where('comment.postId = :postId', { postId: post.id })
 
     if (userId) {
-      const blockedUsers = (
+      const blockTo = (
         await this.userRepository
           .createQueryBuilder()
-          .relation(User, 'blockedUsers')
+          .relation(User, 'blockTo')
           .of(userId)
           .loadMany()
       ).map(user => user.id)
 
-      qb.andWhere('NOT (comment.authorId = ANY(:blockedUsers))', {
-        blockedUsers
+      qb.andWhere('NOT (comment.authorId = ANY(:blockTo))', {
+        blockTo
       })
     }
 

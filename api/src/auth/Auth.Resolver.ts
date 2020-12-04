@@ -56,7 +56,7 @@ export class AuthResolver {
     } as User)
 
     const accessToken = createAccessToken(user)
-    res.cookie('token', accessToken, {
+    res.cookie('accessToken', accessToken, {
       secure: process.env.NODE_ENV === 'production',
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       httpOnly: true
@@ -92,7 +92,7 @@ export class AuthResolver {
     if (!match) throw new Error('Invalid Login')
 
     const accessToken = createAccessToken(user)
-    res.cookie('token', accessToken, {
+    res.cookie('accessToken', accessToken, {
       secure: process.env.NODE_ENV === 'production',
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       httpOnly: true
@@ -106,7 +106,7 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   async logout(@Ctx() { res }: Context) {
-    res.clearCookie('token')
+    res.clearCookie('accessToken')
 
     return true
   }

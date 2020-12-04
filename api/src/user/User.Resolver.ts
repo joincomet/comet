@@ -42,22 +42,6 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  async getUserFromToken(@Arg('accessToken') accessToken: string) {
-    if (!accessToken) return null
-
-    const { userId } = getUser(accessToken)
-
-    return (
-      this.userRepository
-        .createQueryBuilder('user')
-        .whereInIds(userId)
-        //.andWhere('user.banned = false')
-        //.leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
-        .getOne()
-    )
-  }
-
-  @Query(() => User, { nullable: true })
   async user(@Arg('username') username: string) {
     if (!username) return null
 
@@ -156,7 +140,7 @@ export class UserResolver {
 
     await this.userRepository
       .createQueryBuilder('user')
-      .relation(User, 'blockedUsers')
+      .relation(User, 'blockTo')
       .of(userId)
       .add(blockedUser.id)
     return true
@@ -174,7 +158,7 @@ export class UserResolver {
 
     await this.userRepository
       .createQueryBuilder('user')
-      .relation(User, 'blockedUsers')
+      .relation(User, 'blockTo')
       .of(userId)
       .remove(blockedId)
     return true
