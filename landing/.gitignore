@@ -1,4 +1,5 @@
-dist
+.next
+out
 node_modules
 .yarn/*
 !.yarn/releases
