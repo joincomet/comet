@@ -7,7 +7,7 @@ export class CommentsArgs {
     nullable: true,
     description: 'If provided, return all comments for given post ID'
   })
-  postId?: number
+  postId?: any
 
   @Field(() => ID, {
     nullable: true,

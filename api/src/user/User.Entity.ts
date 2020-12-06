@@ -168,9 +168,11 @@ export class User {
   isCurrentUser: boolean
 
   @Field(() => Int)
+  @Column({ default: 0 })
   followerCount: number
 
   @Field(() => Int)
+  @Column({ default: 0 })
   followingCount: number
 
   @Field(() => Int)
@@ -205,8 +207,8 @@ export class User {
 
   @Field()
   get timeSinceCreated(): string {
-    // return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
-    return dayjs(new Date(this.createdAt)).fromNow()
+    // @ts-ignore
+    return dayjs(new Date(this.createdAt)).twitter()
   }
 
   @Field({ nullable: true })

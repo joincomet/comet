@@ -26,9 +26,7 @@ const unselectedTab = 'text-gray-600 dark:text-gray-400'
 function PlanetPage() {
   const router = useRouter()
 
-  const { data } = usePlanet({ name: router.query.name })
-
-  const planet = data
+  const planet = usePlanet({ name: router.query.name }).data
 
   const moderator =
     'w-9 h-9 relative rounded-full shadow-md cursor-pointer opacity-75 hover:opacity-100 transition transform hover:scale-105'
@@ -123,7 +121,7 @@ function PlanetPage() {
       <Header />
 
       <div className="mt-14 pt-3 sm:mt-0 sm:pt-0">
-        <Posts variables={getVariables(router.query)} />
+        <Posts variables={getVariables(router.query)} showPlanet={false} />
       </div>
 
       <CreatePostFAB />
@@ -138,7 +136,7 @@ const getVariables = query => {
     query.sort && query.sort.length >= 1 ? query.sort[0].toUpperCase() : 'HOT'
   const time =
     query.sort && query.sort.length >= 2 ? query.sort[1].toUpperCase() : 'ALL'
-  return { sort, time, page: 0 }
+  return { sort, time, page: 0, planet: query.name }
 }
 
 export async function getServerSideProps(ctx) {
@@ -146,13 +144,16 @@ export async function getServerSideProps(ctx) {
 
   const variables = getVariables(ctx.query)
 
-  await queryClient.prefetchQuery(['posts', variables], fetchPosts, {
-    getNextPageParam: (lastPage, pages) => lastPage.nextPage
-  })
-
   await queryClient.prefetchQuery(
-    ['planet', { name: ctx.query.name }],
-    fetchPlanet
+    ['posts', variables],
+    key => fetchPosts(key, ctx),
+    {
+      getNextPageParam: (lastPage, pages) => lastPage.nextPage
+    }
+  )
+
+  await queryClient.prefetchQuery(['planet', { name: ctx.query.name }], key =>
+    fetchPlanet(key, ctx)
   )
 
   const dehydratedState = dehydrate(queryClient)

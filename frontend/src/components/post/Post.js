@@ -10,6 +10,7 @@ import {
   FiFolderPlus,
   FiRepeat
 } from 'react-icons/fi'
+import { TiPinOutline } from 'react-icons/ti'
 import { HiSwitchHorizontal } from 'react-icons/hi'
 import { CgArrowRight } from 'react-icons/cg'
 import { BiRocket } from 'react-icons/bi'
@@ -33,9 +34,11 @@ const colors = [
   'text-pink-500'
 ]
 
-function Post({ post, index, measure }) {
+function Post({ post, index = 0, measure = () => {}, showPlanet = true }) {
   const [toast, setToast] = useState(null)
   const [timeoutId, setTimeoutId] = useState(null)
+
+  useEffect(measure)
 
   const [{ isDragging }, dragRef, preview] = useDrag({
     item: { post, type: DragItemTypes.POST },
@@ -71,7 +74,13 @@ function Post({ post, index, measure }) {
           isDragging || toast ? 'opacity-40' : 'opacity-100'
         }  transition pb-3 w-full`}
       >
-        <div className="sm:mx-3 2xl:mx-72 flex flex-col bg-white dark:bg-gray-800 sm:rounded-md shadow-md">
+        <div className="sm:mx-3 2xl:mx-72 flex flex-col bg-white dark:bg-gray-800 sm:rounded-md shadow-md relative">
+          {post.sticky && (
+            <TiPinOutline
+              size={20}
+              className="absolute top-3 right-3 text-accent"
+            />
+          )}
           <div className="flex items-start m-3">
             <NavLink
               href={`/user/${post.author.username}`}
@@ -99,17 +108,21 @@ function Post({ post, index, measure }) {
                 <span className="text-tertiary hidden sm:block">
                   @{post.author.username}
                 </span>
-                &nbsp;
-                <CgArrowRight size={16} className="text-tertiary" />
-                &nbsp;
-                <NavLink
-                  href={`/planet/${post.planet.name}`}
-                  className={`font-medium hover:underline cursor-pointer ${
-                    colors[index % 6]
-                  }`}
-                >
-                  {post.planet.name}
-                </NavLink>
+                {showPlanet && (
+                  <>
+                    &nbsp;
+                    <CgArrowRight size={16} className="text-tertiary" />
+                    &nbsp;
+                    <NavLink
+                      href={`/planet/${post.planet.name}`}
+                      className={`font-medium hover:underline cursor-pointer ${
+                        colors[index % 6]
+                      }`}
+                    >
+                      {post.planet.name}
+                    </NavLink>
+                  </>
+                )}
                 <span className="text-tertiary hidden sm:block">
                   &nbsp;&middot;&nbsp;{post.timeSince}
                 </span>

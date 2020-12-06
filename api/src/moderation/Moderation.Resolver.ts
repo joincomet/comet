@@ -8,6 +8,7 @@ import { User } from '@/user/User.Entity'
 import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
 import { Comment } from '@/comment/Comment.Entity'
+import { handleUnderscore } from '@/handleUnderscore'
 
 export class ModerationResolver {
   @InjectRepository(User) readonly userRepository: Repository<User>
@@ -148,7 +149,7 @@ export class ModerationResolver {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .where('user.username ILIKE :username', {
-        username: username.replace(/_/g, '\\_')
+        username: handleUnderscore(username)
       })
       .andWhere('user.banned = false')
       .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')

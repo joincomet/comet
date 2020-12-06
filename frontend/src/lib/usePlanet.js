@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 import { request } from '@/lib/Request'
 
 export const fetchPlanet = async ({ queryKey }, ctx = null) => {
-  const [_key, { name }] = queryKey
+  const [_key, variables] = queryKey
 
   const { planet } = await request(
     ctx,
@@ -20,7 +20,7 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
         }
       }
     `,
-    { name }
+    variables
   )
 
   return planet

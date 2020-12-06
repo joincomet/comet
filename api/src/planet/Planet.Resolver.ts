@@ -19,6 +19,7 @@ import { Repository } from 'typeorm'
 import { PlanetsArgs } from '@/planet/PlanetsArgs'
 import { PlanetSort } from '@/planet/PlanetSort'
 import { PlanetUser } from '@/planet/PlanetUser.Entity'
+import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver(() => Planet)
 export class PlanetResolver {
@@ -39,9 +40,10 @@ export class PlanetResolver {
       }
     })
 
-    const foundPlanet = await this.planetRepository.findOne({
-      where: `"name" ILIKE '${name.replace(/_/g, '\\_')}'`
-    })
+    const foundPlanet = await this.planetRepository
+      .createQueryBuilder('planet')
+      .where('planet.name ILIKE :name', { name: handleUnderscore(name) })
+      .getOne()
 
     if (foundPlanet) throw new Error('Planet already exists')
 
@@ -72,7 +74,7 @@ export class PlanetResolver {
     const qb = this.planetRepository
       .createQueryBuilder('planet')
       .andWhere('planet.name ILIKE :name', {
-        name: name.replace(/_/g, '\\_')
+        name: handleUnderscore(name)
       })
       .leftJoinAndSelect('planet.moderators', 'moderator')
 
@@ -107,7 +109,7 @@ export class PlanetResolver {
     const foundPlanet = await this.planetRepository
       .createQueryBuilder('planet')
       .where('planet.name ILIKE :planet', {
-        planet: name.replace(/_/g, '\\_')
+        planet: handleUnderscore(name)
       })
       .getOne()
 

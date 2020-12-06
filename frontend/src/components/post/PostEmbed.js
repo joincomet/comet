@@ -54,7 +54,7 @@ export default function PostEmbed({ post, measure }) {
         href={post.linkURL}
         target="_blank"
         rel="noreferrer noopener nofollow"
-        className="group rounded-md flex items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200"
+        className="group rounded-md flex items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 shadow-inner"
       >
         <div className="w-32 h-32 relative flex-shrink-0">
           {post.thumbnailURL || post.logoURL ? (

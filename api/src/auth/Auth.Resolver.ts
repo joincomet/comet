@@ -11,6 +11,7 @@ import { SignUpArgs } from '@/auth/SignUpArgs'
 import { bannedWords } from '@/BannedWords'
 import { format } from 'date-fns'
 import { UserProfile } from '@/user/data/UserProfile'
+import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver()
 export class AuthResolver {
@@ -33,9 +34,13 @@ export class AuthResolver {
       }
     })
 
-    const foundUser = await this.userRepository.findOne({
-      where: `"username" ILIKE '${username.replace(/_/g, '\\_')}'`
-    })
+    const foundUser = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username ILIKE :username', {
+        username: handleUnderscore(username)
+      })
+      .getOne()
+
     if (foundUser) throw new Error('Username taken')
 
     const passwordHash = await argon2.hash(password)
@@ -73,9 +78,13 @@ export class AuthResolver {
     @Args() { username, password }: LoginArgs,
     @Ctx() { res }: Context
   ) {
-    const user = await this.userRepository.findOne({
-      where: `"username" ILIKE '${username.replace(/_/g, '\\_')}'`
-    })
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username ILIKE :username', {
+        username: handleUnderscore(username)
+      })
+      .getOne()
+
     if (!user) throw new Error('Invalid Login')
 
     // if (user.banned) throw new Error('Banned: ' + user.banReason)

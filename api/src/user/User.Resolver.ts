@@ -21,6 +21,7 @@ import { CommentSort } from '@/comment/CommentSort'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
 import { getUser } from '@/auth/AuthTokens'
+import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -49,7 +50,7 @@ export class UserResolver {
       this.userRepository
         .createQueryBuilder('user')
         .where('user.username ILIKE :username', {
-          username: username.replace(/_/g, '\\_')
+          username: handleUnderscore(username)
         })
         //.andWhere('user.banned = false')
         //.leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
@@ -128,7 +129,7 @@ export class UserResolver {
     const blockedUser = await this.userRepository
       .createQueryBuilder('user')
       .where('user.username ILIKE :blockedUsername', {
-        blockedUsername: blockedUsername.replace(/_/g, '\\_')
+        blockedUsername: handleUnderscore(blockedUsername)
       })
       .getOne()
 

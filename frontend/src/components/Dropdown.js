@@ -1,16 +1,22 @@
 import { Menu, Transition } from '@headlessui/react'
 import React from 'react'
 
-export default function Dropdown({ button, children, className, style }) {
+export default function Dropdown({
+  button,
+  children,
+  className,
+  buttonClassName,
+  style
+}) {
   if (!Array.isArray(children)) children = [children]
 
   return (
-    <div className="relative">
-      <Menu>
-        {({ open }) => (
-          <>
-            <Menu.Button className="focus:outline-none">{button}</Menu.Button>
+    <Menu>
+      {({ open }) => (
+        <>
+          <Menu.Button className={buttonClassName}>{button}</Menu.Button>
 
+          <div className="relative">
             <Transition
               show={open}
               enter="transition ease-out duration-100"
@@ -30,9 +36,9 @@ export default function Dropdown({ button, children, className, style }) {
                 ))}
               </Menu.Items>
             </Transition>
-          </>
-        )}
-      </Menu>
-    </div>
+          </div>
+        </>
+      )}
+    </Menu>
   )
 }

@@ -12,6 +12,9 @@ export const fetchCurrentUser = async (ctx = null) => {
           admin
           username
           avatarURL
+          postCount
+          followerCount
+          rocketCount
           profile {
             realName
           }

@@ -6,7 +6,7 @@ import React from 'react'
 export default function PostToast({ toast }) {
   return (
     <div
-      className={`absolute inset-x-0 top-1/2 z-50 -translate-y-1/2 transform transition ${
+      className={`absolute inset-x-0 top-1/2 z-50 -translate-y-1/2 transform transition overflow-hidden ${
         toast ? 'translate-x-0' : '-translate-x-full delay-150'
       }`}
     >

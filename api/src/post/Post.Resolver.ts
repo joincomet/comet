@@ -31,6 +31,7 @@ import { PlanetUser } from '@/planet/PlanetUser.Entity'
 import { PostsResponse } from '@/post/PostsResponse'
 import { Metadata } from '@/metascraper/Metadata'
 import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
+import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -71,10 +72,11 @@ export class PostResolver {
       .andWhere('post.deleted = false')
       .andWhere('post.removed = false')
       .leftJoinAndSelect('post.planet', 'planet')
+      .leftJoinAndSelect('post.author', 'author')
 
     if (planet) {
       qb.andWhere('planet.name ILIKE :planet', {
-        planet: planet.replace(/_/g, '\\_')
+        planet: handleUnderscore(planet)
       }).andWhere('post.sticky = false')
     }
 
@@ -91,7 +93,6 @@ export class PostResolver {
           'ts_rank_cd(to_tsvector(post.title), plainto_tsquery(:query))',
           'titlerank'
         )
-        .leftJoinAndSelect('post.author', 'author')
         .addSelect(
           'ts_rank_cd(to_tsvector(author.username), plainto_tsquery(:query))',
           'usernamerank'
@@ -105,7 +106,7 @@ export class PostResolver {
 
     if (username) {
       qb.andWhere('author.username ILIKE :username', {
-        username: username.replace(/_/g, '\\_')
+        username: handleUnderscore(username)
       })
     }
 
@@ -194,15 +195,28 @@ export class PostResolver {
       .take(pageSize)
       .getMany()
 
-    if (planet && page === 0) {
+    if (page === 0) {
       const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .andWhere('post.sticky = true')
         .leftJoinAndSelect('post.planet', 'planet')
-        .andWhere('post.planet.name ILIKE :planet', {
-          planet: planet.replace(/_/g, '\\_')
+        .leftJoinAndSelect('post.author', 'author')
+        .addOrderBy('post.stickiedAt', 'DESC')
+
+      if (planet) {
+        stickiesQb.andWhere('planet.name ILIKE :planet', {
+          planet: handleUnderscore(planet)
         })
-        .addOrderBy('post.createdAt', 'DESC')
+      } else if (username) {
+        stickiesQb.andWhere('author.username ILIKE :username', {
+          username: handleUnderscore(username)
+        })
+      } else if (!search && !galaxy && !folderId && !universe) {
+        // Show stickies from CometX on home page
+        stickiesQb.andWhere('planet.name ILIKE :planet', {
+          planet: 'CometX'
+        })
+      }
 
       const stickies = await stickiesQb.getMany()
 

@@ -11,13 +11,13 @@ export default function PostText({ post, measure }) {
   }
 
   return (
-    <div className="prose-sm p-3 rounded-md border dark:border-gray-700">
+    <div className="p-3 rounded-md border dark:border-gray-700">
       <div
         dangerouslySetInnerHTML={{ __html: post.textContent }}
-        className={`text-primary ${!readMore && 'line-clamp-3'}`}
+        className={`prose-sm text-primary ${!readMore && 'line-clamp-3'}`}
       />
       <div
-        className="text-blue-500 hover:underline cursor-pointer"
+        className="text-blue-500 hover:underline cursor-pointer text-sm mt-3"
         onClick={() => toggleReadMore()}
       >
         {readMore ? 'Read Less' : 'Read More'}

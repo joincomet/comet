@@ -127,6 +127,8 @@ export class CommentResolver {
     @Args() { postId, sort }: CommentsArgs,
     @Ctx() { userId }: Context
   ) {
+    postId = parseInt(postId, 36)
+
     const post = await this.postRepository.findOne({ id: postId })
 
     if (!post) return []

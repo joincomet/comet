@@ -33,6 +33,7 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             id
             id36
             title
+            sticky
             textContent
             linkURL
             imageURLs

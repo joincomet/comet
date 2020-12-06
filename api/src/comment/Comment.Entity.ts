@@ -58,8 +58,8 @@ export class Comment {
 
   @Field()
   get timeSince(): string {
-    //return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
-    return dayjs(new Date(this.createdAt)).fromNow()
+    // @ts-ignore
+    return dayjs(new Date(this.createdAt)).twitter()
   }
 
   @Field({ nullable: true })
@@ -69,8 +69,8 @@ export class Comment {
   @Field({ nullable: true })
   get timeSinceEdited(): string | null {
     if (!this.editedAt) return null
-    // return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
-    return dayjs(new Date(this.editedAt)).fromNow()
+    // @ts-ignore
+    return dayjs(new Date(this.editedAt)).twitter()
   }
 
   @Field(() => ID, { nullable: true })

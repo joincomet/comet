@@ -105,7 +105,6 @@ export class Post {
 
   @Field()
   get timeSince(): string {
-    // return formatDistanceToNowStrict(new Date(this.createdAt)) + ' ago'
     // @ts-ignore
     return dayjs(new Date(this.createdAt)).twitter()
   }
@@ -115,9 +114,12 @@ export class Post {
   editedAt?: Date
 
   @Field({ nullable: true })
+  @Column({ nullable: true })
+  stickiedAt?: Date
+
+  @Field({ nullable: true })
   get timeSinceEdited(): string | null {
     if (!this.editedAt) return null
-    // return formatDistanceToNowStrict(new Date(this.editedAt)) + ' ago'
     return dayjs(new Date(this.editedAt)).fromNow()
   }
 

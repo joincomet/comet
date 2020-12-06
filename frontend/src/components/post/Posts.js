@@ -10,7 +10,7 @@ import {
 } from 'react-virtualized'
 import { usePosts } from '@/lib/usePosts'
 
-export default function Posts({ variables }) {
+export default function Posts({ variables, showPlanet = true }) {
   const { data, fetchNextPage } = usePosts(variables)
 
   const handleResize = event => {
@@ -61,7 +61,7 @@ export default function Posts({ variables }) {
                 overflowX: 'hidden !important',
                 flexBasis: 'auto !important'
               }}
-              rowRenderer={getRowRender(posts())}
+              rowRenderer={getRowRender(posts(), showPlanet)}
             />
           )}
         </WindowScroller>
@@ -75,7 +75,11 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 })
 
-const getRowRender = posts => ({ index, parent, style }) => {
+const getRowRender = (posts, showPlanet = true) => ({
+  index,
+  parent,
+  style
+}) => {
   const post = posts[index]
 
   return (
@@ -88,7 +92,12 @@ const getRowRender = posts => ({ index, parent, style }) => {
       >
         {({ measure, registerChild }) => (
           <div style={{ margin: 0, ...style }} ref={registerChild}>
-            <Post post={post} index={index} measure={measure} />
+            <Post
+              post={post}
+              index={index}
+              measure={measure}
+              showPlanet={showPlanet}
+            />
           </div>
         )}
       </CellMeasurer>
