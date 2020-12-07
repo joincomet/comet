@@ -16,7 +16,7 @@ import { Save } from '@/folder/Save.Entity'
 import { PostHide } from '@/filter/PostHide.Entity'
 import { URL } from 'url'
 import dayjs from 'dayjs'
-import { isURL } from '@/IsURL'
+import { isUrl } from '@/IsUrl'
 import { Metadata } from '@/metascraper/Metadata'
 
 @ObjectType()
@@ -41,7 +41,7 @@ export class Post {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  linkURL?: string
+  linkUrl?: string
 
   @Field(() => Metadata, { nullable: true })
   @Column('jsonb', {
@@ -60,15 +60,15 @@ export class Post {
   meta?: Metadata
 
   @Field({ nullable: true })
-  get thumbnailURL(): string | null {
-    if (this.imageURLs.length > 0) return this.imageURLs[0]
+  get thumbnailUrl(): string | null {
+    if (this.imageUrls.length > 0) return this.imageUrls[0]
     if (this.meta && this.meta.image) return this.meta.image
     return null
   }
 
   @Field({ nullable: true })
-  get logoURL(): string | null {
-    if (!this.linkURL) return null
+  get logoUrl(): string | null {
+    if (!this.linkUrl) return null
     if (this.meta && this.meta.logo) return this.meta.logo
     return null
   }
@@ -76,15 +76,14 @@ export class Post {
   @Field(() => [String])
   @Column('text', {
     array: true,
-    name: 'image_urls',
     default: () => 'array[]::text[]'
   })
-  imageURLs: string[]
+  imageUrls: string[]
 
   @Field({ nullable: true })
   get domain(): string | null {
-    if (isURL(this.linkURL)) {
-      let domain = new URL(this.linkURL).hostname
+    if (isUrl(this.linkUrl)) {
+      let domain = new URL(this.linkUrl).hostname
       if (domain.startsWith('www.')) domain = domain.substring(4)
       return domain
     }
@@ -181,7 +180,7 @@ export class Post {
   hides: Lazy<PostHide[]>
 
   @Field()
-  get relativeURL(): string {
+  get relativeUrl(): string {
     const slug = this.title
       .toLowerCase()
       .trim()

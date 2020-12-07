@@ -62,7 +62,7 @@ function UserInfo() {
     <div className="dark:bg-gray-900 transition cursor-pointer px-6 py-3 rounded-md m-3 shadow-inner">
       <div className="flex items-center">
         <div className="relative w-12 h-12 rounded-full dark:bg-gray-700 inline-flex shadow">
-          {currentUser.profile.avatarURL ? (
+          {currentUser.profile.avatarUrl ? (
             <Image
               src={currentUser.profile.avatarUrl}
               layout="fill"
@@ -132,7 +132,7 @@ function UserInfo() {
         </div>
       </div>
 
-      <div className="mt-3 pt-3 -mx-2 px-2 border-t border-gray-700 text-xs flex items-center text-tertiary cursor-pointer font-medium hover:text-blue-500 dark:hover:text-blue-500 transition">
+      {/*<div className="mt-3 pt-3 -mx-2 px-2 border-t border-gray-700 text-xs flex items-center text-tertiary cursor-pointer font-medium hover:text-blue-500 dark:hover:text-blue-500 transition">
         <svg className="w-5 h-5 mr-6" viewBox="0 0 24 24">
           <path
             fill="currentColor"
@@ -140,7 +140,7 @@ function UserInfo() {
           />
         </svg>
         Create a Planet
-      </div>
+      </div>*/}
     </div>
   )
 }

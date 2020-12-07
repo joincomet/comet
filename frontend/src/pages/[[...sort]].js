@@ -48,29 +48,6 @@ function HomePage() {
 
       <div className="-mt-64 z-10 relative">
         <div className="mt-9 sm:mx-3 2xl:mx-72 hidden sm:block z-10">
-          {/*<div className="mb-9 grid grid-cols-3 gap-12">
-            <div className={boxContainer}>
-              <div className={box}>
-                <BiPlanet size={24} className="mr-3" />
-                Explore Planets
-              </div>
-            </div>
-
-            <div className={boxContainer}>
-              <div className={box}>
-                <BiPlanet size={24} className="mr-3" />
-                Create a planet
-              </div>
-            </div>
-
-            <div className={boxContainer}>
-              <div className={box}>
-                <BiPlanet size={24} className="mr-3" />
-                Update Notes
-              </div>
-            </div>
-          </div>*/}
-
           <CreatePostCard />
         </div>
         <Header />

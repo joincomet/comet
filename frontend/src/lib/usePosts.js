@@ -35,13 +35,13 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             title
             sticky
             textContent
-            linkURL
-            imageURLs
-            relativeURL
+            linkUrl
+            imageUrls
+            relativeUrl
             commentCount
             rocketCount
-            thumbnailURL
-            logoURL
+            thumbnailUrl
+            logoUrl
             domain
             meta {
               title
@@ -52,7 +52,7 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             }
             author {
               username
-              avatarURL
+              avatarUrl
             }
             timeSince
             timeSinceEdited

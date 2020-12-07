@@ -3094,7 +3094,8 @@ __metadata:
     slate-history: ^0.59.0
     slate-react: ^0.59.0
     tailwindcss: ^2.0.1
-    webpack: ^5.9.0
+    tailwindcss-pseudo-elements: ^1.5.0
+    webpack: ^5.10.0
     zustand: ^3.2.0
   languageName: unknown
   linkType: soft
@@ -6620,6 +6621,15 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"tailwindcss-pseudo-elements@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "tailwindcss-pseudo-elements@npm:1.5.0"
+  peerDependencies:
+    tailwindcss: ">=0.7.4"
+  checksum: 69df79e3bbdb0da97b0a38b512bdd216cf30037cd9b82cc81a73cd81d1c9158916d9a164d3b19830bfacfc901f9db6edb7126bdc2a32df548c54131dfbdf2d03
+  languageName: node
+  linkType: hard
+
 "tailwindcss@npm:^2.0.1":
   version: 2.0.1
   resolution: "tailwindcss@npm:2.0.1"
@@ -7118,7 +7128,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.9.0":
+"webpack@npm:^5.10.0":
   version: 5.10.0
   resolution: "webpack@npm:5.10.0"
   dependencies:

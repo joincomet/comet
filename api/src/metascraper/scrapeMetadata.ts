@@ -4,7 +4,7 @@ import { uploadImage } from '@/S3Storage'
 import fetch from 'node-fetch'
 import fileType from 'file-type'
 import { v4 as uuidv4 } from 'uuid'
-import { isURL } from '@/IsURL'
+import { isUrl } from '@/IsUrl'
 
 const metascraper = require('metascraper')([
   require('metascraper-author')(),
@@ -18,18 +18,18 @@ const metascraper = require('metascraper')([
   require('metascraper-url')()
 ])
 
-export const scrapeMetadata = async (targetURL: string): Promise<Metadata> => {
-  if (!isURL(targetURL)) return null
+export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
+  if (!isUrl(targetUrl)) return null
 
   let res
   try {
-    res = await got(targetURL, { timeout: 2000 })
+    res = await got(targetUrl, { timeout: 2000 })
   } catch {
     return null
   }
 
   const { body: html, url } = res
-  if (!isURL(url)) return null
+  if (!isUrl(url)) return null
 
   let meta
   try {

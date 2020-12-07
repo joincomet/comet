@@ -526,7 +526,7 @@ export class PostResolver {
   }
 
   @Query(() => Metadata)
-  async getURLEmbed(@Arg('URL') URL: string) {
+  async getUrlEmbed(@Arg('URL') URL: string) {
     return scrapeMetadata(URL)
   }
 }

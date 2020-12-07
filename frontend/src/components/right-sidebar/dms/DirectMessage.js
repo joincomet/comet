@@ -27,7 +27,7 @@ export default function DirectMessage({ user }) {
           height={32}
           alt={user.profile.realName}
           className="object-cover rounded-full"
-          src={user.avatarURL || '/avatar.jpg'}
+          src={user.avatarUrl || '/avatar.jpg'}
         />
       </div>
       <span className="ml-3">{user.profile.realName}</span>

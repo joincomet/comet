@@ -114,7 +114,7 @@ function PlanetDropdown() {
               width={24}
               height={24}
               alt={planet.name}
-              src={planet.avatarURL}
+              src={planet.avatarUrl}
               className="w-6 h-6 rounded-full"
             />
             <span className="ml-3">+{planet.name}</span>

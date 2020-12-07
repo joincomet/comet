@@ -13,7 +13,7 @@ const login = async variables => {
             id
             admin
             username
-            avatarURL
+            avatarUrl
             profile {
               realName
             }

@@ -63,7 +63,7 @@ export default function PostToast({ toast }) {
                     height={36}
                     alt={toast.user.profile.realName}
                     className="object-cover w-9 h-9 rounded-full mx-4 shadow"
-                    src={toast.user.avatarURL}
+                    src={toast.user.avatarUrl}
                   />
                   {`Sent to ${toast.user.profile.realName}`}
                 </>

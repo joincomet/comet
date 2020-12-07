@@ -30,8 +30,6 @@ services:
       - .env
     volumes:
       - ./frontend:/usr/src/app
-    depends_on:
-      - api
 
   postgres:
     image: "postgres:alpine"

@@ -63,7 +63,7 @@ function PlanetPage() {
         <div className="z-10 absolute inset-center flex flex-col items-center">
           <div className="h-28 w-28 shadow-md rounded-full relative ring-4 ring-blue-500 transition transform cursor-pointer hover:scale-102">
             <Image
-              src={planet.avatarURL}
+              src={planet.avatarUrl}
               layout="fill"
               className="rounded-full object-cover object-center"
             />
@@ -83,9 +83,9 @@ function PlanetPage() {
           </div>
         </div>
 
-        {planet.bannerURL ? (
+        {planet.bannerUrl ? (
           <Image
-            src={planet.bannerURL}
+            src={planet.bannerUrl}
             layout="fill"
             className="object-cover object-center rounded-xl"
           />

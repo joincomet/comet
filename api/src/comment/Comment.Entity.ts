@@ -74,10 +74,8 @@ export class Comment {
   }
 
   @Field(() => ID, { nullable: true })
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'bigint' })
   parentCommentId: number
-
-  childComments: Comment[] = []
 
   @OneToMany(() => CommentRocket, upvote => upvote.comment)
   rockets: Lazy<CommentRocket[]>

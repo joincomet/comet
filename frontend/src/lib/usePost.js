@@ -15,13 +15,13 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           title
           sticky
           textContent
-          linkURL
-          imageURLs
-          relativeURL
+          linkUrl
+          imageUrls
+          relativeUrl
           commentCount
           rocketCount
-          thumbnailURL
-          logoURL
+          thumbnailUrl
+          logoUrl
           domain
           meta {
             title
@@ -32,7 +32,7 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           }
           author {
             username
-            avatarURL
+            avatarUrl
           }
           timeSince
           timeSinceEdited

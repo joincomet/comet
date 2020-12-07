@@ -121,9 +121,9 @@ export class Planet {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  avatarURL?: string
+  avatarUrl?: string
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  bannerURL?: string
+  bannerUrl?: string
 }

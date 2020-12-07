@@ -203,3 +203,39 @@ body {
     box-shadow: inset 0px 0px 0px 30px #7ac142;
   }
 }
+
+.arrowbox {
+  @apply relative;
+}
+.arrowbox::after {
+  @apply right-full top-1/2 h-0 w-0 absolute pointer-events-none border border-transparent border-8 -mt-2;
+  content: " ";
+}
+.arrow_box {
+  position: relative;
+  background: #fff;
+}
+.arrow_box::after {
+  right: 100%;
+  top: 1.5rem;
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border: 8px solid rgba(255, 255, 255, 0);
+  border-right-color: theme('colors.gray.800');
+  margin-top: -8px;
+}
+
+.commentcollapse {
+  @apply absolute top-0 bottom-0 mt-12 -mb-12 w-10 cursor-pointer group;
+}
+
+.commentcollapse::before {
+  @apply absolute empty-content left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-700 transition;
+}
+
+.commentcollapse:hover::before {
+  @apply bg-blue-500;
+}

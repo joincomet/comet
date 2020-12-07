@@ -11,7 +11,7 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
         planets(sort: $sort, pageSize: $pageSize, joined: $joined) {
           id
           name
-          avatarURL
+          avatarUrl
         }
       }
     `,

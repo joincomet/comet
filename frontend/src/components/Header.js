@@ -4,12 +4,7 @@ import SearchBar from '@/components/SearchBar'
 import SortDropdown from '@/components/SortDropdown'
 import { FiEdit } from 'react-icons/fi'
 
-export default function Header({
-  children,
-  sticky = false,
-  className,
-  ...rest
-}) {
+export default function Header({ children, className, ...rest }) {
   const [isSticky, setIsSticky] = useState(false)
   const ref = React.createRef()
 

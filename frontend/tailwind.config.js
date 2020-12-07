@@ -1,3 +1,4 @@
+const plugin = require('tailwindcss/plugin')
 const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
 
@@ -49,13 +50,29 @@ module.exports = {
       pink: colors.pink
     }
   },
+  variants: {
+    extend: {
+      backgroundColor: ['hover_before', 'hover_after']
+    }
+  },
   darkMode: 'class',
   experimental: 'all',
   future: 'all',
   plugins: [
+    require('tailwindcss-pseudo-elements'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/typography')
+    require('@tailwindcss/typography'),
+    plugin(function ({ addUtilities }) {
+      addUtilities(
+        {
+          '.empty-content': {
+            content: "''"
+          }
+        },
+        ['before']
+      )
+    })
   ],
   purge: [
     './src/components/**/*.{js,ts,jsx,tsx}',

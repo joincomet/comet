@@ -17,10 +17,11 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
           rocketCount
           author {
             username
-            avatarURL
+            avatarUrl
           }
           timeSince
           timeSinceEdited
+          level
         }
       }
     `,

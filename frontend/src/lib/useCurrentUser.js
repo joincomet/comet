@@ -11,7 +11,7 @@ export const fetchCurrentUser = async (ctx = null) => {
           id
           admin
           username
-          avatarURL
+          avatarUrl
           postCount
           followerCount
           rocketCount

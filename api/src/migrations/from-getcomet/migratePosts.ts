@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
-import { isURL } from '@/IsURL'
+import { isUrl } from '@/IsUrl'
 import { Sema } from 'async-sema'
-import {scrapeMetadata} from "@/metascraper/scrapeMetadata";
+import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
 
 export const migratePosts = async (postRepo: Repository<Post>) => {
   console.info(
@@ -10,22 +10,22 @@ export const migratePosts = async (postRepo: Repository<Post>) => {
   )
   let posts = await postRepo
     .createQueryBuilder('post')
-    .where('post.linkURL IS NOT NULL')
+    .where('post.linkUrl IS NOT NULL')
     .orderBy('post.createdAt', 'DESC')
     .getMany()
 
   if (!posts || posts.length === 0) throw new Error('No posts retrieved')
 
-  posts = posts.filter(p => isURL(p.linkURL))
+  posts = posts.filter(p => isUrl(p.linkUrl))
 
   const sema = new Sema(10, { capacity: posts.length })
 
   async function fetchEmbedData(post: Post) {
-    if (!isURL(post.linkURL)) return
+    if (!isUrl(post.linkUrl)) return
 
     await sema.acquire()
     try {
-      const meta = await scrapeMetadata(post.linkURL)
+      const meta = await scrapeMetadata(post.linkUrl)
       if (meta) {
         await postRepo.update(post.id, { meta })
       }

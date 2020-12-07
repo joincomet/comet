@@ -1,6 +1,6 @@
 import { URL } from 'url'
 
-export const isURL = (url: string | null | undefined) => {
+export const isUrl = (url: string | null | undefined) => {
   if (!url) return false
   try {
     new URL(url)

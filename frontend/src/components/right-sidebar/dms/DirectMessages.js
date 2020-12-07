@@ -15,7 +15,7 @@ export default function DirectMessages() {
         user={{
           profile: {
             realName: 'Michael Perino',
-            avatarURL:
+            avatarUrl:
               'https://pbs.twimg.com/profile_images/1278741528425517057/oQbjgrA2_400x400.jpg'
           }
         }}

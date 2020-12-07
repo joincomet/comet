@@ -7,21 +7,21 @@ import { useTheme } from '@/components/ThemeContext'
 import ReactPlayer from 'react-player/youtube'
 
 export default function PostEmbed({ post, measure }) {
-  if (!post.linkURL) return null
+  if (!post.linkUrl) return null
 
   const isMounted = useMountedState()
   const { theme } = useTheme()
 
   const isTwitter = () =>
-    post.linkURL &&
-    !!post.linkURL.match(
+    post.linkUrl &&
+    !!post.linkUrl.match(
       /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)(?:\/.*)?$/i
     )
   const tweetId = () =>
-    isTwitter() ? post.linkURL.split('/status/')[1].split('/')[0] : null
+    isTwitter() ? post.linkUrl.split('/status/')[1].split('/')[0] : null
 
   const isCustomEmbed = () =>
-    post.linkURL && (isTwitter() || ReactPlayer.canPlay(post.linkURL))
+    post.linkUrl && (isTwitter() || ReactPlayer.canPlay(post.linkUrl))
 
   if (isTwitter())
     return (
@@ -41,26 +41,26 @@ export default function PostEmbed({ post, measure }) {
       />
     )
 
-  if (ReactPlayer.canPlay(post.linkURL))
+  if (ReactPlayer.canPlay(post.linkUrl))
     return (
       <div className="rounded-md overflow-hidden">
-        <ReactPlayer controls={true} url={post.linkURL} />
+        <ReactPlayer controls={true} url={post.linkUrl} />
       </div>
     )
 
   if (post.meta && post.meta.title)
     return (
       <a
-        href={post.linkURL}
+        href={post.linkUrl}
         target="_blank"
         rel="noreferrer noopener nofollow"
         className="group rounded-md flex items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 shadow-inner"
       >
         <div className="w-32 h-32 relative flex-shrink-0">
-          {post.thumbnailURL || post.logoURL ? (
+          {post.thumbnailUrl || post.logoUrl ? (
             <Image
               loading="eager"
-              src={post.thumbnailURL || post.logoURL}
+              src={post.thumbnailUrl || post.logoUrl}
               layout="fill"
               className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
             />
@@ -73,7 +73,7 @@ export default function PostEmbed({ post, measure }) {
 
         <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
           <div className="text-sm font-semibold transition line-clamp-2 text-primary group-hover:text-blue-500">
-            {post.meta && post.meta.title ? post.meta.title : post.linkURL}
+            {post.meta && post.meta.title ? post.meta.title : post.linkUrl}
           </div>
 
           <div className="mt-1 text-xs font-medium text-secondary line-clamp-2">
@@ -81,11 +81,11 @@ export default function PostEmbed({ post, measure }) {
           </div>
 
           <div className="flex flex-row items-center mt-auto text-tertiary text-xs hover:underline">
-            {post.logoURL && (
+            {post.logoUrl && (
               <div className="inline-block w-4 h-4 mr-3">
                 <Image
                   loading="eager"
-                  src={post.logoURL}
+                  src={post.logoUrl}
                   width={16}
                   height={16}
                 />
@@ -99,12 +99,12 @@ export default function PostEmbed({ post, measure }) {
 
   return (
     <a
-      href={post.linkURL}
+      href={post.linkUrl}
       target="_blank"
       rel="noopener noreferrer"
       className="text-blue-500 hover:underline cursor-pointer mt-3 text-sm break-all"
     >
-      {post.linkURL}
+      {post.linkUrl}
     </a>
   )
 }

@@ -85,12 +85,12 @@ function Post({ post, index = 0, measure = () => {}, showPlanet = true }) {
             <NavLink
               href={`/user/${post.author.username}`}
               className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
-                post.author.avatarURL ? '' : 'bg-gray-200 dark:bg-gray-700'
+                post.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
               }`}
             >
-              {post.author.avatarURL ? (
+              {post.author.avatarUrl ? (
                 <Image
-                  src={post.author.avatarURL}
+                  src={post.author.avatarUrl}
                   layout="fill"
                   className="rounded-full object-cover object-center"
                   loading="eager"
@@ -133,7 +133,7 @@ function Post({ post, index = 0, measure = () => {}, showPlanet = true }) {
               </span>
 
               <NavLink
-                href={post.relativeURL}
+                href={post.relativeUrl}
                 className="text-base font-medium text-primary hidden sm:block"
               >
                 {post.title}
@@ -143,7 +143,7 @@ function Post({ post, index = 0, measure = () => {}, showPlanet = true }) {
 
           <div className="mx-3 sm:mx-16">
             <NavLink
-              href={post.relativeURL}
+              href={post.relativeUrl}
               className="text-base font-medium text-primary sm:hidden block mb-3"
             >
               {post.title}
@@ -151,13 +151,13 @@ function Post({ post, index = 0, measure = () => {}, showPlanet = true }) {
 
             <PostText post={post} measure={measure} />
 
-            {post.imageURLs.length > 0 && (
+            {post.imageUrls.length > 0 && (
               <div className="cursor-pointer relative aspect-ratio-16/9 object-contain w-full bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
                 <Image
                   loading="eager"
                   alt="Image"
                   layout="fill"
-                  src={post.imageURLs[0]}
+                  src={post.imageUrls[0]}
                   className="rounded-md object-cover"
                 />
               </div>
