@@ -110,13 +110,19 @@ function Post({
             </NavLink>
             <div className="flex flex-col">
               <div className="inline-flex items-center text-sm">
-                <span className="text-secondary font-semibold hover:underline cursor-pointer">
+                <NavLink
+                  href={`/user/${post.author.username}`}
+                  className="text-secondary font-semibold hover:underline cursor-pointer"
+                >
                   {post.author.username}
-                </span>
+                </NavLink>
                 &nbsp;
-                <span className="text-tertiary hidden sm:block">
+                <NavLink
+                  href={`/user/${post.author.username}`}
+                  className="text-tertiary hidden sm:block"
+                >
                   @{post.author.username}
-                </span>
+                </NavLink>
                 {showPlanet && (
                   <>
                     &nbsp;

@@ -29,7 +29,7 @@ ALTER TABLE "user"
 UPDATE "user" T
 SET profile = (SELECT to_json(concat(
         '{',
-        '"bio": ', (SELECT to_json(T."bio")), ', ',
+        '"bio": ', (SELECT to_json(T."bio")),
         '}'))::jsonb AS profile
                FROM "user"
                WHERE "id" = T."id")

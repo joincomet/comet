@@ -7,6 +7,14 @@ import { useTheme } from '@/components/ThemeContext'
 import ReactPlayer from 'react-player/youtube'
 
 export default function PostEmbed({ post, measure }) {
+  return (
+    <div className="mt-3">
+      <Embed post={post} measure={measure} />
+    </div>
+  )
+}
+
+function Embed({ post, measure }) {
   if (!post.linkUrl) return null
 
   const isMounted = useMountedState()

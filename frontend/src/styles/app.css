@@ -204,28 +204,35 @@ body {
   }
 }
 
-.arrowbox {
-  @apply relative;
-}
-.arrowbox::after {
-  @apply right-full top-1/2 h-0 w-0 absolute pointer-events-none border border-transparent border-8 -mt-2;
-  content: " ";
-}
 .arrow_box {
   position: relative;
 }
-.arrow_box::after {
+.arrow_box::after, .arrow_box::before {
   right: 100%;
-  top: 1.5rem;
+  top: calc(1.5rem - 4px);
+  border: solid transparent;
   content: "";
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
-  border: 8px solid rgba(255, 255, 255, 0);
-  margin-top: -8px;
-  @apply border-r-gray-200 dark:border-r-gray-800;
 }
+
+.arrow_box::after {
+  @apply border-r-gray-100 dark:border-r-gray-800;
+  border-color: rgba(244, 244, 245, 0);
+  border-right-color: #F4F4F5;
+  border-width: 8px;
+  margin-top: -8px;
+}
+.arrow_box::before {
+  @apply border-r-gray-200 dark:border-r-gray-800;
+  border-color: rgba(228, 228, 231, 0);
+  border-right-color: #E4E4E7;
+  border-width: 9px;
+  margin-top: -9px;
+}
+
 
 .commentcollapse {
   @apply absolute top-1 bottom-0 w-10 cursor-pointer group;
@@ -237,4 +244,8 @@ body {
 
 .commentcollapse:hover::before {
   @apply bg-blue-500;
+}
+
+.glow {
+  box-shadow: rgba(136, 153, 166, 0.2) 0px 0px 15px, rgba(136, 153, 166, 0.15) 0px 0px 3px 1px;
 }

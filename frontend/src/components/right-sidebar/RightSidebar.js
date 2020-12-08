@@ -53,7 +53,7 @@ function UserInfo() {
 
   if (!currentUser)
     return (
-      <div>
+      <div className="mt-6">
         <NavLink
           href="/?login=true"
           as="/login"
