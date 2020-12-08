@@ -15,6 +15,7 @@ import Grass from '@/components/home/Grass'
 import Telescope from '@/components/home/Telescope'
 import { BiPlanet } from 'react-icons/bi'
 import { usePrevious } from 'react-use'
+import PermanentHeader from '@/components/PermanentHeader'
 
 const boxContainer =
   'relative flex-grow h-24 transform transition hover:scale-105 cursor-pointer col-span-1'
@@ -34,7 +35,7 @@ function HomePage() {
     <div>
       <GalaxiesSlider />
 
-      <div
+      {/*<div
         style={{
           backgroundImage:
             'radial-gradient(ellipse at top , #18181B 0%,  #27272A 95%)'
@@ -44,17 +45,15 @@ function HomePage() {
         <Grass className="absolute bottom-0 left-0 text-gray-900 w-1/2" />
         <Grass className="absolute bottom-0 right-0 text-gray-900 w-1/2" />
         <Telescope className="absolute bottom-0 right-24 h-48 text-gray-900" />
+      </div>*/}
+
+      <div className="mt-3 sm:mx-3 2xl:mx-72 hidden sm:block z-10">
+        <CreatePostCard />
       </div>
+      <Header />
 
-      <div className="-mt-64 z-10 relative">
-        <div className="mt-9 sm:mx-3 2xl:mx-72 hidden sm:block z-10">
-          <CreatePostCard />
-        </div>
-        <Header />
-
-        <div className="mt-14 pt-3 sm:mt-0 sm:pt-0">
-          <Posts variables={router.query.login ? prevVariables : variables} />
-        </div>
+      <div className="mt-14 pt-3 sm:mt-0 sm:pt-0">
+        <Posts variables={router.query.login ? prevVariables : variables} />
       </div>
 
       <CreatePostFAB />

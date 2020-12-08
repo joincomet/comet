@@ -118,7 +118,7 @@ function PlanetPage() {
       <div className="pt-3 sm:px-3 2xl:px-72 hidden sm:block">
         <CreatePostCard />
       </div>
-      <Header />
+      <Header planet={planet} />
 
       <div className="mt-14 pt-3 sm:mt-0 sm:pt-0">
         <Posts variables={getVariables(router.query)} showPlanet={false} />

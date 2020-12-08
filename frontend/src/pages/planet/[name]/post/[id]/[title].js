@@ -10,6 +10,7 @@ import { FiUser } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
 import React from 'react'
 import PermanentHeader from '@/components/PermanentHeader'
+import Comment from '@/components/Comment'
 
 const chip =
   'cursor-pointer px-3 h-8 inline-flex flex-row items-center rounded-full dark:border-gray-700 border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition'
@@ -23,72 +24,37 @@ export default function PlanetPage() {
     comments.filter(c => c.parentCommentId === comment.id).length > 0
 
   return (
-    <div>
+    <div className="relative">
       <PermanentHeader />
 
-      <div className="pt-6">
-        <Post post={post} />
+      <div
+        className="fixed bottom-0 right-0 left-0 h-24 py-3 px-72 bg-white dark:bg-gray-800 shadow-2xl z-10"
+        style={{ marginLeft: '17.5rem', marginRight: '17.5rem' }}
+      >
+        <div className="flex">
+          <div
+            className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg bg-gray-200 dark:bg-gray-700`}
+          >
+            <FiUser size={20} className="m-2.5 text-gray-500" />
+          </div>
+          <textarea
+            placeholder="Write a comment..."
+            className="h-auto py-3 px-3 text-sm rounded-md w-full dark:bg-gray-800 resize-none border-none transition hover:border-blue-500"
+          />
+        </div>
       </div>
 
-      {comments.map((comment, index) => (
-        <div key={index} className={`mx-3 2xl:mx-72 mb-3`}>
-          <div
-            className="flex relative"
-            style={{ marginLeft: comment.level * 2 + 'rem' }}
-          >
-            {hasChild(comment) && <div className="commentcollapse" />}
-            <NavLink
-              href={`/user/${comment.author.username}`}
-              className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
-                comment.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
-              }`}
-            >
-              {comment.author.avatarUrl ? (
-                <Image
-                  src={comment.author.avatarUrl}
-                  layout="fill"
-                  className="rounded-full object-cover object-center"
-                  loading="eager"
-                />
-              ) : (
-                <FiUser size={20} className="m-2.5 text-gray-500" />
-              )}
-            </NavLink>
-            <div className="dark:bg-gray-800 arrow_box rounded-md w-full">
-              <div className="flex items-start w-full">
-                <div className="flex flex-col w-full">
-                  <div className="flex items-center text-sm dark:bg-gray-800 border-b dark:border-gray-700 py-3 mx-3 rounded-t-md">
-                    <span className="text-secondary font-semibold hover:underline cursor-pointer">
-                      {comment.author.username}
-                    </span>
-                    &nbsp;
-                    <span className="text-tertiary">
-                      @{comment.author.username}
-                    </span>
-                    <span className="text-tertiary">
-                      &nbsp;&middot;&nbsp;{comment.timeSince}
-                    </span>
-                  </div>
+      <div className="pt-6">
+        <Post post={post} className="rounded-2xl" />
+      </div>
 
-                  <div
-                    className="text-sm p-3"
-                    dangerouslySetInnerHTML={{ __html: comment.textContent }}
-                  />
+      <div className={`mx-3 2xl:mx-72 mb-3`}>
+        {comments.map((comment, index) => (
+          <Comment comment={comment} key={comment.id} />
+        ))}
+      </div>
 
-                  {/*<div className="px-1.5 py-1.5">
-                  <div className={`${chip} mr-3 text-tertiary`}>
-                    <BiRocket className={`w-4.5 h-4.5`} />
-                    <span className="ml-3 text-sm font-medium">
-                      {post.rocketCount}
-                    </span>
-                  </div>
-                </div>*/}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
+      <div className="h-64" />
     </div>
   )
 }

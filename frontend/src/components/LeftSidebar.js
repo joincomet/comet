@@ -45,7 +45,11 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
           sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
         }`}
       >
-        <Scrollbar>
+        <Scrollbar
+          thumbYProps={{
+            style: { backgroundColor: 'rgba(0, 0, 0, 0.1)' }
+          }}
+        >
           <div className="mx-5 pt-3 pb-3 mb-2 border-b border-gray-200 dark:border-gray-700 flex flex-row items-center">
             <NavLink href="/" className="ml-1.5 mr-auto">
               <Logo className="w-32 dark:text-gray-200 text-black" />

@@ -213,7 +213,6 @@ body {
 }
 .arrow_box {
   position: relative;
-  background: #fff;
 }
 .arrow_box::after {
   right: 100%;
@@ -224,16 +223,16 @@ body {
   position: absolute;
   pointer-events: none;
   border: 8px solid rgba(255, 255, 255, 0);
-  border-right-color: theme('colors.gray.800');
   margin-top: -8px;
+  @apply border-r-gray-200 dark:border-r-gray-800;
 }
 
 .commentcollapse {
-  @apply absolute top-0 bottom-0 mt-12 -mb-12 w-10 cursor-pointer group;
+  @apply absolute top-1 bottom-0 w-10 cursor-pointer group;
 }
 
 .commentcollapse::before {
-  @apply absolute empty-content left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-700 transition;
+  @apply absolute mt-12 empty-content left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 transition;
 }
 
 .commentcollapse:hover::before {

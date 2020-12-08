@@ -95,7 +95,4 @@ export class Comment {
 
   @Column({ nullable: true })
   removedReason?: string
-
-  @Field({ nullable: true })
-  level?: number
 }

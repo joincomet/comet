@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Logo from '@/components/Logo'
 
 export default function PostText({ post, measure }) {
   if (!post.textContent) return null
@@ -11,7 +12,10 @@ export default function PostText({ post, measure }) {
   }
 
   return (
-    <div className="p-3 rounded-md border dark:border-gray-700">
+    <div className="group border-b border-gray-200 pb-3 pt-3 dark:border-gray-700 relative">
+      {/*<div className="absolute bottom-0 right-0 p-3 group-hover:opacity-0 opacity-100 transition">
+        <Logo className="h-3" />
+      </div>*/}
       <div
         dangerouslySetInnerHTML={{ __html: post.textContent }}
         className={`prose-sm text-primary ${!readMore && 'line-clamp-3'}`}

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import SearchBar from '@/components/SearchBar'
 import SortDropdown from '@/components/SortDropdown'
-import { FiEdit } from 'react-icons/fi'
+import { FiEdit, FiPlus } from 'react-icons/fi'
+import Image from 'next/image'
 
-export default function Header({ children, className, ...rest }) {
+export default function Header({ children, className, planet, ...rest }) {
   const [isSticky, setIsSticky] = useState(false)
   const ref = React.createRef()
 
@@ -55,6 +56,30 @@ export default function Header({ children, className, ...rest }) {
         ref={ref}
         {...rest}
       >
+        {planet && (
+          <div
+            className={`absolute left-12 inline-flex items-center transition ${
+              isSticky ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <div className="relative h-8 w-8 rounded-full">
+              <Image
+                src={planet.avatarUrl}
+                layout="fill"
+                className="object-cover object-center rounded-full"
+              />
+            </div>
+
+            <div className="ml-3 text-sm text-accent font-medium">
+              {planet.name}
+
+              <div className="text-tertiary text-xs">
+                {planet.userCount} Members
+              </div>
+            </div>
+          </div>
+        )}
+
         <SearchBar
           slashFocus={true}
           className={`w-full h-10 text-sm px-16 rounded-full focus:shadow-md outline-none transition border border-gray-200 dark:border-gray-800 focus:border-blue-500 dark:focus:border-blue-500 ${

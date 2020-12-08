@@ -12,6 +12,7 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
           id
           name
           avatarUrl
+          userCount
         }
       }
     `,

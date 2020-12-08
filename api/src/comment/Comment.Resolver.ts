@@ -158,9 +158,9 @@ export class CommentResolver {
     qb.addOrderBy('comment.createdAt', 'DESC')
     qb.addOrderBy('comment.rocketCount', 'DESC')
 
-    const postComments = await qb.getMany()
+    const comments = await qb.getMany()
 
-    postComments.forEach(comment => {
+    comments.forEach(comment => {
       if (comment.deleted) {
         comment.textContent = `<p>[deleted]</p>`
         comment.authorId = null
@@ -173,48 +173,6 @@ export class CommentResolver {
       }
     })
 
-    if (postComments.length === 0) return []
-
-    const toRemove: any[] = []
-    const thread = postComments.filter(c => c.parentCommentId === null)
-    let maxLevel = 0
-    const fun = (comments: any, level: number) => {
-      if (level > maxLevel) maxLevel = level
-      for (const comment of comments) {
-        comment.childComments = postComments.filter(
-          (c: any) => c.parentCommentId === comment.id
-        )
-        comment.level = level
-        if (
-          (!comment.childComments || comment.childComments.length === 0) &&
-          (comment.deleted || comment.removed)
-        ) {
-          toRemove.push(comment.id)
-        }
-        fun(comment.childComments, level + 1)
-      }
-    }
-    fun(thread, 0)
-    let comments = thread
-      .reduce(flat, [])
-      .filter((c: any) => !toRemove.includes(c.id))
-    for (let i = 0; i < maxLevel; i++) {
-      comments = comments.filter(
-        (c: any) =>
-          (!c.deleted && !c.removed) ||
-          (c.childComments && c.childComments.length > 0)
-      )
-      for (const comment of comments) {
-        if (!comment.childComments) continue
-        for (const childId of comment.childComments) {
-          if (!comments.find((c: any) => c.id === childId)) {
-            comment.childComments = comment.childComments.filter(
-              (id: any) => id !== childId
-            )
-          }
-        }
-      }
-    }
     return comments
   }
 

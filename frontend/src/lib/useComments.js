@@ -2,6 +2,22 @@ import { gql } from 'graphql-request'
 import { useQuery } from 'react-query'
 import { request } from '@/lib/Request'
 
+const unflatten = comments => {
+  const hashTable = Object.create(null)
+  comments.forEach(
+    comment => (hashTable[comment.id] = { ...comment, childComments: [] })
+  )
+  const commentTree = []
+  comments.forEach(comment => {
+    if (comment.parentCommentId)
+      hashTable[comment.parentCommentId].childComments.push(
+        hashTable[comment.id]
+      )
+    else commentTree.push(hashTable[comment.id])
+  })
+  return commentTree
+}
+
 export const fetchComments = async ({ queryKey }, ctx = null) => {
   const [_key, variables] = queryKey
 
@@ -21,14 +37,13 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
           }
           timeSince
           timeSinceEdited
-          level
         }
       }
     `,
     variables
   )
 
-  return comments
+  return unflatten(comments)
 }
 
 export const useComments = variables =>

@@ -97,6 +97,7 @@ const getRowRender = (posts, showPlanet = true) => ({
               index={index}
               measure={measure}
               showPlanet={showPlanet}
+              className="rounded-lg"
             />
           </div>
         )}

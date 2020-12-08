@@ -6,61 +6,7 @@ import {
   FiMenu
 } from 'react-icons/fi'
 import Dropdown from '@/components/Dropdown'
-
-const galaxies = [
-  'activism',
-  'addiction support',
-  'animals & pets',
-  'anime',
-  'art',
-  'beauty & makeup',
-  'business, economics & finance',
-  'careers',
-  'cars & motor vehicles',
-  'celebrity',
-  'crafts & DIY',
-  'crypto',
-  'culture, race & ethnicity',
-  'ethics & philosophy',
-  'family & relationships',
-  'fashion',
-  'fitness & nutrition',
-  'food & drink',
-  'funny/humor',
-  'gaming',
-  'gender',
-  'history',
-  'hobbies',
-  'home & garden',
-  'internet culture & memes',
-  'law',
-  'learning & education',
-  'marketplace & deals',
-  'mature themes & adult content',
-  'medical & mental health',
-  "men's health",
-  'meta/cometx',
-  'military',
-  'movies',
-  'music',
-  'outdoors & nature',
-  'place',
-  'podcasts & streamers',
-  'politics',
-  'programming',
-  'reading, writing, & literature',
-  'religion & spirituality',
-  'science',
-  'sexual orientation',
-  'sports',
-  'tabletop games',
-  'technology',
-  'television',
-  'trauma support',
-  'travel',
-  "women's health",
-  'world news'
-]
+import { galaxies } from '@/lib/galaxies'
 
 export default function GalaxiesSlider() {
   const [scrollLeft, setScrollLeft] = useState(0)

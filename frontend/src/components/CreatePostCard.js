@@ -22,7 +22,7 @@ const button =
 
 export default function CreatePostCard() {
   return (
-    <div className="pt-3 pb-2 sm:rounded-md shadow-md bg-white dark:bg-gray-800">
+    <div className="pt-3 pb-2 sm:rounded-lg shadow-md bg-white dark:bg-gray-800">
       <div className="flex pl-3 pr-3 sm:pr-16">
         <div
           className={`w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 dark:bg-gray-700`}

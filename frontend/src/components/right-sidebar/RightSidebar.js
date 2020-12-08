@@ -28,6 +28,15 @@ export default function RightSidebar() {
           <Folders />
         </div>
 
+        <div className="mt-6">
+          <div className="mx-6 mb-3 font-header text-tertiary inline-flex items-center whitespace-nowrap opacity-75">
+            Direct Messages
+            <span className="ml-3 text-blue-500 font-header whitespace-nowrap">
+              Coming Soon
+            </span>
+          </div>
+        </div>
+
         <ToggleTheme />
       </div>
     </nav>
@@ -59,9 +68,9 @@ function UserInfo() {
     )
 
   return (
-    <div className="dark:bg-gray-900 transition cursor-pointer px-6 py-3 rounded-md m-3 shadow-inner">
+    <div className="bg-gray-100 dark:bg-gray-900 transition cursor-pointer px-6 py-3 rounded-md m-3 shadow-inner">
       <div className="flex items-center">
-        <div className="relative w-12 h-12 rounded-full dark:bg-gray-700 inline-flex shadow">
+        <div className="relative w-12 h-12 rounded-full bg-white dark:bg-gray-700 inline-flex shadow">
           {currentUser.profile.avatarUrl ? (
             <Image
               src={currentUser.profile.avatarUrl}
@@ -72,7 +81,7 @@ function UserInfo() {
             <FiUser className="h-1/2 w-1/2 text-mid m-auto" />
           )}
 
-          <div className="absolute bottom-0 right-0 z-10 w-1/4 h-1/4 bg-green-500 rounded-full ring-4 dark:ring-gray-900" />
+          <div className="absolute bottom-0 right-0 z-10 w-1/4 h-1/4 bg-green-500 rounded-full ring-4 ring-gray-100 dark:ring-gray-900" />
         </div>
 
         <div className="ml-4 font-medium">

@@ -24,6 +24,7 @@ import PostEmbed from '@/components/post/PostEmbed'
 import PostActions from '@/components/post/PostActions'
 import PostToast from '@/components/post/PostToast'
 import PostText from '@/components/post/PostText'
+import Logo from '@/components/Logo'
 
 const colors = [
   'text-red-500',
@@ -34,7 +35,13 @@ const colors = [
   'text-pink-500'
 ]
 
-function Post({ post, index = 0, measure = () => {}, showPlanet = true }) {
+function Post({
+  post,
+  index = 0,
+  measure = () => {},
+  showPlanet = true,
+  className = ''
+}) {
   const [toast, setToast] = useState(null)
   const [timeoutId, setTimeoutId] = useState(null)
 
@@ -74,14 +81,16 @@ function Post({ post, index = 0, measure = () => {}, showPlanet = true }) {
           isDragging || toast ? 'opacity-40' : 'opacity-100'
         }  transition pb-3 w-full`}
       >
-        <div className="sm:mx-3 2xl:mx-72 flex flex-col bg-white dark:bg-gray-800 sm:rounded-md shadow-md relative">
+        <div
+          className={`${className} sm:mx-3 2xl:mx-72 flex flex-col bg-white dark:bg-gray-800 shadow relative`}
+        >
           {post.sticky && (
             <TiPinOutline
               size={20}
               className="absolute top-3 right-3 text-accent"
             />
           )}
-          <div className="flex items-start m-3">
+          <div className="flex items-start px-3 pt-3">
             <NavLink
               href={`/user/${post.author.username}`}
               className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
@@ -152,7 +161,7 @@ function Post({ post, index = 0, measure = () => {}, showPlanet = true }) {
             <PostText post={post} measure={measure} />
 
             {post.imageUrls.length > 0 && (
-              <div className="cursor-pointer relative aspect-ratio-16/9 object-contain w-full bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
+              <div className="mt-3 cursor-pointer relative aspect-ratio-16/9 object-contain w-full bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
                 <Image
                   loading="eager"
                   alt="Image"
