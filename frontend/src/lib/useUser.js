@@ -13,6 +13,8 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
           id
           username
           timeSinceCreated
+          followerCount
+          followingCount
           profile {
             bio
             realName

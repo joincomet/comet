@@ -57,6 +57,7 @@ export default function Posts({ variables, showPlanet = true }) {
               rowHeight={cache.rowHeight}
               deferredMeasurementCache={cache}
               className="outline-none"
+              containerStyle={{ position: 'static' }}
               style={{
                 overflowX: 'hidden !important',
                 flexBasis: 'auto !important'
@@ -83,25 +84,24 @@ const getRowRender = (posts, showPlanet = true) => ({
   const post = posts[index]
 
   return (
-    <div key={post.id} style={{}}>
-      <CellMeasurer
-        cache={cache}
-        columnIndex={0}
-        parent={parent}
-        rowIndex={index}
-      >
-        {({ measure, registerChild }) => (
-          <div style={{ margin: 0, ...style }} ref={registerChild}>
-            <Post
-              post={post}
-              index={index}
-              measure={measure}
-              showPlanet={showPlanet}
-              className="rounded-lg"
-            />
-          </div>
-        )}
-      </CellMeasurer>
-    </div>
+    <CellMeasurer
+      key={post.id}
+      cache={cache}
+      columnIndex={0}
+      parent={parent}
+      rowIndex={index}
+    >
+      {({ measure, registerChild }) => (
+        <div ref={registerChild} style={style}>
+          <Post
+            post={post}
+            index={index}
+            measure={measure}
+            showPlanet={showPlanet}
+            className="lg:rounded-lg mb-3"
+          />
+        </div>
+      )}
+    </CellMeasurer>
   )
 }

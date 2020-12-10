@@ -25,11 +25,8 @@ import Posts from '@/components/post/Posts'
 import { BiPlanet } from 'react-icons/bi'
 import PermanentHeader from '@/components/PermanentHeader'
 
-const tab =
-  'transform hover:bg-blue-500 dark:hover:bg-blue-500 rounded-full hover:-translate-y-0.5 bg-white dark:bg-gray-900 hover:text-white dark:hover:text-white transition px-6 h-9 inline-flex items-center text-sm select-none cursor-pointer'
-
-const selectedTab = 'text-blue-500 font-semibold'
-const unselectedTab = 'text-gray-600 dark:text-gray-400'
+const userInfoItem =
+  'text-tertiary font-medium hover:text-blue-500 dark:hover:text-blue-500 transition cursor-pointer'
 
 function UserPage() {
   const router = useRouter()
@@ -37,109 +34,120 @@ function UserPage() {
 
   return (
     <div>
-      <PermanentHeader />
-      <div className="mx-3 2xl:mx-64 pt-6 pb-3">
-        <div className="glow rounded-2xl bg-white dark:bg-gray-800 relative">
+      <div className="pb-3">
+        <div className="bg-white dark:bg-gray-800 shadow relative">
           <div className="w-full h-32 relative">
-            <Image
-              src="https://media.cometx.io/trump_banner.jpg"
-              layout="fill"
-              className="object-cover object-center rounded-t-2xl"
-            />
+            {user.bannerUrl ? (
+              <Image
+                src={user.bannerUrl}
+                layout="fill"
+                className="object-cover object-center"
+              />
+            ) : (
+              <div className="bg-gradient-to-tr from-red-400 to-blue-500 w-full h-full" />
+            )}
           </div>
 
-          <div
-            className={`w-32 h-32 absolute left-3 top-32 transform -translate-y-1/2 inline-flex rounded-full shadow-md ${
-              user.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
-            }`}
-          >
-            <Image
-              src="https://media.cometx.io/trump_avatar.jpg"
-              layout="fill"
-              className="rounded-full object-cover object-center"
-            />
-          </div>
+          <div className="mycontainer">
+            <div className="relative">
+              <div
+                className={`w-24 h-24 lg:w-32 lg:h-32 absolute left-0 top-0 transform -translate-y-1/2 inline-flex rounded-full ring-4 ring-white dark:ring-gray-800 ${
+                  user.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
+                }`}
+              >
+                {user.avatarUrl ? (
+                  <Image
+                    src={user.avatarUrl}
+                    layout="fill"
+                    className="rounded-full object-cover object-center"
+                  />
+                ) : (
+                  <FiUser className="m-auto w-1/2 h-1/2 text-tertiary" />
+                )}
+              </div>
+            </div>
 
-          <div className="ml-36">
-            <div className="p-3 flex">
-              <div className="space-y-2">
-                <div className="font-semibold leading-none">
-                  Donald J. Trump&nbsp;
-                  <span className="text-tertiary font-normal">
-                    @realDonaldTrump
-                  </span>
+            <div className="ml-24 lg:ml-32 p-3 flex">
+              <div>
+                <div className="font-semibold text-xl leading-none">
+                  {user.profile.realName || user.username}
                 </div>
 
-                <div className="prose-sm text-secondary">
-                  45th President of the United States of America
-                </div>
-
-                <div className="flex items-center text-tertiary text-sm">
-                  <FiMapPin className="w-4 h-4 mr-1.5" />
-                  Washington, DC
-                  <FiGlobe className="w-4 h-4 ml-3 mr-1.5" />
-                  <span className="text-blue-500 hover:underline">
-                    Vote.DonaldJTrump.com
-                  </span>
-                  <FiCalendar className="w-4 h-4 ml-3 mr-1.5" />
-                  Joined {user.timeSinceCreated}
-                </div>
-
-                <div className="flex items-center space-x-3 text-tertiary text-sm">
-                  <div className="hover:underline cursor-pointer">
-                    <span className="font-semibold text-secondary">51</span>{' '}
-                    Following
-                  </div>
-                  <div className="hover:underline cursor-pointer">
-                    <span className="font-semibold text-secondary">88.6M</span>{' '}
-                    Followers
-                  </div>
-
-                  <div className="font-bold">&middot;</div>
-                  <div className="hover:underline cursor-pointer">
-                    <span className="font-semibold text-secondary">20</span>{' '}
-                    Planets
-                  </div>
+                <div className="text-tertiary font-normal text-sm mt-1">
+                  @{user.username}
                 </div>
               </div>
 
               <div className="ml-auto text-white transition bg-blue-500 hover:bg-blue-600 cursor-pointer rounded-full px-6 h-9 font-medium text-sm inline-flex items-center">
                 Follow
               </div>
+            </div>
 
-              {/*<div className="ml-auto transition bg-blue-500 hover:bg-red-500 cursor-pointer rounded-full px-6 h-9 font-medium text-sm inline-flex items-center">
-              Following
-            </div>*/}
+            <div className="flex pt-3">
+              <div className="inline-flex items-center border-b-2 text-blue-500 border-blue-500 px-6 h-10 cursor-pointer select-none text-sm font-medium transition dark:hover:bg-gray-700 rounded-t-md">
+                Overview
+              </div>
+              <div className="inline-flex items-center text-tertiary px-6 h-10 cursor-pointer select-none text-sm font-medium transition dark:hover:bg-gray-700 rounded-t-md">
+                Posts
+              </div>
+              <div className="inline-flex items-center text-tertiary px-6 h-10 cursor-pointer select-none text-sm font-medium transition dark:hover:bg-gray-700 rounded-t-md">
+                Comments
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mb-3 2xl:mx-40 flex items-center">
-        <div className="w-48 h-0.5 bg-gray-700 glow transform -translate-y-1/2" />
-        <div className="inline-flex space-x-3 mx-auto">
-          <div className={`${tab} ${selectedTab}`}>
-            <FiArchive size={20} className="mr-3" />
-            Posts
+      <div className="lg:grid gap-3 grid-cols-3 mycontainer-nopad">
+        <div className="col-span-1">
+          <div className="bg-white dark:bg-gray-800 lg:rounded-lg border border-gray-200 dark:border-gray-800 py-2.5 px-4">
+            <div className="flex space-x-10">
+              <div className={userInfoItem}>
+                <div className="text-lg text-accent">{user.postCount || 0}</div>
+                <div className="text-xs">Posts</div>
+              </div>
+
+              <div className={userInfoItem}>
+                <div className="text-lg text-accent">
+                  {user.followerCount || 0}
+                </div>
+                <div className="text-xs">Followers</div>
+              </div>
+
+              <div className={userInfoItem}>
+                <div className="text-lg text-accent">
+                  {user.followingCount || 0}
+                </div>
+                <div className="text-xs">Following</div>
+              </div>
+            </div>
           </div>
-          <div className={`${tab} ${unselectedTab}`}>
-            <FiMessageCircle size={20} className="mr-3" />
-            Comments
-          </div>
-          <div className={`${tab} ${unselectedTab}`}>
-            <FiFolder size={20} className="mr-3" />
-            Folders
-          </div>
-          <div className={`${tab} ${unselectedTab}`}>
-            <FiImage size={20} className="mr-3" />
-            Media
+
+          <div className="sticky top-14 pt-3">
+            <div className="bg-white dark:bg-gray-800 lg:rounded-lg border border-gray-200 dark:border-gray-800 py-2.5 px-4">
+              <div className="text-lg font-medium">About</div>
+              <div className="text-sm mt-3">{user.profile.bio}</div>
+              <div className="border-t dark:border-gray-700 flex items-center text-tertiary text-xs pt-3 mt-3">
+                <FiCalendar className="w-4 h-4 mr-3" />
+                Joined {user.timeSinceCreated}
+              </div>
+              <div className="border-t dark:border-gray-700 flex items-center text-tertiary text-sm pt-3 mt-3">
+                Website
+                <div className="ml-auto hover:underline text-accent cursor-pointer">
+                  cometx.io
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 lg:rounded-lg border border-gray-200 dark:border-gray-800 py-2.5 px-4 mt-3">
+              Media
+            </div>
           </div>
         </div>
-        <div className="w-48 h-0.5 bg-gray-700 glow transform -translate-y-1/2" />
-      </div>
 
-      <div>
-        <Posts variables={getVariables(router.query)} />
+        <div className="col-span-2 relative">
+          <Posts variables={getVariables(router.query)} />
+        </div>
       </div>
     </div>
   )

@@ -79,10 +79,10 @@ function Post({
       <div
         className={`${
           isDragging || toast ? 'opacity-40' : 'opacity-100'
-        }  transition pb-3 w-full`}
+        } transition w-full`}
       >
         <div
-          className={`${className} sm:mx-3 2xl:mx-72 flex flex-col bg-white dark:bg-gray-800 shadow relative`}
+          className={`${className} border border-gray-200 dark:border-gray-800 flex flex-col bg-white dark:bg-gray-800 relative`}
         >
           {post.sticky && (
             <TiPinOutline
@@ -91,38 +91,62 @@ function Post({
             />
           )}
           <div className="flex items-start px-3 pt-3">
-            <NavLink
-              href={`/user/${post.author.username}`}
-              className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
-                post.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
-              }`}
-            >
-              {post.author.avatarUrl ? (
-                <Image
-                  src={post.author.avatarUrl}
-                  layout="fill"
-                  className="rounded-full object-cover object-center"
-                  loading="eager"
-                />
-              ) : (
+            {post.author ? (
+              <NavLink
+                href={`/user/${post.author.username}`}
+                className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
+                  post.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
+                }`}
+              >
+                {post.author.avatarUrl ? (
+                  <Image
+                    src={post.author.avatarUrl}
+                    layout="fill"
+                    className="rounded-full object-cover object-center"
+                    loading="eager"
+                  />
+                ) : (
+                  <FiUser size={20} className="m-2.5 text-gray-500" />
+                )}
+              </NavLink>
+            ) : (
+              <div
+                className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg bg-gray-200 dark:bg-gray-700`}
+              >
                 <FiUser size={20} className="m-2.5 text-gray-500" />
-              )}
-            </NavLink>
+              </div>
+            )}
+
             <div className="flex flex-col">
               <div className="inline-flex items-center text-sm">
-                <NavLink
-                  href={`/user/${post.author.username}`}
-                  className="text-secondary font-semibold hover:underline cursor-pointer"
-                >
-                  {post.author.username}
-                </NavLink>
-                &nbsp;
-                <NavLink
-                  href={`/user/${post.author.username}`}
-                  className="text-tertiary hidden sm:block"
-                >
-                  @{post.author.username}
-                </NavLink>
+                {post.author ? (
+                  <>
+                    <NavLink
+                      href={`/user/${post.author.username}`}
+                      className="text-secondary font-semibold hover:underline cursor-pointer"
+                    >
+                      {post.author.username}
+                    </NavLink>
+                    &nbsp;
+                    <NavLink
+                      href={`/user/${post.author.username}`}
+                      className="text-tertiary hidden sm:block"
+                    >
+                      @{post.author.username}
+                    </NavLink>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-secondary font-semibold hover:underline cursor-pointer">
+                      [deleted]
+                    </div>
+                    &nbsp;
+                    <div className="text-tertiary hidden sm:block">
+                      @[deleted]
+                    </div>
+                  </>
+                )}
+
                 {showPlanet && (
                   <>
                     &nbsp;
@@ -143,9 +167,9 @@ function Post({
                 </span>
               </div>
 
-              <span className="text-tertiary sm:hidden block text-xs">
+              {/*<span className="text-tertiary sm:hidden block text-xs">
                 @{post.author.username}&nbsp;&middot;&nbsp;{post.timeSince}
-              </span>
+              </span>*/}
 
               <NavLink
                 href={post.relativeUrl}

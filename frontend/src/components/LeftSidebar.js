@@ -41,7 +41,7 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
         )}
       </AnimatePresence>
       <nav
-        className={`w-nav fixed z-30 flex flex-col overflow-y-auto bg-white dark:bg-gray-800 shadow-lg min-h-full h-full transform transition ${
+        className={`w-64 top-14 bottom-0 left-0 fixed z-30 flex flex-col overflow-y-auto bg-white dark:bg-gray-800 shadow-lg transform transition ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
         }`}
       >
@@ -50,17 +50,6 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
             style: { backgroundColor: 'rgba(0, 0, 0, 0.1)' }
           }}
         >
-          <div className="mx-5 pt-3 pb-3 mb-2 border-b border-gray-200 dark:border-gray-700 flex flex-row items-center">
-            <NavLink href="/" className="ml-1.5 mr-auto">
-              <Logo className="w-32 dark:text-gray-200 text-black" />
-            </NavLink>
-            <NavLink
-              href="/notifications"
-              className="ml-4 hover:scale-125 transform   text-tertiary rounded-full hover:bg-gray-700 transition w-9 h-9 p-2"
-            >
-              <FiBell className="w-5 h-5" />
-            </NavLink>
-          </div>
           <div className="text-gray-500">
             <NavLink href="/" className={`${link} navitem-active`}>
               <BiHomeAlt className="w-5 h-5" />

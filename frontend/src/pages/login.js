@@ -26,4 +26,4 @@ function LoginPage() {
   )
 }
 
-export default withLayout(<Layout />)(LoginPage)
+export default withLayout()(LoginPage)

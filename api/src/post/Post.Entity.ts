@@ -117,6 +117,10 @@ export class Post {
   stickiedAt?: Date
 
   @Field({ nullable: true })
+  @Column({ nullable: true })
+  userStickiedAt?: Date
+
+  @Field({ nullable: true })
   get timeSinceEdited(): string | null {
     if (!this.editedAt) return null
     return dayjs(new Date(this.editedAt)).fromNow()
@@ -128,6 +132,10 @@ export class Post {
 
   @Field()
   @Column({ default: false })
+  userSticky: boolean
+
+  @Field()
+  @Column({ default: false })
   postedToProfile: boolean
 
   @OneToMany(() => Comment, comment => comment.post)
@@ -136,6 +144,10 @@ export class Post {
   @Field(() => Int)
   @Column({ default: 0 })
   commentCount: number
+
+  @Field(() => Int)
+  @Column({ default: 0 })
+  repostCount: number
 
   @Field(() => Planet, { nullable: true })
   @ManyToOne(() => Planet, planet => planet.posts, {
@@ -181,14 +193,14 @@ export class Post {
 
   @Field()
   get relativeUrl(): string {
-    const slug = this.title
+    /*const slug = this.title
       .toLowerCase()
       .trim()
       .split(' ')
       .slice(0, 9)
       .join('-')
       .replace(/[^a-z0-9-]+/gi, '')
-      .replace(/[-](.)\1+/g, '$1')
-    return `/planet/${(this.planet as Planet).name}/post/${this.id36}/${slug}`
+      .replace(/[-](.)\1+/g, '$1')*/
+    return `/planet/${(this.planet as Planet).name}/post/${this.id36}`
   }
 }

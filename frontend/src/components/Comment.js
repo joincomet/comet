@@ -1,11 +1,16 @@
 import NavLink from '@/components/NavLink'
 import Image from 'next/image'
-import { FiUser } from 'react-icons/fi'
+import { FiUser, FiCornerUpLeft } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
 import React, { useState } from 'react'
 
 export default function Comment({ comment, level = 0 }) {
   const [collapse, setCollapse] = useState(false)
+
+  if (!comment.author) {
+    comment.deleted = true
+    comment.author = { username: '[deleted]' }
+  }
 
   return (
     <div
@@ -16,10 +21,8 @@ export default function Comment({ comment, level = 0 }) {
 
       <div
         className={`flex transition ${
-          collapse
-            ? 'opacity-50 hover:opacity-100 cursor-pointer'
-            : 'opacity-100'
-        }`}
+          collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
+        } ${comment.deleted ? 'opacity-50' : '100'}`}
         onClick={
           collapse
             ? () => {
@@ -28,46 +31,85 @@ export default function Comment({ comment, level = 0 }) {
             : () => {}
         }
       >
-        <NavLink
-          href={`/user/${comment.author.username}`}
-          className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
-            comment.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
-          }`}
-        >
-          {comment.author.avatarUrl ? (
-            <Image
-              src={comment.author.avatarUrl}
-              layout="fill"
-              className="rounded-full object-cover object-center"
-              loading="eager"
-            />
-          ) : (
-            <FiUser size={20} className="m-2.5 text-gray-500" />
-          )}
-        </NavLink>
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-transparent arrow_box rounded-md w-full">
+        {!collapse && !comment.deleted ? (
+          <NavLink
+            href={`/user/${comment.author.username}`}
+            className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
+              comment.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
+            }`}
+          >
+            {comment.author.avatarUrl ? (
+              <Image
+                src={comment.author.avatarUrl}
+                layout="fill"
+                className="rounded-full object-cover object-center"
+                loading="eager"
+              />
+            ) : (
+              <FiUser size={20} className="m-2.5 text-gray-500" />
+            )}
+          </NavLink>
+        ) : (
+          <div
+            onClick={() => setCollapse(!collapse)}
+            className={`w-10 h-10 cursor-pointer relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
+              comment.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
+            }`}
+          >
+            {comment.author.avatarUrl ? (
+              <Image
+                src={comment.author.avatarUrl}
+                layout="fill"
+                className="rounded-full object-cover object-center"
+                loading="eager"
+              />
+            ) : (
+              <FiUser size={20} className="m-2.5 text-gray-500" />
+            )}
+          </div>
+        )}
+
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 arrow_box rounded-md w-full">
           <div className="flex items-start w-full">
             <div className="flex flex-col w-full">
-              <div className="flex items-center text-sm bg-gray-100 dark:bg-gray-800 p-3 rounded-t-md">
-                <span className="text-secondary font-semibold hover:underline cursor-pointer">
-                  {comment.author.username}
-                </span>
-                &nbsp;
-                <span className="text-tertiary">
-                  @{comment.author.username}
-                </span>
-                <span className="text-tertiary">
-                  &nbsp;&middot;&nbsp;{comment.timeSince}
-                </span>
-                <div className="ml-auto inline-flex text-tertiary items-center">
-                  <span>{comment.rocketCount}</span>
-                  <BiRocket size={18} className="ml-3" />
+              <div className="h-9 flex items-center text-sm bg-gray-100 dark:bg-gray-800 rounded-t-md">
+                <div className="inline-flex items-center p-3">
+                  <div className="text-secondary font-semibold hover:underline cursor-pointer">
+                    {comment.author.username}
+                  </div>
+                  &nbsp;
+                  <div className="text-tertiary">
+                    @{comment.author.username}
+                  </div>
+                  <div className="text-tertiary">
+                    &nbsp;&middot;&nbsp;{comment.timeSince}
+                  </div>
+                </div>
+
+                <div className="ml-auto flex text-tertiary items-center h-full">
+                  {!comment.deleted && (
+                    <div className="flex items-center transition cursor-pointer dark:hover:bg-gray-700 h-full px-4 font-medium">
+                      <div>Reply</div>
+                      <FiCornerUpLeft className="w-5 h-5 ml-3" />
+                    </div>
+                  )}
+
+                  <div
+                    className={`flex items-center h-full px-4 font-medium ${
+                      !comment.deleted
+                        ? 'transition cursor-pointer dark:hover:bg-gray-700'
+                        : ''
+                    }`}
+                  >
+                    <div>{comment.rocketCount}</div>
+                    <BiRocket className="w-5 h-5 ml-3" />
+                  </div>
                 </div>
               </div>
 
-              {!collapse && (
+              {!collapse && !comment.deleted && (
                 <div
-                  className="prose-sm p-3 border-t dark:border-gray-700"
+                  className="prose prose-sm prose-blue dark:prose-dark max-w-none p-3 border-t border-gray-200 dark:border-gray-700"
                   dangerouslySetInnerHTML={{ __html: comment.textContent }}
                 />
               )}

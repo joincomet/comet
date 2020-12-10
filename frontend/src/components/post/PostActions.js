@@ -17,7 +17,7 @@ export default function PostActions({ post }) {
   return (
     <div className={`flex flex-row items-center mx-3 sm:mx-16 py-1.5 mt-auto`}>
       <div className={`${chip} mr-3 text-tertiary`}>
-        <BiRocket className={`w-4.5 h-4.5`} />
+        <BiRocket className={`w-4.5 h-5`} />
         <span className="ml-3 text-sm font-medium">{post.rocketCount}</span>
       </div>
 
@@ -28,17 +28,14 @@ export default function PostActions({ post }) {
 
       <div className={`${chip} text-tertiary hidden sm:inline-flex`}>
         <FiRepeat className="w-4.5 h-4.5" />
-        <span className="ml-3 text-sm font-medium">{post.commentCount}</span>
+        <span className="ml-3 text-sm font-medium">{post.repostCount}</span>
       </div>
 
       <div className="ml-auto" />
-      {/*<div className="mr-3 opacity-50">
-        <Logo className="h-3" />
-      </div>*/}
 
-      <div className={`${chip} text-tertiary group mr-3`}>
+      {/*<div className={`${chip} text-tertiary group mr-3`}>
         <FiFolderPlus className="w-4.5 h-4.5 group-hover:text-blue-500 transition  " />
-      </div>
+      </div>*/}
 
       <div className={`${chip} text-tertiary group`}>
         <FiShare className="w-4.5 h-4.5 group-hover:text-green-500 transition  " />

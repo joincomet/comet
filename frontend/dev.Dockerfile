@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 
 COPY package.json yarn.lock /usr/src/app/
 RUN yarn set version berry
-RUN yarn plugin import interactive-tools
+RUN yarn plugin import interactive-tools && yarn plugin import https://github.com/e5mode/yarn-up-all/releases/download/1.0.3/index.js
 COPY .yarnrc.yml /usr/src/app/
 RUN yarn install
 

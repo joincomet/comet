@@ -14,11 +14,6 @@ module.exports = {
         xxs: '.6875rem',
         tiny: '.625rem'
       },
-      spacing: {
-        18: '4.5rem',
-        prose: '65ch',
-        nav: '17.5rem'
-      },
       transitionDelay: {
         400: '400ms',
         600: '600ms',
@@ -34,7 +29,20 @@ module.exports = {
       cursor: {
         grab: 'grab',
         grabbing: 'grabbing'
-      }
+      },
+      typography: theme => ({
+        dark: {
+          css: {
+            color: theme('colors.gray.100'),
+            a: {
+              color: theme('colors.blue.100'),
+              '&:hover': {
+                color: theme('colors.blue.100')
+              }
+            }
+          }
+        }
+      })
     },
     colors: {
       transparent: 'transparent',
@@ -54,7 +62,10 @@ module.exports = {
   },
   variants: {
     extend: {
-      backgroundColor: ['hover_before', 'hover_after']
+      typography: ['dark'],
+      backgroundColor: ['hover_before', 'hover_after'],
+      translate: ['focus-within'],
+      scale: ['focus-within']
     }
   },
   darkMode: 'class',

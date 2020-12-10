@@ -7,14 +7,6 @@ import { useTheme } from '@/components/ThemeContext'
 import ReactPlayer from 'react-player/youtube'
 
 export default function PostEmbed({ post, measure }) {
-  return (
-    <div className="mt-3">
-      <Embed post={post} measure={measure} />
-    </div>
-  )
-}
-
-function Embed({ post, measure }) {
   if (!post.linkUrl) return null
 
   const isMounted = useMountedState()
@@ -51,8 +43,14 @@ function Embed({ post, measure }) {
 
   if (ReactPlayer.canPlay(post.linkUrl))
     return (
-      <div className="rounded-md overflow-hidden">
-        <ReactPlayer controls={true} url={post.linkUrl} />
+      <div className="rounded-md overflow-hidden player-wrapper">
+        <ReactPlayer
+          className="react-player"
+          controls={true}
+          url={post.linkUrl}
+          width="100%"
+          height="100%"
+        />
       </div>
     )
 

@@ -18,7 +18,7 @@ export default function RightSidebar() {
   const currentUser = useCurrentUser().data
 
   return (
-    <nav className="w-nav fixed top-0 right-0 z-20 flex flex-col hidden h-full min-h-full overflow-y-auto bg-white shadow-lg dark:bg-gray-800 sm:block">
+    <nav className="w-64 fixed top-0 right-0 z-20 flex flex-col hidden h-full min-h-full overflow-y-auto bg-white shadow-lg dark:bg-gray-800 sm:block">
       <div className="relative">
         <CometXLinks />
 
@@ -58,8 +58,8 @@ function UserInfo() {
           href="/?login=true"
           as="/login"
           shallow
-          className={link}
           scroll={false}
+          className={link}
         >
           <FiLogIn className="w-5 h-5 text-blue-500" />
           <span className="ml-6 text-blue-500">Log In/Sign Up</span>
@@ -159,7 +159,7 @@ function CometXLinks() {
     'rounded-full inline-flex place-items-center h-10 w-10 transition hover:bg-gray-200 dark:hover:bg-gray-700'
 
   return (
-    <div className="fixed z-10 bottom-0 right-0 w-nav bg-white dark:bg-gray-800">
+    <div className="fixed z-10 bottom-0 right-0 w-64 bg-white dark:bg-gray-800">
       <div className="h-12 flex items-center justify-between mx-5 border-gray-200 dark:border-gray-700 border-t">
         <Tippy content="CometX Discord Server">
           <a

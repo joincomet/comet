@@ -14,16 +14,10 @@ import { dehydrate } from '@/lib/dehydrate'
 import Grass from '@/components/home/Grass'
 import Telescope from '@/components/home/Telescope'
 import { BiPlanet } from 'react-icons/bi'
-import { usePrevious } from 'react-use'
+import { useCopyToClipboard, usePrevious } from 'react-use'
 import PermanentHeader from '@/components/PermanentHeader'
-
-const boxContainer =
-  'relative flex-grow h-24 transform transition hover:scale-105 cursor-pointer col-span-1'
-
-const box =
-  'dark:bg-gray-800 shadow-md rounded-2xl w-full h-full inline-flex items-center justify-center text-secondary text-sm'
-
-const boxBg = 'absolute inset-0 transform -rotate-6 bg-blue-500 rounded-2xl'
+import Tippy from '@tippyjs/react'
+import { FiCopy, FiUsers } from 'react-icons/fi'
 
 function HomePage() {
   const router = useRouter()
@@ -33,30 +27,62 @@ function HomePage() {
 
   return (
     <div>
-      <GalaxiesSlider />
+      <div className="mycontainer">
+        <div className="grid grid-cols-3 gap-3">
+          <div className="col-span-2 py-3">
+            <div className="mb-3">
+              <CreatePostCard />
+            </div>
+            <Posts variables={router.query.login ? prevVariables : variables} />
+          </div>
 
-      {/*<div
-        style={{
-          backgroundImage:
-            'radial-gradient(ellipse at top , #18181B 0%,  #27272A 95%)'
-        }}
-        className="h-64 relative"
-      >
-        <Grass className="absolute bottom-0 left-0 text-gray-900 w-1/2" />
-        <Grass className="absolute bottom-0 right-0 text-gray-900 w-1/2" />
-        <Telescope className="absolute bottom-0 right-24 h-48 text-gray-900" />
-      </div>*/}
-
-      <div className="mt-3 sm:mx-3 2xl:mx-72 hidden sm:block z-10">
-        <CreatePostCard />
-      </div>
-      <Header />
-
-      <div className="mt-14 pt-3 sm:mt-0 sm:pt-0">
-        <Posts variables={router.query.login ? prevVariables : variables} />
+          <div className="col-span-1">
+            <div className="sticky top-14 pt-3">
+              <ReferralsCard />
+            </div>
+          </div>
+        </div>
       </div>
 
       <CreatePostFAB />
+    </div>
+  )
+}
+
+function ReferralsCard() {
+  const [clipboardState, copyToClipboard] = useCopyToClipboard()
+
+  const copyLink = `https://cometx.io/invite?from=dan`
+
+  const [copyTip, setCopyTip] = useState('Copy invite link')
+
+  const copy = () => {
+    copyToClipboard(copyLink)
+    setCopyTip('Copied invite link!')
+    setTimeout(() => setCopyTip('Copy invite link'), 3000)
+  }
+
+  return (
+    <div className="card p-3">
+      <div className="font-medium text-primary inline-flex items-center">
+        <FiUsers className="w-4 h-4 mr-3" />
+        Invite Friends to CometX
+      </div>
+      <div className="mt-1 text-sm text-tertiary">
+        Your profile displays the number of people you have invited
+      </div>
+      <Tippy content={copyTip}>
+        <div
+          onClick={() => copy()}
+          className="mt-3 p-3 dark:bg-gray-900 rounded text-sm flex items-center text-accent cursor-pointer"
+        >
+          {copyLink}
+
+          <div className="ml-auto">
+            <FiCopy className="w-5 h-5 text-tertiary" />
+          </div>
+        </div>
+      </Tippy>
     </div>
   )
 }

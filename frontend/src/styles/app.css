@@ -45,6 +45,18 @@ body {
   @apply text-blue-500;
 }
 
+.placeholder-tertiary {
+  @apply placeholder-gray-600 dark:placeholder-gray-400;
+}
+
+.placeholder-secondary {
+  @apply placeholder-gray-700 dark:placeholder-gray-300;
+}
+
+.placeholder-primary {
+  @apply placeholder-black dark:placeholder-white;
+}
+
 .border-tertiary {
   @apply border-gray-600 dark:border-gray-400;
 }
@@ -248,4 +260,27 @@ body {
 
 .glow {
   box-shadow: rgba(136, 153, 166, 0.2) 0px 0px 15px, rgba(136, 153, 166, 0.15) 0px 0px 3px 1px;
+}
+
+.player-wrapper {
+  position: relative;
+  padding-top: 56.25% /* Player ratio: 100 / (1280 / 720) */
+}
+
+.react-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mycontainer {
+  @apply container mx-auto lg:px-48 px-3;
+}
+
+.mycontainer-nopad {
+  @apply container mx-auto lg:px-48 px-0;
+}
+
+.card {
+  @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-lg;
 }

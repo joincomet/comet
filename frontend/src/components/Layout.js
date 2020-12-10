@@ -7,6 +7,7 @@ import SignUpForm from '@/components/SignUpForm'
 import { Modal } from 'react-responsive-modal'
 import { useRouter } from 'next/router'
 import { FiX } from 'react-icons/fi'
+import PermanentHeader from '@/components/PermanentHeader'
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -36,13 +37,15 @@ export default function Layout({ children }) {
           setSidebarOpen={setSidebarOpen}
         />
 
-        <main className="h-full min-h-full page">{children}</main>
+        <PermanentHeader />
+
+        <main className="ml-64 mt-14">{children}</main>
 
         <BottomBar />
 
         <TopBar setSidebarOpen={setSidebarOpen} />
 
-        <RightSidebar />
+        {/*<RightSidebar />*/}
       </div>
     </>
   )

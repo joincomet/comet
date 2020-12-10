@@ -929,21 +929,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.0.4":
-  version: 10.0.4
-  resolution: "autoprefixer@npm:10.0.4"
+"autoprefixer@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "autoprefixer@npm:10.1.0"
   dependencies:
-    browserslist: ^4.14.7
-    caniuse-lite: ^1.0.30001161
+    browserslist: ^4.15.0
+    caniuse-lite: ^1.0.30001165
     colorette: ^1.2.1
+    fraction.js: ^4.0.12
     normalize-range: ^0.1.2
-    num2fraction: ^1.2.2
     postcss-value-parser: ^4.1.0
   peerDependencies:
     postcss: ^8.1.0
   bin:
     autoprefixer: bin/autoprefixer
-  checksum: ccc391565a51b4d2d5f5cf5f600f6e3b56b867f476d4ee24e60c98bc01bd6c66e818f2d3e989453721a8e91a931f1334f6965c61a35c7c836087400b0886c5c4
+  checksum: a0d9ccd6059f024e5fda4334019c5306b4a15a3fa2067bf5aea8eafe00fc1e79e0bc1d563998abdb3de6131a0718de80e8506534c404b21aefec75d2a56f966f
   languageName: node
   linkType: hard
 
@@ -1174,7 +1174,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.14.5, browserslist@npm:^4.14.7":
+"browserslist@npm:^4.14.5, browserslist@npm:^4.15.0":
   version: 4.15.0
   resolution: "browserslist@npm:4.15.0"
   dependencies:
@@ -1268,7 +1268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001093, caniuse-lite@npm:^1.0.30001113, caniuse-lite@npm:^1.0.30001154, caniuse-lite@npm:^1.0.30001161, caniuse-lite@npm:^1.0.30001164":
+"caniuse-lite@npm:^1.0.30001093, caniuse-lite@npm:^1.0.30001113, caniuse-lite@npm:^1.0.30001154, caniuse-lite@npm:^1.0.30001164, caniuse-lite@npm:^1.0.30001165":
   version: 1.0.30001165
   resolution: "caniuse-lite@npm:1.0.30001165"
   checksum: f01ea7f22389b403feb86790b4815437b816aeab685a177ab20297aa7f4447c8d9242ed544738003c7a6f03e302f7dde808171ccd0940659fd62c34f53452cbd
@@ -2204,20 +2204,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:^6.15.0":
-  version: 6.15.0
-  resolution: "eslint-config-prettier@npm:6.15.0"
-  dependencies:
-    get-stdin: ^6.0.0
+"eslint-config-prettier@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "eslint-config-prettier@npm:7.0.0"
   peerDependencies:
-    eslint: ">=3.14.1"
+    eslint: ">=7.0.0"
   bin:
-    eslint-config-prettier-check: bin/cli.js
-  checksum: a790bc61699e43a2edc5453488576cd977fad3b3cf99c129c10760ce6970d422923fddf80b65b2b10a93c00af0180a854e4b7824cc268e5957826cbe5b969e90
+    eslint-config-prettier: bin/cli.js
+  checksum: b7c543080e32829dba5f3db970c5f3c3b47f1de8df89b4226105afbecae561e026b6fe9f2cb16bf08ab1a6f1f544d9303c9c8c0919cbb51a9d2c8a640779624a
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.1.4":
+"eslint-plugin-prettier@npm:^3.2.0":
   version: 3.2.0
   resolution: "eslint-plugin-prettier@npm:3.2.0"
   dependencies:
@@ -2283,7 +2281,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.14.0":
+"eslint@npm:^7.15.0":
   version: 7.15.0
   resolution: "eslint@npm:7.15.0"
   dependencies:
@@ -2585,7 +2583,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^2.9.4":
+"fraction.js@npm:^4.0.12":
+  version: 4.0.12
+  resolution: "fraction.js@npm:4.0.12"
+  checksum: 8cb75f050813859fc2e82e5d3c87c6cf03ee253887a45f1c88ef697727dd2b18c5df59ecf1d23b5c82f21f9a41d9430a6ecb0e3e0aa62f8e2caf54deee463402
+  languageName: node
+  linkType: hard
+
+"framer-motion@npm:^2.9.5":
   version: 2.9.5
   resolution: "framer-motion@npm:2.9.5"
   dependencies:
@@ -2705,13 +2710,6 @@ fsevents@~2.1.2:
     has: ^1.0.3
     has-symbols: ^1.0.1
   checksum: c38bc558f1eca73bde2d9e22c7798b06c4b93650f39b2053a875a23a6c00fbafb0919ad20fe0d3a3e16916a8a59450502f91e75a918d264456c8ded070fe93c4
-  languageName: node
-  linkType: hard
-
-"get-stdin@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "get-stdin@npm:6.0.0"
-  checksum: b51d664838aef7f8353dc57371ce59cea54d8d584fec015a9d89d24561e95b97806d5b5ba120bc81574c9ed63cb3e210176ffa0ff9263c7e7ba4d56d0fe54913
   languageName: node
   linkType: hard
 
@@ -3372,28 +3370,28 @@ fsevents@~2.1.2:
     "@tailwindcss/forms": ^0.2.1
     "@tailwindcss/typography": ^0.3.1
     "@tippyjs/react": ^4.2.0
-    autoprefixer: ^10.0.4
+    autoprefixer: ^10.1.0
     babel-eslint: ^10.1.0
-    eslint: ^7.14.0
-    eslint-config-prettier: ^6.15.0
-    eslint-plugin-prettier: ^3.1.4
+    eslint: ^7.15.0
+    eslint-config-prettier: ^7.0.0
+    eslint-plugin-prettier: ^3.2.0
     eslint-plugin-react: ^7.21.5
-    framer-motion: ^2.9.4
-    next: 10.0.3
+    framer-motion: ^2.9.5
+    next: ^10.0.3
     next-seo: ^4.17.0
-    postcss: ^8.1.10
+    postcss: ^8.2.1
     prettier: ^2.2.1
-    react: 17.0.1
-    react-dom: 17.0.1
-    react-hook-form: ^6.12.1
+    react: ^17.0.1
+    react-dom: ^17.0.1
+    react-hook-form: ^6.12.2
     react-icons: ^4.1.0
     react-intersection-observer: ^8.31.0
     react-tsparticles: ^1.18.11
     react-twitter-widgets: ^1.9.5
     react-use: ^15.3.4
-    sass: ^1.29.0
+    sass: ^1.30.0
     tailwindcss: ^2.0.1
-    webpack: ^5.9.0
+    webpack: ^5.10.0
   languageName: unknown
   linkType: soft
 
@@ -3750,7 +3748,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"next@npm:10.0.3":
+"next@npm:^10.0.3":
   version: 10.0.3
   resolution: "next@npm:10.0.3"
   dependencies:
@@ -3936,13 +3934,6 @@ fsevents@~2.1.2:
     gauge: ~2.7.3
     set-blocking: ~2.0.0
   checksum: 0cd63f127c1bbda403a112e83b11804aaee2b58b0bc581c3bde9b82e4d957c7ed0ad3bee499af706cdd3599bb93669d7cbbf29fb500407d35fe75687ac96e2c0
-  languageName: node
-  linkType: hard
-
-"num2fraction@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "num2fraction@npm:1.2.2"
-  checksum: c9bb3e7c6d358cc8a6f354e0f5b56235845255465622f4d2eafec6bf5209dd3500133ab2888fbb444c997e29702e85b79ceef026ccc1c06a2971c2c1a93cee90
   languageName: node
   linkType: hard
 
@@ -4404,7 +4395,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.1.10, postcss@npm:^8.1.6":
+"postcss@npm:^8.1.6":
   version: 8.1.14
   resolution: "postcss@npm:8.1.14"
   dependencies:
@@ -4412,6 +4403,17 @@ fsevents@~2.1.2:
     nanoid: ^3.1.20
     source-map: ^0.6.1
   checksum: 1d28f12c6f18306f5bc374b3d9f360eded798ea9d893a7873cf40005b737464a610f7aa850fc6bb0db14ab3e2eadb99710009c827160f2d13ce5251414510edd
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "postcss@npm:8.2.1"
+  dependencies:
+    colorette: ^1.2.1
+    nanoid: ^3.1.20
+    source-map: ^0.6.1
+  checksum: aa7ba3d80a4d8e25bc1a3f61461d7f6b60d361fb1301465d0eb973c5f38b347ad0842b02b8cc8801ede46559391d7c640c7313301a829ef9ca77e34be7230854
   languageName: node
   linkType: hard
 
@@ -4615,7 +4617,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-dom@npm:17.0.1":
+"react-dom@npm:^17.0.1":
   version: 17.0.1
   resolution: "react-dom@npm:17.0.1"
   dependencies:
@@ -4628,7 +4630,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^6.12.1":
+"react-hook-form@npm:^6.12.2":
   version: 6.12.2
   resolution: "react-hook-form@npm:6.12.2"
   peerDependencies:
@@ -4728,7 +4730,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react@npm:17.0.1":
+"react@npm:^17.0.1":
   version: 17.0.1
   resolution: "react@npm:17.0.1"
   dependencies:
@@ -4994,7 +4996,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.29.0":
+"sass@npm:^1.30.0":
   version: 1.30.0
   resolution: "sass@npm:1.30.0"
   dependencies:

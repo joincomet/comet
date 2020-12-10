@@ -20,6 +20,7 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           relativeUrl
           commentCount
           rocketCount
+          repostCount
           thumbnailUrl
           logoUrl
           domain
@@ -28,7 +29,13 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
             description
           }
           planet {
+            id
             name
+            profile {
+              description
+            }
+            avatarUrl
+            bannerUrl
           }
           author {
             username

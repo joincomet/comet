@@ -1054,21 +1054,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.0.2":
-  version: 10.0.4
-  resolution: "autoprefixer@npm:10.0.4"
+"autoprefixer@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "autoprefixer@npm:10.1.0"
   dependencies:
-    browserslist: ^4.14.7
-    caniuse-lite: ^1.0.30001161
+    browserslist: ^4.15.0
+    caniuse-lite: ^1.0.30001165
     colorette: ^1.2.1
+    fraction.js: ^4.0.12
     normalize-range: ^0.1.2
-    num2fraction: ^1.2.2
     postcss-value-parser: ^4.1.0
   peerDependencies:
     postcss: ^8.1.0
   bin:
     autoprefixer: bin/autoprefixer
-  checksum: ccc391565a51b4d2d5f5cf5f600f6e3b56b867f476d4ee24e60c98bc01bd6c66e818f2d3e989453721a8e91a931f1334f6965c61a35c7c836087400b0886c5c4
+  checksum: a0d9ccd6059f024e5fda4334019c5306b4a15a3fa2067bf5aea8eafe00fc1e79e0bc1d563998abdb3de6131a0718de80e8506534c404b21aefec75d2a56f966f
   languageName: node
   linkType: hard
 
@@ -1343,7 +1343,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.14.5, browserslist@npm:^4.14.7":
+"browserslist@npm:^4.14.5, browserslist@npm:^4.15.0":
   version: 4.15.0
   resolution: "browserslist@npm:4.15.0"
   dependencies:
@@ -1423,7 +1423,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"camelcase@npm:5.3.1, camelcase@npm:^5.0.0":
+"camelcase@npm:5.3.1":
   version: 5.3.1
   resolution: "camelcase@npm:5.3.1"
   checksum: 6a3350c4ea8ab6e5109e0b443cfaf43dc40abfad7b2d79dcafbbafbe9b6b4059b4365b17ad822e24cf08e6627c1ffb65a9651d05cef9fcc6f64b6a0c2f327feb
@@ -1437,7 +1437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001093, caniuse-lite@npm:^1.0.30001113, caniuse-lite@npm:^1.0.30001154, caniuse-lite@npm:^1.0.30001161, caniuse-lite@npm:^1.0.30001164":
+"caniuse-lite@npm:^1.0.30001093, caniuse-lite@npm:^1.0.30001113, caniuse-lite@npm:^1.0.30001154, caniuse-lite@npm:^1.0.30001164, caniuse-lite@npm:^1.0.30001165":
   version: 1.0.30001165
   resolution: "caniuse-lite@npm:1.0.30001165"
   checksum: f01ea7f22389b403feb86790b4815437b816aeab685a177ab20297aa7f4447c8d9242ed544738003c7a6f03e302f7dde808171ccd0940659fd62c34f53452cbd
@@ -2533,20 +2533,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:^6.15.0":
-  version: 6.15.0
-  resolution: "eslint-config-prettier@npm:6.15.0"
-  dependencies:
-    get-stdin: ^6.0.0
+"eslint-config-prettier@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "eslint-config-prettier@npm:7.0.0"
   peerDependencies:
-    eslint: ">=3.14.1"
+    eslint: ">=7.0.0"
   bin:
-    eslint-config-prettier-check: bin/cli.js
-  checksum: a790bc61699e43a2edc5453488576cd977fad3b3cf99c129c10760ce6970d422923fddf80b65b2b10a93c00af0180a854e4b7824cc268e5957826cbe5b969e90
+    eslint-config-prettier: bin/cli.js
+  checksum: b7c543080e32829dba5f3db970c5f3c3b47f1de8df89b4226105afbecae561e026b6fe9f2cb16bf08ab1a6f1f544d9303c9c8c0919cbb51a9d2c8a640779624a
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.1.4":
+"eslint-plugin-prettier@npm:^3.2.0":
   version: 3.2.0
   resolution: "eslint-plugin-prettier@npm:3.2.0"
   dependencies:
@@ -2612,7 +2610,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.14.0":
+"eslint@npm:^7.15.0":
   version: 7.15.0
   resolution: "eslint@npm:7.15.0"
   dependencies:
@@ -3008,7 +3006,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^2.9.4":
+"fraction.js@npm:^4.0.12":
+  version: 4.0.12
+  resolution: "fraction.js@npm:4.0.12"
+  checksum: 8cb75f050813859fc2e82e5d3c87c6cf03ee253887a45f1c88ef697727dd2b18c5df59ecf1d23b5c82f21f9a41d9430a6ecb0e3e0aa62f8e2caf54deee463402
+  languageName: node
+  linkType: hard
+
+"framer-motion@npm:^2.9.5":
   version: 2.9.5
   resolution: "framer-motion@npm:2.9.5"
   dependencies:
@@ -3057,44 +3062,44 @@ __metadata:
     "@tailwindcss/typography": ^0.3.1
     "@tippyjs/react": ^4.2.0
     "@types/react-virtualized": ^9.21.10
-    autoprefixer: ^10.0.2
+    autoprefixer: ^10.1.0
     babel-eslint: ^10.1.0
-    eslint: ^7.14.0
-    eslint-config-prettier: ^6.15.0
-    eslint-plugin-prettier: ^3.1.4
+    eslint: ^7.15.0
+    eslint-config-prettier: ^7.0.0
+    eslint-plugin-prettier: ^3.2.0
     eslint-plugin-react: ^7.21.5
-    framer-motion: ^2.9.4
+    framer-motion: ^2.9.5
     graphql: ^15.4.0
     graphql-request: ^3.3.0
     graphql-tag: ^2.11.0
     next: ^10.0.3
     next-seo: ^4.17.0
     nookies: ^2.5.0
-    postcss: ^8.1.10
-    prettier: ^2.2.0
+    postcss: ^8.2.1
+    prettier: ^2.2.1
     react: ^17.0.1
     react-dnd: ^11.1.3
     react-dnd-html5-backend: ^11.1.3
     react-dnd-touch-backend: ^11.1.3
     react-dom: ^17.0.1
-    react-hook-form: ^6.11.5
-    react-icons: ^3.11.0
+    react-hook-form: ^6.12.2
+    react-icons: ^4.1.0
     react-intersection-observer: ^8.31.0
     react-player: ^2.7.0
     react-popper: ^2.2.4
-    react-query: ^3.2.0-beta.29
+    react-query: ^3.2.0-beta.34
     react-query-devtools: ^3.0.0-beta.1
     react-responsive-modal: ^6.0.0
     react-scrollbars-custom: ^4.0.25
     react-twitter-widgets: ^1.9.5
     react-use: ^15.3.4
     react-virtualized: ^9.22.2
-    sass: ^1.29.0
+    sass: ^1.30.0
     slate: ^0.59.0
     slate-history: ^0.59.0
     slate-react: ^0.59.0
     tailwindcss: ^2.0.1
-    tailwindcss-pseudo-elements: ^1.5.0
+    tailwindcss-pseudo-elements: ^1.5.1
     webpack: ^5.10.0
     zustand: ^3.2.0
   languageName: unknown
@@ -3191,13 +3196,6 @@ fsevents@~2.1.2:
     has: ^1.0.3
     has-symbols: ^1.0.1
   checksum: c38bc558f1eca73bde2d9e22c7798b06c4b93650f39b2053a875a23a6c00fbafb0919ad20fe0d3a3e16916a8a59450502f91e75a918d264456c8ded070fe93c4
-  languageName: node
-  linkType: hard
-
-"get-stdin@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "get-stdin@npm:6.0.0"
-  checksum: b51d664838aef7f8353dc57371ce59cea54d8d584fec015a9d89d24561e95b97806d5b5ba120bc81574c9ed63cb3e210176ffa0ff9263c7e7ba4d56d0fe54913
   languageName: node
   linkType: hard
 
@@ -4590,13 +4588,6 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"num2fraction@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "num2fraction@npm:1.2.2"
-  checksum: c9bb3e7c6d358cc8a6f354e0f5b56235845255465622f4d2eafec6bf5209dd3500133ab2888fbb444c997e29702e85b79ceef026ccc1c06a2971c2c1a93cee90
-  languageName: node
-  linkType: hard
-
 "number-is-nan@npm:^1.0.0":
   version: 1.0.1
   resolution: "number-is-nan@npm:1.0.1"
@@ -5087,7 +5078,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.1.10, postcss@npm:^8.1.6":
+"postcss@npm:^8.1.6":
   version: 8.1.14
   resolution: "postcss@npm:8.1.14"
   dependencies:
@@ -5095,6 +5086,17 @@ fsevents@~2.1.2:
     nanoid: ^3.1.20
     source-map: ^0.6.1
   checksum: 1d28f12c6f18306f5bc374b3d9f360eded798ea9d893a7873cf40005b737464a610f7aa850fc6bb0db14ab3e2eadb99710009c827160f2d13ce5251414510edd
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "postcss@npm:8.2.1"
+  dependencies:
+    colorette: ^1.2.1
+    nanoid: ^3.1.20
+    source-map: ^0.6.1
+  checksum: aa7ba3d80a4d8e25bc1a3f61461d7f6b60d361fb1301465d0eb973c5f38b347ad0842b02b8cc8801ede46559391d7c640c7313301a829ef9ca77e34be7230854
   languageName: node
   linkType: hard
 
@@ -5139,7 +5141,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.2.0":
+"prettier@npm:^2.2.1":
   version: 2.2.1
   resolution: "prettier@npm:2.2.1"
   bin:
@@ -5398,7 +5400,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^6.11.5":
+"react-hook-form@npm:^6.12.2":
   version: 6.12.2
   resolution: "react-hook-form@npm:6.12.2"
   peerDependencies:
@@ -5407,14 +5409,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-icons@npm:^3.11.0":
-  version: 3.11.0
-  resolution: "react-icons@npm:3.11.0"
-  dependencies:
-    camelcase: ^5.0.0
+"react-icons@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "react-icons@npm:4.1.0"
   peerDependencies:
     react: "*"
-  checksum: b629e024d4002b0d951e03256b30d20f9546add9bf30ad0721fba33a4cf8811b730e44f63341d7148eaad9785dfdb02cac2efa3b263dd703e95b8e535af140e9
+  checksum: 08d768e9c20a061a11de6c0050f0b199451b83592ef2fdb1add9f1f14ff6f356e1950621c3fd257f18383bb917e04577d03740b9be0754046bc435e7897141f9
   languageName: node
   linkType: hard
 
@@ -5481,9 +5481,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.2.0-beta.29":
-  version: 3.2.0-beta.30
-  resolution: "react-query@npm:3.2.0-beta.30"
+"react-query@npm:^3.2.0-beta.34":
+  version: 3.2.0-beta.34
+  resolution: "react-query@npm:3.2.0-beta.34"
   dependencies:
     "@babel/runtime": ^7.5.5
   peerDependencies:
@@ -5493,7 +5493,7 @@ fsevents@~2.1.2:
       optional: true
     react-native:
       optional: true
-  checksum: 6dfe28e06894333fdb0580d93d989473c774bf53e01c091ed05880439fa920b9c06a93771a61fb83a13da76253473683f4fb21b9cb75609f4d867770b5b9995a
+  checksum: 0efe351cff1d6f2ab6b4d75c85db601bf783c59c972e5175897d98722cde767ab71b4cf015818ad61a9fbf09cfc4b3be430e627da7be170ac62436a37a0916ce
   languageName: node
   linkType: hard
 
@@ -5877,7 +5877,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.29.0":
+"sass@npm:^1.30.0":
   version: 1.30.0
   resolution: "sass@npm:1.30.0"
   dependencies:
@@ -6621,12 +6621,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"tailwindcss-pseudo-elements@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "tailwindcss-pseudo-elements@npm:1.5.0"
+"tailwindcss-pseudo-elements@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "tailwindcss-pseudo-elements@npm:1.5.1"
   peerDependencies:
     tailwindcss: ">=0.7.4"
-  checksum: 69df79e3bbdb0da97b0a38b512bdd216cf30037cd9b82cc81a73cd81d1c9158916d9a164d3b19830bfacfc901f9db6edb7126bdc2a32df548c54131dfbdf2d03
+  checksum: 547e35176422d4c6dcf888288284b0bfff6765be34da55b57fa066c53ad9324c5fe260d6571481855f222b53cbede35c7e1e55cb608fff7075eb296f4cc2a88d
   languageName: node
   linkType: hard
 

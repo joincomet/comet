@@ -198,24 +198,29 @@ export class PostResolver {
     if (page === 0) {
       const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
-        .andWhere('post.sticky = true')
         .leftJoinAndSelect('post.planet', 'planet')
         .leftJoinAndSelect('post.author', 'author')
         .addOrderBy('post.stickiedAt', 'DESC')
 
       if (planet) {
-        stickiesQb.andWhere('planet.name ILIKE :planet', {
-          planet: handleUnderscore(planet)
-        })
+        stickiesQb
+          .andWhere('planet.name ILIKE :planet', {
+            planet: handleUnderscore(planet)
+          })
+          .andWhere('post.sticky = true')
       } else if (username) {
-        stickiesQb.andWhere('author.username ILIKE :username', {
-          username: handleUnderscore(username)
-        })
+        stickiesQb
+          .andWhere('author.username ILIKE :username', {
+            username: handleUnderscore(username)
+          })
+          .andWhere('post.userSticky = true')
       } else if (!search && !galaxy && !folderId && !universe) {
         // Show stickies from CometX on home page
-        stickiesQb.andWhere('planet.name ILIKE :planet', {
-          planet: 'CometX'
-        })
+        stickiesQb
+          .andWhere('planet.name ILIKE :planet', {
+            planet: 'CometX'
+          })
+          .andWhere('post.sticky = true')
       }
 
       const stickies = await stickiesQb.getMany()

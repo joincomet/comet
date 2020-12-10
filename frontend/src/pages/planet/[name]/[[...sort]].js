@@ -17,12 +17,6 @@ import { FiMessageCircle, FiFolder, FiBook } from 'react-icons/fi'
 import { BiPlanet } from 'react-icons/bi'
 import { dehydrate } from '@/lib/dehydrate'
 
-const tab =
-  'transform hover:bg-blue-500 dark:hover:bg-blue-500 rounded-full hover:-translate-y-0.5 bg-white dark:bg-gray-900 hover:text-white dark:hover:text-white transition px-6 h-9 inline-flex items-center text-sm select-none cursor-pointer'
-
-const selectedTab = 'text-blue-500 font-semibold'
-const unselectedTab = 'text-gray-600 dark:text-gray-400'
-
 function PlanetPage() {
   const router = useRouter()
 
@@ -33,12 +27,10 @@ function PlanetPage() {
 
   return (
     <div>
-      <GalaxiesSlider />
+      <div className="relative rounded-xl h-64 shadow-md bg-gray-200 dark:bg-gray-800">
+        <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90" />
 
-      <div className="relative mx-3 mt-3 rounded-xl h-64 shadow-md bg-gray-200 dark:bg-gray-800">
-        <div className="bg-gradient-to-b from-transparent to-gray-100 dark:to-gray-900 absolute inset-0 z-10 opacity-90" />
-
-        <div className="absolute right-3 bottom-3 z-10 flex space-x-3">
+        <div className="absolute right-3 bottom-3 flex space-x-3">
           <Tippy content="@Dan">
             <div className={moderator}>
               <Image
@@ -83,45 +75,25 @@ function PlanetPage() {
           </div>
         </div>
 
-        {planet.bannerUrl ? (
+        {planet.bannerUrl && (
           <Image
             src={planet.bannerUrl}
             layout="fill"
-            className="object-cover object-center rounded-xl"
+            className="object-cover object-center"
           />
-        ) : (
-          <div>No banner</div>
         )}
       </div>
 
-      <div className="mt-3 2xl:mx-72 flex items-center">
-        <div className="inline-flex space-x-3 mx-auto">
-          <div className={`${tab} ${selectedTab}`}>
-            <BiPlanet size={20} className="mr-3" />
-            Feed
-          </div>
-          <div className={`${tab} ${unselectedTab}`}>
-            <FiBook size={20} className="mr-3" />
-            Rules
-          </div>
-          <div className={`${tab} ${unselectedTab}`}>
-            <FiFolder size={20} className="mr-3" />
-            Folders
-          </div>
-          <div className={`${tab} ${unselectedTab}`}>
-            <FiMessageCircle size={20} className="mr-3" />
-            Chat
+      <div className="mycontainer">
+        <div className="grid grid-cols-3 gap-3">
+          <div className="col-span-2">
+            <div className="my-3">
+              <CreatePostCard />
+            </div>
+
+            <Posts variables={getVariables(router.query)} showPlanet={false} />
           </div>
         </div>
-      </div>
-
-      <div className="pt-3 sm:px-3 2xl:px-72 hidden sm:block">
-        <CreatePostCard />
-      </div>
-      <Header planet={planet} />
-
-      <div className="mt-14 pt-3 sm:mt-0 sm:pt-0">
-        <Posts variables={getVariables(router.query)} showPlanet={false} />
       </div>
 
       <CreatePostFAB />
@@ -129,7 +101,7 @@ function PlanetPage() {
   )
 }
 
-export default withLayout(<Layout />)(PlanetPage)
+export default withLayout()(PlanetPage)
 
 const getVariables = query => {
   const sort =
