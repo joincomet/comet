@@ -147,7 +147,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.12.5, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:7.12.5, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7":
   version: 7.12.5
   resolution: "@babel/runtime@npm:7.12.5"
   dependencies:
@@ -2544,15 +2544,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "eslint-plugin-prettier@npm:3.2.0"
+"eslint-plugin-prettier@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "eslint-plugin-prettier@npm:3.3.0"
   dependencies:
     prettier-linter-helpers: ^1.0.0
   peerDependencies:
     eslint: ">=5.0.0"
     prettier: ">=1.13.0"
-  checksum: a69ac31b1a39cf54b461b48a05928aa8c7535a87e097e2239a7e9ac22e156c93a6f13447e2ae482b466ae2b89c29c75ecc00137faca6d4ebb1182a81265a4708
+  peerDependenciesMeta:
+    eslint-plugin-prettier:
+      optional: true
+  checksum: d79ea6ed414f861d0b84818b9a3f7ac40f67998918d3a0c27e9d82f097768aeae8211f382cc5f9b059f4bdb417d098c8250ea8a552e6e18c904a961eb2b21681
   languageName: node
   linkType: hard
 
@@ -3066,7 +3069,7 @@ __metadata:
     babel-eslint: ^10.1.0
     eslint: ^7.15.0
     eslint-config-prettier: ^7.0.0
-    eslint-plugin-prettier: ^3.2.0
+    eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.21.5
     framer-motion: ^2.9.5
     graphql: ^15.4.0
@@ -3082,13 +3085,12 @@ __metadata:
     react-dnd-html5-backend: ^11.1.3
     react-dnd-touch-backend: ^11.1.3
     react-dom: ^17.0.1
-    react-hook-form: ^6.12.2
+    react-hook-form: ^6.13.0
     react-icons: ^4.1.0
     react-intersection-observer: ^8.31.0
     react-player: ^2.7.0
     react-popper: ^2.2.4
-    react-query: ^3.2.0-beta.34
-    react-query-devtools: ^3.0.0-beta.1
+    react-query: ^3.2.0
     react-responsive-modal: ^6.0.0
     react-scrollbars-custom: ^4.0.25
     react-twitter-widgets: ^1.9.5
@@ -3098,9 +3100,9 @@ __metadata:
     slate: ^0.59.0
     slate-history: ^0.59.0
     slate-react: ^0.59.0
-    tailwindcss: ^2.0.1
+    tailwindcss: ^2.0.2
     tailwindcss-pseudo-elements: ^1.5.1
-    webpack: ^5.10.0
+    webpack: ^5.10.1
     zustand: ^3.2.0
   languageName: unknown
   linkType: soft
@@ -4081,13 +4083,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"match-sorter@npm:^4.1.0":
-  version: 4.2.1
-  resolution: "match-sorter@npm:4.2.1"
+"match-sorter@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "match-sorter@npm:6.0.2"
   dependencies:
-    "@babel/runtime": ^7.10.5
+    "@babel/runtime": ^7.12.5
     remove-accents: 0.4.2
-  checksum: 7b28e050cb4ee14e96e7233fb37f2d4587e9addbda10c10832d50e10cca0b99b49fd77669d094b8c42779442b8db7c2b52197ee4733422df3a3bf170d311c8c2
+  checksum: ec8b497c296889fe8331bbf35a4efa63a202daa6aae74de12c8cbb212d6fbddfe77fbd117cd627b338ecef8e186b2f33df03ae2a1f875c1a385d318e060ef2b1
   languageName: node
   linkType: hard
 
@@ -5400,12 +5402,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^6.12.2":
-  version: 6.12.2
-  resolution: "react-hook-form@npm:6.12.2"
+"react-hook-form@npm:^6.13.0":
+  version: 6.13.0
+  resolution: "react-hook-form@npm:6.13.0"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: bd7dbd3ea807180640684a0af62951475802ff23c7a01397c08deca2cb9b3cf4348524a12d41c7d47fc70e7fc931c85bd4aca92af09afb3bbeb05f4359df8dbb
+  checksum: 818403130739ae29cf97998f596864aae274a29435c61a7b9e0668431e1d6635c577e8853eed5bf02d7e718de7a97bd0b8896729c1a48b3dc92b584a82900c22
   languageName: node
   linkType: hard
 
@@ -5469,23 +5471,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-query-devtools@npm:^3.0.0-beta.1":
-  version: 3.0.0-beta.1
-  resolution: "react-query-devtools@npm:3.0.0-beta.1"
-  dependencies:
-    match-sorter: ^4.1.0
-  peerDependencies:
-    react: ^16.6.3 || ^17.0.0
-    react-query: ^3.2.0-beta.23
-  checksum: 55725d947167e2cd5f030a2683750ca5b059cd061b7e537a428133c3213f3f87bfcb1937156edcb392b8b9b840e9b0390d71e62ea0ccf82d8bc06bed39406806
-  languageName: node
-  linkType: hard
-
-"react-query@npm:^3.2.0-beta.34":
-  version: 3.2.0-beta.34
-  resolution: "react-query@npm:3.2.0-beta.34"
+"react-query@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "react-query@npm:3.2.0"
   dependencies:
     "@babel/runtime": ^7.5.5
+    match-sorter: ^6.0.2
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
   peerDependenciesMeta:
@@ -5493,7 +5484,7 @@ fsevents@~2.1.2:
       optional: true
     react-native:
       optional: true
-  checksum: 0efe351cff1d6f2ab6b4d75c85db601bf783c59c972e5175897d98722cde767ab71b4cf015818ad61a9fbf09cfc4b3be430e627da7be170ac62436a37a0916ce
+  checksum: b33a6fdeaffd90b2541a3d521d5a6659db2f22cafa18cf937002a26cf653041ae08c2dcdbd4bf2db4128fd44982198c51f3e98776c72b67b4c493b279ef5df12
   languageName: node
   linkType: hard
 
@@ -6630,9 +6621,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "tailwindcss@npm:2.0.1"
+"tailwindcss@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "tailwindcss@npm:2.0.2"
   dependencies:
     "@fullhuman/postcss-purgecss": ^3.0.0
     bytes: ^3.0.0
@@ -6660,7 +6651,7 @@ fsevents@~2.1.2:
   bin:
     tailwind: lib/cli.js
     tailwindcss: lib/cli.js
-  checksum: cdc1e44b35cc8e05ae41f65780ce0e2f24276de1dafa26f0c08cbe9dc7683169ee8f7b71e809de29e0ee072e8596d4f47f84df2d3cb9f4d90ae656171afd4866
+  checksum: c7b874ebd9a5277cc3bbd9b77482baa79a0a26a966174c47b3b703ef168921c64f153cbd824ef724182a95eb1e93297c2fefbeca8a13ce0745865591de515757
   languageName: node
   linkType: hard
 

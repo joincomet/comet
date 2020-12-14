@@ -386,7 +386,7 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async togglePostUpvote(
+  async togglePostRocket(
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
@@ -398,11 +398,11 @@ export class PostResolver {
 
     if (!post) throw new Error('Post not found')
 
-    const upvote = await this.postRocketRepo.findOne({
+    const rocket = await this.postRocketRepo.findOne({
       postId,
       userId
     })
-    if (upvote) {
+    if (rocket) {
       await this.postRocketRepo.delete({ postId, userId })
     } else {
       await this.postRocketRepo.save({
@@ -414,7 +414,7 @@ export class PostResolver {
     this.postRepo.update(
       { id: postId },
       {
-        rocketCount: upvote ? post.rocketCount - 1 : post.rocketCount + 1
+        rocketCount: rocket ? post.rocketCount - 1 : post.rocketCount + 1
       }
     )
 
@@ -422,11 +422,11 @@ export class PostResolver {
     this.userRepo.update(
       { id: author.id },
       {
-        rocketCount: upvote ? author.rocketCount - 1 : author.rocketCount + 1
+        rocketCount: rocket ? author.rocketCount - 1 : author.rocketCount + 1
       }
     )
 
-    return !upvote
+    return !rocket
   }
 
   @Authorized()

@@ -42,6 +42,12 @@ export class User {
   @Column()
   username: string
 
+  @Field(() => String)
+  get name() {
+    if (this.profile && this.profile.realName) return this.profile.realName
+    return this.username
+  }
+
   @Authorized('USER')
   @Field()
   @Column({ nullable: true })

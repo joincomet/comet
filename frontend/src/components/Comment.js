@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { FiUser, FiCornerUpLeft } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
 import React, { useState } from 'react'
+import Avatar from '@/components/avatar/Avatar'
+import AvatarPopup from '@/components/avatar/AvatarPopup'
 
 export default function Comment({ comment, level = 0 }) {
   const [collapse, setCollapse] = useState(false)
@@ -31,43 +33,7 @@ export default function Comment({ comment, level = 0 }) {
             : () => {}
         }
       >
-        {!collapse && !comment.deleted ? (
-          <NavLink
-            href={`/user/${comment.author.username}`}
-            className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
-              comment.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
-            }`}
-          >
-            {comment.author.avatarUrl ? (
-              <Image
-                src={comment.author.avatarUrl}
-                layout="fill"
-                className="rounded-full object-cover object-center"
-                loading="eager"
-              />
-            ) : (
-              <FiUser size={20} className="m-2.5 text-gray-500" />
-            )}
-          </NavLink>
-        ) : (
-          <div
-            onClick={() => setCollapse(!collapse)}
-            className={`w-10 h-10 cursor-pointer relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
-              comment.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
-            }`}
-          >
-            {comment.author.avatarUrl ? (
-              <Image
-                src={comment.author.avatarUrl}
-                layout="fill"
-                className="rounded-full object-cover object-center"
-                loading="eager"
-              />
-            ) : (
-              <FiUser size={20} className="m-2.5 text-gray-500" />
-            )}
-          </div>
-        )}
+        <AvatarPopup className="w-10 h-10 mr-3" user={comment.author} />
 
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 arrow_box rounded-md w-full">
           <div className="flex items-start w-full">

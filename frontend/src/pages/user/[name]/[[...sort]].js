@@ -1,29 +1,13 @@
 import { useRouter } from 'next/router'
-import Layout from '@/components/Layout'
 import { withLayout } from '@moxy/next-layout'
 import { QueryClient } from 'react-query'
 import { fetchPosts } from '@/lib/usePosts'
-import { fetchPlanet } from '@/lib/usePlanet'
-import { dehydrate } from '@/lib/dehydrate'
 import { fetchUser, useUser } from '@/lib/useUser'
 import Image from 'next/image'
-import {
-  FiUser,
-  FiPlus,
-  FiMapPin,
-  FiCalendar,
-  FiGlobe,
-  FiBook,
-  FiFolder,
-  FiMessageCircle,
-  FiImage,
-  FiArchive
-} from 'react-icons/fi'
-import NavLink from '@/components/NavLink'
+import { FiUser, FiCalendar } from 'react-icons/fi'
 import React from 'react'
 import Posts from '@/components/post/Posts'
-import { BiPlanet } from 'react-icons/bi'
-import PermanentHeader from '@/components/PermanentHeader'
+import { dehydrate } from 'react-query/hydration'
 
 const userInfoItem =
   'text-tertiary font-medium hover:text-blue-500 dark:hover:text-blue-500 transition cursor-pointer'

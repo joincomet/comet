@@ -77,7 +77,7 @@ export class Comment {
   @Column({ nullable: true, type: 'bigint' })
   parentCommentId: number
 
-  @OneToMany(() => CommentRocket, upvote => upvote.comment)
+  @OneToMany(() => CommentRocket, rocket => rocket.comment)
   rockets: Lazy<CommentRocket[]>
 
   @Field(() => Int)

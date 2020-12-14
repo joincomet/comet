@@ -41,6 +41,7 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             commentCount
             rocketCount
             repostCount
+            rocketed
             thumbnailUrl
             logoUrl
             domain
@@ -50,9 +51,14 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             }
             planet {
               name
+              profile {
+                description
+                color
+              }
             }
             author {
               username
+              name
               avatarUrl
             }
             timeSince

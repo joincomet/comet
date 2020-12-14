@@ -14,6 +14,7 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           name
           profile {
             description
+            color
           }
           avatarUrl
           bannerUrl

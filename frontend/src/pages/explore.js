@@ -1,12 +1,12 @@
 import { QueryClient } from 'react-query'
 import { fetchPlanets, usePlanets } from '@/lib/usePlanets'
-import { dehydrate } from '@/lib/dehydrate'
 import { galaxies } from '@/lib/galaxies'
 import Image from 'next/image'
 import { BiPlanet } from 'react-icons/bi'
 import { FiExternalLink } from 'react-icons/fi'
 import { Scrollbar } from 'react-scrollbars-custom'
 import React from 'react'
+import { dehydrate } from 'react-query/hydration'
 
 const galaxyClass =
   'text-sm cursor-pointer transition hover:text-blue-500 dark:hover:text-blue-500'
@@ -32,7 +32,7 @@ export default function ExplorePage() {
       `}</style>
 
       <div className="mycontainer">
-        <div className="grid gap-3 grid-cols-5">
+        <div className="grid gap-3 grid-cols-3">
           <div className="col-span-1">
             <div className="py-3">
               <div className="card" style={{ height: '32rem' }}>
@@ -108,10 +108,6 @@ export default function ExplorePage() {
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="col-span-2 my-3">
-            <div className="card p-3">{planet.name}</div>
           </div>
         </div>
       </div>

@@ -1,21 +1,16 @@
-import GalaxiesSlider from '@/components/GalaxiesSlider'
 import CreatePostCard from '@/components/CreatePostCard'
 import Posts from '@/components/post/Posts'
 import { QueryClient } from 'react-query'
 import { fetchPosts } from '@/lib/usePosts'
 import { useRouter } from 'next/router'
 import React from 'react'
-import Header from '@/components/Header'
 import { withLayout } from '@moxy/next-layout'
 import CreatePostFAB from '@/components/CreatePostFAB'
-import Layout from '@/components/Layout'
 import { fetchPlanet, usePlanet } from '@/lib/usePlanet'
 import Image from 'next/image'
 import { FiPlusCircle } from 'react-icons/fi'
 import Tippy from '@tippyjs/react'
-import { FiMessageCircle, FiFolder, FiBook } from 'react-icons/fi'
-import { BiPlanet } from 'react-icons/bi'
-import { dehydrate } from '@/lib/dehydrate'
+import { dehydrate } from 'react-query/hydration'
 
 function PlanetPage() {
   const router = useRouter()

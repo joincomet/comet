@@ -20,6 +20,7 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           relativeUrl
           commentCount
           rocketCount
+          rocketed
           repostCount
           thumbnailUrl
           logoUrl
@@ -33,12 +34,14 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
             name
             profile {
               description
+              color
             }
             avatarUrl
             bannerUrl
           }
           author {
             username
+            name
             avatarUrl
           }
           timeSince

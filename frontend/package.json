@@ -34,13 +34,12 @@
     "react-dnd-html5-backend": "^11.1.3",
     "react-dnd-touch-backend": "^11.1.3",
     "react-dom": "^17.0.1",
-    "react-hook-form": "^6.12.2",
+    "react-hook-form": "^6.13.0",
     "react-icons": "^4.1.0",
     "react-intersection-observer": "^8.31.0",
     "react-player": "^2.7.0",
     "react-popper": "^2.2.4",
-    "react-query": "^3.2.0-beta.34",
-    "react-query-devtools": "^3.0.0-beta.1",
+    "react-query": "^3.2.0",
     "react-responsive-modal": "^6.0.0",
     "react-scrollbars-custom": "^4.0.25",
     "react-twitter-widgets": "^1.9.5",
@@ -50,9 +49,9 @@
     "slate": "^0.59.0",
     "slate-history": "^0.59.0",
     "slate-react": "^0.59.0",
-    "tailwindcss": "^2.0.1",
+    "tailwindcss": "^2.0.2",
     "tailwindcss-pseudo-elements": "^1.5.1",
-    "webpack": "^5.10.0",
+    "webpack": "^5.10.1",
     "zustand": "^3.2.0"
   },
   "devDependencies": {
@@ -60,12 +59,12 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
-    "eslint-plugin-prettier": "^3.2.0",
+    "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-react": "^7.21.5",
     "graphql-tag": "^2.11.0",
     "prettier": "^2.2.1"
   },
   "resolutions": {
-    "webpack": "^5.10.0"
+    "webpack": "^5.10.1"
   }
 }

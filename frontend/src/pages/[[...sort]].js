@@ -1,23 +1,17 @@
-import Layout from '@/components/Layout'
-import GalaxiesSlider from '@/components/GalaxiesSlider'
 import CreatePostCard from '@/components/CreatePostCard'
 import Posts from '@/components/post/Posts'
 import { QueryClient } from 'react-query'
 import { fetchPosts } from '@/lib/usePosts'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import Header from '@/components/Header'
 import { withLayout } from '@moxy/next-layout'
 import CreatePostFAB from '@/components/CreatePostFAB'
-import { fetchCurrentUser } from '@/lib/useCurrentUser'
-import { dehydrate } from '@/lib/dehydrate'
-import Grass from '@/components/home/Grass'
-import Telescope from '@/components/home/Telescope'
-import { BiPlanet } from 'react-icons/bi'
+import { fetchCurrentUser, useCurrentUser } from '@/lib/useCurrentUser'
 import { useCopyToClipboard, usePrevious } from 'react-use'
-import PermanentHeader from '@/components/PermanentHeader'
 import Tippy from '@tippyjs/react'
 import { FiCopy, FiUsers } from 'react-icons/fi'
+import { dehydrate } from 'react-query/hydration'
+import { RiFireLine } from 'react-icons/ri'
 
 function HomePage() {
   const router = useRouter()
@@ -30,15 +24,33 @@ function HomePage() {
       <div className="mycontainer">
         <div className="grid grid-cols-3 gap-3">
           <div className="col-span-2 py-3">
-            <div className="mb-3">
+            <div className="">
               <CreatePostCard />
+            </div>
+            <div className="my-6 flex items-center">
+              <div className="inline-flex items-center ml-auto bg-gray-800 rounded-full pl-6">
+                <RiFireLine className="w-4 h-4 mr-1" />
+                <select
+                  name="sort"
+                  id="sort"
+                  className="h-9 border-none text-sm bg-gray-800 rounded-r-full focus:ring-0"
+                  defaultValue="Hot"
+                >
+                  <option value="Hot">Hot</option>
+                  <option value="New">New</option>
+                  <option value="Top">Top</option>
+                  <option value="Rising">Rising</option>
+                </select>
+              </div>
             </div>
             <Posts variables={router.query.login ? prevVariables : variables} />
           </div>
 
           <div className="col-span-1">
-            <div className="sticky top-14 pt-3">
+            <div className="sticky top-14 pt-3 space-y-3">
               <ReferralsCard />
+
+              <InfoCard />
             </div>
           </div>
         </div>
@@ -52,7 +64,11 @@ function HomePage() {
 function ReferralsCard() {
   const [clipboardState, copyToClipboard] = useCopyToClipboard()
 
-  const copyLink = `https://cometx.io/invite?from=dan`
+  const currentUser = useCurrentUser().data
+
+  const copyLink = `https://cometx.io/invite${
+    currentUser ? `?from=${currentUser.username}` : ''
+  }`
 
   const [copyTip, setCopyTip] = useState('Copy invite link')
 
@@ -84,6 +100,40 @@ function ReferralsCard() {
         </div>
       </Tippy>
     </div>
+  )
+}
+
+function InfoCard() {
+  const link =
+    'text-xs font-medium text-tertiary hover:underline cursor-pointer'
+  return (
+    <>
+      <style jsx>
+        {`
+          a {
+            display: block;
+          }
+        `}
+      </style>
+
+      <div className="py-3">
+        <div className="flex divide-x divide-gray-800">
+          <div className="space-y-1 flex-grow px-3">
+            <a className={link}>Discord</a>
+            <a className={link}>Patreon</a>
+            <a className={link}>GitHub</a>
+            <a className={link}>Twitter</a>
+          </div>
+
+          <div className="space-y-1 flex-grow px-3">
+            <a className={link}>About</a>
+            <a className={link}>Terms of Service</a>
+            <a className={link}>Privacy Policy</a>
+            <a className={link}>Content Policy</a>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 

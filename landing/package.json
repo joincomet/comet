@@ -42,6 +42,6 @@
     "prettier": "^2.2.1"
   },
   "resolutions": {
-    "webpack": "^5.9.0"
+    "webpack": "^5.10.0"
   }
 }

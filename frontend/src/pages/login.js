@@ -18,9 +18,7 @@ function LoginPage() {
       `}</style>
 
       <div className="w-full h-full flex">
-        <div className="relative m-auto">
-          <SignUpForm />
-        </div>
+        <SignUpForm />
       </div>
     </>
   )

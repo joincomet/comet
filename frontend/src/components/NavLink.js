@@ -11,6 +11,7 @@ function NavLink({
   children,
   className,
   activeClassName,
+  style = {},
   shallow = false,
   as,
   scroll = true,
@@ -18,6 +19,13 @@ function NavLink({
   prefetch
 }) {
   const router = useRouter()
+
+  if (!href)
+    return (
+      <a className={`${className || ''}`} style={style}>
+        {children}
+      </a>
+    )
 
   return (
     <Link
@@ -32,6 +40,7 @@ function NavLink({
         className={`${className || ''}${
           router.pathname === href ? ' ' + (activeClassName || '') : ''
         }`}
+        style={style}
       >
         {children}
       </a>

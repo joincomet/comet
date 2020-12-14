@@ -20,15 +20,16 @@ export default function Layout({ children }) {
         open={!!router.query.login}
         onClose={() => router.push('/')}
         classNames={{
-          modal: 'overflow-hidden bg-transparent shadow-none p-24',
-          closeButton: 'top-28 right-28 text-tertiary focus:outline-none'
+          modal:
+            'overflow-hidden bg-transparent shadow-none max-w-screen-sm w-full',
+          closeButton: 'top-8 right-8 text-tertiary focus:outline-none'
         }}
         animationDuration={150}
         center
         blockScroll={false}
         closeIcon={<FiX size={20} />}
       >
-        <SignUpForm className="m-24" />
+        <SignUpForm />
       </Modal>
 
       <div>
@@ -39,7 +40,7 @@ export default function Layout({ children }) {
 
         <PermanentHeader />
 
-        <main className="ml-64 mt-14">{children}</main>
+        <main className="ml-64 pt-14 h-full">{children}</main>
 
         <BottomBar />
 

@@ -274,7 +274,7 @@ body {
 }
 
 .mycontainer {
-  @apply container mx-auto lg:px-48 px-3;
+  @apply container mx-auto 2xl:px-48 px-3;
 }
 
 .mycontainer-nopad {

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import SearchBar from '@/components/SearchBar'
-import SortDropdown from '@/components/SortDropdown'
-import { FiSearch } from 'react-icons/fi'
+import { FiSearch, FiBell, FiUser } from 'react-icons/fi'
 import Logo from '@/components/Logo'
 import NavLink from '@/components/NavLink'
 import { useCurrentUser } from '@/lib/useCurrentUser'
+import Image from 'next/image'
+import Avatar from '@/components/avatar/Avatar'
 
 export default function PermanentHeader({ children, className, ...rest }) {
   const currentUser = useCurrentUser().data
@@ -20,6 +19,10 @@ export default function PermanentHeader({ children, className, ...rest }) {
           <Logo className="h-4 dark:text-gray-200 text-black" />
         </NavLink>
 
+        <div className="text-xl font-bold tracking-tight absolute left-64 pl-6">
+          Home Feed
+        </div>
+
         <div className="ml-auto relative text-gray-600 dark:text-gray-400 focus-within:text-blue-500 dark:focus-within:text-blue-500 transition">
           <FiSearch className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2" />
           <input className="h-9 w-96 text-sm rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none text-primary px-10" />
@@ -27,7 +30,18 @@ export default function PermanentHeader({ children, className, ...rest }) {
 
         <div className="ml-6">
           {currentUser ? (
-            <div>Logged in</div>
+            <div className="flex items-center space-x-6">
+              <div className="p-3 rounded-full transition bg-transparent dark:hover:bg-gray-700 cursor-pointer">
+                <FiBell className="w-5 h-5" />
+              </div>
+
+              <div className="inline-flex items-center">
+                <Avatar avatarUrl={currentUser.avatarUrl} />
+                <div className="ml-3 text-sm">
+                  {currentUser.profile.realName || currentUser.username}
+                </div>
+              </div>
+            </div>
           ) : (
             <NavLink
               href="/?login=true"

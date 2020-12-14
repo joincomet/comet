@@ -12,12 +12,12 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
         user(username: $username) {
           id
           username
+          name
           timeSinceCreated
           followerCount
           followingCount
           profile {
             bio
-            realName
             website
           }
           avatarUrl

@@ -1,5 +1,4 @@
 import { QueryClient } from 'react-query'
-import { dehydrate } from '@/lib/dehydrate'
 import { fetchPost, usePost } from '@/lib/usePost'
 import { useRouter } from 'next/router'
 import Post from '@/components/post/Post'
@@ -10,6 +9,7 @@ import Comment from '@/components/Comment'
 import Tippy from '@tippyjs/react'
 import { useCopyToClipboard } from 'react-use'
 import Image from 'next/image'
+import { dehydrate } from 'react-query/hydration'
 
 export default function PlanetPage() {
   const router = useRouter()

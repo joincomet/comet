@@ -49,7 +49,7 @@ export class CommentResolver {
   @InjectRepository(Comment)
   readonly commentRepository: Repository<Comment>
   @InjectRepository(CommentRocket)
-  readonly commentUpvoteRepository: Repository<CommentRocket>
+  readonly commentRocketRepository: Repository<CommentRocket>
   @InjectRepository(Notification)
   readonly notificationRepository: Repository<Notification>
 
@@ -84,7 +84,7 @@ export class CommentResolver {
       rocketCount: 1
     })
 
-    this.commentUpvoteRepository.save({
+    this.commentRocketRepository.save({
       commentId: savedComment.id,
       userId
     } as CommentRocket)
@@ -225,7 +225,7 @@ export class CommentResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async toggleCommentUpvote(
+  async toggleCommentRocket(
     @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
@@ -236,14 +236,14 @@ export class CommentResolver {
       .getOne()
     if (!comment) throw new Error('Comment not found')
 
-    const upvote = await this.commentUpvoteRepository.findOne({
+    const rocket = await this.commentRocketRepository.findOne({
       commentId,
       userId
     })
-    if (upvote) {
-      await this.commentUpvoteRepository.delete({ commentId, userId })
+    if (rocket) {
+      await this.commentRocketRepository.delete({ commentId, userId })
     } else {
-      await this.commentUpvoteRepository.save({
+      await this.commentRocketRepository.save({
         commentId,
         userId
       })
@@ -252,7 +252,7 @@ export class CommentResolver {
     this.commentRepository.update(
       { id: commentId },
       {
-        rocketCount: upvote ? comment.rocketCount - 1 : comment.rocketCount + 1
+        rocketCount: rocket ? comment.rocketCount - 1 : comment.rocketCount + 1
       }
     )
 
@@ -260,11 +260,11 @@ export class CommentResolver {
     this.userRepository.update(
       { id: author.id },
       {
-        rocketCount: upvote ? author.rocketCount - 1 : author.rocketCount + 1
+        rocketCount: rocket ? author.rocketCount - 1 : author.rocketCount + 1
       }
     )
 
-    return !upvote
+    return !rocket
   }
 
   @Authorized()

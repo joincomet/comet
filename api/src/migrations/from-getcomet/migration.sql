@@ -3,7 +3,6 @@ ALTER TABLE "planet"
 UPDATE planet T
 SET profile = (SELECT to_json(concat(
         '{',
-        '"color": "', T."themeColor", '", ',
         '"customName": "', T."customName", '", ',
         '"description": ', (SELECT to_json(T."description")),
         '}'))::jsonb AS profile

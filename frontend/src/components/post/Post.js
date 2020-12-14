@@ -25,15 +25,8 @@ import PostActions from '@/components/post/PostActions'
 import PostToast from '@/components/post/PostToast'
 import PostText from '@/components/post/PostText'
 import Logo from '@/components/Logo'
-
-const colors = [
-  'text-red-500',
-  'text-amber-500',
-  'text-green-500',
-  'text-blue-500',
-  'text-purple-500',
-  'text-pink-500'
-]
+import Avatar from '@/components/avatar/Avatar'
+import AvatarPopup from '@/components/avatar/AvatarPopup'
 
 function Post({
   post,
@@ -91,31 +84,11 @@ function Post({
             />
           )}
           <div className="flex items-start px-3 pt-3">
-            {post.author ? (
-              <NavLink
-                href={`/user/${post.author.username}`}
-                className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg ${
-                  post.author.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
-                }`}
-              >
-                {post.author.avatarUrl ? (
-                  <Image
-                    src={post.author.avatarUrl}
-                    layout="fill"
-                    className="rounded-full object-cover object-center"
-                    loading="eager"
-                  />
-                ) : (
-                  <FiUser size={20} className="m-2.5 text-gray-500" />
-                )}
-              </NavLink>
-            ) : (
-              <div
-                className={`w-10 h-10 relative mr-3 flex-shrink-0 rounded-full hover:shadow-lg bg-gray-200 dark:bg-gray-700`}
-              >
-                <FiUser size={20} className="m-2.5 text-gray-500" />
-              </div>
-            )}
+            <AvatarPopup
+              user={post.author}
+              loading="eager"
+              className="w-10 h-10 mr-3"
+            />
 
             <div className="flex flex-col">
               <div className="inline-flex items-center text-sm">
@@ -154,9 +127,8 @@ function Post({
                     &nbsp;
                     <NavLink
                       href={`/planet/${post.planet.name}`}
-                      className={`font-medium hover:underline cursor-pointer ${
-                        colors[index % 6]
-                      }`}
+                      className={`font-medium hover:underline cursor-pointer`}
+                      style={{ color: post.planet.profile.color || '#3B82F6' }}
                     >
                       {post.planet.name}
                     </NavLink>
