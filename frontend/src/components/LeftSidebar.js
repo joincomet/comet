@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useCurrentUser } from '@/lib/useCurrentUser'
 import TelescopeIcon from '@/TelescopeIcon'
+import PlanetAvatar from '@/components/planet/PlanetAvatar'
 
 const link =
   'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-10 flex items-center hover:text-blue-500 dark:hover:text-blue-500 text-tertiary transition'
@@ -128,17 +129,7 @@ function TopPlanets() {
           key={planet.id}
           href={`/planet/${planet.name}`}
         >
-          {planet.avatarUrl ? (
-            <Image
-              width={20}
-              height={20}
-              src={planet.avatarUrl}
-              className="w-5 h-5 rounded-full"
-              alt={planet.name}
-            />
-          ) : (
-            <div className="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700" />
-          )}
+          <PlanetAvatar className="w-5 h-5" planet={planet} />
 
           <span className="ml-3">{planet.name}</span>
         </NavLink>

@@ -12,10 +12,8 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
         planet(name: $name) {
           id
           name
-          profile {
-            description
-            color
-          }
+          description
+          color
           avatarUrl
           bannerUrl
           userCount

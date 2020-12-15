@@ -1,39 +1,3 @@
-ALTER TABLE "planet"
-    ADD COLUMN "profile" jsonb;
-UPDATE planet T
-SET profile = (SELECT to_json(concat(
-        '{',
-        '"customName": "', T."customName", '", ',
-        '"description": ', (SELECT to_json(T."description")),
-        '}'))::jsonb AS profile
-                FROM planet
-                WHERE "name" = T."name")
-WHERE 1 = 1;
-
-ALTER TABLE "user"
-    ADD COLUMN "settings" jsonb;
-UPDATE "user" T
-SET settings = (SELECT to_json(concat(
-        '{',
-        '"appearOffline": ', (SELECT (CASE WHEN T."appearOffline" = TRUE THEN 'true' ELSE 'false' END)
-                              FROM "user"
-                              WHERE "id" = T."id"),
-        '}'))::jsonb AS settings
-                FROM "user"
-                WHERE "id" = T."id")
-WHERE 1 = 1;
-
-ALTER TABLE "user"
-    ADD COLUMN "profile" jsonb;
-UPDATE "user" T
-SET profile = (SELECT to_json(concat(
-        '{',
-        '"bio": ', (SELECT to_json(T."bio")),
-        '}'))::jsonb AS profile
-               FROM "user"
-               WHERE "id" = T."id")
-WHERE 1 = 1;
-
 ALTER TABLE planet
     DROP CONSTRAINT "FK_365bc311fee310284e3896041dc";
 DROP TABLE galaxy_planets_planet;
@@ -50,8 +14,6 @@ DROP TABLE user_saved_comments_comment;
 DROP TABLE user_saved_posts_post;
 
 ALTER TABLE "user"
-    DROP COLUMN "bio";
-ALTER TABLE "user"
     DROP COLUMN "ipAddresses";
 ALTER TABLE "user"
     DROP COLUMN "lastPostedAt";
@@ -63,8 +25,6 @@ ALTER TABLE "user"
     DROP COLUMN "tag";
 ALTER TABLE "user"
     DROP COLUMN "tagColor";
-ALTER TABLE "user"
-    DROP COLUMN "appearOffline";
 ALTER TABLE "user"
     DROP COLUMN "xp";
 
@@ -89,15 +49,11 @@ ALTER TABLE "planet"
 ALTER TABLE "planet"
     DROP COLUMN "defaultCommentSort";
 ALTER TABLE "planet"
-    DROP COLUMN "themeColor";
+    RENAME COLUMN "themeColor" to "color";
 ALTER TABLE "planet"
     DROP COLUMN "galaxyName";
 ALTER TABLE "planet"
-    DROP COLUMN "customName";
-ALTER TABLE "planet"
     DROP COLUMN "modPostsOnly";
-ALTER TABLE "planet"
-    DROP COLUMN "description";
 
 ALTER TABLE "user"
     RENAME COLUMN "profilePicUrl" TO "avatar_url";
@@ -352,6 +308,8 @@ ALTER TABLE "planet" ADD COLUMN "user_count" bigint default 1;
 ALTER TABLE "planet" ADD COLUMN "post_count" bigint default 0;
 ALTER TABLE "user" ADD COLUMN "post_count" integer default 0;
 ALTER TABLE "user" ADD COLUMN "comment_count" integer default 0;
+ALTER TABLE "user" ADD COLUMN "getcomet" boolean default false;
+UPDATE "user" T SET "getcomet" = true WHERE 1=1;
 
 ALTER TABLE "post" ALTER COLUMN "rocket_count" TYPE integer;
 ALTER TABLE "post" ALTER COLUMN "comment_count" TYPE integer;

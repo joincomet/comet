@@ -11,7 +11,7 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
         $sort: PostSort
         $page: Int
         $time: TimeFilter
-        $universe: Boolean
+        $joinedOnly: Boolean
         $planet: String
         $galaxy: String
         $username: String
@@ -21,7 +21,7 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
           sort: $sort
           page: $page
           time: $time
-          universe: $universe
+          joinedOnly: $joinedOnly
           planet: $planet
           galaxy: $galaxy
           username: $username
@@ -51,10 +51,8 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             }
             planet {
               name
-              profile {
-                description
-                color
-              }
+              description
+              color
             }
             author {
               username
@@ -74,5 +72,6 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
 
 export const usePosts = variables =>
   useInfiniteQuery(['posts', variables], fetchPosts, {
-    getNextPageParam: (lastPage, pages) => lastPage.nextPage
+    getNextPageParam: (lastPage, pages) => lastPage.nextPage,
+    select: data => data.pages.map(page => page.posts).flat()
   })

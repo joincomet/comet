@@ -71,9 +71,9 @@ function UserInfo() {
     <div className="bg-gray-100 dark:bg-gray-900 transition cursor-pointer px-6 py-3 rounded-md m-3 shadow-inner">
       <div className="flex items-center">
         <div className="relative w-12 h-12 rounded-full bg-white dark:bg-gray-700 inline-flex shadow">
-          {currentUser.profile.avatarUrl ? (
+          {currentUser.avatarUrl ? (
             <Image
-              src={currentUser.profile.avatarUrl}
+              src={currentUser.avatarUrl}
               layout="fill"
               className="object-cover object-center"
             />
@@ -85,9 +85,7 @@ function UserInfo() {
         </div>
 
         <div className="ml-4 font-medium">
-          <div className="text-primary">
-            {currentUser.profile.realName || currentUser.username}&nbsp;
-          </div>
+          <div className="text-primary">{currentUser.name}&nbsp;</div>
           <div className="text-tertiary text-xs mt-0.5">
             @{currentUser.username}
           </div>

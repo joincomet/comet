@@ -4,7 +4,7 @@ import Logo from '@/components/Logo'
 import NavLink from '@/components/NavLink'
 import { useCurrentUser } from '@/lib/useCurrentUser'
 import Image from 'next/image'
-import Avatar from '@/components/avatar/Avatar'
+import UserAvatar from '@/components/user/UserAvatar'
 
 export default function PermanentHeader({ children, className, ...rest }) {
   const currentUser = useCurrentUser().data
@@ -36,10 +36,8 @@ export default function PermanentHeader({ children, className, ...rest }) {
               </div>
 
               <div className="inline-flex items-center">
-                <Avatar avatarUrl={currentUser.avatarUrl} />
-                <div className="ml-3 text-sm">
-                  {currentUser.profile.realName || currentUser.username}
-                </div>
+                <UserAvatar user={currentUser} />
+                <div className="ml-3 text-sm">{currentUser.name}</div>
               </div>
             </div>
           ) : (

@@ -7,6 +7,7 @@ import { FiExternalLink } from 'react-icons/fi'
 import { Scrollbar } from 'react-scrollbars-custom'
 import React from 'react'
 import { dehydrate } from 'react-query/hydration'
+import PlanetAvatar from '@/components/planet/PlanetAvatar'
 
 const galaxyClass =
   'text-sm cursor-pointer transition hover:text-blue-500 dark:hover:text-blue-500'
@@ -81,19 +82,7 @@ export default function ExplorePage() {
                   <div className="mr-3 text-mid font-medium text-sm">
                     {index + 1}
                   </div>
-                  {planet.avatarUrl ? (
-                    <div className="relative w-9 h-9 rounded-full">
-                      <Image
-                        src={planet.avatarUrl}
-                        layout="fill"
-                        className="object-cover object-center rounded-full"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-9 h-9 bg-gray-200 dark:bg-gray-700 rounded-full inline-flex">
-                      <BiPlanet className="w-6 h-6 m-auto text-tertiary" />
-                    </div>
-                  )}
+                  <PlanetAvatar planet={planet} className="w-9 h-9" />
 
                   <div className="ml-3 text-secondary text-sm">
                     <div className="font-medium">{planet.name}</div>

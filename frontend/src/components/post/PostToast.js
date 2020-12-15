@@ -61,11 +61,11 @@ export default function PostToast({ toast }) {
                     loading="eager"
                     width={36}
                     height={36}
-                    alt={toast.user.profile.realName}
+                    alt={toast.user.name}
                     className="object-cover w-9 h-9 rounded-full mx-4 shadow"
                     src={toast.user.avatarUrl}
                   />
-                  {`Sent to ${toast.user.profile.realName}`}
+                  {`Sent to ${toast.user.name}`}
                 </>
               )}
             </div>

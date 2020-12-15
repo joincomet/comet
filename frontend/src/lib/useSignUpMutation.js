@@ -14,9 +14,7 @@ const signUp = async variables => {
             admin
             username
             avatarUrl
-            profile {
-              realName
-            }
+            name
           }
         }
       }

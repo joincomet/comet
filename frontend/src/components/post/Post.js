@@ -1,38 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import {
-  FiFolder,
-  FiStar,
-  FiUser,
-  FiLink,
-  FiMessageCircle,
-  FiMoreHorizontal,
-  FiShare,
-  FiFolderPlus,
-  FiRepeat
-} from 'react-icons/fi'
 import { TiPinOutline } from 'react-icons/ti'
-import { HiSwitchHorizontal } from 'react-icons/hi'
 import { CgArrowRight } from 'react-icons/cg'
-import { BiRocket } from 'react-icons/bi'
-import { AnimatePresence, motion } from 'framer-motion'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
 import { getEmptyImage } from 'react-dnd-html5-backend'
-import Image from 'next/image'
 import NavLink from '@/components/NavLink'
 import PostEmbed from '@/components/post/PostEmbed'
 import PostActions from '@/components/post/PostActions'
 import PostToast from '@/components/post/PostToast'
 import PostText from '@/components/post/PostText'
-import Logo from '@/components/Logo'
-import Avatar from '@/components/avatar/Avatar'
-import AvatarPopup from '@/components/avatar/AvatarPopup'
+import UserAvatar from '@/components/user/UserAvatar'
+import UserPopup from '@/components/user/UserPopup'
+import PostImages from '@/components/post/PostImages'
 
 function Post({
   post,
   index = 0,
   measure = () => {},
   showPlanet = true,
+  showFullText = false,
   className = ''
 }) {
   const [toast, setToast] = useState(null)
@@ -63,7 +49,7 @@ function Post({
 
   return (
     <article
-      className={`flex outline-none relative w-full min-w-full`}
+      className={`flex outline-none relative w-full min-w-full pb-1`}
       data-index={index}
       ref={dragRef}
     >
@@ -84,29 +70,27 @@ function Post({
             />
           )}
           <div className="flex items-start px-3 pt-3">
-            <AvatarPopup
-              user={post.author}
-              loading="eager"
-              className="w-10 h-10 mr-3"
-            />
+            <UserPopup user={post.author}>
+              <UserAvatar
+                user={post.author}
+                loading="eager"
+                className="w-10 h-10 mr-3"
+              />
+            </UserPopup>
 
             <div className="flex flex-col">
               <div className="inline-flex items-center text-sm">
                 {post.author ? (
                   <>
-                    <NavLink
-                      href={`/user/${post.author.username}`}
-                      className="text-secondary font-semibold hover:underline cursor-pointer"
-                    >
-                      {post.author.username}
-                    </NavLink>
+                    <UserPopup user={post.author}>
+                      <div className="text-secondary font-medium hover:underline cursor-pointer">
+                        {post.author.username}
+                      </div>
+                    </UserPopup>
                     &nbsp;
-                    <NavLink
-                      href={`/user/${post.author.username}`}
-                      className="text-tertiary hidden sm:block"
-                    >
+                    <div className="text-tertiary hidden sm:block">
                       @{post.author.username}
-                    </NavLink>
+                    </div>
                   </>
                 ) : (
                   <>
@@ -128,7 +112,7 @@ function Post({
                     <NavLink
                       href={`/planet/${post.planet.name}`}
                       className={`font-medium hover:underline cursor-pointer`}
-                      style={{ color: post.planet.profile.color || '#3B82F6' }}
+                      style={{ color: post.planet.color || '#3B82F6' }}
                     >
                       {post.planet.name}
                     </NavLink>
@@ -160,19 +144,13 @@ function Post({
               {post.title}
             </NavLink>
 
-            <PostText post={post} measure={measure} />
+            <PostText
+              post={post}
+              measure={measure}
+              showFullText={showFullText}
+            />
 
-            {post.imageUrls.length > 0 && (
-              <div className="mt-3 cursor-pointer relative aspect-ratio-16/9 object-contain w-full bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200">
-                <Image
-                  loading="eager"
-                  alt="Image"
-                  layout="fill"
-                  src={post.imageUrls[0]}
-                  className="rounded-md object-cover"
-                />
-              </div>
-            )}
+            <PostImages post={post} measure={measure} />
 
             <PostEmbed post={post} measure={measure} />
           </div>

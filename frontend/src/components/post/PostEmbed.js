@@ -1,15 +1,12 @@
-import { Tweet } from 'react-twitter-widgets'
 import Image from 'next/image'
 import { FiLink } from 'react-icons/fi'
 import React from 'react'
-import { useMountedState } from 'react-use'
-import { useTheme } from '@/components/ThemeContext'
 import ReactPlayer from 'react-player/youtube'
 
 export default function PostEmbed({ post, measure }) {
   if (!post.linkUrl) return null
 
-  const isMounted = useMountedState()
+  /*const isMounted = useMountedState()
   const { theme } = useTheme()
 
   const isTwitter = () =>
@@ -18,12 +15,9 @@ export default function PostEmbed({ post, measure }) {
       /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)(?:\/.*)?$/i
     )
   const tweetId = () =>
-    isTwitter() ? post.linkUrl.split('/status/')[1].split('/')[0] : null
+    isTwitter() ? post.linkUrl.split('/status/')[1].split('/')[0] : null*/
 
-  const isCustomEmbed = () =>
-    post.linkUrl && (isTwitter() || ReactPlayer.canPlay(post.linkUrl))
-
-  if (isTwitter())
+  /*if (isTwitter())
     return (
       <Tweet
         tweetId={tweetId()}
@@ -39,12 +33,13 @@ export default function PostEmbed({ post, measure }) {
           theme
         }}
       />
-    )
+    )*/
 
   if (ReactPlayer.canPlay(post.linkUrl))
     return (
-      <div className="rounded-md overflow-hidden player-wrapper">
+      <div className="rounded-md overflow-hidden player-wrapper mt-3">
         <ReactPlayer
+          onReady={measure}
           className="react-player"
           controls={true}
           url={post.linkUrl}
@@ -60,7 +55,7 @@ export default function PostEmbed({ post, measure }) {
         href={post.linkUrl}
         target="_blank"
         rel="noreferrer noopener nofollow"
-        className="group rounded-md flex items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 shadow-inner"
+        className="mt-3 group rounded-md flex items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 shadow-inner"
       >
         <div className="w-32 h-32 relative flex-shrink-0">
           {post.thumbnailUrl || post.logoUrl ? (
@@ -108,7 +103,7 @@ export default function PostEmbed({ post, measure }) {
       href={post.linkUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-blue-500 hover:underline cursor-pointer mt-3 text-sm break-all"
+      className="text-blue-500 hover:underline cursor-pointer text-sm break-all"
     >
       {post.linkUrl}
     </a>

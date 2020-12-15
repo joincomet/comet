@@ -3,8 +3,8 @@ import Image from 'next/image'
 import { FiUser, FiCornerUpLeft } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
 import React, { useState } from 'react'
-import Avatar from '@/components/avatar/Avatar'
-import AvatarPopup from '@/components/avatar/AvatarPopup'
+import UserAvatar from '@/components/user/UserAvatar'
+import UserPopup from '@/components/user/UserPopup'
 
 export default function Comment({ comment, level = 0 }) {
   const [collapse, setCollapse] = useState(false)
@@ -33,16 +33,20 @@ export default function Comment({ comment, level = 0 }) {
             : () => {}
         }
       >
-        <AvatarPopup className="w-10 h-10 mr-3" user={comment.author} />
+        <UserPopup user={comment.author}>
+          <UserAvatar className="w-10 h-10 mr-3" user={comment.author} />
+        </UserPopup>
 
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 arrow_box rounded-md w-full">
           <div className="flex items-start w-full">
             <div className="flex flex-col w-full">
               <div className="h-9 flex items-center text-sm bg-gray-100 dark:bg-gray-800 rounded-t-md">
                 <div className="inline-flex items-center p-3">
-                  <div className="text-secondary font-semibold hover:underline cursor-pointer">
-                    {comment.author.username}
-                  </div>
+                  <UserPopup user={comment.author}>
+                    <div className="text-secondary font-semibold hover:underline cursor-pointer">
+                      {comment.author.username}
+                    </div>
+                  </UserPopup>
                   &nbsp;
                   <div className="text-tertiary">
                     @{comment.author.username}

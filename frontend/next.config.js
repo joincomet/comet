@@ -5,7 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer({
   compress: false,
   experimental: {
-    polyfillsOptimization: true
+    scrollRestoration: true
   },
   images: {
     domains: ['media.cometx.io', 'i.getcomet.net'],

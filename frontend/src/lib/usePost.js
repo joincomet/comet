@@ -32,10 +32,8 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           planet {
             id
             name
-            profile {
-              description
-              color
-            }
+            description
+            color
             avatarUrl
             bannerUrl
           }
@@ -43,6 +41,8 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
             username
             name
             avatarUrl
+            rocketCount
+            followerCount
           }
           timeSince
           timeSinceEdited

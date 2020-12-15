@@ -10,13 +10,11 @@ import {
 import { Lazy } from '@/Lazy'
 import { User } from '@/user/User.Entity'
 import { Post } from '@/post/Post.Entity'
-import { PlanetSettings } from '@/planet/PlanetSettings'
-import { PlanetProfile } from '@/planet/PlanetProfile'
 import { PlanetUser } from '@/planet/PlanetUser.Entity'
 import { PlanetMute } from '@/filter/PlanetMute.Entity'
 import { PlanetModerator } from '@/moderation/PlanetModerator.Entity'
-import { PlanetAllowedPoster } from '@/planet/PlanetAllowedPoster.Entity'
 import { Ban } from '@/moderation/Ban.Entity'
+import { PlanetRule } from '@/planet/PlanetRule'
 
 @ObjectType()
 @Entity()
@@ -35,36 +33,35 @@ export class Planet {
   name: string
 
   @Field()
-  @Column('jsonb', {
-    default: new PlanetSettings(),
-    transformer: {
-      to: value => value,
-      from: value => {
-        try {
-          return JSON.parse(value) as PlanetSettings
-        } catch {
-          return value
-        }
-      }
-    }
-  })
-  settings: PlanetSettings
+  @Column({ default: false })
+  nsfw: boolean
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  color?: string
 
   @Field()
+  @Column({ default: 'New Planet' })
+  description: string
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  customName?: string
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  twitterUsername?: string
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  discordInvite?: string
+
+  @Field(() => [PlanetRule])
   @Column('jsonb', {
-    default: new PlanetProfile(),
-    transformer: {
-      to: value => value,
-      from: value => {
-        try {
-          return JSON.parse(value) as PlanetProfile
-        } catch (e) {
-          return value
-        }
-      }
-    }
+    array: true,
+    default: () => 'array[]::jsonb[]'
   })
-  profile: PlanetProfile
+  rules: PlanetRule[]
 
   @Field()
   @CreateDateColumn({ type: 'timestamp' })
@@ -85,9 +82,6 @@ export class Planet {
 
   @OneToMany(() => PlanetUser, user => user.planet)
   users: Lazy<PlanetUser[]>
-
-  @OneToMany(() => PlanetAllowedPoster, allowed => allowed.planet)
-  allowedPosters: Lazy<User[]>
 
   @Field(() => [String], { nullable: true })
   @Column('text', { array: true, nullable: true })

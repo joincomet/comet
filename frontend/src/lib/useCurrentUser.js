@@ -15,9 +15,7 @@ export const fetchCurrentUser = async (ctx = null) => {
           postCount
           followerCount
           rocketCount
-          profile {
-            realName
-          }
+          name
         }
       }
     `

@@ -6,15 +6,16 @@ import { fetchUser, useUser } from '@/lib/useUser'
 import Image from 'next/image'
 import { FiUser, FiCalendar } from 'react-icons/fi'
 import React from 'react'
-import Posts from '@/components/post/Posts'
+import PostsVirtualized from '@/components/post/PostsVirtualized'
 import { dehydrate } from 'react-query/hydration'
+import Posts from '@/components/post/Posts'
 
 const userInfoItem =
   'text-tertiary font-medium hover:text-blue-500 dark:hover:text-blue-500 transition cursor-pointer'
 
-function UserPage() {
+export default function UserPage() {
   const router = useRouter()
-  const user = useUser({ username: router.query.name }).data
+  const user = useUser({ username: router.query.username }).data
 
   return (
     <div>
@@ -54,7 +55,7 @@ function UserPage() {
             <div className="ml-24 lg:ml-32 p-3 flex">
               <div>
                 <div className="font-semibold text-xl leading-none">
-                  {user.profile.realName || user.username}
+                  {user.name}
                 </div>
 
                 <div className="text-tertiary font-normal text-sm mt-1">
@@ -83,6 +84,10 @@ function UserPage() {
       </div>
 
       <div className="lg:grid gap-3 grid-cols-3 mycontainer-nopad">
+        <div className="col-span-2 relative">
+          <Posts variables={getVariables(router.query)} />
+        </div>
+
         <div className="col-span-1">
           <div className="bg-white dark:bg-gray-800 lg:rounded-lg border border-gray-200 dark:border-gray-800 py-2.5 px-4">
             <div className="flex space-x-10">
@@ -110,7 +115,7 @@ function UserPage() {
           <div className="sticky top-14 pt-3">
             <div className="bg-white dark:bg-gray-800 lg:rounded-lg border border-gray-200 dark:border-gray-800 py-2.5 px-4">
               <div className="text-lg font-medium">About</div>
-              <div className="text-sm mt-3">{user.profile.bio}</div>
+              <div className="text-sm mt-3">{user.bio}</div>
               <div className="border-t dark:border-gray-700 flex items-center text-tertiary text-xs pt-3 mt-3">
                 <FiCalendar className="w-4 h-4 mr-3" />
                 Joined {user.timeSinceCreated}
@@ -128,40 +133,36 @@ function UserPage() {
             </div>
           </div>
         </div>
-
-        <div className="col-span-2 relative">
-          <Posts variables={getVariables(router.query)} />
-        </div>
       </div>
     </div>
   )
 }
-
-export default withLayout()(UserPage)
 
 const getVariables = query => {
   const sort =
     query.sort && query.sort.length >= 1 ? query.sort[0].toUpperCase() : 'HOT'
   const time =
     query.sort && query.sort.length >= 2 ? query.sort[1].toUpperCase() : 'ALL'
-  return { sort, time, username: query.name }
+  return { sort, time, username: query.username }
 }
 
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
-  const variables = getVariables(ctx.query)
+  /*const variables = getVariables(ctx.query)
 
   await queryClient.prefetchQuery(
     ['posts', variables],
     key => fetchPosts(key, ctx),
     {
+      infinite: true,
       getNextPageParam: (lastPage, pages) => lastPage.nextPage
     }
-  )
+  )*/
 
-  await queryClient.prefetchQuery(['user', { username: ctx.query.name }], key =>
-    fetchUser(key, ctx)
+  await queryClient.prefetchQuery(
+    ['user', { username: ctx.query.username }],
+    key => fetchUser(key, ctx)
   )
 
   const dehydratedState = dehydrate(queryClient)

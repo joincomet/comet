@@ -7,7 +7,7 @@ export enum ModPermission {
   REMOVE_COMMENT, // Remove comments
   BAN, // Ban users
   PURGE, // Purge content from a user
-  CUSTOMIZE, // Customize avatar, banner, description etc
+  CUSTOMIZE, // Customize user, banner, description etc
   ADD_MOD, // Add another user as a mod
   ADD_APPROVED_POSTER, // Add an approved poster
   SETTINGS, // Access to planet settings - private, approved posters, or public; nsfw; allowed post types; opt out universe

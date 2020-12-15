@@ -17,8 +17,8 @@ import Layout from '@/components/Layout'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false
-      // staleTime: Infinity
+      refetchOnWindowFocus: false,
+      staleTime: Infinity
     }
   }
 })
@@ -50,6 +50,7 @@ export default function App({ Component, pageProps }) {
                 defaultLayout={<Layout />}
               />
               <CustomDragLayer />
+              <div id="userpopover" />
             </DndProvider>
           </Hydrate>
 

@@ -58,7 +58,7 @@ export class PostResolver {
       pageSize,
       sort,
       time,
-      universe,
+      joinedOnly,
       folderId,
       galaxy,
       planet,
@@ -168,7 +168,7 @@ export class PostResolver {
           post => (post.post as Post).id
         )
 
-        if (!universe) {
+        if (joinedOnly) {
           const sub = await this.planetUserRepo
             .createQueryBuilder('join')
             .where(`"join"."user_id" = ${userId}`)
@@ -186,7 +186,7 @@ export class PostResolver {
           blockTo
         })
 
-        qb.andWhere('NOT (post.id  = ANY(:hiddenPosts))', { hiddenPosts })
+        qb.andWhere('NOT (post.id = ANY(:hiddenPosts))', { hiddenPosts })
       }
     }
 
@@ -214,7 +214,7 @@ export class PostResolver {
             username: handleUnderscore(username)
           })
           .andWhere('post.userSticky = true')
-      } else if (!search && !galaxy && !folderId && !universe) {
+      } else if (!search && !galaxy && !folderId) {
         // Show stickies from CometX on home page
         stickiesQb
           .andWhere('planet.name ILIKE :planet', {

@@ -10,7 +10,6 @@ import * as argon2 from 'argon2'
 import { SignUpArgs } from '@/auth/SignUpArgs'
 import { bannedWords } from '@/BannedWords'
 import { format } from 'date-fns'
-import { UserProfile } from '@/user/data/UserProfile'
 import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver()
@@ -49,15 +48,7 @@ export class AuthResolver {
       username,
       email,
       passwordHash,
-
-      lastLogin: new Date(),
-      profile: {
-        bio: `My name is ${username} and I joined CometX.io on ${format(
-          new Date(),
-          'MMM. do, yyyy'
-        )}`,
-        ...new UserProfile()
-      }
+      lastLogin: new Date()
     } as User)
 
     const accessToken = createAccessToken(user)

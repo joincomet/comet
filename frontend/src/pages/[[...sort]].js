@@ -1,5 +1,5 @@
 import CreatePostCard from '@/components/CreatePostCard'
-import Posts from '@/components/post/Posts'
+import PostsVirtualized from '@/components/post/PostsVirtualized'
 import { QueryClient } from 'react-query'
 import { fetchPosts } from '@/lib/usePosts'
 import { useRouter } from 'next/router'
@@ -12,8 +12,9 @@ import Tippy from '@tippyjs/react'
 import { FiCopy, FiUsers } from 'react-icons/fi'
 import { dehydrate } from 'react-query/hydration'
 import { RiFireLine } from 'react-icons/ri'
+import Posts from '@/components/post/Posts'
 
-function HomePage() {
+export default function HomePage() {
   const router = useRouter()
 
   const [variables, setVariables] = useState(getVariables(router.query))
@@ -55,8 +56,6 @@ function HomePage() {
           </div>
         </div>
       </div>
-
-      <CreatePostFAB />
     </div>
   )
 }
@@ -137,8 +136,6 @@ function InfoCard() {
   )
 }
 
-export default withLayout()(HomePage)
-
 const getVariables = query => {
   const sort =
     query.sort && query.sort.length >= 1 ? query.sort[0].toUpperCase() : 'HOT'
@@ -150,7 +147,7 @@ const getVariables = query => {
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
-  const variables = getVariables(ctx.query)
+  /*const variables = getVariables(ctx.query)
 
   await queryClient.prefetchQuery(
     ['posts', variables],
@@ -158,7 +155,7 @@ export async function getServerSideProps(ctx) {
     {
       getNextPageParam: (lastPage, pages) => lastPage.nextPage
     }
-  )
+  )*/
 
   await queryClient.prefetchQuery(['currentUser'], () => fetchCurrentUser(ctx))
 

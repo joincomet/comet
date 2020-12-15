@@ -12,8 +12,6 @@ import { Lazy } from '@/Lazy'
 import { Post } from '@/post/Post.Entity'
 import { PostRocket } from '@/post/PostRocket.Entity'
 import { CommentRocket } from '@/comment/CommentRocket.Entity'
-import { UserProfile } from '@/user/data/UserProfile'
-import { UserSettings } from '@/user/data/UserSettings'
 import { PlanetUser } from '@/planet/PlanetUser.Entity'
 import { PlanetModerator } from '@/moderation/PlanetModerator.Entity'
 import { PlanetMute } from '@/filter/PlanetMute.Entity'
@@ -22,9 +20,7 @@ import { UserBlock } from '@/filter/UserBlock.Entity'
 import { UserFollow } from '@/user/UserFollow.Entity'
 import { PostHide } from '@/filter/PostHide.Entity'
 import { Ban } from '@/moderation/Ban.Entity'
-import { PlanetAllowedPoster } from '@/planet/PlanetAllowedPoster.Entity'
 import dayjs from 'dayjs'
-import { UserBadges } from '@/user/data/UserBadges'
 
 @ObjectType()
 @Entity()
@@ -44,7 +40,7 @@ export class User {
 
   @Field(() => String)
   get name() {
-    if (this.profile && this.profile.realName) return this.profile.realName
+    if (this.realName) return this.realName
     return this.username
   }
 
@@ -52,55 +48,6 @@ export class User {
   @Field()
   @Column({ nullable: true })
   email?: string
-
-  @Authorized('USER')
-  @Field()
-  @Column('jsonb', {
-    default: new UserSettings(),
-    transformer: {
-      to: value => value,
-      from: value => {
-        try {
-          return JSON.parse(value) as UserSettings
-        } catch {
-          return value
-        }
-      }
-    }
-  })
-  settings: UserSettings
-
-  @Field()
-  @Column('jsonb', {
-    default: new UserProfile(),
-    transformer: {
-      to: value => value,
-      from: value => {
-        try {
-          return JSON.parse(value) as UserProfile
-        } catch {
-          return value
-        }
-      }
-    }
-  })
-  profile: UserProfile
-
-  @Field()
-  @Column('jsonb', {
-    default: new UserBadges(),
-    transformer: {
-      to: value => value,
-      from: value => {
-        try {
-          return JSON.parse(value) as UserBadges
-        } catch {
-          return value
-        }
-      }
-    }
-  })
-  badges: UserBadges
 
   @Field()
   @CreateDateColumn({ type: 'timestamp' })
@@ -136,9 +83,6 @@ export class User {
 
   @OneToMany(() => PlanetModerator, moderator => moderator.user)
   moderatedPlanets: Lazy<PlanetModerator[]>
-
-  @OneToMany(() => PlanetAllowedPoster, a => a.user)
-  allowedPlanets: Lazy<PlanetAllowedPoster[]>
 
   @OneToMany(() => Ban, ban => ban.user)
   bans: Lazy<Ban[]>
@@ -224,4 +168,36 @@ export class User {
   @Field({ nullable: true })
   @Column({ nullable: true })
   bannerUrl?: string
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  realName?: string
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  website?: string
+
+  @Field()
+  @Column({ default: 'New CometX User' })
+  bio: string
+
+  @Field()
+  @Column({ default: false })
+  appearOffline: boolean
+
+  @Field()
+  @Column({ default: false })
+  allowNsfw: boolean
+
+  @Field()
+  @Column({ default: false })
+  allowProfanity: boolean
+
+  @Field()
+  @Column({ default: false })
+  private: boolean
+
+  @Field()
+  @Column({ default: false })
+  getcomet: boolean
 }

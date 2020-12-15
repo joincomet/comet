@@ -10,8 +10,11 @@ import Tippy from '@tippyjs/react'
 import { useCopyToClipboard } from 'react-use'
 import Image from 'next/image'
 import { dehydrate } from 'react-query/hydration'
+import { withLayout } from '@moxy/next-layout'
+import PlanetAvatar from '@/components/planet/PlanetAvatar'
+import PlanetInfoCard from '@/components/planet/PlanetInfoCard'
 
-export default function PlanetPage() {
+function PostPage() {
   const router = useRouter()
   const post = usePost({ postId: router.query.id }).data
   const comments = useComments({ postId: router.query.id }).data
@@ -23,7 +26,7 @@ export default function PlanetPage() {
       <div className="grid grid-cols-3 gap-3">
         <div className="col-span-2 relative py-3">
           <div>
-            <Post post={post} className="rounded-2xl" />
+            <Post post={post} className="rounded-2xl" showFullText />
 
             {comments.map((comment, index) => (
               /*<div key={index}>{JSON.stringify(comment)}</div>*/
@@ -36,45 +39,7 @@ export default function PlanetPage() {
 
         <div className="col-span-1">
           <div className="sticky top-14 pt-3">
-            <div className="card mb-3">
-              <div className="w-full h-12 relative">
-                {post.planet.bannerUrl ? (
-                  <Image
-                    src={post.planet.bannerUrl}
-                    layout="fill"
-                    className="object-cover object-center rounded-t-lg"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-red-400 to-blue-500" />
-                )}
-              </div>
-
-              <div className="p-3">
-                <div className="flex">
-                  <div className="h-12 w-12 relative rounded-full">
-                    <Image
-                      src={post.planet.avatarUrl}
-                      layout="fill"
-                      className="rounded-full object-cover object-center"
-                    />
-                  </div>
-
-                  <div className="ml-3">
-                    <div className="font-medium text-primary">
-                      {post.planet.name}
-                    </div>
-
-                    <div className="text-secondary text-sm">
-                      {post.planet.profile.description}
-                    </div>
-                  </div>
-
-                  <div className="ml-auto px-4 h-7 rounded-full bg-blue-500 text-sm inline-flex items-center cursor-pointer transition hover:bg-blue-600">
-                    Join
-                  </div>
-                </div>
-              </div>
-            </div>
+            <PlanetInfoCard planet={post.planet} />
 
             <ShareCard post={post} />
           </div>
@@ -83,6 +48,8 @@ export default function PlanetPage() {
     </div>
   )
 }
+
+export default PostPage
 
 function ShareCard({ post }) {
   const [clipboardState, copyToClipboard] = useCopyToClipboard()
@@ -105,7 +72,7 @@ function ShareCard({ post }) {
           onClick={() => copy()}
           className="mt-3 p-3 dark:bg-gray-900 rounded text-sm flex items-center text-accent cursor-pointer"
         >
-          {copyLink}
+          <span className="truncate pr-3">{copyLink}</span>
 
           <div className="ml-auto">
             <FiCopy className="w-5 h-5 text-tertiary" />

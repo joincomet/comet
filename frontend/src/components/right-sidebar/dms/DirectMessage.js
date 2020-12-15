@@ -25,12 +25,12 @@ export default function DirectMessage({ user }) {
         <Image
           width={32}
           height={32}
-          alt={user.profile.realName}
+          alt={user.name}
           className="object-cover rounded-full"
-          src={user.avatarUrl || '/avatar.jpg'}
+          src={user.avatarUrl || '/user.jpg'}
         />
       </div>
-      <span className="ml-3">{user.profile.realName}</span>
+      <span className="ml-3">{user.name}</span>
     </div>
   )
 }
