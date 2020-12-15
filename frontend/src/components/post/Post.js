@@ -49,7 +49,7 @@ function Post({
 
   return (
     <article
-      className={`flex outline-none relative w-full min-w-full pb-1`}
+      className={`flex outline-none relative w-full min-w-full pb-0.5`}
       data-index={index}
       ref={dragRef}
     >
@@ -61,7 +61,7 @@ function Post({
         } transition w-full`}
       >
         <div
-          className={`${className} border border-gray-200 dark:border-gray-800 flex flex-col bg-white dark:bg-gray-800 relative`}
+          className={`${className} flex flex-col bg-white dark:bg-gray-900 relative rounded`}
         >
           {post.sticky && (
             <TiPinOutline
@@ -71,11 +71,7 @@ function Post({
           )}
           <div className="flex items-start px-3 pt-3">
             <UserPopup user={post.author}>
-              <UserAvatar
-                user={post.author}
-                loading="eager"
-                className="w-10 h-10 mr-3"
-              />
+              <UserAvatar user={post.author} className="w-10 h-10 mr-3" />
             </UserPopup>
 
             <div className="flex flex-col">

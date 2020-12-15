@@ -10,10 +10,10 @@ export default function PlanetInfoCard({ planet }) {
           <Image
             src={planet.bannerUrl}
             layout="fill"
-            className="object-cover object-center rounded-t-lg"
+            className="object-cover object-center rounded-t"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-red-400 to-blue-500 rounded-t-lg" />
+          <div className="w-full h-full bg-gradient-to-br from-red-400 to-blue-500 rounded-t" />
         )}
       </div>
 

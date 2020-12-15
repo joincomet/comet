@@ -60,7 +60,6 @@ export default function PostEmbed({ post, measure }) {
         <div className="w-32 h-32 relative flex-shrink-0">
           {post.thumbnailUrl || post.logoUrl ? (
             <Image
-              loading="eager"
               src={post.thumbnailUrl || post.logoUrl}
               layout="fill"
               className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
@@ -84,12 +83,7 @@ export default function PostEmbed({ post, measure }) {
           <div className="flex flex-row items-center mt-auto text-tertiary text-xs hover:underline">
             {post.logoUrl && (
               <div className="inline-block w-4 h-4 mr-3">
-                <Image
-                  loading="eager"
-                  src={post.logoUrl}
-                  width={16}
-                  height={16}
-                />
+                <Image src={post.logoUrl} width={16} height={16} />
               </div>
             )}
             {post.domain}

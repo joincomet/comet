@@ -20,7 +20,7 @@ function PostPage() {
   const comments = useComments({ postId: router.query.id }).data
 
   return (
-    <div className="relative mycontainer">
+    <div className="relative mycontainer mt-14">
       <CommentBox />
 
       <div className="grid grid-cols-3 gap-3">

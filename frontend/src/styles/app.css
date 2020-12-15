@@ -3,7 +3,7 @@ html {
 }
 
 html.dark {
-  @apply text-white bg-gray-900;
+  @apply text-white bg-gray-800;
 }
 
 body {
@@ -274,13 +274,13 @@ body {
 }
 
 .mycontainer {
-  @apply container mx-auto 2xl:px-48 px-3;
+  @apply container mx-auto 2xl:px-48 px-3 lg:px-8;
 }
 
 .mycontainer-nopad {
-  @apply container mx-auto lg:px-48 px-0;
+  @apply container mx-auto;
 }
 
 .card {
-  @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-lg;
+  @apply bg-white dark:bg-gray-900 rounded;
 }

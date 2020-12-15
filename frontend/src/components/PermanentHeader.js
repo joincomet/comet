@@ -12,23 +12,23 @@ export default function PermanentHeader({ children, className, ...rest }) {
   return (
     <>
       <header
-        className={`hidden sm:flex z-10 fixed left-0 right-0 top-0 h-14 px-6 items-center transition dark:bg-gray-800 bg-white shadow-md`}
+        className={`hidden sm:flex z-50 fixed left-0 lg:left-64 right-0 top-0 h-14 items-center transition bg-transparent px-6`}
         {...rest}
       >
-        <NavLink href="/">
+        {/*<NavLink href="/">
           <Logo className="h-4 dark:text-gray-200 text-black" />
         </NavLink>
 
         <div className="text-xl font-bold tracking-tight absolute left-64 pl-6">
           Home Feed
-        </div>
+        </div>*/}
 
-        <div className="ml-auto relative text-gray-600 dark:text-gray-400 focus-within:text-blue-500 dark:focus-within:text-blue-500 transition">
+        <div className="relative text-gray-600 dark:text-gray-400 focus-within:text-blue-500 dark:focus-within:text-blue-500 transition">
           <FiSearch className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2" />
-          <input className="h-9 w-96 text-sm rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none text-primary px-10" />
+          <input className="h-8 text-sm rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none text-primary px-10 w-48" />
         </div>
 
-        <div className="ml-6">
+        <div className="ml-auto">
           {currentUser ? (
             <div className="flex items-center space-x-6">
               <div className="p-3 rounded-full transition bg-transparent dark:hover:bg-gray-700 cursor-pointer">

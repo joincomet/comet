@@ -10,10 +10,10 @@ export default function UserAvatar({
   return (
     <div
       className={`select-none relative flex-shrink-0 rounded-full inline-flex ${className} ${
-        user.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
+        user && user.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
       }`}
     >
-      {user.avatarUrl ? (
+      {user && user.avatarUrl ? (
         <Image
           src={user.avatarUrl}
           loading={loading}
@@ -26,8 +26,8 @@ export default function UserAvatar({
 
       {showOnline && (
         <div
-          className={`w-1/4 h-1/4 rounded-full ring-4 ring-white dark:ring-gray-900 bottom-0 right-0 absolute ${
-            user.online ? 'bg-green-500' : 'bg-gray-500'
+          className={`w-1/4 h-1/4 rounded-full ring-4 ring-white dark:ring-gray-800 bottom-0 right-0 absolute ${
+            user && user.online ? 'bg-green-500' : 'bg-gray-500'
           }`}
         />
       )}

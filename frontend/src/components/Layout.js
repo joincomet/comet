@@ -40,7 +40,7 @@ export default function Layout({ children }) {
 
         <PermanentHeader />
 
-        <main className="ml-64 pt-14 h-full">{children}</main>
+        <main className="lg:ml-64 h-full">{children}</main>
 
         <BottomBar />
 

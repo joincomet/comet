@@ -14,7 +14,6 @@ export default function PostImages({ post, measure }) {
         className="mt-3 cursor-pointer relative aspect-ratio-16/9 object-contain w-full bg-gray-100 border border-gray-200 rounded-md dark:bg-gray-900 dark:border-gray-800 hover:bg-gray-200"
       >
         <Image
-          loading="eager"
           alt="Image"
           layout="fill"
           src={post.imageUrls[0]}

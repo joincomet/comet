@@ -37,10 +37,10 @@ export default function Comment({ comment, level = 0 }) {
           <UserAvatar className="w-10 h-10 mr-3" user={comment.author} />
         </UserPopup>
 
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 arrow_box rounded-md w-full">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 arrow_box rounded-md w-full">
           <div className="flex items-start w-full">
             <div className="flex flex-col w-full">
-              <div className="h-9 flex items-center text-sm bg-gray-100 dark:bg-gray-800 rounded-t-md">
+              <div className="h-9 flex items-center text-sm bg-gray-100 dark:bg-gray-900 rounded-t-md">
                 <div className="inline-flex items-center p-3">
                   <UserPopup user={comment.author}>
                     <div className="text-secondary font-semibold hover:underline cursor-pointer">
@@ -79,7 +79,7 @@ export default function Comment({ comment, level = 0 }) {
 
               {!collapse && !comment.deleted && (
                 <div
-                  className="prose prose-sm prose-blue dark:prose-dark max-w-none p-3 border-t border-gray-200 dark:border-gray-700"
+                  className="prose prose-sm prose-blue dark:prose-dark max-w-none p-3 border-t border-gray-200 dark:border-gray-800"
                   dangerouslySetInnerHTML={{ __html: comment.textContent }}
                 />
               )}

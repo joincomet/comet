@@ -16,22 +16,21 @@ import { usePlanets } from '@/lib/usePlanets'
 import Image from 'next/image'
 import Tippy from '@tippyjs/react'
 import NavLink from '@/components/NavLink'
+import { useCurrentUser } from '@/lib/useCurrentUser'
+import UserAvatar from '@/components/user/UserAvatar'
 
 const button =
   'p-2.5 cursor-pointer transition dark:hover:bg-gray-700 rounded-full mr-3 text-blue-500'
 
 export default function CreatePostCard() {
+  const currentUser = useCurrentUser().data
   return (
-    <div className="pt-3 pb-2 sm:rounded-lg shadow bg-white dark:bg-gray-800">
+    <div className="pt-3 pb-2 rounded bg-white dark:bg-gray-900">
       <div className="flex pl-3 pr-3 sm:pr-16">
-        <div
-          className={`w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 dark:bg-gray-700`}
-        >
-          <FiUser size={20} className="m-2.5 text-gray-500" />
-        </div>
+        <UserAvatar user={currentUser} />
         <textarea
           placeholder="Share something with the community"
-          className="w-full rounded-xl px-4 bg-gray-100 dark:bg-gray-900 border-none text-sm ml-3 h-16 resize-none transition"
+          className="w-full rounded px-4 bg-gray-100 dark:bg-gray-900 border-none text-sm ml-3 h-16 resize-none transition"
         />
       </div>
       <div className="flex text-tertiary pl-16 mt-2 items-center">

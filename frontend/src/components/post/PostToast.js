@@ -58,7 +58,6 @@ export default function PostToast({ toast }) {
               {toast.user && (
                 <>
                   <Image
-                    loading="eager"
                     width={36}
                     height={36}
                     alt={toast.user.name}

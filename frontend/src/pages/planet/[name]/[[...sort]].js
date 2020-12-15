@@ -25,15 +25,15 @@ export default function PlanetPage() {
 
   return (
     <div>
-      <div className="relative rounded-xl h-72 bg-gray-200 dark:bg-gray-800">
-        <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90" />
+      <div className="relative rounded-xl h-72 bg-gray-200 dark:bg-gray-800 z-0">
+        <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
 
-        <div className="absolute left-64 right-48 flex top-1/2 transform -translate-y-1/2 z-20">
+        <div className="absolute inset-0 flex items-end z-20 mycontainer pb-12">
           <div>
             <div className="mb-3 font-semibold uppercase tracking-widest text-xs">
               discussion &middot; meta/cometx
             </div>
-            <div className="text-7xl font-extrabold tracking-tight">
+            <div className="text-7xl font-extrabold tracking-tight leading-none">
               {planet.name}
             </div>
 
@@ -48,7 +48,7 @@ export default function PlanetPage() {
           </div>
         </div>
 
-        <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent to-gray-900" />
+        <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent to-gray-800" />
 
         {planet.bannerUrl && (
           <Image
@@ -60,16 +60,16 @@ export default function PlanetPage() {
       </div>
 
       <div className="mycontainer">
-        <div className="grid grid-cols-3 gap-3">
-          <div className="col-span-2">
-            <div className="my-3">
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-3 xl:col-span-2">
+            <div className="mt-3 mb-0.5">
               <CreatePostCard />
             </div>
 
             <Posts variables={getVariables(router.query)} showPlanet={false} />
           </div>
 
-          <div className="col-span-1">
+          <div className="col-span-0 xl:col-span-1">
             <div className="pt-3 sticky top-14">
               <PlanetInfoCard planet={planet} />
             </div>

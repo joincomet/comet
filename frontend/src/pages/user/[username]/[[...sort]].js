@@ -9,6 +9,7 @@ import React from 'react'
 import PostsVirtualized from '@/components/post/PostsVirtualized'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
+import UserAvatar from '@/components/user/UserAvatar'
 
 const userInfoItem =
   'text-tertiary font-medium hover:text-blue-500 dark:hover:text-blue-500 transition cursor-pointer'
@@ -20,7 +21,7 @@ export default function UserPage() {
   return (
     <div>
       <div className="pb-3">
-        <div className="bg-white dark:bg-gray-800 shadow relative">
+        <div className="bg-white dark:bg-gray-900 relative">
           <div className="w-full h-32 relative">
             {user.bannerUrl ? (
               <Image
@@ -35,20 +36,11 @@ export default function UserPage() {
 
           <div className="mycontainer">
             <div className="relative">
-              <div
-                className={`w-24 h-24 lg:w-32 lg:h-32 absolute left-0 top-0 transform -translate-y-1/2 inline-flex rounded-full ring-4 ring-white dark:ring-gray-800 ${
-                  user.avatarUrl ? '' : 'bg-gray-200 dark:bg-gray-700'
-                }`}
-              >
-                {user.avatarUrl ? (
-                  <Image
-                    src={user.avatarUrl}
-                    layout="fill"
-                    className="rounded-full object-cover object-center"
-                  />
-                ) : (
-                  <FiUser className="m-auto w-1/2 h-1/2 text-tertiary" />
-                )}
+              <div className="absolute left-0 top-0 transform -translate-y-1/2">
+                <UserAvatar
+                  user={user}
+                  className="w-24 h-24 lg:w-32 lg:h-32 ring-4 ring-white dark:ring-gray-800"
+                />
               </div>
             </div>
 
@@ -83,13 +75,13 @@ export default function UserPage() {
         </div>
       </div>
 
-      <div className="lg:grid gap-3 grid-cols-3 mycontainer-nopad">
-        <div className="col-span-2 relative">
+      <div className="grid gap-6 grid-cols-3 mycontainer">
+        <div className="col-span-3 lg:col-span-2 relative">
           <Posts variables={getVariables(router.query)} />
         </div>
 
-        <div className="col-span-1">
-          <div className="bg-white dark:bg-gray-800 lg:rounded-lg border border-gray-200 dark:border-gray-800 py-2.5 px-4">
+        <div className="col-span-0 lg:col-span-1">
+          <div className="bg-white dark:bg-gray-900 rounded py-2.5 px-4">
             <div className="flex space-x-10">
               <div className={userInfoItem}>
                 <div className="text-lg text-accent">{user.postCount || 0}</div>
@@ -113,7 +105,7 @@ export default function UserPage() {
           </div>
 
           <div className="sticky top-14 pt-3">
-            <div className="bg-white dark:bg-gray-800 lg:rounded-lg border border-gray-200 dark:border-gray-800 py-2.5 px-4">
+            <div className="bg-white dark:bg-gray-900 rounded py-2.5 px-4">
               <div className="text-lg font-medium">About</div>
               <div className="text-sm mt-3">{user.bio}</div>
               <div className="border-t dark:border-gray-700 flex items-center text-tertiary text-xs pt-3 mt-3">
@@ -126,10 +118,6 @@ export default function UserPage() {
                   cometx.io
                 </div>
               </div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 lg:rounded-lg border border-gray-200 dark:border-gray-800 py-2.5 px-4 mt-3">
-              Media
             </div>
           </div>
         </div>

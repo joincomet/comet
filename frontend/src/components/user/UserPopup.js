@@ -53,7 +53,7 @@ export default function UserPopup({ user, children }) {
                       x: 0
                     }}
                     transition={{ duration: 0.15, ease: 'easeInOut' }}
-                    className="relative dark:bg-gray-900 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64 bg-opacity-75"
+                    className="relative dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64 bg-opacity-75"
                   >
                     <UserAvatar user={user} showOnline className="w-20 h-20" />
                     <div className="mt-3 font-medium">{user.name}</div>
@@ -64,7 +64,7 @@ export default function UserPopup({ user, children }) {
                     <div className="flex items-center mt-3 space-x-3 w-full">
                       <NavLink
                         href={`/user/${user.username}`}
-                        className="text-accent border rounded border-gray-800 w-full h-9 inline-flex items-center justify-center text-sm font-medium cursor-pointer"
+                        className="text-accent border rounded dark:border-gray-700 w-full h-9 inline-flex items-center justify-center text-sm font-medium cursor-pointer"
                       >
                         View profile
                       </NavLink>

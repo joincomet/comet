@@ -42,8 +42,8 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
         )}
       </AnimatePresence>
       <nav
-        className={`w-64 top-14 bottom-0 left-0 fixed z-30 flex flex-col overflow-y-auto bg-white dark:bg-gray-800 shadow-lg transform transition ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
+        className={`w-64 top-0 bottom-0 left-0 fixed z-50 flex flex-col overflow-y-auto bg-white dark:bg-gray-900 transform transition ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         <Scrollbar
@@ -51,6 +51,9 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
             style: { backgroundColor: 'rgba(0, 0, 0, 0.1)' }
           }}
         >
+          <NavLink href="/" className="flex items-center h-14 px-4">
+            <Logo className="h-4 dark:text-gray-200 text-black" />
+          </NavLink>
           <div className="text-gray-500">
             <NavLink href="/" className={`${link} navitem-active`}>
               <BiHomeAlt className="w-5 h-5" />

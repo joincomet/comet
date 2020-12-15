@@ -6,11 +6,6 @@
 @tailwind components;
 /* Stop purging. */
 
-html,
-body {
-  @apply bg-gray-50 dark:bg-gray-900;
-}
-
 /* Write your own custom component styles here */
 
 
@@ -19,14 +14,3 @@ body {
 /* Stop purging. */
 
 /* Your own custom utilities */
-.inset-center {
-  @apply transform left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
-}
-
-.inset-x-center {
-  @apply transform left-1/2 -translate-x-1/2;
-}
-
-.inset-y-center {
-  @apply transform top-1/2 -translate-y-1/2;
-}
