@@ -6,8 +6,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useClickAway } from 'react-use'
 import { FiExternalLink } from 'react-icons/fi'
 import NavLink from '@/components/NavLink'
+import PlanetAvatar from '@/components/planet/PlanetAvatar'
 
-export default function UserPopup({ user, children }) {
+export default function PlanetPopup({ planet, children }) {
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)
   const [arrowElement, setArrowElement] = useState(null)
@@ -55,22 +56,22 @@ export default function UserPopup({ user, children }) {
                     transition={{ duration: 0.15, ease: 'easeInOut' }}
                     className="relative dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64 bg-opacity-75"
                   >
-                    <UserAvatar user={user} showOnline className="w-20 h-20" />
-                    <div className="mt-3 font-medium">{user.name}</div>
+                    <PlanetAvatar planet={planet} className="w-20 h-20" />
+                    <div className="mt-3 font-medium">{planet.name}</div>
                     <div className="mt-1 text-sm text-tertiary">
-                      @{user.username}
+                      {planet.userCount} Members
                     </div>
 
                     <div className="flex items-center mt-3 space-x-3 w-full">
                       <NavLink
-                        href={`/user/${user.username}`}
+                        href={`/planet/${planet.name}`}
                         className="text-accent border rounded dark:border-gray-700 w-full h-9 inline-flex items-center justify-center text-sm font-medium cursor-pointer"
                       >
-                        View profile
+                        View Planet
                       </NavLink>
 
                       <div className="text-white w-full h-9 rounded bg-blue-600 inline-flex items-center justify-center text-sm font-medium cursor-pointer">
-                        Follow
+                        Join
                       </div>
                     </div>
                   </motion.div>

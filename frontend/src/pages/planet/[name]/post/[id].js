@@ -70,7 +70,7 @@ function ShareCard({ post }) {
       <Tippy content={copyTip}>
         <div
           onClick={() => copy()}
-          className="mt-3 p-3 dark:bg-gray-900 rounded text-sm flex items-center text-accent cursor-pointer"
+          className="mt-3 p-3 border dark:border-gray-800 rounded text-sm flex items-center text-accent cursor-pointer"
         >
           <span className="truncate pr-3">{copyLink}</span>
 

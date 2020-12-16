@@ -7,6 +7,11 @@ const flattenColorPalette = require('tailwindcss/lib/util/flattenColorPalette')
 module.exports = {
   theme: {
     extend: {
+      colors: {
+      	gray: {
+      		850: '#202023'
+      	}
+      },
       fontFamily: {
         sans: ['Inter var', 'Inter', ...defaultTheme.fontFamily.sans]
       },

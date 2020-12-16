@@ -3,7 +3,7 @@ html {
 }
 
 html.dark {
-  @apply text-white bg-gray-800;
+  @apply text-white bg-gray-850;
 }
 
 body {
@@ -26,7 +26,7 @@ body {
 }
 
 .text-secondary {
-  @apply text-gray-700 dark:text-gray-300;
+  @apply text-gray-800 dark:text-gray-200;
 }
 
 .text-primary {
@@ -156,11 +156,11 @@ body {
 }
 
 .tippy-box {
-  @apply bg-gray-900 shadow-lg;
+  @apply bg-black shadow-lg p-1 text-xs font-medium text-gray-200;
 }
 
 .tippy-arrow {
-  @apply text-gray-900 shadow-lg;
+  @apply text-black shadow-lg;
 }
 
 .aspect-ratio-16\/9 {
@@ -231,14 +231,14 @@ body {
 }
 
 .arrow_box::after {
-  @apply border-r-gray-100 dark:border-r-gray-800;
+  @apply border-r-gray-100 dark:border-r-gray-900;
   border-color: rgba(244, 244, 245, 0);
   border-right-color: #F4F4F5;
   border-width: 8px;
   margin-top: -8px;
 }
 .arrow_box::before {
-  @apply border-r-gray-200 dark:border-r-gray-800;
+  @apply border-r-gray-200 dark:border-r-gray-900;
   border-color: rgba(228, 228, 231, 0);
   border-right-color: #E4E4E7;
   border-width: 9px;
@@ -262,6 +262,10 @@ body {
   box-shadow: rgba(136, 153, 166, 0.2) 0px 0px 15px, rgba(136, 153, 166, 0.15) 0px 0px 3px 1px;
 }
 
+.glow-green {
+  box-shadow: rgba(0, 255, 0, 0.2) 0px 0px 15px, rgba(0, 255, 0, 0.15) 0px 0px 3px 1px;
+}
+
 .player-wrapper {
   position: relative;
   padding-top: 56.25% /* Player ratio: 100 / (1280 / 720) */
@@ -274,7 +278,7 @@ body {
 }
 
 .mycontainer {
-  @apply container mx-auto 2xl:px-48 px-3 lg:px-8;
+  @apply container mx-auto 2xl:px-48 px-0 md:px-8;
 }
 
 .mycontainer-nopad {

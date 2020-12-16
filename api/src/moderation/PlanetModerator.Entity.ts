@@ -9,11 +9,11 @@ import {
 import { Lazy } from '@/Lazy'
 import { User } from '@/user/User.Entity'
 import { Planet } from '@/planet/Planet.Entity'
-import { ModPermission } from '@/moderation/ModPermission'
 
 @ObjectType()
 @Entity()
 export class PlanetModerator {
+  @Field(() => User)
   @ManyToOne(() => User, user => user.moderatedPlanets)
   user: Lazy<User>
 
@@ -33,13 +33,4 @@ export class PlanetModerator {
   @Field()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
-
-  @Field(() => [ModPermission], { nullable: true })
-  @Column({
-    type: 'enum',
-    enum: ModPermission,
-    array: true,
-    nullable: true // null = all permissions
-  })
-  permissions?: ModPermission[]
 }

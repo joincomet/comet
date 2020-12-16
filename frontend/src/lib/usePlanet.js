@@ -17,6 +17,12 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           avatarUrl
           bannerUrl
           userCount
+          moderators {
+            id
+            username
+            name
+            avatarUrl
+          }
         }
       }
     `,

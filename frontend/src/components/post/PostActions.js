@@ -13,13 +13,13 @@ const chip =
   'cursor-pointer inline-flex items-center group transition text-tertiary'
 const label = 'ml-3 text-sm font-medium transition'
 const icon =
-  'w-9 h-9 group-hover:bg-gray-700 rounded-full transition inline-flex items-center justify-center'
+  'w-9 h-9 dark:group-hover:bg-gray-800 rounded-full transition inline-flex items-center justify-center'
 
 export default function PostActions({ post }) {
   // post.imageUrls.length > 0
   return (
     <div
-      className={`flex flex-row items-center -ml-2 -mr-2 px-3 sm:px-16 pt-3 pb-1`}
+      className={`flex flex-row items-center -ml-2 -mr-2 px-3 sm:px-16 pt-1 pb-1`}
     >
       <div className={`${chip} mr-6`}>
         <div className={`${icon} group-hover:text-red-400`}>

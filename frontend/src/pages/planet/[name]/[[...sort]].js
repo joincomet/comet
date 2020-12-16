@@ -1,54 +1,53 @@
-import CreatePostCard from '@/components/CreatePostCard'
-import PostsVirtualized from '@/components/post/PostsVirtualized'
 import { QueryClient } from 'react-query'
-import { fetchPosts } from '@/lib/usePosts'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { withLayout } from '@moxy/next-layout'
-import CreatePostFAB from '@/components/CreatePostFAB'
 import { fetchPlanet, usePlanet } from '@/lib/usePlanet'
 import Image from 'next/image'
-import { FiPlusCircle } from 'react-icons/fi'
-import Tippy from '@tippyjs/react'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
-import PlanetInfoCard from '@/components/planet/PlanetInfoCard'
+import { useInView } from 'react-intersection-observer'
+import UserAvatar from '@/components/user/UserAvatar'
+import UserPopup from '@/components/user/UserPopup'
+import SortOptions from '@/components/SortOptions'
 
 export default function PlanetPage() {
   const router = useRouter()
 
   const planet = usePlanet({ name: router.query.name }).data
 
-  const moderator =
-    'w-9 h-9 relative rounded-full shadow-md cursor-pointer opacity-75 hover:opacity-100 transition transform hover:scale-105'
+  const { ref, inView, entry } = useInView()
 
   return (
     <div>
-      <div className="relative rounded-xl h-72 bg-gray-200 dark:bg-gray-800 z-0">
+      <div className="relative h-80 z-0">
         <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
 
-        <div className="absolute inset-0 flex items-end z-20 mycontainer pb-12">
-          <div>
-            <div className="mb-3 font-semibold uppercase tracking-widest text-xs">
+        <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-6 md:pb-12">
+          <div className="flex flex-col w-full h-full items-center md:items-start justify-end">
+            <div className="font-semibold uppercase tracking-widest text-xs text-secondary">
               discussion &middot; meta/cometx
             </div>
-            <div className="text-7xl font-extrabold tracking-tight leading-none">
+            <div className="md:text-7xl text-4xl font-extrabold tracking-tight leading-none mt-4">
               {planet.name}
             </div>
 
-            <div className="h-9 rounded-full inline-flex w-32 items-center justify-center font-medium bg-blue-600 text-sm mt-6 cursor-pointer">
+            <div className="block md:hidden text-tertiary font-semibold uppercase tracking-widest text-xs text-right mt-4">
+              {planet.userCount} Members
+            </div>
+
+            <div className="h-9 rounded-full inline-flex w-32 items-center justify-center font-medium bg-blue-600 text-sm mt-8 cursor-pointer">
               Join
             </div>
           </div>
 
-          <div className="ml-auto mt-auto text-tertiary font-semibold uppercase tracking-widest text-xs text-right">
+          <div className="hidden md:block mt-auto text-tertiary font-semibold uppercase tracking-widest text-xs text-right">
             <div>Members</div>
             <div>{planet.userCount}</div>
           </div>
         </div>
 
-        <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent to-gray-800" />
+        <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent dark:to-gray-850" />
 
         {planet.bannerUrl && (
           <Image
@@ -59,19 +58,46 @@ export default function PlanetPage() {
         )}
       </div>
 
-      <div className="mycontainer">
+      <div className="mycontainer py-6">
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 xl:col-span-2">
-            <div className="mt-3 mb-0.5">
-              <CreatePostCard />
-            </div>
-
+            <SortOptions />
             <Posts variables={getVariables(router.query)} showPlanet={false} />
           </div>
 
           <div className="col-span-0 xl:col-span-1">
-            <div className="pt-3 sticky top-14">
-              <PlanetInfoCard planet={planet} />
+            <div>
+              <div className="text-xl font-bold tracking-tight leading-none mb-6 text-secondary">
+                About
+              </div>
+              <div className="text-sm text-secondary font-medium">
+                {planet.description}
+              </div>
+
+              <div className="text-xl font-bold tracking-tight leading-none my-6 text-secondary">
+                Related Planets
+              </div>
+              <div className="flex items-center mt-4">
+                <PlanetAvatar planet={planet} className="w-9 h-9" />
+                <div className="ml-4 font-semibold text-sm text-secondary">
+                  {planet.name}
+                </div>
+              </div>
+
+              <div className="text-xl font-bold tracking-tight leading-none my-6 text-secondary">
+                Moderators
+              </div>
+
+              {planet.moderators.map(mod => (
+                <UserPopup user={mod} key={mod.id}>
+                  <div className="flex items-center mt-4 cursor-pointer">
+                    <UserAvatar user={mod} className="w-9 h-9" />
+                    <div className="ml-4 font-semibold text-sm text-secondary">
+                      {mod.name}
+                    </div>
+                  </div>
+                </UserPopup>
+              ))}
             </div>
           </div>
         </div>

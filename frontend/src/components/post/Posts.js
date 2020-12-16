@@ -12,7 +12,7 @@ export default function Posts({ variables }) {
       scrollThreshold="600px"
       next={fetchNextPage}
       hasMore={true}
-      loader={<h4>Loading...</h4>}
+      loader={<div />}
       dataLength={data.length}
       style={{ overflowX: 'hidden' }}
     >

@@ -1,13 +1,11 @@
 import LeftSidebar from './LeftSidebar'
-import RightSidebar from '@/components/right-sidebar/RightSidebar'
 import BottomBar from '@/components/BottomBar'
 import React, { useState } from 'react'
-import TopBar from '@/components/TopBar'
 import SignUpForm from '@/components/SignUpForm'
 import { Modal } from 'react-responsive-modal'
 import { useRouter } from 'next/router'
 import { FiX } from 'react-icons/fi'
-import PermanentHeader from '@/components/PermanentHeader'
+import Header from '@/components/Header'
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -38,13 +36,13 @@ export default function Layout({ children }) {
           setSidebarOpen={setSidebarOpen}
         />
 
-        <PermanentHeader />
+        <Header />
 
         <main className="lg:ml-64 h-full">{children}</main>
 
         <BottomBar />
 
-        <TopBar setSidebarOpen={setSidebarOpen} />
+        {/*<TopBar setSidebarOpen={setSidebarOpen} />*/}
 
         {/*<RightSidebar />*/}
       </div>

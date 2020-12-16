@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from 'react'
+import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 function PostDragPreview({ post, show }) {

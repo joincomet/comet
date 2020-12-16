@@ -37,7 +37,7 @@ export default function PostEmbed({ post, measure }) {
 
   if (ReactPlayer.canPlay(post.linkUrl))
     return (
-      <div className="rounded-md overflow-hidden player-wrapper mt-3">
+      <div className="rounded-md overflow-hidden player-wrapper">
         <ReactPlayer
           onReady={measure}
           className="react-player"
@@ -55,7 +55,7 @@ export default function PostEmbed({ post, measure }) {
         href={post.linkUrl}
         target="_blank"
         rel="noreferrer noopener nofollow"
-        className="mt-3 group rounded-md flex items-start bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 shadow-inner"
+        className="group rounded-md flex items-start transition bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-850 shadow-inner"
       >
         <div className="w-32 h-32 relative flex-shrink-0">
           {post.thumbnailUrl || post.logoUrl ? (
@@ -72,7 +72,7 @@ export default function PostEmbed({ post, measure }) {
         </div>
 
         <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
-          <div className="text-sm font-semibold transition line-clamp-2 text-primary group-hover:text-blue-500">
+          <div className="text-sm font-semibold line-clamp-2 text-primary">
             {post.meta && post.meta.title ? post.meta.title : post.linkUrl}
           </div>
 
@@ -80,7 +80,7 @@ export default function PostEmbed({ post, measure }) {
             {post.meta && post.meta.description ? post.meta.description : ''}
           </div>
 
-          <div className="flex flex-row items-center mt-auto text-tertiary text-xs hover:underline">
+          <div className="flex flex-row items-center mt-auto text-tertiary text-xs">
             {post.logoUrl && (
               <div className="inline-block w-4 h-4 mr-3">
                 <Image src={post.logoUrl} width={16} height={16} />

@@ -77,7 +77,7 @@ export class PlanetResolver {
         name: handleUnderscore(name)
       })
       .leftJoinAndSelect('planet.moderators', 'moderator')
-
+      .leftJoinAndSelect('moderator.user', 'user')
     return qb.getOne()
   }
 
@@ -189,5 +189,10 @@ export class PlanetResolver {
   ) {
     if (!userId) return false
     return userJoinedPlanetLoader.load({ userId, planetId: planet.id })
+  }
+
+  @FieldResolver(() => [User])
+  async moderators(@Root() planet: Planet) {
+    return (await planet.moderators).map(m => m.user)
   }
 }

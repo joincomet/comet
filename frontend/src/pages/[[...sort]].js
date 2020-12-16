@@ -1,17 +1,11 @@
-import CreatePostCard from '@/components/CreatePostCard'
-import PostsVirtualized from '@/components/post/PostsVirtualized'
 import { QueryClient } from 'react-query'
-import { fetchPosts } from '@/lib/usePosts'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { withLayout } from '@moxy/next-layout'
-import CreatePostFAB from '@/components/CreatePostFAB'
 import { fetchCurrentUser, useCurrentUser } from '@/lib/useCurrentUser'
 import { useCopyToClipboard, usePrevious } from 'react-use'
 import Tippy from '@tippyjs/react'
 import { FiCopy, FiUsers } from 'react-icons/fi'
 import { dehydrate } from 'react-query/hydration'
-import { RiFireLine } from 'react-icons/ri'
 import Posts from '@/components/post/Posts'
 
 export default function HomePage() {
@@ -22,33 +16,14 @@ export default function HomePage() {
 
   return (
     <div>
-      <div className="mycontainer">
-        <div className="grid grid-cols-3 gap-3">
-          <div className="col-span-2 py-3">
-            <div className="">
-              <CreatePostCard />
-            </div>
-            <div className="my-6 flex items-center">
-              <div className="inline-flex items-center ml-auto bg-gray-800 rounded-full pl-6">
-                <RiFireLine className="w-4 h-4 mr-1" />
-                <select
-                  name="sort"
-                  id="sort"
-                  className="h-9 border-none text-sm bg-gray-800 rounded-r-full focus:ring-0"
-                  defaultValue="Hot"
-                >
-                  <option value="Hot">Hot</option>
-                  <option value="New">New</option>
-                  <option value="Top">Top</option>
-                  <option value="Rising">Rising</option>
-                </select>
-              </div>
-            </div>
+      <div className="mycontainer mt-14">
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-2 py-6">
             <Posts variables={router.query.login ? prevVariables : variables} />
           </div>
 
           <div className="col-span-1">
-            <div className="sticky top-14 pt-3 space-y-3">
+            <div className="sticky top-14 space-y-4 py-6">
               <ReferralsCard />
 
               <InfoCard />
@@ -89,7 +64,7 @@ function ReferralsCard() {
       <Tippy content={copyTip}>
         <div
           onClick={() => copy()}
-          className="mt-3 p-3 dark:bg-gray-900 rounded text-sm flex items-center text-accent cursor-pointer"
+          className="mt-3 p-3 border dark:border-gray-800 rounded text-sm flex items-center text-accent cursor-pointer"
         >
           {copyLink}
 

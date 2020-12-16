@@ -12,6 +12,7 @@ import PostText from '@/components/post/PostText'
 import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
 import PostImages from '@/components/post/PostImages'
+import PlanetPopup from '@/components/planet/PlanetPopup'
 
 function Post({
   post,
@@ -79,17 +80,23 @@ function Post({
                 {post.author ? (
                   <>
                     <UserPopup user={post.author}>
-                      <div className="text-secondary font-medium hover:underline cursor-pointer">
-                        {post.author.username}
+                      <div className="inline-flex items-center">
+                        <div className="text-secondary font-medium hover:underline cursor-pointer">
+                          {post.author.name}
+                        </div>
                       </div>
                     </UserPopup>
                     &nbsp;
-                    <div className="text-tertiary hidden sm:block">
-                      @{post.author.username}
-                    </div>
+                    <UserPopup user={post.author}>
+                      <div className="inline-flex items-center">
+                        <div className="text-tertiary cursor-pointer">
+                          @{post.author.username}
+                        </div>
+                      </div>
+                    </UserPopup>
                   </>
                 ) : (
-                  <>
+                  <div className="inline-block">
                     <div className="text-secondary font-semibold hover:underline cursor-pointer">
                       [deleted]
                     </div>
@@ -97,7 +104,7 @@ function Post({
                     <div className="text-tertiary hidden sm:block">
                       @[deleted]
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {showPlanet && (
@@ -105,13 +112,14 @@ function Post({
                     &nbsp;
                     <CgArrowRight size={16} className="text-tertiary" />
                     &nbsp;
-                    <NavLink
-                      href={`/planet/${post.planet.name}`}
-                      className={`font-medium hover:underline cursor-pointer`}
-                      style={{ color: post.planet.color || '#3B82F6' }}
-                    >
-                      {post.planet.name}
-                    </NavLink>
+                    <PlanetPopup planet={post.planet}>
+                      <div
+                        className={`font-medium hover:underline cursor-pointer`}
+                        style={{ color: post.planet.color || '#3B82F6' }}
+                      >
+                        {post.planet.name}
+                      </div>
+                    </PlanetPopup>
                   </>
                 )}
                 <span className="text-tertiary hidden sm:block">
@@ -125,21 +133,14 @@ function Post({
 
               <NavLink
                 href={post.relativeUrl}
-                className="text-base font-medium text-primary hidden sm:block"
+                className="text-base font-medium text-primary"
               >
                 {post.title}
               </NavLink>
             </div>
           </div>
 
-          <div className="mx-3 sm:mx-16">
-            <NavLink
-              href={post.relativeUrl}
-              className="text-base font-medium text-primary sm:hidden block mb-3"
-            >
-              {post.title}
-            </NavLink>
-
+          <div className="mx-3 sm:mx-16 mt-2">
             <PostText
               post={post}
               measure={measure}

@@ -1,70 +1,47 @@
-import React, { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import SearchBar from '@/components/SearchBar'
-import SortDropdown from '@/components/SortDropdown'
-import { FiEdit, FiPlus } from 'react-icons/fi'
-import Image from 'next/image'
+import React from 'react'
+import { FiSearch, FiBell, FiUser } from 'react-icons/fi'
+import NavLink from '@/components/NavLink'
+import { useCurrentUser } from '@/lib/useCurrentUser'
+import UserAvatar from '@/components/user/UserAvatar'
 
-export default function Header({ children, className, planet, ...rest }) {
-  const [isSticky, setIsSticky] = useState(false)
-  const ref = React.createRef()
-
-  // mount
-  useEffect(() => {
-    const cachedRef = ref.current,
-      observer = new IntersectionObserver(
-        ([e]) => setIsSticky(e.intersectionRatio < 1),
-        { threshold: [1] }
-      )
-
-    observer.observe(cachedRef)
-
-    // unmount
-    return function () {
-      observer.unobserve(cachedRef)
-    }
-  }, [])
+export default function Header({ children, className, ...rest }) {
+  const currentUser = useCurrentUser().data
 
   return (
     <>
-      <AnimatePresence>
-        {isSticky && (
-          <motion.div
-            initial={{
-              opacity: 0
-            }}
-            animate={{
-              opacity: 1
-            }}
-            exit={{
-              opacity: 0
-            }}
-            transition={{ duration: 0.15, ease: 'easeInOut' }}
-            className="hidden sm:inline-flex fixed items-center flex-nowrap inset-x-center bottom-8 px-12 h-10 text-white select-none font-medium text-sm rounded-full transition bg-blue-500 hover:bg-blue-600 shadow z-10 cursor-pointer"
-          >
-            Create post
-            <FiEdit size={20} className="text-white ml-3" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <header
-        style={{ top: '-1px' }}
-        className={`hidden sm:flex z-10 sticky h-16 px-3 2xl:px-72 items-center transition ${
-          isSticky ? 'dark:bg-gray-800 bg-white shadow-md' : 'bg-transparent'
-        }`}
-        ref={ref}
+        className={`flex z-50 fixed left-0 lg:left-64 right-0 top-0 h-14 items-center transition bg-transparent px-6`}
         {...rest}
       >
-        <SearchBar
-          slashFocus={true}
-          className={`w-full h-10 text-sm px-16 rounded-full focus:shadow-md outline-none transition border border-gray-200 dark:border-gray-800 focus:border-blue-500 dark:focus:border-blue-500 ${
-            isSticky
-              ? 'dark:bg-gray-700 bg-gray-100'
-              : 'dark:bg-gray-800 bg-white'
-          }`}
-        />
-        <SortDropdown />
+        <div className="relative text-gray-600 dark:text-gray-400 focus-within:text-blue-500 dark:focus-within:text-blue-500 transition">
+          <FiSearch className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2" />
+          <input className="h-8 text-sm rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none text-primary px-10 w-48" />
+        </div>
+
+        <div className="ml-auto">
+          {currentUser ? (
+            <div className="flex items-center space-x-6">
+              <div className="p-3 rounded-full transition bg-transparent dark:hover:bg-gray-700 cursor-pointer">
+                <FiBell className="w-5 h-5" />
+              </div>
+
+              <div className="inline-flex items-center">
+                <UserAvatar user={currentUser} />
+                <div className="ml-3 text-sm">{currentUser.name}</div>
+              </div>
+            </div>
+          ) : (
+            <NavLink
+              href="/?login=true"
+              as="/login"
+              shallow
+              scroll={false}
+              className="h-9 text-sm font-medium cursor-pointer px-6 bg-gray-900 bg-opacity-25 rounded-full inline-flex items-center"
+            >
+              Log In / Sign Up
+            </NavLink>
+          )}
+        </div>
       </header>
     </>
   )

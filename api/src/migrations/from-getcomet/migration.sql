@@ -328,3 +328,8 @@ UPDATE "user" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" WHERE "aut
 DELETE FROM "planet_user" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
 DELETE FROM "planet_moderator" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
 DELETE FROM "planet" WHERE "post_count" = 0;
+
+drop type planet_defaultcommentsort_enum cascade;
+drop type planet_defaultsort_enum cascade;
+drop type post_type_enum cascade;
+drop type planet_moderator_permissions_enum cascade;
