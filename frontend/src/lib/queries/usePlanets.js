@@ -13,6 +13,7 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
           name
           avatarUrl
           userCount
+          joined
         }
       }
     `,

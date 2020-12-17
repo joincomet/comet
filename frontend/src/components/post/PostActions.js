@@ -11,7 +11,7 @@ import NavLink from '@/components/NavLink'
 
 const chip =
   'cursor-pointer inline-flex items-center group transition text-tertiary'
-const label = 'ml-3 text-sm font-medium transition'
+const label = 'ml-0.5 text-sm font-medium transition'
 const icon =
   'w-9 h-9 dark:group-hover:bg-gray-800 rounded-full transition inline-flex items-center justify-center'
 

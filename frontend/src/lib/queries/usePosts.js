@@ -55,10 +55,12 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
               color
               userCount
               avatarUrl
+              joined
             }
             author {
               username
               name
+              bio
               avatarUrl
             }
             timeSince

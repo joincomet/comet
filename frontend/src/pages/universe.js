@@ -1,25 +1,23 @@
 import { QueryClient } from 'react-query'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { fetchCurrentUser, useCurrentUser } from '@/lib/useCurrentUser'
+import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { useCopyToClipboard, usePrevious } from 'react-use'
 import Tippy from '@tippyjs/react'
 import { FiCopy, FiUsers } from 'react-icons/fi'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
+import { fetchPosts } from '@/lib/queries/usePosts'
+import SortOptions from '@/components/sort/SortOptions'
 
-export default function HomePage() {
-  const router = useRouter()
-
-  const [variables, setVariables] = useState(getVariables(router.query))
-  const prevVariables = usePrevious(variables)
-
+export default function UniversePage({ variables }) {
   return (
     <div>
       <div className="mycontainer mt-14">
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-2 py-6">
-            <Posts variables={router.query.login ? prevVariables : variables} />
+            <SortOptions />
+            <Posts variables={variables} />
           </div>
 
           <div className="col-span-1">
@@ -112,33 +110,35 @@ function InfoCard() {
 }
 
 const getVariables = query => {
-  const sort =
-    query.sort && query.sort.length >= 1 ? query.sort[0].toUpperCase() : 'HOT'
-  const time =
-    query.sort && query.sort.length >= 2 ? query.sort[1].toUpperCase() : 'ALL'
-  return { sort, time, page: 0 }
+  const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
+  const time = query.time ? query.time.toUpperCase() : 'ALL'
+  return { sort, time, joinedOnly: false }
 }
 
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
-  /*const variables = getVariables(ctx.query)
+  const { query } = ctx
 
-  await queryClient.prefetchQuery(
+  const variables = getVariables(query)
+
+  await queryClient.prefetchInfiniteQuery(
     ['posts', variables],
     key => fetchPosts(key, ctx),
     {
       getNextPageParam: (lastPage, pages) => lastPage.nextPage
     }
-  )*/
+  )
 
   await queryClient.prefetchQuery(['currentUser'], () => fetchCurrentUser(ctx))
 
   const dehydratedState = dehydrate(queryClient)
+  dehydratedState.queries[0].state.data.pageParams = [0]
 
   return {
     props: {
-      dehydratedState
+      dehydratedState,
+      variables
     }
   }
 }

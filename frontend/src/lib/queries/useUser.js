@@ -15,6 +15,7 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
           name
           timeSinceCreated
           postCount
+          commentCount
           followerCount
           followingCount
           bio

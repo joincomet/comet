@@ -25,7 +25,7 @@ export class FiltersResolver {
   }
 
   @Query(() => [User])
-  async blockTo(@Ctx() { userId }: Context) {
+  async blockedUser(@Ctx() { userId }: Context) {
     if (!userId) return []
 
     const blockTo = await this.userRepository

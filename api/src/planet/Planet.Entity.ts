@@ -15,6 +15,7 @@ import { PlanetMute } from '@/filter/PlanetMute.Entity'
 import { PlanetModerator } from '@/moderation/PlanetModerator.Entity'
 import { Ban } from '@/moderation/Ban.Entity'
 import { PlanetRule } from '@/planet/PlanetRule'
+import dayjs from 'dayjs'
 
 @ObjectType()
 @Entity()
@@ -40,9 +41,9 @@ export class Planet {
   @Column({ nullable: true })
   color?: string
 
-  @Field()
-  @Column({ default: 'New Planet' })
-  description: string
+  @Field({ nullable: true })
+  @Column('text', { nullable: true })
+  description?: string
 
   @Field({ nullable: true })
   @Column({ nullable: true })
@@ -66,6 +67,12 @@ export class Planet {
   @Field()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
+
+  @Field()
+  get timeSinceCreated(): string {
+    // @ts-ignore
+    return dayjs(new Date(this.createdAt)).twitter()
+  }
 
   @Authorized('ADMIN')
   @Field(() => User, { nullable: true })

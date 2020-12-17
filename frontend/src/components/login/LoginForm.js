@@ -7,7 +7,7 @@ import {
 } from 'react-icons/si'
 import { useForm } from 'react-hook-form'
 import Logo from '@/components/Logo'
-import { useLoginMutation } from '@/lib/useLoginMutation'
+import { useLoginMutation } from '@/lib/mutations/useLoginMutation'
 import { useRouter } from 'next/router'
 
 const oauthButton =
@@ -16,8 +16,10 @@ const oauthButton =
 const textBox =
   'bg-gray-200 dark:bg-gray-700 rounded-md h-9 px-3 w-full border-none transition text-sm'
 
-export default function SignUpForm() {
-  const { register, handleSubmit, watch, errors } = useForm()
+export default function LoginForm({ onFinish }) {
+  const { register, handleSubmit, watch, errors, formState } = useForm({
+    mode: 'onChange'
+  })
 
   const router = useRouter()
 
@@ -28,7 +30,7 @@ export default function SignUpForm() {
       username,
       password
     })
-    await router.push('/')
+    if (onFinish) onFinish()
   }
 
   return (
@@ -69,9 +71,10 @@ export default function SignUpForm() {
 
       <button
         type="submit"
-        className="w-full focus:outline-none rounded-md bg-gradient-to-br to-red-400 from-blue-500 flex items-center mt-6 text-white h-9 text-sm"
+        disabled={!formState.isValid || loginMutation.isLoading}
+        className={`w-full focus:outline-none rounded-md bg-gradient-to-br to-red-400 from-blue-500 flex items-center justify-center mt-6 text-white h-9 text-sm disabled:opacity-50 transition`}
       >
-        <div className="m-auto">Log In</div>
+        Log In
       </button>
 
       <button

@@ -21,7 +21,7 @@ export class PostsArgs extends PaginationArgs {
     defaultValue: false,
     description: 'Show posts from only joined planets'
   })
-  joinedOnly: Boolean = false
+  joinedOnly: boolean = false
 
   @Field({
     nullable: true,

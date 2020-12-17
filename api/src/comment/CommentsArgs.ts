@@ -24,8 +24,8 @@ export class CommentsArgs {
   username?: string
 
   @Field(() => CommentSort, {
-    defaultValue: CommentSort.TOP,
+    nullable: true,
     description: 'Sort by new or top'
   })
-  sort: CommentSort = CommentSort.TOP
+  sort?: CommentSort
 }

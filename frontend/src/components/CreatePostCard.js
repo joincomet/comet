@@ -12,11 +12,11 @@ import { RiFileGifLine } from 'react-icons/ri'
 import { CgArrowLeft } from 'react-icons/cg'
 import React from 'react'
 import Dropdown from '@/components/Dropdown'
-import { usePlanets } from '@/lib/usePlanets'
+import { usePlanets } from '@/lib/queries/usePlanets'
 import Image from 'next/image'
 import Tippy from '@tippyjs/react'
 import NavLink from '@/components/NavLink'
-import { useCurrentUser } from '@/lib/useCurrentUser'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import UserAvatar from '@/components/user/UserAvatar'
 
 const button =

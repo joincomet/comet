@@ -1563,10 +1563,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.13":
-  version: 14.14.13
-  resolution: "@types/node@npm:14.14.13"
-  checksum: a879dae2e047e75055b0f4fb217aac31e905e49f921054f6425e8494e7a75dec82d351770b1a0e79a00322345896646a4dadc5fa27c857e392d6909e54cdba9e
+"@types/node@npm:^14.14.14":
+  version: 14.14.14
+  resolution: "@types/node@npm:14.14.14"
+  checksum: dea8d257d49d68c65dafa6ebde9453bb61b67febc92ed8d7e38fce8b95f18d32ccffb3ab37021f9be8d1e5c65cd59cdb7dd8981d9b89b2be103b3012aee09fcf
   languageName: node
   linkType: hard
 
@@ -1939,13 +1939,13 @@ __metadata:
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.9
     "@types/jsonwebtoken": ^8.5.0
-    "@types/node": ^14.14.13
+    "@types/node": ^14.14.14
     "@typescript-eslint/eslint-plugin": ^4.10.0
     "@typescript-eslint/parser": ^4.10.0
     apollo-server-express: ^2.19.0
     argon2: ^0.27.1
     async-sema: ^3.1.0
-    aws-sdk: ^2.809.0
+    aws-sdk: ^2.811.0
     class-validator: ^0.12.2
     cookie-parser: ^1.4.5
     dataloader: ^2.0.0
@@ -2364,9 +2364,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.809.0":
-  version: 2.809.0
-  resolution: "aws-sdk@npm:2.809.0"
+"aws-sdk@npm:^2.811.0":
+  version: 2.811.0
+  resolution: "aws-sdk@npm:2.811.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -2377,7 +2377,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 5b47eac9d231f194bf92d634a791270a897b0f9fcf5b326deb1bc6d32b0a73da20ca0901f53126a8e254e3c1dfcd104565fcaeb7e8efd122b83ee5ecf22a18d6
+  checksum: a468154241dcb2ac7221abd731f8e2f279d765a42d967c16996db757b2dbd0001a3f0b9d15a49c29484f2409a1259504250ae169e3c291abc790802cbecfdb5b
   languageName: node
   linkType: hard
 

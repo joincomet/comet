@@ -22,6 +22,8 @@ import { CommentRocket } from '@/comment/CommentRocket.Entity'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
+import { handleUnderscore } from '@/handleUnderscore'
+import { CommentSort } from '@/comment/CommentSort'
 
 function flat(r: any, a: any) {
   const b = {} as any
@@ -124,7 +126,7 @@ export class CommentResolver {
 
   @Query(() => [Comment])
   async comments(
-    @Args() { postId, sort }: CommentsArgs,
+    @Args() { postId, sort, username }: CommentsArgs,
     @Ctx() { userId }: Context
   ) {
     postId = parseInt(postId, 36)
@@ -133,9 +135,24 @@ export class CommentResolver {
 
     if (!post) return []
 
-    const qb = await this.commentRepository
-      .createQueryBuilder('comment')
-      .where('comment.postId = :postId', { postId: post.id })
+    const qb = await this.commentRepository.createQueryBuilder('comment')
+
+    if (postId) {
+      qb.where('comment.postId = :postId', { postId: post.id })
+
+      if (!sort) sort = CommentSort.TOP // Default top for posts
+    }
+
+    if (username) {
+      qb.leftJoinAndSelect('comment.author', 'author').where(
+        'author.username ILIKE :username',
+        {
+          username: handleUnderscore(username)
+        }
+      )
+
+      if (!sort) sort = CommentSort.NEW // Default new for users
+    }
 
     if (userId) {
       const blockTo = (
@@ -156,7 +173,8 @@ export class CommentResolver {
     }*/
 
     qb.addOrderBy('comment.createdAt', 'DESC')
-    qb.addOrderBy('comment.rocketCount', 'DESC')
+
+    if (sort === CommentSort.TOP) qb.addOrderBy('comment.rocketCount', 'DESC')
 
     const comments = await qb.getMany()
 

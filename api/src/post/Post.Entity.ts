@@ -201,6 +201,6 @@ export class Post {
       .join('-')
       .replace(/[^a-z0-9-]+/gi, '')
       .replace(/[-](.)\1+/g, '$1')*/
-    return `/planet/${(this.planet as Planet).name}/post/${this.id36}`
+    return `/post/${this.id36}`
   }
 }

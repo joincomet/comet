@@ -1,11 +1,12 @@
 import LeftSidebar from './LeftSidebar'
 import BottomBar from '@/components/BottomBar'
 import React, { useState } from 'react'
-import SignUpForm from '@/components/SignUpForm'
+import LoginForm from '@/components/login/LoginForm'
 import { Modal } from 'react-responsive-modal'
 import { useRouter } from 'next/router'
-import { FiX } from 'react-icons/fi'
+import { FiEdit } from 'react-icons/fi'
 import Header from '@/components/Header'
+import LoginModal from '@/components/login/LoginModal'
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -14,23 +15,9 @@ export default function Layout({ children }) {
 
   return (
     <>
-      <Modal
-        open={!!router.query.login}
-        onClose={() => router.push('/')}
-        classNames={{
-          modal:
-            'overflow-hidden bg-transparent shadow-none max-w-screen-sm w-full',
-          closeButton: 'top-8 right-8 text-tertiary focus:outline-none'
-        }}
-        animationDuration={150}
-        center
-        blockScroll={false}
-        closeIcon={<FiX size={20} />}
-      >
-        <SignUpForm />
-      </Modal>
+      <LoginModal />
 
-      <div>
+      <div className="relative">
         <LeftSidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
@@ -45,6 +32,15 @@ export default function Layout({ children }) {
         {/*<TopBar setSidebarOpen={setSidebarOpen} />*/}
 
         {/*<RightSidebar />*/}
+
+        <div className="fixed z-50 bottom-8 left-64 right-0 mycontainer grid grid-cols-3">
+          <div className="col-span-2 flex">
+            <div className="opacity-90 hover:opacity-100 rounded-full shadow-md bg-blue-600 mx-auto h-8 w-48 flex items-center justify-center text-xs font-semibold uppercase tracking-widest cursor-pointer transition transform hover:scale-105">
+              Create Post
+              <FiEdit size={16} className="ml-3" />
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )

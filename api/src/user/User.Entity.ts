@@ -177,9 +177,9 @@ export class User {
   @Column({ nullable: true })
   website?: string
 
-  @Field()
-  @Column({ default: 'New CometX User' })
-  bio: string
+  @Field({ nullable: true })
+  @Column('text', { nullable: true })
+  bio?: string
 
   @Field()
   @Column({ default: false })

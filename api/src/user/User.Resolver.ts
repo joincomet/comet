@@ -16,11 +16,8 @@ import { Comment } from '@/comment/Comment.Entity'
 import { Stream } from 'stream'
 import { uploadImage } from '@/S3Storage'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { TimeFilter } from '@/TimeFilter'
-import { CommentSort } from '@/comment/CommentSort'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
-import { getUser } from '@/auth/AuthTokens'
 import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver(() => User)

@@ -51,6 +51,7 @@ export default function App({ Component, pageProps }) {
               />
               <CustomDragLayer />
               <div id="userpopover" />
+              <div id="timepicker" />
             </DndProvider>
           </Hydrate>
 

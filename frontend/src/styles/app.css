@@ -251,7 +251,8 @@ body {
 }
 
 .commentcollapse::before {
-  @apply absolute mt-12 empty-content left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 transition;
+  @apply absolute mt-12 left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 transition;
+  content: "";
 }
 
 .commentcollapse:hover::before {

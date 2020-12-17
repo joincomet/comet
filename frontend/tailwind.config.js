@@ -8,9 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-      	gray: {
-      		850: '#202023'
-      	}
+        gray: {
+          850: '#202023'
+        }
       },
       fontFamily: {
         sans: ['Inter var', 'Inter', ...defaultTheme.fontFamily.sans]
@@ -68,29 +68,18 @@ module.exports = {
   variants: {
     extend: {
       typography: ['dark'],
-      backgroundColor: ['hover_before', 'hover_after'],
       translate: ['focus-within'],
-      scale: ['focus-within']
+      scale: ['focus-within'],
+      opacity: ['disabled']
     }
   },
   darkMode: 'class',
   experimental: 'all',
   future: 'all',
   plugins: [
-    require('tailwindcss-pseudo-elements'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/typography'),
-    plugin(function ({ addUtilities }) {
-      addUtilities(
-        {
-          '.empty-content': {
-            content: "''"
-          }
-        },
-        ['before']
-      )
-    }),
     plugin(({ addUtilities, e, theme, variants }) => {
       const colors = flattenColorPalette(theme('borderColor'))
       delete colors['default']

@@ -1,20 +1,20 @@
-import UserAvatar from '@/components/user/UserAvatar'
 import React, { useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { usePopper } from 'react-popper'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useClickAway } from 'react-use'
-import { FiExternalLink } from 'react-icons/fi'
 import NavLink from '@/components/NavLink'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
 
-export default function PlanetPopup({ planet, children }) {
+export default function PlanetPopup({
+  planet,
+  children,
+  placement = 'right-start'
+}) {
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)
-  const [arrowElement, setArrowElement] = useState(null)
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    modifiers: [{ name: 'arrow', options: { element: arrowElement } }],
-    placement: 'right-start'
+    placement
   })
 
   const [show, setShow] = useState(false)
@@ -54,7 +54,7 @@ export default function PlanetPopup({ planet, children }) {
                       x: 0
                     }}
                     transition={{ duration: 0.15, ease: 'easeInOut' }}
-                    className="relative dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64 bg-opacity-75"
+                    className="relative dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64"
                   >
                     <PlanetAvatar planet={planet} className="w-20 h-20" />
                     <div className="mt-3 font-medium">{planet.name}</div>
@@ -75,7 +75,6 @@ export default function PlanetPopup({ planet, children }) {
                       </div>
                     </div>
                   </motion.div>
-                  <div ref={setArrowElement} style={styles.arrow} />
                 </>
               )}
             </AnimatePresence>

@@ -36,10 +36,12 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
             color
             avatarUrl
             bannerUrl
+            joined
           }
           author {
             username
             name
+            bio
             avatarUrl
             rocketCount
             followerCount

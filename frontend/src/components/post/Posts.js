@@ -1,4 +1,4 @@
-import { usePosts } from '@/lib/usePosts'
+import { usePosts } from '@/lib/queries/usePosts'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Post from '@/components/post/Post'
 

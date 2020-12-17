@@ -1,5 +1,5 @@
 import { QueryClient } from 'react-query'
-import { fetchPlanets, usePlanets } from '@/lib/usePlanets'
+import { fetchPlanets, usePlanets } from '@/lib/queries/usePlanets'
 import { galaxies } from '@/lib/galaxies'
 import Image from 'next/image'
 import { BiPlanet } from 'react-icons/bi'

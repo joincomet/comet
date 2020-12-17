@@ -1,16 +1,23 @@
 import React from 'react'
 import { FiSearch, FiBell, FiUser } from 'react-icons/fi'
 import NavLink from '@/components/NavLink'
-import { useCurrentUser } from '@/lib/useCurrentUser'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import UserAvatar from '@/components/user/UserAvatar'
+import { useHeaderStore, useLoginStore } from '@/lib/stores'
 
 export default function Header({ children, className, ...rest }) {
   const currentUser = useCurrentUser().data
 
+  const { openLoginModal } = useLoginStore()
+
+  const { dark } = useHeaderStore()
+
   return (
     <>
       <header
-        className={`flex z-50 fixed left-0 lg:left-64 right-0 top-0 h-14 items-center transition bg-transparent px-6`}
+        className={`flex z-50 fixed left-0 lg:left-64 right-0 top-0 h-14 items-center transition px-8 ${
+          dark ? 'dark:bg-gray-900' : 'bg-transparent'
+        }`}
         {...rest}
       >
         <div className="relative text-gray-600 dark:text-gray-400 focus-within:text-blue-500 dark:focus-within:text-blue-500 transition">
@@ -31,15 +38,12 @@ export default function Header({ children, className, ...rest }) {
               </div>
             </div>
           ) : (
-            <NavLink
-              href="/?login=true"
-              as="/login"
-              shallow
-              scroll={false}
+            <div
+              onClick={() => openLoginModal()}
               className="h-9 text-sm font-medium cursor-pointer px-6 bg-gray-900 bg-opacity-25 rounded-full inline-flex items-center"
             >
               Log In / Sign Up
-            </NavLink>
+            </div>
           )}
         </div>
       </header>
