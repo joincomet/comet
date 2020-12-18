@@ -11,16 +11,17 @@ import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
 import SortOptions from '@/components/sort/SortOptions'
 import { fetchPosts } from '@/lib/queries/usePosts'
-import { AnimatePresence, motion } from 'framer-motion'
 import { useHeaderStore } from '@/lib/stores'
-import { FiMoreHorizontal, FiCalendar } from 'react-icons/fi'
+import { FiCalendar } from 'react-icons/fi'
+import PlanetJoinButton from '@/components/planet/PlanetJoinButton'
+import PlanetHeader from '@/components/planet/PlanetHeader'
 
 export default function PlanetPage({ variables }) {
   const { query } = useRouter()
 
   const planet = usePlanet({ name: query.planetname }).data
 
-  const { ref, inView, entry } = useInView({ threshold: 0.8 })
+  const { ref, inView } = useInView({ threshold: 0.8 })
 
   const { setDark } = useHeaderStore()
 
@@ -28,34 +29,9 @@ export default function PlanetPage({ variables }) {
 
   return (
     <div>
-      <AnimatePresence>
-        {!inView && (
-          <motion.div
-            initial={{
-              opacity: 0
-            }}
-            animate={{
-              opacity: 1
-            }}
-            exit={{
-              opacity: 0
-            }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed z-50 top-14 left-64 right-0 h-14 flex items-center dark:bg-gray-900 px-8 border-b dark:border-gray-800"
-          >
-            <PlanetAvatar planet={planet} />
-            <div className="ml-4 text-xl font-bold tracking-tight leading-none">
-              {planet.name}
-            </div>
-
-            <div className="ml-auto">
-              <JoinButton planet={planet} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <div className="relative h-80 z-0">
+        <PlanetHeader planet={planet} show={!inView} />
+
         <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
 
         <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-6 md:pb-12">
@@ -66,14 +42,22 @@ export default function PlanetPage({ variables }) {
             />
 
             <div className="flex flex-col w-full h-full items-center md:items-start justify-end space-y-4">
-              <div className="font-semibold uppercase tracking-widest text-xs text-secondary">
-                <span className="hover:underline cursor-pointer">
-                  discussion
-                </span>
-                &nbsp;&middot;&nbsp;
-                <span className="hover:underline cursor-pointer">
-                  meta/cometx
-                </span>
+              <div className="font-semibold uppercase tracking-widest text-xs">
+                {!planet.galaxies || planet.galaxies.length === 0 ? (
+                  <span className="hover:underline cursor-pointer">
+                    uncategorized
+                  </span>
+                ) : (
+                  planet.galaxies.map((galaxy, index) => (
+                    <span
+                      key={galaxy}
+                      className="hover:underline cursor-pointer"
+                    >
+                      {index !== 0 && <span>&nbsp;&middot;&nbsp;</span>}
+                      {galaxy}
+                    </span>
+                  ))
+                )}
               </div>
               <div
                 className="md:text-7xl text-4xl font-extrabold tracking-tight leading-none"
@@ -86,7 +70,7 @@ export default function PlanetPage({ variables }) {
                 {planet.userCount} Members
               </div>
 
-              <JoinButton planet={planet} />
+              <PlanetJoinButton planet={planet} />
             </div>
           </div>
 
@@ -102,7 +86,8 @@ export default function PlanetPage({ variables }) {
           <Image
             src={planet.bannerUrl}
             layout="fill"
-            className="object-cover object-center"
+            objectFit="cover"
+            className="select-none"
           />
         )}
       </div>
@@ -147,26 +132,6 @@ export default function PlanetPage({ variables }) {
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function JoinButton({ planet }) {
-  return (
-    <div className="inline-flex items-center">
-      <div
-        className={`h-8 rounded-full inline-flex w-32 items-center justify-center uppercase text-xs font-semibold tracking-widest cursor-pointer transition transform hover:scale-105 ${
-          planet.joined
-            ? 'bg-black bg-opacity-25 border border-gray-400 text-blue-500'
-            : 'bg-blue-600'
-        }`}
-      >
-        {planet.joined ? 'Joined' : 'Join'}
-      </div>
-
-      <div className="ml-4 w-8 h-8 rounded-full border border-gray-400 bg-black bg-opacity-25 inline-flex items-center justify-center cursor-pointer transition transform hover:scale-105">
-        <FiMoreHorizontal size={20} />
       </div>
     </div>
   )

@@ -2,7 +2,7 @@ import { FiBell, FiLogIn, FiSearch } from 'react-icons/fi'
 import { SiDiscord, SiPatreon, SiGithub, SiTwitter } from 'react-icons/si'
 import { CgInfinity } from 'react-icons/cg'
 import { BiHomeAlt } from 'react-icons/bi'
-import NavLink from './NavLink'
+import NavLink from '../NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/lib/queries/usePlanets'
 import Tippy from '@tippyjs/react'
@@ -53,6 +53,9 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
         >
           <NavLink href="/" className="flex items-center h-14 px-4">
             <Logo className="h-4 dark:text-gray-200 text-black" />
+            <div className="text-xs font-semibold ml-3 mt-2 text-tertiary uppercase tracking-widest">
+              alpha
+            </div>
           </NavLink>
           <div className="text-gray-500">
             <NavLink href="/" className={`${link} navitem-active`}>
@@ -93,8 +96,7 @@ function TopPlanets() {
 
   const { isLoading, isError, data, error } = usePlanets({
     sort: 'TOP',
-    pageSize: 50,
-    joined: !!currentUser
+    joinedOnly: !!currentUser
   })
 
   if (isLoading || isError) return null

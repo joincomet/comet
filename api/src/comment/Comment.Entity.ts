@@ -3,19 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
-import { Lazy } from '@/Lazy'
 import { Post } from '@/post/Post.Entity'
-import { CommentRocket } from '@/comment/CommentRocket.Entity'
 import { User } from '@/user/User.Entity'
-import { Save } from '@/folder/Save.Entity'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-
-dayjs.extend(relativeTime)
 
 @ObjectType()
 @Entity()
@@ -31,18 +26,15 @@ export class Comment {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.comments)
-  author: Lazy<User>
+  author: Promise<User>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
   authorId: number
 
-  @OneToMany(() => Save, save => save.comment)
-  saves: Lazy<Save[]>
-
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post, post => post.comments)
-  post: Lazy<Post>
+  post: Promise<Post>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
@@ -77,15 +69,16 @@ export class Comment {
   @Column({ nullable: true, type: 'bigint' })
   parentCommentId: number
 
-  @OneToMany(() => CommentRocket, rocket => rocket.comment)
-  rockets: Lazy<CommentRocket[]>
+  @ManyToMany(() => User)
+  @JoinTable()
+  rocketers: Promise<User[]>
 
   @Field(() => Int)
   @Column({ default: 1 })
   rocketCount: number
 
   @Field()
-  rocketed: boolean
+  isRocketed: boolean
 
   @Column({ default: false })
   deleted: boolean

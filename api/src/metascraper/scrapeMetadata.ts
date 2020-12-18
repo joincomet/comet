@@ -3,7 +3,6 @@ import { Metadata } from '@/metascraper/Metadata'
 import { uploadImage } from '@/S3Storage'
 import fetch from 'node-fetch'
 import fileType from 'file-type'
-import { v4 as uuidv4 } from 'uuid'
 import { isUrl } from '@/IsUrl'
 
 const metascraper = require('metascraper')([
@@ -15,7 +14,8 @@ const metascraper = require('metascraper')([
   require('metascraper-clearbit')(),
   require('metascraper-publisher')(),
   require('metascraper-title')(),
-  require('metascraper-url')()
+  require('metascraper-url')(),
+  require('./metascraperTwitterCard')()
 ])
 
 export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
@@ -42,18 +42,12 @@ export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
   if (meta.description)
     meta.description = meta.description.replace(/(<([^>]+)>)/gi, '')
 
-  const uploadUUID = uuidv4()
-
   if (meta.image) {
     try {
       const response = await fetch(meta.image, { timeout: 2000 })
       const buffer = await response.buffer()
       const type = await fileType.fromBuffer(buffer)
-      meta.image = await uploadImage(
-        `${uploadUUID}.${type.ext}`,
-        buffer,
-        type.mime
-      )
+      meta.image = await uploadImage(buffer, type.mime)
     } catch {
       delete meta.image
     }
@@ -64,11 +58,7 @@ export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
       const response = await fetch(meta.logo, { timeout: 2000 })
       const buffer = await response.buffer()
       const type = await fileType.fromBuffer(buffer)
-      meta.logo = await uploadImage(
-        `${uploadUUID}.${type.ext}`,
-        buffer,
-        type.mime
-      )
+      meta.logo = await uploadImage(buffer, type.mime)
     } catch {
       delete meta.logo
     }

@@ -3,7 +3,7 @@ import { FiLink } from 'react-icons/fi'
 import React from 'react'
 import ReactPlayer from 'react-player/youtube'
 
-export default function PostEmbed({ post, measure }) {
+export default function PostEmbed({ post }) {
   if (!post.linkUrl) return null
 
   /*const isMounted = useMountedState()
@@ -37,10 +37,9 @@ export default function PostEmbed({ post, measure }) {
 
   if (ReactPlayer.canPlay(post.linkUrl))
     return (
-      <div className="rounded-md overflow-hidden player-wrapper">
+      <div className="rounded-2xl overflow-hidden relative aspect-w-16 aspect-h-9 mt-2">
         <ReactPlayer
-          onReady={measure}
-          className="react-player"
+          className="absolute top-0 left-0"
           controls={true}
           url={post.linkUrl}
           width="100%"
@@ -55,38 +54,58 @@ export default function PostEmbed({ post, measure }) {
         href={post.linkUrl}
         target="_blank"
         rel="noreferrer noopener nofollow"
-        className="group rounded-md flex items-start transition bg-gray-100 border border-gray-200 rounded-m dark:border-gray-800 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-850 shadow-inner"
+        className="mt-2 block rounded-2xl border dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 transition"
       >
-        <div className="w-32 h-32 relative flex-shrink-0">
-          {post.thumbnailUrl || post.logoUrl ? (
+        {post.meta.twitterCard === 'summary_large_image' && post.thumbnailUrl && (
+          <div className="w-full aspect-w-16 aspect-h-9 relative rounded-t-2xl">
             <Image
-              src={post.thumbnailUrl || post.logoUrl}
+              src={post.thumbnailUrl}
               layout="fill"
-              className="object-cover object-center bg-white rounded-l-md dark:bg-gray-800"
+              objectFit="cover"
+              className="rounded-t-2xl"
             />
-          ) : (
-            <div className="flex w-32 h-32 rounded-l-md dark:bg-gray-700">
-              <FiLink className="w-8 h-8 m-auto text-tertiary" />
+          </div>
+        )}
+
+        <div className="flex items-start">
+          {post.meta.twitterCard !== 'summary_large_image' && (
+            <div className="w-32 h-32 relative flex-shrink-0 rounded-l-xl">
+              {post.thumbnailUrl || post.logoUrl ? (
+                <Image
+                  src={post.thumbnailUrl || post.logoUrl}
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-l-2xl"
+                />
+              ) : (
+                <div className="flex w-32 h-32 rounded-l-xl">
+                  <FiLink className="w-8 h-8 m-auto text-tertiary" />
+                </div>
+              )}
             </div>
           )}
-        </div>
 
-        <div className="flex flex-col h-32 px-6 py-3 cursor-pointer">
-          <div className="text-sm font-semibold line-clamp-2 text-primary">
-            {post.meta && post.meta.title ? post.meta.title : post.linkUrl}
-          </div>
+          <div
+            className={`flex flex-col px-3 py-2 cursor-pointer ${
+              post.meta.twitterCard !== 'summary_large_image' ? 'h-32' : ''
+            }`}
+          >
+            <div className="font-medium line-clamp-2 text-secondary text-sm">
+              {post.meta && post.meta.title ? post.meta.title : post.linkUrl}
+            </div>
 
-          <div className="mt-1 text-xs font-medium text-secondary line-clamp-2">
-            {post.meta && post.meta.description ? post.meta.description : ''}
-          </div>
+            <div className="text-xs font-medium text-tertiary line-clamp-2 mt-1">
+              {post.meta && post.meta.description ? post.meta.description : ''}
+            </div>
 
-          <div className="flex flex-row items-center mt-auto text-tertiary text-xs">
-            {post.logoUrl && (
-              <div className="inline-block w-4 h-4 mr-3">
-                <Image src={post.logoUrl} width={16} height={16} />
-              </div>
-            )}
-            {post.domain}
+            <div className="mt-auto flex flex-row items-center pt-3 text-tertiary text-xs">
+              {post.logoUrl && (
+                <div className="inline-block w-4 h-4 mr-3">
+                  <Image src={post.logoUrl} width={16} height={16} />
+                </div>
+              )}
+              {post.domain}
+            </div>
           </div>
         </div>
       </a>

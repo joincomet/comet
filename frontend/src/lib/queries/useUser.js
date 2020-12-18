@@ -19,9 +19,10 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
           followerCount
           followingCount
           bio
-          website
           avatarUrl
           bannerUrl
+          isFollowing
+          isFollowed
         }
       }
     `,

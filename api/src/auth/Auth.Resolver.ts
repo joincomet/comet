@@ -78,7 +78,7 @@ export class AuthResolver {
 
     if (!user) throw new Error('Invalid Login')
 
-    // if (user.banned) throw new Error('Banned: ' + user.banReason)
+    if (user.banned) throw new Error('Banned: ' + user.banReason)
 
     await this.userRepository
       .createQueryBuilder()

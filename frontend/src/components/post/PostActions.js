@@ -1,12 +1,6 @@
 import { BiRocket } from 'react-icons/bi'
-import {
-  FiFolderPlus,
-  FiMessageCircle,
-  FiRepeat,
-  FiShare
-} from 'react-icons/fi'
+import { FiMessageCircle, FiRepeat, FiShare } from 'react-icons/fi'
 import React from 'react'
-import Logo from '@/components/Logo'
 import NavLink from '@/components/NavLink'
 
 const chip =
@@ -21,7 +15,12 @@ export default function PostActions({ post }) {
     <div
       className={`flex flex-row items-center -ml-2 -mr-2 px-3 sm:px-16 pt-1 pb-1`}
     >
-      <div className={`${chip} mr-6`}>
+      <div
+        className={`${chip} mr-6`}
+        onClick={e => {
+          e.stopPropagation()
+        }}
+      >
         <div className={`${icon} group-hover:text-red-400`}>
           <BiRocket size={18} />
         </div>
@@ -30,25 +29,30 @@ export default function PostActions({ post }) {
         </span>
       </div>
 
-      <NavLink href={post.relativeUrl} className={`${chip} mr-6`}>
+      <div className={`${chip} mr-6`}>
         <div className={`${icon} group-hover:text-blue-500`}>
           <FiMessageCircle size={18} />
         </div>
         <span className={`${label} group-hover:text-blue-500`}>
           {post.commentCount}
         </span>
-      </NavLink>
+      </div>
 
-      <div className={`${chip}`}>
+      {/*<div className={`${chip}`}>
         <div className={`${icon} group-hover:text-green-500`}>
           <FiRepeat size={18} />
         </div>
         <span className={`${label} group-hover:text-green-500`}>
           {post.repostCount}
         </span>
-      </div>
+      </div>*/}
 
-      <div className={`${chip} ml-auto`}>
+      <div
+        className={`${chip} ml-auto`}
+        onClick={e => {
+          e.stopPropagation()
+        }}
+      >
         <div className={`${icon} group-hover:text-blue-500`}>
           <FiShare size={18} />
         </div>

@@ -17,7 +17,8 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           avatarUrl
           bannerUrl
           userCount
-          joined
+          isJoined
+          galaxies
           timeSinceCreated
           moderators {
             id

@@ -4,15 +4,12 @@ import '@/styles/tailwind.css'
 import '@/styles/app.css'
 
 import Head from 'next/head'
-import { DndProvider } from 'react-dnd'
-import { TouchBackend } from 'react-dnd-touch-backend'
-import CustomDragLayer from '@/components/CustomDragLayer'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { LayoutTree } from '@moxy/next-layout'
 import { ThemeProvider } from '@/components/ThemeContext'
-import Layout from '@/components/Layout'
+import Layout from '@/components/layout/Layout'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,19 +37,11 @@ export default function App({ Component, pageProps }) {
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
-            <DndProvider
-              backend={TouchBackend}
-              options={{ enableTouchEvents: false, enableMouseEvents: true }}
-            >
-              <LayoutTree
-                Component={Component}
-                pageProps={pageProps}
-                defaultLayout={<Layout />}
-              />
-              <CustomDragLayer />
-              <div id="userpopover" />
-              <div id="timepicker" />
-            </DndProvider>
+            <LayoutTree
+              Component={Component}
+              pageProps={pageProps}
+              defaultLayout={<Layout />}
+            />
           </Hydrate>
 
           {process.env.NODE_ENV !== 'production' && (

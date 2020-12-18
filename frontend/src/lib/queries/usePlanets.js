@@ -7,13 +7,13 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
   const { planets } = await request(
     ctx,
     gql`
-      query planets($sort: PlanetSort, $pageSize: Int, $joined: Boolean) {
-        planets(sort: $sort, pageSize: $pageSize, joined: $joined) {
+      query planets($sort: PlanetSort, $joinedOnly: Boolean) {
+        planets(sort: $sort, joinedOnly: $joinedOnly) {
           id
           name
           avatarUrl
           userCount
-          joined
+          isJoined
         }
       }
     `,

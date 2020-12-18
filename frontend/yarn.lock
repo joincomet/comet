@@ -3023,14 +3023,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^2.9.5":
-  version: 2.9.5
-  resolution: "framer-motion@npm:2.9.5"
+"framer-motion@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "framer-motion@npm:3.0.0"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     framesync: ^4.1.0
     hey-listen: ^1.0.8
-    popmotion: 9.0.0-rc.20
+    popmotion: 9.0.1
     style-value-types: ^3.1.9
     tslib: ^1.10.0
   peerDependencies:
@@ -3039,7 +3039,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: fbeee68c8e075401c700132add34cfe963c6a85e8e78f33968aa851d5980fbbcef97586c0d1c8972438e27fa044724735a6f1ffb3328a2cfa44ff217ba8f71da
+  checksum: 761a509c1267198c843aae1b811b551419d38b6862bda3c087381ae8d60c46ebdd805068633aeb0ce0412b46ca642b7b3d6c68948f8b8addefce5232f802fb14
   languageName: node
   linkType: hard
 
@@ -3078,9 +3078,9 @@ __metadata:
     eslint-config-prettier: ^7.0.0
     eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.21.5
-    framer-motion: ^2.9.5
+    framer-motion: ^3.0.0
     graphql: ^15.4.0
-    graphql-request: ^3.3.0
+    graphql-request: ^3.4.0
     graphql-tag: ^2.11.0
     next: ^10.0.3
     next-seo: ^4.17.0
@@ -3109,7 +3109,7 @@ __metadata:
     slate-history: ^0.59.0
     slate-react: ^0.59.0
     tailwindcss: ^2.0.2
-    webpack: ^5.10.3
+    webpack: ^5.11.0
     zustand: ^3.2.0
   languageName: unknown
   linkType: soft
@@ -3277,16 +3277,16 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "graphql-request@npm:3.3.0"
+"graphql-request@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "graphql-request@npm:3.4.0"
   dependencies:
     cross-fetch: ^3.0.6
     extract-files: ^9.0.0
     form-data: ^3.0.0
   peerDependencies:
     graphql: 14.x || 15.x
-  checksum: a7a00b41035ae729cbe8f6d246e3a8e2c36087b787ebbecd9a3a45928fc749a1971d5cb5f98efe55cd2051397ab1c9c3993e10b2b755bbb0e8f9ca4a299c5f36
+  checksum: d564874ff42ad63f1555ec18f582bfef5a0ca36160cfc4bf20e22211eca6cf5beabb65961ef734817db441508eee81a9332d4d88fe19c335e39342e20f9f303a
   languageName: node
   linkType: hard
 
@@ -4910,15 +4910,15 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"popmotion@npm:9.0.0-rc.20":
-  version: 9.0.0-rc.20
-  resolution: "popmotion@npm:9.0.0-rc.20"
+"popmotion@npm:9.0.1":
+  version: 9.0.1
+  resolution: "popmotion@npm:9.0.1"
   dependencies:
     framesync: ^4.1.0
     hey-listen: ^1.0.8
     style-value-types: ^3.1.9
     tslib: ^1.10.0
-  checksum: 06839ddc16eb995bc5327aee5cd624d09db9d19effe1abb7078adc5c417965adea580bc73ff5bd512a6949a97fb98c4e3b1e9fda9dd8bc1df96cb0e4f0680c3b
+  checksum: 53f96c449286cc10c79f907c63367e2d99150f97b004bb751b6b7dc40d4dcfcce85006fb9216a14d660daeb72bb7d64d57e0abb266c07e550eed3b98cc83f5d0
   languageName: node
   linkType: hard
 

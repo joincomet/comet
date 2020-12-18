@@ -33,7 +33,7 @@ export class ModerationResolver {
     @Arg('planet', () => ID) planet: string,
     @Arg('postId', () => ID) postId: number
   ) {
-    await this.postRepository.update(postId, { sticky: true })
+    await this.postRepository.update(postId, { pinned: true })
     return true
   }
 
@@ -43,7 +43,7 @@ export class ModerationResolver {
     @Arg('planet', () => ID) planet: string,
     @Arg('postId', () => ID) postId: number
   ) {
-    await this.postRepository.update(postId, { sticky: false })
+    await this.postRepository.update(postId, { pinned: false })
     return true
   }
 
@@ -95,7 +95,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async uploadPlanetAvatarImage(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetName', () => String) planetName: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
     const { createReadStream, mimetype } = await file
@@ -106,20 +106,17 @@ export class ModerationResolver {
     const outStream = new Stream.PassThrough()
     createReadStream().pipe(outStream)
 
-    const url = await uploadImage(
-      `planet/${planet}/avatar.png`,
-      outStream,
-      file.mimetype
-    )
+    const avatarUrl = await uploadImage(outStream, file.mimetype)
 
-    // TODO
+    await this.planetRepository.update({ name: planetName }, { avatarUrl })
+
     return true
   }
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async uploadPlanetBannerImage(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetName', () => String) planetName: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
     const { createReadStream, mimetype } = await file
@@ -130,20 +127,17 @@ export class ModerationResolver {
     const outStream = new Stream.PassThrough()
     createReadStream().pipe(outStream)
 
-    const url = await uploadImage(
-      `planet/${planet}/banner.png`,
-      outStream,
-      file.mimetype
-    )
+    const bannerUrl = await uploadImage(outStream, file.mimetype)
 
-    // TODO
+    await this.planetRepository.update({ name: planetName }, { bannerUrl })
+
     return true
   }
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async addModerator(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetName', () => String) planetName: string,
     @Arg('username') username: string
   ) {
     const user = await this.userRepository
@@ -158,13 +152,17 @@ export class ModerationResolver {
     if (!user) throw new Error('User not found')
     if (
       (await user.moderatedPlanets).find(
-        p => (p.planet as Planet).name.toLowerCase() === planet.toLowerCase()
+        p => p.name.toLowerCase() === planetName.toLowerCase()
       )
     ) {
-      throw new Error(`${user.username} is already a moderator of ${planet}`)
+      throw new Error(
+        `${user.username} is already a moderator of ${planetName}`
+      )
     }
     if ((await user.moderatedPlanets).length >= 3)
       throw new Error(`${user.username} cannot moderate more than 3 planets`)
+
+    const planet = await this.planetRepository.findOne({ name: planetName })
 
     await this.planetRepository
       .createQueryBuilder()

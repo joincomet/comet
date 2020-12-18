@@ -1,4 +1,6 @@
 import AWS from 'aws-sdk'
+import { v4 as uuidv4 } from 'uuid'
+import mime from 'mime'
 
 const Bucket = process.env.BUCKET
 
@@ -28,10 +30,13 @@ export const hasFile = async (key: string) => {
 }
 
 export const uploadImage = async (
-  key: string,
   body: any,
   contentType: string
 ): Promise<string> => {
+  const uuid = uuidv4()
+  const ext = mime.getExtension(contentType)
+  const key = `${uuid}.${ext}`
+
   const upload = s3.upload({
     Bucket,
     Key: key,

@@ -1,19 +1,17 @@
-import { Authorized, Field, ID, Int, ObjectType } from 'type-graphql'
+import { Field, ID, Int, ObjectType } from 'type-graphql'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { Comment } from '@/comment/Comment.Entity'
-import { Lazy } from '@/Lazy'
 import { User } from '@/user/User.Entity'
-import { PostRocket } from '@/post/PostRocket.Entity'
 import { Planet } from '@/planet/Planet.Entity'
-import { Save } from '@/folder/Save.Entity'
-import { PostHide } from '@/filter/PostHide.Entity'
 import { URL } from 'url'
 import dayjs from 'dayjs'
 import { isUrl } from '@/IsUrl'
@@ -92,7 +90,7 @@ export class Post {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.posts)
-  author: Lazy<User>
+  author: Promise<User>
 
   @Field(() => ID)
   @Column({ nullable: true })
@@ -114,82 +112,67 @@ export class Post {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  stickiedAt?: Date
+  pinnedAt?: Date
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  userStickiedAt?: Date
+  pinnedByAuthorAt?: Date
 
   @Field({ nullable: true })
   get timeSinceEdited(): string | null {
     if (!this.editedAt) return null
-    return dayjs(new Date(this.editedAt)).fromNow()
+    // @ts-ignore
+    return dayjs(new Date(this.editedAt)).twitter()
   }
 
   @Field()
   @Column({ default: false })
-  sticky: boolean
+  pinned: boolean
 
   @Field()
   @Column({ default: false })
-  userSticky: boolean
-
-  @Field()
-  @Column({ default: false })
-  postedToProfile: boolean
+  pinnedByAuthor: boolean
 
   @OneToMany(() => Comment, comment => comment.post)
-  comments: Lazy<Comment[]>
-
-  @Field(() => Int)
-  @Column({ default: 0 })
-  commentCount: number
-
-  @Field(() => Int)
-  @Column({ default: 0 })
-  repostCount: number
+  comments: Promise<Comment[]>
 
   @Field(() => Planet, { nullable: true })
   @ManyToOne(() => Planet, planet => planet.posts, {
     cascade: true,
     nullable: true
   })
-  planet?: Lazy<Planet>
+  planet?: Promise<Planet>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
   planetId?: number
 
-  @OneToMany(() => PostRocket, vote => vote.post)
-  rockets: Lazy<PostRocket[]>
+  @ManyToMany(() => User)
+  @JoinTable()
+  rocketers: Promise<User[]>
 
   @Field(() => Int)
   @Column({ default: 1 })
   rocketCount: number
 
-  @Field()
-  rocketed: boolean
+  @Field(() => Int)
+  @Column({ default: 0 })
+  commentCount: number
 
-  @Authorized('ADMIN')
+  @Field()
+  isRocketed: boolean
+
   @Field()
   @Column({ default: false })
   deleted: boolean
 
-  @Authorized('ADMIN')
   @Field()
   @Column({ default: false })
   removed: boolean
 
-  @Authorized('ADMIN')
   @Field()
   @Column({ nullable: true })
   removedReason?: string
-
-  @OneToMany(() => Save, save => save.post)
-  saves: Lazy<Save[]>
-
-  @OneToMany(() => PostHide, hide => hide.post)
-  hides: Lazy<PostHide[]>
 
   @Field()
   get relativeUrl(): string {

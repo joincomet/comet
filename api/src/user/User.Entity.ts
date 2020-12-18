@@ -3,24 +3,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { Comment } from '@/comment/Comment.Entity'
-import { Lazy } from '@/Lazy'
 import { Post } from '@/post/Post.Entity'
-import { PostRocket } from '@/post/PostRocket.Entity'
-import { CommentRocket } from '@/comment/CommentRocket.Entity'
-import { PlanetUser } from '@/planet/PlanetUser.Entity'
-import { PlanetModerator } from '@/moderation/PlanetModerator.Entity'
-import { PlanetMute } from '@/filter/PlanetMute.Entity'
-import { Save } from '@/folder/Save.Entity'
-import { UserBlock } from '@/filter/UserBlock.Entity'
-import { UserFollow } from '@/user/UserFollow.Entity'
-import { PostHide } from '@/filter/PostHide.Entity'
-import { Ban } from '@/moderation/Ban.Entity'
 import dayjs from 'dayjs'
+import { Planet } from '@/planet/Planet.Entity'
 
 @ObjectType()
 @Entity()
@@ -59,7 +50,7 @@ export class User {
   lastLogin?: Date
 
   @Field()
-  online: boolean
+  isOnline: boolean
 
   @Column()
   passwordHash: string
@@ -67,52 +58,57 @@ export class User {
   @Column({ default: false })
   deleted: boolean
 
-  // @Authorized('ADMIN')
   @Field()
   @Column({ default: false })
   admin: boolean
 
   @OneToMany(() => Comment, comment => comment.author)
-  comments: Lazy<Comment[]>
+  comments: Promise<Comment[]>
 
   @OneToMany(() => Post, post => post.author)
-  posts: Lazy<Post[]>
+  posts: Promise<Post[]>
 
-  @OneToMany(() => PlanetUser, planet => planet.user)
-  planets: Lazy<PlanetUser[]>
+  @ManyToMany(() => Planet, planet => planet.users)
+  joinedPlanets: Promise<Planet[]>
 
-  @OneToMany(() => PlanetModerator, moderator => moderator.user)
-  moderatedPlanets: Lazy<PlanetModerator[]>
+  @ManyToMany(() => Planet, planet => planet.moderators)
+  moderatedPlanets: Promise<Planet[]>
 
-  @OneToMany(() => Ban, ban => ban.user)
-  bans: Lazy<Ban[]>
+  @ManyToMany(() => Planet)
+  @JoinTable()
+  mutedPlanets: Promise<Planet[]>
 
-  @OneToMany(() => PlanetMute, mute => mute.user)
-  mutedPlanets: Lazy<PlanetMute[]>
+  @ManyToMany(() => Post)
+  @JoinTable()
+  hiddenPosts: Promise<Post[]>
 
-  @OneToMany(() => Save, post => post.user)
-  saves: Lazy<Save[]>
+  @ManyToMany(() => User, user => user.blocking)
+  blockers: Promise<User[]>
 
-  @OneToMany(() => PostHide, hide => hide.user)
-  hiddenPosts: Lazy<PostHide[]>
+  @ManyToMany(() => User, user => user.blockers)
+  @JoinTable()
+  blocking: Promise<User[]>
 
-  @ManyToOne(() => UserBlock, block => block.from)
-  blockTo: Lazy<UserBlock[]>
+  @ManyToMany(() => User, user => user.following)
+  followers: Promise<User[]>
 
-  @ManyToOne(() => UserBlock, block => block.to)
-  blockFrom: Lazy<UserBlock[]>
-
-  @ManyToOne(() => UserFollow, follow => follow.from)
-  followTo: Lazy<UserFollow[]>
-
-  @ManyToOne(() => UserFollow, follow => follow.to)
-  followFrom: Lazy<UserFollow[]>
+  @ManyToMany(() => User, user => user.followers)
+  @JoinTable()
+  following: Promise<User[]>
 
   @Field()
-  following: boolean
+  @Column({ default: false })
+  banned: boolean
 
   @Field()
-  followed: boolean
+  @Column({ nullable: true })
+  banReason: string
+
+  @Field()
+  isFollowing: boolean
+
+  @Field()
+  isFollowed: boolean
 
   @Field()
   isCurrentUser: boolean
@@ -133,12 +129,6 @@ export class User {
   @Column({ default: 0 })
   postCount: number
 
-  @OneToMany(() => PostRocket, rocket => rocket.user)
-  postRockets: Lazy<PostRocket[]>
-
-  @OneToMany(() => CommentRocket, rocket => rocket.user)
-  commentRockets: Lazy<CommentRocket[]>
-
   @Field(() => Int)
   @Column({ default: 0 })
   rocketCount: number
@@ -147,13 +137,13 @@ export class User {
    * Current user is blocked by this user
    */
   @Field()
-  blocked: boolean
+  isBlocked: boolean
 
   /**
    * Current user is blocking this user
    */
   @Field()
-  blocking: boolean
+  isBlocking: boolean
 
   @Field()
   get timeSinceCreated(): string {
@@ -174,10 +164,6 @@ export class User {
   realName?: string
 
   @Field({ nullable: true })
-  @Column({ nullable: true })
-  website?: string
-
-  @Field({ nullable: true })
   @Column('text', { nullable: true })
   bio?: string
 
@@ -196,8 +182,4 @@ export class User {
   @Field()
   @Column({ default: false })
   private: boolean
-
-  @Field()
-  @Column({ default: false })
-  getcomet: boolean
 }

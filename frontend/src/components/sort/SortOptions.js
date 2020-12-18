@@ -9,12 +9,13 @@ const item =
   'select-none text-xl font-bold tracking-tight leading-none cursor-pointer hover:underline'
 
 export default function SortOptions() {
-  const { query } = useRouter()
+  const { query, pathname } = useRouter()
 
   return (
     <div className="flex items-center space-x-4 mb-6">
       <NavLink
         href={{
+          pathname,
           query: (() => {
             const q = { ...query }
             delete q.time
@@ -30,6 +31,7 @@ export default function SortOptions() {
       </NavLink>
       <NavLink
         href={{
+          pathname,
           query: (() => {
             const q = { ...query }
             delete q.time
@@ -44,7 +46,7 @@ export default function SortOptions() {
         New
       </NavLink>
       <NavLink
-        href={{ query: { ...query, sort: 'top' } }}
+        href={{ pathname, query: { ...query, sort: 'top' } }}
         className={`${
           query.sort === 'top' ? itemActive : itemInactive
         } ${item} `}

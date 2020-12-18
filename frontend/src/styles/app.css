@@ -263,23 +263,8 @@ body {
   box-shadow: rgba(136, 153, 166, 0.2) 0px 0px 15px, rgba(136, 153, 166, 0.15) 0px 0px 3px 1px;
 }
 
-.glow-green {
-  box-shadow: rgba(0, 255, 0, 0.2) 0px 0px 15px, rgba(0, 255, 0, 0.15) 0px 0px 3px 1px;
-}
-
-.player-wrapper {
-  position: relative;
-  padding-top: 56.25% /* Player ratio: 100 / (1280 / 720) */
-}
-
-.react-player {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
 .mycontainer {
-  @apply container mx-auto 2xl:px-48 px-0 md:px-8;
+  @apply container mx-auto 2xl:px-64 px-0 md:px-8;
 }
 
 .mycontainer-nopad {

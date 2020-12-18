@@ -26,7 +26,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
       setShow(false)
   })
 
-  const { query } = useRouter()
+  const { query, pathname } = useRouter()
 
   const text = () => {
     if (!query.time) return 'Day'
@@ -66,7 +66,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                 className="origin-top-left relative dark:bg-gray-800 rounded-md shadow-xl p-3 z-50 w-32 text-sm text-secondary space-y-3 font-medium"
               >
                 <NavLink
-                  href={{ query: { ...query, time: 'hour' } }}
+                  href={{ pathname, query: { ...query, time: 'hour' } }}
                   className={`block ${item} ${
                     query.time === 'hour' ? itemActive : itemInactive
                   }`}
@@ -74,7 +74,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                   Hour
                 </NavLink>
                 <NavLink
-                  href={{ query: { ...query, time: 'day' } }}
+                  href={{ pathname, query: { ...query, time: 'day' } }}
                   className={`block ${item} ${
                     !query.time || query.time === 'day'
                       ? itemActive
@@ -84,7 +84,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                   Day
                 </NavLink>
                 <NavLink
-                  href={{ query: { ...query, time: 'week' } }}
+                  href={{ pathname, query: { ...query, time: 'week' } }}
                   className={`block ${item} ${
                     query.time === 'week' ? itemActive : itemInactive
                   }`}
@@ -92,7 +92,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                   Week
                 </NavLink>
                 <NavLink
-                  href={{ query: { ...query, time: 'month' } }}
+                  href={{ pathname, query: { ...query, time: 'month' } }}
                   className={`block ${item} ${
                     query.time === 'month' ? itemActive : itemInactive
                   }`}
@@ -100,7 +100,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                   Month
                 </NavLink>
                 <NavLink
-                  href={{ query: { ...query, time: 'year' } }}
+                  href={{ pathname, query: { ...query, time: 'year' } }}
                   className={`block ${item} ${
                     query.time === 'year' ? itemActive : itemInactive
                   }`}
@@ -108,7 +108,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                   Year
                 </NavLink>
                 <NavLink
-                  href={{ query: { ...query, time: 'all' } }}
+                  href={{ pathname, query: { ...query, time: 'all' } }}
                   className={`block ${item} ${
                     query.time === 'all' ? itemActive : itemInactive
                   }`}

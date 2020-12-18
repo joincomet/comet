@@ -9,13 +9,14 @@ const item =
   'select-none text-xl font-bold tracking-tight leading-none cursor-pointer hover:underline'
 
 export default function SortOptionsUser({ user }) {
-  const { query } = useRouter()
+  const { query, pathname } = useRouter()
 
   return (
     <div className="flex items-center mb-6">
       <div className="inline-flex items-center space-x-4">
         <NavLink
           href={{
+            pathname,
             query: (() => {
               const q = { ...query }
               delete q.time
@@ -31,6 +32,7 @@ export default function SortOptionsUser({ user }) {
         </NavLink>
         <NavLink
           href={{
+            pathname,
             query: {
               ...query,
               sort: 'top'
@@ -55,6 +57,7 @@ export default function SortOptionsUser({ user }) {
       <div className="ml-auto inline-flex items-center space-x-4">
         <NavLink
           href={{
+            pathname,
             query: (() => {
               const q = { ...query }
               delete q.view
@@ -67,6 +70,7 @@ export default function SortOptionsUser({ user }) {
         </NavLink>
         <NavLink
           href={{
+            pathname,
             query: {
               ...query,
               view: 'comments'

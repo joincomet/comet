@@ -1,20 +1,16 @@
 import { ArgsType, Field } from 'type-graphql'
-import { PaginationArgs } from '@/PaginationArgs'
 import { PlanetSort } from '@/planet/PlanetSort'
 
 @ArgsType()
-export class PlanetsArgs extends PaginationArgs {
+export class PlanetsArgs {
   @Field(() => PlanetSort, { defaultValue: PlanetSort.AZ })
   sort: PlanetSort = PlanetSort.AZ
 
   @Field({ defaultValue: false })
-  joined: boolean
+  joinedOnly: boolean
 
   @Field(() => [String], { nullable: true })
-  names?: string[]
-
-  @Field(() => [String], { nullable: true })
-  tags?: string[]
+  galaxies?: string[]
 
   @Field({ nullable: true })
   search?: string

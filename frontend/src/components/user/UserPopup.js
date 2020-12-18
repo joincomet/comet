@@ -5,6 +5,7 @@ import { usePopper } from 'react-popper'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useClickAway } from 'react-use'
 import NavLink from '@/components/NavLink'
+import Link from 'next/link'
 
 export default function UserPopup({
   user,
@@ -31,7 +32,13 @@ export default function UserPopup({
 
   return (
     <>
-      <div ref={setReferenceElement} onClick={() => setShow(!show)}>
+      <div
+        ref={setReferenceElement}
+        onClick={e => {
+          e.stopPropagation()
+          setShow(!show)
+        }}
+      >
         {children}
       </div>
 
@@ -41,6 +48,7 @@ export default function UserPopup({
             ref={setPopperElement}
             style={styles.popper}
             {...attributes.popper}
+            onClick={e => e.stopPropagation()}
           >
             <AnimatePresence>
               {show && (
@@ -65,7 +73,7 @@ export default function UserPopup({
                       @{user.username}
                     </div>
 
-                    <div className="mt-3 text-sm text-secondary font-medium">
+                    <div className="mt-3 text-sm text-secondary font-medium text-center">
                       {user.bio || 'New CometX User'}
                     </div>
 

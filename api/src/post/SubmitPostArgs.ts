@@ -23,15 +23,9 @@ export class SubmitPostArgs {
   @Matches(/[^ ]+/)
   textContent?: string
 
-  @Field()
-  @Matches(/^[a-zA-Z0-9_]+$/, {
-    message: 'Planet name can only have letters, numbers, and underscores.'
-  })
-  @Length(3, 21, {
-    message: 'Planet name must be between 3 and 21 characters.'
-  })
-  planet: string
+  @Field({ nullable: true })
+  planetName?: string
 
-  @Field(() => GraphQLUpload, { nullable: true })
-  image?: FileUpload
+  @Field(() => [GraphQLUpload], { nullable: true })
+  images?: FileUpload[]
 }

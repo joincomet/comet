@@ -18,7 +18,7 @@ export const migratePosts = async (postRepo: Repository<Post>) => {
 
   posts = posts.filter(p => isUrl(p.linkUrl))
 
-  const sema = new Sema(20, { capacity: posts.length })
+  const sema = new Sema(64, { capacity: posts.length })
 
   async function fetchEmbedData(post: Post) {
     if (!isUrl(post.linkUrl)) return

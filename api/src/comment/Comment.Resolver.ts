@@ -18,29 +18,11 @@ import { User } from '@/user/User.Entity'
 import { Notification } from '@/notification/Notification.Entity'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
-import { CommentRocket } from '@/comment/CommentRocket.Entity'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
 import { handleUnderscore } from '@/handleUnderscore'
 import { CommentSort } from '@/comment/CommentSort'
-
-function flat(r: any, a: any) {
-  const b = {} as any
-  Object.keys(a).forEach(function (k) {
-    if (k !== 'childComments') {
-      b[k] = a[k]
-    }
-  })
-  r.push(b)
-  if (Array.isArray(a.childComments)) {
-    b.childComments = a.childComments.map(function (a: any) {
-      return a.id
-    })
-    return a.childComments.reduce(flat, r)
-  }
-  return r
-}
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -50,8 +32,6 @@ export class CommentResolver {
   readonly postRepository: Repository<Post>
   @InjectRepository(Comment)
   readonly commentRepository: Repository<Comment>
-  @InjectRepository(CommentRocket)
-  readonly commentRocketRepository: Repository<CommentRocket>
   @InjectRepository(Notification)
   readonly notificationRepository: Repository<Notification>
 
@@ -65,14 +45,13 @@ export class CommentResolver {
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.planet', 'planet')
-      // .leftJoinAndSelect('planet.bannedUsers', 'bannedUser')
+      .leftJoinAndSelect('planet.bannedUsers', 'bannedUser')
       .getOne()
 
-    /*const bannedUsers = await (await post.planet).bannedUsers
+    const planet = await post.planet
+    const bannedUsers = await planet.bannedUsers
     if (bannedUsers.map(u => u.id).includes(userId))
-      throw new Error(
-        'You have been banned from ' + (await post.planet).name
-      )*/
+      throw new Error('You have been banned from ' + planet.name)
 
     textContent = filterXSS(textContent, { whiteList })
 
@@ -81,15 +60,9 @@ export class CommentResolver {
       parentCommentId,
       postId,
       authorId: userId,
-
-      rocketed: true,
-      rocketCount: 1
+      rocketCount: 1,
+      rocketers: Promise.resolve([userId])
     })
-
-    this.commentRocketRepository.save({
-      commentId: savedComment.id,
-      userId
-    } as CommentRocket)
 
     this.userRepository.increment({ id: userId }, 'rocketCount', 1)
 
@@ -155,22 +128,18 @@ export class CommentResolver {
     }
 
     if (userId) {
-      const blockTo = (
+      const blocking = (
         await this.userRepository
           .createQueryBuilder()
-          .relation(User, 'blockTo')
+          .relation(User, 'blocking')
           .of(userId)
           .loadMany()
       ).map(user => user.id)
 
-      qb.andWhere('NOT (comment.authorId = ANY(:blockTo))', {
-        blockTo
+      qb.andWhere('NOT (comment.authorId = ANY(:blocking))', {
+        blocking
       })
     }
-
-    /*if (sort === Sort.TOP) {
-      qb.addOrderBy('comment.rocketCount', 'DESC')
-    }*/
 
     qb.addOrderBy('comment.createdAt', 'DESC')
 
@@ -202,7 +171,7 @@ export class CommentResolver {
   ) {
     const comment = await this.commentRepository.findOne(commentId)
     const user = await this.userRepository.findOne(userId)
-    if (comment.authorId !== userId && !user.admin)
+    if (comment.authorId !== userId)
       throw new Error('Attempt to delete post by someone other than author')
 
     this.postRepository.decrement({ id: comment.postId }, 'commentCount', 1)
@@ -226,7 +195,7 @@ export class CommentResolver {
   ) {
     const comment = await this.commentRepository.findOne(commentId)
     const user = await this.userRepository.findOne(userId)
-    if (comment.authorId !== userId && !user.admin)
+    if (comment.authorId !== userId)
       throw new Error('Attempt to edit post by someone other than author')
 
     newTextContent = filterXSS(newTextContent, { whiteList })
@@ -243,79 +212,29 @@ export class CommentResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async toggleCommentRocket(
+  async rocketComment(
     @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
-    const comment = await this.commentRepository
-      .createQueryBuilder('comment')
-      .whereInIds(commentId)
-      .leftJoinAndSelect('comment.author', 'author')
-      .getOne()
-    if (!comment) throw new Error('Comment not found')
-
-    const rocket = await this.commentRocketRepository.findOne({
-      commentId,
-      userId
-    })
-    if (rocket) {
-      await this.commentRocketRepository.delete({ commentId, userId })
-    } else {
-      await this.commentRocketRepository.save({
-        commentId,
-        userId
-      })
-    }
-
-    this.commentRepository.update(
-      { id: commentId },
-      {
-        rocketCount: rocket ? comment.rocketCount - 1 : comment.rocketCount + 1
-      }
-    )
-
-    const author = await comment.author
-    this.userRepository.update(
-      { id: author.id },
-      {
-        rocketCount: rocket ? author.rocketCount - 1 : author.rocketCount + 1
-      }
-    )
-
-    return !rocket
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async saveComment(
-    @Arg('commentId', () => ID) commentId: number,
-    @Ctx() { userId }: Context
-  ) {
-    await this.userRepository
+    await this.commentRepository
       .createQueryBuilder()
-      .relation(User, 'savedComments')
-      .of(userId)
-      .remove(commentId)
-
-    await this.userRepository
-      .createQueryBuilder()
-      .relation(User, 'savedComments')
-      .of(userId)
-      .add(commentId)
+      .relation(Comment, 'rocketers')
+      .of(commentId)
+      .add(userId)
     return true
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async unsaveComment(
+  async unrocketComment(
     @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.commentRepository
       .createQueryBuilder()
-      .relation(User, 'savedComments')
-      .of(userId)
-      .remove(commentId)
+      .relation(Comment, 'rocketers')
+      .of(commentId)
+      .remove(userId)
     return true
   }
 
@@ -331,11 +250,11 @@ export class CommentResolver {
   }
 
   @FieldResolver()
-  async rocketed(
+  async isRocketed(
     @Root() comment: Comment,
-    @Ctx() { commentRocketLoader, userId }: Context
+    @Ctx() { commentRocketedLoader, userId }: Context
   ) {
     if (!userId) return false
-    return commentRocketLoader.load({ userId, commentId: comment.id })
+    return commentRocketedLoader.load({ userId, commentId: comment.id })
   }
 }

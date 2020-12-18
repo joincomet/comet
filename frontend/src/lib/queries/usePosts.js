@@ -33,21 +33,21 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             id
             id36
             title
-            sticky
+            pinned
             textContent
             linkUrl
             imageUrls
             relativeUrl
             commentCount
             rocketCount
-            repostCount
-            rocketed
+            isRocketed
             thumbnailUrl
             logoUrl
             domain
             meta {
               title
               description
+              twitterCard
             }
             planet {
               name
@@ -55,7 +55,7 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
               color
               userCount
               avatarUrl
-              joined
+              isJoined
             }
             author {
               username

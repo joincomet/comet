@@ -49,7 +49,7 @@ ALTER TABLE "planet"
 ALTER TABLE "planet"
     DROP COLUMN "defaultCommentSort";
 ALTER TABLE "planet"
-    RENAME COLUMN "themeColor" to "color";
+    DROP COLUMN "themeColor";
 ALTER TABLE "planet"
     DROP COLUMN "galaxyName";
 ALTER TABLE "planet"
@@ -265,14 +265,8 @@ SELECT "update_entity"('post', 'PK_be5fda3aac270b134ff9c21cdee');
 ALTER TABLE planet
     RENAME COLUMN "temp_name" TO "name";
 
-ALTER TABLE planet_moderators_user
-    RENAME TO planet_moderator;
-ALTER TABLE planet_users_user
-    RENAME TO planet_user;
-ALTER TABLE post_endorsement
-    RENAME TO post_rocket;
-ALTER TABLE comment_endorsement
-    RENAME TO comment_rocket;
+DROP TABLE post_endorsement;
+DROP TABLE comment_endorsement;
 
 ALTER TABLE "comment" ALTER COLUMN "id" DROP DEFAULT;
 ALTER TABLE "planet" ALTER COLUMN "id" DROP DEFAULT;
@@ -289,11 +283,8 @@ ALTER TABLE "post" DROP CONSTRAINT "post__id_key" CASCADE;
 
 UPDATE "planet" SET name = UPPER(SUBSTRING(name from 1 for 1)) || SUBSTRING(name from 2);
 
-DELETE FROM "post_rocket" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
-DELETE FROM "comment_rocket" WHERE "comment_id" = ANY(SELECT "id" FROM "comment" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
 DELETE FROM "comment" WHERE "post_id" = ANY(SELECT "id" FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet'));
 DELETE FROM "post" WHERE "author_id" = (SELECT "id" FROM "user" WHERE "username" = 'Comet');
-DELETE FROM "comment_rocket" T WHERE (SELECT "id" FROM "comment" WHERE "id" = T."comment_id") IS NULL;
 
 ALTER TABLE "post" ADD COLUMN "favicon_url" text;
 ALTER TABLE "post" ADD COLUMN "image_urls" text[] default array[]::text[];
@@ -308,28 +299,22 @@ ALTER TABLE "planet" ADD COLUMN "user_count" bigint default 1;
 ALTER TABLE "planet" ADD COLUMN "post_count" bigint default 0;
 ALTER TABLE "user" ADD COLUMN "post_count" integer default 0;
 ALTER TABLE "user" ADD COLUMN "comment_count" integer default 0;
-ALTER TABLE "user" ADD COLUMN "getcomet" boolean default false;
-UPDATE "user" T SET "getcomet" = true WHERE 1=1;
 
 ALTER TABLE "post" ALTER COLUMN "rocket_count" TYPE integer;
 ALTER TABLE "post" ALTER COLUMN "comment_count" TYPE integer;
 ALTER TABLE "comment" ALTER COLUMN "rocket_count" TYPE integer;
 ALTER TABLE "user" ALTER COLUMN "rocket_count" TYPE integer;
 
-UPDATE "planet" T SET "user_count" = (SELECT COUNT(*) FROM "planet_user" WHERE "planet_id" = T."id") WHERE 1=1;
+UPDATE "planet" T SET "user_count" = (SELECT COUNT(*) FROM "planet_users_user" WHERE "planet_id" = T."id") WHERE 1=1;
 UPDATE "planet" T SET "post_count" = (SELECT COUNT(*) FROM "post" WHERE "planet_id" = T."id") WHERE 1=1;
 UPDATE "post" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" WHERE "post_id" = T."id" AND "deleted" = false AND "removed" = false) WHERE 1=1;
-UPDATE "post" T SET "rocket_count" = (SELECT COUNT(*) FROM "post_rocket" WHERE "post_id" = T."id") WHERE 1=1;
-UPDATE "comment" T SET "rocket_count" = (SELECT COUNT(*) FROM "comment_rocket" WHERE "comment_id" = T."id") WHERE 1=1;
-UPDATE "user" T SET "rocket_count" = (SELECT COUNT(*) FROM "comment_rocket" WHERE "user_id" = T."id") + (SELECT COUNT(*) FROM "post_rocket" WHERE "user_id" = T."id") WHERE 1=1;
 UPDATE "user" T SET "post_count" = (SELECT COUNT(*) FROM "post" WHERE "author_id" = T."id" AND "deleted" = false AND "removed" = false) WHERE 1=1;
 UPDATE "user" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" WHERE "author_id" = T."id" AND "deleted" = false AND "removed" = false) WHERE 1=1;
 
-DELETE FROM "planet_user" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
-DELETE FROM "planet_moderator" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
+DELETE FROM "planet_users_user" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
+DELETE FROM "planet_moderators_user" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
 DELETE FROM "planet" WHERE "post_count" = 0;
 
 drop type planet_defaultcommentsort_enum cascade;
 drop type planet_defaultsort_enum cascade;
 drop type post_type_enum cascade;
-drop type planet_moderator_permissions_enum cascade;

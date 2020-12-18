@@ -1,6 +1,5 @@
 import {
   Arg,
-  Args,
   Authorized,
   Ctx,
   FieldResolver,
@@ -43,16 +42,13 @@ export class UserResolver {
   async user(@Arg('username') username: string) {
     if (!username) return null
 
-    return (
-      this.userRepository
-        .createQueryBuilder('user')
-        .where('user.username ILIKE :username', {
-          username: handleUnderscore(username)
-        })
-        //.andWhere('user.banned = false')
-        //.leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
-        .getOne()
-    )
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username ILIKE :username', {
+        username: handleUnderscore(username)
+      })
+      .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
+      .getOne()
   }
 
   @Mutation(() => Boolean)
@@ -69,13 +65,27 @@ export class UserResolver {
     const outStream = new Stream.PassThrough()
     createReadStream().pipe(outStream)
 
-    const url = await uploadImage(
-      `user/${userId}/avatar.png`,
-      outStream,
-      file.mimetype
-    )
-    // TODO
-    // await this.userRepository.update(userId, { avatar: url })
+    const avatarUrl = await uploadImage(outStream, file.mimetype)
+    await this.userRepository.update(userId, { avatarUrl })
+    return true
+  }
+
+  @Mutation(() => Boolean)
+  @Authorized()
+  async uploadBanner(
+    @Arg('file', () => GraphQLUpload) file: FileUpload,
+    @Ctx() { userId }: Context
+  ) {
+    const { createReadStream, mimetype } = await file
+
+    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
+      throw new Error('Image must be PNG or JPEG')
+
+    const outStream = new Stream.PassThrough()
+    createReadStream().pipe(outStream)
+
+    const bannerUrl = await uploadImage(outStream, file.mimetype)
+    await this.userRepository.update(userId, { bannerUrl })
     return true
   }
 
@@ -165,5 +175,23 @@ export class UserResolver {
   @FieldResolver(() => Boolean)
   async isCurrentUser(@Root() user: User, @Ctx() { userId }: Context) {
     return user.id === userId
+  }
+
+  @FieldResolver(() => Boolean)
+  async isFollowing(
+    @Root() user: User,
+    @Ctx() { userId, followingLoader }: Context
+  ) {
+    if (!userId) return false
+    return followingLoader.load({ userId, followingId: user.id })
+  }
+
+  @FieldResolver(() => Boolean)
+  async isFollowed(
+    @Root() user: User,
+    @Ctx() { userId, followedLoader }: Context
+  ) {
+    if (!userId) return false
+    return followedLoader.load({ userId, followedId: user.id })
   }
 }

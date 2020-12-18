@@ -6,8 +6,8 @@ const leavePlanet = async variables => {
   const { login } = await request(
     null,
     gql`
-      mutation leavePlanet($name: String!) {
-        leavePlanet(name: $name)
+      mutation leavePlanet($planetId: ID!) {
+        leavePlanet(planetId: $planetId)
       }
     `,
     variables

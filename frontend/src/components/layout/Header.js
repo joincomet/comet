@@ -4,6 +4,7 @@ import NavLink from '@/components/NavLink'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import UserAvatar from '@/components/user/UserAvatar'
 import { useHeaderStore, useLoginStore } from '@/lib/stores'
+import { useRouter } from 'next/router'
 
 export default function Header({ children, className, ...rest }) {
   const currentUser = useCurrentUser().data
@@ -12,11 +13,17 @@ export default function Header({ children, className, ...rest }) {
 
   const { dark } = useHeaderStore()
 
+  const router = useRouter()
+
+  const routes = ['/planet/[planetname]', '/user/[username]']
+
+  const isDark = () => (routes.includes(router.pathname) ? dark : true)
+
   return (
     <>
       <header
         className={`flex z-50 fixed left-0 lg:left-64 right-0 top-0 h-14 items-center transition px-8 ${
-          dark ? 'dark:bg-gray-900' : 'bg-transparent'
+          isDark() ? 'dark:bg-gray-900' : 'bg-transparent'
         }`}
         {...rest}
       >

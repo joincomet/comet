@@ -1,5 +1,6 @@
 import { ArgsType, Field } from 'type-graphql'
 import { Length, Matches, ArrayMinSize, ArrayMaxSize } from 'class-validator'
+import { IsGalaxy } from '@/galaxies'
 
 @ArgsType()
 export class CreatePlanetArgs {
@@ -20,10 +21,10 @@ export class CreatePlanetArgs {
 
   @Field(() => [String])
   @ArrayMinSize(1)
-  @ArrayMaxSize(20)
-  @Matches(/^[a-zA-Z0-9-]+$/, {
-    message: 'Tags can only have letters, numbers, and dashes.',
+  @ArrayMaxSize(3)
+  @IsGalaxy({
+    message: 'Galaxy does not exist',
     each: true
   })
-  tags: string[]
+  galaxies: string[]
 }

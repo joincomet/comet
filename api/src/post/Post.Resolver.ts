@@ -17,7 +17,6 @@ import { PostsArgs } from '@/post/PostsArgs'
 import { User } from '@/user/User.Entity'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
-import { PostRocket } from '@/post/PostRocket.Entity'
 import { Stream } from 'stream'
 import { uploadImage } from '@/S3Storage'
 import { TimeFilter } from '@/TimeFilter'
@@ -27,7 +26,6 @@ import { Repository } from 'typeorm'
 import { Comment } from '@/comment/Comment.Entity'
 import { Notification } from '@/notification/Notification.Entity'
 import { Planet } from '@/planet/Planet.Entity'
-import { PlanetUser } from '@/planet/PlanetUser.Entity'
 import { PostsResponse } from '@/post/PostsResponse'
 import { Metadata } from '@/metascraper/Metadata'
 import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
@@ -39,16 +37,12 @@ export class PostResolver {
   readonly userRepo: Repository<User>
   @InjectRepository(Post)
   readonly postRepo: Repository<Post>
-  @InjectRepository(PostRocket)
-  readonly postRocketRepo: Repository<PostRocket>
   @InjectRepository(Comment)
   readonly commentRepo: Repository<Comment>
   @InjectRepository(Notification)
   readonly notificationRepo: Repository<Notification>
   @InjectRepository(Planet)
   readonly planetRepo: Repository<Planet>
-  @InjectRepository(PlanetUser)
-  readonly planetUserRepo: Repository<PlanetUser>
 
   @Query(() => PostsResponse)
   async posts(
@@ -77,7 +71,7 @@ export class PostResolver {
     if (planet) {
       qb.andWhere('planet.name ILIKE :planet', {
         planet: handleUnderscore(planet)
-      }).andWhere('post.sticky = false')
+      }).andWhere('post.pinned = false')
     }
 
     if (search) {
@@ -152,38 +146,38 @@ export class PostResolver {
       const user = await this.userRepo
         .createQueryBuilder('user')
         .whereInIds(userId)
-        .leftJoinAndSelect('user.mutedPlanets', 'mutedPlanet')
-        .leftJoinAndSelect('user.blockTo', 'blockedUser')
-        .leftJoinAndSelect('user.hiddenPosts', 'hiddenPost')
         .getOne()
 
       if (user) {
-        const mutedPlanets = (await user.mutedPlanets).map(
-          planet => (planet.planet as Planet).name
-        )
-        const blockTo = ((await user.blockTo) || []).map(
-          user => (user.to as User).id
-        )
-        const hiddenPosts = (await user.hiddenPosts).map(
-          post => (post.post as Post).id
-        )
+        const mutedPlanets = (await user.mutedPlanets).map(planet => planet.id)
+
+        const blocking = (await user.blocking).map(user => user.id)
+        const hiddenPosts = (await user.hiddenPosts).map(post => post.id)
 
         if (joinedOnly) {
-          const sub = await this.planetUserRepo
-            .createQueryBuilder('join')
-            .where(`"join"."user_id" = ${userId}`)
-            .select('"join"."planet_id"')
-          qb.andWhere(`planet.id = ANY((${sub.getQuery()}))`)
+          const joinedPlanets = (await user.joinedPlanets).map(
+            planet => planet.id
+          )
+
+          const following = (await user.following).map(user => user.id)
+
+          qb.andWhere(
+            'post.planetId = ANY(:joinedPlanets) OR post.authorId = ANY(:following)',
+            {
+              joinedPlanets,
+              following
+            }
+          )
         }
 
         if (mutedPlanets.length > 0) {
-          qb.andWhere('NOT (post.planet = ANY(:mutedPlanets))', {
+          qb.andWhere('NOT (post.planetId = ANY(:mutedPlanets))', {
             mutedPlanets
           })
         }
 
-        qb.andWhere('NOT (post.authorId = ANY(:blockTo))', {
-          blockTo
+        qb.andWhere('NOT (post.authorId = ANY(:blocking))', {
+          blocking
         })
 
         qb.andWhere('NOT (post.id = ANY(:hiddenPosts))', { hiddenPosts })
@@ -200,27 +194,27 @@ export class PostResolver {
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.planet', 'planet')
         .leftJoinAndSelect('post.author', 'author')
-        .addOrderBy('post.stickiedAt', 'DESC')
+        .addOrderBy('post.pinnedAt', 'DESC')
 
       if (planet) {
         stickiesQb
           .andWhere('planet.name ILIKE :planet', {
             planet: handleUnderscore(planet)
           })
-          .andWhere('post.sticky = true')
+          .andWhere('post.pinned = true')
       } else if (username) {
         stickiesQb
           .andWhere('author.username ILIKE :username', {
             username: handleUnderscore(username)
           })
-          .andWhere('post.userSticky = true')
+          .andWhere('post.pinnedByAuthor = true')
       } else if (!search && !galaxy && !folderId) {
         // Show stickies from CometX on home page
         stickiesQb
           .andWhere('planet.name ILIKE :planet', {
             planet: 'CometX'
           })
-          .andWhere('post.sticky = true')
+          .andWhere('post.pinned = true')
       }
 
       const stickies = await stickiesQb.getMany()
@@ -233,27 +227,6 @@ export class PostResolver {
       nextPage: page + 1,
       posts
     } as PostsResponse
-  }
-
-  @Query(() => [Post])
-  async hiddenPosts(@Ctx() { userId }: Context) {
-    if (!userId) return []
-
-    let posts = await this.userRepo
-      .createQueryBuilder()
-      .relation(User, 'hiddenPosts')
-      .of(userId)
-      .loadMany()
-
-    if (posts.length === 0) return []
-
-    const qb = this.postRepo
-      .createQueryBuilder('post')
-      .whereInIds(posts.map(post => post.id))
-
-    posts = await qb.leftJoinAndSelect('post.planet', 'planet').getMany()
-
-    return posts
   }
 
   @Query(() => Post, { nullable: true })
@@ -290,49 +263,48 @@ export class PostResolver {
   @Mutation(() => Post)
   async submitPost(
     @Args()
-    { title, link, textContent, planet, image }: SubmitPostArgs,
+    { title, link, textContent, planetName, images }: SubmitPostArgs,
     @Ctx() { userId }: Context
   ) {
-    const cmmnty = await this.planetRepo
+    const planet = await this.planetRepo
       .createQueryBuilder('planet')
-      .where('planet.name = :planet', { planet })
-      // .leftJoinAndSelect('planet.bannedUsers', 'bannedUser')
+      .where('planet.name = :planetName', { planetName })
       .getOne()
 
-    /*const bannedUsers = await cmmnty.bannedUsers
+    const bannedUsers = await planet.bannedUsers
     if (bannedUsers.map(u => u.id).includes(userId))
-      throw new Error('You have been banned from ' + cmmnty.name)*/
+      throw new Error('You have been banned from ' + planet.name)
 
     if (textContent) {
       textContent = filterXSS(textContent, { whiteList })
+    }
+
+    const imageUrls = []
+
+    if (images && images.length > 0) {
+      for (const image of images) {
+        const { createReadStream, mimetype } = await image
+
+        if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
+          throw new Error('Image must be PNG or JPEG')
+
+        const outStream = new Stream.PassThrough()
+        createReadStream().pipe(outStream)
+
+        const imageUrl = await uploadImage(outStream, mimetype)
+        imageUrls.push(imageUrl)
+      }
     }
 
     const post = await this.postRepo.save({
       title,
       link,
       textContent,
-
+      imageUrls,
       authorId: userId,
-      planetId: cmmnty.id,
-      rocketCount: 1
+      planetId: planet.id,
+      rocketers: Promise.resolve([userId])
     })
-
-    if (image) {
-      const { createReadStream, mimetype } = await image
-
-      if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-        throw new Error('Image must be PNG or JPEG')
-
-      const outStream = new Stream.PassThrough()
-      createReadStream().pipe(outStream)
-
-      link = await uploadImage(`uploads/${post.id}.png`, outStream, mimetype)
-    }
-
-    this.postRocketRepo.save({
-      postId: post.id,
-      userId: userId
-    } as PostRocket)
 
     this.userRepo.increment({ id: userId }, 'rocketCount', 1)
 
@@ -347,8 +319,7 @@ export class PostResolver {
     @Ctx() { userId }: Context
   ) {
     const post = await this.postRepo.findOne(postId)
-    const user = await this.userRepo.findOne(userId)
-    if (post.authorId !== userId && !user.admin)
+    if (post.authorId !== userId)
       throw new Error('Attempt to edit post by someone other than author')
 
     newTextContent = filterXSS(newTextContent, { whiteList })
@@ -370,8 +341,7 @@ export class PostResolver {
     @Ctx() { userId }: Context
   ) {
     const post = await this.postRepo.findOne(postId)
-    const user = await this.userRepo.findOne(userId)
-    if (post.authorId !== userId && !user.admin)
+    if (post.authorId !== userId)
       throw new Error('Attempt to delete post by someone other than author')
 
     await this.postRepo
@@ -386,47 +356,30 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async togglePostRocket(
+  async rocketPost(
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    const post = await this.postRepo
-      .createQueryBuilder('post')
-      .whereInIds(postId)
-      .leftJoinAndSelect('post.author', 'author')
-      .getOne()
+    await this.postRepo
+      .createQueryBuilder()
+      .relation(Post, 'rocketers')
+      .of(postId)
+      .add(userId)
+    return true
+  }
 
-    if (!post) throw new Error('Post not found')
-
-    const rocket = await this.postRocketRepo.findOne({
-      postId,
-      userId
-    })
-    if (rocket) {
-      await this.postRocketRepo.delete({ postId, userId })
-    } else {
-      await this.postRocketRepo.save({
-        postId,
-        userId
-      })
-    }
-
-    this.postRepo.update(
-      { id: postId },
-      {
-        rocketCount: rocket ? post.rocketCount - 1 : post.rocketCount + 1
-      }
-    )
-
-    const author = await post.author
-    this.userRepo.update(
-      { id: author.id },
-      {
-        rocketCount: rocket ? author.rocketCount - 1 : author.rocketCount + 1
-      }
-    )
-
-    return !rocket
+  @Authorized()
+  @Mutation(() => Boolean)
+  async unrocketPost(
+    @Arg('postId', () => ID) postId: number,
+    @Ctx() { userId }: Context
+  ) {
+    await this.postRepo
+      .createQueryBuilder()
+      .relation(Post, 'rocketers')
+      .of(postId)
+      .remove(userId)
+    return true
   }
 
   @Authorized()
@@ -435,12 +388,6 @@ export class PostResolver {
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepo
-      .createQueryBuilder()
-      .relation(User, 'hiddenPosts')
-      .of(userId)
-      .remove(postId)
-
     await this.userRepo
       .createQueryBuilder()
       .relation(User, 'hiddenPosts')
@@ -463,58 +410,6 @@ export class PostResolver {
     return true
   }
 
-  @Authorized()
-  @Mutation(() => Boolean)
-  async savePost(
-    @Arg('postId', () => ID) postId: number,
-    @Ctx() { userId }: Context
-  ) {
-    await this.userRepo
-      .createQueryBuilder()
-      .relation(User, 'savedPosts')
-      .of(userId)
-      .remove(postId)
-
-    await this.userRepo
-      .createQueryBuilder()
-      .relation(User, 'savedPosts')
-      .of(userId)
-      .add(postId)
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async unsavePost(
-    @Arg('postId', () => ID) postId: number,
-    @Ctx() { userId }: Context
-  ) {
-    await this.userRepo
-      .createQueryBuilder()
-      .relation(User, 'savedPosts')
-      .of(userId)
-      .remove(postId)
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async reportPost(
-    @Arg('postId', () => ID) postId: number,
-    @Ctx() { userId }: Context
-  ) {
-    const user = await this.userRepo.findOne(userId)
-
-    /*await discordReport(
-      user.username,
-      process.env.NODE_ENV === 'production'
-        ? `${process.env.ORIGIN_URL}/post/${postId}`
-        : `http://localhost:3000/post/${postId}`
-    )*/
-
-    return true
-  }
-
   @FieldResolver()
   async author(@Root() post: Post, @Ctx() { userLoader }: Context) {
     if (!post.authorId) return null
@@ -522,12 +417,12 @@ export class PostResolver {
   }
 
   @FieldResolver()
-  async rocketed(
+  async isRocketed(
     @Root() post: Post,
-    @Ctx() { postRocketLoader, userId }: Context
+    @Ctx() { postRocketedLoader, userId }: Context
   ) {
     if (!userId) return false
-    return postRocketLoader.load({ userId, postId: post.id })
+    return postRocketedLoader.load({ userId, postId: post.id })
   }
 
   @Query(() => Metadata)

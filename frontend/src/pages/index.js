@@ -1,21 +1,43 @@
 import { QueryClient } from 'react-query'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
-import { useCopyToClipboard, usePrevious } from 'react-use'
+import { useCopyToClipboard } from 'react-use'
 import Tippy from '@tippyjs/react'
 import { FiCopy, FiUsers } from 'react-icons/fi'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import { fetchPosts } from '@/lib/queries/usePosts'
 import SortOptions from '@/components/sort/SortOptions'
+import NavLink from '@/components/NavLink'
 
 export default function HomePage({ variables }) {
+  const currentUser = useCurrentUser().data
+
   return (
     <div>
       <div className="mycontainer mt-14">
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-2 py-6">
+            {currentUser ? (
+              <div className="mb-6 text-4xl text-secondary font-bold tracking-tight leading-none">
+                Welcome back,{' '}
+                <NavLink
+                  href={`/user/${currentUser.username}`}
+                  className="text-accent hover:underline cursor-pointer"
+                >
+                  {currentUser.username}
+                </NavLink>
+                .
+              </div>
+            ) : (
+              <div className="mb-6 text-4xl text-secondary font-bold tracking-tight leading-none">
+                <span className="text-accent hover:underline">
+                  Log In or Sign Up
+                </span>{' '}
+                to customize your feed
+              </div>
+            )}
+
             <SortOptions />
             <Posts variables={variables} />
           </div>
@@ -64,7 +86,7 @@ function ReferralsCard() {
           onClick={() => copy()}
           className="mt-3 p-3 border dark:border-gray-800 rounded text-sm flex items-center text-accent cursor-pointer"
         >
-          {copyLink}
+          <span className="pr-3 truncate">{copyLink}</span>
 
           <div className="ml-auto">
             <FiCopy className="w-5 h-5 text-tertiary" />
@@ -112,7 +134,7 @@ function InfoCard() {
 const getVariables = query => {
   const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
   const time = query.time ? query.time.toUpperCase() : 'ALL'
-  return { sort, time }
+  return { sort, time, joinedOnly: true }
 }
 
 export async function getServerSideProps(ctx) {

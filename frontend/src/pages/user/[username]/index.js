@@ -28,7 +28,7 @@ export default function UserPage({ variables }) {
             <UserAvatar className="w-40 h-40 shadow-md mr-6" user={user} />
 
             <div className="flex flex-col w-full h-full items-center md:items-start justify-end space-y-4">
-              <div className="font-semibold uppercase tracking-widest text-xs text-secondary">
+              <div className="font-semibold uppercase tracking-widest text-xs">
                 User
               </div>
 
@@ -65,7 +65,8 @@ export default function UserPage({ variables }) {
           <Image
             src={user.bannerUrl}
             layout="fill"
-            className="object-cover object-center"
+            objectFit="cover"
+            className="select-none"
           />
         )}
       </div>

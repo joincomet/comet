@@ -11,13 +11,12 @@ export interface Context {
   userLoader: DataLoader<number, User>
   postLoader: DataLoader<number, Post>
   commentLoader: DataLoader<number, Comment>
-  userJoinedPlanetLoader: DataLoader<
-    { userId: number; planetId: number },
+  joinedLoader: DataLoader<{ userId: number; planetId: number }, boolean>
+  postRocketedLoader: DataLoader<{ userId: number; postId: number }, boolean>
+  commentRocketedLoader: DataLoader<
+    { userId: number; commentId: number },
     boolean
   >
-  postRocketLoader: DataLoader<{ userId: number; postId: number }, -1 | 0 | 1>
-  commentRocketLoader: DataLoader<
-    { userId: number; commentId: number },
-    -1 | 0 | 1
-  >
+  followingLoader: DataLoader<{ userId: number; followingId: number }, boolean>
+  followedLoader: DataLoader<{ userId: number; followedId: number }, boolean>
 }

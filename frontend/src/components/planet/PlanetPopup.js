@@ -31,7 +31,13 @@ export default function PlanetPopup({
 
   return (
     <>
-      <div ref={setReferenceElement} onClick={() => setShow(!show)}>
+      <div
+        ref={setReferenceElement}
+        onClick={e => {
+          e.stopPropagation()
+          setShow(!show)
+        }}
+      >
         {children}
       </div>
 
@@ -41,6 +47,7 @@ export default function PlanetPopup({
             ref={setPopperElement}
             style={styles.popper}
             {...attributes.popper}
+            onClick={e => e.stopPropagation()}
           >
             <AnimatePresence>
               {show && (
@@ -57,12 +64,18 @@ export default function PlanetPopup({
                     className="relative dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64"
                   >
                     <PlanetAvatar planet={planet} className="w-20 h-20" />
-                    <div className="mt-3 font-medium">{planet.name}</div>
-                    <div className="mt-1 text-sm text-tertiary">
+                    <div className="mt-3 leading-none font-medium">
+                      {planet.name}
+                    </div>
+                    <div className="mt-1.5 leading-none text-xs font-medium text-tertiary">
                       {planet.userCount} Members
                     </div>
 
-                    <div className="flex items-center mt-3 space-x-3 w-full">
+                    <div className="mt-3 text-sm text-secondary font-medium text-center">
+                      {planet.description || 'New Planet'}
+                    </div>
+
+                    <div className="flex items-center mt-4 space-x-3 w-full">
                       <NavLink
                         href={`/planet/${planet.name}`}
                         className="text-accent border rounded dark:border-gray-700 w-full h-9 inline-flex items-center justify-center text-sm font-medium cursor-pointer"

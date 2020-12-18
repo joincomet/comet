@@ -1,3 +1,9 @@
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidationArguments
+} from 'class-validator'
+
 export const galaxies = [
   'Technology',
   'Science',
@@ -50,3 +56,19 @@ export const galaxies = [
   'Mature Themes & Adult Content',
   'Meta/CometX'
 ]
+
+export function IsGalaxy(validationOptions?: ValidationOptions) {
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      name: 'isGalaxy',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: any, args: ValidationArguments) {
+          return typeof value === 'string' && galaxies.includes(value)
+        }
+      }
+    })
+  }
+}

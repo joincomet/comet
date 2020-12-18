@@ -1,160 +1,110 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { TiPinOutline } from 'react-icons/ti'
 import { CgArrowRight } from 'react-icons/cg'
-import { useDrag } from 'react-dnd'
-import { DragItemTypes } from '@/lib/DragItemTypes'
-import { getEmptyImage } from 'react-dnd-html5-backend'
 import NavLink from '@/components/NavLink'
 import PostEmbed from '@/components/post/PostEmbed'
 import PostActions from '@/components/post/PostActions'
-import PostToast from '@/components/post/PostToast'
 import PostText from '@/components/post/PostText'
 import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
 import PostImages from '@/components/post/PostImages'
 import PlanetPopup from '@/components/planet/PlanetPopup'
+import { useRouter } from 'next/router'
 
 function Post({
   post,
-  index = 0,
-  measure = () => {},
   showPlanet = true,
   showFullText = false,
   className = ''
 }) {
-  const [toast, setToast] = useState(null)
-  const [timeoutId, setTimeoutId] = useState(null)
-
-  useEffect(measure)
-
-  const [{ isDragging }, dragRef, preview] = useDrag({
-    item: { post, type: DragItemTypes.POST },
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult()
-      if (item && dropResult) {
-        setToast({
-          post: item.post,
-          folder: dropResult.folder,
-          user: dropResult.user
-        })
-        if (timeoutId) clearTimeout(timeoutId)
-        setTimeoutId(setTimeout(() => setToast(null), 1500))
-      }
-    },
-    collect: monitor => ({
-      isDragging: monitor.isDragging()
-    })
-  })
-
-  useEffect(() => preview(getEmptyImage(), { captureDraggingState: true }))
-
+  const router = useRouter()
   return (
     <article
-      className={`flex outline-none relative w-full min-w-full pb-0.5`}
-      data-index={index}
-      ref={dragRef}
+      onClick={() => router.push(post.relativeUrl)}
+      className={`${className} cursor-pointer bg-white dark:bg-gray-900 relative rounded w-full mb-0.5`}
     >
-      <PostToast toast={toast} />
+      {post.pinned && (
+        <TiPinOutline
+          size={20}
+          className="absolute top-3 right-3 text-accent"
+        />
+      )}
+      <div className="flex items-start pl-3 pr-16 pt-3">
+        <UserPopup user={post.author}>
+          <UserAvatar
+            user={post.author}
+            className="cursor-pointer w-10 h-10 mr-3"
+          />
+        </UserPopup>
 
-      <div
-        className={`${
-          isDragging || toast ? 'opacity-40' : 'opacity-100'
-        } transition w-full`}
-      >
-        <div
-          className={`${className} flex flex-col bg-white dark:bg-gray-900 relative rounded`}
-        >
-          {post.sticky && (
-            <TiPinOutline
-              size={20}
-              className="absolute top-3 right-3 text-accent"
-            />
-          )}
-          <div className="flex items-start px-3 pt-3">
-            <UserPopup user={post.author}>
-              <UserAvatar user={post.author} className="w-10 h-10 mr-3" />
-            </UserPopup>
-
-            <div className="flex flex-col">
-              <div className="inline-flex items-center text-sm">
-                {post.author ? (
-                  <>
-                    <UserPopup user={post.author}>
-                      <div className="inline-flex items-center">
-                        <div className="text-secondary font-medium hover:underline cursor-pointer">
-                          {post.author.name}
-                        </div>
-                      </div>
-                    </UserPopup>
-                    &nbsp;
-                    <UserPopup user={post.author}>
-                      <div className="inline-flex items-center">
-                        <div className="text-tertiary cursor-pointer">
-                          @{post.author.username}
-                        </div>
-                      </div>
-                    </UserPopup>
-                  </>
-                ) : (
-                  <div className="inline-block">
-                    <div className="text-secondary font-semibold hover:underline cursor-pointer">
-                      [deleted]
-                    </div>
-                    &nbsp;
-                    <div className="text-tertiary hidden sm:block">
-                      @[deleted]
+        <div className="flex flex-col">
+          <div className="inline-flex items-center text-sm">
+            {post.author ? (
+              <>
+                <UserPopup user={post.author}>
+                  <div className="inline-flex items-center">
+                    <div className="text-secondary font-medium hover:underline cursor-pointer">
+                      {post.author.name}
                     </div>
                   </div>
-                )}
-
-                {showPlanet && (
-                  <>
-                    &nbsp;
-                    <CgArrowRight size={16} className="text-tertiary" />
-                    &nbsp;
-                    <PlanetPopup planet={post.planet}>
-                      <div
-                        className={`font-medium hover:underline cursor-pointer`}
-                        style={{ color: post.planet.color || '#3B82F6' }}
-                      >
-                        {post.planet.name}
-                      </div>
-                    </PlanetPopup>
-                  </>
-                )}
-                <span className="text-tertiary hidden sm:block">
-                  &nbsp;&middot;&nbsp;{post.timeSince}
-                </span>
+                </UserPopup>
+                &nbsp;
+                <UserPopup user={post.author}>
+                  <div className="inline-flex items-center">
+                    <div className="text-tertiary cursor-pointer">
+                      @{post.author.username}
+                    </div>
+                  </div>
+                </UserPopup>
+              </>
+            ) : (
+              <div className="inline-block">
+                <div className="text-secondary font-semibold hover:underline cursor-pointer">
+                  [deleted]
+                </div>
+                &nbsp;
+                <div className="text-tertiary hidden sm:block">@[deleted]</div>
               </div>
+            )}
 
-              {/*<span className="text-tertiary sm:hidden block text-xs">
-                @{post.author.username}&nbsp;&middot;&nbsp;{post.timeSince}
-              </span>*/}
-
-              <NavLink
-                href={post.relativeUrl}
-                className="text-base font-medium text-primary"
-              >
-                {post.title}
-              </NavLink>
-            </div>
+            {showPlanet && (
+              <>
+                &nbsp;
+                <CgArrowRight size={16} className="text-tertiary" />
+                &nbsp;
+                <PlanetPopup planet={post.planet}>
+                  <div
+                    className={`font-medium hover:underline cursor-pointer`}
+                    style={{ color: post.planet.color || '#3B82F6' }}
+                  >
+                    {post.planet.name}
+                  </div>
+                </PlanetPopup>
+              </>
+            )}
+            <span className="text-tertiary hidden sm:block">
+              &nbsp;&middot;&nbsp;{post.timeSince}
+            </span>
           </div>
 
-          <div className="mx-3 sm:mx-16 mt-2">
-            <PostText
-              post={post}
-              measure={measure}
-              showFullText={showFullText}
-            />
-
-            <PostImages post={post} measure={measure} />
-
-            <PostEmbed post={post} measure={measure} />
-          </div>
-
-          <PostActions post={post} />
+          <NavLink
+            href={post.relativeUrl}
+            className="text-base font-medium text-primary"
+          >
+            {post.title}
+          </NavLink>
         </div>
       </div>
+
+      <div className="mx-3 sm:mx-16">
+        <PostText post={post} showFullText={showFullText} />
+
+        <PostImages post={post} />
+
+        <PostEmbed post={post} />
+      </div>
+
+      <PostActions post={post} />
     </article>
   )
 }
