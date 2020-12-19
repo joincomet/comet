@@ -1,21 +1,21 @@
 import { FiX } from 'react-icons/fi'
-import LoginForm from '@/components/login/LoginForm'
 import { Modal } from 'react-responsive-modal'
 import React from 'react'
 import { useRouter } from 'next/router'
+import CreatePostForm from '@/components/createpost/CreatePostForm'
 
-export default function LoginModal() {
+export default function CreatePostModal() {
   const { query, pathname, push } = useRouter()
 
   const close = () => {
     const q = { ...query }
-    delete q.login
-    push({ query: q, pathname })
+    delete q.createpost
+    push({ pathname, query: q })
   }
 
   return (
     <Modal
-      open={query.login === 'true'}
+      open={query.createpost === 'true'}
       onClose={() => close()}
       onOverlayClick={e => {
         e.stopPropagation()
@@ -32,7 +32,7 @@ export default function LoginModal() {
       blockScroll={false}
       closeIcon={<FiX size={20} />}
     >
-      <LoginForm onFinish={() => close()} />
+      <CreatePostForm />
     </Modal>
   )
 }

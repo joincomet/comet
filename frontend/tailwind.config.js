@@ -35,6 +35,9 @@ module.exports = {
         grab: 'grab',
         grabbing: 'grabbing'
       },
+      opacity: {
+        33: '0.333'
+      },
       typography: theme => ({
         dark: {
           css: {

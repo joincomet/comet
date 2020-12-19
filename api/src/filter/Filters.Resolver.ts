@@ -7,13 +7,13 @@ import { Repository } from 'typeorm'
 
 @Resolver()
 export class FiltersResolver {
-  @InjectRepository(User) readonly userRepository: Repository<User>
+  @InjectRepository(User) readonly userRepo: Repository<User>
 
   @Query(() => [Planet])
   async mutedPlanets(@Ctx() { userId }: Context) {
     if (!userId) return []
 
-    const planets = await this.userRepository
+    const planets = await this.userRepo
       .createQueryBuilder()
       .relation(User, 'mutedPlanets')
       .of(userId)
@@ -28,7 +28,7 @@ export class FiltersResolver {
   async blockedUser(@Ctx() { userId }: Context) {
     if (!userId) return []
 
-    const blocking = await this.userRepository
+    const blocking = await this.userRepo
       .createQueryBuilder()
       .relation(User, 'blocking')
       .of(userId)
@@ -38,7 +38,7 @@ export class FiltersResolver {
 
     const blockingIds = blocking.map(u => u.id)
 
-    return this.userRepository
+    return this.userRepo
       .createQueryBuilder('user')
       .whereInIds(blockingIds)
       .andWhere('user.banned = false')

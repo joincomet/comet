@@ -15,6 +15,7 @@ import { useHeaderStore } from '@/lib/stores'
 import { FiCalendar } from 'react-icons/fi'
 import PlanetJoinButton from '@/components/planet/PlanetJoinButton'
 import PlanetHeader from '@/components/planet/PlanetHeader'
+import CreatePostButton from '@/components/createpost/CreatePostButton'
 
 export default function PlanetPage({ variables }) {
   const { query } = useRouter()
@@ -29,9 +30,11 @@ export default function PlanetPage({ variables }) {
 
   return (
     <div>
-      <div className="relative h-80 z-0">
-        <PlanetHeader planet={planet} show={!inView} />
+      <PlanetHeader planet={planet} show={!inView} />
 
+      <CreatePostButton />
+
+      <div className="relative h-80 z-0">
         <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
 
         <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-6 md:pb-12">
@@ -42,7 +45,7 @@ export default function PlanetPage({ variables }) {
             />
 
             <div className="flex flex-col w-full h-full items-center md:items-start justify-end space-y-4">
-              <div className="font-semibold uppercase tracking-widest text-xs">
+              <div className="label">
                 {!planet.galaxies || planet.galaxies.length === 0 ? (
                   <span className="hover:underline cursor-pointer">
                     uncategorized
@@ -59,14 +62,11 @@ export default function PlanetPage({ variables }) {
                   ))
                 )}
               </div>
-              <div
-                className="md:text-7xl text-4xl font-extrabold tracking-tight leading-none"
-                ref={ref}
-              >
+              <div className="header-1" ref={ref}>
                 {planet.name}
               </div>
 
-              <div className="block md:hidden text-tertiary font-semibold uppercase tracking-widest text-xs text-right">
+              <div className="block md:hidden text-tertiary label text-right">
                 {planet.userCount} Members
               </div>
 
@@ -74,7 +74,7 @@ export default function PlanetPage({ variables }) {
             </div>
           </div>
 
-          <div className="hidden md:block mt-auto text-tertiary font-semibold uppercase tracking-widest text-xs text-right">
+          <div className="hidden md:block mt-auto text-tertiary label text-right">
             <div>Members</div>
             <div>{planet.userCount}</div>
           </div>
@@ -92,17 +92,17 @@ export default function PlanetPage({ variables }) {
         )}
       </div>
 
-      <div className="mycontainer py-6">
+      <div className="mycontainer">
         <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-3 xl:col-span-2">
+          <div className="col-span-3 xl:col-span-2 py-6">
             <SortOptions />
             <Posts variables={variables} showPlanet={false} />
           </div>
 
           <div className="col-span-0 xl:col-span-1">
-            <div>
-              <div className="text-xl font-bold tracking-tight leading-none mb-6 text-secondary">
-                About
+            <div className="sticky top-28 pt-6">
+              <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
+                About <span className="">{planet.name}</span>
               </div>
               <div className="text-sm text-secondary font-medium">
                 {planet.description || 'New Planet'}
@@ -113,7 +113,7 @@ export default function PlanetPage({ variables }) {
                 Created {planet.timeSinceCreated}
               </div>
 
-              <div className="text-xl font-bold tracking-tight leading-none my-6 text-secondary">
+              <div className="text-xl font-bold tracking-tight leading-none mt-6 mb-4 text-secondary">
                 Moderators
               </div>
 

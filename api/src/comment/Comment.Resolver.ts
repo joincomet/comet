@@ -27,13 +27,13 @@ import { CommentSort } from '@/comment/CommentSort'
 @Resolver(() => Comment)
 export class CommentResolver {
   @InjectRepository(User)
-  readonly userRepository: Repository<User>
+  readonly userRepo: Repository<User>
   @InjectRepository(Post)
-  readonly postRepository: Repository<Post>
+  readonly postRepo: Repository<Post>
   @InjectRepository(Comment)
-  readonly commentRepository: Repository<Comment>
+  readonly commentRepo: Repository<Comment>
   @InjectRepository(Notification)
-  readonly notificationRepository: Repository<Notification>
+  readonly notificationRepo: Repository<Notification>
 
   @Authorized()
   @Mutation(() => Comment)
@@ -41,7 +41,7 @@ export class CommentResolver {
     @Args() { textContent, postId, parentCommentId }: SubmitCommentArgs,
     @Ctx() { userId }: Context
   ) {
-    const post = await this.postRepository
+    const post = await this.postRepo
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.planet', 'planet')
@@ -55,25 +55,22 @@ export class CommentResolver {
 
     textContent = filterXSS(textContent, { whiteList })
 
-    const savedComment = await this.commentRepository.save({
+    const savedComment = await this.commentRepo.save({
       textContent,
       parentCommentId,
       postId,
       authorId: userId,
-      rocketCount: 1,
       rocketers: Promise.resolve([userId])
     })
 
-    this.userRepository.increment({ id: userId }, 'rocketCount', 1)
+    await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
 
-    this.postRepository.increment({ id: postId }, 'commentCount', 1)
+    await this.postRepo.increment({ id: postId }, 'commentCount', 1)
 
     if (parentCommentId) {
-      const parentComment = await this.commentRepository.findOne(
-        parentCommentId
-      )
+      const parentComment = await this.commentRepo.findOne(parentCommentId)
       if (parentComment.authorId !== userId) {
-        this.notificationRepository.save({
+        await this.notificationRepo.save({
           commentId: savedComment.id,
           fromUserId: userId,
           toUserId: parentComment.authorId,
@@ -83,9 +80,9 @@ export class CommentResolver {
         } as Notification)
       }
     } else {
-      const post = await this.postRepository.findOne(postId)
+      const post = await this.postRepo.findOne(postId)
       if (post.authorId !== userId) {
-        this.notificationRepository.save({
+        await this.notificationRepo.save({
           commentId: savedComment.id,
           fromUserId: userId,
           toUserId: post.authorId,
@@ -104,11 +101,11 @@ export class CommentResolver {
   ) {
     postId = parseInt(postId, 36)
 
-    const post = await this.postRepository.findOne({ id: postId })
+    const post = await this.postRepo.findOne({ id: postId })
 
     if (!post) return []
 
-    const qb = await this.commentRepository.createQueryBuilder('comment')
+    const qb = await this.commentRepo.createQueryBuilder('comment')
 
     if (postId) {
       qb.where('comment.postId = :postId', { postId: post.id })
@@ -129,7 +126,7 @@ export class CommentResolver {
 
     if (userId) {
       const blocking = (
-        await this.userRepository
+        await this.userRepo
           .createQueryBuilder()
           .relation(User, 'blocking')
           .of(userId)
@@ -169,14 +166,14 @@ export class CommentResolver {
     @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
-    const comment = await this.commentRepository.findOne(commentId)
-    const user = await this.userRepository.findOne(userId)
+    const comment = await this.commentRepo.findOne(commentId)
+    const user = await this.userRepo.findOne(userId)
     if (comment.authorId !== userId)
       throw new Error('Attempt to delete post by someone other than author')
 
-    this.postRepository.decrement({ id: comment.postId }, 'commentCount', 1)
+    this.postRepo.decrement({ id: comment.postId }, 'commentCount', 1)
 
-    await this.commentRepository
+    await this.commentRepo
       .createQueryBuilder()
       .update()
       .set({ deleted: true })
@@ -193,14 +190,14 @@ export class CommentResolver {
     @Arg('newTextContent') newTextContent: string,
     @Ctx() { userId }: Context
   ) {
-    const comment = await this.commentRepository.findOne(commentId)
-    const user = await this.userRepository.findOne(userId)
+    const comment = await this.commentRepo.findOne(commentId)
+    const user = await this.userRepo.findOne(userId)
     if (comment.authorId !== userId)
       throw new Error('Attempt to edit post by someone other than author')
 
     newTextContent = filterXSS(newTextContent, { whiteList })
 
-    await this.commentRepository
+    await this.commentRepo
       .createQueryBuilder()
       .update()
       .set({ editedAt: new Date(), textContent: newTextContent })
@@ -216,11 +213,15 @@ export class CommentResolver {
     @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.commentRepository
+    await this.commentRepo
       .createQueryBuilder()
       .relation(Comment, 'rocketers')
       .of(commentId)
       .add(userId)
+
+    await this.commentRepo.increment({ id: commentId }, 'rocketCount', 1)
+    await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
+
     return true
   }
 
@@ -230,11 +231,15 @@ export class CommentResolver {
     @Arg('commentId', () => ID) commentId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.commentRepository
+    await this.commentRepo
       .createQueryBuilder()
       .relation(Comment, 'rocketers')
       .of(commentId)
       .remove(userId)
+
+    await this.commentRepo.decrement({ id: commentId }, 'rocketCount', 1)
+    await this.userRepo.decrement({ id: userId }, 'rocketCount', 1)
+
     return true
   }
 

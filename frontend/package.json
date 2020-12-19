@@ -22,7 +22,7 @@
     "@tailwindcss/typography": "^0.3.1",
     "@tippyjs/react": "^4.2.0",
     "autoprefixer": "^10.1.0",
-    "framer-motion": "^3.0.0",
+    "framer-motion": "^3.1.1",
     "graphql": "^15.4.0",
     "graphql-request": "^3.4.0",
     "next": "^10.0.3",
@@ -40,7 +40,7 @@
     "react-intersection-observer": "^8.31.0",
     "react-player": "^2.7.2",
     "react-popper": "^2.2.4",
-    "react-query": "^3.3.0",
+    "react-query": "^3.3.2",
     "react-responsive-modal": "^6.0.0",
     "react-scrollbars-custom": "^4.0.25",
     "react-twitter-widgets": "^1.9.5",
@@ -65,6 +65,6 @@
     "prettier": "^2.2.1"
   },
   "resolutions": {
-    "webpack": "^5.10.1"
+    "webpack": "^5.11.0"
   }
 }

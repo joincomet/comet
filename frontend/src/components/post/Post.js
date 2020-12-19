@@ -34,6 +34,7 @@ function Post({
           <UserAvatar
             user={post.author}
             className="cursor-pointer w-10 h-10 mr-3"
+            loading="eager"
           />
         </UserPopup>
 
@@ -87,10 +88,7 @@ function Post({
             </span>
           </div>
 
-          <NavLink
-            href={post.relativeUrl}
-            className="text-base font-medium text-primary"
-          >
+          <NavLink href={post.relativeUrl} className="title text-primary">
             {post.title}
           </NavLink>
         </div>

@@ -3023,15 +3023,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "framer-motion@npm:3.0.0"
+"framer-motion@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "framer-motion@npm:3.1.1"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
-    framesync: ^4.1.0
+    framesync: ^5.0.0
     hey-listen: ^1.0.8
-    popmotion: 9.0.1
-    style-value-types: ^3.1.9
+    popmotion: ^9.0.2
+    style-value-types: ^3.2.0
     tslib: ^1.10.0
   peerDependencies:
     react: ">=16.8"
@@ -3039,16 +3039,14 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: 761a509c1267198c843aae1b811b551419d38b6862bda3c087381ae8d60c46ebdd805068633aeb0ce0412b46ca642b7b3d6c68948f8b8addefce5232f802fb14
+  checksum: f563f915b6685d30d6afa9eb06611568acf8b1d61b23dda270c3a0a473cfbf739de625aca825be838fa2c6cfd3e550456a7b9d8c1d2a6272e7b08ef639f7b00e
   languageName: node
   linkType: hard
 
-"framesync@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "framesync@npm:4.1.0"
-  dependencies:
-    hey-listen: ^1.0.5
-  checksum: b2a2a06e28a4323848fd48f7c36b4bc01c203a282ec351955d931d440befdbe88dd29e6bb13b36f064e8b62986daeb6be59609ee5ab55114f711677755d5210e
+"framesync@npm:5.0.0, framesync@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "framesync@npm:5.0.0"
+  checksum: 3ae984748abe03710b4a60f35534c572ffd206f773a58c5d61da56397f4656ff8de7bc41be7eb83a3eb961dd24e95f379147818dec1aefda4c005d50a45681d9
   languageName: node
   linkType: hard
 
@@ -3078,7 +3076,7 @@ __metadata:
     eslint-config-prettier: ^7.0.0
     eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.21.5
-    framer-motion: ^3.0.0
+    framer-motion: ^3.1.1
     graphql: ^15.4.0
     graphql-request: ^3.4.0
     graphql-tag: ^2.11.0
@@ -3098,7 +3096,7 @@ __metadata:
     react-intersection-observer: ^8.31.0
     react-player: ^2.7.2
     react-popper: ^2.2.4
-    react-query: ^3.3.0
+    react-query: ^3.3.2
     react-responsive-modal: ^6.0.0
     react-scrollbars-custom: ^4.0.25
     react-twitter-widgets: ^1.9.5
@@ -3400,7 +3398,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"hey-listen@npm:^1.0.5, hey-listen@npm:^1.0.8":
+"hey-listen@npm:^1.0.8":
   version: 1.0.8
   resolution: "hey-listen@npm:1.0.8"
   checksum: b9a3ed8d4851735d221a8c2ecf06fba598b0240d18e7ad46780e00af1d62471a40c65d5c6ec48b004fc86d96056cf7e3599d3ef8ee77a31df3cb9f4ce69721ce
@@ -4910,15 +4908,15 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"popmotion@npm:9.0.1":
-  version: 9.0.1
-  resolution: "popmotion@npm:9.0.1"
+"popmotion@npm:^9.0.2":
+  version: 9.0.2
+  resolution: "popmotion@npm:9.0.2"
   dependencies:
-    framesync: ^4.1.0
+    framesync: 5.0.0
     hey-listen: ^1.0.8
-    style-value-types: ^3.1.9
+    style-value-types: 3.2.0
     tslib: ^1.10.0
-  checksum: 53f96c449286cc10c79f907c63367e2d99150f97b004bb751b6b7dc40d4dcfcce85006fb9216a14d660daeb72bb7d64d57e0abb266c07e550eed3b98cc83f5d0
+  checksum: 4d7add564aa85d328fba7c884e25fb591693d1e3081440ed6e9308f24da889f4a1549cd55857d3d42c9a564fa6a257c152d1e58fa797d70da1d97f8a8400c655
   languageName: node
   linkType: hard
 
@@ -5489,9 +5487,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "react-query@npm:3.3.0"
+"react-query@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "react-query@npm:3.3.2"
   dependencies:
     "@babel/runtime": ^7.5.5
     match-sorter: ^6.0.2
@@ -5502,7 +5500,7 @@ fsevents@~2.1.2:
       optional: true
     react-native:
       optional: true
-  checksum: 121e331a36d711a8c617abd96db645d15bf1b40f98b6210cd6b79fc33fabdbce036e9c2c3299e0714ffc8867c6cc3031b32eaa5ce82f5b901b243b4ec5bd4049
+  checksum: 12c03c7a21a3a64d14555058f37f3ac7b84a91348ca5b2c0c61f6cb2af22f80fed13013208a8f91bdccdbb99f5c45fae46a4a33970900bc774af5dddf78481db
   languageName: node
   linkType: hard
 
@@ -6533,13 +6531,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"style-value-types@npm:^3.1.9":
-  version: 3.1.9
-  resolution: "style-value-types@npm:3.1.9"
+"style-value-types@npm:3.2.0, style-value-types@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "style-value-types@npm:3.2.0"
   dependencies:
     hey-listen: ^1.0.8
     tslib: ^1.10.0
-  checksum: d49e6447576690fc6d8337c554c4d4b26b765e62bf91975494069db1320166e146fa255f1c6c0a7580e085db3dd42c43a2983405345eece57a1ffb1c6c3e39e0
+  checksum: 630a8011abc3c677339efc0782c12691b20b8eb616b49ad09ac49e7f1d18564489712225b501146d143b0f6eaa840caf64887b8f3ccdc9a5b0bb9bd4a60a0f0d
   languageName: node
   linkType: hard
 
@@ -7128,9 +7126,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.10.1":
-  version: 5.10.1
-  resolution: "webpack@npm:5.10.1"
+"webpack@npm:^5.11.0":
+  version: 5.11.0
+  resolution: "webpack@npm:5.11.0"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.45
@@ -7161,7 +7159,7 @@ fsevents@~2.1.2:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 964ac4fa21bb55fb3d45c036fa646a4947a969148470b838c347a79be5857aaaa18596a981999414602ddd4fe19be9673e1d8f421c5882ea3c477491665ea983
+  checksum: 573cdf80bd1cc2ef27a6abbf47b132898a6cd8b1514e7884a4788c521f307dd8c287888a36a40f8402cba5555a553d5a681c7932fed23b654bd922152117691a
   languageName: node
   linkType: hard
 

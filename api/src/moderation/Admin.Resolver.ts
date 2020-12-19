@@ -5,8 +5,8 @@ import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
 
 export class AdminResolver {
-  @InjectRepository(User) readonly userRepository: Repository<User>
-  @InjectRepository(Post) readonly postRepository: Repository<Post>
+  @InjectRepository(User) readonly userRepo: Repository<User>
+  @InjectRepository(Post) readonly postRepo: Repository<Post>
 
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
@@ -14,7 +14,7 @@ export class AdminResolver {
     @Arg('bannedId', () => ID) bannedId: number,
     @Arg('banReason') banReason: string
   ) {
-    await this.userRepository.update(bannedId, { banned: true, banReason })
+    await this.userRepo.update(bannedId, { banned: true, banReason })
 
     return true
   }
@@ -25,9 +25,9 @@ export class AdminResolver {
     @Arg('bannedId', () => ID) bannedId: number,
     @Arg('banReason') banReason: string
   ) {
-    await this.userRepository.update(bannedId, { banned: true, banReason })
+    await this.userRepo.update(bannedId, { banned: true, banReason })
 
-    await this.postRepository.update(
+    await this.postRepo.update(
       { authorId: bannedId },
       { removed: true, removedReason: banReason }
     )
@@ -38,7 +38,7 @@ export class AdminResolver {
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
   async unbanUser(@Arg('bannedId', () => ID) bannedId: number) {
-    await this.userRepository.update(bannedId, {
+    await this.userRepo.update(bannedId, {
       banned: false,
       banReason: null
     })

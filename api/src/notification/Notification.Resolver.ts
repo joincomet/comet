@@ -15,7 +15,7 @@ import { Repository } from 'typeorm'
 @Resolver()
 export class NotificationResolver {
   @InjectRepository(Notification)
-  readonly notificationRepository: Repository<Notification>
+  readonly notificationRepo: Repository<Notification>
 
   @Query(() => [Notification])
   async notifications(
@@ -24,7 +24,7 @@ export class NotificationResolver {
   ) {
     if (!userId) return []
 
-    const qb = this.notificationRepository
+    const qb = this.notificationRepo
       .createQueryBuilder('notification')
       .leftJoinAndSelect('notification.fromUser', 'fromUser')
       .leftJoinAndSelect('notification.post', 'post')
@@ -53,7 +53,7 @@ export class NotificationResolver {
     @Arg('id', () => ID) id: number,
     @Ctx() { userId }: Context
   ) {
-    await this.notificationRepository
+    await this.notificationRepo
       .createQueryBuilder()
       .update()
       .set({ read: true })
@@ -66,7 +66,7 @@ export class NotificationResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async markAllNotificationsRead(@Ctx() { userId }: Context) {
-    await this.notificationRepository
+    await this.notificationRepo
       .createQueryBuilder()
       .update()
       .set({ read: true })

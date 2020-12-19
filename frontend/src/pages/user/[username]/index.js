@@ -10,6 +10,8 @@ import UserAvatar from '@/components/user/UserAvatar'
 import SortOptionsUser from '@/components/sort/SortOptionsUser'
 import { fetchPosts } from '@/lib/queries/usePosts'
 import { fetchComments } from '@/lib/queries/useComments'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
+import CreatePostButton from '@/components/createpost/CreatePostButton'
 
 const userInfoItem =
   'text-tertiary font-medium hover:text-blue-500 dark:hover:text-blue-500 transition cursor-pointer'
@@ -17,9 +19,12 @@ const userInfoItem =
 export default function UserPage({ variables }) {
   const router = useRouter()
   const user = useUser({ username: router.query.username }).data
+  const currentUser = useCurrentUser().data
 
   return (
     <div>
+      {user.id === currentUser.id && <CreatePostButton />}
+
       <div className="relative h-80 z-0">
         <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
 
@@ -28,31 +33,27 @@ export default function UserPage({ variables }) {
             <UserAvatar className="w-40 h-40 shadow-md mr-6" user={user} />
 
             <div className="flex flex-col w-full h-full items-center md:items-start justify-end space-y-4">
-              <div className="font-semibold uppercase tracking-widest text-xs">
-                User
-              </div>
+              <div className="label">User</div>
 
-              <div className="text-7xl font-extrabold tracking-tight leading-none">
-                {user.name}
-              </div>
+              <div className="header-1">{user.name}</div>
 
-              <div className="block md:hidden text-tertiary font-semibold uppercase tracking-widest text-xs text-right">
+              <div className="block md:hidden text-tertiary label text-right">
                 {user.followerCount} Followers
               </div>
 
-              <div className="h-8 rounded-full inline-flex w-32 items-center justify-center font-medium bg-blue-600 text-sm cursor-pointer">
+              <div className="h-8 rounded-full inline-flex w-32 items-center justify-center label bg-blue-600 cursor-pointer">
                 Follow
               </div>
             </div>
           </div>
 
           <div className="hidden md:flex mt-auto space-x-6">
-            <div className="text-tertiary transition dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer font-semibold uppercase tracking-widest text-xs text-right">
+            <div className="text-tertiary transition dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer label text-right">
               <div>Followers</div>
               <div>{user.followerCount}</div>
             </div>
 
-            <div className="text-tertiary transition dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer font-semibold uppercase tracking-widest text-xs text-right">
+            <div className="text-tertiary transition dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer label text-right">
               <div>Following</div>
               <div>{user.followingCount}</div>
             </div>

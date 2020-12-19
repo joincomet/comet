@@ -6,7 +6,7 @@ export default function PostText({ post, showFullText = false }) {
   return (
     <div
       dangerouslySetInnerHTML={{ __html: post.textContent }}
-      className={`prose prose-sm prose-blue dark:prose-dark text-secondary max-w-none ${
+      className={`prose prose-sm dark:prose-dark max-w-none ${
         !showFullText && 'line-clamp-3'
       }`}
     />

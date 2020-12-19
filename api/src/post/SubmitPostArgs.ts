@@ -1,5 +1,5 @@
 import { ArgsType, Field } from 'type-graphql'
-import { IsOptional, Length, Matches } from 'class-validator'
+import { ArrayMaxSize, IsOptional, Length, Matches } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 @ArgsType()
@@ -27,5 +27,6 @@ export class SubmitPostArgs {
   planetName?: string
 
   @Field(() => [GraphQLUpload], { nullable: true })
+  @ArrayMaxSize(20, { message: 'Cannot upload more than 20 images' })
   images?: FileUpload[]
 }

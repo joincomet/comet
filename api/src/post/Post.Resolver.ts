@@ -306,7 +306,7 @@ export class PostResolver {
       rocketers: Promise.resolve([userId])
     })
 
-    this.userRepo.increment({ id: userId }, 'rocketCount', 1)
+    await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
 
     return post
   }
@@ -365,6 +365,10 @@ export class PostResolver {
       .relation(Post, 'rocketers')
       .of(postId)
       .add(userId)
+
+    await this.postRepo.increment({ id: postId }, 'rocketCount', 1)
+    await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
+
     return true
   }
 
@@ -379,6 +383,10 @@ export class PostResolver {
       .relation(Post, 'rocketers')
       .of(postId)
       .remove(userId)
+
+    await this.postRepo.decrement({ id: postId }, 'rocketCount', 1)
+    await this.userRepo.decrement({ id: userId }, 'rocketCount', 1)
+
     return true
   }
 

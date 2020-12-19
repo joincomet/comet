@@ -1,7 +1,7 @@
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
 import React from 'react'
 import PlanetJoinButton from '@/components/planet/PlanetJoinButton'
-import SubHeaderBase from '@/components/SubHeaderBase'
+import SubHeaderBase from '@/components/layout/SubHeaderBase'
 
 export default function PlanetHeader({ planet, show }) {
   return (

@@ -11,10 +11,10 @@ import { Comment } from '@/comment/Comment.Entity'
 import { handleUnderscore } from '@/handleUnderscore'
 
 export class ModerationResolver {
-  @InjectRepository(User) readonly userRepository: Repository<User>
-  @InjectRepository(Post) readonly postRepository: Repository<Post>
-  @InjectRepository(Comment) readonly commentRepository: Repository<Comment>
-  @InjectRepository(Planet) readonly planetRepository: Repository<Planet>
+  @InjectRepository(User) readonly userRepo: Repository<User>
+  @InjectRepository(Post) readonly postRepo: Repository<Post>
+  @InjectRepository(Comment) readonly commentRepo: Repository<Comment>
+  @InjectRepository(Planet) readonly planetRepo: Repository<Planet>
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
@@ -23,7 +23,7 @@ export class ModerationResolver {
     @Arg('postId', () => ID) postId: number,
     @Arg('removedReason') removedReason: string
   ) {
-    await this.postRepository.update(postId, { removed: true, removedReason })
+    await this.postRepo.update(postId, { removed: true, removedReason })
     return true
   }
 
@@ -33,7 +33,7 @@ export class ModerationResolver {
     @Arg('planet', () => ID) planet: string,
     @Arg('postId', () => ID) postId: number
   ) {
-    await this.postRepository.update(postId, { pinned: true })
+    await this.postRepo.update(postId, { pinned: true })
     return true
   }
 
@@ -43,7 +43,7 @@ export class ModerationResolver {
     @Arg('planet', () => ID) planet: string,
     @Arg('postId', () => ID) postId: number
   ) {
-    await this.postRepository.update(postId, { pinned: false })
+    await this.postRepo.update(postId, { pinned: false })
     return true
   }
 
@@ -54,10 +54,10 @@ export class ModerationResolver {
     @Arg('commentId', () => ID) commentId: number,
     @Arg('removedReason') removedReason: string
   ) {
-    const comment = await this.commentRepository.findOne(commentId)
-    this.postRepository.decrement({ id: comment.postId }, 'commentCount', 1)
+    const comment = await this.commentRepo.findOne(commentId)
+    this.postRepo.decrement({ id: comment.postId }, 'commentCount', 1)
 
-    await this.commentRepository.update(commentId, {
+    await this.commentRepo.update(commentId, {
       removed: true,
       removedReason
     })
@@ -70,7 +70,7 @@ export class ModerationResolver {
     @Arg('planet', () => ID) planet: string,
     @Arg('bannedUserId', () => ID) bannedUserId: number
   ) {
-    await this.planetRepository
+    await this.planetRepo
       .createQueryBuilder()
       .relation(Planet, 'bannedUsers')
       .of(planet)
@@ -84,7 +84,7 @@ export class ModerationResolver {
     @Arg('planet', () => ID) planet: string,
     @Arg('bannedUserId', () => ID) bannedUserId: number
   ) {
-    await this.planetRepository
+    await this.planetRepo
       .createQueryBuilder()
       .relation(Planet, 'bannedUsers')
       .of(planet)
@@ -108,7 +108,7 @@ export class ModerationResolver {
 
     const avatarUrl = await uploadImage(outStream, file.mimetype)
 
-    await this.planetRepository.update({ name: planetName }, { avatarUrl })
+    await this.planetRepo.update({ name: planetName }, { avatarUrl })
 
     return true
   }
@@ -129,7 +129,7 @@ export class ModerationResolver {
 
     const bannerUrl = await uploadImage(outStream, file.mimetype)
 
-    await this.planetRepository.update({ name: planetName }, { bannerUrl })
+    await this.planetRepo.update({ name: planetName }, { bannerUrl })
 
     return true
   }
@@ -140,7 +140,7 @@ export class ModerationResolver {
     @Arg('planetName', () => String) planetName: string,
     @Arg('username') username: string
   ) {
-    const user = await this.userRepository
+    const user = await this.userRepo
       .createQueryBuilder('user')
       .where('user.username ILIKE :username', {
         username: handleUnderscore(username)
@@ -162,9 +162,9 @@ export class ModerationResolver {
     if ((await user.moderatedPlanets).length >= 3)
       throw new Error(`${user.username} cannot moderate more than 3 planets`)
 
-    const planet = await this.planetRepository.findOne({ name: planetName })
+    const planet = await this.planetRepo.findOne({ name: planetName })
 
-    await this.planetRepository
+    await this.planetRepo
       .createQueryBuilder()
       .relation(Planet, 'moderators')
       .of(planet)

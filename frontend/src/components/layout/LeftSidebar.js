@@ -5,12 +5,9 @@ import { BiHomeAlt } from 'react-icons/bi'
 import NavLink from '../NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/lib/queries/usePlanets'
-import Tippy from '@tippyjs/react'
-import Image from 'next/image'
-import React, { useState } from 'react'
+import React from 'react'
 import { Scrollbar } from 'react-scrollbars-custom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useRouter } from 'next/router'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import TelescopeIcon from '@/TelescopeIcon'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
@@ -53,9 +50,7 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
         >
           <NavLink href="/" className="flex items-center h-14 px-4">
             <Logo className="h-4 dark:text-gray-200 text-black" />
-            <div className="text-xs font-semibold ml-3 mt-2 text-tertiary uppercase tracking-widest">
-              alpha
-            </div>
+            <div className="ml-3 mt-2 label text-tertiary">alpha</div>
           </NavLink>
           <div className="text-gray-500">
             <NavLink href="/" className={`${link} navitem-active`}>
@@ -78,15 +73,6 @@ function LeftSidebar({ sidebarOpen, setSidebarOpen }) {
     </>
   )
 }
-
-const colors = [
-  'hover:text-red-500 dark:hover:text-red-500',
-  'hover:text-amber-500 dark:hover:text-amber-500',
-  'hover:text-green-500 dark:hover:text-green-500',
-  'hover:text-blue-500 dark:hover:text-blue-500',
-  'hover:text-purple-500 dark:hover:text-purple-500',
-  'hover:text-pink-500 dark:hover:text-pink-500'
-]
 
 const planetClass =
   'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-900 hover:bg-gray-200 px-6 h-8 flex items-center text-gray-600 dark:text-gray-400 transition'
@@ -130,7 +116,7 @@ function TopPlanets() {
 
       {data.map((planet, index) => (
         <NavLink
-          className={`${planetClass} ${colors[index % colors.length]}`}
+          className={`${planetClass} hover:text-blue-500 dark:hover:text-blue-500`}
           key={planet.id}
           href={`/planet/${planet.name}`}
         >

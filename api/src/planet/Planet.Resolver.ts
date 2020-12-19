@@ -23,8 +23,8 @@ import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver(() => Planet)
 export class PlanetResolver {
-  @InjectRepository(Planet) readonly planetRepository: Repository<Planet>
-  @InjectRepository(User) readonly userRepository: Repository<User>
+  @InjectRepository(Planet) readonly planetRepo: Repository<Planet>
+  @InjectRepository(User) readonly userRepo: Repository<User>
 
   @Authorized()
   @Mutation(() => Boolean)
@@ -38,14 +38,14 @@ export class PlanetResolver {
       }
     })
 
-    const foundPlanet = await this.planetRepository
+    const foundPlanet = await this.planetRepo
       .createQueryBuilder('planet')
       .where('planet.name ILIKE :name', { name: handleUnderscore(name) })
       .getOne()
 
     if (foundPlanet) throw new Error('Planet already exists')
 
-    const user = await this.userRepository
+    const user = await this.userRepo
       .createQueryBuilder('user')
       .whereInIds(userId)
       .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
@@ -53,7 +53,7 @@ export class PlanetResolver {
     if ((await user.moderatedPlanets).length >= 3)
       throw new Error('Cannot moderate more than 3 planets')
 
-    await this.planetRepository.save({
+    await this.planetRepo.save({
       name,
       description,
       creatorId: userId,
@@ -65,7 +65,7 @@ export class PlanetResolver {
 
   @Query(() => Planet, { nullable: true })
   async planet(@Arg('name') name: string, @Ctx() { userId }: Context) {
-    const qb = this.planetRepository
+    const qb = this.planetRepo
       .createQueryBuilder('planet')
       .andWhere('planet.name ILIKE :name', {
         name: handleUnderscore(name)
@@ -80,7 +80,7 @@ export class PlanetResolver {
     @Arg('planetId', () => ID) planetId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'joinedPlanets')
       .of(userId)
@@ -94,7 +94,7 @@ export class PlanetResolver {
     @Arg('planetId', () => ID) planetId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'joinedPlanets')
       .of(userId)
@@ -108,7 +108,7 @@ export class PlanetResolver {
     @Arg('planetId', () => ID) planetId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'mutedPlanets')
       .of(userId)
@@ -122,7 +122,7 @@ export class PlanetResolver {
     @Arg('planetId', () => ID) planetId: number,
     @Ctx() { userId }: Context
   ) {
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'mutedPlanets')
       .of(userId)
@@ -136,7 +136,7 @@ export class PlanetResolver {
     { sort, joinedOnly, search, galaxies }: PlanetsArgs,
     @Ctx() { userId }: Context
   ) {
-    const qb = this.planetRepository.createQueryBuilder('planet')
+    const qb = this.planetRepo.createQueryBuilder('planet')
 
     if (sort === PlanetSort.NEW) {
       qb.addOrderBy('planet.createdAt', 'DESC')
@@ -147,7 +147,7 @@ export class PlanetResolver {
     }
 
     if (userId && joinedOnly) {
-      const user = await this.userRepository.findOne(userId)
+      const user = await this.userRepo.findOne(userId)
       const joinedPlanets = (await user.joinedPlanets).map(p => p.id)
       qb.andWhere(`planet.id = ANY(:joinedPlanets)`, { joinedPlanets })
     }

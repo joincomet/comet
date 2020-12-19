@@ -9,17 +9,22 @@ import Posts from '@/components/post/Posts'
 import { fetchPosts } from '@/lib/queries/usePosts'
 import SortOptions from '@/components/sort/SortOptions'
 import NavLink from '@/components/NavLink'
+import CreatePostButton from '@/components/createpost/CreatePostButton'
+import { useLogin } from '@/lib/useLogin'
 
 export default function HomePage({ variables }) {
   const currentUser = useCurrentUser().data
+  const { openLogin } = useLogin()
 
   return (
     <div>
+      <CreatePostButton />
+
       <div className="mycontainer mt-14">
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-2 py-6">
             {currentUser ? (
-              <div className="mb-6 text-4xl text-secondary font-bold tracking-tight leading-none">
+              <div className="mb-6 header-2 text-secondary">
                 Welcome back,{' '}
                 <NavLink
                   href={`/user/${currentUser.username}`}
@@ -30,8 +35,11 @@ export default function HomePage({ variables }) {
                 .
               </div>
             ) : (
-              <div className="mb-6 text-4xl text-secondary font-bold tracking-tight leading-none">
-                <span className="text-accent hover:underline">
+              <div className="mb-6 header-2 text-secondary">
+                <span
+                  className="text-accent hover:underline cursor-pointer"
+                  onClick={() => openLogin()}
+                >
                   Log In or Sign Up
                 </span>{' '}
                 to customize your feed
@@ -98,8 +106,7 @@ function ReferralsCard() {
 }
 
 function InfoCard() {
-  const link =
-    'text-xs font-medium text-tertiary hover:underline cursor-pointer'
+  const link = 'tip text-tertiary hover:underline cursor-pointer'
   return (
     <>
       <style jsx>

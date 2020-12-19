@@ -14,7 +14,7 @@ import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver()
 export class AuthResolver {
-  @InjectRepository(User) readonly userRepository: Repository<User>
+  @InjectRepository(User) readonly userRepo: Repository<User>
 
   @Mutation(() => LoginResponse)
   async signUp(
@@ -33,7 +33,7 @@ export class AuthResolver {
       }
     })
 
-    const foundUser = await this.userRepository
+    const foundUser = await this.userRepo
       .createQueryBuilder('user')
       .where('user.username ILIKE :username', {
         username: handleUnderscore(username)
@@ -44,7 +44,7 @@ export class AuthResolver {
 
     const passwordHash = await argon2.hash(password)
 
-    const user = await this.userRepository.save({
+    const user = await this.userRepo.save({
       username,
       email,
       passwordHash,
@@ -69,7 +69,7 @@ export class AuthResolver {
     @Args() { username, password }: LoginArgs,
     @Ctx() { res }: Context
   ) {
-    const user = await this.userRepository
+    const user = await this.userRepo
       .createQueryBuilder('user')
       .where('user.username ILIKE :username', {
         username: handleUnderscore(username)
@@ -80,7 +80,7 @@ export class AuthResolver {
 
     if (user.banned) throw new Error('Banned: ' + user.banReason)
 
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .update()
       .set({ lastLogin: new Date() })
@@ -118,12 +118,12 @@ export class AuthResolver {
     @Arg('newPassword') newPassword: string,
     @Ctx() { userId }: Context
   ) {
-    const user = await this.userRepository.findOne(userId)
+    const user = await this.userRepo.findOne(userId)
     const match = await argon2.verify(user.passwordHash, oldPassword)
 
     if (!match) throw new Error('Current password incorrect!')
 
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .update()
       .set({ passwordHash: await argon2.hash(newPassword) })

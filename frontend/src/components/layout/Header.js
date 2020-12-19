@@ -1,15 +1,14 @@
 import React from 'react'
-import { FiSearch, FiBell, FiUser } from 'react-icons/fi'
-import NavLink from '@/components/NavLink'
+import { FiSearch, FiBell } from 'react-icons/fi'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import UserAvatar from '@/components/user/UserAvatar'
-import { useHeaderStore, useLoginStore } from '@/lib/stores'
+import { useHeaderStore } from '@/lib/stores'
 import { useRouter } from 'next/router'
+import { useLogin } from '@/lib/useLogin'
 
 export default function Header({ children, className, ...rest }) {
   const currentUser = useCurrentUser().data
-
-  const { openLoginModal } = useLoginStore()
+  const { openLogin } = useLogin()
 
   const { dark } = useHeaderStore()
 
@@ -28,7 +27,9 @@ export default function Header({ children, className, ...rest }) {
         {...rest}
       >
         <div className="relative text-gray-600 dark:text-gray-400 focus-within:text-blue-500 dark:focus-within:text-blue-500 transition">
-          <FiSearch className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2" />
+          <button className="absolute h-8 w-10 top-1/2 transform -translate-y-1/2 focus:outline-none inline-flex items-center justify-center">
+            <FiSearch className="w-4 h-4" />
+          </button>
           <input className="h-8 text-sm rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none text-primary px-10 w-48" />
         </div>
 
@@ -46,7 +47,7 @@ export default function Header({ children, className, ...rest }) {
             </div>
           ) : (
             <div
-              onClick={() => openLoginModal()}
+              onClick={() => openLogin()}
               className="h-9 text-sm font-medium cursor-pointer px-6 bg-gray-900 bg-opacity-25 rounded-full inline-flex items-center"
             >
               Log In / Sign Up

@@ -22,9 +22,9 @@ import { handleUnderscore } from '@/handleUnderscore'
 @Resolver(() => User)
 export class UserResolver {
   @InjectRepository(User)
-  readonly userRepository: Repository<User>
+  readonly userRepo: Repository<User>
   @InjectRepository(Comment)
-  readonly commentRepository: Repository<Comment>
+  readonly commentRepo: Repository<Comment>
 
   @Query(() => User, { nullable: true })
   async currentUser(@Ctx() { userId }: Context) {
@@ -32,17 +32,14 @@ export class UserResolver {
       return null
     }
 
-    return this.userRepository
-      .createQueryBuilder('user')
-      .whereInIds(userId)
-      .getOne()
+    return this.userRepo.createQueryBuilder('user').whereInIds(userId).getOne()
   }
 
   @Query(() => User, { nullable: true })
   async user(@Arg('username') username: string) {
     if (!username) return null
 
-    return this.userRepository
+    return this.userRepo
       .createQueryBuilder('user')
       .where('user.username ILIKE :username', {
         username: handleUnderscore(username)
@@ -66,7 +63,7 @@ export class UserResolver {
     createReadStream().pipe(outStream)
 
     const avatarUrl = await uploadImage(outStream, file.mimetype)
-    await this.userRepository.update(userId, { avatarUrl })
+    await this.userRepo.update(userId, { avatarUrl })
     return true
   }
 
@@ -85,7 +82,7 @@ export class UserResolver {
     createReadStream().pipe(outStream)
 
     const bannerUrl = await uploadImage(outStream, file.mimetype)
-    await this.userRepository.update(userId, { bannerUrl })
+    await this.userRepo.update(userId, { bannerUrl })
     return true
   }
 
@@ -99,11 +96,14 @@ export class UserResolver {
       throw new Error('Cannot follow yourself')
     }
 
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'following')
       .of(userId)
       .add(followedId)
+
+    await this.userRepo.increment({ id: userId }, 'followingCount', 1)
+    await this.userRepo.increment({ id: followedId }, 'followerCount', 1)
 
     return true
   }
@@ -118,11 +118,14 @@ export class UserResolver {
       throw new Error('Cannot unfollow yourself')
     }
 
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder()
       .relation(User, 'following')
       .of(userId)
       .remove(followedId)
+
+    await this.userRepo.decrement({ id: userId }, 'followingCount', 1)
+    await this.userRepo.decrement({ id: followedId }, 'followerCount', 1)
 
     return true
   }
@@ -133,7 +136,7 @@ export class UserResolver {
     @Arg('blockedUsername') blockedUsername: string,
     @Ctx() { userId }: Context
   ) {
-    const blockedUser = await this.userRepository
+    const blockedUser = await this.userRepo
       .createQueryBuilder('user')
       .where('user.username ILIKE :blockedUsername', {
         blockedUsername: handleUnderscore(blockedUsername)
@@ -146,7 +149,7 @@ export class UserResolver {
       throw new Error('Cannot block yourself')
     }
 
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder('user')
       .relation(User, 'blockTo')
       .of(userId)
@@ -164,7 +167,7 @@ export class UserResolver {
       throw new Error('Cannot unblock yourself')
     }
 
-    await this.userRepository
+    await this.userRepo
       .createQueryBuilder('user')
       .relation(User, 'blockTo')
       .of(userId)

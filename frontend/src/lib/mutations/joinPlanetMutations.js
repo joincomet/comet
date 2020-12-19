@@ -16,3 +16,18 @@ const joinPlanet = async variables => {
 }
 
 export const useJoinPlanetMutation = () => useMutation(joinPlanet)
+
+const leavePlanet = async variables => {
+  const { login } = await request(
+    null,
+    gql`
+      mutation leavePlanet($planetId: ID!) {
+        leavePlanet(planetId: $planetId)
+      }
+    `,
+    variables
+  )
+  return login
+}
+
+export const useLeavePlanetMutation = () => useMutation(leavePlanet)

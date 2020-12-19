@@ -9,7 +9,6 @@ import Comment from '@/components/Comment'
 import Tippy from '@tippyjs/react'
 import { useCopyToClipboard } from 'react-use'
 import { dehydrate } from 'react-query/hydration'
-import PlanetInfoCard from '@/components/planet/PlanetInfoCard'
 
 function PostPage() {
   const router = useRouter()
@@ -36,8 +35,6 @@ function PostPage() {
 
         <div className="col-span-1">
           <div className="sticky top-14 pt-3">
-            <PlanetInfoCard planet={post.planet} />
-
             <ShareCard post={post} />
           </div>
         </div>

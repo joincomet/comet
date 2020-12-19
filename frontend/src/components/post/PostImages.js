@@ -17,6 +17,7 @@ export default function PostImages({ post }) {
         className="mt-2 cursor-pointer relative aspect-w-16 aspect-h-9 w-full rounded-2xl"
       >
         <Image
+          loading="eager"
           alt="Image"
           layout="fill"
           src={post.imageUrls[0]}
@@ -34,6 +35,10 @@ export default function PostImages({ post }) {
         classNames={{
           modal:
             'max-w-screen-sm w-full h-screen bg-transparent shadow-none p-0 m-0'
+        }}
+        onOverlayClick={e => {
+          e.stopPropagation()
+          setOpen(false)
         }}
       >
         <div
