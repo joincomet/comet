@@ -23,7 +23,7 @@ export default function LoginModal() {
       }}
       classNames={{
         modal:
-          'overflow-hidden bg-transparent shadow-none max-w-screen-sm w-full',
+          'overflow-hidden bg-transparent shadow-none max-w-screen-sm w-full p-0 m-0',
         closeButton: 'top-8 right-8 text-tertiary focus:outline-none',
         overlay: 'bg-black bg-opacity-75'
       }}

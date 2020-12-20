@@ -3,7 +3,7 @@ import { QueryClient } from 'react-query'
 import { fetchUser, useUser } from '@/lib/queries/useUser'
 import Image from 'next/image'
 import { FiCalendar } from 'react-icons/fi'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import UserAvatar from '@/components/user/UserAvatar'
@@ -12,6 +12,10 @@ import { fetchPosts } from '@/lib/queries/usePosts'
 import { fetchComments } from '@/lib/queries/useComments'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import CreatePostButton from '@/components/createpost/CreatePostButton'
+import UserFollowButton from '@/components/user/UserFollowButton'
+import UserHeader from '@/components/user/UserHeader'
+import { useInView } from 'react-intersection-observer'
+import { useHeaderStore } from '@/lib/stores'
 
 const userInfoItem =
   'text-tertiary font-medium hover:text-blue-500 dark:hover:text-blue-500 transition cursor-pointer'
@@ -20,30 +24,40 @@ export default function UserPage({ variables }) {
   const router = useRouter()
   const user = useUser({ username: router.query.username }).data
   const currentUser = useCurrentUser().data
+  const { ref, inView } = useInView({ threshold: 0.8 })
+  const { setDark } = useHeaderStore()
+  useEffect(() => setDark(!inView), [inView])
 
   return (
     <div>
-      {user.id === currentUser.id && <CreatePostButton />}
+      {currentUser && user.id === currentUser.id && <CreatePostButton />}
+
+      <UserHeader user={user} show={!inView} />
 
       <div className="relative h-80 z-0">
         <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
 
-        <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-6 md:pb-12">
-          <div className="flex flex-grow">
-            <UserAvatar className="w-40 h-40 shadow-md mr-6" user={user} />
+        <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-3 md:pt-6 md:pb-12">
+          <div className="flex flex-col items-center md:items-start md:flex-row flex-grow">
+            <div className="label block md:hidden mb-4">User</div>
 
-            <div className="flex flex-col w-full h-full items-center md:items-start justify-end space-y-4">
-              <div className="label">User</div>
+            <UserAvatar
+              className="w-20 h-20 md:w-40 md:h-40 shadow-md md:mr-6"
+              user={user}
+            />
 
-              <div className="header-1">{user.name}</div>
+            <div className="flex flex-col w-full md:h-full items-center md:items-start justify-end space-y-4">
+              <div className="label hidden md:block">User</div>
+
+              <div className="header-1" ref={ref}>
+                {user.name}
+              </div>
 
               <div className="block md:hidden text-tertiary label text-right">
                 {user.followerCount} Followers
               </div>
 
-              <div className="h-8 rounded-full inline-flex w-32 items-center justify-center label bg-blue-600 cursor-pointer">
-                Follow
-              </div>
+              <UserFollowButton user={user} />
             </div>
           </div>
 
@@ -74,7 +88,9 @@ export default function UserPage({ variables }) {
 
       <div className="grid gap-6 grid-cols-3 mycontainer py-6">
         <div className="col-span-3 lg:col-span-2 relative">
-          <SortOptionsUser user={user} />
+          <div className="px-3 md:px-0">
+            <SortOptionsUser user={user} />
+          </div>
           <Posts variables={variables} />
         </div>
 

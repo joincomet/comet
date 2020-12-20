@@ -46,7 +46,7 @@ export default function Header({ children, className, ...rest }) {
           ) : (
             <div
               onClick={() => openLogin()}
-              className="h-9 label cursor-pointer px-6 bg-gray-900 bg-opacity-25 rounded-full inline-flex items-center"
+              className="h-9 label cursor-pointer px-6 bg-gray-900 bg-opacity-25 rounded-full inline-flex whitespace-nowrap items-center select-none"
             >
               Log In / Sign Up
             </div>

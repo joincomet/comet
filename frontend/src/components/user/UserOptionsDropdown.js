@@ -60,7 +60,7 @@ export default function UserOptionsDropdown() {
       <div
         ref={setReferenceElement}
         onClick={() => setShow(!show)}
-        className="inline-flex items-center cursor-pointer"
+        className="inline-flex flex-nowrap items-center cursor-pointer select-none"
       >
         <UserAvatar user={currentUser} />
         <div className="ml-3 label">{currentUser.name}</div>
