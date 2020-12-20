@@ -10,6 +10,7 @@ import UserPopup from '@/components/user/UserPopup'
 import PostImages from '@/components/post/PostImages'
 import PlanetPopup from '@/components/planet/PlanetPopup'
 import { useRouter } from 'next/router'
+import Twemoji from 'react-twemoji'
 
 function Post({
   post,
@@ -88,7 +89,11 @@ function Post({
           href={post.relativeUrl}
           className="text-base text-primary mt-0.5"
         >
-          {post.title}
+          <Twemoji
+            options={{ className: 'w-4.5 h-4.5 inline-block object-contain' }}
+          >
+            {post.title}
+          </Twemoji>
         </NavLink>
 
         <PostText post={post} showFullText={showFullText} />

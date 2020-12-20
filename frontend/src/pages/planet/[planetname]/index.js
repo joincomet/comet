@@ -94,7 +94,7 @@ export default function PlanetPage({ variables }) {
           </div>
         </div>
 
-        <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent dark:to-gray-850" />
+        <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent dark:to-gray-850 to-gray-100" />
 
         {planet.bannerUrl && (
           <Image
@@ -133,14 +133,16 @@ export default function PlanetPage({ variables }) {
 
               <div className="space-y-4">
                 {planet.moderators.map(mod => (
-                  <UserPopup user={mod} key={mod.id} placement="left-start">
-                    <div className="inline-flex items-center cursor-pointer">
-                      <UserAvatar user={mod} className="w-9 h-9" />
-                      <div className="ml-4 font-semibold text-sm text-secondary">
-                        {mod.name}
+                  <div className="block" key={mod.id}>
+                    <UserPopup user={mod} placement="left-start">
+                      <div className="flex items-center cursor-pointer">
+                        <UserAvatar user={mod} className="w-9 h-9" />
+                        <div className="ml-4 font-semibold text-sm text-secondary">
+                          {mod.name}
+                        </div>
                       </div>
-                    </div>
-                  </UserPopup>
+                    </UserPopup>
+                  </div>
                 ))}
               </div>
             </div>

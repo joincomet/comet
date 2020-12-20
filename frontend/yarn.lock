@@ -3090,9 +3090,10 @@ __metadata:
     react-intersection-observer: ^8.31.0
     react-player: ^2.7.2
     react-popper: ^2.2.4
-    react-query: ^3.3.4
+    react-query: ^3.4.0
     react-responsive-modal: ^6.0.0
     react-scrollbars-custom: ^4.0.25
+    react-twemoji: ^0.3.0
     react-twitter-widgets: ^1.9.5
     react-use: ^15.3.4
     react-virtualized: ^9.22.3
@@ -3101,6 +3102,7 @@ __metadata:
     slate-history: ^0.59.0
     slate-react: ^0.59.0
     tailwindcss: ^2.0.2
+    twemoji: ^13.0.1
     webpack: ^5.11.0
     zustand: ^3.2.0
   languageName: unknown
@@ -3110,6 +3112,17 @@ __metadata:
   version: 1.0.0
   resolution: "fs-constants@npm:1.0.0"
   checksum: b8382395f555012591b20bddf08d258723f660b4e7312943d10431a893e2af879295fefc15a917df43c9ed52d80d2f014c0ca8ca359367969be5c8a133e39742
+  languageName: node
+  linkType: hard
+
+"fs-extra@npm:^8.0.1":
+  version: 8.1.0
+  resolution: "fs-extra@npm:8.1.0"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^4.0.0
+    universalify: ^0.1.0
+  checksum: 056a96d4f55ab8728b021e251175a4a6440d1edb5845e6c2e8e010019bde3e63de188a0eb99386c21c71804ca1a571cd6e08f507971f10a2bc4f4f7667720fa4
   languageName: node
   linkType: hard
 
@@ -3916,6 +3929,31 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"jsonfile@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "jsonfile@npm:4.0.0"
+  dependencies:
+    graceful-fs: ^4.1.6
+  dependenciesMeta:
+    graceful-fs:
+      optional: true
+  checksum: a40b7b64da41c84b0dc7ad753737ba240bb0dc50a94be20ec0b73459707dede69a6f89eb44b4d29e6994ed93ddf8c9b6e57f6b1f09dd707567959880ad6cee7f
+  languageName: node
+  linkType: hard
+
+"jsonfile@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "jsonfile@npm:5.0.0"
+  dependencies:
+    graceful-fs: ^4.1.6
+    universalify: ^0.1.2
+  dependenciesMeta:
+    graceful-fs:
+      optional: true
+  checksum: 938b5d1216572282090710986e38ff30b8ece626491b153b96a6005392a07f9acf60505bf120878d52c5f3c754d3ee41dac681ac2550d43d3572eebbca52a56d
+  languageName: node
+  linkType: hard
+
 "jsonfile@npm:^6.0.1":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
@@ -4036,6 +4074,13 @@ fsevents@~2.1.2:
   dependencies:
     p-locate: ^5.0.0
   checksum: 4c379638152e0e5fda9a8cc07005702f81fcb9899db0f66d691ac1e64193dea670af14e96c50f14d82d45959daa4c400cb712c158cffe22ae265bfc1b1e3a221
+  languageName: node
+  linkType: hard
+
+"lodash.isequal@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.isequal@npm:4.5.0"
+  checksum: 5b47e094641c18a915497343894c66f7da6aebb9aaa2a3fcc5643455aaf29d19df60ebbed664c8374fb959c8b4ce96810ee6becd8a71ac58c6c2ca8d29762947
   languageName: node
   linkType: hard
 
@@ -5488,9 +5533,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.3.4":
-  version: 3.3.4
-  resolution: "react-query@npm:3.3.4"
+"react-query@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "react-query@npm:3.4.0"
   dependencies:
     "@babel/runtime": ^7.5.5
     match-sorter: ^6.0.2
@@ -5501,7 +5546,7 @@ fsevents@~2.1.2:
       optional: true
     react-native:
       optional: true
-  checksum: 8973cc15d5b413d5a760d7e289ff999bf5cdd511bc6adf4e417fe64621ab6e9bc37b0112dcbb2329589a370c955b6837f7b6461da9bdef611d0d2fc10fe0aa8d
+  checksum: 64062c641dc1e5e9ba762c349d875fc0e1b3c9ebcf2a8f2e209b054e7e43e0f1f35f9a086b767d61be9f59358f7b96bce14ccf3f2f9bdcaeaa0ebdbd3dc64a96
   languageName: node
   linkType: hard
 
@@ -5536,6 +5581,20 @@ fsevents@~2.1.2:
     prop-types: ^15.0.0
     react: ^16.0.0
   checksum: f5fa5bf75a4f972a4b175bca772e7045415234ca83e26f273086b0d326738a87e73394649cfd694c76a788896cbc6b9b435c59468214b587ec3f0fbe4164ac33
+  languageName: node
+  linkType: hard
+
+"react-twemoji@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "react-twemoji@npm:0.3.0"
+  dependencies:
+    lodash.isequal: ^4.5.0
+    prop-types: ^15.7.2
+    twemoji: ^13.0.1
+  peerDependencies:
+    react: ^16.4.2
+    react-dom: ^16.4.2
+  checksum: af6b89bad07556276fb552cb2cd2691b52237bc998ffac198793c7da59eaf97c88c1c2832127829a63c9539838870788bca882b0dc9771d1baef2ab1fb92f324
   languageName: node
   linkType: hard
 
@@ -6882,6 +6941,25 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"twemoji-parser@npm:13.0.0":
+  version: 13.0.0
+  resolution: "twemoji-parser@npm:13.0.0"
+  checksum: 05a4d6a8579a7a6614a081b6f1339846ae19e28efe9e304b1d094b925a3b857a6738a3be8a427ac4a95add0b6486c92f63417c670c219a80b74a81f8389c2feb
+  languageName: node
+  linkType: hard
+
+"twemoji@npm:^13.0.1":
+  version: 13.0.1
+  resolution: "twemoji@npm:13.0.1"
+  dependencies:
+    fs-extra: ^8.0.1
+    jsonfile: ^5.0.0
+    twemoji-parser: 13.0.0
+    universalify: ^0.1.2
+  checksum: a4f47f2ec39bbbbff553559b918872ea6465d726816cd921345c54260a7ee8b820aac39e69e3fb5b32771c05e833685558018e5819127cab51ff5c4c8d524369
+  languageName: node
+  linkType: hard
+
 "type-check@npm:^0.4.0, type-check@npm:~0.4.0":
   version: 0.4.0
   resolution: "type-check@npm:0.4.0"
@@ -6933,6 +7011,13 @@ fsevents@~2.1.2:
   version: 1.0.1
   resolution: "uniq@npm:1.0.1"
   checksum: a5603a5b3128616f268e7695e47cd1eb8d583cf8ee1278434140cd83d2f3f98e5d65a22cf4187f0345ca8d8a0a9f1d07e1f06cb46312135ad4a6303fd28fc317
+  languageName: node
+  linkType: hard
+
+"universalify@npm:^0.1.0, universalify@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "universalify@npm:0.1.2"
+  checksum: 420fc6547357782c700d53e9a92506a8e95345b13e97684c8f9ab75237912ec2ebb6af8ac10d4f7406b7b6bd21c58f6c5c0811414fb0b4091b78b4743fa6806e
   languageName: node
   linkType: hard
 

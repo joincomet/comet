@@ -4,9 +4,9 @@ import Modal from 'react-responsive-modal'
 import { FiChevronRight, FiChevronLeft } from 'react-icons/fi'
 
 const previous =
-  'cursor-pointer absolute z-10 left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-black bg-opacity-50 transition hover:bg-opacity-75'
+  'cursor-pointer text-white absolute z-10 left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-black bg-opacity-50 transition hover:bg-opacity-75'
 const next =
-  'cursor-pointer absolute z-10 left-full transform -translate-x-full top-0 bottom-0 w-10 flex items-center justify-center bg-black bg-opacity-50 transition hover:bg-opacity-75'
+  'cursor-pointer text-white absolute z-10 left-full transform -translate-x-full top-0 bottom-0 w-10 flex items-center justify-center bg-black bg-opacity-50 transition hover:bg-opacity-75'
 
 export default function PostImages({ post }) {
   if (!post.imageUrls || post.imageUrls.length === 0) return null

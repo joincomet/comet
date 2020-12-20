@@ -62,7 +62,7 @@ export default function PlanetPopup({
                       x: 0
                     }}
                     transition={{ duration: 0.15, ease: 'easeInOut' }}
-                    className="relative dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64"
+                    className="relative bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64"
                   >
                     <PlanetAvatar planet={planet} className="w-20 h-20" />
                     <div className="mt-3 leading-none font-medium">

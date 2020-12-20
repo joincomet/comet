@@ -1,19 +1,19 @@
 import { FiMoreHorizontal } from 'react-icons/fi'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import {
-  useJoinPlanetMutation,
-  useLeavePlanetMutation
-} from '@/lib/mutations/joinPlanetMutations'
-import { useRouter } from 'next/router'
 import { useLogin } from '@/lib/useLogin'
 import {
   useFollowUserMutation,
   useUnfollowUserMutation
 } from '@/lib/mutations/followMutations'
+import { useForm } from 'react-hook-form'
+import { useUploadBannerMutation } from '@/lib/mutations/editProfileMutations'
+import { useUser } from '@/lib/queries/useUser'
 
 export default function UserFollowButton({ user }) {
-  const currentUser = useCurrentUser().data
+  const userQuery = useUser({ username: user.username })
+  const currentUserQuery = useCurrentUser()
+  const currentUser = currentUserQuery.data
   const { openLogin } = useLogin()
 
   const followMutation = useFollowUserMutation()
@@ -42,22 +42,58 @@ export default function UserFollowButton({ user }) {
     await unfollowMutation.mutateAsync(variables)
   }
 
+  const { register, watch } = useForm()
+
+  const bannerImage = watch('bannerImage')
+
+  const uploadBanner = useUploadBannerMutation()
+
+  useEffect(() => {
+    if (!bannerImage || bannerImage.length === 0) return
+    uploadBanner.mutateAsync({ file: bannerImage[0] }).then(bannerUrl => {
+      user.bannerUrl = bannerUrl
+      userQuery.refetch()
+      currentUserQuery.refetch()
+    })
+  }, [bannerImage])
+
   return (
     <div className="inline-flex items-center">
-      <div
-        onClick={() => toggle()}
-        className={`h-8 rounded-full inline-flex w-32 items-center justify-center label cursor-pointer transition transform hover:scale-105 ${
-          user.isFollowing
-            ? 'bg-black bg-opacity-25 border border-gray-500 text-blue-500'
-            : 'bg-blue-600'
-        }`}
-      >
-        {user.isFollowing ? 'Following' : 'Follow'}
-      </div>
+      {user.isCurrentUser ? (
+        <form>
+          <input
+            ref={register}
+            name="bannerImage"
+            id="bannerImage"
+            className="hidden"
+            accept="image/png, image/jpeg"
+            type="file"
+          />
+          <label
+            htmlFor="bannerImage"
+            className="block h-8 rounded-full inline-flex px-6 items-center justify-center label cursor-pointer transition transform hover:scale-105 bg-black bg-opacity-25 border border-gray-500 text-blue-500"
+          >
+            Upload Banner
+          </label>
+        </form>
+      ) : (
+        <>
+          <div
+            onClick={() => toggle()}
+            className={`h-8 rounded-full inline-flex px-6 items-center justify-center label cursor-pointer transition transform hover:scale-105 ${
+              user.isFollowing
+                ? 'bg-black bg-opacity-25 border border-gray-500 text-blue-500'
+                : 'bg-blue-600'
+            }`}
+          >
+            {user.isFollowing ? 'Following' : 'Follow'}
+          </div>
 
-      <div className="ml-4 w-8 h-8 rounded-full border border-gray-500 bg-black bg-opacity-25 inline-flex items-center justify-center cursor-pointer transition transform hover:scale-105">
-        <FiMoreHorizontal size={20} />
-      </div>
+          <div className="ml-4 w-8 h-8 rounded-full border border-gray-500 bg-black bg-opacity-25 inline-flex items-center justify-center cursor-pointer transition transform hover:scale-105">
+            <FiMoreHorizontal size={20} />
+          </div>
+        </>
+      )}
     </div>
   )
 }

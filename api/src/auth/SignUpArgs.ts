@@ -10,7 +10,7 @@ import {
 @ArgsType()
 export class SignUpArgs {
   @Field()
-  @Length(3, 15, { message: 'Username must be between 3 and 15 characters.' })
+  @Length(3, 20, { message: 'Username must be between 3 and 20 characters.' })
   @Matches(/^[a-zA-Z0-9_]+$/, {
     message: 'Username can only have letters, numbers, and underscores.'
   })

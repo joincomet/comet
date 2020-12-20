@@ -23,12 +23,12 @@ export default function PostText({ post, showFullText = false }) {
   return (
     <div
       ref={ref}
-      className={`relative border p-3 mt-2 dark:border-gray-800 rounded max-h-32 overflow-hidden ${
-        !showFullText ? 'transition dark:hover:bg-gray-800' : ''
+      className={`relative border p-3 mt-2 dark:border-gray-800 rounded overflow-hidden ${
+        !showFullText ? 'transition dark:hover:bg-gray-800 max-h-32' : ''
       }`}
     >
       {!showFullText && of && (
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent dark:to-gray-900 to-white" />
       )}
       <div
         dangerouslySetInnerHTML={{ __html: post.textContent }}

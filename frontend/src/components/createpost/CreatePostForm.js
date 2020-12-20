@@ -55,7 +55,8 @@ export default function CreatePostForm() {
   const submitPostMutation = useSubmitPostMutation()
 
   const onSubmit = async ({ title, link }) => {
-    const variables = { title }
+    const variables = {}
+    if (title) variables.title = title
     if (link) variables.link = link
 
     if (textContent !== initialValue) {
@@ -89,7 +90,6 @@ export default function CreatePostForm() {
         <textarea
           name="title"
           ref={register({
-            required: true,
             maxLength: 300
           })}
           placeholder="Share something..."
@@ -127,7 +127,7 @@ export default function CreatePostForm() {
                 }
               }
             })}
-            placeholder="Link URL (Optional)"
+            placeholder="Link URL"
             className="block body text-accent bg-gray-200 dark:bg-gray-900 h-full rounded placeholder-white placeholder-opacity-33 px-12 w-full focus:outline-none"
           />
         </div>
@@ -219,7 +219,7 @@ function Editor({ value, setValue }) {
       onChange={newValue => setValue(newValue)}
     >
       <Editable
-        placeholder="Details (Optional)"
+        placeholder="Details"
         className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-16"
       />
     </Slate>

@@ -22,7 +22,7 @@ export default function CreatePostButton() {
                 ? { ...query, createpost: 'true' }
                 : { ...query, login: 'true' }
             }}
-            className="pointer-events-auto opacity-90 hover:opacity-100 rounded-full shadow-md bg-blue-600 mx-auto h-8 w-48 flex items-center justify-center label cursor-pointer transition transform hover:scale-105"
+            className="pointer-events-auto text-white opacity-90 hover:opacity-100 rounded-full shadow-md bg-blue-600 mx-auto h-8 w-48 flex items-center justify-center label cursor-pointer transition transform hover:scale-105"
           >
             Create Post
             <FiEdit size={16} className="ml-3" />

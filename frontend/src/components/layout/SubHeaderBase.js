@@ -16,7 +16,7 @@ export default function SubHeaderBase({ show, children }) {
             opacity: 0
           }}
           transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed z-50 top-14 left-0 md:left-64 right-0 h-14 flex items-center dark:bg-gray-900 px-4 md:px-8 border-b dark:border-gray-800"
+          className="fixed z-50 top-14 left-0 md:left-64 right-0 h-14 flex items-center bg-white dark:bg-gray-900 px-4 md:px-8 border-b dark:border-gray-800"
         >
           {children}
         </motion.div>

@@ -267,6 +267,9 @@ export class PostResolver {
     { title, link, textContent, planetName, images }: SubmitPostArgs,
     @Ctx() { userId }: Context
   ) {
+    if (!title && !link && !textContent && (!images || images.length === 0))
+      throw new Error('At least one field is required')
+
     const toSave: any = {
       title,
       authorId: userId
@@ -308,7 +311,10 @@ export class PostResolver {
       }
     }
 
-    if (link) toSave.link = link
+    if (link) {
+      toSave.linkUrl = link
+      toSave.meta = await scrapeMetadata(link)
+    }
     if (textContent) toSave.textContent = textContent
     if (imageUrls && imageUrls.length > 0) toSave.imageUrls = imageUrls
 

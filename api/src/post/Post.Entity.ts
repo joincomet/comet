@@ -29,8 +29,8 @@ export class Post {
     return BigInt(this.id).toString(36)
   }
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   title: string
 
   @Field({ nullable: true })
@@ -173,6 +173,10 @@ export class Post {
   @Field()
   @Column({ nullable: true })
   removedReason?: string
+
+  @Field()
+  @Column({ default: false })
+  nsfw: boolean
 
   @Field()
   get relativeUrl(): string {

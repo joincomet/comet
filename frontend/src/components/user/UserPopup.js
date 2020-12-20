@@ -63,7 +63,7 @@ export default function UserPopup({
                       x: 0
                     }}
                     transition={{ duration: 0.15, ease: 'easeInOut' }}
-                    className="relative dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64"
+                    className="relative border border-gray-200 dark:border-transparent bg-white dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64"
                   >
                     <UserAvatar user={user} showOnline className="w-20 h-20" />
                     <div className="leading-none mt-3 font-medium">

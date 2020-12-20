@@ -23,6 +23,7 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
           bannerUrl
           isFollowing
           isFollowed
+          isCurrentUser
         }
       }
     `,

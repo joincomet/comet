@@ -48,7 +48,7 @@ export class UserResolver {
       .getOne()
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => String)
   @Authorized()
   async uploadAvatar(
     @Arg('file', () => GraphQLUpload) file: FileUpload,
@@ -64,10 +64,10 @@ export class UserResolver {
 
     const avatarUrl = await uploadImage(outStream, file.mimetype)
     await this.userRepo.update(userId, { avatarUrl })
-    return true
+    return avatarUrl
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => String)
   @Authorized()
   async uploadBanner(
     @Arg('file', () => GraphQLUpload) file: FileUpload,
@@ -83,6 +83,46 @@ export class UserResolver {
 
     const bannerUrl = await uploadImage(outStream, file.mimetype)
     await this.userRepo.update(userId, { bannerUrl })
+    return bannerUrl
+  }
+
+  @Mutation(() => Boolean)
+  @Authorized()
+  async editBio(@Arg('bio') bio: string, @Ctx() { userId }: Context) {
+    bio = bio.trim()
+    if (!bio) throw new Error('Bio cannot be empty')
+    if (bio.length > 300)
+      throw new Error('Bio cannot be longer than 300 characters')
+    await this.userRepo.update(userId, { bio })
+    return true
+  }
+
+  @Mutation(() => Boolean)
+  @Authorized()
+  async changeName(@Arg('name') name: string, @Ctx() { userId }: Context) {
+    name = name.trim()
+    if (name.length < 3 || name.length > 50)
+      throw new Error('Name must be between 3 and 50 characters')
+    if (!name.match(/^[a-zA-Z0-9_]+$/))
+      throw new Error('Name can only have letters, numbers, and underscores')
+    await this.userRepo.update(userId, { realName: name })
+    return true
+  }
+
+  @Mutation(() => Boolean)
+  @Authorized()
+  async changeUsername(
+    @Arg('username') username: string,
+    @Ctx() { userId }: Context
+  ) {
+    username = username.trim()
+    if (username.length < 3 || username.length > 20)
+      throw new Error('Username must be between 3 and 20 characters')
+    if (!username.match(/^[a-zA-Z0-9_]+$/))
+      throw new Error(
+        'Username can only have letters, numbers, and underscores'
+      )
+    await this.userRepo.update(userId, { username })
     return true
   }
 

@@ -19,11 +19,15 @@ export default function Header({ children, className, ...rest }) {
 
   const isDark = () => (routes.includes(router.pathname) ? dark : true)
 
+  const isSolo = () => !routes.includes(router.pathname)
+
   return (
     <>
       <header
         className={`flex z-50 fixed left-0 lg:left-64 right-0 top-0 h-14 items-center transition px-8 ${
-          isDark() ? 'dark:bg-gray-900' : 'bg-transparent'
+          isDark() ? 'bg-white dark:bg-gray-900' : 'bg-transparent'
+        } ${
+          isSolo() ? 'border-b border-gray-200 dark:border-transparent' : ''
         }`}
         {...rest}
       >

@@ -7,7 +7,7 @@ const submitPost = async variables => {
     null,
     gql`
       mutation submitPost(
-        $title: String!
+        $title: String
         $link: String
         $textContent: String
         $planetName: String

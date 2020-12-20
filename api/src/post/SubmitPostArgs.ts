@@ -4,10 +4,11 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 @ArgsType()
 export class SubmitPostArgs {
-  @Field()
+  @Field({ nullable: true })
+  @IsOptional()
   @Length(1, 300, { message: 'Title must be no longer than 300 characters.' })
   @Matches(/[^ ]+/)
-  title: string
+  title?: string
 
   @Field({ nullable: true })
   @IsOptional()
@@ -24,9 +25,11 @@ export class SubmitPostArgs {
   textContent?: string
 
   @Field({ nullable: true })
+  @IsOptional()
   planetName?: string
 
   @Field(() => [GraphQLUpload], { nullable: true })
+  @IsOptional()
   @ArrayMaxSize(20, { message: 'Cannot upload more than 20 images' })
   images?: FileUpload[]
 }

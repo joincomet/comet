@@ -44,14 +44,14 @@ export default function PlanetJoinButton({ planet }) {
         onClick={() => toggle()}
         className={`h-8 rounded-full inline-flex w-32 items-center justify-center label cursor-pointer transition transform hover:scale-105 ${
           planet.isJoined
-            ? 'bg-black bg-opacity-25 border border-gray-500 text-blue-500'
-            : 'bg-blue-600'
+            ? 'bg-black bg-opacity-25 border border-gray-500 text-white dark:text-blue-500'
+            : 'bg-blue-600 text-white'
         }`}
       >
         {planet.isJoined ? 'Joined' : 'Join'}
       </div>
 
-      <div className="ml-4 w-8 h-8 rounded-full border border-gray-500 bg-black bg-opacity-25 inline-flex items-center justify-center cursor-pointer transition transform hover:scale-105">
+      <div className="ml-4 w-8 h-8 rounded-full border text-white border-gray-500 bg-black bg-opacity-25 inline-flex items-center justify-center cursor-pointer transition transform hover:scale-105">
         <FiMoreHorizontal size={20} />
       </div>
     </div>

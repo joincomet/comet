@@ -118,7 +118,7 @@ function InfoCard() {
       </style>
 
       <div className="py-3">
-        <div className="flex divide-x divide-gray-800">
+        <div className="flex divide-x divide-gray-200 dark:divide-gray-800">
           <div className="space-y-1 flex-grow px-3">
             <a className={link}>Discord</a>
             <a className={link}>Patreon</a>

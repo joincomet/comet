@@ -10,9 +10,10 @@ import NavLink from '@/components/NavLink'
 import { useLogoutMutation } from '@/lib/mutations/authMutations'
 import { useQueryClient } from 'react-query'
 import { useRouter } from 'next/router'
+import ToggleTheme from '@/components/ToggleTheme'
 
 const item =
-  'transition hover:bg-gray-700 cursor-pointer px-4 h-10 flex items-center text-sm text-secondary'
+  'transition hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer px-4 h-10 flex items-center text-sm text-secondary'
 
 export default function UserOptionsDropdown() {
   const currentUser = useCurrentUser().data
@@ -28,15 +29,7 @@ export default function UserOptionsDropdown() {
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: 'bottom-end',
-    modifiers: [
-      {
-        name: 'offset',
-        options: {
-          offset: [-128]
-        }
-      }
-    ]
+    placement: 'bottom-start'
   })
 
   const [show, setShow] = useState(false)
@@ -80,7 +73,7 @@ export default function UserOptionsDropdown() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.15, ease: 'easeInOut' }}
-                className="origin-top-right relative dark:bg-gray-800 rounded-md shadow-xl z-50 w-32"
+                className="origin-top-right relative bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-xl z-50 w-32"
               >
                 <NavLink
                   href={`/user/${currentUser.username}`}
@@ -88,6 +81,7 @@ export default function UserOptionsDropdown() {
                 >
                   My Profile
                 </NavLink>
+                <ToggleTheme className={item} />
                 <NavLink href="/settings" className={item}>
                   Settings
                 </NavLink>

@@ -3,7 +3,7 @@ import { QueryClient } from 'react-query'
 import { fetchUser, useUser } from '@/lib/queries/useUser'
 import Image from 'next/image'
 import { FiCalendar } from 'react-icons/fi'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import UserAvatar from '@/components/user/UserAvatar'
@@ -16,17 +16,50 @@ import UserFollowButton from '@/components/user/UserFollowButton'
 import UserHeader from '@/components/user/UserHeader'
 import { useInView } from 'react-intersection-observer'
 import { useHeaderStore } from '@/lib/stores'
-
-const userInfoItem =
-  'text-tertiary font-medium hover:text-blue-500 dark:hover:text-blue-500 transition cursor-pointer'
+import { FiEdit2 } from 'react-icons/fi'
+import { useForm } from 'react-hook-form'
+import {
+  useEditBioMutation,
+  useUploadAvatarMutation
+} from '@/lib/mutations/editProfileMutations'
 
 export default function UserPage({ variables }) {
   const router = useRouter()
-  const user = useUser({ username: router.query.username }).data
-  const currentUser = useCurrentUser().data
+  const userQuery = useUser({ username: router.query.username })
+  const user = userQuery.data
+  const currentUserQuery = useCurrentUser()
+  const currentUser = currentUserQuery.data
   const { ref, inView } = useInView({ threshold: 0.8 })
   const { setDark } = useHeaderStore()
   useEffect(() => setDark(!inView), [inView])
+
+  const { watch, register } = useForm()
+
+  const avatarImage = watch('avatarImage')
+
+  const uploadAvatar = useUploadAvatarMutation()
+
+  useEffect(() => {
+    if (!avatarImage || avatarImage.length === 0) return
+    uploadAvatar.mutateAsync({ file: avatarImage[0] }).then(avatarUrl => {
+      user.avatarUrl = avatarUrl
+      userQuery.refetch()
+      currentUserQuery.refetch()
+    })
+  }, [avatarImage])
+
+  const [editBio, setEditBio] = useState(false)
+  const editBioMutation = useEditBioMutation()
+  const newBio = watch('newbio')
+
+  const updateBio = async () => {
+    if (!newBio) return
+    const bio = newBio.trim()
+    if (!bio) return
+    await editBioMutation.mutateAsync({ bio })
+    user.bio = bio
+    userQuery.refetch()
+  }
 
   return (
     <div>
@@ -41,10 +74,32 @@ export default function UserPage({ variables }) {
           <div className="flex flex-col items-center md:items-start md:flex-row flex-grow">
             <div className="label block md:hidden mb-4">User</div>
 
-            <UserAvatar
-              className="w-20 h-20 md:w-40 md:h-40 shadow-md md:mr-6"
-              user={user}
-            />
+            <div className="relative md:mr-6 group">
+              <UserAvatar
+                className="w-20 h-20 md:w-40 md:h-40 shadow-md"
+                user={user}
+              />
+
+              {user.isCurrentUser && (
+                <form className="absolute inset-0">
+                  <input
+                    ref={register}
+                    type="file"
+                    name="avatarImage"
+                    id="avatarImage"
+                    accept="image/png, image/jpeg"
+                    className="hidden"
+                  />
+
+                  <label
+                    htmlFor="avatarImage"
+                    className="cursor-pointer bg-black rounded-full w-full h-full inline-flex items-center justify-center bg-opacity-50 transition opacity-0 group-hover:opacity-100"
+                  >
+                    <FiEdit2 className="w-1/2 h-1/2" />
+                  </label>
+                </form>
+              )}
+            </div>
 
             <div className="flex flex-col w-full md:h-full items-center md:items-start justify-end space-y-4">
               <div className="label hidden md:block">User</div>
@@ -96,12 +151,43 @@ export default function UserPage({ variables }) {
 
         <div className="col-span-0 lg:col-span-1">
           <div>
-            <div className="text-xl font-bold tracking-tight leading-none mb-6 text-secondary">
+            <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
               About
+              {user.isCurrentUser && (
+                <span
+                  onClick={() => {
+                    if (editBio) {
+                      updateBio()
+                      setEditBio(false)
+                    } else {
+                      setEditBio(true)
+                    }
+                  }}
+                  className="ml-3 text-mid hover:underline cursor-pointer"
+                >
+                  {editBio ? 'Done' : 'Edit'}
+                </span>
+              )}
             </div>
-            <div className="text-sm text-secondary font-medium">
-              {user.bio || 'New CometX User'}
-            </div>
+
+            <form>
+              <div
+                className={`text-sm text-secondary font-medium ${
+                  editBio ? 'hidden' : 'block'
+                }`}
+              >
+                {user.bio || 'New CometX User'}
+              </div>
+
+              <textarea
+                ref={register}
+                defaultValue={user.bio || 'New CometX User'}
+                name="newbio"
+                className={`dark:bg-gray-800 h-24 rounded text-sm text-secondary font-medium block border-none resize-none p-3 focus:ring-0 w-full ${
+                  editBio ? 'block' : 'hidden'
+                }`}
+              />
+            </form>
 
             <div className="mt-4 text-tertiary text-xs font-medium inline-flex items-center">
               <FiCalendar size={16} className="mr-3" />
