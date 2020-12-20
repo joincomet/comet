@@ -160,6 +160,7 @@ export class PostResolver {
           )
 
           const following = (await user.following).map(user => user.id)
+          following.push(userId)
 
           qb.andWhere(
             'post.planetId = ANY(:joinedPlanets) OR post.authorId = ANY(:following)',
@@ -266,14 +267,26 @@ export class PostResolver {
     { title, link, textContent, planetName, images }: SubmitPostArgs,
     @Ctx() { userId }: Context
   ) {
-    const planet = await this.planetRepo
-      .createQueryBuilder('planet')
-      .where('planet.name = :planetName', { planetName })
-      .getOne()
+    const toSave: any = {
+      title,
+      authorId: userId,
+      rocketers: Promise.resolve([userId])
+    }
 
-    const bannedUsers = await planet.bannedUsers
-    if (bannedUsers.map(u => u.id).includes(userId))
-      throw new Error('You have been banned from ' + planet.name)
+    if (planetName) {
+      const planet = await this.planetRepo
+        .createQueryBuilder('planet')
+        .where('planet.name ILIKE :planetName', {
+          planetName: handleUnderscore(planetName)
+        })
+        .getOne()
+
+      const bannedUsers = await planet.bannedUsers
+      if (bannedUsers.map(u => u.id).includes(userId))
+        throw new Error('You have been banned from ' + planet.name)
+
+      toSave.planetId = planet.id
+    }
 
     if (textContent) {
       textContent = filterXSS(textContent, { whiteList })
@@ -296,15 +309,11 @@ export class PostResolver {
       }
     }
 
-    const post = await this.postRepo.save({
-      title,
-      link,
-      textContent,
-      imageUrls,
-      authorId: userId,
-      planetId: planet.id,
-      rocketers: Promise.resolve([userId])
-    })
+    if (link) toSave.link = link
+    if (textContent) toSave.textContent = textContent
+    if (imageUrls && imageUrls.length > 0) toSave.imageUrls = imageUrls
+
+    const post = await this.postRepo.save(toSave)
 
     await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
 

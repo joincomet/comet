@@ -14,7 +14,7 @@ export default function PostImages({ post }) {
           e.stopPropagation()
           setOpen(true)
         }}
-        className="mt-2 cursor-pointer relative aspect-w-16 aspect-h-9 w-full rounded-2xl"
+        className="mt-2 cursor-pointer relative aspect-w-16 aspect-h-9 w-full rounded"
       >
         <Image
           loading="eager"
@@ -22,7 +22,7 @@ export default function PostImages({ post }) {
           layout="fill"
           src={post.imageUrls[0]}
           objectFit="cover"
-          className="rounded-2xl"
+          className="rounded"
         />
       </div>
 
@@ -34,7 +34,8 @@ export default function PostImages({ post }) {
         closeIcon={<div />}
         classNames={{
           modal:
-            'max-w-screen-sm w-full h-screen bg-transparent shadow-none p-0 m-0'
+            'max-w-screen-sm w-full h-screen bg-transparent shadow-none p-0 m-0',
+          overlay: 'bg-black bg-opacity-75'
         }}
         onOverlayClick={e => {
           e.stopPropagation()

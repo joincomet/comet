@@ -37,6 +37,7 @@ export default function PlanetPopup({
           e.stopPropagation()
           setShow(!show)
         }}
+        className="inline-block"
       >
         {children}
       </div>
@@ -71,7 +72,7 @@ export default function PlanetPopup({
                       {planet.userCount} Members
                     </div>
 
-                    <div className="mt-3 text-sm text-secondary font-medium text-center">
+                    <div className="mt-3 text-sm text-secondary font-medium text-center line-clamp-3">
                       {planet.description || 'New Planet'}
                     </div>
 

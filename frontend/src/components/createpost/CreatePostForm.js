@@ -1,11 +1,14 @@
 // @refresh reset
 import { useForm } from 'react-hook-form'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Slate, Editable, withReact } from 'slate-react'
 import { createEditor } from 'slate'
 import { FiImage, FiLink, FiX } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
+import NavLink from '@/components/NavLink'
+import { useSubmitPostMutation } from '@/lib/mutations/postMutations'
+import { serialize } from '@/lib/serializeHtml'
 
 const error = 'tip text-red-400 mb-2'
 
@@ -27,12 +30,20 @@ export default function CreatePostForm() {
     mode: 'onChange'
   })
 
+  const initialValue = [
+    {
+      type: 'paragraph',
+      children: [{ text: '' }]
+    }
+  ]
+  const [textContent, setTextContent] = useState(initialValue)
+
   let images = Array.from(watch('images') || [])
 
   const previews = () =>
     images.map(image => (image ? URL.createObjectURL(image) : null))
 
-  const { query, pathname } = useRouter()
+  const { query, push } = useRouter()
   const currentUser = useCurrentUser().data
 
   const destination = query.planetname
@@ -41,7 +52,22 @@ export default function CreatePostForm() {
 
   const link = watch('link')
 
-  const onSubmit = async variables => {}
+  const submitPostMutation = useSubmitPostMutation()
+
+  const onSubmit = async ({ title, link }) => {
+    const variables = { title }
+    if (link) variables.link = link
+
+    if (textContent !== initialValue) {
+      const html = serialize({ children: textContent })
+      if (html && html !== `<p></p>`) variables.textContent = html
+    }
+
+    if (images && images.length > 0) variables.images = images
+    if (query.planetname) variables.planetName = query.planetname
+    const { relativeUrl } = await submitPostMutation.mutateAsync(variables)
+    await push(relativeUrl)
+  }
 
   return (
     <form
@@ -60,14 +86,14 @@ export default function CreatePostForm() {
           {errors.title?.type === 'maxLength' &&
             'Title must be no longer than 300 characters'}
         </div>
-        <input
+        <textarea
           name="title"
           ref={register({
             required: true,
             maxLength: 300
           })}
-          placeholder="Title"
-          className="block title bg-gray-200 dark:bg-gray-900 h-12 rounded placeholder-white placeholder-opacity-33 px-3 w-full focus:outline-none"
+          placeholder="Share something..."
+          className="block border-none h-20 focus:ring-0 resize-none bg-gray-200 dark:bg-gray-900 rounded placeholder-white placeholder-opacity-33 px-3 w-full focus:outline-none"
         />
       </div>
 
@@ -101,13 +127,13 @@ export default function CreatePostForm() {
                 }
               }
             })}
-            placeholder="Link URL"
+            placeholder="Link URL (Optional)"
             className="block body text-accent bg-gray-200 dark:bg-gray-900 h-full rounded placeholder-white placeholder-opacity-33 px-12 w-full focus:outline-none"
           />
         </div>
       </div>
 
-      <Editor />
+      <Editor value={textContent} setValue={setTextContent} />
       <div>
         <div className={error}>
           {errors.images?.type === 'size' && 'Max image size is 16 Mb'}
@@ -158,6 +184,17 @@ export default function CreatePostForm() {
             Post
           </button>
         </div>
+
+        <div className="tip text-tertiary mt-2 text-right">
+          Read the{' '}
+          <NavLink
+            href="/about/content"
+            className="text-accent cursor-pointer hover:underline"
+          >
+            Content Policy
+          </NavLink>{' '}
+          before posting
+        </div>
       </div>
       {previews().map((preview, index) => (
         <div key={index} className="aspect-w-16 aspect-h-9 w-full">
@@ -172,15 +209,8 @@ export default function CreatePostForm() {
   )
 }
 
-function Editor() {
-  const initialValue = [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }]
-    }
-  ]
+function Editor({ value, setValue }) {
   const editor = useMemo(() => withReact(createEditor()), [])
-  const [value, setValue] = useState(initialValue)
 
   return (
     <Slate
@@ -189,8 +219,8 @@ function Editor() {
       onChange={newValue => setValue(newValue)}
     >
       <Editable
-        placeholder="Write something..."
-        className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-32"
+        placeholder="Details (Optional)"
+        className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-16"
       />
     </Slate>
   )

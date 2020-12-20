@@ -38,6 +38,7 @@ export default function UserPopup({
           e.stopPropagation()
           setShow(!show)
         }}
+        className="inline-block"
       >
         {children}
       </div>
@@ -73,7 +74,7 @@ export default function UserPopup({
                       @{user.username}
                     </div>
 
-                    <div className="mt-3 text-sm text-secondary font-medium text-center">
+                    <div className="mt-3 text-sm text-secondary font-medium text-center line-clamp-3">
                       {user.bio || 'New CometX User'}
                     </div>
 

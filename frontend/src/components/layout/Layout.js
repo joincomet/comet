@@ -32,6 +32,7 @@ export default function Layout({ children }) {
 
         <div id="userpopover" />
         <div id="timepicker" />
+        <div id="useroptionsdropdown" />
       </div>
     </>
   )

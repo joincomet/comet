@@ -21,7 +21,7 @@ function Post({
   return (
     <article
       onClick={() => router.push(post.relativeUrl)}
-      className={`${className} cursor-pointer bg-white dark:bg-gray-900 relative rounded w-full mb-0.5`}
+      className={`${className} cursor-pointer bg-white dark:bg-gray-900 relative flex rounded pt-2 pl-3 pr-6 pb-0.5 mb-0.5`}
     >
       {post.pinned && (
         <TiPinOutline
@@ -29,80 +29,72 @@ function Post({
           className="absolute top-3 right-3 text-accent"
         />
       )}
-      <div className="flex items-start pl-3 pr-16 pt-3">
+
+      <div className="pr-3">
         <UserPopup user={post.author}>
           <UserAvatar
             user={post.author}
-            className="cursor-pointer w-10 h-10 mr-3"
+            className="cursor-pointer w-12 h-12"
             loading="eager"
           />
         </UserPopup>
-
-        <div className="flex flex-col">
-          <div className="inline-flex items-center text-sm">
-            {post.author ? (
-              <>
-                <UserPopup user={post.author}>
-                  <div className="inline-flex items-center">
-                    <div className="text-secondary font-medium hover:underline cursor-pointer">
-                      {post.author.name}
-                    </div>
-                  </div>
-                </UserPopup>
-                &nbsp;
-                <UserPopup user={post.author}>
-                  <div className="inline-flex items-center">
-                    <div className="text-tertiary cursor-pointer">
-                      @{post.author.username}
-                    </div>
-                  </div>
-                </UserPopup>
-              </>
-            ) : (
-              <div className="inline-block">
-                <div className="text-secondary font-semibold hover:underline cursor-pointer">
-                  [deleted]
-                </div>
-                &nbsp;
-                <div className="text-tertiary hidden sm:block">@[deleted]</div>
-              </div>
-            )}
-
-            {showPlanet && (
-              <>
-                &nbsp;
-                <CgArrowRight size={16} className="text-tertiary" />
-                &nbsp;
-                <PlanetPopup planet={post.planet}>
-                  <div
-                    className={`font-medium hover:underline cursor-pointer`}
-                    style={{ color: post.planet.color || '#3B82F6' }}
-                  >
-                    {post.planet.name}
-                  </div>
-                </PlanetPopup>
-              </>
-            )}
-            <span className="text-tertiary hidden sm:block">
-              &nbsp;&middot;&nbsp;{post.timeSince}
-            </span>
-          </div>
-
-          <NavLink href={post.relativeUrl} className="title text-primary">
-            {post.title}
-          </NavLink>
-        </div>
       </div>
 
-      <div className="mx-3 sm:mx-16">
+      <div className="flex-grow">
+        <div className="text-sm flex items-center">
+          {post.author ? (
+            <>
+              <UserPopup user={post.author}>
+                <span className="text-secondary font-semibold hover:underline cursor-pointer">
+                  {post.author.name}
+                </span>
+              </UserPopup>
+              &nbsp;
+              <UserPopup user={post.author}>
+                <span className="text-mid cursor-pointer">
+                  @{post.author.username}
+                </span>
+              </UserPopup>
+            </>
+          ) : (
+            <span className="text-secondary font-semibold hover:underline cursor-pointer">
+              [deleted]
+            </span>
+          )}
+
+          {post.planet && showPlanet && (
+            <>
+              &nbsp;
+              <CgArrowRight size={16} className="text-mid inline-block" />
+              &nbsp;
+              <PlanetPopup planet={post.planet}>
+                <span
+                  className={`font-semibold hover:underline cursor-pointer`}
+                  style={{ color: post.planet.color || '#3B82F6' }}
+                >
+                  {post.planet.name}
+                </span>
+              </PlanetPopup>
+            </>
+          )}
+          <span className="text-mid">&nbsp;&middot;&nbsp;{post.timeSince}</span>
+        </div>
+
+        <NavLink
+          href={post.relativeUrl}
+          className="text-base text-primary mt-0.5"
+        >
+          {post.title}
+        </NavLink>
+
         <PostText post={post} showFullText={showFullText} />
 
         <PostImages post={post} />
 
         <PostEmbed post={post} />
-      </div>
 
-      <PostActions post={post} />
+        <PostActions post={post} />
+      </div>
     </article>
   )
 }

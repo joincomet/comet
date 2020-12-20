@@ -37,7 +37,7 @@ export default function PostEmbed({ post }) {
 
   if (ReactPlayer.canPlay(post.linkUrl))
     return (
-      <div className="rounded-2xl overflow-hidden relative aspect-w-16 aspect-h-9 mt-2">
+      <div className="mt-2 rounded overflow-hidden relative aspect-w-16 aspect-h-9">
         <ReactPlayer
           className="absolute top-0 left-0"
           controls={true}
@@ -54,15 +54,16 @@ export default function PostEmbed({ post }) {
         href={post.linkUrl}
         target="_blank"
         rel="noreferrer noopener nofollow"
-        className="mt-2 block rounded-2xl border dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 transition"
+        className="mt-2 block rounded border dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 transition"
       >
         {post.meta.twitterCard === 'summary_large_image' && post.thumbnailUrl && (
-          <div className="w-full aspect-w-16 aspect-h-9 relative rounded-t-2xl">
+          <div className="w-full aspect-w-16 aspect-h-9 relative rounded-t">
             <Image
               src={post.thumbnailUrl}
+              loading="eager"
               layout="fill"
               objectFit="cover"
-              className="rounded-t-2xl"
+              className="rounded-t"
             />
           </div>
         )}
@@ -75,10 +76,11 @@ export default function PostEmbed({ post }) {
                   src={post.thumbnailUrl || post.logoUrl}
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-l-2xl"
+                  className="rounded-l"
+                  loading="eager"
                 />
               ) : (
-                <div className="flex w-32 h-32 rounded-l-xl">
+                <div className="flex w-32 h-32 rounded-l">
                   <FiLink className="w-8 h-8 m-auto text-tertiary" />
                 </div>
               )}
@@ -101,7 +103,12 @@ export default function PostEmbed({ post }) {
             <div className="mt-auto flex flex-row items-center pt-3 text-tertiary text-xs">
               {post.logoUrl && (
                 <div className="inline-block w-4 h-4 mr-3">
-                  <Image src={post.logoUrl} width={16} height={16} />
+                  <Image
+                    loading="eager"
+                    src={post.logoUrl}
+                    width={16}
+                    height={16}
+                  />
                 </div>
               )}
               {post.domain}
@@ -116,7 +123,7 @@ export default function PostEmbed({ post }) {
       href={post.linkUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-blue-500 hover:underline cursor-pointer text-sm break-all"
+      className="block p-3 border dark:border-gray-800 rounded mt-2 text-blue-500 hover:underline cursor-pointer text-sm break-all"
     >
       {post.linkUrl}
     </a>

@@ -7,6 +7,9 @@ const flattenColorPalette = require('tailwindcss/lib/util/flattenColorPalette')
 module.exports = {
   theme: {
     extend: {
+      spacing: {
+        18: '4.5rem'
+      },
       colors: {
         gray: {
           850: '#202023'
@@ -39,14 +42,78 @@ module.exports = {
         33: '0.333'
       },
       typography: theme => ({
+        DEFAULT: {
+          css: {
+            color: theme('colors.gray.800'),
+            a: {
+              color: theme('colors.blue.500'),
+              '&:hover': {
+                color: theme('colors.blue.500'),
+                textDecoration: 'underline'
+              }
+            },
+            'h2 a': {
+              color: theme('colors.gray.800'),
+              textDecoration: 'none'
+            },
+            '.tag a': {
+              textDecoration: 'none'
+            }
+          }
+        },
+
         dark: {
           css: {
-            color: theme('colors.gray.100'),
+            color: theme('colors.white'),
             a: {
-              color: theme('colors.blue.100'),
+              color: theme('colors.blue.500'),
               '&:hover': {
-                color: theme('colors.blue.100')
+                color: theme('colors.blue.500'),
+                textDecoration: 'underline'
               }
+            },
+
+            'a strong': {
+              color: theme('colors.blue.500')
+            },
+
+            'h2 a': {
+              color: theme('colors.blue.500')
+            },
+
+            h1: {
+              color: theme('colors.white')
+            },
+            h2: {
+              color: theme('colors.white')
+            },
+            h3: {
+              color: theme('colors.white')
+            },
+            h4: {
+              color: theme('colors.white')
+            },
+            h5: {
+              color: theme('colors.white')
+            },
+            h6: {
+              color: theme('colors.white')
+            },
+
+            strong: {
+              color: theme('colors.white')
+            },
+
+            code: {
+              color: theme('colors.white')
+            },
+
+            figcaption: {
+              color: theme('colors.white')
+            },
+
+            '::selection': {
+              backgroundColor: '#6f7bb635'
             }
           }
         }

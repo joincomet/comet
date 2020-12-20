@@ -3,7 +3,7 @@ import { gql } from 'graphql-request'
 import { useMutation } from 'react-query'
 
 const joinPlanet = async variables => {
-  const { login } = await request(
+  await request(
     null,
     gql`
       mutation joinPlanet($planetId: ID!) {
@@ -12,13 +12,12 @@ const joinPlanet = async variables => {
     `,
     variables
   )
-  return login
 }
 
 export const useJoinPlanetMutation = () => useMutation(joinPlanet)
 
 const leavePlanet = async variables => {
-  const { login } = await request(
+  await request(
     null,
     gql`
       mutation leavePlanet($planetId: ID!) {
@@ -27,7 +26,6 @@ const leavePlanet = async variables => {
     `,
     variables
   )
-  return login
 }
 
 export const useLeavePlanetMutation = () => useMutation(leavePlanet)

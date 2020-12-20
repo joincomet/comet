@@ -5,6 +5,7 @@ import UserAvatar from '@/components/user/UserAvatar'
 import { useHeaderStore } from '@/lib/stores'
 import { useRouter } from 'next/router'
 import { useLogin } from '@/lib/useLogin'
+import UserOptionsDropdown from '@/components/user/UserOptionsDropdown'
 
 export default function Header({ children, className, ...rest }) {
   const currentUser = useCurrentUser().data
@@ -40,10 +41,7 @@ export default function Header({ children, className, ...rest }) {
                 <FiBell className="w-5 h-5" />
               </div>
 
-              <div className="inline-flex items-center">
-                <UserAvatar user={currentUser} />
-                <div className="ml-3 text-sm">{currentUser.name}</div>
-              </div>
+              <UserOptionsDropdown />
             </div>
           ) : (
             <div

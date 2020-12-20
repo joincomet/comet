@@ -140,7 +140,8 @@ function InfoCard() {
 
 const getVariables = query => {
   const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
-  const time = query.time ? query.time.toUpperCase() : 'ALL'
+  let time = query.time ? query.time.toUpperCase() : 'ALL'
+  if (sort === 'TOP' && !query.time) time = 'DAY'
   return { sort, time, joinedOnly: true }
 }
 

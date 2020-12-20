@@ -74,7 +74,14 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                   Hour
                 </NavLink>
                 <NavLink
-                  href={{ pathname, query: { ...query, time: 'day' } }}
+                  href={{
+                    pathname,
+                    query: (() => {
+                      const q = { ...query }
+                      delete q.time
+                      return q
+                    })()
+                  }}
                   className={`block ${item} ${
                     !query.time || query.time === 'day'
                       ? itemActive
