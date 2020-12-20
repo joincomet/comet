@@ -70,7 +70,7 @@ export default function PostEmbed({ post }) {
 
         <div className="flex items-start">
           {post.meta.twitterCard !== 'summary_large_image' && (
-            <div className="w-32 h-32 relative flex-shrink-0 rounded-l-xl">
+            <div className="w-20 h-20 md:w-32 md:h-32 relative flex-shrink-0 rounded-l-xl">
               {post.thumbnailUrl || post.logoUrl ? (
                 <Image
                   src={post.thumbnailUrl || post.logoUrl}
@@ -80,7 +80,7 @@ export default function PostEmbed({ post }) {
                   loading="eager"
                 />
               ) : (
-                <div className="flex w-32 h-32 rounded-l">
+                <div className="flex w-20 h-20 md:w-32 md:h-32 rounded-l">
                   <FiLink className="w-8 h-8 m-auto text-tertiary" />
                 </div>
               )}
@@ -89,14 +89,16 @@ export default function PostEmbed({ post }) {
 
           <div
             className={`flex flex-col px-3 py-2 cursor-pointer ${
-              post.meta.twitterCard !== 'summary_large_image' ? 'h-32' : ''
+              post.meta.twitterCard !== 'summary_large_image'
+                ? 'h-20 md:h-32'
+                : ''
             }`}
           >
-            <div className="font-medium line-clamp-2 text-secondary text-sm">
+            <div className="font-medium line-clamp-1 md:line-clamp-2 text-secondary text-sm">
               {post.meta && post.meta.title ? post.meta.title : post.linkUrl}
             </div>
 
-            <div className="text-xs font-medium text-tertiary line-clamp-2 mt-1">
+            <div className="text-xs font-medium text-tertiary line-clamp-1 md:line-clamp-2 mt-1">
               {post.meta && post.meta.description ? post.meta.description : ''}
             </div>
 

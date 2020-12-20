@@ -45,7 +45,7 @@ export default function PostActions({ post }) {
   }
 
   return (
-    <div className={`flex flex-row items-center pt-0.5`}>
+    <div className={`flex flex-row items-center pt-1`}>
       <div
         className={`${chip} mr-6 ${
           post.isRocketed ? 'text-red-400' : 'text-tertiary'

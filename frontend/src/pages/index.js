@@ -22,9 +22,9 @@ export default function HomePage({ variables }) {
 
       <div className="mycontainer mt-14">
         <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-2 py-6">
+          <div className="col-span-3 md:col-span-2 py-6">
             {currentUser ? (
-              <div className="mb-6 header-2 text-secondary">
+              <div className="mb-6 header-2 text-secondary px-3 md:px-0">
                 Welcome back,{' '}
                 <NavLink
                   href={`/user/${currentUser.username}`}
@@ -35,7 +35,7 @@ export default function HomePage({ variables }) {
                 .
               </div>
             ) : (
-              <div className="mb-6 header-2 text-secondary">
+              <div className="mb-6 header-2 text-secondary px-3 md:px-0">
                 <span
                   className="text-accent hover:underline cursor-pointer"
                   onClick={() => openLogin()}
@@ -50,7 +50,7 @@ export default function HomePage({ variables }) {
             <Posts variables={variables} />
           </div>
 
-          <div className="col-span-1">
+          <div className="col-span-0 md:col-span-1 hidden md:block">
             <div className="sticky top-14 space-y-4 py-6">
               <ReferralsCard />
 

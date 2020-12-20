@@ -20,8 +20,12 @@ function Post({
   const router = useRouter()
   return (
     <article
-      onClick={() => router.push(post.relativeUrl)}
-      className={`${className} cursor-pointer bg-white dark:bg-gray-900 relative flex rounded pt-2 pl-3 pr-6 pb-0.5 mb-0.5`}
+      onClick={() => {
+        if (!showFullText) router.push(post.relativeUrl)
+      }}
+      className={`${className} ${
+        !showFullText ? 'cursor-pointer' : ''
+      } bg-white dark:bg-gray-900 relative flex rounded pt-2 pl-3 pr-3 md:pr-6 pb-1 mb-0.5`}
     >
       {post.pinned && (
         <TiPinOutline
@@ -41,7 +45,7 @@ function Post({
       </div>
 
       <div className="flex-grow">
-        <div className="text-sm flex items-center">
+        <div className="text-base flex items-center flex-wrap">
           {post.author ? (
             <>
               <UserPopup user={post.author}>

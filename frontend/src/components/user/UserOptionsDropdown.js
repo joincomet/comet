@@ -63,7 +63,7 @@ export default function UserOptionsDropdown() {
         className="inline-flex items-center cursor-pointer"
       >
         <UserAvatar user={currentUser} />
-        <div className="ml-3 text-sm">{currentUser.name}</div>
+        <div className="ml-3 label">{currentUser.name}</div>
       </div>
 
       {

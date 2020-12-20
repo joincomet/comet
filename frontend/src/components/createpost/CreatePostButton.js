@@ -13,8 +13,8 @@ export default function CreatePostButton() {
     <>
       <CreatePostModal />
 
-      <div className="fixed z-50 bottom-8 left-64 right-0 mycontainer grid grid-cols-3 pointer-events-none">
-        <div className="col-span-2 flex">
+      <div className="fixed z-50 bottom-20 md:bottom-8 left-0 md:left-64 right-0 mycontainer grid grid-cols-3 pointer-events-none">
+        <div className="col-span-3 md:col-span-2 flex">
           <NavLink
             href={{
               pathname,

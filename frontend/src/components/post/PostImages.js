@@ -1,11 +1,19 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import Modal from 'react-responsive-modal'
+import { FiChevronRight, FiChevronLeft } from 'react-icons/fi'
+
+const previous =
+  'cursor-pointer absolute z-10 left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-black bg-opacity-50 transition hover:bg-opacity-75'
+const next =
+  'cursor-pointer absolute z-10 left-full transform -translate-x-full top-0 bottom-0 w-10 flex items-center justify-center bg-black bg-opacity-50 transition hover:bg-opacity-75'
 
 export default function PostImages({ post }) {
   if (!post.imageUrls || post.imageUrls.length === 0) return null
 
   const [open, setOpen] = useState(false)
+
+  const [current, setCurrent] = useState(0)
 
   return (
     <>
@@ -20,10 +28,34 @@ export default function PostImages({ post }) {
           loading="eager"
           alt="Image"
           layout="fill"
-          src={post.imageUrls[0]}
+          src={post.imageUrls[current]}
           objectFit="cover"
           className="rounded"
         />
+
+        {post.imageUrls.length > 1 && current < post.imageUrls.length - 1 && (
+          <div
+            onClick={e => {
+              e.stopPropagation()
+              setCurrent(current + 1)
+            }}
+            className={next}
+          >
+            <FiChevronRight size={20} />
+          </div>
+        )}
+
+        {post.imageUrls.length > 1 && current > 0 && (
+          <div
+            onClick={e => {
+              e.stopPropagation()
+              setCurrent(current - 1)
+            }}
+            className={previous}
+          >
+            <FiChevronLeft size={20} />
+          </div>
+        )}
       </div>
 
       <Modal
@@ -52,10 +84,34 @@ export default function PostImages({ post }) {
           <Image
             alt="Image"
             layout="fill"
-            src={post.imageUrls[0]}
+            src={post.imageUrls[current]}
             objectFit="contain"
             className="rounded-md"
           />
+
+          {post.imageUrls.length > 1 && current < post.imageUrls.length - 1 && (
+            <div
+              onClick={e => {
+                e.stopPropagation()
+                setCurrent(current + 1)
+              }}
+              className={next}
+            >
+              <FiChevronRight size={20} />
+            </div>
+          )}
+
+          {post.imageUrls.length > 1 && current > 0 && (
+            <div
+              onClick={e => {
+                e.stopPropagation()
+                setCurrent(current - 1)
+              }}
+              className={previous}
+            >
+              <FiChevronLeft size={20} />
+            </div>
+          )}
         </div>
       </Modal>
     </>

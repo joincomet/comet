@@ -41,7 +41,7 @@ export default function Comment({ comment, level = 0 }) {
           <div className="flex items-start w-full">
             <div className="flex flex-col w-full">
               <div className="h-9 flex items-center text-sm bg-gray-100 dark:bg-gray-900 rounded-t-md">
-                <div className="inline-flex items-center p-3">
+                <div className="inline-flex flex-wrap items-center p-3">
                   <UserPopup user={comment.author}>
                     <div className="text-secondary font-semibold hover:underline cursor-pointer">
                       {comment.author.username}

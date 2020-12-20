@@ -269,8 +269,7 @@ export class PostResolver {
   ) {
     const toSave: any = {
       title,
-      authorId: userId,
-      rocketers: Promise.resolve([userId])
+      authorId: userId
     }
 
     if (planetName) {
@@ -316,6 +315,12 @@ export class PostResolver {
     const post = await this.postRepo.save(toSave)
 
     await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
+
+    await this.postRepo
+      .createQueryBuilder()
+      .relation(Post, 'rocketers')
+      .of(post.id)
+      .add(userId)
 
     return post
   }

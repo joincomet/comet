@@ -37,15 +37,29 @@ export default function PlanetPage({ variables }) {
       <div className="relative h-80 z-0">
         <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
 
-        <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-6 md:pb-12">
-          <div className="flex flex-grow">
+        <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-3 md:pt-6 md:pb-12">
+          <div className="flex flex-col items-center md:items-start md:flex-row flex-grow mt-auto">
+            <div className="label block md:hidden mb-4">
+              {!planet.galaxies || planet.galaxies.length === 0 ? (
+                <span className="hover:underline cursor-pointer">
+                  uncategorized
+                </span>
+              ) : (
+                planet.galaxies.map((galaxy, index) => (
+                  <span key={galaxy} className="hover:underline cursor-pointer">
+                    {index !== 0 && <span>&nbsp;&middot;&nbsp;</span>}
+                    {galaxy}
+                  </span>
+                ))
+              )}
+            </div>
             <PlanetAvatar
-              className="w-40 h-40 shadow-md mr-6"
+              className="w-20 h-20 md:w-40 md:h-40 shadow-md mr-0 md:mr-6"
               planet={planet}
             />
 
-            <div className="flex flex-col w-full h-full items-center md:items-start justify-end space-y-4">
-              <div className="label">
+            <div className="flex flex-col w-full md:h-full items-center md:items-start justify-end space-y-4">
+              <div className="label hidden md:block">
                 {!planet.galaxies || planet.galaxies.length === 0 ? (
                   <span className="hover:underline cursor-pointer">
                     uncategorized

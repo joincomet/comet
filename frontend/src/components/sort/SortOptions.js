@@ -12,7 +12,7 @@ export default function SortOptions() {
   const { query, pathname } = useRouter()
 
   return (
-    <div className="flex items-center space-x-4 mb-6">
+    <div className="flex items-center space-x-4 mb-6 px-3 md:px-0">
       <NavLink
         href={{
           pathname,

@@ -20,7 +20,8 @@ module.exports = {
       },
       fontSize: {
         xxs: '.6875rem',
-        tiny: '.625rem'
+        tiny: '.625rem',
+        base: '.9375rem'
       },
       transitionDelay: {
         400: '400ms',
@@ -110,10 +111,6 @@ module.exports = {
 
             figcaption: {
               color: theme('colors.white')
-            },
-
-            '::selection': {
-              backgroundColor: '#6f7bb635'
             }
           }
         }

@@ -16,7 +16,7 @@ const imageBtn =
   'rounded-full h-8 px-6 label inline-flex items-center justify-center bg-black bg-opacity-25 border border-gray-500 text-blue-500 cursor-pointer transition transform hover:scale-105'
 
 const postBtn =
-  'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105'
+  'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105 focus:outline-none'
 
 export default function CreatePostForm() {
   const {
@@ -72,7 +72,7 @@ export default function CreatePostForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-8 rounded-2xl bg-white dark:bg-gray-800 space-y-4"
+      className="p-6 md:rounded-2xl bg-white dark:bg-gray-800 space-y-4"
     >
       <div className="label text-tertiary">
         Posting to <span className="text-accent">{destination}</span>
@@ -185,7 +185,7 @@ export default function CreatePostForm() {
           </button>
         </div>
 
-        <div className="tip text-tertiary mt-2 text-right">
+        <div className="tip text-tertiary mt-4 text-right">
           Read the{' '}
           <NavLink
             href="/about/content"

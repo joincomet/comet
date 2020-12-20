@@ -17,23 +17,23 @@ function PostPage() {
 
   return (
     <div className="relative mycontainer mt-14">
-      <CommentBox />
-
       <div className="grid grid-cols-3 gap-3">
-        <div className="col-span-2 relative py-3">
+        <div className="col-span-3 md:col-span-2 relative py-3">
           <div>
-            <Post post={post} className="rounded-2xl" showFullText />
+            <Post post={post} className="md:rounded-2xl" showFullText />
 
-            {comments.map((comment, index) => (
-              /*<div key={index}>{JSON.stringify(comment)}</div>*/
-              <Comment comment={comment} key={comment.id} />
-            ))}
+            <div className="px-3 md:px-0">
+              {comments.map((comment, index) => (
+                /*<div key={index}>{JSON.stringify(comment)}</div>*/
+                <Comment comment={comment} key={comment.id} />
+              ))}
 
-            {comments.length > 0 && <div className="h-64" />}
+              {comments.length > 0 && <div className="h-64" />}
+            </div>
           </div>
         </div>
 
-        <div className="col-span-1">
+        <div className="col-span-0 md:col-span-1 hidden md:block">
           <div className="sticky top-14 pt-3">
             <ShareCard post={post} />
           </div>

@@ -70,74 +70,76 @@ body {
   @apply text-tiny font-semibold uppercase tracking-widest;
 }
 
-.line-clamp-3 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* number of lines to show */
-  -webkit-box-orient: vertical;
-   /* These are technically the same, but use both */
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  -ms-word-break: break-all;
-  /* This is the dangerous one in WebKit, as it breaks things wherever */
-  word-break: break-all;
-  /* Instead use this non-standard one: */
-  word-break: break-word;
+@responsive {
+  .line-clamp-3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* number of lines to show */
+    -webkit-box-orient: vertical;
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
 
-  /* Adds a hyphen where the word breaks, if supported (No Blink) */
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-}
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
 
-.line-clamp-2 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* number of lines to show */
-  -webkit-box-orient: vertical;
+  .line-clamp-2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
 
-  /* These are technically the same, but use both */
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 
-  -ms-word-break: break-all;
-  /* This is the dangerous one in WebKit, as it breaks things wherever */
-  word-break: break-all;
-  /* Instead use this non-standard one: */
-  word-break: break-word;
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
 
-  /* Adds a hyphen where the word breaks, if supported (No Blink) */
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-}
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
 
-.line-clamp-1 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1; /* number of lines to show */
-  -webkit-box-orient: vertical;
+  .line-clamp-1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical;
 
-  /* These are technically the same, but use both */
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 
-  -ms-word-break: break-all;
-  /* This is the dangerous one in WebKit, as it breaks things wherever */
-  word-break: break-all;
-  /* Instead use this non-standard one: */
-  word-break: break-word;
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
 
-  /* Adds a hyphen where the word breaks, if supported (No Blink) */
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
 }
 
 .animate-online {
@@ -227,7 +229,7 @@ body {
 }
 
 .header-1 {
-  @apply text-7xl font-extrabold tracking-tight leading-none;
+  @apply text-4xl md:text-7xl font-extrabold tracking-tight leading-none;
 }
 
 .header-2 {
