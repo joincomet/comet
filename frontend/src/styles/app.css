@@ -288,4 +288,6 @@ body {
 
 .twemoji {
   @apply w-4.5 h-4.5 inline-block object-contain;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
