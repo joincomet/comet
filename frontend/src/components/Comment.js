@@ -75,10 +75,10 @@ export default function Comment({ comment, level = 0, setParentComment }) {
           />
         </UserPopup>
 
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 arrow-box rounded-md w-full">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 arrow-box rounded w-full">
           <div className="flex items-start w-full">
             <div className="flex flex-col w-full">
-              <div className="h-9 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t-md">
+              <div className="h-9 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t">
                 <div className="inline-flex flex-wrap items-center p-3 cursor-pointer">
                   <UserPopup user={comment.author}>
                     <span className="text-secondary font-semibold hover:underline cursor-pointer">

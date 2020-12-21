@@ -68,6 +68,9 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
               avatarUrl
               followerCount
               followingCount
+              isFollowing
+              isFollowed
+              isCurrentUser
             }
             timeSince
             timeSinceEdited

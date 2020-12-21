@@ -18,6 +18,7 @@ export const fetchCurrentUser = async (ctx = null) => {
           followingCount
           rocketCount
           name
+          isCurrentUser
         }
       }
     `

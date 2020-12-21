@@ -9,13 +9,6 @@ export class CommentsArgs {
   })
   postId?: any
 
-  @Field(() => ID, {
-    nullable: true,
-    description:
-      'If provided, return thread of comments, starting at parent of given ID'
-  })
-  commentId?: number
-
   @Field(() => String, {
     nullable: true,
     description:
@@ -25,7 +18,8 @@ export class CommentsArgs {
 
   @Field(() => CommentSort, {
     nullable: true,
-    description: 'Sort by new or top'
+    description: 'Sort by new or top',
+    defaultValue: CommentSort.TOP
   })
   sort?: CommentSort
 }

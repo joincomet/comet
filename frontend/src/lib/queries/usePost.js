@@ -50,6 +50,9 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
             rocketCount
             followerCount
             followingCount
+            isFollowing
+            isFollowed
+            isCurrentUser
           }
           timeSince
           timeSinceEdited

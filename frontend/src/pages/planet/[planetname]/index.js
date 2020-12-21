@@ -56,6 +56,7 @@ export default function PlanetPage({ variables }) {
             <PlanetAvatar
               className="w-20 h-20 md:w-40 md:h-40 shadow-md mr-0 md:mr-6"
               planet={planet}
+              loading="eager"
             />
 
             <div className="flex flex-col w-full md:h-full items-center md:items-start justify-end space-y-4">
@@ -102,6 +103,7 @@ export default function PlanetPage({ variables }) {
             layout="fill"
             objectFit="cover"
             className="select-none"
+            loading="eager"
           />
         )}
       </div>

@@ -33,11 +33,16 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
           rocketCount
           isRocketed
           author {
+            id
+            id36
             username
             name
             avatarUrl
             followerCount
             followingCount
+            isFollowing
+            isFollowed
+            isCurrentUser
           }
           timeSince
           timeSinceEdited

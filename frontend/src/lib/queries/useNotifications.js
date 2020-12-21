@@ -18,6 +18,11 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
             username
             avatarUrl
             bio
+            isCurrentUser
+            followerCount
+            followingCount
+            isFollowing
+            isFollowed
           }
           post {
             id
@@ -60,6 +65,9 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
               rocketCount
               followerCount
               followingCount
+              isFollowing
+              isFollowed
+              isCurrentUser
             }
             timeSince
             timeSinceEdited
@@ -78,6 +86,9 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
               avatarUrl
               followerCount
               followingCount
+              isFollowing
+              isFollowed
+              isCurrentUser
             }
             timeSince
             timeSinceEdited

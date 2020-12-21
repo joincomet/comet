@@ -78,6 +78,7 @@ export default function UserPage({ variables }) {
               <UserAvatar
                 className="w-20 h-20 md:w-40 md:h-40 shadow-md"
                 user={user}
+                loading="eager"
               />
 
               {user.isCurrentUser && (
@@ -137,6 +138,7 @@ export default function UserPage({ variables }) {
             layout="fill"
             objectFit="cover"
             className="select-none"
+            loading="eager"
           />
         )}
       </div>

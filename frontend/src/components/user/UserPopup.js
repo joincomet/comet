@@ -153,8 +153,12 @@ export default function UserPopup({
                       </NavLink>
 
                       <div
-                        onClick={() => toggle()}
-                        className={`text-white w-full h-9 rounded inline-flex items-center justify-center text-sm font-medium cursor-pointer ${
+                        onClick={() => {
+                          if (!user.isCurrentUser) toggle()
+                        }}
+                        className={`text-white w-full h-9 rounded inline-flex items-center justify-center text-sm font-medium select-none ${
+                          user.isCurrentUser ? 'opacity-50' : 'cursor-pointer'
+                        } ${
                           user.isFollowing
                             ? 'border border-gray-200 dark:border-gray-700 text-accent'
                             : 'bg-blue-600 text-white'

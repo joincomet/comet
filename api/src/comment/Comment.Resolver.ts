@@ -104,6 +104,9 @@ export class CommentResolver {
     @Args() { postId, sort, username }: CommentsArgs,
     @Ctx() { userId }: Context
   ) {
+    if (!postId && !username)
+      throw new Error('Must specify either postId or username')
+
     postId = parseInt(postId, 36)
 
     const post = await this.postRepo.findOne({ id: postId })
@@ -114,8 +117,6 @@ export class CommentResolver {
 
     if (postId) {
       qb.where('comment.postId = :postId', { postId: post.id })
-
-      if (!sort) sort = CommentSort.TOP // Default top for posts
     }
 
     if (username) {
@@ -125,8 +126,6 @@ export class CommentResolver {
           username: handleUnderscore(username)
         }
       )
-
-      if (!sort) sort = CommentSort.NEW // Default new for users
     }
 
     if (userId) {
@@ -143,9 +142,9 @@ export class CommentResolver {
       })
     }
 
-    qb.addOrderBy('comment.createdAt', 'DESC')
-
     if (sort === CommentSort.TOP) qb.addOrderBy('comment.rocketCount', 'DESC')
+    else if (sort === CommentSort.NEW)
+      qb.addOrderBy('comment.createdAt', 'DESC')
 
     const comments = await qb.getMany()
 

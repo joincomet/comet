@@ -13,13 +13,12 @@ import CreateCommentButton from '@/components/createcomment/CreateCommentButton'
 import PlanetHeader from '@/components/planet/PlanetHeader'
 import UserHeader from '@/components/user/UserHeader'
 import InfoLinks from '@/components/InfoLinks'
+import NavLink from '@/components/NavLink'
 
-function PostPage() {
-  const router = useRouter()
-  const post = usePost({ postId: router.query.id }).data
-  const { comments, commentCount } = useComments({
-    postId: router.query.id
-  }).data
+function PostPage({ postVariables, commentVariables }) {
+  const { query, pathname } = useRouter()
+  const post = usePost(postVariables).data
+  const { comments, commentCount } = useComments(commentVariables).data
   const [parentComment, setParentComment] = useState(null)
 
   return (
@@ -38,13 +37,41 @@ function PostPage() {
       <div className="grid grid-cols-3 gap-3">
         <div className="col-span-3 md:col-span-2 relative py-3">
           <div>
-            <Post post={post} className="md:rounded-2xl" showFullText />
+            <Post post={post} className="md:rounded" showFullText />
 
             <div>
-              <div className="header-3 text-secondary py-4">
-                {`${commentCount > 0 ? commentCount : 'No'} Comment${
-                  commentCount === 1 ? '' : 's'
-                }`}
+              <div className="header-3 text-secondary pt-5 pb-2 flex items-center space-x-4">
+                <div>
+                  {`${commentCount > 0 ? commentCount : 'No'} Comment${
+                    commentCount === 1 ? '' : 's'
+                  }`}
+                </div>
+
+                <NavLink
+                  href={{
+                    pathname,
+                    query: (() => {
+                      const q = { ...query }
+                      delete q.sort
+                      return q
+                    })()
+                  }}
+                  className={`cursor-pointer hover:underline ${
+                    !query.sort || query.sort === 'top'
+                      ? 'text-accent'
+                      : 'text-tertiary'
+                  }`}
+                >
+                  Top
+                </NavLink>
+                <NavLink
+                  href={{ pathname, query: { ...query, sort: 'new' } }}
+                  className={`cursor-pointer hover:underline ${
+                    query.sort === 'new' ? 'text-accent' : 'text-tertiary'
+                  }`}
+                >
+                  New
+                </NavLink>
               </div>
 
               {comments.map((comment, index) => (
@@ -108,33 +135,22 @@ function ShareCard({ post }) {
   )
 }
 
-function CommentBox() {
-  return (
-    <div className="fixed bottom-0 left-0 right-0 ml-64 z-10">
-      <div className="relative mycontainer">
-        <div className="grid grid-cols-3 gap-3">
-          <div className="col-span-2">
-            <div className="transform translate-y-1/2 transition focus-within:translate-y-0 bg-white dark:bg-gray-700 rounded-t-xl p-3 shadow-2xl z-10">
-              <textarea
-                placeholder="Write a comment..."
-                className="h-24 py-3 px-3 text-sm rounded-md w-full dark:bg-gray-700 resize-none border-none placeholder-tertiary"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery(['post', { postId: ctx.query.id }], key =>
+  const { query } = ctx
+
+  const postVariables = { postId: query.id }
+  const commentVariables = {
+    postId: query.id,
+    sort: query.sort ? query.sort.toUpperCase() : 'TOP'
+  }
+
+  await queryClient.prefetchQuery(['post', postVariables], key =>
     fetchPost(key, ctx)
   )
 
-  await queryClient.prefetchQuery(['comments', { postId: ctx.query.id }], key =>
+  await queryClient.prefetchQuery(['comments', commentVariables], key =>
     fetchComments(key, ctx)
   )
 
@@ -142,7 +158,9 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      dehydratedState
+      dehydratedState,
+      postVariables,
+      commentVariables
     }
   }
 }
