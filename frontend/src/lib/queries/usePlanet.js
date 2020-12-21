@@ -11,6 +11,7 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
       query planet($name: String!) {
         planet(name: $name) {
           id
+          id36
           name
           description
           color

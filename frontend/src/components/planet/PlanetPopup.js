@@ -5,12 +5,47 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useClickAway } from 'react-use'
 import NavLink from '@/components/NavLink'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
+import { useLogin } from '@/lib/useLogin'
+import {
+  useJoinPlanetMutation,
+  useLeavePlanetMutation
+} from '@/lib/mutations/joinPlanetMutations'
 
 export default function PlanetPopup({
   planet,
   children,
   placement = 'right-start'
 }) {
+  const currentUser = useCurrentUser().data
+  const { openLogin } = useLogin()
+
+  const joinMutation = useJoinPlanetMutation()
+  const leaveMutation = useLeavePlanetMutation()
+
+  const toggle = () => {
+    if (!currentUser) {
+      openLogin()
+      return
+    }
+    if (planet.isJoined) leave()
+    else join()
+  }
+
+  const variables = { planetId: planet.id }
+
+  const join = async () => {
+    planet.isJoined = true
+    planet.userCount++
+    await joinMutation.mutateAsync(variables)
+  }
+
+  const leave = async () => {
+    planet.isJoined = false
+    planet.userCount--
+    await leaveMutation.mutateAsync(variables)
+  }
+
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
@@ -84,8 +119,15 @@ export default function PlanetPopup({
                         View Planet
                       </NavLink>
 
-                      <div className="text-white w-full h-9 rounded bg-blue-600 inline-flex items-center justify-center text-sm font-medium cursor-pointer">
-                        Join
+                      <div
+                        onClick={() => toggle()}
+                        className={`text-white w-full h-9 rounded inline-flex items-center justify-center text-sm font-medium cursor-pointer ${
+                          planet.isJoined
+                            ? 'border border-gray-200 dark:border-gray-700 text-accent'
+                            : 'bg-blue-600 text-white'
+                        }`}
+                      >
+                        {planet.isJoined ? 'Joined' : 'Join'}
                       </div>
                     </div>
                   </motion.div>

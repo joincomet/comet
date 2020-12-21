@@ -11,6 +11,7 @@ import SortOptions from '@/components/sort/SortOptions'
 import NavLink from '@/components/NavLink'
 import CreatePostButton from '@/components/createpost/CreatePostButton'
 import { useLogin } from '@/lib/useLogin'
+import InfoLinks from '@/components/InfoLinks'
 
 export default function HomePage({ variables }) {
   const currentUser = useCurrentUser().data
@@ -54,7 +55,7 @@ export default function HomePage({ variables }) {
             <div className="sticky top-14 space-y-4 py-6">
               <ReferralsCard />
 
-              <InfoCard />
+              <InfoLinks />
             </div>
           </div>
         </div>
@@ -76,7 +77,7 @@ function ReferralsCard() {
 
   const copy = () => {
     copyToClipboard(copyLink)
-    setCopyTip('Copied invite link!')
+    setCopyTip('Copied!')
     setTimeout(() => setCopyTip('Copy invite link'), 3000)
   }
 
@@ -105,39 +106,6 @@ function ReferralsCard() {
   )
 }
 
-function InfoCard() {
-  const link = 'tip text-tertiary hover:underline cursor-pointer'
-  return (
-    <>
-      <style jsx>
-        {`
-          a {
-            display: block;
-          }
-        `}
-      </style>
-
-      <div className="py-3">
-        <div className="flex divide-x divide-gray-200 dark:divide-gray-800">
-          <div className="space-y-1 flex-grow px-3">
-            <a className={link}>Discord</a>
-            <a className={link}>Patreon</a>
-            <a className={link}>GitHub</a>
-            <a className={link}>Twitter</a>
-          </div>
-
-          <div className="space-y-1 flex-grow px-3">
-            <a className={link}>About</a>
-            <a className={link}>Terms of Service</a>
-            <a className={link}>Privacy Policy</a>
-            <a className={link}>Content Policy</a>
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
-
 const getVariables = query => {
   const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
   let time = query.time ? query.time.toUpperCase() : 'ALL'
@@ -162,8 +130,7 @@ export async function getServerSideProps(ctx) {
 
   await queryClient.prefetchQuery(['currentUser'], () => fetchCurrentUser(ctx))
 
-  const dehydratedState = dehydrate(queryClient)
-  dehydratedState.queries[0].state.data.pageParams = [0]
+  const dehydratedState = JSON.parse(JSON.stringify(dehydrate(queryClient)))
 
   return {
     props: {

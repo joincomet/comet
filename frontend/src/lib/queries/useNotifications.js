@@ -41,20 +41,25 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
             }
             planet {
               id
+              id36
               name
               description
               color
               avatarUrl
               bannerUrl
               isJoined
+              userCount
             }
             author {
+              id
+              id36
               username
               name
               bio
               avatarUrl
               rocketCount
               followerCount
+              followingCount
             }
             timeSince
             timeSinceEdited
@@ -66,9 +71,13 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
             textContent
             rocketCount
             author {
+              id
+              id36
               username
               name
               avatarUrl
+              followerCount
+              followingCount
             }
             timeSince
             timeSinceEdited

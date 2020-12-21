@@ -9,23 +9,51 @@ import Comment from '@/components/Comment'
 import Tippy from '@tippyjs/react'
 import { useCopyToClipboard } from 'react-use'
 import { dehydrate } from 'react-query/hydration'
+import CreateCommentButton from '@/components/createcomment/CreateCommentButton'
+import PlanetHeader from '@/components/planet/PlanetHeader'
+import UserHeader from '@/components/user/UserHeader'
+import InfoLinks from '@/components/InfoLinks'
 
 function PostPage() {
   const router = useRouter()
   const post = usePost({ postId: router.query.id }).data
-  const comments = useComments({ postId: router.query.id }).data
+  const { comments, commentCount } = useComments({
+    postId: router.query.id
+  }).data
+  const [parentComment, setParentComment] = useState(null)
 
   return (
-    <div className="relative mycontainer mt-14">
+    <div className="relative mycontainer mt-28">
+      {post.planet ? (
+        <PlanetHeader show={true} planet={post.planet} />
+      ) : (
+        <UserHeader show={true} user={post.author} />
+      )}
+
+      <CreateCommentButton
+        post={post}
+        parentComment={parentComment}
+        setParentComment={setParentComment}
+      />
       <div className="grid grid-cols-3 gap-3">
         <div className="col-span-3 md:col-span-2 relative py-3">
           <div>
             <Post post={post} className="md:rounded-2xl" showFullText />
 
-            <div className="px-3 md:px-0">
+            <div>
+              <div className="header-3 text-secondary py-4">
+                {`${commentCount > 0 ? commentCount : 'No'} Comment${
+                  commentCount === 1 ? '' : 's'
+                }`}
+              </div>
+
               {comments.map((comment, index) => (
                 /*<div key={index}>{JSON.stringify(comment)}</div>*/
-                <Comment comment={comment} key={comment.id} />
+                <Comment
+                  comment={comment}
+                  key={comment.id}
+                  setParentComment={setParentComment}
+                />
               ))}
 
               {comments.length > 0 && <div className="h-64" />}
@@ -34,8 +62,11 @@ function PostPage() {
         </div>
 
         <div className="col-span-0 md:col-span-1 hidden md:block">
-          <div className="sticky top-14 pt-3">
+          <div className="sticky top-28 pt-3">
             <ShareCard post={post} />
+            <div className="mt-3">
+              <InfoLinks />
+            </div>
           </div>
         </div>
       </div>
@@ -54,7 +85,7 @@ function ShareCard({ post }) {
 
   const copy = () => {
     copyToClipboard(copyLink)
-    setCopyTip('Copied post link!')
+    setCopyTip('Copied!')
     setTimeout(() => setCopyTip('Copy post link'), 3000)
   }
 

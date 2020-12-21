@@ -9,6 +9,7 @@ export default function UserHeader({ user, show }) {
       <UserAvatar user={user} />
       <div className="ml-4 text-xl font-bold tracking-tight leading-none">
         {user.name}
+        <span className="text-mid">&nbsp;@{user.username}</span>
       </div>
 
       <div className="ml-auto">

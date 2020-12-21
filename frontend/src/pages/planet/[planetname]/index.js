@@ -178,8 +178,7 @@ export async function getServerSideProps(ctx) {
     fetchPlanet(key, ctx)
   )
 
-  const dehydratedState = dehydrate(queryClient)
-  dehydratedState.queries[0].state.data.pageParams = [0]
+  const dehydratedState = JSON.parse(JSON.stringify(dehydrate(queryClient)))
 
   return {
     props: {

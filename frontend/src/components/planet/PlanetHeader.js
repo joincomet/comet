@@ -8,7 +8,7 @@ export default function PlanetHeader({ planet, show }) {
     <SubHeaderBase show={show}>
       <PlanetAvatar planet={planet} />
       <div className="ml-4 text-xl font-bold tracking-tight leading-none">
-        {planet.name}
+        +{planet.name}
       </div>
 
       <div className="ml-auto">

@@ -50,6 +50,8 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
               twitterCard
             }
             planet {
+              id
+              id36
               name
               description
               color
@@ -58,10 +60,14 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
               isJoined
             }
             author {
+              id
+              id36
               username
               name
               bio
               avatarUrl
+              followerCount
+              followingCount
             }
             timeSince
             timeSinceEdited

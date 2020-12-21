@@ -31,20 +31,25 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           }
           planet {
             id
+            id36
             name
             description
             color
             avatarUrl
             bannerUrl
             isJoined
+            userCount
           }
           author {
+            id
+            id36
             username
             name
             bio
             avatarUrl
             rocketCount
             followerCount
+            followingCount
           }
           timeSince
           timeSinceEdited

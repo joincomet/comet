@@ -59,8 +59,7 @@ export class CommentResolver {
       textContent,
       parentCommentId,
       postId,
-      authorId: userId,
-      rocketers: Promise.resolve([userId])
+      authorId: userId
     })
 
     await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
@@ -90,6 +89,12 @@ export class CommentResolver {
         } as Notification)
       }
     }
+
+    await this.commentRepo
+      .createQueryBuilder()
+      .relation(Comment, 'rocketers')
+      .of(savedComment.id)
+      .add(userId)
 
     return savedComment
   }

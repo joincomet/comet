@@ -59,8 +59,9 @@ export class Post {
 
   @Field({ nullable: true })
   get thumbnailUrl(): string | null {
-    if (this.imageUrls.length > 0) return this.imageUrls[0]
+    if (!this.linkUrl) return null
     if (this.meta && this.meta.image) return this.meta.image
+    if (this.meta && this.meta.logo) return this.meta.logo
     return null
   }
 

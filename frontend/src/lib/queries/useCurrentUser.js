@@ -9,11 +9,13 @@ export const fetchCurrentUser = async (ctx = null) => {
       query currentUser {
         currentUser {
           id
+          id36
           admin
           username
           avatarUrl
           postCount
           followerCount
+          followingCount
           rocketCount
           name
         }

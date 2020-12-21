@@ -5,7 +5,12 @@ import { usePopper } from 'react-popper'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useClickAway } from 'react-use'
 import NavLink from '@/components/NavLink'
-import Link from 'next/link'
+import { useLogin } from '@/lib/useLogin'
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation
+} from '@/lib/mutations/followMutations'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 
 export default function UserPopup({
   user,
@@ -29,6 +34,35 @@ export default function UserPopup({
     )
       setShow(false)
   })
+
+  const currentUser = useCurrentUser().data
+  const { openLogin } = useLogin()
+
+  const followMutation = useFollowUserMutation()
+  const unfollowMutation = useUnfollowUserMutation()
+
+  const toggle = () => {
+    if (!currentUser) {
+      openLogin()
+      return
+    }
+    if (user.isFollowing) unfollow()
+    else follow()
+  }
+
+  const variables = { followedId: user.id }
+
+  const follow = async () => {
+    user.isFollowing = true
+    user.followerCount++
+    await followMutation.mutateAsync(variables)
+  }
+
+  const unfollow = async () => {
+    user.isFollowing = false
+    user.followerCount--
+    await unfollowMutation.mutateAsync(variables)
+  }
 
   return (
     <>
@@ -65,17 +99,49 @@ export default function UserPopup({
                     transition={{ duration: 0.15, ease: 'easeInOut' }}
                     className="relative border border-gray-200 dark:border-transparent bg-white dark:bg-gray-800 rounded-md shadow-xl p-3 flex flex-col items-center z-50 w-64"
                   >
-                    <UserAvatar user={user} showOnline className="w-20 h-20" />
-                    <div className="leading-none mt-3 font-medium">
-                      {user.name}
-                    </div>
+                    <NavLink
+                      className="w-20 h-20"
+                      href={`/user/${user.username}`}
+                    >
+                      <UserAvatar
+                        user={user}
+                        showOnline
+                        className="w-20 h-20"
+                      />
+                    </NavLink>
 
-                    <div className="leading-none mt-1.5 font-medium text-xs text-tertiary">
+                    <NavLink
+                      href={`/user/${user.username}`}
+                      className="leading-none mt-3 font-medium"
+                    >
+                      {user.name}
+                    </NavLink>
+
+                    <NavLink
+                      href={`/user/${user.username}`}
+                      className="leading-none mt-1.5 font-medium text-xs text-tertiary"
+                    >
                       @{user.username}
-                    </div>
+                    </NavLink>
 
                     <div className="mt-3 text-sm text-secondary font-medium text-center line-clamp-3">
                       {user.bio || 'New CometX User'}
+                    </div>
+
+                    <div className="flex text-sm space-x-4 mt-3 text-tertiary">
+                      <div>
+                        <span className="text-secondary font-bold">
+                          {user.followerCount}
+                        </span>{' '}
+                        Follower
+                        {user.followerCount === 1 ? '' : 's'}
+                      </div>
+                      <div>
+                        <span className="text-secondary font-bold">
+                          {user.followingCount}
+                        </span>{' '}
+                        Following
+                      </div>
                     </div>
 
                     <div className="flex items-center mt-4 space-x-3 w-full">
@@ -86,8 +152,15 @@ export default function UserPopup({
                         View profile
                       </NavLink>
 
-                      <div className="text-white w-full h-9 rounded bg-blue-600 inline-flex items-center justify-center text-sm font-medium cursor-pointer">
-                        Follow
+                      <div
+                        onClick={() => toggle()}
+                        className={`text-white w-full h-9 rounded inline-flex items-center justify-center text-sm font-medium cursor-pointer ${
+                          user.isFollowing
+                            ? 'border border-gray-200 dark:border-gray-700 text-accent'
+                            : 'bg-blue-600 text-white'
+                        }`}
+                      >
+                        {user.isFollowing ? 'Following' : 'Follow'}
                       </div>
                     </div>
                   </motion.div>

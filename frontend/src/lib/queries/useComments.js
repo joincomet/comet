@@ -31,10 +31,13 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
           parentCommentId
           textContent
           rocketCount
+          isRocketed
           author {
             username
             name
             avatarUrl
+            followerCount
+            followingCount
           }
           timeSince
           timeSinceEdited
@@ -44,7 +47,7 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
     variables
   )
 
-  return unflatten(comments)
+  return { comments: unflatten(comments), commentCount: comments.length }
 }
 
 export const useComments = variables =>

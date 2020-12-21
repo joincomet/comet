@@ -178,6 +178,7 @@ export default function CreatePostForm() {
           />
 
           <button
+            type="submit"
             disabled={!formState.isValid}
             className={`ml-auto ${postBtn}`}
           >
@@ -220,7 +221,7 @@ function Editor({ value, setValue }) {
     >
       <Editable
         placeholder="Details"
-        className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-16"
+        className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-24 min-w-full overflow-y-auto"
       />
     </Slate>
   )

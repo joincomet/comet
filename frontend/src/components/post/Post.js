@@ -89,11 +89,7 @@ function Post({
           href={post.relativeUrl}
           className="text-base text-primary mt-0.5"
         >
-          <Twemoji
-            options={{ className: 'w-4.5 h-4.5 inline-block object-contain' }}
-          >
-            {post.title}
-          </Twemoji>
+          <Twemoji options={{ className: 'twemoji' }}>{post.title}</Twemoji>
         </NavLink>
 
         <PostText post={post} showFullText={showFullText} />

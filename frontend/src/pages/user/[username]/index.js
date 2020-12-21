@@ -129,7 +129,7 @@ export default function UserPage({ variables }) {
           </div>
         </div>
 
-        <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent dark:to-gray-850" />
+        <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent to-gray-100 dark:to-gray-850" />
 
         {user.bannerUrl && (
           <Image
@@ -229,8 +229,7 @@ export async function getServerSideProps(ctx) {
     fetchUser(key, ctx)
   )
 
-  const dehydratedState = dehydrate(queryClient)
-  dehydratedState.queries[0].state.data.pageParams = [0]
+  const dehydratedState = JSON.parse(JSON.stringify(dehydrate(queryClient)))
 
   return {
     props: {
