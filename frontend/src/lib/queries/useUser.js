@@ -11,7 +11,6 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
       query user($username: String!) {
         user(username: $username) {
           id
-          id36
           username
           name
           timeSinceCreated

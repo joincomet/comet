@@ -21,11 +21,7 @@ export class AuthResolver {
     @Args() { username, password, email }: SignUpArgs,
     @Ctx() { res }: Context
   ) {
-    if (
-      username.toLowerCase() === 'null' ||
-      username.toLowerCase() === 'undefined'
-    )
-      throw new Error('Invalid username')
+    if (!username) throw new Error('Invalid username')
 
     bannedWords.forEach(u => {
       if (username.toLowerCase().includes(u.toLowerCase())) {

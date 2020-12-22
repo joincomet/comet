@@ -44,14 +44,14 @@ export class CommentResolver {
     const post = await this.postRepo
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })
-      .leftJoinAndSelect('post.planet', 'planet')
-      .leftJoinAndSelect('planet.bannedUsers', 'bannedUser')
       .getOne()
 
-    const planet = await post.planet
-    const bannedUsers = await planet.bannedUsers
-    if (bannedUsers.map(u => u.id).includes(userId))
-      throw new Error('You have been banned from ' + planet.name)
+    if (post.planetId) {
+      const planet = await post.planet
+      const bannedUsers = await planet.bannedUsers
+      if (bannedUsers.map(u => u.id).includes(userId))
+        throw new Error('You have been banned from ' + planet.name)
+    }
 
     textContent = filterXSS(textContent, { whiteList })
 

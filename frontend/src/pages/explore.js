@@ -63,7 +63,7 @@ export default function ExplorePage() {
 
           <div className="col-span-2">
             <div className="relative card pb-3 my-3">
-              <div className="sticky top-14 rounded-t-lg dark:bg-gray-800 p-3 z-10 font-semibold text-secondary border-b dark:border-gray-700 flex items-center">
+              <div className="sticky top-14 rounded-t-lg bg-white dark:bg-gray-800 p-3 z-10 font-semibold text-secondary border-b dark:border-gray-700 flex items-center">
                 {planets.length} planets in&nbsp;
                 <div className="text-accent hover:underline cursor-pointer">
                   all

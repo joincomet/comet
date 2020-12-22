@@ -1,4 +1,4 @@
-import { Arg, Authorized, ID, Mutation, UseMiddleware } from 'type-graphql'
+import { Arg, Authorized, ID, Mutation } from 'type-graphql'
 import { Planet } from '@/planet/Planet.Entity'
 import { uploadImage } from '@/S3Storage'
 import { Stream } from 'stream'
@@ -30,17 +30,17 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async pinPost(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetId', () => ID) planetId: number,
     @Arg('postId', () => ID) postId: number
   ) {
-    await this.postRepo.update(postId, { pinned: true })
+    await this.postRepo.update(postId, { pinned: true, pinnedAt: new Date() })
     return true
   }
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async unpinPost(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetId', () => ID) planetId: number,
     @Arg('postId', () => ID) postId: number
   ) {
     await this.postRepo.update(postId, { pinned: false })
@@ -50,7 +50,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async removeComment(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetId', () => ID) planetId: number,
     @Arg('commentId', () => ID) commentId: number,
     @Arg('removedReason') removedReason: string
   ) {
@@ -67,13 +67,13 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async banUserFromPlanet(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetId', () => ID) planetId: number,
     @Arg('bannedUserId', () => ID) bannedUserId: number
   ) {
     await this.planetRepo
       .createQueryBuilder()
       .relation(Planet, 'bannedUsers')
-      .of(planet)
+      .of(planetId)
       .add(bannedUserId)
     return true
   }
@@ -81,13 +81,13 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async unbanUserFromPlanet(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetId', () => ID) planetId: number,
     @Arg('bannedUserId', () => ID) bannedUserId: number
   ) {
     await this.planetRepo
       .createQueryBuilder()
       .relation(Planet, 'bannedUsers')
-      .of(planet)
+      .of(planetId)
       .remove(bannedUserId)
     return true
   }
@@ -95,7 +95,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async uploadPlanetAvatarImage(
-    @Arg('planetName', () => String) planetName: string,
+    @Arg('planetId', () => ID) planetId: number,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
     const { createReadStream, mimetype } = await file
@@ -108,7 +108,7 @@ export class ModerationResolver {
 
     const avatarUrl = await uploadImage(outStream, file.mimetype)
 
-    await this.planetRepo.update({ name: planetName }, { avatarUrl })
+    await this.planetRepo.update(planetId, { avatarUrl })
 
     return true
   }
@@ -116,7 +116,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async uploadPlanetBannerImage(
-    @Arg('planetName', () => String) planetName: string,
+    @Arg('planetId', () => ID) planetId: number,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
     const { createReadStream, mimetype } = await file
@@ -129,7 +129,7 @@ export class ModerationResolver {
 
     const bannerUrl = await uploadImage(outStream, file.mimetype)
 
-    await this.planetRepo.update({ name: planetName }, { bannerUrl })
+    await this.planetRepo.update(planetId, { bannerUrl })
 
     return true
   }
@@ -137,7 +137,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async addModerator(
-    @Arg('planetName', () => String) planetName: string,
+    @Arg('planetId', () => ID) planetId: number,
     @Arg('username') username: string
   ) {
     const user = await this.userRepo
@@ -150,19 +150,13 @@ export class ModerationResolver {
       .getOne()
 
     if (!user) throw new Error('User not found')
-    if (
-      (await user.moderatedPlanets).find(
-        p => p.name.toLowerCase() === planetName.toLowerCase()
-      )
-    ) {
-      throw new Error(
-        `${user.username} is already a moderator of ${planetName}`
-      )
+    if ((await user.moderatedPlanets).find(p => p.id === planetId)) {
+      throw new Error(`${user.username} is already a moderator`)
     }
     if ((await user.moderatedPlanets).length >= 3)
       throw new Error(`${user.username} cannot moderate more than 3 planets`)
 
-    const planet = await this.planetRepo.findOne({ name: planetName })
+    const planet = await this.planetRepo.findOne(planetId)
 
     await this.planetRepo
       .createQueryBuilder()

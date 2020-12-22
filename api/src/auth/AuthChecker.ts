@@ -36,7 +36,9 @@ export const authChecker: AuthChecker<Context> = async (
   if (roles.includes('USER')) {
     if (root && root.id) {
       return root.id === user.id
-    } else if (args && args.postId) {
+    }
+  } else if (roles.includes('AUTHOR')) {
+    if (args && args.postId) {
       const post = await getRepository(Post).findOne(args.postId)
       if (!post) return false
       return post.authorId === userId
@@ -44,9 +46,9 @@ export const authChecker: AuthChecker<Context> = async (
   }
 
   // true if planet arg is in list of moderated planets
-  if (roles.includes('MOD') && args && args.planet)
+  else if (roles.includes('MOD') && args && args.planetId)
     return !!(await user.moderatedPlanets).find(
-      planet => planet.name === args.planet
+      planet => planet.id === args.planetId
     )
 
   // false if no other conditions met

@@ -51,6 +51,7 @@ export default function CreatePostForm() {
     : `@${currentUser.username}`
 
   const link = watch('link')
+  const title = watch('title')
 
   const submitPostMutation = useSubmitPostMutation()
 
@@ -68,6 +69,29 @@ export default function CreatePostForm() {
     if (query.planetname) variables.planetName = query.planetname
     const { relativeUrl } = await submitPostMutation.mutateAsync(variables)
     await push(relativeUrl)
+  }
+
+  const validUrl = url => {
+    if (!url) return true
+    try {
+      new URL(url)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const disabled = () => {
+    let htmlEmpty = true
+    const html = serialize({ children: textContent })
+    if (html && html !== `<p></p>`) htmlEmpty = false
+
+    return (
+      htmlEmpty &&
+      (!link || (link && !validUrl(link))) &&
+      !title &&
+      (!images || images.length === 0)
+    )
   }
 
   return (
@@ -117,15 +141,7 @@ export default function CreatePostForm() {
             name="link"
             ref={register({
               maxLength: 5000,
-              validate: url => {
-                if (!url) return true
-                try {
-                  new URL(url)
-                  return true
-                } catch {
-                  return false
-                }
-              }
+              validate: url => validUrl(url)
             })}
             placeholder="Link URL"
             className="block body text-accent bg-gray-200 dark:bg-gray-900 h-full rounded placeholder-white placeholder-opacity-33 px-12 w-full focus:outline-none"
@@ -179,7 +195,7 @@ export default function CreatePostForm() {
 
           <button
             type="submit"
-            disabled={!formState.isValid}
+            disabled={disabled()}
             className={`ml-auto ${postBtn}`}
           >
             Post

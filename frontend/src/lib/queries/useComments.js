@@ -18,23 +18,32 @@ const unflatten = comments => {
   return commentTree
 }
 
+const countChildren = comment => {
+  if (!comment.childComments || comment.childComments.length === 0) return 0
+  let count = 0
+  comment.childComments.forEach(c => {
+    count++
+    c.childCount = countChildren(c)
+    count += c.childCount
+  })
+  return count
+}
+
 export const fetchComments = async ({ queryKey }, ctx = null) => {
   const [_key, variables] = queryKey
 
-  const { comments } = await request(
+  let { comments } = await request(
     ctx,
     gql`
       query comments($postId: ID, $username: String, $sort: CommentSort) {
         comments(postId: $postId, username: $username, sort: $sort) {
           id
-          id36
           parentCommentId
           textContent
           rocketCount
           isRocketed
           author {
             id
-            id36
             username
             name
             avatarUrl
@@ -52,7 +61,11 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
     variables
   )
 
-  return { comments: unflatten(comments), commentCount: comments.length }
+  const commentCount = comments.length
+  comments = unflatten(comments)
+  comments.forEach(c => (c.childCount = countChildren(c)))
+
+  return { comments, commentCount }
 }
 
 export const useComments = variables =>

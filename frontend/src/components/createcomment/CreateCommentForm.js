@@ -3,9 +3,9 @@ import React, { useMemo, useState } from 'react'
 import { Slate, Editable, withReact } from 'slate-react'
 import { createEditor } from 'slate'
 import NavLink from '@/components/NavLink'
-import { useSubmitCommentMutation } from '@/lib/mutations/postMutations'
 import { serialize } from '@/lib/serializeHtml'
 import { useForm } from 'react-hook-form'
+import { useSubmitCommentMutation } from '@/lib/mutations/commentMutations'
 
 const postBtn =
   'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105 focus:outline-none'
@@ -44,7 +44,10 @@ export default function CreateCommentForm({ post, parentComment, close }) {
     if (!variables.textContent) return
 
     const comment = await submitCommentMutation.mutateAsync(variables)
-    parentComment.childComments.unshift(comment)
+    if (parentComment) {
+      if (!parentComment.childComments) parentComment.childComments = []
+      parentComment.childComments.unshift(comment)
+    }
     close()
   }
 
@@ -66,7 +69,7 @@ export default function CreateCommentForm({ post, parentComment, close }) {
       {parentComment && (
         <div
           dangerouslySetInnerHTML={{ __html: parentComment.textContent }}
-          className="prose prose-sm dark:prose-dark p-3 border rounded border-gray-200 dark:border-gray-700"
+          className="prose prose-sm dark:prose-dark p-3 border rounded border-gray-200 dark:border-gray-700 max-h-32 overflow-y-auto min-w-full"
         />
       )}
 
@@ -109,7 +112,7 @@ function Editor({ value, setValue }) {
     >
       <Editable
         placeholder="Write your comment"
-        className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-24 min-w-full overflow-y-auto"
+        className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-32 min-w-full overflow-y-auto"
       />
     </Slate>
   )

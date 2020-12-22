@@ -59,7 +59,7 @@ export default function Comment({ comment, level = 0, setParentComment }) {
       <div
         className={`flex transition ${
           collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
-        } ${comment.deleted ? 'opacity-50' : '100'}`}
+        } ${comment.deleted ? 'opacity-50' : ''}`}
         onClick={
           collapse
             ? () => {
@@ -75,68 +75,71 @@ export default function Comment({ comment, level = 0, setParentComment }) {
           />
         </UserPopup>
 
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 arrow-box rounded w-full">
-          <div className="flex items-start w-full">
-            <div className="flex flex-col w-full">
-              <div className="h-9 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t">
-                <div className="inline-flex flex-wrap items-center p-3 cursor-pointer">
-                  <UserPopup user={comment.author}>
-                    <span className="text-secondary font-semibold hover:underline cursor-pointer">
-                      {comment.author.username}
-                    </span>
-                    &nbsp;
-                    <span className="text-tertiary">
-                      @{comment.author.username}
-                    </span>
-                  </UserPopup>
-                  <div className="text-mid">
-                    &nbsp;&middot;&nbsp;{comment.timeSince}
-                  </div>
-                </div>
-
-                <div className="ml-auto flex text-tertiary items-center h-full">
-                  {!comment.deleted && (
-                    <div
-                      onClick={() => {
-                        setParentComment(comment)
-                        push({
-                          pathname,
-                          query: currentUser
-                            ? { ...query, createcomment: 'true' }
-                            : { ...query, login: 'true' }
-                        })
-                      }}
-                      className="flex items-center transition cursor-pointer dark:hover:bg-gray-700 h-full px-4 font-medium"
-                    >
-                      <div>Reply</div>
-                      <FiCornerUpLeft className="w-4.5 h-4.5 ml-3" />
-                    </div>
-                  )}
-
-                  <div
-                    onClick={() => toggle()}
-                    className={`flex items-center h-full px-4 font-medium ${
-                      !comment.deleted
-                        ? 'transition cursor-pointer dark:hover:bg-gray-700'
-                        : ''
-                    } ${comment.isRocketed ? 'text-red-400' : 'text-tertiary'}`}
-                  >
-                    <div>{comment.rocketCount}</div>
-                    <BiRocket className="w-4.5 h-4.5 ml-3" />
-                  </div>
-                </div>
-              </div>
-
-              {!collapse && !comment.deleted && (
-                <Twemoji options={{ className: 'twemoji' }}>
-                  <div
-                    className="prose prose-sm prose-blue dark:prose-dark max-w-none p-3 border-t border-gray-200 dark:border-gray-800"
-                    dangerouslySetInnerHTML={{ __html: comment.textContent }}
-                  />
-                </Twemoji>
-              )}
+        <div
+          className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 arrow-box rounded w-full ${
+            collapse || comment.deleted ? 'h-10' : ''
+          }`}
+        >
+          <div className="h-10 px-3 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t">
+            <UserPopup user={comment.author}>
+              <span className="text-secondary font-semibold hover:underline cursor-pointer">
+                {comment.author.username}
+              </span>
+              &nbsp;
+              <span className="text-tertiary">@{comment.author.username}</span>
+            </UserPopup>
+            <div className="text-mid">
+              &nbsp;&middot;&nbsp;{comment.timeSince}
             </div>
+            {collapse && comment.childCount > 0 && (
+              <div className="ml-auto text-mid">
+                {comment.childCount} hidden replies
+              </div>
+            )}
           </div>
+
+          {!collapse && !comment.deleted && (
+            <>
+              <Twemoji options={{ className: 'twemoji' }}>
+                <div
+                  className="prose prose-sm prose-blue dark:prose-dark max-w-none p-3 border-t border-gray-200 dark:border-gray-800"
+                  dangerouslySetInnerHTML={{ __html: comment.textContent }}
+                />
+              </Twemoji>
+
+              <div className="flex items-center h-10 border-t dark:border-gray-800 border-gray-200">
+                <div
+                  onClick={() => toggle()}
+                  className={`flex items-center h-full px-4 font-medium ${
+                    !comment.deleted
+                      ? 'transition cursor-pointer hover:text-red-400'
+                      : ''
+                  } ${comment.isRocketed ? 'text-red-400' : 'text-mid'}`}
+                >
+                  <div className="label">{comment.rocketCount}</div>
+                  <BiRocket className="w-4.5 h-4.5 ml-3" />
+                </div>
+
+                {!comment.deleted && (
+                  <div
+                    onClick={() => {
+                      setParentComment(comment)
+                      push({
+                        pathname,
+                        query: currentUser
+                          ? { ...query, createcomment: 'true' }
+                          : { ...query, login: 'true' }
+                      })
+                    }}
+                    className="flex text-mid items-center transition cursor-pointer hover:text-blue-500 h-full px-4 font-medium"
+                  >
+                    <div className="label">Reply</div>
+                    <FiCornerUpLeft className="w-4.5 h-4.5 ml-3" />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
 

@@ -54,15 +54,30 @@ export default function InfoLinks() {
             <NavLink href="/about" target="_blank" className={link}>
               About Us
             </NavLink>
-            <NavLink href="/about/terms" target="_blank" className={link}>
+            <a
+              href="https://github.com/cometx-io/about/blob/master/TERMS.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              className={link}
+            >
               Terms of Service
-            </NavLink>
-            <NavLink href="/about/privacy" target="_blank" className={link}>
+            </a>
+            <a
+              href="https://github.com/cometx-io/about/blob/master/PRIVACY.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              className={link}
+            >
               Privacy Policy
-            </NavLink>
-            <NavLink href="/about/content" target="_blank" className={link}>
+            </a>
+            <a
+              href="https://github.com/cometx-io/about/blob/master/CONTENT.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              className={link}
+            >
               Content Policy
-            </NavLink>
+            </a>
           </div>
         </div>
       </div>

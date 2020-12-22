@@ -16,6 +16,8 @@ import { FiCalendar } from 'react-icons/fi'
 import PlanetJoinButton from '@/components/planet/PlanetJoinButton'
 import PlanetHeader from '@/components/planet/PlanetHeader'
 import CreatePostButton from '@/components/createpost/CreatePostButton'
+import { NextSeo } from 'next-seo'
+import PlanetAbout from '@/components/planet/PlanetAbout'
 
 export default function PlanetPage({ variables }) {
   const { query } = useRouter()
@@ -29,7 +31,19 @@ export default function PlanetPage({ variables }) {
   useEffect(() => setDark(!inView), [inView])
 
   return (
-    <div>
+    <>
+      <NextSeo
+        title={`+${planet.name} – CometX`}
+        description={planet.description}
+        openGraph={{
+          images: [
+            {
+              url: planet.avatarUrl
+            }
+          ]
+        }}
+      />
+
       <PlanetHeader planet={planet} show={!inView} />
 
       <CreatePostButton />
@@ -117,12 +131,7 @@ export default function PlanetPage({ variables }) {
 
           <div className="col-span-0 xl:col-span-1">
             <div className="sticky top-28 pt-6">
-              <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
-                About <span className="">{planet.name}</span>
-              </div>
-              <div className="text-sm text-secondary font-medium">
-                {planet.description || 'New Planet'}
-              </div>
+              <PlanetAbout planet={planet} className="mb-4" />
 
               <div className="mt-4 text-tertiary text-xs font-medium inline-flex items-center">
                 <FiCalendar size={16} className="mr-3" />
@@ -151,7 +160,7 @@ export default function PlanetPage({ variables }) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -168,19 +177,11 @@ export async function getServerSideProps(ctx) {
 
   const variables = getVariables(query)
 
-  await queryClient.prefetchInfiniteQuery(
-    ['posts', variables],
-    key => fetchPosts(key, ctx),
-    {
-      getNextPageParam: (lastPage, pages) => lastPage.nextPage
-    }
-  )
-
   await queryClient.prefetchQuery(['planet', { name: query.planetname }], key =>
     fetchPlanet(key, ctx)
   )
 
-  const dehydratedState = JSON.parse(JSON.stringify(dehydrate(queryClient)))
+  const dehydratedState = dehydrate(queryClient)
 
   return {
     props: {

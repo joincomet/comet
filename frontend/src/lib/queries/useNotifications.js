@@ -13,7 +13,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
           id
           fromUser {
             id
-            id36
             name
             username
             avatarUrl
@@ -26,7 +25,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
           }
           post {
             id
-            id36
             title
             pinned
             textContent
@@ -46,7 +44,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
             }
             planet {
               id
-              id36
               name
               description
               color
@@ -57,7 +54,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
             }
             author {
               id
-              id36
               username
               name
               bio
@@ -74,13 +70,11 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
           }
           comment {
             id
-            id36
             parentCommentId
             textContent
             rocketCount
             author {
               id
-              id36
               username
               name
               avatarUrl

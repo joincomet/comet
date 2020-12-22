@@ -9,7 +9,6 @@ export const fetchCurrentUser = async (ctx = null) => {
       query currentUser {
         currentUser {
           id
-          id36
           admin
           username
           avatarUrl
@@ -19,6 +18,9 @@ export const fetchCurrentUser = async (ctx = null) => {
           rocketCount
           name
           isCurrentUser
+          moderatedPlanets {
+            id
+          }
         }
       }
     `

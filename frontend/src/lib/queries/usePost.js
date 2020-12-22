@@ -11,7 +11,6 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
       query post($postId: ID!) {
         post(postId: $postId) {
           id
-          id36
           title
           pinned
           textContent

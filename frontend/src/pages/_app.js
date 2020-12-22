@@ -10,6 +10,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { LayoutTree } from '@moxy/next-layout'
 import { ThemeProvider } from '@/components/ThemeContext'
 import Layout from '@/components/layout/Layout'
+import SEO from '../next-seo.config'
+import { DefaultSeo } from 'next-seo'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +35,8 @@ export default function App({ Component, pageProps }) {
         <link rel="preconnect" href="https://rsms.me/" crossOrigin="true" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </Head>
+
+      <DefaultSeo {...SEO} />
 
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>

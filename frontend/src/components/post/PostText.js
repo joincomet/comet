@@ -28,7 +28,7 @@ export default function PostText({ post, showFullText = false }) {
       }`}
     >
       {!showFullText && of && (
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent dark:to-gray-900 to-white" />
+        <div className="absolute z-10 inset-0 bg-gradient-to-b from-transparent dark:to-gray-900 to-white" />
       )}
       <div
         dangerouslySetInnerHTML={{ __html: post.textContent }}

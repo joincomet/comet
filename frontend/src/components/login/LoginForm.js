@@ -80,7 +80,7 @@ export default function LoginForm({ onFinish }) {
       </button>
 
       <button
-        type="submit"
+        type="button"
         onClick={() => signup()}
         name="signup"
         className="w-full focus:outline-none rounded-md border border-gray-200 dark:border-gray-700 transition bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white flex items-center mt-3 h-9 label"

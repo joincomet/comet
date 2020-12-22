@@ -98,7 +98,7 @@ function Post({
 
         <PostEmbed post={post} />
 
-        <PostActions post={post} />
+        <PostActions post={post} showOptions={showFullText} />
       </div>
     </article>
   )

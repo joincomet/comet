@@ -10,7 +10,6 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
       query planets($sort: PlanetSort, $joinedOnly: Boolean) {
         planets(sort: $sort, joinedOnly: $joinedOnly) {
           id
-          id36
           name
           avatarUrl
           userCount

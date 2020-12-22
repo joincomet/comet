@@ -120,17 +120,9 @@ export async function getServerSideProps(ctx) {
 
   const variables = getVariables(query)
 
-  await queryClient.prefetchInfiniteQuery(
-    ['posts', variables],
-    key => fetchPosts(key, ctx),
-    {
-      getNextPageParam: (lastPage, pages) => lastPage.nextPage
-    }
-  )
-
   await queryClient.prefetchQuery(['currentUser'], () => fetchCurrentUser(ctx))
 
-  const dehydratedState = JSON.parse(JSON.stringify(dehydrate(queryClient)))
+  const dehydratedState = dehydrate(queryClient)
 
   return {
     props: {

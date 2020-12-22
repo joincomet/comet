@@ -22,6 +22,7 @@ import {
   useEditBioMutation,
   useUploadAvatarMutation
 } from '@/lib/mutations/editProfileMutations'
+import { NextSeo } from 'next-seo'
 
 export default function UserPage({ variables }) {
   const router = useRouter()
@@ -62,7 +63,19 @@ export default function UserPage({ variables }) {
   }
 
   return (
-    <div>
+    <>
+      <NextSeo
+        title={`${user.name} (@${user.username}) – CometX`}
+        description={user.description}
+        openGraph={{
+          images: [
+            {
+              url: user.avatarUrl
+            }
+          ]
+        }}
+      />
+
       {currentUser && user.id === currentUser.id && <CreatePostButton />}
 
       <UserHeader user={user} show={!inView} />
@@ -151,7 +164,7 @@ export default function UserPage({ variables }) {
           <Posts variables={variables} />
         </div>
 
-        <div className="col-span-0 lg:col-span-1">
+        <div className="col-span-0 lg:col-span-1 hidden md:block">
           <div>
             <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
               About
@@ -198,7 +211,7 @@ export default function UserPage({ variables }) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -215,14 +228,6 @@ export async function getServerSideProps(ctx) {
 
   const variables = getVariables(query)
 
-  await queryClient.prefetchInfiniteQuery(
-    ['posts', variables],
-    key => fetchPosts(key, ctx),
-    {
-      getNextPageParam: (lastPage, pages) => lastPage.nextPage
-    }
-  )
-
   await queryClient.prefetchQuery(['comments', variables], key =>
     fetchComments(key, ctx)
   )
@@ -231,7 +236,7 @@ export async function getServerSideProps(ctx) {
     fetchUser(key, ctx)
   )
 
-  const dehydratedState = JSON.parse(JSON.stringify(dehydrate(queryClient)))
+  const dehydratedState = dehydrate(queryClient)
 
   return {
     props: {

@@ -71,6 +71,7 @@ export class User {
   @ManyToMany(() => Planet, planet => planet.users)
   joinedPlanets: Promise<Planet[]>
 
+  @Field(() => [Planet])
   @ManyToMany(() => Planet, planet => planet.moderators)
   moderatedPlanets: Promise<Planet[]>
 

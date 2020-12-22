@@ -63,7 +63,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.15, ease: 'easeInOut' }}
-                className="origin-top-left relative dark:bg-gray-800 rounded-md shadow-xl p-3 z-50 w-32 text-sm text-secondary space-y-3 font-medium"
+                className="origin-top-left relative bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-xl p-3 z-50 w-32 text-sm text-secondary space-y-3 font-medium"
               >
                 <NavLink
                   href={{ pathname, query: { ...query, time: 'hour' } }}

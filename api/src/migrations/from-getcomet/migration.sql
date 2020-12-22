@@ -318,3 +318,8 @@ DELETE FROM "planet" WHERE "post_count" = 0;
 drop type planet_defaultcommentsort_enum cascade;
 drop type planet_defaultsort_enum cascade;
 drop type post_type_enum cascade;
+
+SELECT setval(pg_get_serial_sequence('"comment"', 'id'), (SELECT MAX("id") FROM "comment") + 1);
+SELECT setval(pg_get_serial_sequence('"planet"', 'id'), (SELECT MAX("id") FROM "planet") + 1);
+SELECT setval(pg_get_serial_sequence('"post"', 'id'), (SELECT MAX("id") FROM "post") + 1);
+SELECT setval(pg_get_serial_sequence('"user"', 'id'), (SELECT MAX("id") FROM "user") + 1);

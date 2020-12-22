@@ -1,16 +1,14 @@
 // @refresh reset
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import React, { useEffect, useRef, useState } from 'react'
-import { usePopper } from 'react-popper'
-import { useClickAway } from 'react-use'
-import ReactDOM from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import React from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
 import NavLink from '@/components/NavLink'
 import { useLogoutMutation } from '@/lib/mutations/authMutations'
 import { useQueryClient } from 'react-query'
-import { useRouter } from 'next/router'
 import ToggleTheme from '@/components/ToggleTheme'
+import { Menu, Transition } from '@headlessui/react'
+import { FiMoreHorizontal } from 'react-icons/fi'
+import { menuTransition } from '@/lib/menuTransition'
 
 const item =
   'transition hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer px-4 h-10 flex items-center text-sm text-secondary'
@@ -26,73 +24,77 @@ export default function UserOptionsDropdown() {
     await queryClient.invalidateQueries()
   }
 
-  const [referenceElement, setReferenceElement] = useState(null)
-  const [popperElement, setPopperElement] = useState(null)
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: 'bottom-start'
-  })
-
-  const [show, setShow] = useState(false)
-
-  const { query, pathname } = useRouter()
-
-  useEffect(() => setShow(false), [query, pathname])
-
-  const clickAwayRef = useRef(null)
-  useClickAway(clickAwayRef, ({ target }) => {
-    if (
-      target !== referenceElement &&
-      !referenceElement.contains(target) &&
-      show
-    )
-      setShow(false)
-  })
+  const menuItem =
+    'cursor-pointer transition flex justify-between w-full px-4 py-2 text-sm leading-5 text-left focus:outline-none'
 
   return (
-    <>
-      <div
-        ref={setReferenceElement}
-        onClick={() => setShow(!show)}
-        className="inline-flex flex-nowrap items-center cursor-pointer select-none"
-      >
-        <UserAvatar user={currentUser} />
-        <div className="ml-3 label">{currentUser.name}</div>
-      </div>
+    <div className="relative z-50 h-14">
+      <Menu>
+        {({ open }) => (
+          <>
+            <Menu.Button className="inline-flex flex-nowrap items-center cursor-pointer select-none focus:outline-none h-full">
+              <UserAvatar user={currentUser} className="h-9 w-9" />
+              <div className="ml-4 font-medium text-sm">{currentUser.name}</div>
+            </Menu.Button>
 
-      {
-        <div
-          ref={setPopperElement}
-          style={styles.popper}
-          {...attributes.popper}
-        >
-          <AnimatePresence>
-            {show && (
-              <motion.div
-                ref={clickAwayRef}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.15, ease: 'easeInOut' }}
-                className="origin-top-right relative bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-xl z-50 w-32"
+            <Transition show={open} {...menuTransition}>
+              <Menu.Items
+                static
+                className="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
               >
-                <NavLink
-                  href={`/user/${currentUser.username}`}
-                  className={item}
-                >
-                  My Profile
-                </NavLink>
-                <ToggleTheme className={item} />
-                <NavLink href="/settings" className={item}>
-                  Settings
-                </NavLink>
-                <div onClick={() => logout()} className={item}>
-                  Log Out
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      }
-    </>
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavLink
+                      href={`/user/${currentUser.username}`}
+                      className={`${
+                        active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                      } ${menuItem}`}
+                    >
+                      My Profile
+                    </NavLink>
+                  )}
+                </Menu.Item>
+
+                <Menu.Item>
+                  {({ active }) => (
+                    <ToggleTheme
+                      className={`${
+                        active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                      } ${menuItem}`}
+                    />
+                  )}
+                </Menu.Item>
+
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavLink
+                      href="/settings"
+                      className={`${
+                        active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                      } ${menuItem}`}
+                    >
+                      Settings
+                    </NavLink>
+                  )}
+                </Menu.Item>
+
+                <Menu.Item>
+                  {({ active }) => (
+                    <div
+                      onClick={() => logout()}
+                      className={`${
+                        active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                      } ${menuItem}`}
+                    >
+                      Log Out
+                    </div>
+                  )}
+                </Menu.Item>
+              </Menu.Items>
+            </Transition>
+          </>
+        )}
+      </Menu>
+    </div>
   )
 }

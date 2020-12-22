@@ -84,6 +84,7 @@ export default function UserPopup({
             style={styles.popper}
             {...attributes.popper}
             onClick={e => e.stopPropagation()}
+            className="z-50"
           >
             <AnimatePresence>
               {show && (

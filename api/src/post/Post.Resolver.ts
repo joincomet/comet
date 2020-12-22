@@ -331,7 +331,7 @@ export class PostResolver {
     return post
   }
 
-  @Authorized('USER')
+  @Authorized('AUTHOR')
   @Mutation(() => Boolean)
   async editPost(
     @Arg('postId', () => ID) postId: number,
@@ -354,7 +354,7 @@ export class PostResolver {
     return true
   }
 
-  @Authorized('USER')
+  @Authorized('AUTHOR')
   @Mutation(() => Boolean)
   async deletePost(
     @Arg('postId', () => ID) postId: number,
@@ -371,6 +371,23 @@ export class PostResolver {
       .where('id = :postId', { postId })
       .execute()
 
+    return true
+  }
+
+  @Authorized('AUTHOR')
+  @Mutation(() => Boolean)
+  async pinPostProfile(@Arg('postId', () => ID) postId: number) {
+    await this.postRepo.update(postId, {
+      pinnedByAuthor: true,
+      pinnedByAuthorAt: new Date()
+    })
+    return true
+  }
+
+  @Authorized('AUTHOR')
+  @Mutation(() => Boolean)
+  async unpinPostProfile(@Arg('postId', () => ID) postId: number) {
+    await this.postRepo.update(postId, { pinnedByAuthor: false })
     return true
   }
 

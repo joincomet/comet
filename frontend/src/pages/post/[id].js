@@ -14,6 +14,9 @@ import PlanetHeader from '@/components/planet/PlanetHeader'
 import UserHeader from '@/components/user/UserHeader'
 import InfoLinks from '@/components/InfoLinks'
 import NavLink from '@/components/NavLink'
+import { NextSeo } from 'next-seo'
+import PlanetAbout from '@/components/planet/PlanetAbout'
+import UserAbout from '@/components/user/UserAbout'
 
 function PostPage({ postVariables, commentVariables }) {
   const { query, pathname } = useRouter()
@@ -22,82 +25,123 @@ function PostPage({ postVariables, commentVariables }) {
   const [parentComment, setParentComment] = useState(null)
 
   return (
-    <div className="relative mycontainer mt-28">
-      {post.planet ? (
-        <PlanetHeader show={true} planet={post.planet} />
-      ) : (
-        <UserHeader show={true} user={post.author} />
-      )}
-
-      <CreateCommentButton
-        post={post}
-        parentComment={parentComment}
-        setParentComment={setParentComment}
+    <>
+      <NextSeo
+        title={
+          post.title
+            ? `${post.title} – CometX`
+            : `Post by @${post.author.username} – CometX`
+        }
+        description={
+          post.textContent
+            ? post.textContent.replace(/(<([^>]+)>)/gi, '')
+            : `Submitted ${post.timeSince} by @${post.author.username}`
+        }
+        openGraph={{
+          images: [
+            {
+              url:
+                post.imageUrls && post.imageUrls.length > 0
+                  ? post.imageUrls[0]
+                  : post.thumbnailUrl
+            }
+          ]
+        }}
       />
-      <div className="grid grid-cols-3 gap-3">
-        <div className="col-span-3 md:col-span-2 relative py-3">
-          <div>
-            <Post post={post} className="md:rounded" showFullText />
 
+      <div className="relative mycontainer mt-14 md:mt-28">
+        {post.planet ? (
+          <PlanetHeader show={true} planet={post.planet} />
+        ) : (
+          <UserHeader show={true} user={post.author} />
+        )}
+
+        <CreateCommentButton
+          post={post}
+          parentComment={parentComment}
+          setParentComment={setParentComment}
+        />
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-3 md:col-span-2 relative py-3">
             <div>
-              <div className="header-3 text-secondary pt-5 pb-2 flex items-center space-x-4">
-                <div>
-                  {`${commentCount > 0 ? commentCount : 'No'} Comment${
-                    commentCount === 1 ? '' : 's'
+              <Post post={post} className="md:rounded" showFullText />
+
+              <div className="px-3 md:px-0">
+                <div
+                  className={`header-3 text-secondary pt-5 pb-2 flex items-center space-x-4 ${
+                    commentCount === 0 ? 'justify-center' : ''
                   }`}
+                >
+                  <div>
+                    {`${commentCount > 0 ? commentCount : 'No'} Comment${
+                      commentCount === 1 ? '' : 's'
+                    }`}
+                  </div>
+
+                  {commentCount > 0 && (
+                    <>
+                      <NavLink
+                        href={{
+                          pathname,
+                          query: (() => {
+                            const q = { ...query }
+                            delete q.sort
+                            return q
+                          })()
+                        }}
+                        className={`cursor-pointer hover:underline ${
+                          !query.sort || query.sort === 'top'
+                            ? 'text-accent'
+                            : 'text-tertiary'
+                        }`}
+                      >
+                        Top
+                      </NavLink>
+                      <NavLink
+                        href={{ pathname, query: { ...query, sort: 'new' } }}
+                        className={`cursor-pointer hover:underline ${
+                          query.sort === 'new' ? 'text-accent' : 'text-tertiary'
+                        }`}
+                      >
+                        New
+                      </NavLink>
+                    </>
+                  )}
                 </div>
 
-                <NavLink
-                  href={{
-                    pathname,
-                    query: (() => {
-                      const q = { ...query }
-                      delete q.sort
-                      return q
-                    })()
-                  }}
-                  className={`cursor-pointer hover:underline ${
-                    !query.sort || query.sort === 'top'
-                      ? 'text-accent'
-                      : 'text-tertiary'
-                  }`}
-                >
-                  Top
-                </NavLink>
-                <NavLink
-                  href={{ pathname, query: { ...query, sort: 'new' } }}
-                  className={`cursor-pointer hover:underline ${
-                    query.sort === 'new' ? 'text-accent' : 'text-tertiary'
-                  }`}
-                >
-                  New
-                </NavLink>
+                {comments.map((comment, index) => (
+                  /*<div key={index}>{JSON.stringify(comment)}</div>*/
+                  <Comment
+                    comment={comment}
+                    key={comment.id}
+                    setParentComment={setParentComment}
+                  />
+                ))}
+
+                {comments.length > 0 && <div className="h-64" />}
               </div>
-
-              {comments.map((comment, index) => (
-                /*<div key={index}>{JSON.stringify(comment)}</div>*/
-                <Comment
-                  comment={comment}
-                  key={comment.id}
-                  setParentComment={setParentComment}
-                />
-              ))}
-
-              {comments.length > 0 && <div className="h-64" />}
             </div>
           </div>
-        </div>
 
-        <div className="col-span-0 md:col-span-1 hidden md:block">
-          <div className="sticky top-28 pt-3">
-            <ShareCard post={post} />
-            <div className="mt-3">
-              <InfoLinks />
+          <div className="col-span-0 md:col-span-1 hidden md:block">
+            <div className="sticky top-28 pt-6">
+              <div className="mb-4">
+                {post.planet ? (
+                  <PlanetAbout planet={post.planet} />
+                ) : (
+                  <UserAbout user={post.author} />
+                )}
+              </div>
+
+              <ShareCard post={post} />
+              <div className="mt-3">
+                <InfoLinks />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

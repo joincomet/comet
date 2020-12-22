@@ -31,7 +31,6 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
           nextPage
           posts {
             id
-            id36
             title
             pinned
             textContent
@@ -51,7 +50,6 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             }
             planet {
               id
-              id36
               name
               description
               color
@@ -61,7 +59,6 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             }
             author {
               id
-              id36
               username
               name
               bio
