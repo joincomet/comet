@@ -128,6 +128,8 @@ ALTER TABLE "post"
     RENAME COLUMN "removedReason" TO "removed_reason";
 ALTER TABLE "post"
     RENAME COLUMN "link" TO "link_url";
+ALTER TABLE "post"
+    RENAME COLUMN "sticky" TO "pinned";
 
 ALTER TABLE "post_endorsement"
     RENAME COLUMN "userId" TO "user_id";
@@ -296,14 +298,14 @@ ALTER TABLE "post" DROP COLUMN "type";
 UPDATE "planet" T SET "name" = 'CometX' WHERE T."name" = 'Comet';
 
 ALTER TABLE "planet" ADD COLUMN "user_count" bigint default 1;
-ALTER TABLE "planet" ADD COLUMN "post_count" bigint default 0;
+ALTER TABLE "planet" ADD COLUMN "post_count" integer default 0;
 ALTER TABLE "user" ADD COLUMN "post_count" integer default 0;
 ALTER TABLE "user" ADD COLUMN "comment_count" integer default 0;
 
 ALTER TABLE "post" ALTER COLUMN "rocket_count" TYPE integer;
 ALTER TABLE "post" ALTER COLUMN "comment_count" TYPE integer;
 ALTER TABLE "comment" ALTER COLUMN "rocket_count" TYPE integer;
-ALTER TABLE "user" ALTER COLUMN "rocket_count" TYPE integer;
+ALTER TABLE "user" ALTER COLUMN "rocket_count" TYPE bigint;
 
 UPDATE "planet" T SET "user_count" = (SELECT COUNT(*) FROM "planet_users_user" WHERE "planet_id" = T."id") WHERE 1=1;
 UPDATE "planet" T SET "post_count" = (SELECT COUNT(*) FROM "post" WHERE "planet_id" = T."id") WHERE 1=1;
@@ -314,6 +316,7 @@ UPDATE "user" T SET "comment_count" = (SELECT COUNT(*) FROM "comment" WHERE "aut
 DELETE FROM "planet_users_user" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
 DELETE FROM "planet_moderators_user" WHERE "planet_id" = ANY(SELECT "id" FROM "planet" WHERE "post_count" = 0);
 DELETE FROM "planet" WHERE "post_count" = 0;
+ALTER TABLE "planet" DROP COLUMN "post_count";
 
 drop type planet_defaultcommentsort_enum cascade;
 drop type planet_defaultsort_enum cascade;

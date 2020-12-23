@@ -11,7 +11,7 @@ import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
 import SortOptions from '@/components/sort/SortOptions'
 import { fetchPosts } from '@/lib/queries/usePosts'
-import { useHeaderStore } from '@/lib/stores'
+import { useHeaderStore } from '@/lib/useHeaderStore'
 import { FiCalendar } from 'react-icons/fi'
 import PlanetJoinButton from '@/components/planet/PlanetJoinButton'
 import PlanetHeader from '@/components/planet/PlanetHeader'
@@ -26,7 +26,9 @@ export default function PlanetPage({ variables }) {
 
   const { ref, inView } = useInView({ threshold: 0.8 })
 
-  const { setDark } = useHeaderStore()
+  const { setDark, setTitle } = useHeaderStore()
+
+  useEffect(() => setTitle(`+${planet.name}`), [])
 
   useEffect(() => setDark(!inView), [inView])
 
@@ -48,9 +50,14 @@ export default function PlanetPage({ variables }) {
 
       <CreatePostButton />
 
-      <div className="relative h-80 z-0">
-        <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
-
+      <div
+        className={`relative h-80 z-0 bg-center bg-cover ${
+          !planet.bannerUrl ? 'bg-gradient-to-br from-red-400 to-blue-500' : ''
+        }`}
+        style={{
+          backgroundImage: planet.bannerUrl ? `url(${planet.bannerUrl})` : ''
+        }}
+      >
         <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-3 md:pt-6 md:pb-12">
           <div className="flex flex-col items-center md:items-start md:flex-row flex-grow mt-auto">
             <div className="label block md:hidden mb-4">
@@ -110,16 +117,6 @@ export default function PlanetPage({ variables }) {
         </div>
 
         <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent dark:to-gray-850 to-gray-100" />
-
-        {planet.bannerUrl && (
-          <Image
-            src={planet.bannerUrl}
-            layout="fill"
-            objectFit="cover"
-            className="select-none"
-            loading="eager"
-          />
-        )}
       </div>
 
       <div className="mycontainer">
@@ -133,7 +130,7 @@ export default function PlanetPage({ variables }) {
             <div className="sticky top-28 pt-6">
               <PlanetAbout planet={planet} className="mb-4" />
 
-              <div className="mt-4 text-tertiary text-xs font-medium inline-flex items-center">
+              <div className="mt-4 text-tertiary text-sm font-medium inline-flex items-center">
                 <FiCalendar size={16} className="mr-3" />
                 Created {planet.timeSinceCreated}
               </div>

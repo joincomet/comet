@@ -4,6 +4,14 @@ const colors = require('tailwindcss/colors')
 const flattenColorPalette = require('tailwindcss/lib/util/flattenColorPalette')
   .default
 
+const round = num =>
+  num
+    .toFixed(7)
+    .replace(/(\.[0-9]+?)0+$/, '$1')
+    .replace(/\.0$/, '')
+const rem = px => `${round(px / 16)}rem`
+const em = (px, base) => `${round(px / base)}em`
+
 module.exports = {
   theme: {
     extend: {
@@ -21,9 +29,8 @@ module.exports = {
         sans: ['Inter var', 'Inter', ...defaultTheme.fontFamily.sans]
       },
       fontSize: {
-        xxs: '.6875rem',
-        tiny: '.625rem',
-        base: '.9375rem'
+        base: '.9375rem',
+        13: '.8125rem'
       },
       transitionDelay: {
         400: '400ms',
@@ -61,6 +68,16 @@ module.exports = {
             },
             '.tag a': {
               textDecoration: 'none'
+            },
+            blockquote: {
+              borderLeftColor: theme('colors.gray.300'),
+              backgroundColor: theme('colors.gray.200'),
+              color: theme('colors.gray.600'),
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
+              paddingTop: '0.25rem',
+              paddingBottom: '0.25rem',
+              borderRadius: '0.25rem'
             }
           }
         },
@@ -113,6 +130,12 @@ module.exports = {
 
             figcaption: {
               color: theme('colors.white')
+            },
+
+            blockquote: {
+              borderLeftColor: theme('colors.gray.700'),
+              backgroundColor: theme('colors.gray.800'),
+              color: theme('colors.gray.400')
             }
           }
         }
@@ -164,8 +187,24 @@ module.exports = {
       addUtilities(utilities, variants('borderColor'))
     })
   ],
-  purge: [
-    './src/components/**/*.{js,ts,jsx,tsx}',
-    './src/pages/**/*.{js,ts,jsx,tsx}'
-  ]
+  purge: {
+    content: [
+      './src/components/**/*.{js,ts,jsx,tsx}',
+      './src/pages/**/*.{js,ts,jsx,tsx}'
+    ],
+    options: {
+      safelist: [
+        'transition',
+        'transform',
+        'ease-in',
+        'ease-out',
+        'duration-75',
+        'duration-100',
+        'opacity-0',
+        'opacity-100',
+        'scale-95',
+        'scale-100'
+      ]
+    }
+  }
 }

@@ -59,10 +59,10 @@ export class UserResolver {
     if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
       throw new Error('Image must be PNG or JPEG')
 
-    const outStream = new Stream.PassThrough()
-    createReadStream().pipe(outStream)
-
-    const avatarUrl = await uploadImage(outStream, file.mimetype)
+    const avatarUrl = await uploadImage(createReadStream(), file.mimetype, {
+      width: 256,
+      height: 256
+    })
     await this.userRepo.update(userId, { avatarUrl })
     return avatarUrl
   }
@@ -78,10 +78,9 @@ export class UserResolver {
     if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
       throw new Error('Image must be PNG or JPEG')
 
-    const outStream = new Stream.PassThrough()
-    createReadStream().pipe(outStream)
-
-    const bannerUrl = await uploadImage(outStream, file.mimetype)
+    const bannerUrl = await uploadImage(createReadStream(), file.mimetype, {
+      width: 1920
+    })
     await this.userRepo.update(userId, { bannerUrl })
     return bannerUrl
   }
@@ -173,21 +172,16 @@ export class UserResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async blockUser(
-    @Arg('blockedUsername') blockedUsername: string,
+    @Arg('blockedId', () => ID) blockedId: number,
     @Ctx() { userId }: Context
   ) {
-    const blockedUser = await this.userRepo
-      .createQueryBuilder('user')
-      .where('user.username ILIKE :blockedUsername', {
-        blockedUsername: handleUnderscore(blockedUsername)
-      })
-      .getOne()
-
-    if (!blockedUser) throw new Error('User does not exist')
-
-    if (blockedUser.id === userId) {
+    if (blockedId === userId) {
       throw new Error('Cannot block yourself')
     }
+
+    const blockedUser = await this.userRepo.findOne(blockedId)
+
+    if (!blockedUser) throw new Error('User does not exist')
 
     await this.userRepo
       .createQueryBuilder('user')

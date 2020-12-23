@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import Post from '@/components/post/Post'
 import { fetchComments, useComments } from '@/lib/queries/useComments'
 import { FiCopy } from 'react-icons/fi'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Comment from '@/components/Comment'
 import Tippy from '@tippyjs/react'
 import { useCopyToClipboard } from 'react-use'
@@ -17,12 +17,20 @@ import NavLink from '@/components/NavLink'
 import { NextSeo } from 'next-seo'
 import PlanetAbout from '@/components/planet/PlanetAbout'
 import UserAbout from '@/components/user/UserAbout'
+import { useHeaderStore } from '@/lib/useHeaderStore'
 
 function PostPage({ postVariables, commentVariables }) {
   const { query, pathname } = useRouter()
   const post = usePost(postVariables).data
   const { comments, commentCount } = useComments(commentVariables).data
   const [parentComment, setParentComment] = useState(null)
+
+  const { setTitle } = useHeaderStore()
+
+  useEffect(() => {
+    setTitle(post.title || 'Post')
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <>
@@ -113,6 +121,7 @@ function PostPage({ postVariables, commentVariables }) {
                   /*<div key={index}>{JSON.stringify(comment)}</div>*/
                   <Comment
                     comment={comment}
+                    post={post}
                     key={comment.id}
                     setParentComment={setParentComment}
                   />
@@ -161,7 +170,7 @@ function ShareCard({ post }) {
   }
 
   return (
-    <div className="card p-3">
+    <div className="dark:bg-gray-900 rounded p-3">
       <div className="font-medium text-secondary">Share Post</div>
       <Tippy content={copyTip}>
         <div

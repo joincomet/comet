@@ -23,7 +23,7 @@ export default function PostText({ post, showFullText = false }) {
   return (
     <div
       ref={ref}
-      className={`relative border p-3 mt-2 dark:border-gray-800 rounded overflow-hidden ${
+      className={`relative border p-3 mt-2 dark:border-gray-800 rounded-lg overflow-hidden ${
         !showFullText ? 'transition dark:hover:bg-gray-800 max-h-32' : ''
       }`}
     >
@@ -32,7 +32,7 @@ export default function PostText({ post, showFullText = false }) {
       )}
       <div
         dangerouslySetInnerHTML={{ __html: post.textContent }}
-        className={`prose prose-sm dark:prose-dark max-w-none h-full`}
+        className={`prose prose-sm dark:prose-dark max-w-none h-full overflow`}
       />
     </div>
   )

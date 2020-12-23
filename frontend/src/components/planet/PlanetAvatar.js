@@ -13,10 +13,10 @@ export default function PlanetAvatar({
       }`}
     >
       {planet.avatarUrl ? (
-        <Image
+        <img
+          alt={planet.name}
           src={planet.avatarUrl}
           loading={loading}
-          layout="fill"
           className="rounded-full object-cover object-center"
         />
       ) : (

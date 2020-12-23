@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk'
 import { v4 as uuidv4 } from 'uuid'
 import mime from 'mime'
+import sharp from 'sharp'
 
 const Bucket = process.env.BUCKET
 
@@ -31,17 +32,23 @@ export const hasFile = async (key: string) => {
 
 export const uploadImage = async (
   body: any,
-  contentType: string
+  contentType: string,
+  resize?: any
 ): Promise<string> => {
   const uuid = uuidv4()
   const ext = mime.getExtension(contentType)
   const key = `${uuid}.${ext}`
 
+  const s = sharp().webp({ quality: 75 })
+  if (resize) s.resize(resize)
+  body.pipe(s)
+  body = await s.toBuffer()
+
   const upload = s3.upload({
     Bucket,
     Key: key,
     Body: body,
-    ContentType: contentType,
+    ContentType: 'image/webp',
     ACL: 'public-read',
     CacheControl: 'max-age=2592000'
   })

@@ -14,10 +14,10 @@ export default function UserAvatar({
       }`}
     >
       {user && user.avatarUrl ? (
-        <Image
+        <img
+          alt={user.username}
           src={user.avatarUrl}
           loading={loading}
-          layout="fill"
           className="rounded-full object-cover object-center"
         />
       ) : (

@@ -5,7 +5,7 @@ import { useLogin } from '@/lib/useLogin'
 import {
   useFollowUserMutation,
   useUnfollowUserMutation
-} from '@/lib/mutations/followMutations'
+} from '@/lib/mutations/userMutations'
 import { useForm } from 'react-hook-form'
 import { useUploadBannerMutation } from '@/lib/mutations/editProfileMutations'
 import { useUser } from '@/lib/queries/useUser'

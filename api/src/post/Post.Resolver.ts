@@ -101,7 +101,7 @@ export class PostResolver {
     if (username) {
       qb.andWhere('author.username ILIKE :username', {
         username: handleUnderscore(username)
-      })
+      }).andWhere('post.pinnedByAuthor = false')
     }
 
     if (sort === PostSort.NEW) {
@@ -160,15 +160,17 @@ export class PostResolver {
           )
 
           const following = (await user.following).map(user => user.id)
-          following.push(userId)
 
-          qb.andWhere(
-            'post.planetId = ANY(:joinedPlanets) OR post.authorId = ANY(:following)',
-            {
-              joinedPlanets,
-              following
-            }
-          )
+          if (joinedPlanets.length > 0 || following.length > 0) {
+            following.push(userId)
+            qb.andWhere(
+              'post.planetId = ANY(:joinedPlanets) OR post.authorId = ANY(:following)',
+              {
+                joinedPlanets,
+                following
+              }
+            )
+          }
         }
 
         if (mutedPlanets.length > 0) {
@@ -195,7 +197,6 @@ export class PostResolver {
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.planet', 'planet')
         .leftJoinAndSelect('post.author', 'author')
-        .addOrderBy('post.pinnedAt', 'DESC')
 
       if (planet) {
         stickiesQb
@@ -203,12 +204,14 @@ export class PostResolver {
             planet: handleUnderscore(planet)
           })
           .andWhere('post.pinned = true')
+          .addOrderBy('post.pinnedAt', 'DESC')
       } else if (username) {
         stickiesQb
           .andWhere('author.username ILIKE :username', {
             username: handleUnderscore(username)
           })
           .andWhere('post.pinnedByAuthor = true')
+          .addOrderBy('post.pinnedByAuthorAt', 'DESC')
       } else if (!search && !galaxy && !folderId) {
         // Show stickies from CometX on home page
         stickiesQb
@@ -216,6 +219,7 @@ export class PostResolver {
             planet: 'CometX'
           })
           .andWhere('post.pinned = true')
+          .addOrderBy('post.pinnedAt', 'DESC')
       }
 
       const stickies = await stickiesQb.getMany()
@@ -303,10 +307,7 @@ export class PostResolver {
         if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
           throw new Error('Image must be PNG or JPEG')
 
-        const outStream = new Stream.PassThrough()
-        createReadStream().pipe(outStream)
-
-        const imageUrl = await uploadImage(outStream, mimetype)
+        const imageUrl = await uploadImage(createReadStream(), mimetype)
         imageUrls.push(imageUrl)
       }
     }
@@ -321,6 +322,7 @@ export class PostResolver {
     const post = await this.postRepo.save(toSave)
 
     await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
+    await this.userRepo.increment({ id: userId }, 'postCount', 1)
 
     await this.postRepo
       .createQueryBuilder()
@@ -364,12 +366,8 @@ export class PostResolver {
     if (post.authorId !== userId)
       throw new Error('Attempt to delete post by someone other than author')
 
-    await this.postRepo
-      .createQueryBuilder()
-      .update()
-      .set({ deleted: true })
-      .where('id = :postId', { postId })
-      .execute()
+    await this.postRepo.update(postId, { deleted: true })
+    await this.userRepo.decrement({ id: userId }, 'postCount', 1)
 
     return true
   }

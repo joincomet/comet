@@ -38,10 +38,11 @@ export default function CreatePostForm() {
   ]
   const [textContent, setTextContent] = useState(initialValue)
 
-  let images = Array.from(watch('images') || [])
+  const images = Array.from(watch('images') || [])
 
-  const previews = () =>
-    images.map(image => (image ? URL.createObjectURL(image) : null))
+  const previews = images.map(image =>
+    image ? URL.createObjectURL(image) : null
+  )
 
   const { query, push } = useRouter()
   const currentUser = useCurrentUser().data
@@ -67,6 +68,7 @@ export default function CreatePostForm() {
 
     if (images && images.length > 0) variables.images = images
     if (query.planetname) variables.planetName = query.planetname
+
     const { relativeUrl } = await submitPostMutation.mutateAsync(variables)
     await push(relativeUrl)
   }
@@ -213,15 +215,11 @@ export default function CreatePostForm() {
           before posting
         </div>
       </div>
-      {previews().map((preview, index) => (
-        <div key={index} className="aspect-w-16 aspect-h-9 w-full">
-          <img
-            key={index}
-            src={preview}
-            className="rounded-2xl w-full h-full object-cover"
-          />
-        </div>
-      ))}
+      <div className="space-y-4 flex flex-col items-center">
+        {previews.map((preview, index) => (
+          <img key={index} src={preview} className="rounded-2xl" />
+        ))}
+      </div>
     </form>
   )
 }

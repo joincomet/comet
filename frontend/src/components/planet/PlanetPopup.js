@@ -10,7 +10,7 @@ import { useLogin } from '@/lib/useLogin'
 import {
   useJoinPlanetMutation,
   useLeavePlanetMutation
-} from '@/lib/mutations/joinPlanetMutations'
+} from '@/lib/mutations/planetMutations'
 
 export default function PlanetPopup({
   planet,

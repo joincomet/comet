@@ -115,11 +115,11 @@ export class User {
   isCurrentUser: boolean
 
   @Field(() => Int)
-  @Column({ default: 0 })
+  @Column('bigint', { default: 0 })
   followerCount: number
 
   @Field(() => Int)
-  @Column({ default: 0 })
+  @Column('bigint', { default: 0 })
   followingCount: number
 
   @Field(() => Int)
@@ -131,7 +131,7 @@ export class User {
   postCount: number
 
   @Field(() => Int)
-  @Column({ default: 0 })
+  @Column('bigint', { default: 0 })
   rocketCount: number
 
   /**

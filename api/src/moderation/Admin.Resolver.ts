@@ -12,9 +12,9 @@ export class AdminResolver {
   @Mutation(() => Boolean)
   async banUser(
     @Arg('bannedId', () => ID) bannedId: number,
-    @Arg('banReason') banReason: string
+    @Arg('reason') reason: string
   ) {
-    await this.userRepo.update(bannedId, { banned: true, banReason })
+    await this.userRepo.update(bannedId, { banned: true, banReason: reason })
 
     return true
   }
@@ -23,13 +23,13 @@ export class AdminResolver {
   @Mutation(() => Boolean)
   async banAndPurgeUser(
     @Arg('bannedId', () => ID) bannedId: number,
-    @Arg('banReason') banReason: string
+    @Arg('reason') reason: string
   ) {
-    await this.userRepo.update(bannedId, { banned: true, banReason })
+    await this.userRepo.update(bannedId, { banned: true, banReason: reason })
 
     await this.postRepo.update(
       { authorId: bannedId },
-      { removed: true, removedReason: banReason }
+      { removed: true, removedReason: reason }
     )
 
     return true

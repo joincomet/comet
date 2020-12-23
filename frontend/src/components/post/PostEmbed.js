@@ -37,7 +37,7 @@ export default function PostEmbed({ post }) {
 
   if (ReactPlayer.canPlay(post.linkUrl))
     return (
-      <div className="mt-2 rounded overflow-hidden relative aspect-w-16 aspect-h-9">
+      <div className="mt-2 rounded-lg overflow-hidden relative aspect-w-16 aspect-h-9">
         <ReactPlayer
           className="absolute top-0 left-0"
           controls={true}
@@ -54,33 +54,30 @@ export default function PostEmbed({ post }) {
         href={post.linkUrl}
         target="_blank"
         rel="noreferrer noopener nofollow"
-        className="mt-2 block rounded border dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 transition"
+        className="mt-2 block rounded-lg border dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 transition"
       >
         {post.meta.twitterCard === 'summary_large_image' && post.thumbnailUrl && (
-          <div className="w-full aspect-w-16 aspect-h-9 relative rounded-t">
-            <Image
+          <div className="w-full aspect-w-16 aspect-h-9 relative rounded-t-lg">
+            <img
+              alt={post.linkUrl}
               src={post.thumbnailUrl}
               loading="eager"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-t"
+              className="rounded-t-lg object-cover"
             />
           </div>
         )}
 
         <div className="flex items-start">
           {post.meta.twitterCard !== 'summary_large_image' && (
-            <div className="w-20 h-20 md:w-32 md:h-32 relative flex-shrink-0 rounded-l-xl">
+            <div className="w-20 h-20 md:w-32 md:h-32 relative flex-shrink-0 rounded-l-lg">
               {post.thumbnailUrl || post.logoUrl ? (
-                <Image
+                <img
                   src={post.thumbnailUrl || post.logoUrl}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-l"
+                  className="rounded-l-lg object-cover h-full w-full"
                   loading="eager"
                 />
               ) : (
-                <div className="flex w-20 h-20 md:w-32 md:h-32 rounded-l">
+                <div className="flex w-20 h-20 md:w-32 md:h-32 rounded-l-lg border-r border-gray-200 dark:border-gray-800">
                   <FiLink className="w-8 h-8 m-auto text-tertiary" />
                 </div>
               )}
@@ -94,7 +91,7 @@ export default function PostEmbed({ post }) {
                 : ''
             }`}
           >
-            <div className="font-medium line-clamp-1 md:line-clamp-2 text-secondary text-sm">
+            <div className="font-medium line-clamp-1 md:line-clamp-2 text-secondary text-base">
               {post.meta && post.meta.title ? post.meta.title : post.linkUrl}
             </div>
 
@@ -105,11 +102,11 @@ export default function PostEmbed({ post }) {
             <div className="mt-auto flex flex-row items-center pt-3 text-tertiary text-xs">
               {post.logoUrl && (
                 <div className="inline-block w-4 h-4 mr-3">
-                  <Image
+                  <img
+                    alt={post.domain}
                     loading="eager"
                     src={post.logoUrl}
-                    width={16}
-                    height={16}
+                    className="w-4 h-4 object-cover"
                   />
                 </div>
               )}

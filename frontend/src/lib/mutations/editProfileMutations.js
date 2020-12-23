@@ -45,3 +45,47 @@ const editBio = async variables => {
 }
 
 export const useEditBioMutation = () => useMutation(editBio)
+
+const changeName = async variables => {
+  await request(
+    null,
+    gql`
+      mutation changeName($name: String!) {
+        changeName(name: $name)
+      }
+    `,
+    variables
+  )
+}
+
+export const useChangeNameMutation = () => useMutation(changeName)
+
+const changeUsername = async variables => {
+  await request(
+    null,
+    gql`
+      mutation changeUsername($username: String!) {
+        changeUsername(username: $username)
+      }
+    `,
+    variables
+  )
+}
+
+export const useChangeUsernameMutation = () => useMutation(changeUsername)
+
+const changePassword = async variables => {
+  await request(
+    null,
+    gql`
+      mutation changePassword($oldPassword: String!, $newPassword: String!) {
+        changePassword(oldPassword: $oldPassword, newPassword: $newPassword) {
+          accessToken
+        }
+      }
+    `,
+    variables
+  )
+}
+
+export const useChangePasswordMutation = () => useMutation(changePassword)

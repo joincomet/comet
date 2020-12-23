@@ -1,21 +1,19 @@
 import { useRouter } from 'next/router'
 import { QueryClient } from 'react-query'
 import { fetchUser, useUser } from '@/lib/queries/useUser'
-import Image from 'next/image'
 import { FiCalendar } from 'react-icons/fi'
 import React, { useEffect, useState } from 'react'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import UserAvatar from '@/components/user/UserAvatar'
 import SortOptionsUser from '@/components/sort/SortOptionsUser'
-import { fetchPosts } from '@/lib/queries/usePosts'
 import { fetchComments } from '@/lib/queries/useComments'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import CreatePostButton from '@/components/createpost/CreatePostButton'
 import UserFollowButton from '@/components/user/UserFollowButton'
 import UserHeader from '@/components/user/UserHeader'
 import { useInView } from 'react-intersection-observer'
-import { useHeaderStore } from '@/lib/stores'
+import { useHeaderStore } from '@/lib/useHeaderStore'
 import { FiEdit2 } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import {
@@ -31,7 +29,10 @@ export default function UserPage({ variables }) {
   const currentUserQuery = useCurrentUser()
   const currentUser = currentUserQuery.data
   const { ref, inView } = useInView({ threshold: 0.8 })
-  const { setDark } = useHeaderStore()
+  const { setDark, setTitle } = useHeaderStore()
+
+  useEffect(() => setTitle(`@${user.username}`), [])
+
   useEffect(() => setDark(!inView), [inView])
 
   const { watch, register } = useForm()
@@ -51,7 +52,7 @@ export default function UserPage({ variables }) {
 
   const [editBio, setEditBio] = useState(false)
   const editBioMutation = useEditBioMutation()
-  const newBio = watch('newbio')
+  const [newBio, setNewBio] = useState(user.bio || 'New CometX User')
 
   const updateBio = async () => {
     if (!newBio) return
@@ -80,9 +81,14 @@ export default function UserPage({ variables }) {
 
       <UserHeader user={user} show={!inView} />
 
-      <div className="relative h-80 z-0">
-        <div className="bg-gradient-to-br from-red-400 to-blue-500 absolute inset-0 opacity-90 z-0" />
-
+      <div
+        className={`relative h-80 bg-center bg-cover ${
+          !user.bannerUrl ? 'bg-gradient-to-br from-red-400 to-blue-500' : ''
+        }`}
+        style={{
+          backgroundImage: user.bannerUrl ? `url(${user.bannerUrl})` : ''
+        }}
+      >
         <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-3 md:pt-6 md:pb-12">
           <div className="flex flex-col items-center md:items-start md:flex-row flex-grow">
             <div className="label block md:hidden mb-4">User</div>
@@ -144,16 +150,6 @@ export default function UserPage({ variables }) {
         </div>
 
         <div className="absolute left-0 right-0 top-0 z-10 h-full bg-gradient-to-b from-transparent to-gray-100 dark:to-gray-850" />
-
-        {user.bannerUrl && (
-          <Image
-            src={user.bannerUrl}
-            layout="fill"
-            objectFit="cover"
-            className="select-none"
-            loading="eager"
-          />
-        )}
       </div>
 
       <div className="grid gap-6 grid-cols-3 mycontainer py-6">
@@ -185,7 +181,7 @@ export default function UserPage({ variables }) {
               )}
             </div>
 
-            <form>
+            <div>
               <div
                 className={`text-sm text-secondary font-medium ${
                   editBio ? 'hidden' : 'block'
@@ -195,16 +191,15 @@ export default function UserPage({ variables }) {
               </div>
 
               <textarea
-                ref={register}
-                defaultValue={user.bio || 'New CometX User'}
-                name="newbio"
+                value={newBio}
+                onChange={e => setNewBio(e.target.value)}
                 className={`dark:bg-gray-800 h-24 rounded text-sm text-secondary font-medium block border-none resize-none p-3 focus:ring-0 w-full ${
                   editBio ? 'block' : 'hidden'
                 }`}
               />
-            </form>
+            </div>
 
-            <div className="mt-4 text-tertiary text-xs font-medium inline-flex items-center">
+            <div className="mt-4 text-tertiary text-sm font-medium inline-flex items-center">
               <FiCalendar size={16} className="mr-3" />
               Joined {user.timeSinceCreated}
             </div>

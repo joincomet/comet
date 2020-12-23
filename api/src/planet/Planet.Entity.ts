@@ -98,10 +98,6 @@ export class Planet {
   isJoined: boolean
 
   @Field(() => Int)
-  @Column('bigint', { default: 0 })
-  postCount: number
-
-  @Field(() => Int)
   @Column('bigint', { default: 1 })
   userCount: number
 

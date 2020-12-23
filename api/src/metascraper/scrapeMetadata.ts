@@ -4,6 +4,7 @@ import { uploadImage } from '@/S3Storage'
 import fetch from 'node-fetch'
 import fileType from 'file-type'
 import { isUrl } from '@/IsUrl'
+import { Readable } from 'stream'
 
 const metascraper = require('metascraper')([
   require('metascraper-author')(),
@@ -47,7 +48,10 @@ export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
       const response = await fetch(meta.image, { timeout: 2000 })
       const buffer = await response.buffer()
       const type = await fileType.fromBuffer(buffer)
-      meta.image = await uploadImage(buffer, type.mime)
+      let resize = { width: 128, height: 128 }
+      if (meta.twitterCard === 'summary_large_image')
+        resize = { width: 1280, height: 720 }
+      meta.image = await uploadImage(Readable.from(buffer), type.mime, resize)
     } catch {
       delete meta.image
     }
@@ -58,7 +62,10 @@ export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
       const response = await fetch(meta.logo, { timeout: 2000 })
       const buffer = await response.buffer()
       const type = await fileType.fromBuffer(buffer)
-      meta.logo = await uploadImage(buffer, type.mime)
+      meta.logo = await uploadImage(Readable.from(buffer), type.mime, {
+        width: 128,
+        height: 128
+      })
     } catch {
       delete meta.logo
     }

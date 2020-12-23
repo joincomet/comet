@@ -24,6 +24,9 @@ export const authChecker: AuthChecker<Context> = async (
   // false if not logged in
   if (!user) return false
 
+  // false if banned
+  if (user.banned) return false
+
   // true if logged in and no roles specified
   if (!role) return true
 

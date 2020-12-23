@@ -4,7 +4,7 @@ import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import {
   useJoinPlanetMutation,
   useLeavePlanetMutation
-} from '@/lib/mutations/joinPlanetMutations'
+} from '@/lib/mutations/planetMutations'
 import { useRouter } from 'next/router'
 import { useLogin } from '@/lib/useLogin'
 

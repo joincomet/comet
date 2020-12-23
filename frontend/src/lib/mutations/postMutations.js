@@ -32,3 +32,101 @@ const submitPost = async variables => {
 }
 
 export const useSubmitPostMutation = () => useMutation(submitPost)
+
+const pinPost = async variables => {
+  await request(
+    null,
+    gql`
+      mutation pinPost($planetId: ID!, $postId: ID!) {
+        pinPost(planetId: $planetId, postId: $postId)
+      }
+    `,
+    variables
+  )
+}
+
+export const usePinPostMutation = () => useMutation(pinPost)
+
+const unpinPost = async variables => {
+  await request(
+    null,
+    gql`
+      mutation unpinPost($planetId: ID!, $postId: ID!) {
+        unpinPost(planetId: $planetId, postId: $postId)
+      }
+    `,
+    variables
+  )
+}
+
+export const useUnpinPostMutation = () => useMutation(unpinPost)
+
+const pinPostProfile = async variables => {
+  await request(
+    null,
+    gql`
+      mutation pinPostProfile($postId: ID!) {
+        pinPostProfile(postId: $postId)
+      }
+    `,
+    variables
+  )
+}
+
+export const usePinPostProfileMutation = () => useMutation(pinPostProfile)
+
+const unpinPostProfile = async variables => {
+  await request(
+    null,
+    gql`
+      mutation unpinPostProfile($postId: ID!) {
+        unpinPostProfile(postId: $postId)
+      }
+    `,
+    variables
+  )
+}
+
+export const useUnpinPostProfileMutation = () => useMutation(unpinPostProfile)
+
+const deletePost = async variables => {
+  await request(
+    null,
+    gql`
+      mutation deletePost($postId: ID!) {
+        deletePost(postId: $postId)
+      }
+    `,
+    variables
+  )
+}
+
+export const useDeletePostMutation = () => useMutation(deletePost)
+
+const rocketPost = async variables => {
+  await request(
+    null,
+    gql`
+      mutation rocketPost($postId: ID!) {
+        rocketPost(postId: $postId)
+      }
+    `,
+    variables
+  )
+}
+
+export const useRocketPostMutation = () => useMutation(rocketPost)
+
+const unrocketPost = async variables => {
+  await request(
+    null,
+    gql`
+      mutation unrocketPost($postId: ID!) {
+        unrocketPost(postId: $postId)
+      }
+    `,
+    variables
+  )
+}
+
+export const useUnrocketPostMutation = () => useMutation(unrocketPost)

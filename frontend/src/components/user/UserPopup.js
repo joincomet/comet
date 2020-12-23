@@ -9,7 +9,7 @@ import { useLogin } from '@/lib/useLogin'
 import {
   useFollowUserMutation,
   useUnfollowUserMutation
-} from '@/lib/mutations/followMutations'
+} from '@/lib/mutations/userMutations'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 
 export default function UserPopup({
@@ -20,7 +20,15 @@ export default function UserPopup({
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement
+    placement,
+    modifiers: [
+      {
+        name: 'preventOverflow',
+        options: {
+          mainAxis: true // true by default
+        }
+      }
+    ]
   })
 
   const [show, setShow] = useState(false)
@@ -158,7 +166,7 @@ export default function UserPopup({
                           if (!user.isCurrentUser) toggle()
                         }}
                         className={`text-white w-full h-9 rounded inline-flex items-center justify-center text-sm font-medium select-none ${
-                          user.isCurrentUser ? 'opacity-50' : 'cursor-pointer'
+                          user.isCurrentUser ? 'opacity-25' : 'cursor-pointer'
                         } ${
                           user.isFollowing
                             ? 'border border-gray-200 dark:border-gray-700 text-accent'

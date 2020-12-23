@@ -1,4 +1,11 @@
-import { FiUser, FiCornerUpLeft } from 'react-icons/fi'
+import {
+  FiCornerUpLeft,
+  FiMoreHorizontal,
+  FiEdit2,
+  FiTrash,
+  FiAlertCircle,
+  FiShield
+} from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
 import React, { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
@@ -7,12 +14,28 @@ import Twemoji from 'react-twemoji'
 import { useRouter } from 'next/router'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import {
+  useDeleteCommentMutation,
   useRocketCommentMutation,
   useUnrocketCommentMutation
-} from '@/lib/mutations/rocketMutations'
+} from '@/lib/mutations/commentMutations'
 import { useLogin } from '@/lib/useLogin'
+import {
+  useBanAndPurgeUserMutation,
+  useBanUserFromPlanetMutation,
+  useBanUserMutation,
+  useRemoveCommentMutation
+} from '@/lib/mutations/moderationMutations'
+import { Menu, Transition } from '@headlessui/react'
+import { menuTransition } from '@/lib/menuTransition'
+import { FaThumbtack } from 'react-icons/fa'
+import Tippy from '@tippyjs/react'
 
-export default function Comment({ comment, level = 0, setParentComment }) {
+export default function Comment({
+  comment,
+  post,
+  level = 0,
+  setParentComment
+}) {
   const [collapse, setCollapse] = useState(false)
   const { query, pathname, push } = useRouter()
   const currentUser = useCurrentUser().data
@@ -137,6 +160,22 @@ export default function Comment({ comment, level = 0, setParentComment }) {
                     <FiCornerUpLeft className="w-4.5 h-4.5 ml-3" />
                   </div>
                 )}
+
+                <div className="mr-auto" />
+
+                {comment.pinned && (
+                  <Tippy content="Pinned comment">
+                    <div className="mr-4 text-accent cursor-pointer">
+                      <FaThumbtack size={18} className="transform -rotate-45" />
+                    </div>
+                  </Tippy>
+                )}
+
+                <MoreOptionsComment
+                  comment={comment}
+                  post={post}
+                  level={level}
+                />
               </div>
             </>
           )}
@@ -150,8 +189,256 @@ export default function Comment({ comment, level = 0, setParentComment }) {
             comment={childComment}
             level={level + 1}
             setParentComment={setParentComment}
+            post={post}
           />
         ))}
+    </div>
+  )
+}
+
+function MoreOptionsComment({ comment, post, level }) {
+  const menuItem =
+    'cursor-pointer transition flex items-center w-full px-4 py-2.5 text-sm font-medium text-left focus:outline-none select-none'
+
+  const currentUser = useCurrentUser().data
+
+  const deleteComment = useDeleteCommentMutation()
+  const removeComment = useRemoveCommentMutation()
+  const banUserFromPlanet = useBanUserFromPlanetMutation()
+  const banUser = useBanUserMutation()
+  const banAndPurgeUser = useBanAndPurgeUserMutation()
+
+  const isModerator =
+    currentUser &&
+    post.planet &&
+    currentUser.moderatedPlanets &&
+    currentUser.moderatedPlanets.map(p => p.id).includes(post.planet.id)
+
+  return (
+    <div className="relative inline-block z-30 h-full">
+      <Menu>
+        {({ open }) => (
+          <>
+            <span
+              className={`cursor-pointer select-none text-disabled mr-3 h-full inline-flex items-center`}
+              onClick={e => e.stopPropagation()}
+            >
+              <Menu.Button
+                className={`transition rounded-full h-8 w-8 dark:hover:bg-gray-800 focus:outline-none inline-flex items-center justify-center`}
+              >
+                <FiMoreHorizontal size={18} />
+              </Menu.Button>
+            </span>
+
+            <Transition show={open} {...menuTransition}>
+              <Menu.Items
+                static
+                className="absolute right-full w-56 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
+              >
+                {currentUser &&
+                  (isModerator ||
+                    currentUser.admin ||
+                    post.author.isCurrentUser) &&
+                  level === 0 && (
+                    <Menu.Item>
+                      {({ active }) => (
+                        <div
+                          onClick={e => {
+                            e.stopPropagation()
+                          }}
+                          className={`${
+                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                          } text-accent ${menuItem}`}
+                        >
+                          <FaThumbtack
+                            size={18}
+                            className="mr-4 transform -rotate-45"
+                          />
+                          {comment.pinned ? `Unpin comment` : `Pin comment`}
+                        </div>
+                      )}
+                    </Menu.Item>
+                  )}
+
+                {comment.author.isCurrentUser ? (
+                  <>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <div
+                          className={`${
+                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                          } text-secondary ${menuItem}`}
+                        >
+                          <FiEdit2 size={18} className="mr-4" />
+                          Edit
+                        </div>
+                      )}
+                    </Menu.Item>
+
+                    <Menu.Item>
+                      {({ active }) => (
+                        <div
+                          onClick={e => {
+                            e.stopPropagation()
+                            if (!window.confirm('Confirm Delete')) return
+                            comment.deleted = true
+                            deleteComment.mutateAsync({ commentId: comment.id })
+                          }}
+                          className={`${
+                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                          } text-red-400 ${menuItem}`}
+                        >
+                          <FiTrash size={18} className="mr-4" />
+                          Delete
+                        </div>
+                      )}
+                    </Menu.Item>
+                  </>
+                ) : (
+                  <Menu.Item>
+                    {({ active }) => (
+                      <div
+                        className={`${
+                          active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                        } text-red-400 ${menuItem}`}
+                      >
+                        <FiAlertCircle size={18} className="mr-4" />
+                        Report
+                      </div>
+                    )}
+                  </Menu.Item>
+                )}
+
+                {currentUser &&
+                  !comment.author.isCurrentUser &&
+                  (currentUser.admin || isModerator) && (
+                    <>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              const reason = window.prompt(
+                                'Reason for removal:'
+                              )
+                              comment.removed = true
+                              comment.removedReason = reason
+                              removeComment.mutateAsync({
+                                commentId: comment.id,
+                                planetId: post.planet.id,
+                                reason
+                              })
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-red-400 ${menuItem}`}
+                          >
+                            <FiShield size={18} className="mr-4" />
+                            Remove
+                          </div>
+                        )}
+                      </Menu.Item>
+
+                      {post.planet && (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <div
+                              onClick={e => {
+                                e.stopPropagation()
+                                const reason = window.prompt('Reason for ban:')
+                                if (!reason) return
+                                banUserFromPlanet.mutateAsync({
+                                  planetId: post.planet.id,
+                                  bannedId: comment.author.id,
+                                  reason
+                                })
+                              }}
+                              className={`${
+                                active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                              } text-red-400 ${menuItem}`}
+                            >
+                              <FiShield
+                                size={18}
+                                className="mr-4 flex-shrink-0"
+                              />
+                              Ban @{comment.author.username} from +
+                              {post.planet.name}
+                            </div>
+                          )}
+                        </Menu.Item>
+                      )}
+                    </>
+                  )}
+
+                {currentUser &&
+                  currentUser.admin &&
+                  !post.author.isCurrentUser && (
+                    <>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              const reason = window.prompt('Reason for ban:')
+                              if (!reason) return
+                              banUser.mutateAsync({
+                                bannedId: comment.author.id,
+                                reason
+                              })
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-red-400 ${menuItem}`}
+                          >
+                            <FiShield
+                              size={18}
+                              className="mr-4 flex-shrink-0"
+                            />
+                            Ban @{comment.author.username} from CometX
+                          </div>
+                        )}
+                      </Menu.Item>
+
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              const reason = window.prompt(
+                                'Reason for ban and purge:'
+                              )
+                              if (!reason) return
+                              if (
+                                !window.confirm(
+                                  `Confirm ban and purge - will remove all posts by ${comment.author.username}`
+                                )
+                              )
+                                return
+                              banAndPurgeUser.mutateAsync({
+                                bannedId: comment.author.id,
+                                reason
+                              })
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-red-400 ${menuItem}`}
+                          >
+                            <FiShield
+                              size={18}
+                              className="mr-4 flex-shrink-0"
+                            />
+                            Ban @{comment.author.username} from CometX and purge
+                            posts
+                          </div>
+                        )}
+                      </Menu.Item>
+                    </>
+                  )}
+              </Menu.Items>
+            </Transition>
+          </>
+        )}
+      </Menu>
     </div>
   )
 }

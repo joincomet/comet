@@ -85,6 +85,7 @@ export class PlanetResolver {
       .relation(User, 'joinedPlanets')
       .of(userId)
       .add(planetId)
+    await this.planetRepo.increment({ id: planetId }, 'userCount', 1)
     return true
   }
 
@@ -99,6 +100,7 @@ export class PlanetResolver {
       .relation(User, 'joinedPlanets')
       .of(userId)
       .remove(planetId)
+    await this.planetRepo.decrement({ id: planetId }, 'userCount', 1)
     return true
   }
 
@@ -149,7 +151,8 @@ export class PlanetResolver {
     if (userId && joinedOnly) {
       const user = await this.userRepo.findOne(userId)
       const joinedPlanets = (await user.joinedPlanets).map(p => p.id)
-      qb.andWhere(`planet.id = ANY(:joinedPlanets)`, { joinedPlanets })
+      if (joinedPlanets.length > 0)
+        qb.andWhere(`planet.id = ANY(:joinedPlanets)`, { joinedPlanets })
     }
 
     return qb.getMany()

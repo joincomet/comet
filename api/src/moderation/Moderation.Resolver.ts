@@ -19,11 +19,11 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async removePost(
-    @Arg('planet', () => ID) planet: string,
+    @Arg('planetId', () => ID) planetId: string,
     @Arg('postId', () => ID) postId: number,
-    @Arg('removedReason') removedReason: string
+    @Arg('reason') reason: string
   ) {
-    await this.postRepo.update(postId, { removed: true, removedReason })
+    await this.postRepo.update(postId, { removed: true, removedReason: reason })
     return true
   }
 
@@ -52,14 +52,14 @@ export class ModerationResolver {
   async removeComment(
     @Arg('planetId', () => ID) planetId: number,
     @Arg('commentId', () => ID) commentId: number,
-    @Arg('removedReason') removedReason: string
+    @Arg('reason') reason: string
   ) {
     const comment = await this.commentRepo.findOne(commentId)
     this.postRepo.decrement({ id: comment.postId }, 'commentCount', 1)
 
     await this.commentRepo.update(commentId, {
       removed: true,
-      removedReason
+      removedReason: reason
     })
     return true
   }
@@ -68,13 +68,14 @@ export class ModerationResolver {
   @Mutation(() => Boolean)
   async banUserFromPlanet(
     @Arg('planetId', () => ID) planetId: number,
-    @Arg('bannedUserId', () => ID) bannedUserId: number
+    @Arg('bannedId', () => ID) bannedId: number,
+    @Arg('reason') reason: string
   ) {
     await this.planetRepo
       .createQueryBuilder()
       .relation(Planet, 'bannedUsers')
       .of(planetId)
-      .add(bannedUserId)
+      .add(bannedId)
     return true
   }
 
@@ -94,7 +95,7 @@ export class ModerationResolver {
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
-  async uploadPlanetAvatarImage(
+  async uploadPlanetAvatar(
     @Arg('planetId', () => ID) planetId: number,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
@@ -103,10 +104,10 @@ export class ModerationResolver {
     if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
       throw new Error('Image must be PNG or JPEG')
 
-    const outStream = new Stream.PassThrough()
-    createReadStream().pipe(outStream)
-
-    const avatarUrl = await uploadImage(outStream, file.mimetype)
+    const avatarUrl = await uploadImage(createReadStream(), file.mimetype, {
+      width: 256,
+      height: 256
+    })
 
     await this.planetRepo.update(planetId, { avatarUrl })
 
@@ -115,7 +116,7 @@ export class ModerationResolver {
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
-  async uploadPlanetBannerImage(
+  async uploadPlanetBanner(
     @Arg('planetId', () => ID) planetId: number,
     @Arg('file', () => GraphQLUpload) file: FileUpload
   ) {
@@ -124,10 +125,9 @@ export class ModerationResolver {
     if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
       throw new Error('Image must be PNG or JPEG')
 
-    const outStream = new Stream.PassThrough()
-    createReadStream().pipe(outStream)
-
-    const bannerUrl = await uploadImage(outStream, file.mimetype)
+    const bannerUrl = await uploadImage(createReadStream(), file.mimetype, {
+      width: 1920
+    })
 
     await this.planetRepo.update(planetId, { bannerUrl })
 

@@ -1,5 +1,4 @@
 import React from 'react'
-import { TiPinOutline } from 'react-icons/ti'
 import { CgArrowRight } from 'react-icons/cg'
 import NavLink from '@/components/NavLink'
 import PostEmbed from '@/components/post/PostEmbed'
@@ -26,15 +25,8 @@ function Post({
       }}
       className={`${className} ${
         !showFullText ? 'cursor-pointer' : ''
-      } bg-white dark:bg-gray-900 relative flex rounded pt-2 pl-3 pr-3 md:pr-6 pb-1 mb-0.5`}
+      } bg-white dark:bg-gray-900 relative flex md:rounded pt-2 pl-3 pr-3 md:pr-6 pb-1 mb-0.5`}
     >
-      {post.pinned && (
-        <TiPinOutline
-          size={20}
-          className="absolute top-3 right-3 text-accent"
-        />
-      )}
-
       <div className="pr-3">
         <UserPopup user={post.author}>
           <UserAvatar

@@ -31,8 +31,10 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
           nextPage
           posts {
             id
+            id36
             title
             pinned
+            pinnedByAuthor
             textContent
             linkUrl
             imageUrls

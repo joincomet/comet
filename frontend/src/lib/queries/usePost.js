@@ -11,8 +11,10 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
       query post($postId: ID!) {
         post(postId: $postId) {
           id
+          id36
           title
           pinned
+          pinnedByAuthor
           textContent
           linkUrl
           imageUrls
@@ -30,7 +32,6 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           }
           planet {
             id
-            id36
             name
             description
             color
@@ -41,7 +42,6 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           }
           author {
             id
-            id36
             username
             name
             bio

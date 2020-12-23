@@ -1,16 +1,37 @@
 import { BiRocket } from 'react-icons/bi'
-import { FiMessageCircle, FiMoreHorizontal } from 'react-icons/fi'
+import {
+  FiMessageCircle,
+  FiMoreHorizontal,
+  FiTrash,
+  FiAlertCircle,
+  FiEdit2,
+  FiShield
+} from 'react-icons/fi'
+import { FaThumbtack } from 'react-icons/fa'
 import React from 'react'
 import {
+  useDeletePostMutation,
+  usePinPostMutation,
+  usePinPostProfileMutation,
   useRocketPostMutation,
+  useUnpinPostMutation,
+  useUnpinPostProfileMutation,
   useUnrocketPostMutation
-} from '@/lib/mutations/rocketMutations'
+} from '@/lib/mutations/postMutations'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { useLogin } from '@/lib/useLogin'
 import { Menu, Transition } from '@headlessui/react'
 import { menuTransition } from '@/lib/menuTransition'
+import {
+  useBanAndPurgeUserMutation,
+  useBanUserFromPlanetMutation,
+  useBanUserMutation,
+  useRemovePostMutation
+} from '@/lib/mutations/moderationMutations'
+import Tippy from '@tippyjs/react'
 
-const chip = 'cursor-pointer inline-flex items-center group transition'
+const chip =
+  'cursor-pointer inline-flex items-center group transition select-none'
 const label = 'ml-0.5 label transition'
 const icon =
   'w-9 h-9 dark:group-hover:bg-gray-800 rounded-full transition inline-flex items-center justify-center focus:outline-none'
@@ -46,6 +67,12 @@ export default function PostActions({ post, showOptions = false }) {
     else rocket()
   }
 
+  const isModerator =
+    currentUser &&
+    post.planet &&
+    currentUser.moderatedPlanets &&
+    currentUser.moderatedPlanets.map(p => p.id).includes(post.planet.id)
+
   return (
     <div className={`flex flex-row items-center pt-1`}>
       <div
@@ -65,7 +92,7 @@ export default function PostActions({ post, showOptions = false }) {
         </span>
       </div>
 
-      <div className={`${chip} mr-auto text-mid`}>
+      <div className={`${chip} text-mid`}>
         <div className={`${icon} group-hover:text-blue-500`}>
           <FiMessageCircle size={18} />
         </div>
@@ -74,16 +101,64 @@ export default function PostActions({ post, showOptions = false }) {
         </span>
       </div>
 
-      <MoreOptions post={post} chip={chip} icon={icon} />
+      <div className="mr-auto" />
+
+      {(post.pinned || post.pinnedByAuthor) && (
+        <Tippy
+          content={`Pinned to ${
+            post.pinned && !post.pinnedByAuthor ? `+${post.planet.name}` : ''
+          }${
+            !post.pinned && post.pinnedByAuthor
+              ? `@${post.author.username}`
+              : ''
+          }${
+            post.pinned && post.pinnedByAuthor
+              ? `+${post.planet.name} and @${post.author.username}`
+              : ''
+          }`}
+        >
+          <div className="text-accent mr-4 cursor-pointer">
+            <FaThumbtack size={18} className="transform -rotate-45" />
+          </div>
+        </Tippy>
+      )}
+
+      {isModerator && (
+        <Tippy content={`You are a moderator of +${post.planet.name}`}>
+          <div className="text-green-500 mr-4 cursor-pointer">
+            <FiShield size={18} />
+          </div>
+        </Tippy>
+      )}
+
+      <MoreOptions
+        post={post}
+        chip={chip}
+        icon={icon}
+        isModerator={isModerator}
+      />
     </div>
   )
 }
 
-function MoreOptions({ post, chip, icon }) {
+function MoreOptions({ post, chip, icon, isModerator }) {
   const menuItem =
-    'cursor-pointer transition flex justify-between w-full px-4 py-2 text-sm leading-5 text-left focus:outline-none'
+    'cursor-pointer transition flex items-center w-full px-4 py-2.5 text-sm font-medium text-left focus:outline-none select-none'
+
+  const currentUser = useCurrentUser().data
+
+  const pinPost = usePinPostMutation()
+  const unpinPost = useUnpinPostMutation()
+  const pinProfile = usePinPostProfileMutation()
+  const unpinProfile = useUnpinPostProfileMutation()
+  const deletePost = useDeletePostMutation()
+  const removePost = useRemovePostMutation()
+  const banUserFromPlanet = useBanUserFromPlanetMutation()
+  const banUser = useBanUserMutation()
+  const banAndPurgeUser = useBanAndPurgeUserMutation()
+
   return (
-    <div className="z-50 relative inline-block text-left">
+    <div className="relative inline-block z-30">
       <Menu>
         {({ open }) => (
           <>
@@ -91,7 +166,7 @@ function MoreOptions({ post, chip, icon }) {
               className={`${chip} text-disabled`}
               onClick={e => e.stopPropagation()}
             >
-              <Menu.Button className={icon}>
+              <Menu.Button className={`${icon} z-0`}>
                 <FiMoreHorizontal size={18} />
               </Menu.Button>
             </span>
@@ -99,18 +174,72 @@ function MoreOptions({ post, chip, icon }) {
             <Transition show={open} {...menuTransition}>
               <Menu.Items
                 static
-                className="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
+                className="absolute right-full w-56 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
               >
+                {currentUser &&
+                  post.planet &&
+                  (isModerator || currentUser.admin) && (
+                    <Menu.Item>
+                      {({ active }) => (
+                        <div
+                          onClick={e => {
+                            e.stopPropagation()
+                            if (!post.pinned) {
+                              post.pinned = true
+                              pinPost.mutateAsync({
+                                postId: post.id,
+                                planetId: post.planet.id
+                              })
+                            } else {
+                              post.pinned = false
+                              unpinPost.mutateAsync({
+                                postId: post.id,
+                                planetId: post.planet.id
+                              })
+                            }
+                          }}
+                          className={`${
+                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                          } text-accent ${menuItem}`}
+                        >
+                          <FaThumbtack
+                            size={18}
+                            className="mr-4 transform -rotate-45"
+                          />
+                          {post.pinned
+                            ? `Unpin from +${post.planet.name}`
+                            : `Pin to +${post.planet.name}`}
+                        </div>
+                      )}
+                    </Menu.Item>
+                  )}
+
                 {post.author.isCurrentUser ? (
                   <>
                     <Menu.Item>
                       {({ active }) => (
                         <div
+                          onClick={e => {
+                            e.stopPropagation()
+                            if (!post.pinnedByAuthor) {
+                              post.pinnedByAuthor = true
+                              pinProfile.mutateAsync({ postId: post.id })
+                            } else {
+                              post.pinnedByAuthor = false
+                              unpinProfile.mutateAsync({ postId: post.id })
+                            }
+                          }}
                           className={`${
                             active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-secondary ${menuItem}`}
+                          } text-accent ${menuItem}`}
                         >
-                          Pin to profile
+                          <FaThumbtack
+                            size={18}
+                            className="mr-4 transform -rotate-45"
+                          />
+                          {post.pinnedByAuthor
+                            ? 'Unpin from profile'
+                            : 'Pin to profile'}
                         </div>
                       )}
                     </Menu.Item>
@@ -122,6 +251,7 @@ function MoreOptions({ post, chip, icon }) {
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
                             } text-secondary ${menuItem}`}
                           >
+                            <FiEdit2 size={18} className="mr-4" />
                             Edit
                           </div>
                         )}
@@ -130,10 +260,17 @@ function MoreOptions({ post, chip, icon }) {
                     <Menu.Item>
                       {({ active }) => (
                         <div
+                          onClick={e => {
+                            e.stopPropagation()
+                            if (!window.confirm('Confirm Delete')) return
+                            post.deleted = true
+                            deletePost.mutateAsync({ postId: post.id })
+                          }}
                           className={`${
                             active ? 'bg-gray-100 dark:bg-gray-700' : ''
                           } text-red-400 ${menuItem}`}
                         >
+                          <FiTrash size={18} className="mr-4" />
                           Delete
                         </div>
                       )}
@@ -147,11 +284,138 @@ function MoreOptions({ post, chip, icon }) {
                           active ? 'bg-gray-100 dark:bg-gray-700' : ''
                         } text-red-400 ${menuItem}`}
                       >
+                        <FiAlertCircle size={18} className="mr-4" />
                         Report
                       </div>
                     )}
                   </Menu.Item>
                 )}
+
+                {currentUser &&
+                  !post.author.isCurrentUser &&
+                  (currentUser.admin || isModerator) && (
+                    <>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              const reason = window.prompt(
+                                'Reason for removal:'
+                              )
+                              post.removed = true
+                              post.removedReason = reason
+                              removePost.mutateAsync({
+                                postId: post.id,
+                                planetId: post.planet.id,
+                                reason
+                              })
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-red-400 ${menuItem}`}
+                          >
+                            <FiShield size={18} className="mr-4" />
+                            Remove
+                          </div>
+                        )}
+                      </Menu.Item>
+
+                      {post.planet && (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <div
+                              onClick={e => {
+                                e.stopPropagation()
+                                const reason = window.prompt('Reason for ban:')
+                                if (!reason) return
+                                banUserFromPlanet.mutateAsync({
+                                  planetId: post.planet.id,
+                                  bannedId: post.author.id,
+                                  reason
+                                })
+                              }}
+                              className={`${
+                                active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                              } text-red-400 ${menuItem}`}
+                            >
+                              <FiShield
+                                size={18}
+                                className="mr-4 flex-shrink-0"
+                              />
+                              Ban @{post.author.username} from +
+                              {post.planet.name}
+                            </div>
+                          )}
+                        </Menu.Item>
+                      )}
+                    </>
+                  )}
+
+                {currentUser &&
+                  currentUser.admin &&
+                  !post.author.isCurrentUser && (
+                    <>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              const reason = window.prompt('Reason for ban:')
+                              if (!reason) return
+                              banUser.mutateAsync({
+                                bannedId: post.author.id,
+                                reason
+                              })
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-red-400 ${menuItem}`}
+                          >
+                            <FiShield
+                              size={18}
+                              className="mr-4 flex-shrink-0"
+                            />
+                            Ban @{post.author.username} from CometX
+                          </div>
+                        )}
+                      </Menu.Item>
+
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              const reason = window.prompt(
+                                'Reason for ban and purge:'
+                              )
+                              if (!reason) return
+                              if (
+                                !window.confirm(
+                                  `Confirm ban and purge - will remove all posts by ${post.author.username}`
+                                )
+                              )
+                                return
+                              banAndPurgeUser.mutateAsync({
+                                bannedId: post.author.id,
+                                reason
+                              })
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-red-400 ${menuItem}`}
+                          >
+                            <FiShield
+                              size={18}
+                              className="mr-4 flex-shrink-0"
+                            />
+                            Ban @{post.author.username} from CometX and purge
+                            posts
+                          </div>
+                        )}
+                      </Menu.Item>
+                    </>
+                  )}
               </Menu.Items>
             </Transition>
           </>

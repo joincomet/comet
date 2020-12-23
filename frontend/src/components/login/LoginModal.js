@@ -32,7 +32,12 @@ export default function LoginModal() {
       blockScroll={false}
       closeIcon={<FiX size={20} />}
     >
-      <LoginForm onFinish={() => close()} />
+      <LoginForm
+        onFinish={() => {
+          close()
+          window.scrollTo(0, 0)
+        }}
+      />
     </Modal>
   )
 }

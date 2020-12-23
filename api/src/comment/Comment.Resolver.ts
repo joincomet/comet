@@ -63,7 +63,7 @@ export class CommentResolver {
     })
 
     await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
-
+    await this.userRepo.increment({ id: userId }, 'commentCount', 1)
     await this.postRepo.increment({ id: postId }, 'commentCount', 1)
 
     if (parentCommentId) {
@@ -176,13 +176,9 @@ export class CommentResolver {
       throw new Error('Attempt to delete post by someone other than author')
 
     this.postRepo.decrement({ id: comment.postId }, 'commentCount', 1)
+    this.userRepo.decrement({ id: userId }, 'commentCount', 1)
 
-    await this.commentRepo
-      .createQueryBuilder()
-      .update()
-      .set({ deleted: true })
-      .where('id = :commentId', { commentId })
-      .execute()
+    await this.commentRepo.update(commentId, { deleted: true })
 
     return true
   }
@@ -195,7 +191,6 @@ export class CommentResolver {
     @Ctx() { userId }: Context
   ) {
     const comment = await this.commentRepo.findOne(commentId)
-    const user = await this.userRepo.findOne(userId)
     if (comment.authorId !== userId)
       throw new Error('Attempt to edit post by someone other than author')
 

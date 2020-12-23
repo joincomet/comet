@@ -29,3 +29,31 @@ const unfollowUser = async variables => {
 }
 
 export const useUnfollowUserMutation = () => useMutation(unfollowUser)
+
+const blockUser = async variables => {
+  await request(
+    null,
+    gql`
+      mutation blockUser($blockedId: ID!) {
+        blockUser(blockedId: $blockedId)
+      }
+    `,
+    variables
+  )
+}
+
+export const useBlockUserMutation = () => useMutation(blockUser)
+
+const unblockUser = async variables => {
+  await request(
+    null,
+    gql`
+      mutation unblockUser($blockedId: ID!) {
+        unblockUser(blockedId: $blockedId)
+      }
+    `,
+    variables
+  )
+}
+
+export const useUnblockUserMutation = () => useMutation(unblockUser)

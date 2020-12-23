@@ -66,10 +66,6 @@ body {
   @apply border-r border-gray-200 dark:border-gray-800;
 }
 
-.font-header {
-  @apply text-tiny font-semibold uppercase tracking-widest;
-}
-
 @responsive {
   .line-clamp-3 {
     overflow: hidden;
@@ -163,7 +159,8 @@ body {
 }
 
 .tippy-box {
-  @apply bg-black shadow-lg p-1 text-xs font-medium text-gray-200;
+  @apply bg-black shadow-lg p-1 font-medium text-gray-200;
+  font-size: 0.8125rem;
 }
 
 .tippy-arrow {
@@ -173,6 +170,7 @@ body {
 .arrow-box {
   position: relative;
 }
+
 .arrow-box::after, .arrow-box::before {
   right: 100%;
   top: calc(1.5rem - 4px);
@@ -189,6 +187,7 @@ body {
   border-width: 8px;
   margin-top: -8px;
 }
+
 .arrow-box::before {
   @apply border-r-gray-300 dark:border-r-gray-900;
   border-width: 9px;
@@ -218,10 +217,6 @@ body {
 
 .mycontainer-nopad {
   @apply container mx-auto;
-}
-
-.card {
-  @apply bg-white dark:bg-gray-900 rounded;
 }
 
 .header-1 {
