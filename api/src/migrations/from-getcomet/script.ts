@@ -14,9 +14,12 @@ const run = async () => {
   const planetRepo = getRepository(Planet)
   console.info('--- Deleting planets with 0 posts ---')
   const planetsToDelete = (
-    await planetRepo.createQueryBuilder('planet').getMany()
+    await planetRepo
+      .createQueryBuilder('planet')
+      .loadRelationCountAndMap('planet.postCount', 'planet.posts')
+      .getMany()
   )
-    .filter(c => c.postCount === 0)
+    .filter(c => (c as any).postCount === 0)
     .map(c => c.id)
 
   if (planetsToDelete && planetsToDelete.length > 0) {
