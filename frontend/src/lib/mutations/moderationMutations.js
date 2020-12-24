@@ -6,7 +6,7 @@ const removePost = async variables => {
   await request(
     null,
     gql`
-      mutation removePost($planetId: ID!, $postId: ID!, $reason: String!) {
+      mutation removePost($planetId: ID, $postId: ID!, $reason: String!) {
         removePost(planetId: $planetId, postId: $postId, reason: $reason)
       }
     `,

@@ -5,6 +5,8 @@ import Header from '@/components/layout/Header'
 import LoginModal from '@/components/login/LoginModal'
 import { Toaster } from 'react-hot-toast'
 
+const toastClass = 'bg-white dark:bg-gray-800 text-sm font-medium text-primary'
+
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -13,14 +15,15 @@ export default function Layout({ children }) {
       <Toaster
         position="bottom-center"
         toastOptions={{
-          className:
-            'bg-white dark:bg-gray-800 text-sm font-medium text-primary',
+          className: toastClass,
           success: {
+            className: toastClass,
             iconTheme: {
               primary: '#059669'
             }
           },
           error: {
+            className: toastClass,
             iconTheme: {
               primary: '#EF4444'
             }

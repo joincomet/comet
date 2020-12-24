@@ -41,7 +41,7 @@ export default function Header({ children, className, ...rest }) {
           <button className="absolute h-8 w-10 top-1/2 transform -translate-y-1/2 focus:outline-none inline-flex items-center justify-center">
             <FiSearch className="w-4 h-4" />
           </button>
-          <input className="h-8 text-sm rounded-full bg-gray-200 dark:bg-gray-800 focus:outline-none text-primary px-10 w-72" />
+          <input className="h-8 text-sm rounded-full bg-gray-200 dark:bg-gray-800 focus:outline-none text-primary px-10 w-64" />
         </div>
 
         <div className="ml-auto">

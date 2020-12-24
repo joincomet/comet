@@ -21,7 +21,7 @@ import { uploadImage } from '@/S3Storage'
 import { TimeFilter } from '@/TimeFilter'
 import { PostSort } from '@/post/PostSort'
 import { InjectRepository } from 'typeorm-typedi-extensions'
-import { Repository } from 'typeorm'
+import { Brackets, Repository } from 'typeorm'
 import { Comment } from '@/comment/Comment.Entity'
 import { Notification } from '@/notification/Notification.Entity'
 import { Planet } from '@/planet/Planet.Entity'
@@ -161,11 +161,11 @@ export class PostResolver {
           if (joinedPlanets.length > 0 || following.length > 0) {
             following.push(userId)
             qb.andWhere(
-              'post.planetId = ANY(:joinedPlanets) OR post.authorId = ANY(:following)',
-              {
-                joinedPlanets,
-                following
-              }
+              new Brackets(qb => {
+                qb.where('post.planetId = ANY(:joinedPlanets)', {
+                  joinedPlanets
+                }).orWhere('post.authorId = ANY(:following)', { following })
+              })
             )
           }
         }

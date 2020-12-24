@@ -19,9 +19,9 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async removePost(
-    @Arg('planetId', () => ID) planetId: string,
     @Arg('postId', () => ID) postId: number,
-    @Arg('reason') reason: string
+    @Arg('reason') reason: string,
+    @Arg('planetId', () => ID, { nullable: true }) planetId?: string
   ) {
     await this.postRepo.update(postId, {
       removed: true,

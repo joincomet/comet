@@ -322,7 +322,7 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                               post.removedReason = reason
                               removePost.mutateAsync({
                                 postId: post.id,
-                                planetId: post.planet.id,
+                                planetId: post.planet ? post.planet.id : null,
                                 reason
                               })
                               toast.success(`Removed post!`)

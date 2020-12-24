@@ -1,22 +1,14 @@
 import { QueryClient } from 'react-query'
-import React, { useEffect, useState } from 'react'
-import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
-import { useCopyToClipboard } from 'react-use'
-import Tippy from '@tippyjs/react'
-import { FiCopy, FiUsers } from 'react-icons/fi'
+import React, { useEffect } from 'react'
+import { fetchCurrentUser } from '@/lib/queries/useCurrentUser'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
-import { fetchPosts } from '@/lib/queries/usePosts'
 import SortOptions from '@/components/sort/SortOptions'
-import NavLink from '@/components/NavLink'
 import CreatePostButton from '@/components/createpost/CreatePostButton'
-import { useLogin } from '@/lib/useLogin'
 import InfoLinks from '@/components/InfoLinks'
 import { useHeaderStore } from '@/lib/useHeaderStore'
 
 export default function HomePage({ variables }) {
-  const currentUser = useCurrentUser().data
-  const { openLogin } = useLogin()
   const { setTitle } = useHeaderStore()
   useEffect(() => setTitle('Home'), [])
 
