@@ -725,6 +725,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@discordjs/collection@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "@discordjs/collection@npm:0.1.6"
+  checksum: da87faf9975e9320a4aa5e8a78312849e4767eb5b0c3348612a0f2d07b5bad4bb91c8c65a5a8ffecc007574c5eebd4790d2e13880af6fd2ae865ba3161495f9a
+  languageName: node
+  linkType: hard
+
+"@discordjs/form-data@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@discordjs/form-data@npm:3.0.1"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: 2ddf4c9bba170ea325cabae28d8d4f3e2e132a4eded64d242dbaafb514d0109c338a18bd0cab4d3464dca8f2da1c6ddc870ef96b89d7b5ed16f155cd171bf1a4
+  languageName: node
+  linkType: hard
+
 "@eslint/eslintrc@npm:^0.2.2":
   version: 0.2.2
   resolution: "@eslint/eslintrc@npm:0.2.2"
@@ -1262,6 +1280,16 @@ __metadata:
   version: 0.1.1
   resolution: "@tokenizer/token@npm:0.1.1"
   checksum: f495a1fe58da2cec4a45f02d302864484ecf3d00e343470b00ebcafd3248c3f252e0450e603838962f0ac3019477ad466b097134bc332d3f76441fc408a1dcfb
+  languageName: node
+  linkType: hard
+
+"@typeit/discord@npm:^4.0.8":
+  version: 4.0.8
+  resolution: "@typeit/discord@npm:4.0.8"
+  dependencies:
+    discord.js: ^12.2.0
+    glob: ^7.1.6
+  checksum: 057cceac22590b347a258c37417b7062cc3ab109862336148e89f8726f83632bc155a8a298ec99708946a9d2a114da1125eb11f243e61d4ab1c3e612197cedeb
   languageName: node
   linkType: hard
 
@@ -1823,6 +1851,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"abort-controller@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "abort-controller@npm:3.0.0"
+  dependencies:
+    event-target-shim: ^5.0.0
+  checksum: cc53ad8df9a6de3f55d4f804fca5106908f855e47b572fb5ab3cdd723b76374686dcefa557a2f87d4396db77e31bc0e6ce9d48637388cef6d884c29ad2691448
+  languageName: node
+  linkType: hard
+
 "accepts@npm:^1.3.5, accepts@npm:~1.3.7":
   version: 1.3.7
   resolution: "accepts@npm:1.3.7"
@@ -1937,6 +1974,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "api@workspace:."
   dependencies:
+    "@typeit/discord": ^4.0.8
     "@types/async": ^3.2.5
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.9
@@ -1955,6 +1993,7 @@ __metadata:
     date-fns: ^2.16.1
     dayjs: ^1.9.7
     dayjs-twitter: ^0.4.0
+    discord.js: ^12.5.1
     domutils: ^2.4.4
     eslint: ^7.16.0
     eslint-config-prettier: ^7.1.0
@@ -3317,6 +3356,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"discord.js@npm:^12.2.0, discord.js@npm:^12.5.1":
+  version: 12.5.1
+  resolution: "discord.js@npm:12.5.1"
+  dependencies:
+    "@discordjs/collection": ^0.1.6
+    "@discordjs/form-data": ^3.0.1
+    abort-controller: ^3.0.0
+    node-fetch: ^2.6.1
+    prism-media: ^1.2.2
+    setimmediate: ^1.0.5
+    tweetnacl: ^1.0.3
+    ws: ^7.3.1
+  checksum: 18850040f3b945b0d60a89ea38df31d1abcca2879abc171b3a44d0b9ce163e0ad0a0119e0e417630cf56609483af6c4b5235f77cc84ae1bee0a2869aff25fae3
+  languageName: node
+  linkType: hard
+
 "doctrine@npm:^3.0.0":
   version: 3.0.0
   resolution: "doctrine@npm:3.0.0"
@@ -3709,6 +3764,13 @@ __metadata:
   version: 1.8.1
   resolution: "etag@npm:1.8.1"
   checksum: f18341a3c12a554ec46c0d4756bc9cae177e92f25a4ebd9ceefebf0ee448b675972fc110879f22b1bf514174713921ae5de9ff77af2062d422b1085588465a57
+  languageName: node
+  linkType: hard
+
+"event-target-shim@npm:^5.0.0":
+  version: 5.0.1
+  resolution: "event-target-shim@npm:5.0.1"
+  checksum: d176477a31adf328ff50148886e46cef3f61ff8bdc1d6db161f6b3ead2501085d5652a81fab8dddc59aed93727231c0b5c8a0948de77ae401b2d977a3d18329e
   languageName: node
   linkType: hard
 
@@ -6458,6 +6520,27 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"prism-media@npm:^1.2.2":
+  version: 1.2.3
+  resolution: "prism-media@npm:1.2.3"
+  peerDependencies:
+    "@discordjs/opus": ^0.3.3
+    ffmpeg-static: ^4.2.7 || ^3.0.0 || ^2.4.0
+    node-opus: ^0.3.3
+    opusscript: ^0.0.7
+  peerDependenciesMeta:
+    "@discordjs/opus":
+      optional: true
+    ffmpeg-static:
+      optional: true
+    node-opus:
+      optional: true
+    opusscript:
+      optional: true
+  checksum: 337cfb80dba36ffb96989b3b6832cf1e46b0706da73ebb3d3de6a6d1429302e318961ee5cc048ea3e997c23c543e950d08a20a89cadc84ec37b2b0a856946397
+  languageName: node
+  linkType: hard
+
 "process-nextick-args@npm:~2.0.0":
   version: 2.0.1
   resolution: "process-nextick-args@npm:2.0.1"
@@ -7806,6 +7889,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"tweetnacl@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "tweetnacl@npm:1.0.3"
+  checksum: 1188f3ef85db04d6dba632d211e481ae0a5805974491633ff60bd56ae3362312dfea1515e0d200685867b69ff212e8778e26923f8203e3c335064b07f620a6c7
+  languageName: node
+  linkType: hard
+
 "type-check@npm:^0.4.0, type-check@npm:~0.4.0":
   version: 0.4.0
   resolution: "type-check@npm:0.4.0"
@@ -8223,6 +8313,21 @@ typescript@^4.1.3:
   dependencies:
     async-limiter: ~1.0.0
   checksum: 35d32b09e28f799f04708c3a7bd9eff469ae63e60543d7e18335f28689228a42ee21210f48de680aad6e5317df76b5b1183d1a1ea4b4d14cb6e0943528f40e76
+  languageName: node
+  linkType: hard
+
+"ws@npm:^7.3.1":
+  version: 7.4.1
+  resolution: "ws@npm:7.4.1"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 32b4f83bfeeca2b98d31c2d11c87a11c6e83f9285937e4a8267eb0ccaba479952a70c8b2ba39d0304236043c37a9bdf45cf2e5a1c28f19a77838e4e0b7f37593
   languageName: node
   linkType: hard
 

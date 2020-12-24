@@ -1,4 +1,4 @@
-import { Arg, Authorized, ID, Mutation } from 'type-graphql'
+import { Arg, Authorized, Ctx, ID, Mutation } from 'type-graphql'
 import { Planet } from '@/planet/Planet.Entity'
 import { uploadImage } from '@/S3Storage'
 import { Stream } from 'stream'
@@ -9,6 +9,9 @@ import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
 import { Comment } from '@/comment/Comment.Entity'
 import { handleUnderscore } from '@/handleUnderscore'
+import { discordClient } from '@/discord/DiscordClient'
+import { Context } from '@/Context'
+import { TextChannel } from 'discord.js'
 
 export class ModerationResolver {
   @InjectRepository(User) readonly userRepo: Repository<User>
@@ -183,6 +186,49 @@ export class ModerationResolver {
     if (description.length > 1000)
       throw new Error('Description cannot be longer than 1000 characters')
     await this.planetRepo.update(planetId, { description })
+    return true
+  }
+
+  @Mutation(() => Boolean)
+  async reportPost(
+    @Arg('postId', () => ID) postId: number,
+    @Arg('reason') reason: string,
+    @Ctx() { userId }: Context
+  ) {
+    let user
+    if (userId) user = await this.userRepo.findOne(userId)
+    const post = await this.postRepo.findOne(postId)
+    const author = await post.author
+    await (discordClient.channels.cache.get(
+      process.env.DISCORD_REPORTS_CHANNEL
+    ) as TextChannel).send(
+      `${user ? user.username : 'Anonymous'} reported a post by ${
+        author.username
+      } for "${reason}": https://cometx.io${post.relativeUrl}`
+    )
+    return true
+  }
+
+  @Mutation(() => Boolean)
+  async reportComment(
+    @Arg('commentId', () => ID) commentId: number,
+    @Arg('reason') reason: string,
+    @Ctx() { userId }: Context
+  ) {
+    let user
+    if (userId) user = await this.userRepo.findOne(userId)
+    const comment = await this.commentRepo.findOne(commentId)
+    const post = await this.postRepo.findOne(comment.postId)
+    const author = await comment.author
+    await (discordClient.channels.cache.get(
+      process.env.DISCORD_REPORTS_CHANNEL
+    ) as TextChannel).send(
+      `${user ? user.username : 'Anonymous'} reported a comment by ${
+        author.username
+      } on https://cometx.io${post.relativeUrl} for "${reason}":\n"${
+        comment.textContent
+      }"`
+    )
     return true
   }
 }

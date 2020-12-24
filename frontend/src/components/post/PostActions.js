@@ -26,7 +26,8 @@ import {
   useBanAndPurgeUserMutation,
   useBanUserFromPlanetMutation,
   useBanUserMutation,
-  useRemovePostMutation
+  useRemovePostMutation,
+  useReportPostMutation
 } from '@/lib/mutations/moderationMutations'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
@@ -157,6 +158,7 @@ function MoreOptions({ post, chip, icon, isModerator }) {
   const banUserFromPlanet = useBanUserFromPlanetMutation()
   const banUser = useBanUserMutation()
   const banAndPurgeUser = useBanAndPurgeUserMutation()
+  const reportPost = useReportPostMutation()
 
   return (
     <div className="relative inline-block z-30">
@@ -294,6 +296,13 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                   <Menu.Item>
                     {({ active }) => (
                       <div
+                        onClick={e => {
+                          e.stopPropagation()
+                          const reason = window.prompt('Reason for removal:')
+                          if (!reason) return
+                          reportPost.mutateAsync({ postId: post.id, reason })
+                          toast.success('Reported post!')
+                        }}
                         className={`${
                           active ? 'bg-gray-100 dark:bg-gray-700' : ''
                         } text-red-400 ${menuItem}`}

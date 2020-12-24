@@ -12,6 +12,7 @@
     "migrate": "NODE_ENV=development ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
   "dependencies": {
+    "@typeit/discord": "^4.0.8",
     "apollo-server-express": "^2.19.1",
     "argon2": "^0.27.1",
     "async-sema": "^3.1.0",
@@ -22,6 +23,7 @@
     "date-fns": "^2.16.1",
     "dayjs": "^1.9.7",
     "dayjs-twitter": "^0.4.0",
+    "discord.js": "^12.5.1",
     "domutils": "^2.4.4",
     "express": "^4.17.1",
     "file-type": "^16.1.0",

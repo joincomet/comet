@@ -20,6 +20,8 @@ import dayjs from 'dayjs'
 import dayjsTwitter from 'dayjs-twitter'
 import { followedLoader } from '@/user/FollowedLoader'
 import { followingLoader } from '@/user/FollowingLoader'
+import { Client } from '@typeit/discord'
+import { discordClient } from '@/discord/DiscordClient'
 
 dayjs.extend(dayjsTwitter)
 
@@ -108,6 +110,8 @@ async function bootstrap() {
       }`
     )
   })
+
+  await discordClient.login(process.env.DISCORD_TOKEN)
 }
 
 bootstrap()

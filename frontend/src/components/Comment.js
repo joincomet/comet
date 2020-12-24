@@ -23,7 +23,8 @@ import {
   useBanAndPurgeUserMutation,
   useBanUserFromPlanetMutation,
   useBanUserMutation,
-  useRemoveCommentMutation
+  useRemoveCommentMutation,
+  useReportCommentMutation
 } from '@/lib/mutations/moderationMutations'
 import { Menu, Transition } from '@headlessui/react'
 import { menuTransition } from '@/lib/menuTransition'
@@ -208,6 +209,7 @@ function MoreOptionsComment({ comment, post, level }) {
   const banUserFromPlanet = useBanUserFromPlanetMutation()
   const banUser = useBanUserMutation()
   const banAndPurgeUser = useBanAndPurgeUserMutation()
+  const reportComment = useReportCommentMutation()
 
   const isModerator =
     currentUser &&
@@ -300,6 +302,16 @@ function MoreOptionsComment({ comment, post, level }) {
                   <Menu.Item>
                     {({ active }) => (
                       <div
+                        onClick={e => {
+                          e.stopPropagation()
+                          const reason = window.prompt('Reason for removal:')
+                          if (!reason) return
+                          reportComment.mutateAsync({
+                            commentId: comment.id,
+                            reason
+                          })
+                          toast.success('Reported comment!')
+                        }}
                         className={`${
                           active ? 'bg-gray-100 dark:bg-gray-700' : ''
                         } text-red-400 ${menuItem}`}
@@ -323,6 +335,7 @@ function MoreOptionsComment({ comment, post, level }) {
                               const reason = window.prompt(
                                 'Reason for removal:'
                               )
+                              if (!reason) return
                               comment.removed = true
                               comment.removedReason = reason
                               removeComment.mutateAsync({

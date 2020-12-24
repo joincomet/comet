@@ -87,3 +87,31 @@ const banAndPurgeUser = async variables => {
 }
 
 export const useBanAndPurgeUserMutation = () => useMutation(banAndPurgeUser)
+
+const reportPost = async variables => {
+  await request(
+    null,
+    gql`
+      mutation reportPost($postId: ID!, $reason: String!) {
+        reportPost(postId: $postId, reason: $reason)
+      }
+    `,
+    variables
+  )
+}
+
+export const useReportPostMutation = () => useMutation(reportPost)
+
+const reportComment = async variables => {
+  await request(
+    null,
+    gql`
+      mutation reportComment($commentId: ID!, $reason: String!) {
+        reportComment(commentId: $commentId, reason: $reason)
+      }
+    `,
+    variables
+  )
+}
+
+export const useReportCommentMutation = () => useMutation(reportComment)
