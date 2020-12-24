@@ -1955,6 +1955,7 @@ __metadata:
     date-fns: ^2.16.1
     dayjs: ^1.9.7
     dayjs-twitter: ^0.4.0
+    domutils: ^2.4.4
     eslint: ^7.16.0
     eslint-config-prettier: ^7.1.0
     eslint-plugin-prettier: ^3.3.0
@@ -1965,6 +1966,7 @@ __metadata:
     graphql-tools: ^7.0.2
     graphql-type-json: ^0.3.2
     graphql-upload: ^11.0.0
+    htmlparser2: ^6.0.0
     jsonwebtoken: ^8.5.1
     metascraper: ^5.16.0
     metascraper-author: ^5.16.0

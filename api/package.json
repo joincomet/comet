@@ -7,8 +7,7 @@
     "node": "15.x.x"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "NODE_ENV=production TS_NODE_PROJECT=tsconfig.prod.json NODE_TLS_REJECT_UNAUTHORIZED=0 node -r tsconfig-paths/register dist/index.js",
+    "start": "NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register src/index.ts",
     "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
     "migrate": "NODE_ENV=development ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
@@ -23,6 +22,7 @@
     "date-fns": "^2.16.1",
     "dayjs": "^1.9.7",
     "dayjs-twitter": "^0.4.0",
+    "domutils": "^2.4.4",
     "express": "^4.17.1",
     "file-type": "^16.1.0",
     "got": "^11.8.1",
@@ -30,6 +30,7 @@
     "graphql-tools": "^7.0.2",
     "graphql-type-json": "^0.3.2",
     "graphql-upload": "^11.0.0",
+    "htmlparser2": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "metascraper": "^5.16.0",
     "metascraper-author": "^5.16.0",

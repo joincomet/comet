@@ -17,7 +17,6 @@ import { PostsArgs } from '@/post/PostsArgs'
 import { User } from '@/user/User.Entity'
 import { filterXSS } from 'xss'
 import { whiteList } from '@/XSSWhiteList'
-import { Stream } from 'stream'
 import { uploadImage } from '@/S3Storage'
 import { TimeFilter } from '@/TimeFilter'
 import { PostSort } from '@/post/PostSort'
@@ -192,7 +191,7 @@ export class PostResolver {
       .take(pageSize)
       .getMany()
 
-    if (page === 0) {
+    if (page === 0 && sort === PostSort.HOT) {
       const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.planet', 'planet')

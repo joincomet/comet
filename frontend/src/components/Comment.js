@@ -29,6 +29,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { menuTransition } from '@/lib/menuTransition'
 import { FaThumbtack } from 'react-icons/fa'
 import Tippy from '@tippyjs/react'
+import toast from 'react-hot-toast'
 
 export default function Comment({
   comment,
@@ -283,6 +284,7 @@ function MoreOptionsComment({ comment, post, level }) {
                             if (!window.confirm('Confirm Delete')) return
                             comment.deleted = true
                             deleteComment.mutateAsync({ commentId: comment.id })
+                            toast.success('Deleted comment!')
                           }}
                           className={`${
                             active ? 'bg-gray-100 dark:bg-gray-700' : ''
@@ -328,6 +330,7 @@ function MoreOptionsComment({ comment, post, level }) {
                                 planetId: post.planet.id,
                                 reason
                               })
+                              toast.success('Removed comment!')
                             }}
                             className={`${
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
@@ -352,6 +355,9 @@ function MoreOptionsComment({ comment, post, level }) {
                                   bannedId: comment.author.id,
                                   reason
                                 })
+                                toast.success(
+                                  `Banned @${comment.author.username} from +${post.planet.name}!`
+                                )
                               }}
                               className={`${
                                 active ? 'bg-gray-100 dark:bg-gray-700' : ''
@@ -385,6 +391,9 @@ function MoreOptionsComment({ comment, post, level }) {
                                 bannedId: comment.author.id,
                                 reason
                               })
+                              toast.success(
+                                `Banned @${comment.author.username} from CometX!`
+                              )
                             }}
                             className={`${
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
@@ -418,6 +427,9 @@ function MoreOptionsComment({ comment, post, level }) {
                                 bannedId: comment.author.id,
                                 reason
                               })
+                              toast.success(
+                                `Banned and purged @${comment.author.username}!`
+                              )
                             }}
                             className={`${
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
