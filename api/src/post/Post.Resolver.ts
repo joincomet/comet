@@ -63,8 +63,6 @@ export class PostResolver {
   ) {
     const qb = this.postRepo
       .createQueryBuilder('post')
-      .andWhere('post.deleted = false')
-      .andWhere('post.removed = false')
       .leftJoinAndSelect('post.planet', 'planet')
       .leftJoinAndSelect('post.author', 'author')
 
@@ -188,6 +186,8 @@ export class PostResolver {
     }
 
     let posts = await qb
+      .andWhere('post.deleted = false')
+      .andWhere('post.removed = false')
       .skip(page * pageSize)
       .take(pageSize)
       .getMany()
@@ -222,7 +222,10 @@ export class PostResolver {
           .addOrderBy('post.pinnedAt', 'DESC')
       }
 
-      const stickies = await stickiesQb.getMany()
+      const stickies = await stickiesQb
+        .andWhere('post.deleted = false')
+        .andWhere('post.removed = false')
+        .getMany()
 
       posts = stickies.concat(posts)
     }
@@ -268,7 +271,7 @@ export class PostResolver {
   @Mutation(() => Post)
   async submitPost(
     @Args()
-    { title, link, textContent, planetName, images }: SubmitPostArgs,
+    { title, link, textContent, planetName, images, nsfw }: SubmitPostArgs,
     @Ctx() { userId }: Context
   ) {
     if (!title && !link && !textContent && (!images || images.length === 0))
@@ -276,7 +279,8 @@ export class PostResolver {
 
     const toSave: any = {
       title,
-      authorId: userId
+      authorId: userId,
+      nsfw
     }
 
     if (planetName) {
@@ -366,7 +370,11 @@ export class PostResolver {
     if (post.authorId !== userId)
       throw new Error('Attempt to delete post by someone other than author')
 
-    await this.postRepo.update(postId, { deleted: true })
+    await this.postRepo.update(postId, {
+      deleted: true,
+      pinned: false,
+      pinnedByAuthor: false
+    })
     await this.userRepo.decrement({ id: userId }, 'postCount', 1)
 
     return true

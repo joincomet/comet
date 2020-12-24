@@ -149,11 +149,11 @@ module.exports = {
       gray: colors.gray,
 
       red: colors.red,
-      amber: colors.amber,
-      yellow: colors.yellow,
-      green: colors.green,
+      yellow: colors.amber,
+      green: colors.emerald,
       blue: colors.blue,
-      purple: colors.purple,
+      indigo: colors.indigo,
+      purple: colors.violet,
       pink: colors.pink
     }
   },

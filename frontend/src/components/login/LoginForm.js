@@ -1,40 +1,46 @@
 import { useForm } from 'react-hook-form'
 import Logo from '@/components/Logo'
-import { useRouter } from 'next/router'
 import {
   useLoginMutation,
   useSignUpMutation
 } from '@/lib/mutations/authMutations'
 import { useQueryClient } from 'react-query'
+import toast from 'react-hot-toast'
 
 const textBox =
   'bg-gray-200 dark:bg-gray-700 rounded-md h-9 px-3 w-full border-none transition text-sm'
 
 export default function LoginForm({ onFinish }) {
-  const { register, handleSubmit, watch, errors, formState } = useForm({
-    mode: 'onChange'
-  })
+  const { register, handleSubmit, formState } = useForm({ mode: 'onChange' })
   const queryClient = useQueryClient()
 
-  const loginMutation = useLoginMutation()
-  const signUpMutation = useSignUpMutation()
+  const loginMutation = useLoginMutation({
+    onError: error => toast.error(error.response.errors[0].message),
+    onSuccess: () => {
+      queryClient.invalidateQueries()
+      if (onFinish) onFinish()
+    }
+  })
+  const signUpMutation = useSignUpMutation({
+    onError: error => toast.error(error.response.errors[0].message),
+    onSuccess: () => {
+      queryClient.invalidateQueries()
+      if (onFinish) onFinish()
+    }
+  })
 
   const login = handleSubmit(async ({ username, password }) => {
-    const { accessToken, user } = await loginMutation.mutateAsync({
+    loginMutation.mutate({
       username,
       password
     })
-    await queryClient.invalidateQueries()
-    if (onFinish) onFinish()
   })
 
   const signup = handleSubmit(async ({ username, password }) => {
-    const { accessToken, user } = await signUpMutation.mutateAsync({
+    signUpMutation.mutate({
       username,
       password
     })
-    await queryClient.invalidateQueries()
-    if (onFinish) onFinish()
   })
 
   return (
@@ -83,7 +89,8 @@ export default function LoginForm({ onFinish }) {
         type="button"
         onClick={() => signup()}
         name="signup"
-        className="w-full focus:outline-none rounded-md border border-gray-200 dark:border-gray-700 transition bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white flex items-center mt-3 h-9 label"
+        disabled={!formState.isValid || signUpMutation.isLoading}
+        className="disabled:opacity-50 transition w-full focus:outline-none rounded-md border border-gray-200 dark:border-gray-700 transition bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white flex items-center mt-3 h-9 label"
       >
         <div className="m-auto">Create Account</div>
       </button>

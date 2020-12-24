@@ -27,4 +27,7 @@ export class CreatePlanetArgs {
     each: true
   })
   galaxies: string[]
+
+  @Field(() => Boolean, { defaultValue: false })
+  nsfw: boolean = false
 }

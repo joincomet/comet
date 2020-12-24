@@ -28,4 +28,4 @@ export const fetchCurrentUser = async (ctx = null) => {
   return currentUser
 }
 
-export const useCurrentUser = () => useQuery(['currentUser'], fetchCurrentUser)
+export const useCurrentUser = () => useQuery('currentUser', fetchCurrentUser)

@@ -18,6 +18,7 @@ import { NextSeo } from 'next-seo'
 import PlanetAbout from '@/components/planet/PlanetAbout'
 import UserAbout from '@/components/user/UserAbout'
 import { useHeaderStore } from '@/lib/useHeaderStore'
+import { fetchCurrentUser } from '@/lib/queries/useCurrentUser'
 
 function PostPage({ postVariables, commentVariables }) {
   const { query, pathname } = useRouter()
@@ -198,6 +199,8 @@ export async function getServerSideProps(ctx) {
     postId: query.id,
     sort: query.sort ? query.sort.toUpperCase() : 'TOP'
   }
+
+  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
 
   await queryClient.prefetchQuery(['post', postVariables], key =>
     fetchPost(key, ctx)

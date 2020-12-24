@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import React, { useState } from 'react'
 import Modal from 'react-responsive-modal'
 import { FiChevronRight, FiChevronLeft } from 'react-icons/fi'

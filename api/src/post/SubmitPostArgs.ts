@@ -32,4 +32,7 @@ export class SubmitPostArgs {
   @IsOptional()
   @ArrayMaxSize(20, { message: 'Cannot upload more than 20 images' })
   images?: FileUpload[]
+
+  @Field(() => Boolean, { defaultValue: false })
+  nsfw: boolean = false
 }

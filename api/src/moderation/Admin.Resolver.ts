@@ -3,10 +3,12 @@ import { InjectRepository } from 'typeorm-typedi-extensions'
 import { User } from '@/user/User.Entity'
 import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
+import { Comment } from '@/comment/Comment.Entity'
 
 export class AdminResolver {
   @InjectRepository(User) readonly userRepo: Repository<User>
   @InjectRepository(Post) readonly postRepo: Repository<Post>
+  @InjectRepository(Comment) readonly commentRepo: Repository<Comment>
 
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
@@ -25,11 +27,26 @@ export class AdminResolver {
     @Arg('bannedId', () => ID) bannedId: number,
     @Arg('reason') reason: string
   ) {
-    await this.userRepo.update(bannedId, { banned: true, banReason: reason })
+    await this.userRepo.update(bannedId, {
+      banned: true,
+      banReason: reason,
+      postCount: 0,
+      commentCount: 0
+    })
 
     await this.postRepo.update(
       { authorId: bannedId },
-      { removed: true, removedReason: reason }
+      {
+        removed: true,
+        removedReason: reason,
+        pinned: false,
+        pinnedByAuthor: false
+      }
+    )
+
+    await this.commentRepo.update(
+      { authorId: bannedId },
+      { removed: true, removedReason: reason, pinned: false }
     )
 
     return true

@@ -2851,6 +2851,7 @@ __metadata:
     eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.21.5
     framer-motion: ^3.1.1
+    fuse.js: ^6.4.3
     graphql: ^15.4.0
     graphql-request: ^3.4.0
     graphql-tag: ^2.11.0
@@ -2865,12 +2866,13 @@ __metadata:
     react-dnd-touch-backend: ^11.1.3
     react-dom: ^17.0.1
     react-hook-form: ^6.13.1
+    react-hot-toast: ^1.0.1
     react-icons: ^4.1.0
     react-infinite-scroll-component: ^5.1.0
     react-intersection-observer: ^8.31.0
     react-player: ^2.7.2
     react-popper: ^2.2.4
-    react-query: ^3.5.2
+    react-query: ^3.5.4
     react-responsive-modal: ^6.0.0
     react-scrollbars-custom: ^4.0.25
     react-twemoji: ^0.3.0
@@ -2966,6 +2968,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"fuse.js@npm:^6.4.3":
+  version: 6.4.3
+  resolution: "fuse.js@npm:6.4.3"
+  checksum: 02b827a1ca9c2903e7575b1aad1087aec5b523ecd2be9b0ed8eef08d91107a5aa6b607119de8a6cd34e2e1e9ac3a3469b16fc37ba2b6a01713520b7a3dbe2f11
+  languageName: node
+  linkType: hard
+
 "gauge@npm:~2.7.3":
   version: 2.7.4
   resolution: "gauge@npm:2.7.4"
@@ -3052,6 +3061,15 @@ fsevents@~2.1.2:
   dependencies:
     type-fest: ^0.8.1
   checksum: 0b9764bdeab0bc9762dea8954a0d4c5db029420bd8bf693df9098ce7e045ccaf9b2d259185396fd048b051d42fdc8dc7ab02af62e3dbeb2324a78a05aac8d33c
+  languageName: node
+  linkType: hard
+
+"goober@npm:^2.0.15":
+  version: 2.0.18
+  resolution: "goober@npm:2.0.18"
+  peerDependencies:
+    csstype: ^2.6.2
+  checksum: 7dff96ff4b52dbbd44fef7f6759c432dbef8e3cb4fc3f3daa45ab79a03d0d94e04be0b3fe2f5f02e1afd6b1a39c1b6e4c45b4df643715e59d6c636ba7ca91318
   languageName: node
   linkType: hard
 
@@ -5083,6 +5101,18 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"react-hot-toast@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "react-hot-toast@npm:1.0.1"
+  dependencies:
+    goober: ^2.0.15
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: ab627c74f616aff31e598909feb25c4daae5ca5822d132f0fe8bb9e04aa3843d9b718581dc79972276006ff25554a09b0cc2c67dfa8acbce736a2388460027da
+  languageName: node
+  linkType: hard
+
 "react-icons@npm:^4.1.0":
   version: 4.1.0
   resolution: "react-icons@npm:4.1.0"
@@ -5154,9 +5184,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.5.2":
-  version: 3.5.2
-  resolution: "react-query@npm:3.5.2"
+"react-query@npm:^3.5.4":
+  version: 3.5.4
+  resolution: "react-query@npm:3.5.4"
   dependencies:
     "@babel/runtime": ^7.5.5
     match-sorter: ^6.0.2
@@ -5167,7 +5197,7 @@ fsevents@~2.1.2:
       optional: true
     react-native:
       optional: true
-  checksum: 45e41fe5b2a48b69936eb9f2e82bf683842756f118ef7ebd24d2b51e4b7a0ac14e2942d30b4338ef28d32b85c944a395dc785cecd19d041214e80b20ca265eaa
+  checksum: 96bb80393c7a01f750d470ee9e35637da5dbb26df4eb0bb04f29b74f7ad70a21ab421fb3c989c2b5634f5eb7a3641b8ca1a00eddd5f1ffe06523a0a587f00183
   languageName: node
   linkType: hard
 

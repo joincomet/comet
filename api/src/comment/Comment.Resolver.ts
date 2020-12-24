@@ -178,7 +178,7 @@ export class CommentResolver {
     this.postRepo.decrement({ id: comment.postId }, 'commentCount', 1)
     this.userRepo.decrement({ id: userId }, 'commentCount', 1)
 
-    await this.commentRepo.update(commentId, { deleted: true })
+    await this.commentRepo.update(commentId, { deleted: true, pinned: false })
 
     return true
   }

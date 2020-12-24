@@ -24,6 +24,8 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
           avatarUrl
           bannerUrl
           isCurrentUser
+          banned
+          banReason
         }
       }
     `,

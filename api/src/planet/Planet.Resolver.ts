@@ -29,7 +29,7 @@ export class PlanetResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async createPlanet(
-    @Args() { name, description, galaxies }: CreatePlanetArgs,
+    @Args() { name, description, galaxies, nsfw }: CreatePlanetArgs,
     @Ctx() { userId }: Context
   ) {
     bannedWords.forEach(u => {
@@ -57,7 +57,8 @@ export class PlanetResolver {
       name,
       description,
       creatorId: userId,
-      galaxies
+      galaxies,
+      nsfw
     })
 
     return true

@@ -55,6 +55,9 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
           }
           timeSince
           timeSinceEdited
+          deleted
+          removed
+          removedReason
         }
       }
     `,

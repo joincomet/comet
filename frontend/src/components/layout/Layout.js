@@ -1,17 +1,33 @@
 import LeftSidebar from './LeftSidebar'
 import BottomBar from '@/components/layout/BottomBar'
 import React, { useState } from 'react'
-import { FiEdit } from 'react-icons/fi'
 import Header from '@/components/layout/Header'
 import LoginModal from '@/components/login/LoginModal'
-import { Hydrate } from 'react-query/hydration'
-import CreatePostModal from '@/components/createpost/CreatePostModal'
+import { Toaster } from 'react-hot-toast'
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <>
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          className:
+            'bg-white dark:bg-gray-800 text-sm font-medium text-primary',
+          success: {
+            iconTheme: {
+              primary: '#059669'
+            }
+          },
+          error: {
+            iconTheme: {
+              primary: '#EF4444'
+            }
+          }
+        }}
+      />
+
       <LoginModal />
 
       <div className="relative">

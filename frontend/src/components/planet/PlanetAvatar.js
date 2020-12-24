@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { BiPlanet } from 'react-icons/bi'
 
 export default function PlanetAvatar({

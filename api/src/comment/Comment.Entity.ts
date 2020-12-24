@@ -80,12 +80,23 @@ export class Comment {
   @Field()
   isRocketed: boolean
 
+  @Field()
   @Column({ default: false })
   deleted: boolean
 
+  @Field()
   @Column({ default: false })
   removed: boolean
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   removedReason?: string
+
+  @Field()
+  @Column({ default: false })
+  pinned: boolean
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  pinnedAt?: Date
 }

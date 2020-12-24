@@ -108,4 +108,12 @@ export class Planet {
   @Field({ nullable: true })
   @Column({ nullable: true })
   bannerUrl?: string
+
+  @Field()
+  @Column({ default: false })
+  banned: boolean
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  banReason?: string
 }

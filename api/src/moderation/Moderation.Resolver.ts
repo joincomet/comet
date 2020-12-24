@@ -23,7 +23,14 @@ export class ModerationResolver {
     @Arg('postId', () => ID) postId: number,
     @Arg('reason') reason: string
   ) {
-    await this.postRepo.update(postId, { removed: true, removedReason: reason })
+    await this.postRepo.update(postId, {
+      removed: true,
+      removedReason: reason,
+      pinned: false,
+      pinnedByAuthor: false
+    })
+    const post = await this.postRepo.findOne(postId)
+    await this.userRepo.decrement({ id: post.authorId }, 'postCount', 1)
     return true
   }
 
@@ -54,13 +61,14 @@ export class ModerationResolver {
     @Arg('commentId', () => ID) commentId: number,
     @Arg('reason') reason: string
   ) {
-    const comment = await this.commentRepo.findOne(commentId)
-    this.postRepo.decrement({ id: comment.postId }, 'commentCount', 1)
-
     await this.commentRepo.update(commentId, {
       removed: true,
-      removedReason: reason
+      removedReason: reason,
+      pinned: false
     })
+    const comment = await this.commentRepo.findOne(commentId)
+    await this.postRepo.decrement({ id: comment.postId }, 'commentCount', 1)
+    await this.userRepo.decrement({ id: comment.authorId }, 'commentCount', 1)
     return true
   }
 
@@ -163,6 +171,18 @@ export class ModerationResolver {
       .relation(Planet, 'moderators')
       .of(planet)
       .add(user.id)
+    return true
+  }
+
+  @Authorized('MOD')
+  @Mutation(() => Boolean)
+  async editPlanetDescription(
+    @Arg('planetId', () => ID) planetId: number,
+    @Arg('description') description: string
+  ) {
+    if (description.length > 1000)
+      throw new Error('Description cannot be longer than 1000 characters')
+    await this.planetRepo.update(planetId, { description })
     return true
   }
 }

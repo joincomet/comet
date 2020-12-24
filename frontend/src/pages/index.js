@@ -56,7 +56,7 @@ export async function getServerSideProps(ctx) {
 
   const variables = getVariables(query)
 
-  await queryClient.prefetchQuery(['currentUser'], () => fetchCurrentUser(ctx))
+  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
 
   const dehydratedState = dehydrate(queryClient)
 

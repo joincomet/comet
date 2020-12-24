@@ -8,36 +8,60 @@ import Posts from '@/components/post/Posts'
 import UserAvatar from '@/components/user/UserAvatar'
 import SortOptionsUser from '@/components/sort/SortOptionsUser'
 import { fetchComments } from '@/lib/queries/useComments'
-import { useCurrentUser } from '@/lib/queries/useCurrentUser'
+import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
 import CreatePostButton from '@/components/createpost/CreatePostButton'
 import UserFollowButton from '@/components/user/UserFollowButton'
 import UserHeader from '@/components/user/UserHeader'
 import { useInView } from 'react-intersection-observer'
 import { useHeaderStore } from '@/lib/useHeaderStore'
 import { FiEdit2 } from 'react-icons/fi'
-import { useForm } from 'react-hook-form'
 import {
   useEditBioMutation,
   useUploadAvatarMutation
 } from '@/lib/mutations/editProfileMutations'
 import { NextSeo } from 'next-seo'
+import NavLink from '@/components/NavLink'
 
 export default function UserPage({ variables }) {
-  const router = useRouter()
-  const userQuery = useUser({ username: router.query.username })
+  const { query } = useRouter()
+  const userQuery = useUser({ username: query.username })
   const user = userQuery.data
+  const { setDark, setTitle } = useHeaderStore()
+
+  if (!user) {
+    useEffect(() => setDark(true), [])
+    return (
+      <div className="flex flex-col items-center justify-center h-screen space-y-6 mycontainer">
+        <div className="header-2">User not found</div>
+        <NavLink href="/" className="rounded bg-blue-600 px-6 py-2 label">
+          Home Page
+        </NavLink>
+      </div>
+    )
+  }
+
+  if (user.banned) {
+    useEffect(() => setDark(true), [])
+    return (
+      <div className="flex flex-col items-center justify-center h-screen space-y-6 mycontainer">
+        <div className="header-2">@{user.username} is banned</div>
+        <div className="">Reason: {user.banReason}</div>
+        <NavLink href="/" className="rounded bg-blue-600 px-6 py-2 label">
+          Home Page
+        </NavLink>
+      </div>
+    )
+  }
+
   const currentUserQuery = useCurrentUser()
   const currentUser = currentUserQuery.data
   const { ref, inView } = useInView({ threshold: 0.8 })
-  const { setDark, setTitle } = useHeaderStore()
 
   useEffect(() => setTitle(`@${user.username}`), [])
 
   useEffect(() => setDark(!inView), [inView])
 
-  const { watch, register } = useForm()
-
-  const avatarImage = watch('avatarImage')
+  const [avatarImage, setAvatarImage] = useState(null)
 
   const uploadAvatar = useUploadAvatarMutation()
 
@@ -97,18 +121,17 @@ export default function UserPage({ variables }) {
               <UserAvatar
                 className="w-20 h-20 md:w-40 md:h-40 shadow-md"
                 user={user}
-                loading="eager"
               />
 
               {user.isCurrentUser && (
-                <form className="absolute inset-0">
+                <div className="absolute inset-0">
                   <input
-                    ref={register}
                     type="file"
                     name="avatarImage"
                     id="avatarImage"
                     accept="image/png, image/jpeg"
                     className="hidden"
+                    onChange={e => setAvatarImage(e.target.files)}
                   />
 
                   <label
@@ -117,7 +140,7 @@ export default function UserPage({ variables }) {
                   >
                     <FiEdit2 className="w-1/2 h-1/2" />
                   </label>
-                </form>
+                </div>
               )}
             </div>
 
@@ -222,6 +245,8 @@ export async function getServerSideProps(ctx) {
   const { query } = ctx
 
   const variables = getVariables(query)
+
+  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
 
   await queryClient.prefetchQuery(['comments', variables], key =>
     fetchComments(key, ctx)

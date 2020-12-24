@@ -101,9 +101,9 @@ export class User {
   @Column({ default: false })
   banned: boolean
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
-  banReason: string
+  banReason?: string
 
   @Field()
   isFollowing: boolean

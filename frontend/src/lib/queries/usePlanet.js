@@ -20,6 +20,8 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           isJoined
           galaxies
           timeSinceCreated
+          banned
+          banReason
           moderators {
             id
             username

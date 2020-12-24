@@ -55,6 +55,9 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           }
           timeSince
           timeSinceEdited
+          deleted
+          removed
+          removedReason
         }
       }
     `,

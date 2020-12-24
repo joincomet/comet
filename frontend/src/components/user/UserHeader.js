@@ -16,7 +16,7 @@ export default function UserHeader({ user, show }) {
       </NavLink>
 
       <div className="ml-auto">
-        <UserFollowButton user={user} />
+        {!user.isCurrentUser && <UserFollowButton user={user} />}
       </div>
     </SubHeaderBase>
   )

@@ -2,7 +2,7 @@ import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { useRouter } from 'next/router'
 import { QueryClient } from 'react-query'
 import { dehydrate } from 'react-query/hydration'
-import Image from 'next/image'
+
 import UserAvatar from '@/components/user/UserAvatar'
 
 export default function SettingsPage() {
@@ -14,9 +14,9 @@ export default function SettingsPage() {
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery(['currentUser'], () => fetchCurrentUser(ctx))
+  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
 
-  const currentUser = queryClient.getQueryData(['currentUser'])
+  const currentUser = queryClient.getQueryData('currentUser')
 
   if (!currentUser)
     return {

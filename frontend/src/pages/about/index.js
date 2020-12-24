@@ -1,3 +1,3 @@
 export default function AboutPage() {
-  return <div>Landing page here</div>
+  return <div className="mt-14">Landing page here</div>
 }

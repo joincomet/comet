@@ -1,12 +1,11 @@
 import { FiMoreHorizontal } from 'react-icons/fi'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { useLogin } from '@/lib/useLogin'
 import {
   useFollowUserMutation,
   useUnfollowUserMutation
 } from '@/lib/mutations/userMutations'
-import { useForm } from 'react-hook-form'
 import { useUploadBannerMutation } from '@/lib/mutations/editProfileMutations'
 import { useUser } from '@/lib/queries/useUser'
 
@@ -42,9 +41,7 @@ export default function UserFollowButton({ user }) {
     await unfollowMutation.mutateAsync(variables)
   }
 
-  const { register, watch } = useForm()
-
-  const bannerImage = watch('bannerImage')
+  const [bannerImage, setBannerImage] = useState(null)
 
   const uploadBanner = useUploadBannerMutation()
 
@@ -60,14 +57,14 @@ export default function UserFollowButton({ user }) {
   return (
     <div className="inline-flex items-center">
       {user.isCurrentUser ? (
-        <form>
+        <div>
           <input
-            ref={register}
             name="bannerImage"
             id="bannerImage"
             className="hidden"
             accept="image/png, image/jpeg"
             type="file"
+            onChange={e => setBannerImage(e.target.files)}
           />
           <label
             htmlFor="bannerImage"
@@ -75,7 +72,7 @@ export default function UserFollowButton({ user }) {
           >
             Upload Banner
           </label>
-        </form>
+        </div>
       ) : (
         <>
           <div

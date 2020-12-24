@@ -73,6 +73,9 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
             }
             timeSince
             timeSinceEdited
+            deleted
+            removed
+            removedReason
           }
         }
       }

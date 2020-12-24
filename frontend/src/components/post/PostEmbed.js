@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { FiLink } from 'react-icons/fi'
 import React from 'react'
 import ReactPlayer from 'react-player/youtube'

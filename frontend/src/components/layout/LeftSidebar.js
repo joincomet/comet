@@ -4,13 +4,14 @@ import { BiHomeAlt } from 'react-icons/bi'
 import NavLink from '../NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/lib/queries/usePlanets'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Scrollbar } from 'react-scrollbars-custom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
 import { useHeaderStore } from '@/lib/useHeaderStore'
 import { useRouter } from 'next/router'
+import Fuse from 'fuse.js'
 
 const link =
   'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-10 flex items-center transition'
@@ -79,7 +80,7 @@ function LeftSidebar() {
               <CgInfinity className="w-5 h-5" />
               <span className="ml-6">Universe</span>
             </NavLink>
-            <NavLink
+            {/*<NavLink
               href="/explore"
               className={`${link} ${
                 pathname === '/explore'
@@ -94,10 +95,20 @@ function LeftSidebar() {
                 />
               </svg>
               <span className="ml-6">Explore Planets</span>
+            </NavLink>*/}
+
+            <NavLink className={`${link} text-tertiary`} href={`/createplanet`}>
+              <svg className="w-5 h-5 mr-6" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M17 14H19V17H22V19H19V22H17V19H14V17H17V14M20 12C20 8.64 17.93 5.77 15 4.59V5C15 6.1 14.1 7 13 7H11V9C11 9.55 10.55 10 10 10H8V12H14C14.5 12 14.9 12.35 15 12.81C13.2 13.85 12 15.79 12 18C12 19.5 12.54 20.85 13.44 21.9L12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12L21.9 13.44C21.34 12.96 20.7 12.59 20 12.34L20 12M11 19.93V18C9.9 18 9 17.1 9 16V15L4.21 10.21C4.08 10.78 4 11.38 4 12C4 16.08 7.06 19.44 11 19.93Z"
+                />
+              </svg>
+              Create a Planet
             </NavLink>
           </div>
 
-          <TopPlanets />
+          <Planets />
         </Scrollbar>
       </nav>
     </>
@@ -107,19 +118,56 @@ function LeftSidebar() {
 const planetClass =
   'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-8 flex items-center transition'
 
-function TopPlanets() {
+function Planets() {
   const [searchPlanets, setSearchPlanets] = useState('')
 
   const { query, pathname } = useRouter()
 
   const currentUser = useCurrentUser().data
 
-  const { isLoading, isError, data, error } = usePlanets({
-    sort: 'TOP',
-    joinedOnly: !!currentUser
+  const joinedPlanets =
+    usePlanets({
+      sort: 'AZ',
+      joinedOnly: !!currentUser
+    }).data || []
+
+  const topPlanets =
+    usePlanets({
+      sort: 'TOP',
+      joinedOnly: false
+    }).data || []
+
+  const fuse = new Fuse(topPlanets, {
+    threshold: 0.3,
+    keys: ['name']
   })
 
-  if (isLoading || isError) return null
+  const [results, setResults] = useState([])
+
+  useEffect(() => setResults(fuse.search(searchPlanets).slice(0, 5)), [
+    searchPlanets
+  ])
+
+  function Planet({ planet }) {
+    return (
+      <NavLink
+        className={`${planetClass} ${
+          pathname === '/planet/[planetname]' &&
+          query.planetname === planet.name
+            ? 'text-accent navitem-active'
+            : 'text-tertiary'
+        }`}
+        key={planet.id}
+        href={`/planet/${planet.name}`}
+      >
+        <PlanetAvatar className="w-5 h-5" planet={planet} />
+
+        <span className="ml-3">{planet.name}</span>
+      </NavLink>
+    )
+  }
+
+  const MemoizedPlanet = React.memo(Planet)
 
   return (
     <div className="py-3 h-full">
@@ -137,35 +185,30 @@ function TopPlanets() {
         />
       </div>
 
-      <NavLink
-        className={`${planetClass} text-tertiary hover:text-blue-500 dark:hover:text-blue-500 transition`}
-        href={`/createplanet`}
-      >
-        <svg className="w-5 h-5" viewBox="0 0 24 24">
-          <path
-            fill="currentColor"
-            d="M17 14H19V17H22V19H19V22H17V19H14V17H17V14M20 12C20 8.64 17.93 5.77 15 4.59V5C15 6.1 14.1 7 13 7H11V9C11 9.55 10.55 10 10 10H8V12H14C14.5 12 14.9 12.35 15 12.81C13.2 13.85 12 15.79 12 18C12 19.5 12.54 20.85 13.44 21.9L12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12L21.9 13.44C21.34 12.96 20.7 12.59 20 12.34L20 12M11 19.93V18C9.9 18 9 17.1 9 16V15L4.21 10.21C4.08 10.78 4 11.38 4 12C4 16.08 7.06 19.44 11 19.93Z"
-          />
-        </svg>
-        <span className="ml-3">Create a Planet</span>
-      </NavLink>
+      {searchPlanets &&
+        results
+          .map(r => r.item)
+          .map((planet, index) => (
+            <MemoizedPlanet key={index} planet={planet} />
+          ))}
 
-      {data.map((planet, index) => (
-        <NavLink
-          className={`${planetClass} ${
-            pathname === '/planet/[planetname]' &&
-            query.planetname === planet.name
-              ? 'text-accent navitem-active'
-              : 'text-tertiary'
-          }`}
-          key={planet.id}
-          href={`/planet/${planet.name}`}
-        >
-          <PlanetAvatar className="w-5 h-5" planet={planet} />
+      {currentUser && !searchPlanets && (
+        <>
+          <div className="label text-tertiary px-6 py-3">My Planets</div>
+          {joinedPlanets.map((planet, index) => (
+            <MemoizedPlanet key={index} planet={planet} />
+          ))}
+        </>
+      )}
 
-          <span className="ml-3">{planet.name}</span>
-        </NavLink>
-      ))}
+      {!searchPlanets && (
+        <>
+          <div className="label text-tertiary px-6 py-3">All Planets</div>
+          {topPlanets.map((planet, index) => (
+            <MemoizedPlanet key={index} planet={planet} />
+          ))}
+        </>
+      )}
     </div>
   )
 }

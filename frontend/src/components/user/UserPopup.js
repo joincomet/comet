@@ -112,11 +112,7 @@ export default function UserPopup({
                       className="w-20 h-20"
                       href={`/user/${user.username}`}
                     >
-                      <UserAvatar
-                        user={user}
-                        showOnline
-                        className="w-20 h-20"
-                      />
+                      <UserAvatar user={user} className="w-20 h-20" />
                     </NavLink>
 
                     <NavLink

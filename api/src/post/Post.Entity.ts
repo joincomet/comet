@@ -171,7 +171,7 @@ export class Post {
   @Column({ default: false })
   removed: boolean
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   removedReason?: string
 

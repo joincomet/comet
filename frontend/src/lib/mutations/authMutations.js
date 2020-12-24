@@ -24,7 +24,7 @@ const login = async variables => {
   return login
 }
 
-export const useLoginMutation = () => useMutation(login)
+export const useLoginMutation = options => useMutation(login, options)
 
 const signUp = async variables => {
   const { signUp } = await request(
@@ -48,7 +48,7 @@ const signUp = async variables => {
   return signUp
 }
 
-export const useSignUpMutation = () => useMutation(signUp)
+export const useSignUpMutation = options => useMutation(signUp, options)
 
 const logout = async variables => {
   const { signUp } = await request(

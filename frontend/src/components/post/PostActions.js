@@ -29,6 +29,7 @@ import {
   useRemovePostMutation
 } from '@/lib/mutations/moderationMutations'
 import Tippy from '@tippyjs/react'
+import toast from 'react-hot-toast'
 
 const chip =
   'cursor-pointer inline-flex items-center group transition select-none'
@@ -190,12 +191,18 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                                 postId: post.id,
                                 planetId: post.planet.id
                               })
+                              toast.success(
+                                `Pinned post to +${post.planet.name}`
+                              )
                             } else {
                               post.pinned = false
                               unpinPost.mutateAsync({
                                 postId: post.id,
                                 planetId: post.planet.id
                               })
+                              toast.success(
+                                `Unpinned post from +${post.planet.name}`
+                              )
                             }
                           }}
                           className={`${
@@ -224,9 +231,15 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                             if (!post.pinnedByAuthor) {
                               post.pinnedByAuthor = true
                               pinProfile.mutateAsync({ postId: post.id })
+                              toast.success(
+                                `Pinned post to @${post.author.username}`
+                              )
                             } else {
                               post.pinnedByAuthor = false
                               unpinProfile.mutateAsync({ postId: post.id })
+                              toast.success(
+                                `Unpinned post from @${post.author.username}`
+                              )
                             }
                           }}
                           className={`${
@@ -265,6 +278,7 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                             if (!window.confirm('Confirm Delete')) return
                             post.deleted = true
                             deletePost.mutateAsync({ postId: post.id })
+                            toast.success(`Deleted post!`)
                           }}
                           className={`${
                             active ? 'bg-gray-100 dark:bg-gray-700' : ''
@@ -303,6 +317,7 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                               const reason = window.prompt(
                                 'Reason for removal:'
                               )
+                              if (!reason) return
                               post.removed = true
                               post.removedReason = reason
                               removePost.mutateAsync({
@@ -310,6 +325,7 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                                 planetId: post.planet.id,
                                 reason
                               })
+                              toast.success(`Removed post!`)
                             }}
                             className={`${
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
@@ -334,6 +350,9 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                                   bannedId: post.author.id,
                                   reason
                                 })
+                                toast.success(
+                                  `Banned @${post.author.username} from +${post.planet.name}!`
+                                )
                               }}
                               className={`${
                                 active ? 'bg-gray-100 dark:bg-gray-700' : ''
@@ -367,6 +386,9 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                                 bannedId: post.author.id,
                                 reason
                               })
+                              toast.success(
+                                `Banned @${post.author.username} from CometX!`
+                              )
                             }}
                             className={`${
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
@@ -400,6 +422,9 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                                 bannedId: post.author.id,
                                 reason
                               })
+                              toast.success(
+                                `Banned and purged @${post.author.username}!`
+                              )
                             }}
                             className={`${
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''

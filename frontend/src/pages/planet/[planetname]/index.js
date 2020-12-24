@@ -1,8 +1,8 @@
 import { QueryClient } from 'react-query'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
-import Image from 'next/image'
+
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
@@ -12,17 +12,29 @@ import UserPopup from '@/components/user/UserPopup'
 import SortOptions from '@/components/sort/SortOptions'
 import { fetchPosts } from '@/lib/queries/usePosts'
 import { useHeaderStore } from '@/lib/useHeaderStore'
-import { FiCalendar } from 'react-icons/fi'
+import { FiCalendar, FiEdit2 } from 'react-icons/fi'
 import PlanetJoinButton from '@/components/planet/PlanetJoinButton'
 import PlanetHeader from '@/components/planet/PlanetHeader'
 import CreatePostButton from '@/components/createpost/CreatePostButton'
 import { NextSeo } from 'next-seo'
 import PlanetAbout from '@/components/planet/PlanetAbout'
+import {
+  useEditBioMutation,
+  useUploadAvatarMutation
+} from '@/lib/mutations/editProfileMutations'
+import {
+  useEditPlanetDescriptionMutation,
+  useUploadPlanetAvatarMutation
+} from '@/lib/mutations/editPlanetMutations'
+import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
 
 export default function PlanetPage({ variables }) {
   const { query } = useRouter()
 
-  const planet = usePlanet({ name: query.planetname }).data
+  const currentUser = useCurrentUser().data
+
+  const planetQuery = usePlanet({ name: query.planetname })
+  const planet = planetQuery.data
 
   const { ref, inView } = useInView({ threshold: 0.8 })
 
@@ -31,6 +43,38 @@ export default function PlanetPage({ variables }) {
   useEffect(() => setTitle(`+${planet.name}`), [])
 
   useEffect(() => setDark(!inView), [inView])
+
+  const [avatarImage, setAvatarImage] = useState(null)
+
+  const uploadAvatar = useUploadPlanetAvatarMutation()
+
+  useEffect(() => {
+    if (!avatarImage || avatarImage.length === 0) return
+    uploadAvatar
+      .mutateAsync({ file: avatarImage[0], planetId: planet.id })
+      .then(avatarUrl => {
+        planet.avatarUrl = avatarUrl
+        planetQuery.refetch()
+      })
+  }, [avatarImage])
+
+  const [editDesc, setEditDesc] = useState(false)
+  const editDescMutation = useEditPlanetDescriptionMutation()
+  const [newDesc, setNewDesc] = useState(planet.description || 'New Planet')
+
+  const updateDescription = async () => {
+    if (!newDesc) return
+    const description = newDesc.trim()
+    if (!description) return
+    await editDescMutation.mutateAsync({ description, planetId: planet.id })
+    planet.description = description
+    planetQuery.refetch()
+  }
+
+  const isModerator =
+    currentUser &&
+    currentUser.moderatedPlanets &&
+    currentUser.moderatedPlanets.map(p => p.id).includes(planet.id)
 
   return (
     <>
@@ -74,11 +118,32 @@ export default function PlanetPage({ variables }) {
                 ))
               )}
             </div>
-            <PlanetAvatar
-              className="w-20 h-20 md:w-40 md:h-40 shadow-md mr-0 md:mr-6"
-              planet={planet}
-              loading="eager"
-            />
+            <div className="relative group md:mr-6">
+              <PlanetAvatar
+                className="w-20 h-20 md:w-40 md:h-40 shadow-md"
+                planet={planet}
+              />
+
+              {currentUser && (isModerator || currentUser.admin) && (
+                <div className="absolute inset-0">
+                  <input
+                    type="file"
+                    name="avatarImage"
+                    id="avatarImage"
+                    accept="image/png, image/jpeg"
+                    className="hidden"
+                    onChange={e => setAvatarImage(e.target.files)}
+                  />
+
+                  <label
+                    htmlFor="avatarImage"
+                    className="cursor-pointer bg-black rounded-full w-full h-full inline-flex items-center justify-center bg-opacity-50 transition opacity-0 group-hover:opacity-100"
+                  >
+                    <FiEdit2 className="w-1/2 h-1/2" />
+                  </label>
+                </div>
+              )}
+            </div>
 
             <div className="flex flex-col w-full md:h-full items-center md:items-start justify-end space-y-4">
               <div className="label hidden md:block">
@@ -128,7 +193,42 @@ export default function PlanetPage({ variables }) {
 
           <div className="col-span-0 xl:col-span-1">
             <div className="sticky top-28 pt-6">
-              <PlanetAbout planet={planet} className="mb-4" />
+              <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
+                About
+                {currentUser && (isModerator || currentUser.admin) && (
+                  <span
+                    onClick={() => {
+                      if (editDesc) {
+                        updateDescription()
+                        setEditDesc(false)
+                      } else {
+                        setEditDesc(true)
+                      }
+                    }}
+                    className="ml-3 text-mid hover:underline cursor-pointer"
+                  >
+                    {editDesc ? 'Done' : 'Edit'}
+                  </span>
+                )}
+              </div>
+
+              <div>
+                <div
+                  className={`text-sm text-secondary font-medium ${
+                    editDesc ? 'hidden' : 'block'
+                  }`}
+                >
+                  {planet.description || 'New Planet'}
+                </div>
+
+                <textarea
+                  value={newDesc}
+                  onChange={e => setNewDesc(e.target.value)}
+                  className={`dark:bg-gray-800 h-24 rounded text-sm text-secondary font-medium block border-none resize-none p-3 focus:ring-0 w-full ${
+                    editDesc ? 'block' : 'hidden'
+                  }`}
+                />
+              </div>
 
               <div className="mt-4 text-tertiary text-sm font-medium inline-flex items-center">
                 <FiCalendar size={16} className="mr-3" />
@@ -171,6 +271,8 @@ export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
   const { query } = ctx
+
+  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
 
   const variables = getVariables(query)
 

@@ -7,11 +7,9 @@ import { useLogoutMutation } from '@/lib/mutations/authMutations'
 import { useQueryClient } from 'react-query'
 import ToggleTheme from '@/components/ToggleTheme'
 import { Menu, Transition } from '@headlessui/react'
-import { FiMoreHorizontal } from 'react-icons/fi'
+import { FiUser, FiSettings, FiLogOut, FiMoon, FiSun } from 'react-icons/fi'
 import { menuTransition } from '@/lib/menuTransition'
-
-const item =
-  'transition hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer px-4 h-10 flex items-center text-sm text-secondary'
+import { useTheme } from '@/components/ThemeContext'
 
 export default function UserOptionsDropdown() {
   const currentUser = useCurrentUser().data
@@ -24,8 +22,10 @@ export default function UserOptionsDropdown() {
     await queryClient.invalidateQueries()
   }
 
+  const { theme, toggleTheme } = useTheme()
+
   const menuItem =
-    'cursor-pointer transition flex justify-between w-full px-4 py-2 text-sm leading-5 text-left focus:outline-none'
+    'cursor-pointer transition flex items-center w-full px-4 py-2.5 text-sm font-medium focus:outline-none select-none hover:bg-gray-100 dark:hover:bg-gray-700'
 
   return (
     <div className="relative z-50 h-14">
@@ -40,7 +40,7 @@ export default function UserOptionsDropdown() {
             <Transition show={open} {...menuTransition}>
               <Menu.Items
                 static
-                className="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
+                className="absolute right-0 mt-1 w-56 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
               >
                 <Menu.Item>
                   {({ active }) => (
@@ -50,6 +50,7 @@ export default function UserOptionsDropdown() {
                         active ? 'bg-gray-100 dark:bg-gray-700' : ''
                       } ${menuItem}`}
                     >
+                      <FiUser size={18} className="mr-4" />
                       My Profile
                     </NavLink>
                   )}
@@ -57,11 +58,19 @@ export default function UserOptionsDropdown() {
 
                 <Menu.Item>
                   {({ active }) => (
-                    <ToggleTheme
+                    <div
+                      onClick={toggleTheme}
                       className={`${
                         active ? 'bg-gray-100 dark:bg-gray-700' : ''
                       } ${menuItem}`}
-                    />
+                    >
+                      {theme === 'light' ? (
+                        <FiMoon size={18} className="mr-4" />
+                      ) : (
+                        <FiSun size={18} className="mr-4" />
+                      )}
+                      {theme === 'light' ? 'Dark' : 'Light'} Mode
+                    </div>
                   )}
                 </Menu.Item>
 
@@ -73,6 +82,7 @@ export default function UserOptionsDropdown() {
                         active ? 'bg-gray-100 dark:bg-gray-700' : ''
                       } ${menuItem}`}
                     >
+                      <FiSettings size={18} className="mr-4" />
                       Settings
                     </NavLink>
                   )}
@@ -86,6 +96,7 @@ export default function UserOptionsDropdown() {
                         active ? 'bg-gray-100 dark:bg-gray-700' : ''
                       } ${menuItem}`}
                     >
+                      <FiLogOut size={18} className="mr-4" />
                       Log Out
                     </div>
                   )}

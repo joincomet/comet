@@ -1,13 +1,14 @@
 import { QueryClient } from 'react-query'
 import { fetchPlanets, usePlanets } from '@/lib/queries/usePlanets'
 import { galaxies } from '@/lib/galaxies'
-import Image from 'next/image'
+
 import { BiPlanet } from 'react-icons/bi'
 import { FiExternalLink } from 'react-icons/fi'
 import { Scrollbar } from 'react-scrollbars-custom'
 import React from 'react'
 import { dehydrate } from 'react-query/hydration'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
+import { fetchCurrentUser } from '@/lib/queries/useCurrentUser'
 
 const galaxyClass =
   'text-sm cursor-pointer transition hover:text-blue-500 dark:hover:text-blue-500'
@@ -105,6 +106,8 @@ export default function ExplorePage() {
 
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
 
   await queryClient.prefetchQuery(['planets', { pageSize: 50 }], key =>
     fetchPlanets(key, ctx)
