@@ -8,7 +8,7 @@ import {
   FiShield
 } from 'react-icons/fi'
 import { FaThumbtack } from 'react-icons/fa'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   useDeletePostMutation,
   usePinPostMutation,
@@ -31,6 +31,7 @@ import {
 } from '@/lib/mutations/moderationMutations'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
+import EditPostModal from '@/components/post/EditPostModal'
 
 const chip =
   'cursor-pointer inline-flex items-center group transition select-none'
@@ -38,7 +39,7 @@ const label = 'ml-0.5 label transition'
 const icon =
   'w-9 h-9 dark:group-hover:bg-gray-800 rounded-full transition inline-flex items-center justify-center focus:outline-none'
 
-export default function PostActions({ post, showOptions = false }) {
+export default function PostActions({ post, textContent, setTextContent }) {
   const currentUser = useCurrentUser().data
   const { setLogin } = useLoginStore()
 
@@ -138,12 +139,21 @@ export default function PostActions({ post, showOptions = false }) {
         chip={chip}
         icon={icon}
         isModerator={isModerator}
+        textContent={textContent}
+        setTextContent={setTextContent}
       />
     </div>
   )
 }
 
-function MoreOptions({ post, chip, icon, isModerator }) {
+function MoreOptions({
+  post,
+  chip,
+  icon,
+  isModerator,
+  textContent,
+  setTextContent
+}) {
   const menuItem =
     'cursor-pointer transition flex items-center w-full px-4 py-2.5 text-sm font-medium text-left focus:outline-none select-none'
 
@@ -159,192 +169,244 @@ function MoreOptions({ post, chip, icon, isModerator }) {
   const banUser = useBanUserMutation()
   const banAndPurgeUser = useBanAndPurgeUserMutation()
   const reportPost = useReportPostMutation()
+  const [editing, setEditing] = useState(false)
 
   return (
-    <div className="relative inline-block z-30">
-      <Menu>
-        {({ open }) => (
-          <>
-            <span
-              className={`${chip} text-disabled`}
-              onClick={e => e.stopPropagation()}
-            >
-              <Menu.Button className={`${icon} z-0`}>
-                <FiMoreHorizontal size={18} />
-              </Menu.Button>
-            </span>
+    <>
+      <EditPostModal
+        post={post}
+        setText={setTextContent}
+        setOpen={setEditing}
+        open={editing}
+      />
 
-            <Transition show={open} {...menuTransition}>
-              <Menu.Items
-                static
-                className="absolute right-full w-56 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
+      <div className="relative inline-block z-30">
+        <Menu>
+          {({ open }) => (
+            <>
+              <span
+                className={`${chip} text-disabled`}
+                onClick={e => e.stopPropagation()}
               >
-                {currentUser &&
-                  post.planet &&
-                  (isModerator || currentUser.admin) && (
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div
-                          onClick={e => {
-                            e.stopPropagation()
-                            if (!post.pinned) {
-                              post.pinned = true
-                              pinPost.mutateAsync({
-                                postId: post.id,
-                                planetId: post.planet.id
-                              })
-                              toast.success(
-                                `Pinned post to +${post.planet.name}`
-                              )
-                            } else {
-                              post.pinned = false
-                              unpinPost.mutateAsync({
-                                postId: post.id,
-                                planetId: post.planet.id
-                              })
-                              toast.success(
-                                `Unpinned post from +${post.planet.name}`
-                              )
-                            }
-                          }}
-                          className={`${
-                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-accent ${menuItem}`}
-                        >
-                          <FaThumbtack
-                            size={18}
-                            className="mr-4 transform -rotate-45"
-                          />
-                          {post.pinned
-                            ? `Unpin from +${post.planet.name}`
-                            : `Pin to +${post.planet.name}`}
-                        </div>
-                      )}
-                    </Menu.Item>
-                  )}
+                <Menu.Button className={`${icon} z-0`}>
+                  <FiMoreHorizontal size={18} />
+                </Menu.Button>
+              </span>
 
-                {post.author.isCurrentUser ? (
-                  <>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div
-                          onClick={e => {
-                            e.stopPropagation()
-                            if (!post.pinnedByAuthor) {
-                              post.pinnedByAuthor = true
-                              pinProfile.mutateAsync({ postId: post.id })
-                              toast.success(
-                                `Pinned post to @${post.author.username}`
-                              )
-                            } else {
-                              post.pinnedByAuthor = false
-                              unpinProfile.mutateAsync({ postId: post.id })
-                              toast.success(
-                                `Unpinned post from @${post.author.username}`
-                              )
-                            }
-                          }}
-                          className={`${
-                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-accent ${menuItem}`}
-                        >
-                          <FaThumbtack
-                            size={18}
-                            className="mr-4 transform -rotate-45"
-                          />
-                          {post.pinnedByAuthor
-                            ? 'Unpin from profile'
-                            : 'Pin to profile'}
-                        </div>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div
-                          className={`${
-                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-tertiary ${menuItem}`}
-                        >
-                          <FiEdit2 size={18} className="mr-4" />
-                          Edit
-                        </div>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div
-                          onClick={e => {
-                            e.stopPropagation()
-                            if (!window.confirm('Confirm Delete')) return
-                            post.deleted = true
-                            deletePost.mutateAsync({ postId: post.id })
-                            toast.success(`Deleted post!`)
-                          }}
-                          className={`${
-                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-red-400 ${menuItem}`}
-                        >
-                          <FiTrash size={18} className="mr-4" />
-                          Delete
-                        </div>
-                      )}
-                    </Menu.Item>
-                  </>
-                ) : (
-                  <Menu.Item>
-                    {({ active }) => (
-                      <div
-                        onClick={e => {
-                          e.stopPropagation()
-                          const reason = window.prompt('Reason for removal:')
-                          if (!reason) return
-                          reportPost.mutateAsync({ postId: post.id, reason })
-                          toast.success('Reported post!')
-                        }}
-                        className={`${
-                          active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                        } text-red-400 ${menuItem}`}
-                      >
-                        <FiAlertCircle size={18} className="mr-4" />
-                        Report
-                      </div>
+              <Transition show={open} {...menuTransition}>
+                <Menu.Items
+                  static
+                  className="absolute right-full w-56 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
+                >
+                  {currentUser &&
+                    post.planet &&
+                    (isModerator || currentUser.admin) && (
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              if (!post.pinned) {
+                                post.pinned = true
+                                pinPost.mutateAsync({
+                                  postId: post.id,
+                                  planetId: post.planet.id
+                                })
+                                toast.success(
+                                  `Pinned post to +${post.planet.name}`
+                                )
+                              } else {
+                                post.pinned = false
+                                unpinPost.mutateAsync({
+                                  postId: post.id,
+                                  planetId: post.planet.id
+                                })
+                                toast.success(
+                                  `Unpinned post from +${post.planet.name}`
+                                )
+                              }
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-accent ${menuItem}`}
+                          >
+                            <FaThumbtack
+                              size={18}
+                              className="mr-4 transform -rotate-45"
+                            />
+                            {post.pinned
+                              ? `Unpin from +${post.planet.name}`
+                              : `Pin to +${post.planet.name}`}
+                          </div>
+                        )}
+                      </Menu.Item>
                     )}
-                  </Menu.Item>
-                )}
 
-                {currentUser &&
-                  !post.author.isCurrentUser &&
-                  (currentUser.admin || isModerator) && (
+                  {post.author.isCurrentUser ? (
                     <>
                       <Menu.Item>
                         {({ active }) => (
                           <div
                             onClick={e => {
                               e.stopPropagation()
-                              const reason = window.prompt(
-                                'Reason for removal:'
-                              )
-                              if (!reason) return
-                              post.removed = true
-                              post.removedReason = reason
-                              removePost.mutateAsync({
-                                postId: post.id,
-                                planetId: post.planet ? post.planet.id : null,
-                                reason
-                              })
-                              toast.success(`Removed post!`)
+                              if (!post.pinnedByAuthor) {
+                                post.pinnedByAuthor = true
+                                pinProfile.mutateAsync({ postId: post.id })
+                                toast.success(
+                                  `Pinned post to @${post.author.username}`
+                                )
+                              } else {
+                                post.pinnedByAuthor = false
+                                unpinProfile.mutateAsync({ postId: post.id })
+                                toast.success(
+                                  `Unpinned post from @${post.author.username}`
+                                )
+                              }
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-accent ${menuItem}`}
+                          >
+                            <FaThumbtack
+                              size={18}
+                              className="mr-4 transform -rotate-45"
+                            />
+                            {post.pinnedByAuthor
+                              ? 'Unpin from profile'
+                              : 'Pin to profile'}
+                          </div>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              setEditing(true)
+                            }}
+                            className={`${
+                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } text-tertiary ${menuItem}`}
+                          >
+                            <FiEdit2 size={18} className="mr-4" />
+                            Edit
+                          </div>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation()
+                              if (!window.confirm('Confirm Delete')) return
+                              post.deleted = true
+                              deletePost.mutateAsync({ postId: post.id })
+                              toast.success(`Deleted post!`)
                             }}
                             className={`${
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
                             } text-red-400 ${menuItem}`}
                           >
-                            <FiShield size={18} className="mr-4" />
-                            Remove
+                            <FiTrash size={18} className="mr-4" />
+                            Delete
                           </div>
                         )}
                       </Menu.Item>
+                    </>
+                  ) : (
+                    <Menu.Item>
+                      {({ active }) => (
+                        <div
+                          onClick={e => {
+                            e.stopPropagation()
+                            const reason = window.prompt('Reason for removal:')
+                            if (!reason) return
+                            reportPost.mutateAsync({ postId: post.id, reason })
+                            toast.success('Reported post!')
+                          }}
+                          className={`${
+                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                          } text-red-400 ${menuItem}`}
+                        >
+                          <FiAlertCircle size={18} className="mr-4" />
+                          Report
+                        </div>
+                      )}
+                    </Menu.Item>
+                  )}
 
-                      {post.planet && (
+                  {currentUser &&
+                    !post.author.isCurrentUser &&
+                    (currentUser.admin || isModerator) && (
+                      <>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <div
+                              onClick={e => {
+                                e.stopPropagation()
+                                const reason = window.prompt(
+                                  'Reason for removal:'
+                                )
+                                if (!reason) return
+                                post.removed = true
+                                post.removedReason = reason
+                                removePost.mutateAsync({
+                                  postId: post.id,
+                                  planetId: post.planet ? post.planet.id : null,
+                                  reason
+                                })
+                                toast.success(`Removed post!`)
+                              }}
+                              className={`${
+                                active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                              } text-red-400 ${menuItem}`}
+                            >
+                              <FiShield size={18} className="mr-4" />
+                              Remove
+                            </div>
+                          )}
+                        </Menu.Item>
+
+                        {post.planet && (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <div
+                                onClick={e => {
+                                  e.stopPropagation()
+                                  const reason = window.prompt(
+                                    'Reason for ban:'
+                                  )
+                                  if (!reason) return
+                                  banUserFromPlanet.mutateAsync({
+                                    planetId: post.planet.id,
+                                    bannedId: post.author.id,
+                                    reason
+                                  })
+                                  toast.success(
+                                    `Banned @${post.author.username} from +${post.planet.name}!`
+                                  )
+                                }}
+                                className={`${
+                                  active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                                } text-red-400 ${menuItem}`}
+                              >
+                                <FiShield
+                                  size={18}
+                                  className="mr-4 flex-shrink-0"
+                                />
+                                Ban @{post.author.username} from +
+                                {post.planet.name}
+                              </div>
+                            )}
+                          </Menu.Item>
+                        )}
+                      </>
+                    )}
+
+                  {currentUser &&
+                    currentUser.admin &&
+                    !post.author.isCurrentUser && (
+                      <>
                         <Menu.Item>
                           {({ active }) => (
                             <div
@@ -352,13 +414,12 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                                 e.stopPropagation()
                                 const reason = window.prompt('Reason for ban:')
                                 if (!reason) return
-                                banUserFromPlanet.mutateAsync({
-                                  planetId: post.planet.id,
+                                banUser.mutateAsync({
                                   bannedId: post.author.id,
                                   reason
                                 })
                                 toast.success(
-                                  `Banned @${post.author.username} from +${post.planet.name}!`
+                                  `Banned @${post.author.username} from CometX!`
                                 )
                               }}
                               className={`${
@@ -369,90 +430,55 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                                 size={18}
                                 className="mr-4 flex-shrink-0"
                               />
-                              Ban @{post.author.username} from +
-                              {post.planet.name}
+                              Ban @{post.author.username} from CometX
                             </div>
                           )}
                         </Menu.Item>
-                      )}
-                    </>
-                  )}
 
-                {currentUser &&
-                  currentUser.admin &&
-                  !post.author.isCurrentUser && (
-                    <>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <div
-                            onClick={e => {
-                              e.stopPropagation()
-                              const reason = window.prompt('Reason for ban:')
-                              if (!reason) return
-                              banUser.mutateAsync({
-                                bannedId: post.author.id,
-                                reason
-                              })
-                              toast.success(
-                                `Banned @${post.author.username} from CometX!`
-                              )
-                            }}
-                            className={`${
-                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                            } text-red-400 ${menuItem}`}
-                          >
-                            <FiShield
-                              size={18}
-                              className="mr-4 flex-shrink-0"
-                            />
-                            Ban @{post.author.username} from CometX
-                          </div>
-                        )}
-                      </Menu.Item>
-
-                      <Menu.Item>
-                        {({ active }) => (
-                          <div
-                            onClick={e => {
-                              e.stopPropagation()
-                              const reason = window.prompt(
-                                'Reason for ban and purge:'
-                              )
-                              if (!reason) return
-                              if (
-                                !window.confirm(
-                                  `Confirm ban and purge - will remove all posts by ${post.author.username}`
+                        <Menu.Item>
+                          {({ active }) => (
+                            <div
+                              onClick={e => {
+                                e.stopPropagation()
+                                const reason = window.prompt(
+                                  'Reason for ban and purge:'
                                 )
-                              )
-                                return
-                              banAndPurgeUser.mutateAsync({
-                                bannedId: post.author.id,
-                                reason
-                              })
-                              toast.success(
-                                `Banned and purged @${post.author.username}!`
-                              )
-                            }}
-                            className={`${
-                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                            } text-red-400 ${menuItem}`}
-                          >
-                            <FiShield
-                              size={18}
-                              className="mr-4 flex-shrink-0"
-                            />
-                            Ban @{post.author.username} from CometX and purge
-                            posts
-                          </div>
-                        )}
-                      </Menu.Item>
-                    </>
-                  )}
-              </Menu.Items>
-            </Transition>
-          </>
-        )}
-      </Menu>
-    </div>
+                                if (!reason) return
+                                if (
+                                  !window.confirm(
+                                    `Confirm ban and purge - will remove all posts by ${post.author.username}`
+                                  )
+                                )
+                                  return
+                                banAndPurgeUser.mutateAsync({
+                                  bannedId: post.author.id,
+                                  reason
+                                })
+                                toast.success(
+                                  `Banned and purged @${post.author.username}!`
+                                )
+                              }}
+                              className={`${
+                                active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                              } text-red-400 ${menuItem}`}
+                            >
+                              <FiShield
+                                size={18}
+                                className="mr-4 flex-shrink-0"
+                              />
+                              Ban @{post.author.username} from CometX and purge
+                              posts
+                            </div>
+                          )}
+                        </Menu.Item>
+                      </>
+                    )}
+                </Menu.Items>
+              </Transition>
+            </>
+          )}
+        </Menu>
+      </div>
+    </>
   )
 }

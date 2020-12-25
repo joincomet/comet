@@ -56,7 +56,7 @@ export class PostResolver {
       galaxy,
       planet,
       username,
-      search
+      q
     }: PostsArgs,
     @Ctx() { userId }: Context
   ) {
@@ -69,30 +69,6 @@ export class PostResolver {
       qb.andWhere('planet.name ILIKE :planet', {
         planet: handleUnderscore(planet)
       }).andWhere('post.pinned = false')
-    }
-
-    if (search) {
-      qb.addSelect(
-        'ts_rank_cd(to_tsvector(post.textContent), plainto_tsquery(:query))',
-        'textrank'
-      )
-        .addSelect(
-          'ts_rank_cd(to_tsvector(post.linkUrl), plainto_tsquery(:query))',
-          'linkrank'
-        )
-        .addSelect(
-          'ts_rank_cd(to_tsvector(post.title), plainto_tsquery(:query))',
-          'titlerank'
-        )
-        .addSelect(
-          'ts_rank_cd(to_tsvector(author.username), plainto_tsquery(:query))',
-          'usernamerank'
-        )
-        .addOrderBy('titlerank', 'DESC')
-        .addOrderBy('textrank', 'DESC')
-        .addOrderBy('linkrank', 'DESC')
-        .addOrderBy('usernamerank', 'DESC')
-        .setParameter('query', search)
     }
 
     if (username) {
@@ -139,7 +115,7 @@ export class PostResolver {
       qb.addOrderBy('post.createdAt', 'DESC')
     }
 
-    if (userId) {
+    if (userId && !q) {
       const user = await this.userRepo
         .createQueryBuilder('user')
         .where({ id: userId })
@@ -167,7 +143,7 @@ export class PostResolver {
             following.push(userId)
             qb.andWhere(
               new Brackets(qb => {
-                qb.where('post.planetId = ANY(:joinedPlanets)', {
+                qb.andWhere('post.planetId = ANY(:joinedPlanets)', {
                   joinedPlanets
                 }).orWhere('post.authorId = ANY(:following)', { following })
               })
@@ -189,6 +165,18 @@ export class PostResolver {
       }
     }
 
+    if (q) {
+      qb.andWhere(
+        new Brackets(qb => {
+          qb.andWhere('post.title ILIKE :searchTerm', {
+            searchTerm: `%${q}%`
+          }).orWhere('post.textContent ILIKE :searchTerm', {
+            searchTerm: `%${q}%`
+          })
+        })
+      )
+    }
+
     let posts = await qb
       .andWhere('post.deleted = false')
       .andWhere('post.removed = false')
@@ -196,7 +184,7 @@ export class PostResolver {
       .take(pageSize)
       .getMany()
 
-    if (page === 0 && sort === PostSort.HOT) {
+    if (page === 0 && sort === PostSort.HOT && !q) {
       const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.planet', 'planet')
@@ -216,7 +204,7 @@ export class PostResolver {
           })
           .andWhere('post.pinnedByAuthor = true')
           .addOrderBy('post.pinnedByAuthorAt', 'DESC')
-      } else if (!search && !galaxy && !folderId) {
+      } else if (!q && !galaxy && !folderId) {
         // Show stickies from CometX on home page
         stickiesQb
           .andWhere('planet.name ILIKE :planet', {

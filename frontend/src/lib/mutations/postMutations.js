@@ -130,3 +130,17 @@ const unrocketPost = async variables => {
 }
 
 export const useUnrocketPostMutation = () => useMutation(unrocketPost)
+
+const editPost = async variables => {
+  await request(
+    null,
+    gql`
+      mutation editPost($postId: ID!, $newTextContent: String!) {
+        editPost(postId: $postId, newTextContent: $newTextContent)
+      }
+    `,
+    variables
+  )
+}
+
+export const useEditPostMutation = options => useMutation(editPost, options)

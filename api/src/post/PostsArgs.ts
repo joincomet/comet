@@ -52,5 +52,5 @@ export class PostsArgs extends PaginationArgs {
     description:
       'If provided, only posts matching given search term will be returned'
   })
-  search?: string
+  q?: string
 }

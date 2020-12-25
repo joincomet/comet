@@ -185,14 +185,17 @@ function Planets() {
             <MemoizedPlanet key={index} planet={planet} />
           ))}
 
-      {currentUser && !searchPlanets && (
-        <>
-          <div className="label text-tertiary px-6 py-3">My Planets</div>
-          {joinedPlanets.map((planet, index) => (
-            <MemoizedPlanet key={index} planet={planet} />
-          ))}
-        </>
-      )}
+      {currentUser &&
+        !searchPlanets &&
+        joinedPlanets &&
+        joinedPlanets.length > 0 && (
+          <>
+            <div className="label text-tertiary px-6 py-3">My Planets</div>
+            {joinedPlanets.map((planet, index) => (
+              <MemoizedPlanet key={index} planet={planet} />
+            ))}
+          </>
+        )}
 
       {!searchPlanets && (
         <>

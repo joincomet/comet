@@ -15,7 +15,7 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
         $planet: String
         $galaxy: String
         $username: String
-        $search: String
+        $q: String
       ) {
         posts(
           sort: $sort
@@ -25,7 +25,7 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
           planet: $planet
           galaxy: $galaxy
           username: $username
-          search: $search
+          q: $q
         ) {
           page
           nextPage

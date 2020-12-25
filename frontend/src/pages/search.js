@@ -16,14 +16,14 @@ export default function SearchPage() {
 
   const { query, pathname, push } = useRouter()
 
+  const [search, setSearch] = useState(query.q)
+
   const getVariables = () => {
     const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
     let time = query.time ? query.time.toUpperCase() : 'ALL'
     if (sort === 'TOP' && !query.time) time = 'DAY'
-    return { sort, time, joinedOnly: false, search: query.q }
+    return { sort, time, joinedOnly: false, q: query.q }
   }
-
-  const [search, setSearch] = useState(query.q)
 
   return (
     <div>

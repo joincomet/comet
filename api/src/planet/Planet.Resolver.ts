@@ -173,8 +173,7 @@ export class PlanetResolver {
     if (userId && joinedOnly) {
       const user = await this.userRepo.findOne(userId)
       const joinedPlanets = (await user.joinedPlanets).map(p => p.id)
-      if (joinedPlanets.length > 0)
-        qb.andWhere(`planet.id = ANY(:joinedPlanets)`, { joinedPlanets })
+      qb.andWhere(`planet.id = ANY(:joinedPlanets)`, { joinedPlanets })
     }
 
     return qb.getMany()

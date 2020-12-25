@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-export default function PostText({ post, showFullText = false }) {
-  if (!post.textContent) return null
+export default function PostText({ post, showFullText = false, textContent }) {
+  if (!textContent) return null
 
   const ref = useRef(null)
 
@@ -31,7 +31,7 @@ export default function PostText({ post, showFullText = false }) {
         <div className="absolute z-10 inset-0 bg-gradient-to-b from-transparent dark:to-gray-900 to-white" />
       )}
       <div
-        dangerouslySetInnerHTML={{ __html: post.textContent }}
+        dangerouslySetInnerHTML={{ __html: textContent }}
         className={`prose prose-sm dark:prose-dark max-w-none h-full overflow`}
       />
     </div>
