@@ -211,11 +211,9 @@ export async function getServerSideProps(ctx) {
     fetchComments(key, ctx)
   )
 
-  const dehydratedState = dehydrate(queryClient)
-
   return {
     props: {
-      dehydratedState,
+      dehydratedState: dehydrate(queryClient),
       postVariables,
       commentVariables
     }

@@ -16,10 +16,6 @@ export default function CreateCommentModal({
     <Modal
       open={createComment}
       onClose={() => setCreateComment(false)}
-      onOverlayClick={e => {
-        e.stopPropagation()
-        setCreateComment(false)
-      }}
       classNames={{
         modal:
           'overflow-hidden bg-transparent shadow-none max-w-screen-sm w-full p-0 m-0',

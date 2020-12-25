@@ -4,7 +4,7 @@ import { fetchNotifications } from '@/lib/queries/useNotifications'
 
 export const globalPrefetch = async (queryClient, ctx) => {
   await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
-  await queryClient.prefetchQuery(
+  /*await queryClient.prefetchQuery(
     ['planets', { sort: 'AZ', joinedOnly: true }],
     key => fetchPlanets(key, ctx)
   )
@@ -15,5 +15,5 @@ export const globalPrefetch = async (queryClient, ctx) => {
   await queryClient.prefetchQuery(
     ['notifications', { unreadOnly: true }],
     key => fetchNotifications(key, ctx)
-  )
+  )*/
 }

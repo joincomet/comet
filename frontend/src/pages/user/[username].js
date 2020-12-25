@@ -250,11 +250,9 @@ export async function getServerSideProps(ctx) {
     fetchUser(key, ctx)
   )
 
-  const dehydratedState = dehydrate(queryClient)
-
   return {
     props: {
-      dehydratedState
+      dehydratedState: dehydrate(queryClient)
     }
   }
 }

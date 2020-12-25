@@ -2890,6 +2890,7 @@ __metadata:
     sass: ^1.30.0
     slate: ^0.59.0
     slate-history: ^0.59.0
+    slate-hyperscript: ^0.59.0
     slate-react: ^0.59.0
     tailwindcss: ^2.0.2
     twemoji: ^13.0.1
@@ -5868,6 +5869,17 @@ fsevents@~2.1.2:
   peerDependencies:
     slate: ">=0.55.0"
   checksum: 46e496a541233f1bb3cc815a1237abd3a1aaaf38737936e94f34a20766dbae0c4c8c4f453e03dbbe6f3f074694a6b9df8929d67e0dbdcff99428bb1893a8cf77
+  languageName: node
+  linkType: hard
+
+"slate-hyperscript@npm:^0.59.0":
+  version: 0.59.0
+  resolution: "slate-hyperscript@npm:0.59.0"
+  dependencies:
+    is-plain-object: ^3.0.0
+  peerDependencies:
+    slate: ">=0.55.0"
+  checksum: 639e6997887e3f2429a075823c0e99ba9b24eb711c6de59b0f9c38306af7fd4516b3cd227cbe79f9118f86b7a71b85996107eb63953a6fe4a2e99ff6a7c1a77b
   languageName: node
   linkType: hard
 

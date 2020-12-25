@@ -1,4 +1,3 @@
-// @refresh reset
 import { useForm } from 'react-hook-form'
 import React, { useMemo, useState } from 'react'
 import { Slate, Editable, withReact } from 'slate-react'
@@ -9,6 +8,8 @@ import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import NavLink from '@/components/NavLink'
 import { useSubmitPostMutation } from '@/lib/mutations/postMutations'
 import { serialize } from '@/lib/serializeHtml'
+import Editor from '@/components/Editor'
+import { emptyEditor } from '@/lib/emptyEditor'
 
 const error = 'tip text-red-400 mb-2'
 
@@ -30,13 +31,7 @@ export default function CreatePostForm({ onFinish }) {
     mode: 'onChange'
   })
 
-  const initialValue = [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }]
-    }
-  ]
-  const [textContent, setTextContent] = useState(initialValue)
+  const [textContent, setTextContent] = useState(emptyEditor)
 
   const images = Array.from(watch('images') || [])
 
@@ -61,7 +56,7 @@ export default function CreatePostForm({ onFinish }) {
     if (title) variables.title = title
     if (link) variables.link = link
 
-    if (textContent !== initialValue) {
+    if (textContent !== emptyEditor) {
       const html = serialize({ children: textContent })
       if (html && html !== `<p></p>`) variables.textContent = html
     }
@@ -224,22 +219,5 @@ export default function CreatePostForm({ onFinish }) {
         ))}
       </div>
     </form>
-  )
-}
-
-function Editor({ value, setValue }) {
-  const editor = useMemo(() => withReact(createEditor()), [])
-
-  return (
-    <Slate
-      editor={editor}
-      value={value}
-      onChange={newValue => setValue(newValue)}
-    >
-      <Editable
-        placeholder="Details"
-        className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-24 min-w-full overflow-y-auto"
-      />
-    </Slate>
   )
 }

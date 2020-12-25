@@ -96,10 +96,9 @@ export default function NotificationsPage() {
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
   await globalPrefetch(queryClient, ctx)
-  const dehydratedState = dehydrate(queryClient)
   return {
     props: {
-      dehydratedState
+      dehydratedState: dehydrate(queryClient)
     }
   }
 }

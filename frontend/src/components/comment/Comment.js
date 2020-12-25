@@ -31,6 +31,7 @@ import { FaThumbtack } from 'react-icons/fa'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
 import { useCommentStore } from '@/lib/stores/useCommentStore'
+import EditCommentModal from '@/components/comment/EditCommentModal'
 
 export default function Comment({
   comment,
@@ -40,6 +41,8 @@ export default function Comment({
 }) {
   const { setCreateComment } = useCommentStore()
   const [collapse, setCollapse] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [textContent, setTextContent] = useState(comment.textContent)
   const currentUser = useCurrentUser().data
 
   if (!comment.author) {
@@ -75,133 +78,147 @@ export default function Comment({
   }
 
   return (
-    <div
-      className="relative mt-3"
-      style={{ marginLeft: level === 0 ? '0' : '2rem' }}
-    >
-      <div className="absolute -top-14 md:-top-28" id={comment.id36} />
-
-      <div className="commentcollapse" onClick={() => setCollapse(true)} />
-
+    <>
+      <EditCommentModal
+        open={editing}
+        setOpen={setEditing}
+        comment={comment}
+        setText={setTextContent}
+      />
       <div
-        className={`flex transition ${
-          collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
-        } ${comment.deleted ? 'opacity-50' : ''}`}
-        onClick={
-          collapse
-            ? () => {
-                setCollapse(false)
-              }
-            : () => {}
-        }
+        className="relative mt-3"
+        style={{ marginLeft: level === 0 ? '0' : '2rem' }}
       >
-        <UserPopup user={comment.author}>
-          <UserAvatar
-            className="w-10 h-10 mr-3 cursor-pointer transition hover:opacity-90"
-            user={comment.author}
-          />
-        </UserPopup>
+        <div className="absolute -top-14 md:-top-28" id={comment.id36} />
+
+        <div className="commentcollapse" onClick={() => setCollapse(true)} />
 
         <div
-          className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 arrow-box rounded w-full ${
-            collapse || comment.deleted ? 'h-10' : ''
-          }`}
+          className={`flex transition ${
+            collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
+          } ${comment.deleted ? 'opacity-50' : ''}`}
+          onClick={
+            collapse
+              ? () => {
+                  setCollapse(false)
+                }
+              : () => {}
+          }
         >
-          <div className="h-10 px-3 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t">
-            <UserPopup user={comment.author}>
-              <span className="text-secondary font-semibold hover:underline cursor-pointer">
-                {comment.author.username}
-              </span>
-              &nbsp;
-              <span className="text-tertiary">@{comment.author.username}</span>
-            </UserPopup>
-            <div className="text-mid">
-              &nbsp;&middot;&nbsp;{comment.timeSince}
-            </div>
-            {collapse && comment.childCount > 0 && (
-              <div className="ml-auto text-mid">
-                {comment.childCount} hidden replies
+          <UserPopup user={comment.author}>
+            <UserAvatar
+              className="w-10 h-10 mr-3 cursor-pointer transition hover:opacity-90"
+              user={comment.author}
+            />
+          </UserPopup>
+
+          <div
+            className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 arrow-box rounded w-full ${
+              collapse || comment.deleted ? 'h-10' : ''
+            }`}
+          >
+            <div className="h-10 px-3 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t">
+              <UserPopup user={comment.author}>
+                <span className="text-secondary font-semibold hover:underline cursor-pointer">
+                  {comment.author.username}
+                </span>
+                &nbsp;
+                <span className="text-tertiary">
+                  @{comment.author.username}
+                </span>
+              </UserPopup>
+              <div className="text-mid">
+                &nbsp;&middot;&nbsp;{comment.timeSince}
               </div>
+              {collapse && comment.childCount > 0 && (
+                <div className="ml-auto text-mid">
+                  {comment.childCount} hidden replies
+                </div>
+              )}
+            </div>
+
+            {!collapse && !comment.deleted && (
+              <>
+                <Twemoji options={{ className: 'twemoji' }}>
+                  <div
+                    className="prose prose-sm prose-blue dark:prose-dark max-w-none p-3 border-t border-gray-200 dark:border-gray-800"
+                    dangerouslySetInnerHTML={{ __html: textContent }}
+                  />
+                </Twemoji>
+
+                <div className="flex items-center h-10 border-t dark:border-gray-800 border-gray-200">
+                  <div
+                    onClick={() => toggle()}
+                    className={`flex items-center h-full px-4 font-medium select-none ${
+                      !comment.deleted
+                        ? 'transition cursor-pointer hover:text-red-400'
+                        : ''
+                    } ${comment.isRocketed ? 'text-red-400' : 'text-mid'}`}
+                  >
+                    <div className="label">{comment.rocketCount}</div>
+                    <BiRocket className="w-4.5 h-4.5 ml-3" />
+                  </div>
+
+                  {!comment.deleted && (
+                    <div
+                      onClick={() => {
+                        if (currentUser) {
+                          setParentComment(comment)
+                          setCreateComment(true)
+                        } else {
+                          setLogin(true)
+                        }
+                      }}
+                      className="flex text-mid items-center transition cursor-pointer hover:text-blue-500 h-full px-4 font-medium select-none"
+                    >
+                      <div className="label">Reply</div>
+                      <FiCornerUpLeft className="w-4.5 h-4.5 ml-3" />
+                    </div>
+                  )}
+
+                  <div className="mr-auto" />
+
+                  {comment.pinned && (
+                    <Tippy content="Pinned comment">
+                      <div className="mr-4 text-accent cursor-pointer">
+                        <FaThumbtack
+                          size={18}
+                          className="transform -rotate-45"
+                        />
+                      </div>
+                    </Tippy>
+                  )}
+
+                  <MoreOptionsComment
+                    comment={comment}
+                    post={post}
+                    level={level}
+                    setEditing={setEditing}
+                  />
+                </div>
+              </>
             )}
           </div>
-
-          {!collapse && !comment.deleted && (
-            <>
-              <Twemoji options={{ className: 'twemoji' }}>
-                <div
-                  className="prose prose-sm prose-blue dark:prose-dark max-w-none p-3 border-t border-gray-200 dark:border-gray-800"
-                  dangerouslySetInnerHTML={{ __html: comment.textContent }}
-                />
-              </Twemoji>
-
-              <div className="flex items-center h-10 border-t dark:border-gray-800 border-gray-200">
-                <div
-                  onClick={() => toggle()}
-                  className={`flex items-center h-full px-4 font-medium select-none ${
-                    !comment.deleted
-                      ? 'transition cursor-pointer hover:text-red-400'
-                      : ''
-                  } ${comment.isRocketed ? 'text-red-400' : 'text-mid'}`}
-                >
-                  <div className="label">{comment.rocketCount}</div>
-                  <BiRocket className="w-4.5 h-4.5 ml-3" />
-                </div>
-
-                {!comment.deleted && (
-                  <div
-                    onClick={() => {
-                      if (currentUser) {
-                        setParentComment(comment)
-                        setCreateComment(true)
-                      } else {
-                        setLogin(true)
-                      }
-                    }}
-                    className="flex text-mid items-center transition cursor-pointer hover:text-blue-500 h-full px-4 font-medium select-none"
-                  >
-                    <div className="label">Reply</div>
-                    <FiCornerUpLeft className="w-4.5 h-4.5 ml-3" />
-                  </div>
-                )}
-
-                <div className="mr-auto" />
-
-                {comment.pinned && (
-                  <Tippy content="Pinned comment">
-                    <div className="mr-4 text-accent cursor-pointer">
-                      <FaThumbtack size={18} className="transform -rotate-45" />
-                    </div>
-                  </Tippy>
-                )}
-
-                <MoreOptionsComment
-                  comment={comment}
-                  post={post}
-                  level={level}
-                />
-              </div>
-            </>
-          )}
         </div>
-      </div>
 
-      {!collapse &&
-        comment.childComments &&
-        comment.childComments.length > 0 &&
-        comment.childComments.map(childComment => (
-          <Comment
-            key={childComment.id}
-            comment={childComment}
-            level={level + 1}
-            setParentComment={setParentComment}
-            post={post}
-          />
-        ))}
-    </div>
+        {!collapse &&
+          comment.childComments &&
+          comment.childComments.length > 0 &&
+          comment.childComments.map(childComment => (
+            <Comment
+              key={childComment.id}
+              comment={childComment}
+              level={level + 1}
+              setParentComment={setParentComment}
+              post={post}
+            />
+          ))}
+      </div>
+    </>
   )
 }
 
-function MoreOptionsComment({ comment, post, level }) {
+function MoreOptionsComment({ comment, post, level, setEditing }) {
   const menuItem =
     'cursor-pointer transition flex items-center w-full px-4 py-2.5 text-sm font-medium text-left focus:outline-none select-none'
 
@@ -271,9 +288,10 @@ function MoreOptionsComment({ comment, post, level }) {
                     <Menu.Item>
                       {({ active }) => (
                         <div
+                          onClick={() => setEditing(true)}
                           className={`${
                             active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-secondary ${menuItem}`}
+                          } text-tertiary ${menuItem}`}
                         >
                           <FiEdit2 size={18} className="mr-4" />
                           Edit

@@ -1,14 +1,12 @@
-// @refresh reset
-import React, { useMemo, useState } from 'react'
-import { Slate, Editable, withReact } from 'slate-react'
-import { createEditor } from 'slate'
-import NavLink from '@/components/NavLink'
+import React, { useState } from 'react'
 import { serialize } from '@/lib/serializeHtml'
 import { useForm } from 'react-hook-form'
 import { useSubmitCommentMutation } from '@/lib/mutations/commentMutations'
 import { useCommentStore } from '@/lib/stores/useCommentStore'
 import { useQueryClient } from 'react-query'
 import { useComments } from '@/lib/queries/useComments'
+import { emptyEditor } from '@/lib/emptyEditor'
+import Editor from '@/components/Editor'
 
 const postBtn =
   'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105 focus:outline-none'
@@ -20,13 +18,7 @@ export default function CreateCommentForm({
 }) {
   const { setCreateComment } = useCommentStore()
 
-  const initialValue = [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }]
-    }
-  ]
-  const [textContent, setTextContent] = useState(initialValue)
+  const [textContent, setTextContent] = useState(emptyEditor)
 
   const submitCommentMutation = useSubmitCommentMutation()
 
@@ -48,7 +40,7 @@ export default function CreateCommentForm({
 
     if (parentComment) variables.parentCommentId = parentComment.id
 
-    if (textContent !== initialValue) {
+    if (textContent !== emptyEditor) {
       const html = serialize({ children: textContent })
       if (html && html !== `<p></p>`) variables.textContent = html
     }
@@ -118,22 +110,5 @@ export default function CreateCommentForm({
         </div>
       </div>
     </form>
-  )
-}
-
-function Editor({ value, setValue }) {
-  const editor = useMemo(() => withReact(createEditor()), [])
-
-  return (
-    <Slate
-      editor={editor}
-      value={value}
-      onChange={newValue => setValue(newValue)}
-    >
-      <Editable
-        placeholder="Write your comment"
-        className="dark:bg-gray-900 p-3 rounded prose prose-sm dark:prose-dark h-32 min-w-full overflow-y-auto"
-      />
-    </Slate>
   )
 }

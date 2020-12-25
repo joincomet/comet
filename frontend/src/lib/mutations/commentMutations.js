@@ -101,4 +101,5 @@ const editComment = async variables => {
   )
 }
 
-export const useEditCommentMutation = () => useMutation(editComment)
+export const useEditCommentMutation = options =>
+  useMutation(editComment, options)

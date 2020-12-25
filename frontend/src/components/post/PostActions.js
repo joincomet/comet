@@ -258,20 +258,18 @@ function MoreOptions({ post, chip, icon, isModerator }) {
                         </div>
                       )}
                     </Menu.Item>
-                    {post.textContent && (
-                      <Menu.Item>
-                        {({ active }) => (
-                          <div
-                            className={`${
-                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                            } text-secondary ${menuItem}`}
-                          >
-                            <FiEdit2 size={18} className="mr-4" />
-                            Edit
-                          </div>
-                        )}
-                      </Menu.Item>
-                    )}
+                    <Menu.Item>
+                      {({ active }) => (
+                        <div
+                          className={`${
+                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                          } text-tertiary ${menuItem}`}
+                        >
+                          <FiEdit2 size={18} className="mr-4" />
+                          Edit
+                        </div>
+                      )}
+                    </Menu.Item>
                     <Menu.Item>
                       {({ active }) => (
                         <div

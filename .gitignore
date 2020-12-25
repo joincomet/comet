@@ -4,3 +4,4 @@
 latest.dump
 .graphqlconfig
 schema.graphql
+dump.sql

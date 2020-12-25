@@ -4,7 +4,13 @@ import { Container } from 'typedi'
 import { Planet } from '@/planet/Planet.Entity'
 import { Post } from '@/post/Post.Entity'
 import { connectDatabase } from '@/ConnectDatabase'
-import { migratePosts } from '@/migrations/from-getcomet/migratePosts'
+import {
+  getPostEmbeds,
+  reuploadPlanetImages,
+  reuploadPostImages,
+  reuploadUserImages
+} from '@/migrations/from-getcomet/migrations'
+import { User } from '@/user/User.Entity'
 
 TypeORM.useContainer(Container)
 
@@ -26,7 +32,10 @@ const run = async () => {
     await planetRepo.delete(planetsToDelete)
   }
 
-  await migratePosts(getRepository(Post))
+  // await getPostEmbeds(getRepository(Post))
+  await reuploadPostImages(getRepository(Post))
+  await reuploadUserImages(getRepository(User))
+  await reuploadPlanetImages(getRepository(Planet))
 
   console.info('--- Done ---')
   await connection.close()

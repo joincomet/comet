@@ -40,7 +40,9 @@ export default function Header({ children, className, ...rest }) {
           <FiMenu size={20} />
         </div>
 
-        <div className="header-3 ml-4 block md:hidden">{title}</div>
+        <div className="header-3 ml-4 block md:hidden whitespace-nowrap truncate">
+          {title}
+        </div>
 
         <div className="hidden md:block relative text-gray-600 dark:text-gray-400 focus-within:text-blue-500 dark:focus-within:text-blue-500 transition">
           <button className="absolute h-8 w-10 top-1/2 transform -translate-y-1/2 focus:outline-none inline-flex items-center justify-center">

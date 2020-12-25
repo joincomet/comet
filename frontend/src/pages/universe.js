@@ -50,11 +50,9 @@ export async function getServerSideProps(ctx) {
 
   await globalPrefetch(queryClient, ctx)
 
-  const dehydratedState = dehydrate(queryClient)
-
   return {
     props: {
-      dehydratedState
+      dehydratedState: dehydrate(queryClient)
     }
   }
 }
