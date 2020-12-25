@@ -5,11 +5,11 @@ import Post from '@/components/post/Post'
 import { fetchComments, useComments } from '@/lib/queries/useComments'
 import { FiCopy } from 'react-icons/fi'
 import React, { useEffect, useState } from 'react'
-import Comment from '@/components/Comment'
+import Comment from '@/components/comment/Comment'
 import Tippy from '@tippyjs/react'
 import { useCopyToClipboard } from 'react-use'
 import { dehydrate } from 'react-query/hydration'
-import CreateCommentButton from '@/components/createcomment/CreateCommentButton'
+import CreateCommentButton from '@/components/comment/create/CreateCommentButton'
 import PlanetHeader from '@/components/planet/PlanetHeader'
 import UserHeader from '@/components/user/UserHeader'
 import InfoLinks from '@/components/InfoLinks'
@@ -17,8 +17,8 @@ import NavLink from '@/components/NavLink'
 import { NextSeo } from 'next-seo'
 import PlanetAbout from '@/components/planet/PlanetAbout'
 import UserAbout from '@/components/user/UserAbout'
-import { useHeaderStore } from '@/lib/useHeaderStore'
-import { fetchCurrentUser } from '@/lib/queries/useCurrentUser'
+import { useHeaderStore } from '@/lib/stores/useHeaderStore'
+import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 
 function PostPage({ postVariables, commentVariables }) {
   const { query, pathname } = useRouter()
@@ -69,6 +69,7 @@ function PostPage({ postVariables, commentVariables }) {
           post={post}
           parentComment={parentComment}
           setParentComment={setParentComment}
+          commentVariables={commentVariables}
         />
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 relative py-3">
@@ -200,7 +201,7 @@ export async function getServerSideProps(ctx) {
     sort: query.sort ? query.sort.toUpperCase() : 'TOP'
   }
 
-  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
+  await globalPrefetch(queryClient, ctx)
 
   await queryClient.prefetchQuery(['post', postVariables], key =>
     fetchPost(key, ctx)

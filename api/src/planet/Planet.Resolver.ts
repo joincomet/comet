@@ -20,6 +20,8 @@ import { Repository } from 'typeorm'
 import { PlanetsArgs } from '@/planet/PlanetsArgs'
 import { PlanetSort } from '@/planet/PlanetSort'
 import { handleUnderscore } from '@/handleUnderscore'
+import { Comment } from '@/comment/Comment.Entity'
+import { galaxiesList } from '@/galaxiesList'
 
 @Resolver(() => Planet)
 export class PlanetResolver {
@@ -32,6 +34,13 @@ export class PlanetResolver {
     @Args() { name, description, galaxies, nsfw }: CreatePlanetArgs,
     @Ctx() { userId }: Context
   ) {
+    if (!galaxies || galaxies.length === 0)
+      throw new Error('At least one galaxy is required')
+
+    for (const g of galaxies) {
+      if (!galaxiesList.includes(g)) throw new Error('Invalid galaxy')
+    }
+
     bannedWords.forEach(u => {
       if (name.toLowerCase().includes(u.toLowerCase())) {
         throw new Error('Inappropriate Planet Name')
@@ -53,13 +62,25 @@ export class PlanetResolver {
     if ((await user.moderatedPlanets).length >= 3)
       throw new Error('Cannot moderate more than 3 planets')
 
-    await this.planetRepo.save({
+    const planet = await this.planetRepo.save({
       name,
       description,
       creatorId: userId,
       galaxies,
       nsfw
     })
+
+    await this.planetRepo
+      .createQueryBuilder()
+      .relation(Planet, 'moderators')
+      .of(planet.id)
+      .add(userId)
+
+    await this.planetRepo
+      .createQueryBuilder()
+      .relation(Planet, 'users')
+      .of(planet.id)
+      .add(userId)
 
     return true
   }

@@ -1,6 +1,7 @@
 import { usePosts } from '@/lib/queries/usePosts'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Post from '@/components/post/Post'
+import { useQueryClient } from 'react-query'
 
 export default function Posts({ variables }) {
   const { data, fetchNextPage } = usePosts(variables)
@@ -14,11 +15,14 @@ export default function Posts({ variables }) {
       hasMore={true}
       loader={<div />}
       dataLength={data.length}
-      style={{ overflowX: 'hidden' }}
+      style={{
+        overflowX: 'hidden'
+      }}
     >
       {data.map((post, index) => (
         <Post key={post.id} post={post} />
       ))}
+      <div className="h-96" />
     </InfiniteScroll>
   )
 }

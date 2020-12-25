@@ -17,17 +17,26 @@ const submitComment = async variables => {
           parentCommentId: $parentCommentId
         ) {
           id
-          id36
           parentCommentId
           textContent
           rocketCount
+          isRocketed
           author {
+            id
             username
             name
             avatarUrl
+            followerCount
+            followingCount
+            isFollowing
+            isFollowed
+            isCurrentUser
           }
           timeSince
           timeSinceEdited
+          deleted
+          removed
+          removedReason
         }
       }
     `,

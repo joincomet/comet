@@ -18,7 +18,7 @@ const imageBtn =
 const postBtn =
   'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105 focus:outline-none'
 
-export default function CreatePostForm() {
+export default function CreatePostForm({ onFinish }) {
   const {
     register,
     handleSubmit,
@@ -71,6 +71,7 @@ export default function CreatePostForm() {
 
     const { relativeUrl } = await submitPostMutation.mutateAsync(variables)
     await push(relativeUrl)
+    if (onFinish) onFinish()
   }
 
   const validUrl = url => {
@@ -206,12 +207,14 @@ export default function CreatePostForm() {
 
         <div className="tip text-tertiary mt-4 text-right">
           Read the{' '}
-          <NavLink
-            href="/about/content"
+          <a
+            href="https://github.com/cometx-io/about/blob/master/CONTENT.md"
+            rel="noopener noreferrer"
+            target="_blank"
             className="text-accent cursor-pointer hover:underline"
           >
             Content Policy
-          </NavLink>{' '}
+          </a>{' '}
           before posting
         </div>
       </div>

@@ -4,7 +4,7 @@ import {
   ValidationArguments
 } from 'class-validator'
 
-export const galaxies = [
+export const galaxiesList = [
   'Technology',
   'Science',
   'Movies & Television',
@@ -66,7 +66,7 @@ export function IsGalaxy(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return typeof value === 'string' && galaxies.includes(value)
+          return typeof value === 'string' && galaxiesList.includes(value)
         }
       }
     })

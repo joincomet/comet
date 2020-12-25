@@ -1,10 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { usePopper } from 'react-popper'
-import { useClickAway } from 'react-use'
+import React from 'react'
 import { useRouter } from 'next/router'
-import { FiChevronDown, FiMoreHorizontal } from 'react-icons/fi'
-import ReactDOM from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { FiChevronDown } from 'react-icons/fi'
 import NavLink from '@/components/NavLink'
 import { Menu, Transition } from '@headlessui/react'
 import { menuTransition } from '@/lib/menuTransition'
@@ -21,7 +17,7 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
   }
 
   return (
-    <div className="relative z-30">
+    <div className="relative inline-block leading-none z-30">
       <Menu>
         {({ open }) => (
           <>
@@ -37,85 +33,91 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                 static
                 className="absolute right-0 w-32 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none p-3 space-y-3"
               >
-                <Menu.Item
-                  className={`block ${item} ${
-                    query.time === 'hour' ? itemActive : itemInactive
-                  }`}
-                >
-                  <NavLink
-                    href={{ pathname, query: { ...query, time: 'hour' } }}
-                  >
-                    Hour
-                  </NavLink>
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavLink
+                      href={{ pathname, query: { ...query, time: 'hour' } }}
+                      className={`block ${item} ${
+                        query.time === 'hour' ? itemActive : itemInactive
+                      } ${active ? 'underline' : ''}`}
+                    >
+                      Hour
+                    </NavLink>
+                  )}
                 </Menu.Item>
 
-                <Menu.Item
-                  className={`block ${item} ${
-                    !query.time || query.time === 'day'
-                      ? itemActive
-                      : itemInactive
-                  }`}
-                >
-                  <NavLink
-                    href={{
-                      pathname,
-                      query: (() => {
-                        const q = { ...query }
-                        delete q.time
-                        return q
-                      })()
-                    }}
-                  >
-                    Day
-                  </NavLink>
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavLink
+                      href={{
+                        pathname,
+                        query: (() => {
+                          const q = { ...query }
+                          delete q.time
+                          return q
+                        })()
+                      }}
+                      className={`block ${item} ${
+                        !query.time || query.time === 'day'
+                          ? itemActive
+                          : itemInactive
+                      } ${active ? 'underline' : ''}`}
+                    >
+                      Day
+                    </NavLink>
+                  )}
                 </Menu.Item>
 
-                <Menu.Item
-                  className={`block ${item} ${
-                    query.time === 'week' ? itemActive : itemInactive
-                  }`}
-                >
-                  <NavLink
-                    href={{ pathname, query: { ...query, time: 'week' } }}
-                  >
-                    Week
-                  </NavLink>
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavLink
+                      href={{ pathname, query: { ...query, time: 'week' } }}
+                      className={`block ${item} ${
+                        query.time === 'week' ? itemActive : itemInactive
+                      } ${active ? 'underline' : ''}`}
+                    >
+                      Week
+                    </NavLink>
+                  )}
                 </Menu.Item>
 
-                <Menu.Item
-                  className={`block ${item} ${
-                    query.time === 'month' ? itemActive : itemInactive
-                  }`}
-                >
-                  <NavLink
-                    href={{ pathname, query: { ...query, time: 'month' } }}
-                  >
-                    Month
-                  </NavLink>
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavLink
+                      href={{ pathname, query: { ...query, time: 'month' } }}
+                      className={`block ${item} ${
+                        query.time === 'month' ? itemActive : itemInactive
+                      } ${active ? 'underline' : ''}`}
+                    >
+                      Month
+                    </NavLink>
+                  )}
                 </Menu.Item>
 
-                <Menu.Item
-                  className={`block ${item} ${
-                    query.time === 'year' ? itemActive : itemInactive
-                  }`}
-                >
-                  <NavLink
-                    href={{ pathname, query: { ...query, time: 'year' } }}
-                  >
-                    Year
-                  </NavLink>
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavLink
+                      href={{ pathname, query: { ...query, time: 'year' } }}
+                      className={`block ${item} ${
+                        query.time === 'year' ? itemActive : itemInactive
+                      } ${active ? 'underline' : ''}`}
+                    >
+                      Year
+                    </NavLink>
+                  )}
                 </Menu.Item>
 
-                <Menu.Item
-                  className={`block ${item} ${
-                    query.time === 'all' ? itemActive : itemInactive
-                  }`}
-                >
-                  <NavLink
-                    href={{ pathname, query: { ...query, time: 'all' } }}
-                  >
-                    All
-                  </NavLink>
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavLink
+                      href={{ pathname, query: { ...query, time: 'all' } }}
+                      className={`block ${item} ${
+                        query.time === 'all' ? itemActive : itemInactive
+                      } ${active ? 'underline' : ''}`}
+                    >
+                      All
+                    </NavLink>
+                  )}
                 </Menu.Item>
               </Menu.Items>
             </Transition>

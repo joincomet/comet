@@ -11,14 +11,13 @@ import React, { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
 import Twemoji from 'react-twemoji'
-import { useRouter } from 'next/router'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import {
   useDeleteCommentMutation,
   useRocketCommentMutation,
   useUnrocketCommentMutation
 } from '@/lib/mutations/commentMutations'
-import { useLogin } from '@/lib/useLogin'
+import { useLoginStore } from '@/lib/stores/useLoginStore'
 import {
   useBanAndPurgeUserMutation,
   useBanUserFromPlanetMutation,
@@ -31,6 +30,7 @@ import { menuTransition } from '@/lib/menuTransition'
 import { FaThumbtack } from 'react-icons/fa'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
+import { useCommentStore } from '@/lib/stores/useCommentStore'
 
 export default function Comment({
   comment,
@@ -38,8 +38,8 @@ export default function Comment({
   level = 0,
   setParentComment
 }) {
+  const { setCreateComment } = useCommentStore()
   const [collapse, setCollapse] = useState(false)
-  const { query, pathname, push } = useRouter()
   const currentUser = useCurrentUser().data
 
   if (!comment.author) {
@@ -47,7 +47,7 @@ export default function Comment({
     comment.author = { username: '[deleted]' }
   }
 
-  const { openLogin } = useLogin()
+  const { setLogin } = useLoginStore()
   const variables = { commentId: comment.id }
   const rocketCommentMutation = useRocketCommentMutation()
   const unrocketCommentMutation = useUnrocketCommentMutation()
@@ -66,7 +66,7 @@ export default function Comment({
 
   const toggle = () => {
     if (!currentUser) {
-      openLogin()
+      setLogin(true)
       return
     }
 
@@ -79,6 +79,8 @@ export default function Comment({
       className="relative mt-3"
       style={{ marginLeft: level === 0 ? '0' : '2rem' }}
     >
+      <div className="absolute -top-14 md:-top-28" id={comment.id36} />
+
       <div className="commentcollapse" onClick={() => setCollapse(true)} />
 
       <div
@@ -135,7 +137,7 @@ export default function Comment({
               <div className="flex items-center h-10 border-t dark:border-gray-800 border-gray-200">
                 <div
                   onClick={() => toggle()}
-                  className={`flex items-center h-full px-4 font-medium ${
+                  className={`flex items-center h-full px-4 font-medium select-none ${
                     !comment.deleted
                       ? 'transition cursor-pointer hover:text-red-400'
                       : ''
@@ -148,15 +150,14 @@ export default function Comment({
                 {!comment.deleted && (
                   <div
                     onClick={() => {
-                      setParentComment(comment)
-                      push({
-                        pathname,
-                        query: currentUser
-                          ? { ...query, createcomment: 'true' }
-                          : { ...query, login: 'true' }
-                      })
+                      if (currentUser) {
+                        setParentComment(comment)
+                        setCreateComment(true)
+                      } else {
+                        setLogin(true)
+                      }
                     }}
-                    className="flex text-mid items-center transition cursor-pointer hover:text-blue-500 h-full px-4 font-medium"
+                    className="flex text-mid items-center transition cursor-pointer hover:text-blue-500 h-full px-4 font-medium select-none"
                   >
                     <div className="label">Reply</div>
                     <FiCornerUpLeft className="w-4.5 h-4.5 ml-3" />
@@ -185,6 +186,8 @@ export default function Comment({
       </div>
 
       {!collapse &&
+        comment.childComments &&
+        comment.childComments.length > 0 &&
         comment.childComments.map(childComment => (
           <Comment
             key={childComment.id}

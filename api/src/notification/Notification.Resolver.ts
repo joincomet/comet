@@ -29,11 +29,7 @@ export class NotificationResolver {
       .leftJoinAndSelect('notification.fromUser', 'fromUser')
       .leftJoinAndSelect('notification.post', 'post')
       .leftJoinAndSelect('post.planet', 'planet')
-      .leftJoinAndSelect(
-        'notification.comment',
-        'comment',
-        'comment.deleted = false'
-      )
+      .leftJoinAndSelect('notification.comment', 'comment')
       .addOrderBy('notification.createdAt', 'DESC')
       .andWhere('notification.toUserId = :userId', { userId })
 
@@ -42,8 +38,7 @@ export class NotificationResolver {
     const notifications = await qb.getMany()
 
     return notifications.filter(
-      notification =>
-        notification.comment !== null && notification.comment !== undefined
+      async notification => !!(await notification.comment)
     )
   }
 

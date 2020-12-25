@@ -38,6 +38,7 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
       query comments($postId: ID, $username: String, $sort: CommentSort) {
         comments(postId: $postId, username: $username, sort: $sort) {
           id
+          id36
           parentCommentId
           textContent
           rocketCount

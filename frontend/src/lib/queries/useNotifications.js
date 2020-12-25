@@ -5,12 +5,14 @@ import { request } from '@/lib/Request'
 export const fetchNotifications = async ({ queryKey }, ctx = null) => {
   const [_key, variables] = queryKey
 
-  const { user } = await request(
+  const { notifications } = await request(
     ctx,
     gql`
       query notifications($unreadOnly: Boolean) {
         notifications(unreadOnly: $unreadOnly) {
           id
+          timeSince
+          parentCommentId
           fromUser {
             id
             name
@@ -70,6 +72,7 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
           }
           comment {
             id
+            id36
             parentCommentId
             textContent
             rocketCount
@@ -93,7 +96,8 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
     variables
   )
 
-  return user
+  return notifications
 }
 
-export const useUser = variables => useQuery(['user', variables], fetchUser)
+export const useNotifications = variables =>
+  useQuery(['notifications', variables], fetchNotifications)

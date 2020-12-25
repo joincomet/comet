@@ -7,13 +7,12 @@ import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import UserAvatar from '@/components/user/UserAvatar'
 import SortOptionsUser from '@/components/sort/SortOptionsUser'
-import { fetchComments } from '@/lib/queries/useComments'
 import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
-import CreatePostButton from '@/components/createpost/CreatePostButton'
+import CreatePostButton from '@/components/post/create/CreatePostButton'
 import UserFollowButton from '@/components/user/UserFollowButton'
 import UserHeader from '@/components/user/UserHeader'
 import { useInView } from 'react-intersection-observer'
-import { useHeaderStore } from '@/lib/useHeaderStore'
+import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { FiEdit2 } from 'react-icons/fi'
 import {
   useEditBioMutation,
@@ -21,9 +20,16 @@ import {
 } from '@/lib/mutations/editProfileMutations'
 import { NextSeo } from 'next-seo'
 import NavLink from '@/components/NavLink'
+import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 
-export default function UserPage({ variables }) {
+export default function UserPage() {
   const { query } = useRouter()
+  const getVariables = () => {
+    const sort = query.sort ? query.sort.toUpperCase() : 'NEW'
+    const time = query.time ? query.time.toUpperCase() : 'ALL'
+    return { sort, time, username: query.username }
+  }
+
   const userQuery = useUser({ username: query.username })
   const user = userQuery.data
   const { setDark, setTitle } = useHeaderStore()
@@ -176,14 +182,14 @@ export default function UserPage({ variables }) {
       </div>
 
       <div className="grid gap-6 grid-cols-3 mycontainer py-6">
-        <div className="col-span-3 lg:col-span-2 relative">
+        <div className="col-span-3 md:col-span-2 relative">
           <div className="px-3 md:px-0">
             <SortOptionsUser user={user} />
           </div>
-          <Posts variables={variables} />
+          <Posts variables={getVariables()} />
         </div>
 
-        <div className="col-span-0 lg:col-span-1 hidden md:block">
+        <div className="col-span-0 md:col-span-1 hidden md:block">
           <div>
             <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
               About
@@ -233,24 +239,12 @@ export default function UserPage({ variables }) {
   )
 }
 
-const getVariables = query => {
-  const sort = query.sort ? query.sort.toUpperCase() : 'NEW'
-  const time = query.time ? query.time.toUpperCase() : 'ALL'
-  return { sort, time, username: query.username }
-}
-
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
   const { query } = ctx
 
-  const variables = getVariables(query)
-
-  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
-
-  await queryClient.prefetchQuery(['comments', variables], key =>
-    fetchComments(key, ctx)
-  )
+  await globalPrefetch(queryClient, ctx)
 
   await queryClient.prefetchQuery(['user', { username: query.username }], key =>
     fetchUser(key, ctx)
@@ -260,8 +254,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      dehydratedState,
-      variables
+      dehydratedState
     }
   }
 }

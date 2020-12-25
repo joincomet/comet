@@ -1,25 +1,16 @@
 import { FiX } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
 import React from 'react'
-import { useRouter } from 'next/router'
-import CreatePostForm from '@/components/createpost/CreatePostForm'
+import CreatePlanetForm from '@/components/planet/create/CreatePlanetForm'
 
-export default function CreatePostModal() {
-  const { query, pathname, push } = useRouter()
-
-  const close = () => {
-    const q = { ...query }
-    delete q.createpost
-    push({ pathname, query: q })
-  }
-
+export default function CreatePlanetModal({ open, setOpen }) {
   return (
     <Modal
-      open={query.createpost === 'true'}
-      onClose={() => close()}
+      open={open}
+      onClose={() => setOpen(false)}
       onOverlayClick={e => {
         e.stopPropagation()
-        close()
+        setOpen(false)
       }}
       classNames={{
         modal:
@@ -32,7 +23,7 @@ export default function CreatePostModal() {
       blockScroll={false}
       closeIcon={<FiX size={20} />}
     >
-      <CreatePostForm />
+      <CreatePlanetForm setOpen={setOpen} />
     </Modal>
   )
 }

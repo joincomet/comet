@@ -1,6 +1,6 @@
 import { ArgsType, Field } from 'type-graphql'
 import { Length, Matches, ArrayMinSize, ArrayMaxSize } from 'class-validator'
-import { IsGalaxy } from '@/galaxies'
+import { IsGalaxy } from '@/galaxiesList'
 
 @ArgsType()
 export class CreatePlanetArgs {
@@ -29,5 +29,5 @@ export class CreatePlanetArgs {
   galaxies: string[]
 
   @Field(() => Boolean, { defaultValue: false })
-  nsfw: boolean = false
+  nsfw = false
 }

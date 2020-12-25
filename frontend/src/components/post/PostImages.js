@@ -15,18 +15,14 @@ export default function PostImages({ post }) {
 
   const { query, pathname, push } = useRouter()
 
-  const close = () => {
-    const q = { ...query }
-    delete q.image
-    push({ query: q, pathname })
-  }
+  const [open, setOpen] = useState(false)
 
   return (
     <>
       <div
         onClick={e => {
           e.stopPropagation()
-          push({ pathname, query: { ...query, image: post.id36 } })
+          setOpen(true)
         }}
         className="mt-2 cursor-pointer flex relative justify-center aspect-w-16 aspect-h-9 rounded-lg dark:bg-black"
       >
@@ -63,8 +59,8 @@ export default function PostImages({ post }) {
       </div>
 
       <Modal
-        open={query.image === post.id36}
-        onClose={() => close()}
+        open={open}
+        onClose={() => setOpen(false)}
         center
         blockScroll={false}
         closeIcon={<div />}
@@ -78,7 +74,7 @@ export default function PostImages({ post }) {
         <div
           onClick={e => {
             e.stopPropagation()
-            close()
+            setOpen(false)
           }}
           className="h-full w-full flex items-center justify-center"
         >

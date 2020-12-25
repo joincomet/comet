@@ -9,6 +9,7 @@ import {
 import { Post } from '@/post/Post.Entity'
 import { Comment } from '@/comment/Comment.Entity'
 import { User } from '@/user/User.Entity'
+import dayjs from 'dayjs'
 
 @ObjectType()
 @Entity()
@@ -61,6 +62,16 @@ export class Notification {
   @Field()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
+
+  @Field()
+  get timeSince(): string {
+    // @ts-ignore
+    return dayjs(new Date(this.createdAt)).twitter()
+  }
+
+  @Field(() => Comment, { nullable: true })
+  @ManyToOne(() => Comment)
+  parentComment: Promise<Comment>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })

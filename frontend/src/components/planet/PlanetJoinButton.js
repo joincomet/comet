@@ -5,19 +5,18 @@ import {
   useJoinPlanetMutation,
   useLeavePlanetMutation
 } from '@/lib/mutations/planetMutations'
-import { useRouter } from 'next/router'
-import { useLogin } from '@/lib/useLogin'
+import { useLoginStore } from '@/lib/stores/useLoginStore'
 
 export default function PlanetJoinButton({ planet }) {
   const currentUser = useCurrentUser().data
-  const { openLogin } = useLogin()
+  const { setLogin } = useLoginStore()
 
   const joinMutation = useJoinPlanetMutation()
   const leaveMutation = useLeavePlanetMutation()
 
   const toggle = () => {
     if (!currentUser) {
-      openLogin()
+      setLogin(true)
       return
     }
     if (planet.isJoined) leave()
@@ -49,10 +48,6 @@ export default function PlanetJoinButton({ planet }) {
         }`}
       >
         {planet.isJoined ? 'Joined' : 'Join'}
-      </div>
-
-      <div className="ml-4 w-8 h-8 rounded-full border text-white border-gray-500 bg-black bg-opacity-25 inline-flex items-center justify-center cursor-pointer transition transform hover:scale-105">
-        <FiMoreHorizontal size={20} />
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import LeftSidebar from './LeftSidebar'
+import Sidebar from './Sidebar'
 import BottomBar from '@/components/layout/BottomBar'
 import React, { useState } from 'react'
 import Header from '@/components/layout/Header'
@@ -34,14 +34,11 @@ export default function Layout({ children }) {
       <LoginModal />
 
       <div className="relative">
-        <LeftSidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <Header />
 
-        <main className="lg:ml-64 h-full">{children}</main>
+        <main className="md:ml-64 h-full">{children}</main>
 
         <BottomBar />
 

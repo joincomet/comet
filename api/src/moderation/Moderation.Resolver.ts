@@ -12,12 +12,15 @@ import { handleUnderscore } from '@/handleUnderscore'
 import { discordClient } from '@/discord/DiscordClient'
 import { Context } from '@/Context'
 import { TextChannel } from 'discord.js'
+import { Notification } from '@/notification/Notification.Entity'
 
 export class ModerationResolver {
   @InjectRepository(User) readonly userRepo: Repository<User>
   @InjectRepository(Post) readonly postRepo: Repository<Post>
   @InjectRepository(Comment) readonly commentRepo: Repository<Comment>
   @InjectRepository(Planet) readonly planetRepo: Repository<Planet>
+  @InjectRepository(Notification)
+  readonly notificationRepo: Repository<Notification>
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
@@ -34,6 +37,7 @@ export class ModerationResolver {
     })
     const post = await this.postRepo.findOne(postId)
     await this.userRepo.decrement({ id: post.authorId }, 'postCount', 1)
+
     return true
   }
 
@@ -72,6 +76,8 @@ export class ModerationResolver {
     const comment = await this.commentRepo.findOne(commentId)
     await this.postRepo.decrement({ id: comment.postId }, 'commentCount', 1)
     await this.userRepo.decrement({ id: comment.authorId }, 'commentCount', 1)
+    await this.notificationRepo.delete({ commentId })
+
     return true
   }
 

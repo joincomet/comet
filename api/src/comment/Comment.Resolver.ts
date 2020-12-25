@@ -74,7 +74,6 @@ export class CommentResolver {
           fromUserId: userId,
           toUserId: parentComment.authorId,
           postId,
-
           parentCommentId
         } as Notification)
       }
@@ -171,7 +170,6 @@ export class CommentResolver {
     @Ctx() { userId }: Context
   ) {
     const comment = await this.commentRepo.findOne(commentId)
-    const user = await this.userRepo.findOne(userId)
     if (comment.authorId !== userId)
       throw new Error('Attempt to delete post by someone other than author')
 
@@ -179,6 +177,7 @@ export class CommentResolver {
     this.userRepo.decrement({ id: userId }, 'commentCount', 1)
 
     await this.commentRepo.update(commentId, { deleted: true, pinned: false })
+    await this.notificationRepo.delete({ commentId })
 
     return true
   }

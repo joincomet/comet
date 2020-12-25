@@ -1,7 +1,7 @@
 import { FiMoreHorizontal } from 'react-icons/fi'
 import React, { useEffect, useState } from 'react'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import { useLogin } from '@/lib/useLogin'
+import { useLoginStore } from '@/lib/stores/useLoginStore'
 import {
   useFollowUserMutation,
   useUnfollowUserMutation
@@ -13,14 +13,14 @@ export default function UserFollowButton({ user }) {
   const userQuery = useUser({ username: user.username })
   const currentUserQuery = useCurrentUser()
   const currentUser = currentUserQuery.data
-  const { openLogin } = useLogin()
+  const { setLogin } = useLoginStore()
 
   const followMutation = useFollowUserMutation()
   const unfollowMutation = useUnfollowUserMutation()
 
   const toggle = () => {
     if (!currentUser) {
-      openLogin()
+      setLogin(true)
       return
     }
     if (user.isFollowing) unfollow()

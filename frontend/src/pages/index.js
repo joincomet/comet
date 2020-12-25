@@ -4,13 +4,23 @@ import { fetchCurrentUser } from '@/lib/queries/useCurrentUser'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import SortOptions from '@/components/sort/SortOptions'
-import CreatePostButton from '@/components/createpost/CreatePostButton'
+import CreatePostButton from '@/components/post/create/CreatePostButton'
 import InfoLinks from '@/components/InfoLinks'
-import { useHeaderStore } from '@/lib/useHeaderStore'
+import { useHeaderStore } from '@/lib/stores/useHeaderStore'
+import { globalPrefetch } from '@/lib/queries/globalPrefetch'
+import { useRouter } from 'next/router'
 
-export default function HomePage({ variables }) {
+export default function HomePage() {
   const { setTitle } = useHeaderStore()
   useEffect(() => setTitle('Home'), [])
+  const { query } = useRouter()
+
+  const getVariables = () => {
+    const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
+    let time = query.time ? query.time.toUpperCase() : 'ALL'
+    if (sort === 'TOP' && !query.time) time = 'DAY'
+    return { sort, time, joinedOnly: true }
+  }
 
   return (
     <div>
@@ -20,7 +30,7 @@ export default function HomePage({ variables }) {
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 py-6">
             <SortOptions />
-            <Posts variables={variables} />
+            <Posts variables={getVariables()} />
           </div>
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -34,28 +44,16 @@ export default function HomePage({ variables }) {
   )
 }
 
-const getVariables = query => {
-  const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
-  let time = query.time ? query.time.toUpperCase() : 'ALL'
-  if (sort === 'TOP' && !query.time) time = 'DAY'
-  return { sort, time, joinedOnly: true }
-}
-
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
-  const { query } = ctx
-
-  const variables = getVariables(query)
-
-  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
+  await globalPrefetch(queryClient, ctx)
 
   const dehydratedState = dehydrate(queryClient)
 
   return {
     props: {
-      dehydratedState,
-      variables
+      dehydratedState
     }
   }
 }

@@ -14,6 +14,8 @@ import { useTheme } from '@/components/ThemeContext'
 export default function UserOptionsDropdown() {
   const currentUser = useCurrentUser().data
 
+  if (!currentUser) return null
+
   const queryClient = useQueryClient()
 
   const logoutMutation = useLogoutMutation()

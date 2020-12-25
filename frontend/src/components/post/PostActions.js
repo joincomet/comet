@@ -19,7 +19,7 @@ import {
   useUnrocketPostMutation
 } from '@/lib/mutations/postMutations'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import { useLogin } from '@/lib/useLogin'
+import { useLoginStore } from '@/lib/stores/useLoginStore'
 import { Menu, Transition } from '@headlessui/react'
 import { menuTransition } from '@/lib/menuTransition'
 import {
@@ -40,7 +40,7 @@ const icon =
 
 export default function PostActions({ post, showOptions = false }) {
   const currentUser = useCurrentUser().data
-  const { openLogin } = useLogin()
+  const { setLogin } = useLoginStore()
 
   const rocketPostMutation = useRocketPostMutation()
   const unrocketPostMutation = useUnrocketPostMutation()
@@ -61,7 +61,7 @@ export default function PostActions({ post, showOptions = false }) {
 
   const toggle = () => {
     if (!currentUser) {
-      openLogin()
+      setLogin(true)
       return
     }
 

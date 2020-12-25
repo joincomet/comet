@@ -77,7 +77,7 @@ export class PostResolver {
         'textrank'
       )
         .addSelect(
-          'ts_rank_cd(to_tsvector(post.link), plainto_tsquery(:query))',
+          'ts_rank_cd(to_tsvector(post.linkUrl), plainto_tsquery(:query))',
           'linkrank'
         )
         .addSelect(
@@ -142,7 +142,12 @@ export class PostResolver {
     if (userId) {
       const user = await this.userRepo
         .createQueryBuilder('user')
-        .whereInIds(userId)
+        .where({ id: userId })
+        .leftJoinAndSelect('user.mutedPlanets', 'mutedPlanet')
+        .leftJoinAndSelect('user.blocking', 'blockedUser')
+        .leftJoinAndSelect('user.hiddenPosts', 'hiddenPost')
+        .leftJoinAndSelect('user.joinedPlanets', 'joinedPlanet')
+        .leftJoinAndSelect('user.following', 'followingUser')
         .getOne()
 
       if (user) {

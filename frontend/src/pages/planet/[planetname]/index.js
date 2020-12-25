@@ -2,7 +2,6 @@ import { QueryClient } from 'react-query'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
-
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
@@ -10,26 +9,28 @@ import { useInView } from 'react-intersection-observer'
 import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
 import SortOptions from '@/components/sort/SortOptions'
-import { fetchPosts } from '@/lib/queries/usePosts'
-import { useHeaderStore } from '@/lib/useHeaderStore'
+import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { FiCalendar, FiEdit2 } from 'react-icons/fi'
 import PlanetJoinButton from '@/components/planet/PlanetJoinButton'
 import PlanetHeader from '@/components/planet/PlanetHeader'
-import CreatePostButton from '@/components/createpost/CreatePostButton'
+import CreatePostButton from '@/components/post/create/CreatePostButton'
 import { NextSeo } from 'next-seo'
-import PlanetAbout from '@/components/planet/PlanetAbout'
-import {
-  useEditBioMutation,
-  useUploadAvatarMutation
-} from '@/lib/mutations/editProfileMutations'
 import {
   useEditPlanetDescriptionMutation,
   useUploadPlanetAvatarMutation
 } from '@/lib/mutations/editPlanetMutations'
 import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
+import { globalPrefetch } from '@/lib/queries/globalPrefetch'
+import PlanetOptionsButton from '@/components/planet/PlanetOptionsButton'
 
-export default function PlanetPage({ variables }) {
+export default function PlanetPage() {
   const { query } = useRouter()
+
+  const getVariables = () => {
+    const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
+    const time = query.time ? query.time.toUpperCase() : 'ALL'
+    return { sort, time, planet: query.planetname }
+  }
 
   const currentUser = useCurrentUser().data
 
@@ -171,7 +172,10 @@ export default function PlanetPage({ variables }) {
                 {planet.userCount} Members
               </div>
 
-              <PlanetJoinButton planet={planet} />
+              <div className="inline-flex items-center space-x-4">
+                <PlanetJoinButton planet={planet} />
+                <PlanetOptionsButton planet={planet} />
+              </div>
             </div>
           </div>
 
@@ -186,12 +190,12 @@ export default function PlanetPage({ variables }) {
 
       <div className="mycontainer">
         <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-3 xl:col-span-2 py-6">
+          <div className="col-span-3 md:col-span-2 py-6">
             <SortOptions />
-            <Posts variables={variables} showPlanet={false} />
+            <Posts variables={getVariables()} showPlanet={false} />
           </div>
 
-          <div className="col-span-0 xl:col-span-1">
+          <div className="col-span-0 md:col-span-1 hidden md:block">
             <div className="sticky top-28 pt-6">
               <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
                 About
@@ -261,20 +265,12 @@ export default function PlanetPage({ variables }) {
   )
 }
 
-const getVariables = query => {
-  const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
-  const time = query.time ? query.time.toUpperCase() : 'ALL'
-  return { sort, time, planet: query.planetname }
-}
-
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
   const { query } = ctx
 
-  await queryClient.prefetchQuery('currentUser', () => fetchCurrentUser(ctx))
-
-  const variables = getVariables(query)
+  await globalPrefetch(queryClient, ctx)
 
   await queryClient.prefetchQuery(['planet', { name: query.planetname }], key =>
     fetchPlanet(key, ctx)
@@ -284,8 +280,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      dehydratedState,
-      variables
+      dehydratedState
     }
   }
 }

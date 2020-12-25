@@ -5,7 +5,7 @@ import { usePopper } from 'react-popper'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useClickAway } from 'react-use'
 import NavLink from '@/components/NavLink'
-import { useLogin } from '@/lib/useLogin'
+import { useLoginStore } from '@/lib/stores/useLoginStore'
 import {
   useFollowUserMutation,
   useUnfollowUserMutation
@@ -44,14 +44,14 @@ export default function UserPopup({
   })
 
   const currentUser = useCurrentUser().data
-  const { openLogin } = useLogin()
+  const { setLogin } = useLoginStore()
 
   const followMutation = useFollowUserMutation()
   const unfollowMutation = useUnfollowUserMutation()
 
   const toggle = () => {
     if (!currentUser) {
-      openLogin()
+      setLogin(true)
       return
     }
     if (user.isFollowing) unfollow()

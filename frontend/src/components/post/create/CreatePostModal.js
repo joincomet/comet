@@ -1,25 +1,16 @@
 import { FiX } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
 import React from 'react'
-import { useRouter } from 'next/router'
-import CreateCommentForm from '@/components/createcomment/CreateCommentForm'
+import CreatePostForm from '@/components/post/create/CreatePostForm'
 
-export default function CreateCommentModal({ post, parentComment }) {
-  const { query, pathname, push } = useRouter()
-
-  const close = () => {
-    const q = { ...query }
-    delete q.createcomment
-    push({ pathname, query: q })
-  }
-
+export default function CreatePostModal({ open, setOpen }) {
   return (
     <Modal
-      open={query.createcomment === 'true'}
-      onClose={() => close()}
+      open={open}
+      onClose={() => setOpen(false)}
       onOverlayClick={e => {
         e.stopPropagation()
-        close()
+        setOpen(false)
       }}
       classNames={{
         modal:
@@ -32,11 +23,7 @@ export default function CreateCommentModal({ post, parentComment }) {
       blockScroll={false}
       closeIcon={<FiX size={20} />}
     >
-      <CreateCommentForm
-        post={post}
-        parentComment={parentComment}
-        close={close}
-      />
+      <CreatePostForm onFinish={() => setOpen(false)} />
     </Modal>
   )
 }

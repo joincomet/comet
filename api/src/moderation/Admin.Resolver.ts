@@ -4,11 +4,14 @@ import { User } from '@/user/User.Entity'
 import { Repository } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
 import { Comment } from '@/comment/Comment.Entity'
+import { Notification } from '@/notification/Notification.Entity'
 
 export class AdminResolver {
   @InjectRepository(User) readonly userRepo: Repository<User>
   @InjectRepository(Post) readonly postRepo: Repository<Post>
   @InjectRepository(Comment) readonly commentRepo: Repository<Comment>
+  @InjectRepository(Notification)
+  readonly notificationRepo: Repository<Notification>
 
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
@@ -48,6 +51,8 @@ export class AdminResolver {
       { authorId: bannedId },
       { removed: true, removedReason: reason, pinned: false }
     )
+
+    await this.notificationRepo.delete({ fromUserId: bannedId })
 
     return true
   }

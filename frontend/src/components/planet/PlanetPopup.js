@@ -6,7 +6,7 @@ import { useClickAway } from 'react-use'
 import NavLink from '@/components/NavLink'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import { useLogin } from '@/lib/useLogin'
+import { useLoginStore } from '@/lib/stores/useLoginStore'
 import {
   useJoinPlanetMutation,
   useLeavePlanetMutation
@@ -18,14 +18,14 @@ export default function PlanetPopup({
   placement = 'right-start'
 }) {
   const currentUser = useCurrentUser().data
-  const { openLogin } = useLogin()
+  const { setLogin } = useLoginStore()
 
   const joinMutation = useJoinPlanetMutation()
   const leaveMutation = useLeavePlanetMutation()
 
   const toggle = () => {
     if (!currentUser) {
-      openLogin()
+      setLogin(true)
       return
     }
     if (planet.isJoined) leave()
