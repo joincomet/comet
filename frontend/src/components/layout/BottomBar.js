@@ -37,7 +37,7 @@ export default function BottomBar() {
             className={`${pathname === '/notifications' ? 'text-accent' : ''}`}
           />
 
-          {notifications.length > 0 && (
+          {notifications && notifications.length > 0 && (
             <div className="absolute text-white -right-full -bottom-1/2 rounded-full w-6 h-6 inline-flex items-center justify-center tip bg-blue-500">
               {notifications.length}
             </div>

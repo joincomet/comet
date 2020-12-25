@@ -64,7 +64,7 @@ export default function Header({ children, className, ...rest }) {
                 className="hidden md:block relative p-3 rounded-full transition bg-transparent dark:hover:bg-gray-700 cursor-pointer"
               >
                 <FiBell size={20} />
-                {notifications.length > 0 && (
+                {notifications && notifications.length > 0 && (
                   <div className="absolute -bottom-0.5 -right-0.5 rounded-full w-6 h-6 inline-flex items-center justify-center tip bg-blue-500">
                     {notifications.length}
                   </div>
