@@ -170,8 +170,8 @@ export class ModerationResolver {
     if ((await user.moderatedPlanets).find(p => p.id === planetId)) {
       throw new Error(`${user.username} is already a moderator`)
     }
-    if ((await user.moderatedPlanets).length >= 3)
-      throw new Error(`${user.username} cannot moderate more than 3 planets`)
+    if ((await user.moderatedPlanets).length >= 5)
+      throw new Error(`${user.username} cannot moderate more than 5 planets`)
 
     const planet = await this.planetRepo.findOne(planetId)
 

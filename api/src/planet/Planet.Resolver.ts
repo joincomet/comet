@@ -59,8 +59,8 @@ export class PlanetResolver {
       .whereInIds(userId)
       .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
       .getOne()
-    if ((await user.moderatedPlanets).length >= 3)
-      throw new Error('Cannot moderate more than 3 planets')
+    if ((await user.moderatedPlanets).length >= 5)
+      throw new Error('Cannot moderate more than 5 planets')
 
     const planet = await this.planetRepo.save({
       name,

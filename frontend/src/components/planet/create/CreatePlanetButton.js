@@ -17,8 +17,8 @@ export default function CreatePlanetButton({ className = '' }) {
       <div
         onClick={() => {
           if (currentUser) {
-            if (currentUser.moderatedPlanets.length >= 3 && !currentUser.admin)
-              toast.error('You cannot moderate more than 3 planets')
+            if (currentUser.moderatedPlanets.length >= 5 && !currentUser.admin)
+              toast.error('You cannot moderate more than 5 planets')
             else setOpen(true)
           } else {
             setLogin(true)
