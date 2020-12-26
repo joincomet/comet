@@ -48,7 +48,7 @@ export default function PlanetOptionsButton({ planet }) {
                 static
                 className="absolute left-0 w-56 origin-top-left bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
               >
-                {(isModerator || currentUser.admin) && (
+                {currentUser && (isModerator || currentUser.admin) && (
                   <Menu.Item>
                     {({ active }) => (
                       <>
