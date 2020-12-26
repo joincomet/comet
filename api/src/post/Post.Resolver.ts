@@ -60,6 +60,8 @@ export class PostResolver {
     }: PostsArgs,
     @Ctx() { userId }: Context
   ) {
+    if (q === '') return []
+
     const qb = this.postRepo
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.planet', 'planet')

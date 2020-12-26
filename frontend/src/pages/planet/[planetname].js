@@ -125,25 +125,26 @@ export default function PlanetPage() {
                 planet={planet}
               />
 
-              {currentUser && (isModerator || currentUser.admin) && (
-                <div className="absolute inset-0">
-                  <input
-                    type="file"
-                    name="avatarImage"
-                    id="avatarImage"
-                    accept="image/png, image/jpeg"
-                    className="hidden"
-                    onChange={e => setAvatarImage(e.target.files)}
-                  />
+              {currentUser &&
+                (isModerator || (currentUser && currentUser.admin)) && (
+                  <div className="absolute inset-0">
+                    <input
+                      type="file"
+                      name="avatarImage"
+                      id="avatarImage"
+                      accept="image/png, image/jpeg"
+                      className="hidden"
+                      onChange={e => setAvatarImage(e.target.files)}
+                    />
 
-                  <label
-                    htmlFor="avatarImage"
-                    className="cursor-pointer bg-black rounded-full w-full h-full inline-flex items-center justify-center bg-opacity-50 transition opacity-0 group-hover:opacity-100"
-                  >
-                    <FiEdit2 className="w-1/2 h-1/2" />
-                  </label>
-                </div>
-              )}
+                    <label
+                      htmlFor="avatarImage"
+                      className="cursor-pointer bg-black rounded-full w-full h-full inline-flex items-center justify-center bg-opacity-50 transition opacity-0 group-hover:opacity-100"
+                    >
+                      <FiEdit2 className="w-1/2 h-1/2" />
+                    </label>
+                  </div>
+                )}
             </div>
 
             <div className="flex flex-col w-full md:h-full items-center md:items-start justify-end space-y-4">
@@ -199,21 +200,22 @@ export default function PlanetPage() {
             <div className="sticky top-28 pt-6">
               <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
                 About
-                {currentUser && (isModerator || currentUser.admin) && (
-                  <span
-                    onClick={() => {
-                      if (editDesc) {
-                        updateDescription()
-                        setEditDesc(false)
-                      } else {
-                        setEditDesc(true)
-                      }
-                    }}
-                    className="ml-3 text-mid hover:underline cursor-pointer"
-                  >
-                    {editDesc ? 'Done' : 'Edit'}
-                  </span>
-                )}
+                {currentUser &&
+                  (isModerator || (currentUser && currentUser.admin)) && (
+                    <span
+                      onClick={() => {
+                        if (editDesc) {
+                          updateDescription()
+                          setEditDesc(false)
+                        } else {
+                          setEditDesc(true)
+                        }
+                      }}
+                      className="ml-3 text-mid hover:underline cursor-pointer"
+                    >
+                      {editDesc ? 'Done' : 'Edit'}
+                    </span>
+                  )}
               </div>
 
               <div>
