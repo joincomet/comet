@@ -218,7 +218,7 @@ export default function PlanetPage() {
 
               <div>
                 <div
-                  className={`text-sm text-secondary font-medium ${
+                  className={`whitespace-pre-wrap prose prose-sm dark:prose-dark text-secondary ${
                     editDesc ? 'hidden' : 'block'
                   }`}
                 >

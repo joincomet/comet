@@ -205,7 +205,8 @@ module.exports = {
         'scale-95',
         'scale-100',
         'bg-black',
-        'font-medium'
+        'font-medium',
+        'text-blue-500'
       ]
     }
   }
