@@ -2,6 +2,7 @@ import AWS from 'aws-sdk'
 import { v4 as uuidv4 } from 'uuid'
 import mime from 'mime'
 import sharp from 'sharp'
+import { streamToBuffer } from '@/util/stream-to-buffer'
 
 const Bucket = process.env.BUCKET
 
@@ -39,9 +40,9 @@ export const uploadImage = async (
   const ext = mime.getExtension(contentType)
   const key = `${uuid}.${ext}`
 
-  const s = sharp().webp({ quality: 75 })
+  const buffer = await streamToBuffer(body)
+  const s = sharp(buffer).webp({ quality: 75 })
   if (resize) s.resize(resize)
-  body.pipe(s)
   body = await s.toBuffer()
 
   const upload = s3.upload({

@@ -1,11 +1,8 @@
 import { useForm } from 'react-hook-form'
-import React, { useMemo, useState } from 'react'
-import { Slate, Editable, withReact } from 'slate-react'
-import { createEditor } from 'slate'
+import React, { useState } from 'react'
 import { FiImage, FiLink, FiX } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import NavLink from '@/components/NavLink'
 import { useSubmitPostMutation } from '@/lib/mutations/postMutations'
 import { serialize } from '@/lib/serializeHtml'
 import Editor from '@/components/Editor'
@@ -152,7 +149,7 @@ export default function CreatePostForm({ onFinish }) {
         <div className={error}>
           {errors.images?.type === 'size' && 'Max image size is 16 Mb'}
           {errors.images?.type === 'count' &&
-            'Cannot upload more than 20 images'}
+            'Cannot upload more than 10 images'}
         </div>
 
         <div className="flex">
@@ -185,7 +182,7 @@ export default function CreatePostForm({ onFinish }) {
                 },
                 count: images => {
                   images = Array.from(images || [])
-                  return images.length <= 20
+                  return images.length <= 10
                 }
               }
             })}

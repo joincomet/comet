@@ -203,7 +203,9 @@ module.exports = {
         'opacity-0',
         'opacity-100',
         'scale-95',
-        'scale-100'
+        'scale-100',
+        'bg-black',
+        'font-medium'
       ]
     }
   }

@@ -186,7 +186,7 @@ export class PostResolver {
       .take(pageSize)
       .getMany()
 
-    if (page === 0 && sort === PostSort.HOT && !q) {
+    if (page === 0 && !q && (sort === PostSort.HOT || username)) {
       const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.planet', 'planet')

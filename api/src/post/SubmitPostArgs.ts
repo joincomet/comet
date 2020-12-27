@@ -30,7 +30,7 @@ export class SubmitPostArgs {
 
   @Field(() => [GraphQLUpload], { nullable: true })
   @IsOptional()
-  @ArrayMaxSize(20, { message: 'Cannot upload more than 20 images' })
+  @ArrayMaxSize(10, { message: 'Cannot upload more than 10 images' })
   images?: FileUpload[]
 
   @Field(() => Boolean, { defaultValue: false })
