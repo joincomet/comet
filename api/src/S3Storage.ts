@@ -40,10 +40,9 @@ export const uploadImage = async (
   const ext = mime.getExtension(contentType)
   const key = `${uuid}.${ext}`
 
-  const buffer = await streamToBuffer(body)
-  const s = sharp(buffer).webp({ quality: 75 })
+  const s = sharp().webp({ quality: 75 })
   if (resize) s.resize(resize)
-  body = await s.toBuffer()
+  body = body.pipe(s)
 
   const upload = s3.upload({
     Bucket,

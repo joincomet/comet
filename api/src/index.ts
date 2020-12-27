@@ -20,7 +20,6 @@ import dayjs from 'dayjs'
 import dayjsTwitter from 'dayjs-twitter'
 import { followedLoader } from '@/user/FollowedLoader'
 import { followingLoader } from '@/user/FollowingLoader'
-import { Client } from '@typeit/discord'
 import { discordClient } from '@/discord/DiscordClient'
 
 dayjs.extend(dayjsTwitter)
@@ -54,7 +53,7 @@ async function bootstrap() {
   app.use(
     graphqlUploadExpress({
       maxFileSize: 16 * 1024 * 1024,
-      maxFiles: 20
+      maxFiles: 10
     })
   )
 

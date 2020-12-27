@@ -21,7 +21,7 @@
     "cookie-parser": "^1.4.5",
     "dataloader": "^2.0.0",
     "date-fns": "^2.16.1",
-    "dayjs": "^1.9.7",
+    "dayjs": "^1.9.8",
     "dayjs-twitter": "^0.4.0",
     "discord.js": "^12.5.1",
     "express": "^4.17.1",
