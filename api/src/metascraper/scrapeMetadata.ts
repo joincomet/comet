@@ -6,19 +6,6 @@ import fileType from 'file-type'
 import { isUrl } from '@/IsUrl'
 import { Readable } from 'stream'
 
-const metascraper = require('metascraper')([
-  require('metascraper-author')(),
-  require('metascraper-date')(),
-  require('metascraper-description')(),
-  require('metascraper-image')(),
-  require('metascraper-logo')(),
-  require('metascraper-clearbit')(),
-  require('metascraper-publisher')(),
-  require('metascraper-title')(),
-  require('metascraper-url')(),
-  require('./metascraperTwitterCard')()
-])
-
 export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
   if (!isUrl(targetUrl)) return null
 
@@ -34,6 +21,18 @@ export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
 
   let meta
   try {
+    const metascraper = require('metascraper')([
+      require('metascraper-author')(),
+      require('metascraper-date')(),
+      require('metascraper-description')(),
+      require('metascraper-image')(),
+      require('metascraper-logo')(),
+      require('metascraper-clearbit')(),
+      require('metascraper-publisher')(),
+      require('metascraper-title')(),
+      require('metascraper-url')(),
+      require('./metascraperTwitterCard')()
+    ])
     meta = (await metascraper({ html, url })) as Metadata
   } catch {
     return null
