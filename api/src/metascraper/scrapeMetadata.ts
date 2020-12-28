@@ -47,9 +47,7 @@ export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
       const response = await fetch(meta.image, { timeout: 2000 })
       const buffer = await response.buffer()
       const type = await fileType.fromBuffer(buffer)
-      let resize = { width: 256, height: 256 }
-      if (meta.twitterCard === 'summary_large_image')
-        resize = { width: 1280, height: 720 }
+      const resize = { width: 256, height: 256 }
       meta.image = await uploadImage(Readable.from(buffer), type.mime, resize)
     } catch {
       delete meta.image

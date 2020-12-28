@@ -147,7 +147,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.12.5, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:7.12.5, @babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7":
   version: 7.12.5
   resolution: "@babel/runtime@npm:7.12.5"
   dependencies:
@@ -2865,6 +2865,7 @@ __metadata:
     next: ^10.0.4
     next-seo: ^4.17.0
     nookies: ^2.5.0
+    nprogress: ^0.2.0
     postcss: ^8.2.1
     prettier: ^2.2.1
     react: ^17.0.1
@@ -2887,6 +2888,10 @@ __metadata:
     react-use: ^15.3.4
     react-virtual: ^2.3.2
     react-virtualized: ^9.22.3
+    react-virtualized-auto-sizer: ^1.0.3
+    react-window: ^1.8.6
+    react-window-infinite-loader: ^1.0.5
+    react-window-scroller: ^1.0.10
     sass: ^1.30.0
     slate: ^0.59.0
     slate-history: ^0.59.0
@@ -3934,7 +3939,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"memoize-one@npm:^5.1.1":
+"memoize-one@npm:>=3.1.1 <6, memoize-one@npm:^5.1.1":
   version: 5.1.1
   resolution: "memoize-one@npm:5.1.1"
   checksum: e7c4a9cceca71334bf09c38818c375a280dc6e8ec03a92701c16199763269ce756b7b0b370f4b464c071045349fb7b3e4a3cc7460a3f46a277f394d8634a6eb5
@@ -4352,6 +4357,13 @@ fsevents@~2.1.2:
     gauge: ~2.7.3
     set-blocking: ~2.0.0
   checksum: 0cd63f127c1bbda403a112e83b11804aaee2b58b0bc581c3bde9b82e4d957c7ed0ad3bee499af706cdd3599bb93669d7cbbf29fb500407d35fe75687ac96e2c0
+  languageName: node
+  linkType: hard
+
+"nprogress@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "nprogress@npm:0.2.0"
+  checksum: 652dfcfea776f9d9a2c3ad1f79b4cbd3056a03e7c6884966eab70fb184e8e70bfca9e0343ba89d11aa1ed95370d648fb638fab91b5dc027bdad54c8d37c96478
   languageName: node
   linkType: hard
 
@@ -5316,6 +5328,16 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"react-virtualized-auto-sizer@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "react-virtualized-auto-sizer@npm:1.0.3"
+  peerDependencies:
+    react: ^15.3.0 || ^16.0.0-alpha
+    react-dom: ^15.3.0 || ^16.0.0-alpha
+  checksum: a1784ef527aead7d6643f955e85115084b5c721b360fffca86b40e0549115435ea156e47dff9633fd1a02fd369c79af56993eb2e452e6293fadc5f7a142c8190
+  languageName: node
+  linkType: hard
+
 "react-virtualized@npm:^9.22.3":
   version: 9.22.3
   resolution: "react-virtualized@npm:9.22.3"
@@ -5330,6 +5352,40 @@ fsevents@~2.1.2:
     react: ^15.3.0 || ^16.0.0-alpha
     react-dom: ^15.3.0 || ^16.0.0-alpha
   checksum: 1e54556ab99409bb172842ddeea3ade467ff9aed6331e80376f969d1c61ff0dc9dfb07986080066aaa327fd977060e7f50c19ae0cbeb8d53e5bd258c7d83e6a2
+  languageName: node
+  linkType: hard
+
+"react-window-infinite-loader@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "react-window-infinite-loader@npm:1.0.5"
+  peerDependencies:
+    react: ^15.3.0 || ^16.0.0-alpha
+    react-dom: ^15.3.0 || ^16.0.0-alpha
+  checksum: fe2c096429bc1de5c684cadf06b33d122cc1827361bfd3d7f81e94f7ac26b25a78207fa58c1f57587308c7e574aeb905a1a2096a7a843d521092370af3049ec1
+  languageName: node
+  linkType: hard
+
+"react-window-scroller@npm:^1.0.10":
+  version: 1.0.10
+  resolution: "react-window-scroller@npm:1.0.10"
+  dependencies:
+    lodash: ^4.17.20
+  peerDependencies:
+    react: ^16.8.0
+  checksum: 64b47ac01729c0010a80b238e504eef5ce1d1f9a5c13cfea6dd2e5aec27633395ccb4b5bd94d71850ca2f976381d609020f8390e22c5c5037e4a6a29e05081a2
+  languageName: node
+  linkType: hard
+
+"react-window@npm:^1.8.6":
+  version: 1.8.6
+  resolution: "react-window@npm:1.8.6"
+  dependencies:
+    "@babel/runtime": ^7.0.0
+    memoize-one: ">=3.1.1 <6"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0
+  checksum: e2bfdfbe39f165c8ca4005b36837288546db5701fc6b53da0acb352317f5dad14cd7abbdff3b13644a8615074fa9841996249b2776f8f94e7efa4e37236b06a4
   languageName: node
   linkType: hard
 

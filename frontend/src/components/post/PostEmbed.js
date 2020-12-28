@@ -34,7 +34,7 @@ export default function PostEmbed({ post }) {
       />
     )*/
 
-  if (ReactPlayer.canPlay(post.linkUrl))
+  /*if (ReactPlayer.canPlay(post.linkUrl))
     return (
       <div className="mt-2 rounded-lg overflow-hidden relative aspect-w-16 aspect-h-9">
         <ReactPlayer
@@ -45,7 +45,7 @@ export default function PostEmbed({ post }) {
           height="100%"
         />
       </div>
-    )
+    )*/
 
   if (post.meta && post.meta.title)
     return (
@@ -54,47 +54,29 @@ export default function PostEmbed({ post }) {
         target="_blank"
         rel="noreferrer noopener nofollow"
         className="mt-2 block rounded-lg border dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 transition"
+        onClick={e => e.stopPropagation()}
       >
-        {post.meta.twitterCard === 'summary_large_image' && post.thumbnailUrl && (
-          <div className="w-full aspect-w-16 aspect-h-9 relative rounded-t-lg">
-            <img
-              alt={post.linkUrl}
-              src={post.thumbnailUrl}
-              loading="eager"
-              className="rounded-t-lg object-cover"
-            />
-          </div>
-        )}
-
         <div className="flex items-start">
-          {post.meta.twitterCard !== 'summary_large_image' && (
-            <div className="w-20 h-20 md:w-32 md:h-32 relative flex-shrink-0 rounded-l-lg">
-              {post.thumbnailUrl || post.logoUrl ? (
-                <img
-                  src={post.thumbnailUrl || post.logoUrl}
-                  className="rounded-l-lg object-cover h-full w-full"
-                  loading="eager"
-                />
-              ) : (
-                <div className="flex w-20 h-20 md:w-32 md:h-32 rounded-l-lg border-r border-gray-200 dark:border-gray-800">
-                  <FiLink className="w-8 h-8 m-auto text-tertiary" />
-                </div>
-              )}
-            </div>
-          )}
+          <div className="w-24 h-24 relative flex-shrink-0 rounded-l-lg">
+            {post.thumbnailUrl || post.logoUrl ? (
+              <img
+                src={post.thumbnailUrl || post.logoUrl}
+                className="rounded-l-lg object-cover h-full w-full"
+                loading="eager"
+              />
+            ) : (
+              <div className="flex w-24 h-24 rounded-l-lg border-r border-gray-200 dark:border-gray-800">
+                <FiLink className="w-8 h-8 m-auto text-tertiary" />
+              </div>
+            )}
+          </div>
 
-          <div
-            className={`flex flex-col px-3 py-2 cursor-pointer ${
-              post.meta.twitterCard !== 'summary_large_image'
-                ? 'h-20 md:h-32'
-                : ''
-            }`}
-          >
-            <div className="font-medium line-clamp-1 md:line-clamp-2 text-secondary text-base">
+          <div className={`flex flex-col px-3 py-2 cursor-pointer h-24`}>
+            <div className="font-medium line-clamp-1 text-secondary text-base">
               {post.meta && post.meta.title ? post.meta.title : post.linkUrl}
             </div>
 
-            <div className="text-xs font-medium text-tertiary line-clamp-1 md:line-clamp-2 mt-1">
+            <div className="text-xs font-medium text-tertiary line-clamp-1 mt-1">
               {post.meta && post.meta.description ? post.meta.description : ''}
             </div>
 

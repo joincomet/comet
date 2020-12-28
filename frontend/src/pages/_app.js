@@ -12,6 +12,7 @@ import { ThemeProvider } from '@/components/ThemeContext'
 import Layout from '@/components/layout/Layout'
 import SEO from '../next-seo.config'
 import { DefaultSeo } from 'next-seo'
+import RouteLoader from '@/components/RouteLoader'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,6 +38,8 @@ export default function App({ Component, pageProps }) {
       </Head>
 
       <DefaultSeo {...SEO} />
+
+      <RouteLoader />
 
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>

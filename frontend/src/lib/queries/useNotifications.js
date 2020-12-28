@@ -42,7 +42,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
             meta {
               title
               description
-              twitterCard
             }
             planet {
               id

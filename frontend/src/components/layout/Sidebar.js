@@ -4,7 +4,7 @@ import { BiHomeAlt } from 'react-icons/bi'
 import NavLink from '../NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/lib/queries/usePlanets'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Scrollbar } from 'react-scrollbars-custom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
@@ -13,6 +13,8 @@ import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { useRouter } from 'next/router'
 import Fuse from 'fuse.js'
 import CreatePlanetButton from '@/components/planet/create/CreatePlanetButton'
+import { FixedSizeList as List } from 'react-window'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 const link =
   'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-10 flex items-center transition'
@@ -40,48 +42,41 @@ function Sidebar() {
             }}
             transition={{ duration: 0.15, ease: 'easeInOut' }}
             onClick={() => setSidebar(false)}
-            className={`z-20 fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-gray-900`}
+            className={`z-30 fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-gray-900`}
           />
         )}
       </AnimatePresence>
       <nav
-        className={`w-64 top-0 bottom-0 left-0 fixed z-50 flex flex-col overflow-y-auto bg-white dark:bg-gray-900 transform duration-300 transition ${
+        className={`w-64 top-0 bottom-0 left-0 fixed z-40 flex flex-col overflow-y-auto bg-white dark:bg-gray-900 transform duration-300 transition ${
           sidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-        <Scrollbar
-          thumbYProps={{
-            style: { backgroundColor: 'rgba(0, 0, 0, 0.1)' }
-          }}
-        >
-          <NavLink href="/" className="flex items-center h-14 px-4">
-            <Logo className="h-4 dark:text-gray-200 text-black" />
-            <div className="ml-3 mt-2 label text-tertiary">alpha</div>
+        <NavLink href="/" className="flex items-center h-14 px-4">
+          <Logo className="h-4 dark:text-gray-200 text-black" />
+          <div className="ml-3 mt-2 label text-tertiary">alpha</div>
+        </NavLink>
+        <div>
+          <NavLink
+            href="/"
+            className={`${link} ${
+              pathname === '/' ? 'text-accent navitem-active' : 'text-tertiary'
+            }`}
+          >
+            <BiHomeAlt className="w-5 h-5" />
+            <span className="ml-6">Home</span>
           </NavLink>
-          <div>
-            <NavLink
-              href="/"
-              className={`${link} ${
-                pathname === '/'
-                  ? 'text-accent navitem-active'
-                  : 'text-tertiary'
-              }`}
-            >
-              <BiHomeAlt className="w-5 h-5" />
-              <span className="ml-6">Home</span>
-            </NavLink>
-            <NavLink
-              href="/universe"
-              className={`${link} ${
-                pathname === '/universe'
-                  ? 'text-accent navitem-active'
-                  : 'text-tertiary'
-              }`}
-            >
-              <CgInfinity className="w-5 h-5" />
-              <span className="ml-6">Universe</span>
-            </NavLink>
-            {/*<NavLink
+          <NavLink
+            href="/universe"
+            className={`${link} ${
+              pathname === '/universe'
+                ? 'text-accent navitem-active'
+                : 'text-tertiary'
+            }`}
+          >
+            <CgInfinity className="w-5 h-5" />
+            <span className="ml-6">Universe</span>
+          </NavLink>
+          {/*<NavLink
               href="/explore"
               className={`${link} ${
                 pathname === '/explore'
@@ -98,11 +93,12 @@ function Sidebar() {
               <span className="ml-6">Explore Planets</span>
             </NavLink>*/}
 
-            <CreatePlanetButton className={`${link} text-tertiary`} />
-          </div>
+          <CreatePlanetButton className={`${link} text-tertiary`} />
+        </div>
 
+        <div className="relative h-full w-full">
           <Planets />
-        </Scrollbar>
+        </div>
       </nav>
     </>
   )
@@ -160,9 +156,26 @@ function Planets() {
     )
   }
 
-  const MemoizedPlanet = React.memo(Planet)
-
   return (
+    <AutoSizer>
+      {({ height, width }) => (
+        <List
+          height={height}
+          itemCount={topPlanets.length}
+          itemSize={32}
+          width={width}
+        >
+          {({ index, style }) => (
+            <div style={style}>
+              <Planet planet={topPlanets[index]} />
+            </div>
+          )}
+        </List>
+      )}
+    </AutoSizer>
+  )
+
+  /* return (
     <div className="py-3 h-full">
       <div className="mx-5 px-3 border-b dark:border-gray-700 relative mb-3">
         <div className="h-8 absolute left-0 top-0 bottom-0 inline-flex items-center ml-1.5">
@@ -206,7 +219,7 @@ function Planets() {
         </>
       )}
     </div>
-  )
+  )*/
 }
 
 export default Sidebar

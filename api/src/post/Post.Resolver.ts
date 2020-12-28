@@ -70,13 +70,15 @@ export class PostResolver {
     if (planet) {
       qb.andWhere('planet.name ILIKE :planet', {
         planet: handleUnderscore(planet)
-      }).andWhere('post.pinned = false')
+      })
     }
 
     if (username) {
       qb.andWhere('author.username ILIKE :username', {
         username: handleUnderscore(username)
       }).andWhere('post.pinnedByAuthor = false')
+    } else if (!q) {
+      qb.andWhere('post.pinned = false')
     }
 
     if (sort === PostSort.NEW) {

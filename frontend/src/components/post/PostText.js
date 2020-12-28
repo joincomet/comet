@@ -24,7 +24,7 @@ export default function PostText({ post, showFullText = false, textContent }) {
     <div
       ref={ref}
       className={`relative border p-3 mt-2 dark:border-gray-800 rounded-lg overflow-hidden ${
-        !showFullText ? 'transition dark:hover:bg-gray-800 max-h-32' : ''
+        !showFullText ? 'transition dark:hover:bg-gray-800 max-h-24' : ''
       }`}
     >
       {!showFullText && of && (

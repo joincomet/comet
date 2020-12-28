@@ -19,43 +19,21 @@ export default function PostImages({ post }) {
 
   return (
     <>
-      <div
-        onClick={e => {
-          e.stopPropagation()
-          setOpen(true)
-        }}
-        className="mt-2 cursor-pointer flex relative justify-center aspect-w-16 aspect-h-9 rounded-lg dark:bg-black"
-      >
-        <img
-          loading="lazy"
-          alt="Image"
-          src={post.imageUrls[current]}
-          className="rounded-lg object-contain"
-        />
-
-        {post.imageUrls.length > 1 && current < post.imageUrls.length - 1 && (
-          <div
+      <div className="mt-2 cursor-pointer flex relative h-24 space-x-3 rounded-lg select-none overflow-x-auto">
+        {post.imageUrls.map((image, index) => (
+          <img
+            key={index}
+            loading="lazy"
+            alt="Image"
+            src={image}
+            className="rounded-lg object-contain h-24 w-24"
             onClick={e => {
               e.stopPropagation()
-              setCurrent(current + 1)
+              setCurrent(index)
+              setOpen(true)
             }}
-            className={next}
-          >
-            <FiChevronRight size={20} />
-          </div>
-        )}
-
-        {post.imageUrls.length > 1 && current > 0 && (
-          <div
-            onClick={e => {
-              e.stopPropagation()
-              setCurrent(current - 1)
-            }}
-            className={previous}
-          >
-            <FiChevronLeft size={20} />
-          </div>
-        )}
+          />
+        ))}
       </div>
 
       <Modal
