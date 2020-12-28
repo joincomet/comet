@@ -33,7 +33,7 @@ export default function PostImages({ post }) {
   }
 
   const rightButtonEnabled = () => {
-    if (!sliderRef.current) return true
+    if (!sliderRef.current) return false
     return (
       sliderRef.current.scrollWidth > sliderRef.current.offsetWidth &&
       scrollLeft <
