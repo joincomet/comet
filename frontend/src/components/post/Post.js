@@ -34,7 +34,6 @@ function Post({
             <UserAvatar
               user={post.author}
               className="cursor-pointer w-12 h-12 transition hover:opacity-90"
-              loading="eager"
             />
           </UserPopup>
         </div>

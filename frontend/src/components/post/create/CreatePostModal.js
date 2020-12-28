@@ -12,11 +12,6 @@ export default function CreatePostModal({ open, setOpen }) {
         e.stopPropagation()
         setOpen(false)
       }}
-      classNames={{
-        modal: 'modal',
-        closeButton: 'modal-close',
-        overlay: 'modal-overlay'
-      }}
       animationDuration={150}
       center
       blockScroll={false}

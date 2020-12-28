@@ -1,10 +1,6 @@
 import { BiPlanet } from 'react-icons/bi'
 
-export default function PlanetAvatar({
-  planet,
-  loading = 'lazy',
-  className = 'w-10 h-10'
-}) {
+export default function PlanetAvatar({ planet, className = 'w-10 h-10' }) {
   return (
     <div
       className={`select-none relative flex-shrink-0 rounded-full inline-flex ${className} ${
@@ -15,7 +11,6 @@ export default function PlanetAvatar({
         <img
           alt={planet.name}
           src={planet.avatarUrl}
-          loading={loading}
           className="rounded-full object-cover object-center"
         />
       ) : (

@@ -109,6 +109,7 @@ export default function Comment({
             <UserAvatar
               className="w-10 h-10 mr-3 cursor-pointer transition hover:opacity-90"
               user={comment.author}
+              loading="lazy"
             />
           </UserPopup>
 

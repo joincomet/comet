@@ -2,7 +2,7 @@ import { FiUser } from 'react-icons/fi'
 
 export default function UserAvatar({
   user,
-  loading = 'lazy',
+  loading = 'eager',
   className = 'w-10 h-10'
 }) {
   return (

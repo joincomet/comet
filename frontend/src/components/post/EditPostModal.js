@@ -35,11 +35,6 @@ export default function EditPostModal({ open, setOpen, post, setText }) {
     <Modal
       open={open}
       onClose={() => setOpen(false)}
-      classNames={{
-        modal: 'modal',
-        closeButton: 'modal-close',
-        overlay: 'modal-overlay'
-      }}
       animationDuration={150}
       center
       blockScroll={false}

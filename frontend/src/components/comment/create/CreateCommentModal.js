@@ -16,11 +16,6 @@ export default function CreateCommentModal({
     <Modal
       open={createComment}
       onClose={() => setCreateComment(false)}
-      classNames={{
-        modal: 'modal',
-        closeButton: 'modal-close',
-        overlay: 'modal-overlay'
-      }}
       animationDuration={150}
       center
       blockScroll={false}

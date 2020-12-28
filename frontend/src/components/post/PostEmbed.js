@@ -62,7 +62,6 @@ export default function PostEmbed({ post }) {
               <img
                 src={post.thumbnailUrl || post.logoUrl}
                 className="rounded-l-lg object-cover h-full w-full"
-                loading="eager"
               />
             ) : (
               <div className="flex w-24 h-24 rounded-l-lg border-r border-gray-200 dark:border-gray-800">
@@ -85,7 +84,6 @@ export default function PostEmbed({ post }) {
                 <div className="inline-block w-4 h-4 mr-3">
                   <img
                     alt={post.domain}
-                    loading="eager"
                     src={post.logoUrl}
                     className="w-4 h-4 object-cover"
                   />

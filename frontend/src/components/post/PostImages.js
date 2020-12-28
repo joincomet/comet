@@ -35,13 +35,14 @@ export default function PostImages({ post }) {
   const rightButtonEnabled = () => {
     if (!sliderRef.current) return true
     return (
+      sliderRef.current.scrollWidth > sliderRef.current.offsetWidth &&
       scrollLeft <
-      sliderRef.current.scrollWidth - sliderRef.current.offsetWidth - 1
+        sliderRef.current.scrollWidth - sliderRef.current.offsetWidth - 1
     )
   }
 
   const arrowbtn =
-    'inline-flex items-center absolute top-0 bottom-0 cursor-pointer bg-black bg-opacity-50'
+    'z-10 inline-flex items-center absolute top-0 bottom-0 cursor-pointer bg-black bg-opacity-50'
 
   return (
     <>
@@ -75,19 +76,19 @@ export default function PostImages({ post }) {
         <div
           ref={sliderRef}
           onScroll={e => setScrollLeft(e.target.scrollLeft)}
-          className="flex space-x-3 slider overflow-x-scroll overflow-y-hidden"
+          className="flex space-x-3 overflow-x-scroll overflow-y-hidden slider h-32"
         >
           {post.imageUrls.map((image, index) => (
             <img
-              key={index}
-              alt="Image"
               src={image}
-              className="rounded-lg object-cover h-32 w-32 bg-gray-200 dark:bg-gray-800 cursor-pointer"
+              alt={index}
+              key={index}
               onClick={e => {
                 e.stopPropagation()
                 setCurrent(index)
                 setOpen(true)
               }}
+              className="w-32 h-32 rounded-lg bg-gray-200 dark:bg-gray-800 cursor-pointer object-cover"
             />
           ))}
         </div>
@@ -116,10 +117,6 @@ export default function PostImages({ post }) {
         blockScroll={false}
         closeIcon={<div />}
         animationDuration={150}
-        classNames={{
-          modal: 'modal',
-          overlay: 'modal-overlay'
-        }}
       >
         <div
           onClick={e => {
@@ -130,7 +127,6 @@ export default function PostImages({ post }) {
         >
           <div className="relative">
             <img
-              loading="lazy"
               alt="Image"
               src={post.imageUrls[current]}
               className="md:rounded-md"

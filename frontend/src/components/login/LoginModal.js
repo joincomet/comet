@@ -18,11 +18,6 @@ export default function LoginModal() {
         e.stopPropagation()
         setLogin(false)
       }}
-      classNames={{
-        modal: 'modal',
-        closeButton: 'modal-close',
-        overlay: 'modal-overlay'
-      }}
       animationDuration={150}
       center
       blockScroll={false}
