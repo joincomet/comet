@@ -34,10 +34,11 @@ export default function RouteLoader() {
 
   return (
     <span
-      className={`fixed bg-blue-100 z-50 top-0 left-0 right-0 block h-0.5 w-full transform origin-top-left ${
+      className={`fixed bg-blue-100 top-0 left-0 right-0 block h-0.5 w-full transform origin-top-left ${
         isLoading ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'
       }`}
       style={{
+        zIndex: 100,
         boxShadow: '0 0 8px #fff',
         transition: isLoading
           ? 'transform 600ms ease-out'
