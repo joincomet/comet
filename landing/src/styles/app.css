@@ -27,11 +27,11 @@ html, body {
 }
 
 .tippy-box {
-  @apply bg-gray-900 shadow-lg;
+  @apply bg-gray-900 shadow-lg !important;
 }
 
 .tippy-arrow {
-  @apply text-gray-900 shadow-lg;
+  @apply text-gray-900 shadow-lg !important;
 }
 
 .line-clamp-1 {
