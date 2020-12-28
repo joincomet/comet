@@ -77,7 +77,7 @@ export class PostResolver {
       qb.andWhere('author.username ILIKE :username', {
         username: handleUnderscore(username)
       }).andWhere('post.pinnedByAuthor = false')
-    } else if (!q) {
+    } else if (!q && sort === PostSort.HOT) {
       qb.andWhere('post.pinned = false')
     }
 

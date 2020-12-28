@@ -390,13 +390,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reach/observe-rect@npm:^1.1.0":
-  version: 1.2.0
-  resolution: "@reach/observe-rect@npm:1.2.0"
-  checksum: 4aa32fa1ab410527cecf62e3143664e4b7823212bb7b79b5fd84d0d390fa086fcdba27fceebc0e24e2958f2a0649d5b88ec8b0ed907c72730964ac33eb3089af
-  languageName: node
-  linkType: hard
-
 "@react-dnd/asap@npm:^4.0.0":
   version: 4.0.0
   resolution: "@react-dnd/asap@npm:4.0.0"
@@ -2886,12 +2879,9 @@ __metadata:
     react-twemoji: ^0.3.0
     react-twitter-widgets: ^1.9.5
     react-use: ^15.3.4
-    react-virtual: ^2.3.2
     react-virtualized: ^9.22.3
     react-virtualized-auto-sizer: ^1.0.3
     react-window: ^1.8.6
-    react-window-infinite-loader: ^1.0.5
-    react-window-scroller: ^1.0.10
     sass: ^1.30.0
     slate: ^0.59.0
     slate-history: ^0.59.0
@@ -5316,18 +5306,6 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-virtual@npm:^2.3.2":
-  version: 2.3.2
-  resolution: "react-virtual@npm:2.3.2"
-  dependencies:
-    "@reach/observe-rect": ^1.1.0
-    ts-toolbelt: ^6.4.2
-  peerDependencies:
-    react: ^16.6.3
-  checksum: 38e5fb535bf55615e9b60339ffe41ea321248807ecbb852f44efbaa897d31a891e295b0ebf1588f8b0858ab4b2e77f68330a9e5d68a555eb7966bc756ce02899
-  languageName: node
-  linkType: hard
-
 "react-virtualized-auto-sizer@npm:^1.0.3":
   version: 1.0.3
   resolution: "react-virtualized-auto-sizer@npm:1.0.3"
@@ -5352,27 +5330,6 @@ fsevents@~2.1.2:
     react: ^15.3.0 || ^16.0.0-alpha
     react-dom: ^15.3.0 || ^16.0.0-alpha
   checksum: 1e54556ab99409bb172842ddeea3ade467ff9aed6331e80376f969d1c61ff0dc9dfb07986080066aaa327fd977060e7f50c19ae0cbeb8d53e5bd258c7d83e6a2
-  languageName: node
-  linkType: hard
-
-"react-window-infinite-loader@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "react-window-infinite-loader@npm:1.0.5"
-  peerDependencies:
-    react: ^15.3.0 || ^16.0.0-alpha
-    react-dom: ^15.3.0 || ^16.0.0-alpha
-  checksum: fe2c096429bc1de5c684cadf06b33d122cc1827361bfd3d7f81e94f7ac26b25a78207fa58c1f57587308c7e574aeb905a1a2096a7a843d521092370af3049ec1
-  languageName: node
-  linkType: hard
-
-"react-window-scroller@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "react-window-scroller@npm:1.0.10"
-  dependencies:
-    lodash: ^4.17.20
-  peerDependencies:
-    react: ^16.8.0
-  checksum: 64b47ac01729c0010a80b238e504eef5ce1d1f9a5c13cfea6dd2e5aec27633395ccb4b5bd94d71850ca2f976381d609020f8390e22c5c5037e4a6a29e05081a2
   languageName: node
   linkType: hard
 
@@ -6612,13 +6569,6 @@ fsevents@~2.1.2:
     typescript:
       optional: true
   checksum: 78341a27939de565e2754ff65ebb689743c16e3295528089d143c08d91842cf9029c3d6b3c95a9a20854a114a7904329d02c710d63f7ce4dbf671b8a3e560ac1
-  languageName: node
-  linkType: hard
-
-"ts-toolbelt@npm:^6.4.2":
-  version: 6.15.5
-  resolution: "ts-toolbelt@npm:6.15.5"
-  checksum: d2f585ee3439ae7a72dd7c00630491195b2a4f34107c595d567242482b9fa911b5a9b5921fb4984506c2f7d8efce61351c7f48519438df67b6c0a8dcd40c862c
   languageName: node
   linkType: hard
 

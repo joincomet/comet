@@ -73,7 +73,7 @@ export default function LoginForm({ onFinish }) {
         />
       </label>
 
-      <div className="tip text-blue-500 mt-2">Forgot your password?</div>
+      {/*<div className="tip text-blue-500 mt-2">Forgot your password?</div>*/}
 
       <button
         type="submit"

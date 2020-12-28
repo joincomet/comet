@@ -10,7 +10,6 @@ import PostImages from '@/components/post/PostImages'
 import PlanetPopup from '@/components/planet/PlanetPopup'
 import { useRouter } from 'next/router'
 import Twemoji from 'react-twemoji'
-import EditPostModal from '@/components/post/EditPostModal'
 
 function Post({
   post,
@@ -43,19 +42,11 @@ function Post({
         <div className="flex-grow">
           <div className="text-base flex items-center flex-wrap">
             {post.author ? (
-              <>
-                <UserPopup user={post.author}>
-                  <span className="text-secondary font-semibold hover:underline cursor-pointer">
-                    {post.author.name}
-                  </span>
-                </UserPopup>
-                &nbsp;
-                <UserPopup user={post.author}>
-                  <span className="text-mid cursor-pointer">
-                    @{post.author.username}
-                  </span>
-                </UserPopup>
-              </>
+              <UserPopup user={post.author}>
+                <span className="text-secondary font-semibold hover:underline cursor-pointer">
+                  {post.author.name}
+                </span>
+              </UserPopup>
             ) : (
               <span className="text-secondary font-semibold hover:underline cursor-pointer">
                 [deleted]

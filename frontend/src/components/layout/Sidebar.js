@@ -4,8 +4,8 @@ import { BiHomeAlt } from 'react-icons/bi'
 import NavLink from '../NavLink'
 import Logo from '@/components/Logo'
 import { usePlanets } from '@/lib/queries/usePlanets'
-import React, { useEffect, useRef, useState } from 'react'
-import { Scrollbar } from 'react-scrollbars-custom'
+import React, { useEffect, useState } from 'react'
+import RSC from 'react-scrollbars-custom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
@@ -47,7 +47,7 @@ function Sidebar() {
         )}
       </AnimatePresence>
       <nav
-        className={`w-64 top-0 bottom-0 left-0 fixed z-40 flex flex-col overflow-y-auto bg-white dark:bg-gray-900 transform duration-300 transition ${
+        className={`w-64 top-0 bottom-0 left-0 fixed z-50 flex flex-col overflow-y-auto bg-white dark:bg-gray-900 transform duration-300 transition ${
           sidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
@@ -96,13 +96,51 @@ function Sidebar() {
           <CreatePlanetButton className={`${link} text-tertiary`} />
         </div>
 
-        <div className="relative h-full w-full">
-          <Planets />
-        </div>
+        <Planets />
       </nav>
     </>
   )
 }
+
+function CustomScrollbars({
+  children,
+  forwardedRef,
+  onScroll,
+  style,
+  className
+}) {
+  return (
+    <RSC
+      className={className}
+      style={style}
+      scrollerProps={{
+        renderer: props => {
+          const { elementRef, onScroll: rscOnScroll, ...restProps } = props
+
+          return (
+            <span
+              {...restProps}
+              onScroll={e => {
+                onScroll(e)
+                rscOnScroll(e)
+              }}
+              ref={ref => {
+                forwardedRef(ref)
+                elementRef(ref)
+              }}
+            />
+          )
+        }
+      }}
+    >
+      {children}
+    </RSC>
+  )
+}
+
+const CustomScrollbarsVirtualList = React.forwardRef((props, ref) => (
+  <CustomScrollbars {...props} forwardedRef={ref} />
+))
 
 const planetClass =
   'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-8 flex items-center transition'
@@ -156,23 +194,60 @@ function Planets() {
     )
   }
 
+  const listRef = React.createRef()
+  const outerRef = React.createRef()
+
+  const top = ['Top Planets'].concat(topPlanets)
+  const planetsList = searchPlanets
+    ? results.map(r => r.item)
+    : currentUser
+    ? ['My Planets'].concat(joinedPlanets).concat(top)
+    : top
+
   return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <List
-          height={height}
-          itemCount={topPlanets.length}
-          itemSize={32}
-          width={width}
-        >
-          {({ index, style }) => (
-            <div style={style}>
-              <Planet planet={topPlanets[index]} />
-            </div>
+    <>
+      <div className="mx-5 px-3 border-b dark:border-gray-700 relative">
+        <div className="h-8 absolute left-0 top-0 bottom-0 inline-flex items-center ml-1.5">
+          <FiSearch size={16} className="text-disabled" />
+        </div>
+
+        <input
+          type="text"
+          placeholder="Search planets"
+          className="w-full h-8 text-xs bg-transparent border-none font-medium focus:ring-0 pl-6 pr-3"
+          value={searchPlanets}
+          onChange={e => setSearchPlanets(e.target.value)}
+        />
+      </div>
+
+      <div className="relative h-full w-full">
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              ref={listRef}
+              height={height}
+              itemCount={planetsList.length}
+              itemSize={32}
+              width={width}
+              outerElementType={CustomScrollbarsVirtualList}
+              outerRef={outerRef}
+            >
+              {({ index, style }) => (
+                <div style={style}>
+                  {typeof planetsList[index] === 'string' ? (
+                    <div className="label text-tertiary px-6 py-3">
+                      {planetsList[index]}
+                    </div>
+                  ) : (
+                    <Planet planet={planetsList[index]} />
+                  )}
+                </div>
+              )}
+            </List>
           )}
-        </List>
-      )}
-    </AutoSizer>
+        </AutoSizer>
+      </div>
+    </>
   )
 
   /* return (

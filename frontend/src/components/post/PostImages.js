@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Modal from 'react-responsive-modal'
 import { FiChevronRight, FiChevronLeft } from 'react-icons/fi'
 import { useRouter } from 'next/router'
@@ -13,40 +13,112 @@ export default function PostImages({ post }) {
 
   const [current, setCurrent] = useState(0)
 
-  const { query, pathname, push } = useRouter()
-
   const [open, setOpen] = useState(false)
+
+  const [scrollLeft, setScrollLeft] = useState(0)
+  const sliderRef = useRef()
+
+  const scroll = left => {
+    const el = sliderRef.current
+    el.scrollTo({
+      left: left
+        ? el.scrollLeft - 0.75 * el.offsetWidth
+        : el.scrollLeft + 0.75 * el.offsetWidth,
+      behavior: 'smooth'
+    })
+  }
+
+  const leftButtonEnabled = () => {
+    return scrollLeft > 0
+  }
+
+  const rightButtonEnabled = () => {
+    if (!sliderRef.current) return true
+    return (
+      scrollLeft <
+      sliderRef.current.scrollWidth - sliderRef.current.offsetWidth - 1
+    )
+  }
+
+  const arrowbtn =
+    'inline-flex items-center absolute top-0 bottom-0 cursor-pointer bg-black bg-opacity-50'
 
   return (
     <>
-      <div className="mt-2 cursor-pointer flex relative h-24 space-x-3 rounded-lg select-none overflow-x-auto">
-        {post.imageUrls.map((image, index) => (
-          <img
-            key={index}
-            loading="lazy"
-            alt="Image"
-            src={image}
-            className="rounded-lg object-contain h-24 w-24"
-            onClick={e => {
-              e.stopPropagation()
-              setCurrent(index)
-              setOpen(true)
-            }}
-          />
-        ))}
+      <style jsx>
+        {`
+          .slider {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE 10+ */
+          }
+          .slider::-webkit-scrollbar {
+            width: 0px;
+            background: transparent; /* make scrollbar transparent */
+            display: none;
+          }
+        `}
+      </style>
+
+      <div className="relative mt-2 h-32 select-none">
+        <div
+          className={`${arrowbtn} left-0 ${
+            leftButtonEnabled() ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={e => {
+            e.stopPropagation()
+            scroll(true)
+          }}
+        >
+          <FiChevronLeft className={`w-5 h-5 text-white`} />
+        </div>
+
+        <div
+          ref={sliderRef}
+          onScroll={e => setScrollLeft(e.target.scrollLeft)}
+          className="flex space-x-3 slider overflow-x-scroll overflow-y-hidden"
+        >
+          {post.imageUrls.map((image, index) => (
+            <img
+              key={index}
+              alt="Image"
+              src={image}
+              className="rounded-lg object-cover h-32 w-32 bg-gray-200 dark:bg-gray-800 cursor-pointer"
+              onClick={e => {
+                e.stopPropagation()
+                setCurrent(index)
+                setOpen(true)
+              }}
+            />
+          ))}
+        </div>
+
+        <div
+          className={`${arrowbtn} right-0 ${
+            rightButtonEnabled() ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={e => {
+            e.stopPropagation()
+            scroll(false)
+          }}
+        >
+          <FiChevronRight className={`w-5 h-5 text-white`} />
+        </div>
       </div>
 
       <Modal
         open={open}
         onClose={() => setOpen(false)}
+        onOverlayClick={e => {
+          e.stopPropagation()
+          setOpen(false)
+        }}
         center
         blockScroll={false}
         closeIcon={<div />}
         animationDuration={150}
         classNames={{
-          modal:
-            'max-w-screen-sm w-full h-screen bg-transparent shadow-none p-0 m-0',
-          overlay: 'bg-black bg-opacity-75'
+          modal: 'modal',
+          overlay: 'modal-overlay'
         }}
       >
         <div

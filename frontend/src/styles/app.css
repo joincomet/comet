@@ -212,7 +212,7 @@ body {
 }
 
 .mycontainer {
-  @apply container mx-auto 2xl:px-64 px-0 md:px-8;
+  @apply container mx-auto 2xl:px-56 px-0 md:px-8;
 }
 
 .mycontainer-nopad {
@@ -285,4 +285,16 @@ body {
   @apply w-4.5 h-4.5 inline-block object-contain;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
+}
+
+.modal {
+  @apply overflow-hidden bg-transparent shadow-none max-w-screen-sm w-full p-0 m-0;
+}
+
+.modal-overlay {
+  @apply bg-black bg-opacity-75;
+}
+
+.modal-close {
+  @apply top-8 right-8 text-tertiary focus:outline-none;
 }

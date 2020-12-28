@@ -36,10 +36,9 @@ export default function EditPostModal({ open, setOpen, post, setText }) {
       open={open}
       onClose={() => setOpen(false)}
       classNames={{
-        modal:
-          'overflow-hidden bg-transparent shadow-none max-w-screen-sm w-full p-0 m-0',
-        closeButton: 'top-8 right-8 text-tertiary focus:outline-none',
-        overlay: 'bg-black bg-opacity-75'
+        modal: 'modal',
+        closeButton: 'modal-close',
+        overlay: 'modal-overlay'
       }}
       animationDuration={150}
       center
