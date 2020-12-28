@@ -7,7 +7,7 @@
     "node": "15.x.x"
   },
   "scripts": {
-    "start": "NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register src/index.ts",
+    "start": "NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
     "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
     "migrate": "NODE_ENV=development ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
@@ -34,7 +34,7 @@
     "jsonwebtoken": "^8.5.1",
     "metascraper": "^5.16.0",
     "metascraper-author": "^5.16.0",
-    "metascraper-clearbit": "^5.16.0",
+    "metascraper-clearbit": "^5.16.3",
     "metascraper-date": "^5.16.0",
     "metascraper-description": "^5.16.0",
     "metascraper-image": "^5.16.0",

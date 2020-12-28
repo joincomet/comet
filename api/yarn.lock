@@ -2007,7 +2007,7 @@ __metadata:
     jsonwebtoken: ^8.5.1
     metascraper: ^5.16.0
     metascraper-author: ^5.16.0
-    metascraper-clearbit: ^5.16.0
+    metascraper-clearbit: ^5.16.3
     metascraper-date: ^5.16.0
     metascraper-description: ^5.16.0
     metascraper-image: ^5.16.0
@@ -5460,16 +5460,16 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"metascraper-clearbit@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-clearbit@npm:5.16.0"
+"metascraper-clearbit@npm:^5.16.3":
+  version: 5.16.3
+  resolution: "metascraper-clearbit@npm:5.16.3"
   dependencies:
     "@metascraper/helpers": ^5.16.0
     async-memoize-one: ~1.0.1
     got: ~11.8.1
     lodash: ~4.17.20
-    tldts: ~5.6.79
-  checksum: 66f352027689125b612924985572a550280ce2f179da02296249ef8a7944b7a5b9eb1dfce9e631bd19b5e559d60389572965b467ef3d1dd5dc46493530a8520b
+    tldts: ~5.6.80
+  checksum: d8fd775d8782ac20aa8038e77d282c104964db1e4e056b970cce465e55eda85803de86a2a754fa82a5b7d3400767f5e03875a835eebb6626de15a6b444c2a3e2
   languageName: node
   linkType: hard
 
@@ -7655,21 +7655,21 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"tldts-core@npm:^5.6.79":
-  version: 5.6.79
-  resolution: "tldts-core@npm:5.6.79"
-  checksum: f1a24c3c8d17e3fb571284bc9051657fd5c36f0b67fcf5f5708a07cb2fbbfe61b301bf510d672cfdd0d2d55ba011d6f605cd0a50834e59105b12a6a16c3a66d6
+"tldts-core@npm:^5.6.80":
+  version: 5.6.80
+  resolution: "tldts-core@npm:5.6.80"
+  checksum: c753cea76b28543b3c1f9e703a77bc63f780a691510aad0433de9d14cb81cb5abde01e9ce26e8d48292057c6eb478a9ec1b8b401f8120b7f35b5ee467dbe45f1
   languageName: node
   linkType: hard
 
-"tldts@npm:~5.6.79":
-  version: 5.6.79
-  resolution: "tldts@npm:5.6.79"
+"tldts@npm:~5.6.80":
+  version: 5.6.80
+  resolution: "tldts@npm:5.6.80"
   dependencies:
-    tldts-core: ^5.6.79
+    tldts-core: ^5.6.80
   bin:
     tldts: bin/cli.js
-  checksum: ea14030a3f9fbb44c2ec257a6bd8f30cd0400fbdf6f365b015da35c541705bfaafc43bb2a312eedcfb8e2d0b4b831edafcb2ad61baf9686a35b4721d9628afd1
+  checksum: 7537189ddaef47e5b8d2aadeedff3bdcae2abec8d68b70a0fb1c96d926d26322a182433943352748a3606a96389835c8d248023dd8964b2ec765c17b51d52af6
   languageName: node
   linkType: hard
 
