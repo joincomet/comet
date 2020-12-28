@@ -228,7 +228,7 @@ export class PostResolver {
 
     return {
       page: page,
-      nextPage: page + 1,
+      nextPage: posts.length >= pageSize ? page + 1 : null,
       posts
     } as PostsResponse
   }

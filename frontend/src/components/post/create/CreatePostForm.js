@@ -7,6 +7,8 @@ import { useSubmitPostMutation } from '@/lib/mutations/postMutations'
 import { serialize } from '@/lib/serializeHtml'
 import Editor from '@/components/Editor'
 import { emptyEditor } from '@/lib/emptyEditor'
+import toast from 'react-hot-toast'
+import Spinner from '@/components/Spinner'
 
 const error = 'tip text-red-400 mb-2'
 
@@ -16,7 +18,7 @@ const imageBtn =
 const postBtn =
   'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105 focus:outline-none'
 
-export default function CreatePostForm({ onFinish }) {
+export default function CreatePostForm({ setOpen }) {
   const {
     register,
     handleSubmit,
@@ -46,7 +48,13 @@ export default function CreatePostForm({ onFinish }) {
   const link = watch('link')
   const title = watch('title')
 
-  const submitPostMutation = useSubmitPostMutation()
+  const submitPostMutation = useSubmitPostMutation({
+    onSuccess: ({ relativeUrl }) => {
+      setOpen(false)
+      push(relativeUrl)
+    },
+    onError: error => toast.error(error.response.errors[0].message)
+  })
 
   const onSubmit = async ({ title, link }) => {
     const variables = {}
@@ -60,10 +68,7 @@ export default function CreatePostForm({ onFinish }) {
 
     if (images && images.length > 0) variables.images = images
     if (query.planetname) variables.planetName = query.planetname
-
-    const { relativeUrl } = await submitPostMutation.mutateAsync(variables)
-    await push(relativeUrl)
-    if (onFinish) onFinish()
+    submitPostMutation.mutate(variables)
   }
 
   const validUrl = url => {
@@ -190,9 +195,14 @@ export default function CreatePostForm({ onFinish }) {
 
           <button
             type="submit"
-            disabled={disabled()}
+            disabled={submitPostMutation.isLoading || disabled()}
             className={`ml-auto ${postBtn}`}
           >
+            {submitPostMutation.isLoading && (
+              <div className="mr-3">
+                <Spinner />
+              </div>
+            )}
             Post
           </button>
         </div>

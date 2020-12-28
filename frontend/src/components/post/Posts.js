@@ -11,9 +11,51 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 export default function Posts({ variables }) {
-  const { data, fetchNextPage } = usePosts(variables)
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = usePosts(
+    variables
+  )
 
-  const posts = data || []
+  const posts = data ? data.pages.flatMap(page => page.posts) : []
+
+  const rowCount = hasNextPage ? posts.length + 1 : posts.length
+
+  const loadMoreRows = isFetchingNextPage ? () => {} : fetchNextPage
+
+  const isRowLoaded = ({ index }) => !hasNextPage || index < posts.length
+
+  const cache = new CellMeasurerCache({
+    defaultHeight: 300,
+    fixedWidth: true
+  })
+
+  const rowRenderer = ({ index, parent, style }) => {
+    const post = posts[index]
+
+    return (
+      <CellMeasurer
+        key={post ? post.id : 'loading'}
+        cache={cache}
+        columnIndex={0}
+        parent={parent}
+        rowIndex={index}
+      >
+        {({ measure, registerChild }) => (
+          <div ref={registerChild} style={style}>
+            {post ? (
+              <Post
+                post={post}
+                index={index}
+                measure={measure}
+                className="lg:rounded-lg mb-3"
+              />
+            ) : (
+              <div>Loading...</div>
+            )}
+          </div>
+        )}
+      </CellMeasurer>
+    )
+  }
 
   const handleResize = event => {
     cache.clearAll()
@@ -32,9 +74,9 @@ export default function Posts({ variables }) {
 
   return (
     <InfiniteLoader
-      isRowLoaded={index => !!posts[index]}
-      loadMoreRows={() => fetchNextPage()}
-      rowCount={posts.length}
+      isRowLoaded={isRowLoaded}
+      loadMoreRows={loadMoreRows}
+      rowCount={rowCount}
       minimumBatchSize={1}
       threshold={5}
     >
@@ -44,12 +86,11 @@ export default function Posts({ variables }) {
             <List
               ref={registerChild}
               onRowsRendered={onRowsRendered}
-              overscanRowCount={10}
               autoHeight={true}
               height={height || 1080}
               autoWidth
               width={10000}
-              rowCount={posts.length}
+              rowCount={rowCount}
               isScrolling={isScrolling}
               onScroll={onChildScroll}
               scrollTop={scrollTop}
@@ -62,46 +103,11 @@ export default function Posts({ variables }) {
                 overflowY: 'hidden !important',
                 flexBasis: 'auto !important'
               }}
-              rowRenderer={getRowRender(posts)}
+              rowRenderer={rowRenderer}
             />
           )}
         </WindowScroller>
       )}
     </InfiniteLoader>
-  )
-}
-
-const cache = new CellMeasurerCache({
-  defaultHeight: 300,
-  fixedWidth: true
-})
-
-const getRowRender = (posts, showPlanet = true) => ({
-  index,
-  parent,
-  style
-}) => {
-  const post = posts[index]
-
-  return (
-    <CellMeasurer
-      key={post.id}
-      cache={cache}
-      columnIndex={0}
-      parent={parent}
-      rowIndex={index}
-    >
-      {({ measure, registerChild }) => (
-        <div ref={registerChild} style={style}>
-          <Post
-            post={post}
-            index={index}
-            measure={measure}
-            showPlanet={showPlanet}
-            className="lg:rounded-lg mb-3"
-          />
-        </div>
-      )}
-    </CellMeasurer>
   )
 }

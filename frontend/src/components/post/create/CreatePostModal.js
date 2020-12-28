@@ -17,7 +17,7 @@ export default function CreatePostModal({ open, setOpen }) {
       blockScroll={false}
       closeIcon={<FiX size={20} />}
     >
-      <CreatePostForm onFinish={() => setOpen(false)} />
+      <CreatePostForm setOpen={setOpen} />
     </Modal>
   )
 }

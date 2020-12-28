@@ -7,7 +7,7 @@ import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import UserAvatar from '@/components/user/UserAvatar'
 import SortOptionsUser from '@/components/sort/SortOptionsUser'
-import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import CreatePostButton from '@/components/post/create/CreatePostButton'
 import UserFollowButton from '@/components/user/UserFollowButton'
 import UserHeader from '@/components/user/UserHeader'
@@ -96,7 +96,7 @@ export default function UserPage() {
   return (
     <>
       <NextSeo
-        title={`${user.name} (@${user.username}) – CometX`}
+        title={`@${user.username} – CometX`}
         description={user.description}
         openGraph={{
           images: [

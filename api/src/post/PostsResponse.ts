@@ -6,8 +6,8 @@ export class PostsResponse {
   @Field(() => Int)
   page: number
 
-  @Field(() => Int)
-  nextPage: number
+  @Field(() => Int, { nullable: true })
+  nextPage?: number
 
   @Field(() => [Post])
   posts: Post[]

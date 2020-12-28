@@ -79,7 +79,7 @@ export default function PostEmbed({ post }) {
               {post.meta && post.meta.description ? post.meta.description : ''}
             </div>
 
-            <div className="mt-auto flex flex-row items-center pt-3 text-tertiary text-xs">
+            <div className="mt-auto flex flex-row items-center pt-3 text-tertiary text-xs line-clamp-1">
               {post.logoUrl && (
                 <div className="inline-block w-4 h-4 mr-3">
                   <img

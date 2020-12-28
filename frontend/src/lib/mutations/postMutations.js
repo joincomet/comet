@@ -31,7 +31,7 @@ const submitPost = async variables => {
   return submitPost
 }
 
-export const useSubmitPostMutation = () => useMutation(submitPost)
+export const useSubmitPostMutation = options => useMutation(submitPost, options)
 
 const pinPost = async variables => {
   await request(

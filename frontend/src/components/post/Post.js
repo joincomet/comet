@@ -33,7 +33,7 @@ function Post({
           <UserPopup user={post.author}>
             <UserAvatar
               user={post.author}
-              className="cursor-pointer w-12 h-12 transition hover:opacity-90"
+              className="cursor-pointer w-10 h-10 transition hover:opacity-90"
             />
           </UserPopup>
         </div>

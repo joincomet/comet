@@ -32,7 +32,7 @@ export default function PostText({ post, showFullText = false, textContent }) {
       )}
       <div
         dangerouslySetInnerHTML={{ __html: textContent }}
-        className={`prose prose-sm dark:prose-dark max-w-none h-full overflow`}
+        className={`prose prose-sm dark:prose-dark max-w-none h-full`}
       />
     </div>
   )
