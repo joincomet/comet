@@ -19,12 +19,11 @@ import {
   useEditPlanetDescriptionMutation,
   useUploadPlanetAvatarMutation
 } from '@/lib/mutations/editPlanetMutations'
-import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import PlanetOptionsButton from '@/components/planet/PlanetOptionsButton'
-import { fetchPosts } from '@/lib/queries/usePosts'
 
-export default function PlanetPage({ variables }) {
+export default function PlanetPage() {
   const { query } = useRouter()
 
   const currentUser = useCurrentUser().data
@@ -187,12 +186,12 @@ export default function PlanetPage({ variables }) {
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 pt-6 pb-28">
             <SortOptions />
-            <Posts variables={variables} showPlanet={false} />
+            <Posts variables={getVariables(query)} showPlanet={false} />
           </div>
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
             <div className="sticky top-28 pt-6">
-              <div className="text-xl font-bold tracking-tight leading-none mb-4 text-secondary">
+              <div className="header-2 mb-4 text-secondary">
                 About
                 {currentUser && (isModerator || currentUser.admin) && (
                   <span
@@ -282,16 +281,9 @@ export async function getServerSideProps(ctx) {
     fetchPlanet(key, ctx)
   )
 
-  const variables = getVariables(ctx.query)
-
-  await queryClient.prefetchQuery(['posts', variables], key =>
-    fetchPosts(key, ctx)
-  )
-
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
-      variables
+      dehydratedState: dehydrate(queryClient)
     }
   }
 }

@@ -36,7 +36,15 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                 <Menu.Item>
                   {({ active }) => (
                     <NavLink
-                      href={{ pathname, query: { ...query, time: 'hour' } }}
+                      href={{
+                        pathname,
+                        query: (() => {
+                          const q = { ...query, time: 'hour' }
+                          delete q.page
+                          return q
+                        })()
+                      }}
+                      shallow
                       className={`block ${item} ${
                         query.time === 'hour' ? itemActive : itemInactive
                       } ${active ? 'underline' : ''}`}
@@ -54,9 +62,11 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                         query: (() => {
                           const q = { ...query }
                           delete q.time
+                          delete q.page
                           return q
                         })()
                       }}
+                      shallow
                       className={`block ${item} ${
                         !query.time || query.time === 'day'
                           ? itemActive
@@ -71,7 +81,15 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                 <Menu.Item>
                   {({ active }) => (
                     <NavLink
-                      href={{ pathname, query: { ...query, time: 'week' } }}
+                      href={{
+                        pathname,
+                        query: (() => {
+                          const q = { ...query, time: 'week' }
+                          delete q.page
+                          return q
+                        })()
+                      }}
+                      shallow
                       className={`block ${item} ${
                         query.time === 'week' ? itemActive : itemInactive
                       } ${active ? 'underline' : ''}`}
@@ -84,7 +102,15 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                 <Menu.Item>
                   {({ active }) => (
                     <NavLink
-                      href={{ pathname, query: { ...query, time: 'month' } }}
+                      href={{
+                        pathname,
+                        query: (() => {
+                          const q = { ...query, time: 'month' }
+                          delete q.page
+                          return q
+                        })()
+                      }}
+                      shallow
                       className={`block ${item} ${
                         query.time === 'month' ? itemActive : itemInactive
                       } ${active ? 'underline' : ''}`}
@@ -97,7 +123,15 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                 <Menu.Item>
                   {({ active }) => (
                     <NavLink
-                      href={{ pathname, query: { ...query, time: 'year' } }}
+                      href={{
+                        pathname,
+                        query: (() => {
+                          const q = { ...query, time: 'year' }
+                          delete q.page
+                          return q
+                        })()
+                      }}
+                      shallow
                       className={`block ${item} ${
                         query.time === 'year' ? itemActive : itemInactive
                       } ${active ? 'underline' : ''}`}
@@ -110,7 +144,15 @@ export default function TimePicker({ item, itemActive, itemInactive }) {
                 <Menu.Item>
                   {({ active }) => (
                     <NavLink
-                      href={{ pathname, query: { ...query, time: 'all' } }}
+                      href={{
+                        pathname,
+                        query: (() => {
+                          const q = { ...query, time: 'all' }
+                          delete q.page
+                          return q
+                        })()
+                      }}
+                      shallow
                       className={`block ${item} ${
                         query.time === 'all' ? itemActive : itemInactive
                       } ${active ? 'underline' : ''}`}

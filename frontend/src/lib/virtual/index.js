@@ -250,7 +250,8 @@ export function useVirtual({
     virtualItems,
     totalSize,
     scrollToOffset,
-    scrollToIndex
+    scrollToIndex,
+    setMeasuredCache
   }
 }
 

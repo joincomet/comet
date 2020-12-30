@@ -11,7 +11,8 @@ import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { useRouter } from 'next/router'
 import { fetchPosts } from '@/lib/queries/usePosts'
 
-export default function UniversePage({ variables }) {
+export default function UniversePage() {
+  const { query } = useRouter()
   const { setTitle } = useHeaderStore()
   useEffect(() => setTitle('Universe'), [])
 
@@ -23,7 +24,7 @@ export default function UniversePage({ variables }) {
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 py-6">
             <SortOptions />
-            <Posts variables={variables} />
+            <Posts variables={getVariables(query)} />
           </div>
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -54,16 +55,9 @@ export async function getServerSideProps(ctx) {
 
   await globalPrefetch(queryClient, ctx)
 
-  const variables = getVariables(ctx.query)
-
-  await queryClient.prefetchQuery(['posts', variables], key =>
-    fetchPosts(key, ctx)
-  )
-
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
-      variables
+      dehydratedState: dehydrate(queryClient)
     }
   }
 }

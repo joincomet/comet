@@ -21,9 +21,11 @@ export default function SortOptionsUser({ user }) {
               const q = { ...query }
               delete q.time
               delete q.sort
+              delete q.page
               return q
             })()
           }}
+          shallow
           className={`${
             !query.sort || query.sort === 'new' ? itemActive : itemInactive
           } ${item} `}
@@ -33,11 +35,13 @@ export default function SortOptionsUser({ user }) {
         <NavLink
           href={{
             pathname,
-            query: {
-              ...query,
-              sort: 'top'
-            }
+            query: (() => {
+              const q = { ...query, sort: 'top' }
+              delete q.page
+              return q
+            })()
           }}
+          shallow
           className={`${
             query.sort === 'top' ? itemActive : itemInactive
           } ${item} `}
@@ -61,9 +65,11 @@ export default function SortOptionsUser({ user }) {
             query: (() => {
               const q = { ...query }
               delete q.view
+              delete q.page
               return q
             })()
           }}
+          shallow
           className={`${item} ${!query.view ? itemActive : itemInactive}`}
         >
           {user.postCount} Post{user.postCount === 1 ? '' : 's'}
@@ -71,11 +77,13 @@ export default function SortOptionsUser({ user }) {
         <NavLink
           href={{
             pathname,
-            query: {
-              ...query,
-              view: 'comments'
-            }
+            query: (() => {
+              const q = { ...query, view: 'comments' }
+              delete q.page
+              return q
+            })()
           }}
+          shallow
           className={`${item} ${
             query.view === 'comments' ? itemActive : itemInactive
           }`}

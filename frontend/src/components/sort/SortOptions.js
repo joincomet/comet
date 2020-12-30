@@ -20,9 +20,11 @@ export default function SortOptions() {
             const q = { ...query }
             delete q.time
             delete q.sort
+            delete q.page
             return q
           })()
         }}
+        shallow
         className={`${
           !query.sort || query.sort === 'hot' ? itemActive : itemInactive
         } ${item} `}
@@ -35,10 +37,12 @@ export default function SortOptions() {
           query: (() => {
             const q = { ...query }
             delete q.time
+            delete q.page
             q.sort = 'new'
             return q
           })()
         }}
+        shallow
         className={`${
           query.sort === 'new' ? itemActive : itemInactive
         } ${item}`}
@@ -46,7 +50,15 @@ export default function SortOptions() {
         New
       </NavLink>
       <NavLink
-        href={{ pathname, query: { ...query, sort: 'top' } }}
+        href={{
+          pathname,
+          query: (() => {
+            const q = { ...query, sort: 'top' }
+            delete q.page
+            return q
+          })()
+        }}
+        shallow
         className={`${
           query.sort === 'top' ? itemActive : itemInactive
         } ${item} `}
