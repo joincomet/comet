@@ -65,7 +65,7 @@ export default function Post({
           <div className="text-base flex items-center flex-wrap">
             {post.author ? (
               <UserPopup user={post.author}>
-                <span className="text-secondary font-semibold hover:underline cursor-pointer">
+                <span className="text-secondary font-semibold hover:underline cursor-pointer leading-normal">
                   {post.author.name}
                 </span>
               </UserPopup>
@@ -82,7 +82,7 @@ export default function Post({
                 &nbsp;
                 <PlanetPopup planet={post.planet}>
                   <span
-                    className={`font-semibold hover:underline cursor-pointer`}
+                    className={`font-semibold hover:underline cursor-pointer leading-normal`}
                     style={{ color: post.planet.color || '#3B82F6' }}
                   >
                     {post.planet.name}
@@ -90,7 +90,7 @@ export default function Post({
                 </PlanetPopup>
               </>
             )}
-            <span className="text-mid leading-none">
+            <span className="text-mid">
               &nbsp;&middot;&nbsp;{post.timeSince}
             </span>
           </div>
