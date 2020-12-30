@@ -12,8 +12,6 @@ import PlanetPopup from '@/components/planet/PlanetPopup'
 import { useRouter } from 'next/router'
 import Twemoji from 'react-twemoji'
 import Tippy from '@tippyjs/react'
-import { FiShield } from 'react-icons/fi'
-import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 
 export default function Post({
   post,
@@ -23,14 +21,6 @@ export default function Post({
 }) {
   const router = useRouter()
   const [textContent, setTextContent] = useState(post.textContent)
-
-  const currentUser = useCurrentUser().data
-
-  const isModerator =
-    currentUser &&
-    post.planet &&
-    currentUser.moderatedPlanets &&
-    currentUser.moderatedPlanets.map(p => p.id).includes(post.planet.id)
 
   return (
     <div className="pb-0.5">
@@ -58,14 +48,6 @@ export default function Post({
           >
             <div className="text-accent absolute top-2 right-3 cursor-pointer">
               <TiPinOutline size={22} style={{ marginTop: '-1px' }} />
-            </div>
-          </Tippy>
-        )}
-
-        {isModerator && (
-          <Tippy content={`You are a moderator of +${post.planet.name}`}>
-            <div className="text-green-500 absolute top-2 right-12 cursor-pointer">
-              <FiShield size={18} />
             </div>
           </Tippy>
         )}
@@ -108,7 +90,7 @@ export default function Post({
                 </PlanetPopup>
               </>
             )}
-            <span className="text-mid">
+            <span className="text-mid leading-none">
               &nbsp;&middot;&nbsp;{post.timeSince}
             </span>
           </div>

@@ -195,7 +195,7 @@ body {
 }
 
 .commentcollapse {
-  @apply absolute top-0 bottom-0 w-6 cursor-pointer group;
+  @apply absolute top-0 bottom-0 w-6 cursor-pointer group z-10;
 }
 
 .commentcollapse::before {

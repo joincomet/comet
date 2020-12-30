@@ -88,24 +88,23 @@ export default function Comment({
       <div className={`relative mt-3 ${level === 0 ? '' : 'ml-3'}`}>
         <div className="absolute -top-14 md:-top-28" id={comment.id36} />
 
-        <div className="commentcollapse" onClick={() => setCollapse(true)} />
-
         <div
-          className={`flex transition ${
-            collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
-          } ${comment.deleted ? 'opacity-50' : ''}`}
-          onClick={
-            collapse
-              ? () => {
-                  setCollapse(false)
-                }
-              : () => {}
-          }
-        >
+          className="commentcollapse"
+          onClick={() => setCollapse(!collapse)}
+        />
+
+        <div className="pl-6">
           <div
-            className={`ml-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 rounded-l md:rounded-r w-full ${
-              collapse || comment.deleted ? 'h-10' : ''
-            }`}
+            onClick={
+              collapse
+                ? () => {
+                    setCollapse(false)
+                  }
+                : () => {}
+            }
+            className={`transition bg-white dark:bg-gray-900 border border-gray-200 dark:border-transparent rounded-l md:rounded-r w-full ${
+              collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
+            } ${collapse || comment.deleted ? 'h-10' : ''}`}
           >
             <div className="h-10 px-3 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t">
               <UserPopup user={comment.author}>

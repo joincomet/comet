@@ -186,7 +186,7 @@ export default function UserPage() {
 
         <div className="col-span-0 md:col-span-1 hidden md:block">
           <div>
-            <div className="header-2 mb-4 text-secondary">
+            <div className="header-3 mb-4 text-secondary">
               About
               {user.isCurrentUser && (
                 <span

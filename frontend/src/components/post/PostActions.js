@@ -106,6 +106,14 @@ export default function PostActions({ post, textContent, setTextContent }) {
 
       <div className="mr-auto" />
 
+      {isModerator && (
+        <Tippy content={`You are a moderator of +${post.planet.name}`}>
+          <div className="text-green-500 mr-3 cursor-pointer">
+            <FiShield size={18} />
+          </div>
+        </Tippy>
+      )}
+
       <MoreOptions
         post={post}
         chip={chip}

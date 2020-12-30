@@ -191,7 +191,7 @@ export default function PlanetPage() {
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
             <div className="sticky top-28 pt-6">
-              <div className="header-2 mb-4 text-secondary">
+              <div className="header-3 mb-4 text-secondary">
                 About
                 {currentUser && (isModerator || currentUser.admin) && (
                   <span
