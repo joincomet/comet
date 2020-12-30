@@ -22,15 +22,10 @@ import {
 import { fetchCurrentUser, useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import PlanetOptionsButton from '@/components/planet/PlanetOptionsButton'
+import { fetchPosts } from '@/lib/queries/usePosts'
 
-export default function PlanetPage() {
+export default function PlanetPage({ variables }) {
   const { query } = useRouter()
-
-  const getVariables = () => {
-    const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
-    const time = query.time ? query.time.toUpperCase() : 'ALL'
-    return { sort, time, planet: query.planetname }
-  }
 
   const currentUser = useCurrentUser().data
 
@@ -190,9 +185,9 @@ export default function PlanetPage() {
 
       <div className="mycontainer">
         <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-3 md:col-span-2 py-6">
+          <div className="col-span-3 md:col-span-2 pt-6 pb-28">
             <SortOptions />
-            <Posts variables={getVariables()} showPlanet={false} />
+            <Posts variables={variables} showPlanet={false} />
           </div>
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -265,6 +260,17 @@ export default function PlanetPage() {
   )
 }
 
+const getVariables = query => {
+  const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
+  const time = query.time ? query.time.toUpperCase() : 'ALL'
+  return {
+    sort,
+    time,
+    planet: query.planetname,
+    page: query.page ? parseInt(query.page) : 0
+  }
+}
+
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
@@ -276,9 +282,16 @@ export async function getServerSideProps(ctx) {
     fetchPlanet(key, ctx)
   )
 
+  const variables = getVariables(ctx.query)
+
+  await queryClient.prefetchQuery(['posts', variables], key =>
+    fetchPosts(key, ctx)
+  )
+
   return {
     props: {
-      dehydratedState: dehydrate(queryClient)
+      dehydratedState: dehydrate(queryClient),
+      variables
     }
   }
 }

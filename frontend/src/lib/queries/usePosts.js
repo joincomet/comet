@@ -1,8 +1,8 @@
 import { gql } from 'graphql-request'
-import { useInfiniteQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import { request } from '@/lib/Request'
 
-export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
+export const fetchPosts = async ({ queryKey }, ctx = null) => {
   const [_key, variables] = queryKey
   const { posts } = await request(
     ctx,
@@ -79,13 +79,12 @@ export const fetchPosts = async ({ queryKey, pageParam = 0 }, ctx = null) => {
         }
       }
     `,
-    { ...variables, page: pageParam }
+    variables
   )
   return posts
 }
 
 export const usePosts = variables =>
-  useInfiniteQuery(['posts', variables], fetchPosts, {
-    getNextPageParam: (lastPage, pages) => lastPage.nextPage
-    // select: data => data.pages.flatMap(page => page.posts)
+  useQuery(['posts', variables], fetchPosts, {
+    keepPreviousData: true
   })

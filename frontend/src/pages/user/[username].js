@@ -21,14 +21,10 @@ import {
 import { NextSeo } from 'next-seo'
 import NavLink from '@/components/NavLink'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
+import { fetchPosts } from '@/lib/queries/usePosts'
 
-export default function UserPage() {
+export default function UserPage({ variables }) {
   const { query } = useRouter()
-  const getVariables = () => {
-    const sort = query.sort ? query.sort.toUpperCase() : 'NEW'
-    const time = query.time ? query.time.toUpperCase() : 'ALL'
-    return { sort, time, username: query.username }
-  }
 
   const userQuery = useUser({ username: query.username })
   const user = userQuery.data
@@ -182,11 +178,11 @@ export default function UserPage() {
       </div>
 
       <div className="grid gap-6 grid-cols-3 mycontainer py-6">
-        <div className="col-span-3 md:col-span-2 relative">
+        <div className="col-span-3 md:col-span-2 relative pb-28">
           <div className="px-3 md:px-0">
             <SortOptionsUser user={user} />
           </div>
-          <Posts variables={getVariables()} />
+          <Posts variables={variables} />
         </div>
 
         <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -239,6 +235,17 @@ export default function UserPage() {
   )
 }
 
+const getVariables = query => {
+  const sort = query.sort ? query.sort.toUpperCase() : 'NEW'
+  const time = query.time ? query.time.toUpperCase() : 'ALL'
+  return {
+    sort,
+    time,
+    username: query.username,
+    page: query.page ? parseInt(query.page) : 0
+  }
+}
+
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
@@ -250,9 +257,16 @@ export async function getServerSideProps(ctx) {
     fetchUser(key, ctx)
   )
 
+  const variables = getVariables(ctx.query)
+
+  await queryClient.prefetchQuery(['posts', variables], key =>
+    fetchPosts(key, ctx)
+  )
+
   return {
     props: {
-      dehydratedState: dehydrate(queryClient)
+      dehydratedState: dehydrate(queryClient),
+      variables
     }
   }
 }

@@ -26,6 +26,8 @@ function Sidebar() {
 
   const { query, pathname } = useRouter()
 
+  useEffect(() => setSidebar(false), [query, pathname])
+
   return (
     <>
       <AnimatePresence>
@@ -57,7 +59,15 @@ function Sidebar() {
         </NavLink>
         <div>
           <NavLink
-            href="/"
+            href={{
+              pathname: '/',
+              query: (() => {
+                const q = {}
+                if (query.sort) q.sort = query.sort
+                if (query.time) q.time = query.time
+                return q
+              })()
+            }}
             className={`${link} ${
               pathname === '/' ? 'text-accent navitem-active' : 'text-tertiary'
             }`}
@@ -66,7 +76,15 @@ function Sidebar() {
             <span className="ml-6">Home</span>
           </NavLink>
           <NavLink
-            href="/universe"
+            href={{
+              pathname: '/universe',
+              query: (() => {
+                const q = {}
+                if (query.sort) q.sort = query.sort
+                if (query.time) q.time = query.time
+                return q
+              })()
+            }}
             className={`${link} ${
               pathname === '/universe'
                 ? 'text-accent navitem-active'

@@ -7,8 +7,8 @@ export class PaginationArgs {
   @Min(0)
   page = 0
 
-  @Field(() => Int, { defaultValue: 10 })
+  @Field(() => Int, { defaultValue: 100 })
   @Min(1)
   @Max(100)
-  pageSize = 10
+  pageSize = 100
 }

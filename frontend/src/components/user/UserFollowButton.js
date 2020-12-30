@@ -77,7 +77,7 @@ export default function UserFollowButton({ user }) {
         <>
           <div
             onClick={() => toggle()}
-            className={`h-8 rounded-full inline-flex px-6 items-center justify-center label cursor-pointer transition transform hover:scale-105 ${
+            className={`h-8 rounded-full inline-flex px-6 items-center justify-center text-white label cursor-pointer transition transform hover:scale-105 ${
               user.isFollowing
                 ? 'bg-black bg-opacity-25 border border-gray-500 text-blue-500'
                 : 'bg-blue-600'

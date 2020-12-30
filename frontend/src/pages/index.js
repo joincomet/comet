@@ -9,28 +9,22 @@ import InfoLinks from '@/components/InfoLinks'
 import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { useRouter } from 'next/router'
+import { fetchPosts } from '@/lib/queries/usePosts'
 
-export default function HomePage() {
+export default function HomePage({ variables }) {
   const { setTitle } = useHeaderStore()
   useEffect(() => setTitle('Home'), [])
   const { query } = useRouter()
-
-  const getVariables = () => {
-    const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
-    let time = query.time ? query.time.toUpperCase() : 'ALL'
-    if (sort === 'TOP' && !query.time) time = 'DAY'
-    return { sort, time, joinedOnly: true }
-  }
 
   return (
     <div>
       <CreatePostButton />
 
-      <div className="mycontainer mt-14">
+      <div className="mycontainer mt-14 mb-28">
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 py-6">
             <SortOptions />
-            <Posts variables={getVariables()} />
+            <Posts variables={variables} />
           </div>
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -44,14 +38,33 @@ export default function HomePage() {
   )
 }
 
+const getVariables = query => {
+  const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
+  let time = query.time ? query.time.toUpperCase() : 'ALL'
+  if (sort === 'TOP' && !query.time) time = 'DAY'
+  return {
+    sort,
+    time,
+    joinedOnly: true,
+    page: query.page ? parseInt(query.page) : 0
+  }
+}
+
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
   await globalPrefetch(queryClient, ctx)
 
+  const variables = getVariables(ctx.query)
+
+  await queryClient.prefetchQuery(['posts', variables], key =>
+    fetchPosts(key, ctx)
+  )
+
   return {
     props: {
-      dehydratedState: dehydrate(queryClient)
+      dehydratedState: dehydrate(queryClient),
+      variables
     }
   }
 }
