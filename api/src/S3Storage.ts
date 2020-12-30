@@ -2,7 +2,6 @@ import AWS from 'aws-sdk'
 import { v4 as uuidv4 } from 'uuid'
 import mime from 'mime'
 import sharp from 'sharp'
-import { streamToBuffer } from '@/util/stream-to-buffer'
 
 const Bucket = process.env.BUCKET
 
