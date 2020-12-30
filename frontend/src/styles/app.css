@@ -195,11 +195,11 @@ body {
 }
 
 .commentcollapse {
-  @apply absolute top-1 bottom-0 w-10 cursor-pointer group;
+  @apply absolute top-0 bottom-0 w-6 cursor-pointer group;
 }
 
 .commentcollapse::before {
-  @apply absolute mt-12 left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 transition;
+  @apply absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 transition;
   content: "";
 }
 

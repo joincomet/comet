@@ -118,7 +118,9 @@ function PostPage({ postVariables, commentVariables }) {
                     </>
                   )}
                 </div>
+              </div>
 
+              <div>
                 {comments.map((comment, index) => (
                   /*<div key={index}>{JSON.stringify(comment)}</div>*/
                   <Comment

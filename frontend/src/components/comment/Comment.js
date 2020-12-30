@@ -85,10 +85,7 @@ export default function Comment({
         comment={comment}
         setText={setTextContent}
       />
-      <div
-        className="relative mt-3"
-        style={{ marginLeft: level === 0 ? '0' : '2rem' }}
-      >
+      <div className={`relative mt-3 ${level === 0 ? '' : 'ml-3'}`}>
         <div className="absolute -top-14 md:-top-28" id={comment.id36} />
 
         <div className="commentcollapse" onClick={() => setCollapse(true)} />
@@ -105,27 +102,22 @@ export default function Comment({
               : () => {}
           }
         >
-          <UserPopup user={comment.author}>
-            <UserAvatar
-              className="w-10 h-10 mr-3 cursor-pointer transition hover:opacity-90"
-              user={comment.author}
-              loading="lazy"
-            />
-          </UserPopup>
-
           <div
-            className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 arrow-box rounded w-full ${
+            className={`ml-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-900 rounded-l md:rounded-r w-full ${
               collapse || comment.deleted ? 'h-10' : ''
             }`}
           >
             <div className="h-10 px-3 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t">
               <UserPopup user={comment.author}>
+                <UserAvatar
+                  className="w-6 h-6 mr-3 cursor-pointer transition hover:opacity-90"
+                  user={comment.author}
+                  loading="lazy"
+                />
+              </UserPopup>
+              <UserPopup user={comment.author}>
                 <span className="text-secondary font-semibold hover:underline cursor-pointer">
                   {comment.author.username}
-                </span>
-                &nbsp;
-                <span className="text-tertiary">
-                  @{comment.author.username}
                 </span>
               </UserPopup>
               <div className="text-mid">

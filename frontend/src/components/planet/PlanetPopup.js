@@ -72,7 +72,7 @@ export default function PlanetPopup({
           e.stopPropagation()
           setShow(!show)
         }}
-        className="inline-block"
+        className="inline-block leading-none"
       >
         {children}
       </div>

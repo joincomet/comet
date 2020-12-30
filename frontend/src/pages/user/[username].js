@@ -252,9 +252,19 @@ export async function getServerSideProps(ctx) {
 
   await globalPrefetch(queryClient, ctx)
 
-  await queryClient.prefetchQuery(['user', { username: query.username }], key =>
-    fetchUser(key, ctx)
-  )
+  const k = ['user', { username: query.username }]
+
+  await queryClient.prefetchQuery(k, key => fetchUser(key, ctx))
+
+  const user = queryClient.getQueryData(k)
+
+  if (query.username !== user.username)
+    return {
+      redirect: {
+        destination: `/user/${user.username}`,
+        permanent: true
+      }
+    }
 
   return {
     props: {

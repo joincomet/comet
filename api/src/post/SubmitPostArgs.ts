@@ -7,13 +7,11 @@ export class SubmitPostArgs {
   @Field({ nullable: true })
   @IsOptional()
   @Length(1, 300, { message: 'Title must be no longer than 300 characters.' })
-  @Matches(/[^ ]+/)
   title?: string
 
   @Field({ nullable: true })
   @IsOptional()
   @Length(1, 5000, { message: 'URL must be no longer than 5000 characters.' })
-  @Matches(/[^ ]+/)
   link?: string
 
   @Field({ nullable: true })
@@ -21,7 +19,6 @@ export class SubmitPostArgs {
   @Length(1, 100000, {
     message: 'Text must be between 1 and 100000 characters'
   })
-  @Matches(/[^ ]+/)
   textContent?: string
 
   @Field({ nullable: true })

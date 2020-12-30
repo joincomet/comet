@@ -333,6 +333,50 @@ export class PostResolver {
     return post
   }
 
+  @Authorized()
+  @Mutation(() => Post)
+  async repost(
+    @Arg('postId', () => ID) postId: number,
+    @Ctx() { userId }: Context
+  ) {
+    const post = await this.postRepo.save({
+      repostId: postId,
+      authorId: userId
+    })
+
+    await this.userRepo.increment({ id: userId }, 'postCount', 1)
+
+    return post
+  }
+
+  @Authorized()
+  @Mutation(() => Post)
+  async repostQuote(
+    @Arg('postId', () => ID) postId: number,
+    @Arg('title') title: string,
+    @Ctx() { userId }: Context
+  ) {
+    if (title.length < 1 || title.length > 300)
+      throw new Error('Title must be between 1 and 300 characters')
+
+    const post = await this.postRepo.save({
+      repostId: postId,
+      authorId: userId,
+      title
+    })
+
+    await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
+    await this.userRepo.increment({ id: userId }, 'postCount', 1)
+
+    await this.postRepo
+      .createQueryBuilder()
+      .relation(Post, 'rocketers')
+      .of(post.id)
+      .add(userId)
+
+    return post
+  }
+
   @Authorized('AUTHOR')
   @Mutation(() => Boolean)
   async editPost(

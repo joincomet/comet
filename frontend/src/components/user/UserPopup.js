@@ -80,7 +80,7 @@ export default function UserPopup({
           e.stopPropagation()
           setShow(!show)
         }}
-        className="inline-block"
+        className="inline-block leading-none"
       >
         {children}
       </div>

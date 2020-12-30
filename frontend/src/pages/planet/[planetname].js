@@ -277,9 +277,19 @@ export async function getServerSideProps(ctx) {
 
   await globalPrefetch(queryClient, ctx)
 
-  await queryClient.prefetchQuery(['planet', { name: query.planetname }], key =>
-    fetchPlanet(key, ctx)
-  )
+  const k = ['planet', { name: query.planetname }]
+
+  await queryClient.prefetchQuery(k, key => fetchPlanet(key, ctx))
+
+  const planet = queryClient.getQueryData(k)
+
+  if (query.planetname !== planet.name)
+    return {
+      redirect: {
+        destination: `/planet/${planet.name}`,
+        permanent: true
+      }
+    }
 
   return {
     props: {
