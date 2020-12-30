@@ -191,4 +191,12 @@ export class Post {
       .replace(/[-](.)\1+/g, '$1')*/
     return `/post/${this.id36}`
   }
+
+  @Field(() => Post, { nullable: true })
+  @ManyToOne(() => Post)
+  repost: Promise<Post>
+
+  @Field(() => ID, { nullable: true })
+  @Column({ nullable: true })
+  repostId: number
 }

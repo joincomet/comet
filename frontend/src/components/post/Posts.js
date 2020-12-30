@@ -12,9 +12,9 @@ const pageBtn =
 export default function Posts({ variables }) {
   const { query, pathname } = useRouter()
 
-  const currentPage = query.page ? parseInt(query.page) : 1
+  const currentPage = variables.page + 1
 
-  const { data, isLoading } = usePosts({ ...variables, page: currentPage - 1 })
+  const { data, isLoading } = usePosts(variables)
 
   const parentRef = useRef()
   const windowRef = useRef(typeof window === 'undefined' ? null : window)
@@ -25,7 +25,7 @@ export default function Posts({ variables }) {
     size: data ? (data.nextPage !== null ? posts.length + 1 : posts.length) : 0,
     parentRef,
     estimateSize: useCallback(() => 200, []),
-    overscan: 5,
+    overscan: 10,
     windowRef
   })
 

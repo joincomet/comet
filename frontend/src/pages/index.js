@@ -44,7 +44,7 @@ const getVariables = query => {
     sort,
     time,
     joinedOnly: true,
-    page: query.page ? parseInt(query.page) : 0
+    page: query.page ? parseInt(query.page) - 1 : 0
   }
 }
 

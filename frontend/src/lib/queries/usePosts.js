@@ -86,5 +86,5 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
 
 export const usePosts = variables =>
   useQuery(['posts', variables], fetchPosts, {
-    keepPreviousData: true
+    // keepPreviousData: true
   })
