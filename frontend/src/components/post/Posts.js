@@ -33,7 +33,7 @@ export default function Posts({ variables }) {
     rowVirtualizer.setMeasuredCache({})
     window.scrollTo({ top: 5 })
     window.scrollTo({ top: 0 })
-  }, [currentPage, posts])
+  }, [currentPage, isLoading])
 
   return (
     <div ref={parentRef}>
