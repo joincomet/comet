@@ -14,7 +14,7 @@ const joinPlanet = async variables => {
   )
 }
 
-export const useJoinPlanetMutation = () => useMutation(joinPlanet)
+export const useJoinPlanetMutation = options => useMutation(joinPlanet, options)
 
 const leavePlanet = async variables => {
   await request(
@@ -28,7 +28,8 @@ const leavePlanet = async variables => {
   )
 }
 
-export const useLeavePlanetMutation = () => useMutation(leavePlanet)
+export const useLeavePlanetMutation = options =>
+  useMutation(leavePlanet, options)
 
 const mutePlanet = async variables => {
   await request(
@@ -42,7 +43,7 @@ const mutePlanet = async variables => {
   )
 }
 
-export const useMutePlanetMutation = () => useMutation(mutePlanet)
+export const useMutePlanetMutation = options => useMutation(mutePlanet, options)
 
 const unmutePlanet = async variables => {
   await request(
@@ -56,7 +57,8 @@ const unmutePlanet = async variables => {
   )
 }
 
-export const useUnmutePlanetMutation = () => useMutation(unmutePlanet)
+export const useUnmutePlanetMutation = options =>
+  useMutation(unmutePlanet, options)
 
 const createPlanet = async variables => {
   await request(
@@ -78,4 +80,5 @@ const createPlanet = async variables => {
   )
 }
 
-export const useCreatePlanetMutation = () => useMutation(createPlanet)
+export const useCreatePlanetMutation = options =>
+  useMutation(createPlanet, options)

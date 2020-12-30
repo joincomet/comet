@@ -12,6 +12,7 @@ import PlanetPopup from '@/components/planet/PlanetPopup'
 import { useRouter } from 'next/router'
 import Twemoji from 'react-twemoji'
 import Tippy from '@tippyjs/react'
+import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 
 export default function Post({
   post,
@@ -30,7 +31,7 @@ export default function Post({
         }}
         className={`${className} ${
           !showFullText ? 'cursor-pointer' : ''
-        } bg-white dark:bg-gray-900 relative flex md:rounded pt-2 pl-3 pr-3 md:pr-6 pb-1`}
+        } bg-white dark:bg-gray-900 relative flex md:rounded pt-3 pl-3 md:px-4 pr-3 pb-1`}
       >
         {(post.pinned || post.pinnedByAuthor) && (
           <Tippy
@@ -52,17 +53,14 @@ export default function Post({
           </Tippy>
         )}
 
-        <div className="pr-3">
-          <UserPopup user={post.author}>
-            <UserAvatar
-              user={post.author}
-              className="cursor-pointer w-10 h-10 transition hover:opacity-90"
-            />
-          </UserPopup>
-        </div>
-
         <div className="flex-grow">
           <div className="text-base flex items-center flex-wrap">
+            <UserPopup user={post.author}>
+              <UserAvatar
+                user={post.author}
+                className="cursor-pointer w-6 h-6 mr-2 transition hover:opacity-90"
+              />
+            </UserPopup>
             {post.author ? (
               <UserPopup user={post.author}>
                 <span className="text-secondary font-semibold hover:underline cursor-pointer leading-normal">
@@ -95,12 +93,14 @@ export default function Post({
             </span>
           </div>
 
-          <NavLink
-            href={post.relativeUrl}
-            className="text-base text-primary mt-0.5"
-          >
-            <Twemoji options={{ className: 'twemoji' }}>{post.title}</Twemoji>
-          </NavLink>
+          {post.title && (
+            <NavLink
+              href={post.relativeUrl}
+              className="text-base text-primary pt-2 block"
+            >
+              <Twemoji options={{ className: 'twemoji' }}>{post.title}</Twemoji>
+            </NavLink>
+          )}
 
           <PostText
             post={post}

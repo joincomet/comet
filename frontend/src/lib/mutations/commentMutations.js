@@ -45,7 +45,8 @@ const submitComment = async variables => {
   return submitComment
 }
 
-export const useSubmitCommentMutation = () => useMutation(submitComment)
+export const useSubmitCommentMutation = options =>
+  useMutation(submitComment, options)
 
 const rocketComment = async variables => {
   await request(
@@ -59,7 +60,8 @@ const rocketComment = async variables => {
   )
 }
 
-export const useRocketCommentMutation = () => useMutation(rocketComment)
+export const useRocketCommentMutation = options =>
+  useMutation(rocketComment, options)
 
 const unrocketComment = async variables => {
   await request(
@@ -73,7 +75,8 @@ const unrocketComment = async variables => {
   )
 }
 
-export const useUnrocketCommentMutation = () => useMutation(unrocketComment)
+export const useUnrocketCommentMutation = options =>
+  useMutation(unrocketComment, options)
 
 const deleteComment = async variables => {
   await request(
@@ -87,7 +90,8 @@ const deleteComment = async variables => {
   )
 }
 
-export const useDeleteCommentMutation = () => useMutation(deleteComment)
+export const useDeleteCommentMutation = options =>
+  useMutation(deleteComment, options)
 
 const editComment = async variables => {
   await request(

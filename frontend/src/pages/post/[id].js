@@ -122,7 +122,6 @@ function PostPage({ postVariables, commentVariables }) {
 
               <div className="md:-ml-3">
                 {comments.map((comment, index) => (
-                  /*<div key={index}>{JSON.stringify(comment)}</div>*/
                   <Comment
                     comment={comment}
                     post={post}

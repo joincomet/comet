@@ -231,6 +231,10 @@ body {
   @apply text-xl font-bold tracking-tight leading-none;
 }
 
+.header-4 {
+  @apply text-lg font-bold tracking-tight leading-none;
+}
+
 .title {
   @apply text-base font-medium;
 }

@@ -45,7 +45,7 @@ const pinPost = async variables => {
   )
 }
 
-export const usePinPostMutation = () => useMutation(pinPost)
+export const usePinPostMutation = options => useMutation(pinPost, options)
 
 const unpinPost = async variables => {
   await request(
@@ -59,7 +59,7 @@ const unpinPost = async variables => {
   )
 }
 
-export const useUnpinPostMutation = () => useMutation(unpinPost)
+export const useUnpinPostMutation = options => useMutation(unpinPost, options)
 
 const pinPostProfile = async variables => {
   await request(
@@ -73,7 +73,8 @@ const pinPostProfile = async variables => {
   )
 }
 
-export const usePinPostProfileMutation = () => useMutation(pinPostProfile)
+export const usePinPostProfileMutation = options =>
+  useMutation(pinPostProfile, options)
 
 const unpinPostProfile = async variables => {
   await request(
@@ -87,7 +88,8 @@ const unpinPostProfile = async variables => {
   )
 }
 
-export const useUnpinPostProfileMutation = () => useMutation(unpinPostProfile)
+export const useUnpinPostProfileMutation = options =>
+  useMutation(unpinPostProfile, options)
 
 const deletePost = async variables => {
   await request(
@@ -101,7 +103,7 @@ const deletePost = async variables => {
   )
 }
 
-export const useDeletePostMutation = () => useMutation(deletePost)
+export const useDeletePostMutation = options => useMutation(deletePost, options)
 
 const rocketPost = async variables => {
   await request(
@@ -115,7 +117,7 @@ const rocketPost = async variables => {
   )
 }
 
-export const useRocketPostMutation = () => useMutation(rocketPost)
+export const useRocketPostMutation = options => useMutation(rocketPost, options)
 
 const unrocketPost = async variables => {
   await request(
@@ -129,7 +131,8 @@ const unrocketPost = async variables => {
   )
 }
 
-export const useUnrocketPostMutation = () => useMutation(unrocketPost)
+export const useUnrocketPostMutation = options =>
+  useMutation(unrocketPost, options)
 
 const editPost = async variables => {
   await request(

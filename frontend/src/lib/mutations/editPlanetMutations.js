@@ -15,8 +15,8 @@ const uploadPlanetAvatar = async variables => {
   return uploadPlanetAvatar
 }
 
-export const useUploadPlanetAvatarMutation = () =>
-  useMutation(uploadPlanetAvatar)
+export const useUploadPlanetAvatarMutation = options =>
+  useMutation(uploadPlanetAvatar, options)
 
 const uploadPlanetBanner = async variables => {
   const { uploadPlanetBanner } = await request(
@@ -31,8 +31,8 @@ const uploadPlanetBanner = async variables => {
   return uploadPlanetBanner
 }
 
-export const useUploadPlanetBannerMutation = () =>
-  useMutation(uploadPlanetBanner)
+export const useUploadPlanetBannerMutation = options =>
+  useMutation(uploadPlanetBanner, options)
 
 const editPlanetDescription = async variables => {
   await request(
@@ -46,8 +46,8 @@ const editPlanetDescription = async variables => {
   )
 }
 
-export const useEditPlanetDescriptionMutation = () =>
-  useMutation(editPlanetDescription)
+export const useEditPlanetDescriptionMutation = options =>
+  useMutation(editPlanetDescription, options)
 
 const addModerator = async variables => {
   await request(
@@ -61,4 +61,5 @@ const addModerator = async variables => {
   )
 }
 
-export const useAddModeratorMutation = () => useMutation(addModerator)
+export const useAddModeratorMutation = options =>
+  useMutation(addModerator, options)

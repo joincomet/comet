@@ -14,7 +14,7 @@ const followUser = async variables => {
   )
 }
 
-export const useFollowUserMutation = () => useMutation(followUser)
+export const useFollowUserMutation = options => useMutation(followUser, options)
 
 const unfollowUser = async variables => {
   await request(
@@ -28,7 +28,8 @@ const unfollowUser = async variables => {
   )
 }
 
-export const useUnfollowUserMutation = () => useMutation(unfollowUser)
+export const useUnfollowUserMutation = options =>
+  useMutation(unfollowUser, options)
 
 const blockUser = async variables => {
   await request(
@@ -42,7 +43,7 @@ const blockUser = async variables => {
   )
 }
 
-export const useBlockUserMutation = () => useMutation(blockUser)
+export const useBlockUserMutation = options => useMutation(blockUser, options)
 
 const unblockUser = async variables => {
   await request(
@@ -56,4 +57,5 @@ const unblockUser = async variables => {
   )
 }
 
-export const useUnblockUserMutation = () => useMutation(unblockUser)
+export const useUnblockUserMutation = options =>
+  useMutation(unblockUser, options)

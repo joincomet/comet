@@ -14,7 +14,7 @@ const removePost = async variables => {
   )
 }
 
-export const useRemovePostMutation = () => useMutation(removePost)
+export const useRemovePostMutation = options => useMutation(removePost, options)
 
 const removeComment = async variables => {
   await request(
@@ -36,7 +36,8 @@ const removeComment = async variables => {
   )
 }
 
-export const useRemoveCommentMutation = () => useMutation(removeComment)
+export const useRemoveCommentMutation = options =>
+  useMutation(removeComment, options)
 
 const banUserFromPlanet = async variables => {
   await request(
@@ -58,7 +59,8 @@ const banUserFromPlanet = async variables => {
   )
 }
 
-export const useBanUserFromPlanetMutation = () => useMutation(banUserFromPlanet)
+export const useBanUserFromPlanetMutation = options =>
+  useMutation(banUserFromPlanet, options)
 
 const banUser = async variables => {
   await request(
@@ -72,7 +74,7 @@ const banUser = async variables => {
   )
 }
 
-export const useBanUserMutation = () => useMutation(banUser)
+export const useBanUserMutation = options => useMutation(banUser, options)
 
 const banAndPurgeUser = async variables => {
   await request(
@@ -86,7 +88,8 @@ const banAndPurgeUser = async variables => {
   )
 }
 
-export const useBanAndPurgeUserMutation = () => useMutation(banAndPurgeUser)
+export const useBanAndPurgeUserMutation = options =>
+  useMutation(banAndPurgeUser, options)
 
 const reportPost = async variables => {
   await request(
@@ -100,7 +103,7 @@ const reportPost = async variables => {
   )
 }
 
-export const useReportPostMutation = () => useMutation(reportPost)
+export const useReportPostMutation = options => useMutation(reportPost, options)
 
 const reportComment = async variables => {
   await request(
@@ -114,4 +117,5 @@ const reportComment = async variables => {
   )
 }
 
-export const useReportCommentMutation = () => useMutation(reportComment)
+export const useReportCommentMutation = options =>
+  useMutation(reportComment, options)

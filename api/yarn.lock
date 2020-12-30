@@ -1118,34 +1118,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metascraper/helpers@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "@metascraper/helpers@npm:5.16.0"
-  dependencies:
-    audio-extensions: 0.0.0
-    chrono-node: 2.1.10
-    condense-whitespace: ~2.0.0
-    entities: ~2.1.0
-    file-extension: ~4.0.5
-    has-values: ~2.0.1
-    image-extensions: ~1.1.0
-    is-relative-url: ~3.0.0
-    is-uri: ~1.2.0
-    iso-639-3: ~2.2.0
-    isostring: 0.0.1
-    lodash: ~4.17.20
-    memoize-one: ~5.1.1
-    microsoft-capitalize: ~1.0.5
-    mime-types: ~2.1.27
-    normalize-url: ~5.3.0
-    smartquotes: ~2.3.2
-    truncate: ~2.1.0
-    url-regex-safe: ~1.0.2
-    video-extensions: ~1.1.0
-  checksum: e97e4518737446e0de516d093c4523cd1bc340d762a5c2c632232b97e4640f78ad9911a82cc11d2a2a04d01080dfc5d226891af97d40dd7be14dd2ba923f4b80
-  languageName: node
-  linkType: hard
-
 "@metascraper/helpers@npm:^5.16.6":
   version: 5.16.6
   resolution: "@metascraper/helpers@npm:5.16.6"
@@ -1605,10 +1577,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.16":
-  version: 14.14.16
-  resolution: "@types/node@npm:14.14.16"
-  checksum: 220a7496ec73861ad7fb4ae762618bb46ac9d5d5f92f3a2fcebfd1a81a509ff558eface7bcd1d632598a8a28f856a74b324e7165918e8334a59c221cb06d15e3
+"@types/node@npm:^14.14.17":
+  version: 14.14.17
+  resolution: "@types/node@npm:14.14.17"
+  checksum: 2bb32c683d8446128cf3240b4af6cc884c6ee006a845d1901becadc46255d1263bf265abde5ccb37a09d9a318fc3964d07afc941d52544f2d7f249dbb28d9420
   languageName: node
   linkType: hard
 
@@ -1993,7 +1965,7 @@ __metadata:
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.9
     "@types/jsonwebtoken": ^8.5.0
-    "@types/node": ^14.14.16
+    "@types/node": ^14.14.17
     "@types/sharp": ^0.26.1
     "@typescript-eslint/eslint-plugin": ^4.11.1
     "@typescript-eslint/parser": ^4.11.1
@@ -2017,16 +1989,16 @@ __metadata:
     graphql-type-json: ^0.3.2
     graphql-upload: ^11.0.0
     jsonwebtoken: ^8.5.1
-    metascraper: ^5.16.0
-    metascraper-author: ^5.16.0
-    metascraper-clearbit: ^5.16.3
-    metascraper-date: ^5.16.0
-    metascraper-description: ^5.16.0
-    metascraper-image: ^5.16.0
-    metascraper-logo: ^5.16.0
-    metascraper-publisher: ^5.16.0
-    metascraper-title: ^5.16.0
-    metascraper-url: ^5.16.0
+    metascraper: ^5.16.6
+    metascraper-author: ^5.16.6
+    metascraper-clearbit: ^5.16.6
+    metascraper-date: ^5.16.6
+    metascraper-description: ^5.16.6
+    metascraper-image: ^5.16.6
+    metascraper-logo: ^5.16.6
+    metascraper-publisher: ^5.16.6
+    metascraper-title: ^5.16.6
+    metascraper-url: ^5.16.6
     metascraper-youtube: ^5.16.6
     mime: ^2.4.7
     pg: ^8.5.1
@@ -5497,88 +5469,88 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"metascraper-author@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-author@npm:5.16.0"
+"metascraper-author@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-author@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
-  checksum: 2f79d728bc1d459fa81028b58157c14e7b732e9307963a4db1665a9554ae0292047581fc9932fb8a6b2727d11263b7aa0ce0c0d7a0a9589c25c7ac99768eef77
+    "@metascraper/helpers": ^5.16.6
+  checksum: 9952bab4f3c4f1c409a362bccbaac02a4d1154fb7fd78ab28266d8e38a99496b8642a95a2c714a26c737d0cdb57752c4c2f40220cc9e7ccf3543af34d05ac503
   languageName: node
   linkType: hard
 
-"metascraper-clearbit@npm:^5.16.3":
-  version: 5.16.3
-  resolution: "metascraper-clearbit@npm:5.16.3"
+"metascraper-clearbit@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-clearbit@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
+    "@metascraper/helpers": ^5.16.6
     async-memoize-one: ~1.0.1
     got: ~11.8.1
     lodash: ~4.17.20
     tldts: ~5.6.80
-  checksum: d8fd775d8782ac20aa8038e77d282c104964db1e4e056b970cce465e55eda85803de86a2a754fa82a5b7d3400767f5e03875a835eebb6626de15a6b444c2a3e2
+  checksum: b0d5af0ca23dae1478695d91403230adfa653ae7fee761b6cd987d2e5fcf80f5962087ab2915c023a26fbdcee5a115cb3b3474b9abf4142041359c149a6ce048
   languageName: node
   linkType: hard
 
-"metascraper-date@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-date@npm:5.16.0"
+"metascraper-date@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-date@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
-  checksum: f360b31a58e0defb58c315d0c81d3e7f3562b08ff23d6c025568e5998ddad790481ce718d3430fbeb08afc255db560ffe6c81cc7c0b8f2f740b3d0b7764a982f
+    "@metascraper/helpers": ^5.16.6
+  checksum: dc1bad3df515d4ed8709fd5590a82c9d9a15e5e2b4cb08d08f6075aa7fcadac7ac0cacb39961e00aa40ae62ffa93e712271ed8528a3ddc5d652c1269cca468b6
   languageName: node
   linkType: hard
 
-"metascraper-description@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-description@npm:5.16.0"
+"metascraper-description@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-description@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
-  checksum: b56d3ff3883af576bcc6611a885a702334f088f65dcac56ddb528dda35353ab0f5615a02acea7f766bca393c1461d8756fccd9093855ba943b8aff921570aaa9
+    "@metascraper/helpers": ^5.16.6
+  checksum: 9c28005b18aad5964f4ec18038f46b02376cf146af8f1d040af0b231e75b41ef504d8f9b9ecafd429aa7c357c50d137f380e538b0cfda3f153874fd61f8e4168
   languageName: node
   linkType: hard
 
-"metascraper-image@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-image@npm:5.16.0"
+"metascraper-image@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-image@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
-  checksum: 1b2ddfb822ae8788fc86f718c73f2196c1df139d8162dfa094bc212909320c25d4f806f90f058758a99fb5cc762f495852ec51be4efcea46b3a67f398b883878
+    "@metascraper/helpers": ^5.16.6
+  checksum: a51572b5c5113b5018385ba0f9af3c4301552754bdaa9f2050a1e724c2dd6d3ee78dc84ef2a16de410620b8ca619f9e42b7a55e356e8509a5be3a81725f829e4
   languageName: node
   linkType: hard
 
-"metascraper-logo@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-logo@npm:5.16.0"
+"metascraper-logo@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-logo@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
-  checksum: 0ea4c21fdd207e93136b6854fcd8fea272ccdb1ebbe611a08ef8264d431fd29d5508ffed9660193f2e48e4561ed91eec4e3774afd6a24f1228561818d1f52526
+    "@metascraper/helpers": ^5.16.6
+  checksum: 3fb6b8d38a0736f2d31b36581b90f98c6acba34c784e201e1af25fa3629b5625526eadd4906b914cd489c3e04094b175f17438d8f3b5f587e690e71558b9ac1c
   languageName: node
   linkType: hard
 
-"metascraper-publisher@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-publisher@npm:5.16.0"
+"metascraper-publisher@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-publisher@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
-  checksum: 93f5ede06f992506bb35b9307dacfe15e49ef23d2379391c1446979efa76b741afc5b268cbeb3fdeb8b5926d6d8b23e5e9dbf308b0675794ff98fc2a75faed91
+    "@metascraper/helpers": ^5.16.6
+  checksum: 555f218176c725e2ab66d6a7eabbcb21d47fbbb0852253ed57b5c8ed446b8bcb86f52df38b7754b517dc2ffab68068b8cec5b81944d28fb837a6f1d56e6d9316
   languageName: node
   linkType: hard
 
-"metascraper-title@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-title@npm:5.16.0"
+"metascraper-title@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-title@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
-  checksum: e62103626cfd730f76d6f03a1634c59cd391fc83b5ea1657bf52133d938b707bd6a805d912b81128c8e9c9455b0abc516b1b524b925824508ca29d3763eb9a0c
+    "@metascraper/helpers": ^5.16.6
+  checksum: ae07e6a7fbf6adb824c79b43c94600ef2a3e8607583712479942dfb6e11591705c3c762ae2ba3d1cd8d0eb149f60e7994189350c15f48b85099aa32cfc1a9db5
   languageName: node
   linkType: hard
 
-"metascraper-url@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper-url@npm:5.16.0"
+"metascraper-url@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper-url@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
-  checksum: a1199c9f5c82d15f3b27df78d0e46a91e9fccb9c6d97e4caf2a680e8ca4cf531580d1bb79a1b073caee8dae3c96695e34e4f11dcf7c14eb74c97b22694bd3898
+    "@metascraper/helpers": ^5.16.6
+  checksum: 60f2aadd1281371b7141b22597d0e82fc7b984e65ed812c92e015d2c95647ef254e9e2826d3ab1915e263999bedff8d26fb16e699365805e8dc7b3447ef84b29
   languageName: node
   linkType: hard
 
@@ -5594,15 +5566,15 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"metascraper@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "metascraper@npm:5.16.0"
+"metascraper@npm:^5.16.6":
+  version: 5.16.6
+  resolution: "metascraper@npm:5.16.6"
   dependencies:
-    "@metascraper/helpers": ^5.16.0
+    "@metascraper/helpers": ^5.16.6
     cheerio: ~1.0.0-rc.5
     lodash: ~4.17.20
     whoops: ~4.1.0
-  checksum: eb275e60e5978c579eaf918d941a4c44f5315095a2217869eb9285c7a30c3b9b26f492ad9a63779ea7d0f0a9eb24f3d1a5a2e61220226a27c3fae6cb65dcac46
+  checksum: eaf1fbbd8d2531dec83f1099ddb6e1f39f5c0645bd39d04b45a1cd047310c53f2751a7d87bff28ec0d2f76c1466f777a49584468575c68a41b2f836ca698240e
   languageName: node
   linkType: hard
 

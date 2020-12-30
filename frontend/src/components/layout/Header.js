@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FiSearch, FiBell, FiMenu, FiLogIn } from 'react-icons/fi'
+import { FiSearch, FiBell, FiMenu, FiLogIn, FiArrowLeft } from 'react-icons/fi'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { useRouter } from 'next/router'
@@ -8,16 +8,19 @@ import UserOptionsDropdown from '@/components/user/UserOptionsDropdown'
 import { useNotifications } from '@/lib/queries/useNotifications'
 import NavLink from '@/components/NavLink'
 
+const menuBtn =
+  'block md:hidden inline-flex flex-shrink-0 items-center justify-center h-10 w-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition'
+
 export default function Header({ children, className, ...rest }) {
   const currentUser = useCurrentUser().data
   const notifications = useNotifications({ unreadOnly: true }).data
   const { setLogin } = useLoginStore()
 
-  const { dark, setSidebar, sidebar, title } = useHeaderStore()
+  const { dark, setSidebar, sidebar, title, canGoBack } = useHeaderStore()
 
   const [search, setSearch] = useState('')
 
-  const { query, pathname, push } = useRouter()
+  const { query, pathname, push, back } = useRouter()
 
   const routes = ['/planet/[planetname]', '/user/[username]']
 
@@ -25,22 +28,35 @@ export default function Header({ children, className, ...rest }) {
 
   const isSolo = !routes.includes(pathname)
 
+  const backRoutes = ['/user/[username]', '/post/[id]', '/search']
+
+  const showBack = backRoutes.includes(pathname)
+
   return (
     <>
       <header
         className={`flex z-40 fixed left-0 md:left-64 right-0 top-0 h-14 items-center transition px-4 md:px-8 ${
           isDark ? 'bg-white dark:bg-gray-900' : 'bg-transparent'
-        } ${isSolo ? 'border-b border-gray-200 dark:border-transparent' : ''}`}
+        } ${isSolo ? 'border-b border-gray-200 dark:border-gray-800' : ''}`}
         {...rest}
       >
-        <div
-          onClick={() => setSidebar(!sidebar)}
-          className="block md:hidden inline-flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition"
-        >
-          <FiMenu size={20} />
-        </div>
+        {showBack ? (
+          <div
+            onClick={() => {
+              if (canGoBack) back()
+              else push('/')
+            }}
+            className={menuBtn}
+          >
+            <FiArrowLeft size={20} />
+          </div>
+        ) : (
+          <div onClick={() => setSidebar(!sidebar)} className={menuBtn}>
+            <FiMenu size={20} />
+          </div>
+        )}
 
-        <div className="header-3 ml-4 block md:hidden whitespace-nowrap truncate">
+        <div className="header-4 ml-4 block md:hidden whitespace-nowrap truncate">
           {title}
         </div>
 

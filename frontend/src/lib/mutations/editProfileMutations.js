@@ -15,7 +15,8 @@ const uploadAvatar = async variables => {
   return uploadAvatar
 }
 
-export const useUploadAvatarMutation = () => useMutation(uploadAvatar)
+export const useUploadAvatarMutation = options =>
+  useMutation(uploadAvatar, options)
 
 const uploadBanner = async variables => {
   const { uploadBanner } = await request(
@@ -30,7 +31,8 @@ const uploadBanner = async variables => {
   return uploadBanner
 }
 
-export const useUploadBannerMutation = () => useMutation(uploadBanner)
+export const useUploadBannerMutation = options =>
+  useMutation(uploadBanner, options)
 
 const editBio = async variables => {
   await request(
@@ -44,7 +46,7 @@ const editBio = async variables => {
   )
 }
 
-export const useEditBioMutation = () => useMutation(editBio)
+export const useEditBioMutation = options => useMutation(editBio, options)
 
 const changeName = async variables => {
   await request(
@@ -58,7 +60,7 @@ const changeName = async variables => {
   )
 }
 
-export const useChangeNameMutation = () => useMutation(changeName)
+export const useChangeNameMutation = options => useMutation(changeName, options)
 
 const changeUsername = async variables => {
   await request(
@@ -72,7 +74,8 @@ const changeUsername = async variables => {
   )
 }
 
-export const useChangeUsernameMutation = () => useMutation(changeUsername)
+export const useChangeUsernameMutation = options =>
+  useMutation(changeUsername, options)
 
 const changePassword = async variables => {
   await request(
@@ -88,4 +91,5 @@ const changePassword = async variables => {
   )
 }
 
-export const useChangePasswordMutation = () => useMutation(changePassword)
+export const useChangePasswordMutation = options =>
+  useMutation(changePassword, options)

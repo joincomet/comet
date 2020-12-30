@@ -63,4 +63,4 @@ const logout = async variables => {
   return signUp
 }
 
-export const useLogoutMutation = () => useMutation(logout)
+export const useLogoutMutation = options => useMutation(logout, options)

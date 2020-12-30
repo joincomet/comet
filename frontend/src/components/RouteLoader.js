@@ -1,11 +1,14 @@
 import Router from 'next/router'
 import NProgress from 'nprogress'
 import React, { useEffect, useRef, useState } from 'react'
+import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 
 const DELAY = 200
 
 export default function RouteLoader() {
   const [isLoading, setLoading] = useState(false)
+
+  const { setCanGoBack } = useHeaderStore()
 
   const timeout = useRef(null)
 
@@ -20,6 +23,7 @@ export default function RouteLoader() {
       NProgress.done()
       clearTimeout(timeout.current)
       setLoading(false)
+      setCanGoBack(true)
     })
     Router.events.on('routeChangeError', () => {
       NProgress.done()

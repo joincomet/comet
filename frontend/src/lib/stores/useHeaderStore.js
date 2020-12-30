@@ -6,5 +6,7 @@ export const useHeaderStore = create(set => ({
   sidebar: false,
   setSidebar: sidebar => set({ sidebar }),
   title: 'Home',
-  setTitle: title => set({ title })
+  setTitle: title => set({ title }),
+  canGoBack: false,
+  setCanGoBack: canGoBack => set({ canGoBack })
 }))
