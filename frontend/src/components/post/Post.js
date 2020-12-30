@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { CgArrowRight } from 'react-icons/cg'
+import { TiPinOutline } from 'react-icons/ti'
 import NavLink from '@/components/NavLink'
 import PostEmbed from '@/components/post/PostEmbed'
 import PostActions from '@/components/post/PostActions'
@@ -10,6 +11,9 @@ import PostImages from '@/components/post/PostImages'
 import PlanetPopup from '@/components/planet/PlanetPopup'
 import { useRouter } from 'next/router'
 import Twemoji from 'react-twemoji'
+import Tippy from '@tippyjs/react'
+import { FiShield } from 'react-icons/fi'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 
 export default function Post({
   post,
@@ -19,6 +23,15 @@ export default function Post({
 }) {
   const router = useRouter()
   const [textContent, setTextContent] = useState(post.textContent)
+
+  const currentUser = useCurrentUser().data
+
+  const isModerator =
+    currentUser &&
+    post.planet &&
+    currentUser.moderatedPlanets &&
+    currentUser.moderatedPlanets.map(p => p.id).includes(post.planet.id)
+
   return (
     <div className="pb-0.5">
       <article
@@ -29,6 +42,34 @@ export default function Post({
           !showFullText ? 'cursor-pointer' : ''
         } bg-white dark:bg-gray-900 relative flex md:rounded pt-2 pl-3 pr-3 md:pr-6 pb-1`}
       >
+        {(post.pinned || post.pinnedByAuthor) && (
+          <Tippy
+            content={`Pinned to ${
+              post.pinned && !post.pinnedByAuthor ? `+${post.planet.name}` : ''
+            }${
+              !post.pinned && post.pinnedByAuthor
+                ? `@${post.author.username}`
+                : ''
+            }${
+              post.pinned && post.pinnedByAuthor
+                ? `+${post.planet.name} and @${post.author.username}`
+                : ''
+            }`}
+          >
+            <div className="text-accent absolute top-2 right-3 cursor-pointer">
+              <TiPinOutline size={22} style={{ marginTop: '-1px' }} />
+            </div>
+          </Tippy>
+        )}
+
+        {isModerator && (
+          <Tippy content={`You are a moderator of +${post.planet.name}`}>
+            <div className="text-green-500 absolute top-2 right-12 cursor-pointer">
+              <FiShield size={18} />
+            </div>
+          </Tippy>
+        )}
+
         <div className="pr-3">
           <UserPopup user={post.author}>
             <UserAvatar

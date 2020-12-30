@@ -7,8 +7,8 @@ import {
   FiEdit2,
   FiShield
 } from 'react-icons/fi'
-import { FaThumbtack } from 'react-icons/fa'
-import React, { useEffect, useState } from 'react'
+import { TiPinOutline } from 'react-icons/ti'
+import React, { useState } from 'react'
 import {
   useDeletePostMutation,
   usePinPostMutation,
@@ -106,34 +106,6 @@ export default function PostActions({ post, textContent, setTextContent }) {
 
       <div className="mr-auto" />
 
-      {(post.pinned || post.pinnedByAuthor) && (
-        <Tippy
-          content={`Pinned to ${
-            post.pinned && !post.pinnedByAuthor ? `+${post.planet.name}` : ''
-          }${
-            !post.pinned && post.pinnedByAuthor
-              ? `@${post.author.username}`
-              : ''
-          }${
-            post.pinned && post.pinnedByAuthor
-              ? `+${post.planet.name} and @${post.author.username}`
-              : ''
-          }`}
-        >
-          <div className="text-accent mr-4 cursor-pointer">
-            <FaThumbtack size={18} className="transform -rotate-45" />
-          </div>
-        </Tippy>
-      )}
-
-      {isModerator && (
-        <Tippy content={`You are a moderator of +${post.planet.name}`}>
-          <div className="text-green-500 mr-4 cursor-pointer">
-            <FiShield size={18} />
-          </div>
-        </Tippy>
-      )}
-
       <MoreOptions
         post={post}
         chip={chip}
@@ -230,9 +202,10 @@ function MoreOptions({
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
                             } text-accent ${menuItem}`}
                           >
-                            <FaThumbtack
-                              size={18}
-                              className="mr-4 transform -rotate-45"
+                            <TiPinOutline
+                              size={22}
+                              style={{ marginTop: '-1px' }}
+                              className="mr-4"
                             />
                             {post.pinned
                               ? `Unpin from +${post.planet.name}`
@@ -267,9 +240,10 @@ function MoreOptions({
                               active ? 'bg-gray-100 dark:bg-gray-700' : ''
                             } text-accent ${menuItem}`}
                           >
-                            <FaThumbtack
-                              size={18}
-                              className="mr-4 transform -rotate-45"
+                            <TiPinOutline
+                              size={22}
+                              style={{ marginTop: '-1px' }}
+                              className="mr-4"
                             />
                             {post.pinnedByAuthor
                               ? 'Unpin from profile'

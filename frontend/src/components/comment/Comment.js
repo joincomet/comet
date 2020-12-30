@@ -7,6 +7,7 @@ import {
   FiShield
 } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
+import { TiPinOutline } from 'react-icons/ti'
 import React, { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
@@ -27,7 +28,6 @@ import {
 } from '@/lib/mutations/moderationMutations'
 import { Menu, Transition } from '@headlessui/react'
 import { menuTransition } from '@/lib/menuTransition'
-import { FaThumbtack } from 'react-icons/fa'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
 import { useCommentStore } from '@/lib/stores/useCommentStore'
@@ -174,10 +174,7 @@ export default function Comment({
                   {comment.pinned && (
                     <Tippy content="Pinned comment">
                       <div className="mr-4 text-accent cursor-pointer">
-                        <FaThumbtack
-                          size={18}
-                          className="transform -rotate-45"
-                        />
+                        <TiPinOutline size={22} style={{ marginTop: '-1px' }} />
                       </div>
                     </Tippy>
                   )}
@@ -266,9 +263,10 @@ function MoreOptionsComment({ comment, post, level, setEditing }) {
                             active ? 'bg-gray-100 dark:bg-gray-700' : ''
                           } text-accent ${menuItem}`}
                         >
-                          <FaThumbtack
-                            size={18}
-                            className="mr-4 transform -rotate-45"
+                          <TiPinOutline
+                            size={22}
+                            style={{ marginTop: '-1px' }}
+                            className="mr-4"
                           />
                           {comment.pinned ? `Unpin comment` : `Pin comment`}
                         </div>
