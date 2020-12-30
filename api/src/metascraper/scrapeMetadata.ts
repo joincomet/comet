@@ -19,12 +19,14 @@ const metascraper = require('metascraper')([
   require('./metascraperTwitterCard')()
 ])
 
+const timeout = 5000
+
 export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
   if (!isUrl(targetUrl)) return null
 
   let res
   try {
-    res = await got(targetUrl, { timeout: 2000 })
+    res = await got(targetUrl, { timeout })
   } catch {
     return null
   }
@@ -43,27 +45,26 @@ export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
   if (meta.description)
     meta.description = meta.description.replace(/(<([^>]+)>)/gi, '')
 
-  if (meta.image) {
+  const { image, logo } = meta
+
+  const resize = {
+    width: 128,
+    height: 128
+  }
+
+  if (image) {
     try {
-      const response = await fetch(meta.image, { timeout: 2000 })
-      const buffer = await response.buffer()
-      const type = await fileType.fromBuffer(buffer)
-      const resize = { width: 256, height: 256 }
-      meta.image = await uploadImage(Readable.from(buffer), type.mime, resize)
+      const ext = image.substr(image.lastIndexOf('.') + 1)
+      meta.image = await uploadImage(got.stream(image), `image/${ext}`, resize)
     } catch {
       delete meta.image
     }
   }
 
-  if (meta.logo) {
+  if (logo) {
     try {
-      const response = await fetch(meta.logo, { timeout: 2000 })
-      const buffer = await response.buffer()
-      const type = await fileType.fromBuffer(buffer)
-      meta.logo = await uploadImage(Readable.from(buffer), type.mime, {
-        width: 256,
-        height: 256
-      })
+      const ext = logo.substr(logo.lastIndexOf('.') + 1)
+      meta.logo = await uploadImage(got.stream(logo), `image/${ext}`, resize)
     } catch {
       delete meta.logo
     }

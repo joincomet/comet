@@ -11,7 +11,7 @@ import PlanetPopup from '@/components/planet/PlanetPopup'
 import { useRouter } from 'next/router'
 import Twemoji from 'react-twemoji'
 
-function Post({
+export default function Post({
   post,
   showPlanet = true,
   showFullText = false,
@@ -20,14 +20,14 @@ function Post({
   const router = useRouter()
   const [textContent, setTextContent] = useState(post.textContent)
   return (
-    <>
+    <div className="pb-0.5">
       <article
         onClick={() => {
           if (!showFullText) router.push(post.relativeUrl)
         }}
         className={`${className} ${
           !showFullText ? 'cursor-pointer' : ''
-        } bg-white dark:bg-gray-900 relative flex md:rounded pt-2 pl-3 pr-3 md:pr-6 pb-1 mb-0.5`}
+        } bg-white dark:bg-gray-900 relative flex md:rounded pt-2 pl-3 pr-3 md:pr-6 pb-1`}
       >
         <div className="pr-3">
           <UserPopup user={post.author}>
@@ -97,8 +97,6 @@ function Post({
           />
         </div>
       </article>
-    </>
+    </div>
   )
 }
-
-export default React.memo(Post)
