@@ -37,7 +37,11 @@ export default function Header({ children, className, ...rest }) {
       <header
         className={`flex z-40 fixed left-0 md:left-64 right-0 top-0 h-14 items-center transition px-4 md:px-8 ${
           isDark ? 'bg-white dark:bg-gray-900' : 'bg-transparent'
-        } ${isSolo ? 'border-b border-gray-200 dark:border-gray-800' : ''}`}
+        } ${
+          isSolo
+            ? 'border-b border-gray-200 dark:border-gray-800 md:dark:border-transparent'
+            : ''
+        }`}
         {...rest}
       >
         {showBack ? (
@@ -66,7 +70,8 @@ export default function Header({ children, className, ...rest }) {
           </button>
           <input
             onKeyDown={e => {
-              if (e.key === 'Enter') push(`/search?q=${search}`)
+              if (e.key === 'Enter' && !!search.trim())
+                push(`/search?q=${search}`)
             }}
             value={search}
             onChange={e => setSearch(e.target.value)}

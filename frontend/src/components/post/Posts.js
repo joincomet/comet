@@ -39,7 +39,9 @@ export default function Posts({ variables }) {
     <div ref={parentRef}>
       {isLoading ? (
         <div className="w-full flex items-center justify-center">
-          <Spinner />
+          {(pathname !== '/search' || (pathname === '/search' && query.q)) && (
+            <Spinner />
+          )}
         </div>
       ) : (
         <div

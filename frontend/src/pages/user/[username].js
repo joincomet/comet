@@ -21,6 +21,7 @@ import {
 import { NextSeo } from 'next-seo'
 import NavLink from '@/components/NavLink'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
+import usePostsVariables from '@/lib/usePostsVariables'
 
 export default function UserPage() {
   const { query } = useRouter()
@@ -181,7 +182,7 @@ export default function UserPage() {
           <div className="px-3 md:px-0">
             <SortOptionsUser user={user} />
           </div>
-          <Posts variables={getVariables(query)} />
+          <Posts variables={usePostsVariables()} />
         </div>
 
         <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -232,17 +233,6 @@ export default function UserPage() {
       </div>
     </>
   )
-}
-
-const getVariables = query => {
-  const sort = query.sort ? query.sort.toUpperCase() : 'NEW'
-  const time = query.time ? query.time.toUpperCase() : 'ALL'
-  return {
-    sort,
-    time,
-    username: query.username,
-    page: query.page ? parseInt(query.page) - 1 : 0
-  }
 }
 
 export async function getServerSideProps(ctx) {

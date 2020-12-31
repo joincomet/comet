@@ -1,6 +1,5 @@
 import { QueryClient } from 'react-query'
 import React, { useEffect } from 'react'
-import { fetchCurrentUser } from '@/lib/queries/useCurrentUser'
 import { dehydrate } from 'react-query/hydration'
 import Posts from '@/components/post/Posts'
 import SortOptions from '@/components/sort/SortOptions'
@@ -9,7 +8,7 @@ import InfoLinks from '@/components/InfoLinks'
 import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { useRouter } from 'next/router'
-import { fetchPosts } from '@/lib/queries/usePosts'
+import usePostsVariables from '@/lib/usePostsVariables'
 
 export default function UniversePage() {
   const { query } = useRouter()
@@ -24,7 +23,7 @@ export default function UniversePage() {
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 py-6">
             <SortOptions />
-            <Posts variables={getVariables(query)} />
+            <Posts variables={usePostsVariables()} />
           </div>
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -36,18 +35,6 @@ export default function UniversePage() {
       </div>
     </div>
   )
-}
-
-const getVariables = query => {
-  const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
-  let time = query.time ? query.time.toUpperCase() : 'ALL'
-  if (sort === 'TOP' && !query.time) time = 'DAY'
-  return {
-    sort,
-    time,
-    joinedOnly: false,
-    page: query.page ? parseInt(query.page) - 1 : 0
-  }
 }
 
 export async function getServerSideProps(ctx) {

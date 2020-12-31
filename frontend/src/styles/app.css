@@ -212,7 +212,7 @@ body {
 }
 
 .mycontainer {
-  @apply container mx-auto 2xl:px-56 px-0 md:px-8;
+  @apply container mx-auto 2xl:px-64 px-0 md:px-8;
 }
 
 .mycontainer-nopad {
@@ -267,4 +267,24 @@ body {
 
 .react-responsive-modal-closeButton {
   @apply top-8 right-8 text-tertiary focus:outline-none !important;
+}
+
+.break-long-words {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.menu-items {
+  @apply absolute bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none;
+}
+
+.menu-item {
+  @apply cursor-pointer transition flex items-center w-full px-4 py-2.5 text-sm font-medium text-left focus:outline-none select-none;
+}
+
+.toast {
+  @apply bg-white dark:bg-gray-800 text-sm font-medium text-primary;
 }

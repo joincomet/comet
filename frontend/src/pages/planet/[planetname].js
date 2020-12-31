@@ -22,6 +22,7 @@ import {
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import PlanetOptionsButton from '@/components/planet/PlanetOptionsButton'
+import usePostsVariables from '@/lib/usePostsVariables'
 
 export default function PlanetPage() {
   const { query } = useRouter()
@@ -186,7 +187,7 @@ export default function PlanetPage() {
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 pt-6 pb-28">
             <SortOptions />
-            <Posts variables={getVariables(query)} showPlanet={false} />
+            <Posts variables={usePostsVariables()} showPlanet={false} />
           </div>
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -257,17 +258,6 @@ export default function PlanetPage() {
       </div>
     </>
   )
-}
-
-const getVariables = query => {
-  const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
-  const time = query.time ? query.time.toUpperCase() : 'ALL'
-  return {
-    sort,
-    time,
-    planet: query.planetname,
-    page: query.page ? parseInt(query.page) - 1 : 0
-  }
 }
 
 export async function getServerSideProps(ctx) {

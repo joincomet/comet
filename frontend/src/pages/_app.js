@@ -13,6 +13,7 @@ import Layout from '@/components/layout/Layout'
 import SEO from '../next-seo.config'
 import { DefaultSeo } from 'next-seo'
 import RouteLoader from '@/components/RouteLoader'
+import ResponsiveToaster from '@/components/ResponsiveToaster'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,6 +41,8 @@ export default function App({ Component, pageProps }) {
       <DefaultSeo {...SEO} />
 
       <RouteLoader />
+
+      <ResponsiveToaster />
 
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>

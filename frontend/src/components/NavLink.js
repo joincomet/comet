@@ -12,7 +12,8 @@ function NavLink({
   scroll = true,
   replace = false,
   prefetch,
-  target = '_self'
+  target = '_self',
+  onClick = () => {}
 }) {
   if (!href)
     return (
@@ -30,7 +31,12 @@ function NavLink({
       replace={replace}
       prefetch={prefetch}
     >
-      <a className={`${className}`} style={style} target={target}>
+      <a
+        className={`${className}`}
+        style={style}
+        target={target}
+        onClick={onClick}
+      >
         {children}
       </a>
     </Link>

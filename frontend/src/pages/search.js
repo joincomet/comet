@@ -7,34 +7,45 @@ import InfoLinks from '@/components/InfoLinks'
 import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { useRouter } from 'next/router'
+import usePostsVariables from '@/lib/usePostsVariables'
 
 export default function SearchPage() {
   const { setTitle } = useHeaderStore()
   useEffect(() => setTitle('Search'), [])
 
-  const { query, pathname, push } = useRouter()
+  const { query, push } = useRouter()
 
   const [search, setSearch] = useState(query.q || '')
 
   return (
     <div>
-      {/*<CreatePostButton />*/}
-
       <div className="mycontainer mt-14 mb-28">
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 py-6">
-            <input
-              className="w-full px-3 focus:outline-none dark:bg-gray-800 rounded h-12"
-              placeholder="Search"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') push(`/search?q=${search}`)
-              }}
-            />
-            <div className="header-2 py-6">Search: {query.q}</div>
-            <SortOptions />
-            <Posts variables={getVariables(query)} />
+            <div className="px-3 md:px-0">
+              <input
+                className="w-full px-3 focus:outline-none dark:bg-gray-800 rounded h-12"
+                placeholder="Search"
+                autoFocus
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && !!search.trim())
+                    push(`/search?q=${search}`, `/search?q=${search}`, {
+                      shallow: true
+                    })
+                }}
+              />
+            </div>
+            {query.q && (
+              <>
+                <div className="header-2 py-6 px-3 md:px-0">
+                  Search: {query.q}
+                </div>
+                <SortOptions />
+                <Posts variables={usePostsVariables()} />
+              </>
+            )}
           </div>
 
           <div className="col-span-0 md:col-span-1 hidden md:block">
@@ -46,19 +57,6 @@ export default function SearchPage() {
       </div>
     </div>
   )
-}
-
-const getVariables = query => {
-  const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
-  let time = query.time ? query.time.toUpperCase() : 'ALL'
-  if (sort === 'TOP' && !query.time) time = 'DAY'
-  return {
-    sort,
-    time,
-    joinedOnly: false,
-    q: query.q || '',
-    page: query.page ? parseInt(query.page) - 1 : 0
-  }
 }
 
 export async function getServerSideProps(ctx) {

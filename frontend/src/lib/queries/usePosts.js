@@ -75,6 +75,56 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
             deleted
             removed
             removedReason
+            repostId
+            repost {
+              id
+              id36
+              title
+              pinned
+              pinnedByAuthor
+              textContent
+              linkUrl
+              imageUrls
+              relativeUrl
+              commentCount
+              rocketCount
+              isRocketed
+              thumbnailUrl
+              logoUrl
+              domain
+              meta {
+                title
+                description
+              }
+              planet {
+                id
+                name
+                description
+                color
+                avatarUrl
+                bannerUrl
+                isJoined
+                userCount
+              }
+              author {
+                id
+                username
+                name
+                bio
+                avatarUrl
+                rocketCount
+                followerCount
+                followingCount
+                isFollowing
+                isFollowed
+                isCurrentUser
+              }
+              timeSince
+              timeSinceEdited
+              deleted
+              removed
+              removedReason
+            }
           }
         }
       }
@@ -84,7 +134,4 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
   return posts
 }
 
-export const usePosts = variables =>
-  useQuery(['posts', variables], fetchPosts, {
-    // keepPreviousData: true
-  })
+export const usePosts = variables => useQuery(['posts', variables], fetchPosts)

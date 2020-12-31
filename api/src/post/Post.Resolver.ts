@@ -60,7 +60,12 @@ export class PostResolver {
     }: PostsArgs,
     @Ctx() { userId }: Context
   ) {
-    if (q === '') return []
+    if (q === '')
+      return {
+        page: 0,
+        nextPage: null,
+        posts: []
+      } as PostsResponse
 
     const qb = this.postRepo
       .createQueryBuilder('post')
