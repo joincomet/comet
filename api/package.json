@@ -70,5 +70,10 @@
     "prettier": "^2.2.1",
     "ts-node-dev": "^1.1.1",
     "typescript": "^4.1.3"
+  },
+  "resolutions": {
+    "domutils": "^2.4.4",
+    "cheerio": "^1.0.0-rc.5",
+    "metascraper/cheerio": "^1.0.0-rc.5"
   }
 }
