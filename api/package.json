@@ -73,6 +73,7 @@
   },
   "resolutions": {
     "domutils": "^2.4.4",
+    "htmlparser2/domutils": "^2.4.4",
     "cheerio": "^1.0.0-rc.5",
     "metascraper/cheerio": "^1.0.0-rc.5"
   }
