@@ -2,20 +2,7 @@ import got from 'got'
 import { Metadata } from '@/metascraper/Metadata'
 import { uploadImage } from '@/S3Storage'
 import { isUrl } from '@/IsUrl'
-
-const metascraper = require('metascraper')([
-  require('metascraper-author')(),
-  require('metascraper-date')(),
-  require('metascraper-description')(),
-  require('metascraper-image')(),
-  require('metascraper-logo')(),
-  require('metascraper-clearbit')(),
-  require('metascraper-publisher')(),
-  require('metascraper-title')(),
-  require('metascraper-url')(),
-  require('metascraper-youtube')(),
-  require('./metascraperTwitterCard')()
-])
+import { metascraper } from '@/metascraper/metascraper'
 
 const timeout = 5000
 

@@ -17,7 +17,7 @@
     "esModuleInterop": true,
     "newLine": "LF",
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "lib": ["es2020", "dom"]
   },
   "include": [
