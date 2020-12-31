@@ -2,7 +2,6 @@ import got from 'got'
 import { Metadata } from '@/metascraper/Metadata'
 import { uploadImage } from '@/S3Storage'
 import { isUrl } from '@/IsUrl'
-import { metascraper } from '@/metascraper/metascraper'
 
 const timeout = 5000
 
@@ -21,8 +20,22 @@ export const scrapeMetadata = async (targetUrl: string): Promise<Metadata> => {
 
   let meta
   try {
+    const metascraper = require('metascraper')([
+      require('metascraper-author')(),
+      require('metascraper-date')(),
+      require('metascraper-description')(),
+      require('metascraper-image')(),
+      require('metascraper-logo')(),
+      require('metascraper-clearbit')(),
+      require('metascraper-publisher')(),
+      require('metascraper-title')(),
+      require('metascraper-url')(),
+      require('metascraper-youtube')(),
+      require('./metascraperTwitterCard')()
+    ])
     meta = (await metascraper({ html, url })) as Metadata
-  } catch {
+  } catch (e) {
+    console.error(e)
     return null
   }
 
