@@ -2,9 +2,10 @@
 import React, { useMemo } from 'react'
 import { Editable, Slate, withReact } from 'slate-react'
 import { createEditor } from 'slate'
+import { useAndroidPlugin } from 'slate-android-plugin'
 
 export default function Editor({ value, setValue }) {
-  const editor = useMemo(() => withReact(createEditor()), [])
+  const editor = useAndroidPlugin(useMemo(() => withReact(createEditor()), []))
 
   return (
     <Slate

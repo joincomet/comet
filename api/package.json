@@ -15,7 +15,7 @@
     "@typeit/discord": "^4.0.8",
     "apollo-server-express": "^2.19.1",
     "argon2": "^0.27.1",
-    "aws-sdk": "^2.819.0",
+    "aws-sdk": "^2.820.0",
     "class-validator": "^0.12.2",
     "cookie-parser": "^1.4.5",
     "dataloader": "^2.0.0",

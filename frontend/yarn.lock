@@ -2826,7 +2826,7 @@ __metadata:
     prettier: ^2.2.1
     react: ^17.0.1
     react-dom: ^17.0.1
-    react-hook-form: ^6.13.1
+    react-hook-form: ^6.14.0
     react-hot-toast: ^1.0.1
     react-icons: ^4.1.0
     react-intersection-observer: ^8.31.0
@@ -2842,6 +2842,7 @@ __metadata:
     react-window: ^1.8.6
     sass: ^1.32.0
     slate: ^0.59.0
+    slate-android-plugin: ^0.0.4
     slate-history: ^0.59.0
     slate-hyperscript: ^0.59.0
     slate-react: ^0.59.0
@@ -5027,12 +5028,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^6.13.1":
-  version: 6.13.1
-  resolution: "react-hook-form@npm:6.13.1"
+"react-hook-form@npm:^6.14.0":
+  version: 6.14.0
+  resolution: "react-hook-form@npm:6.14.0"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 842a7e2de7f66ee802c08b6f085c71eb48683f521b6537fd48bcc3f91dd5cb6362ec9032e7250550cf4e9751c707847c50fa9af4b1397a8acfda06380e06e456
+  checksum: d2c7023ed8f506aab0fcd95cb24b20df9ef2da6846269686de5072ab7eb0a5fb430be513ca8054503698f92a96f020cbac5711567936bb1dfc25992e01804324
   languageName: node
   linkType: hard
 
@@ -5750,6 +5751,18 @@ fsevents@~2.1.2:
     mime: ^2.3.1
     totalist: ^1.0.0
   checksum: 043b9aa38d6666f402f5cbc26bad94152bca07a3ce15ab1eb7d65a18075bf4e49239285805b3b5d7f33a772fc00fea42f916177378559ad61c4a69706f9b7e68
+  languageName: node
+  linkType: hard
+
+"slate-android-plugin@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "slate-android-plugin@npm:0.0.4"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+    slate: ">=0.55.0"
+    slate-react: ">=0.55.0"
+  checksum: 917a756c69ed3058c214ce05ceab238644a7977c17f5f4d62cf5a5b3f82e1804360b77442477daec695f8b57c25445985dfb6d1eb1cf0592674f6a1976578b80
   languageName: node
   linkType: hard
 

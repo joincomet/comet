@@ -1971,7 +1971,7 @@ __metadata:
     "@typescript-eslint/parser": ^4.11.1
     apollo-server-express: ^2.19.1
     argon2: ^0.27.1
-    aws-sdk: ^2.819.0
+    aws-sdk: ^2.820.0
     class-validator: ^0.12.2
     cookie-parser: ^1.4.5
     dataloader: ^2.0.0
@@ -2399,9 +2399,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.819.0":
-  version: 2.819.0
-  resolution: "aws-sdk@npm:2.819.0"
+"aws-sdk@npm:^2.820.0":
+  version: 2.820.0
+  resolution: "aws-sdk@npm:2.820.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -2412,7 +2412,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 984858afa4334752de81af2e5e6eb971975f81f9e071ebc4f58b125100f5f86f7eb9514799934d413f487269c84c6783b3b3cb2f7427fca2c9ee1e88c801eeb3
+  checksum: 734bd47c88584d81c6ab3283648b9ae1fc3ada4b28a1814bd2d20a5e989352c7f188c3da7372b7cc317c6d67c08eeeebbfaf366068710506ad66fe4f15466912
   languageName: node
   linkType: hard
 
