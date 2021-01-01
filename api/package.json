@@ -7,7 +7,7 @@
     "node": "15.x.x"
   },
   "scripts": {
-    "start": "npm install domutils@2.4.4 --no-save && NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
+    "start": "NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
     "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
     "migrate": "NODE_ENV=development ts-node -r tsconfig-paths/register src/migrations/from-getcomet/script.ts"
   },
@@ -70,11 +70,5 @@
     "prettier": "^2.2.1",
     "ts-node-dev": "^1.1.1",
     "typescript": "^4.1.3"
-  },
-  "resolutions": {
-    "domutils": "^2.4.4",
-    "htmlparser2/domutils": "^2.4.4",
-    "cheerio": "^1.0.0-rc.5",
-    "metascraper/cheerio": "^1.0.0-rc.5"
   }
 }
