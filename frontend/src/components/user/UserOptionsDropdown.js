@@ -1,4 +1,3 @@
-// @refresh reset
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import React from 'react'
 import UserAvatar from '@/components/user/UserAvatar'

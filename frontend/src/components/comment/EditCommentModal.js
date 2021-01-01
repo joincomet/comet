@@ -2,9 +2,7 @@ import { FiX } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
 import React, { useEffect, useState } from 'react'
 import { useEditCommentMutation } from '@/lib/mutations/commentMutations'
-import Editor from '@/components/Editor'
-import { emptyEditor } from '@/lib/emptyEditor'
-import { deserialize, serialize, textContentEmpty } from '@/lib/serializeHtml'
+import Editor from '@/components/editor/Editor'
 import toast from 'react-hot-toast'
 
 export default function EditCommentModal({ open, setOpen, comment, setText }) {
@@ -15,17 +13,7 @@ export default function EditCommentModal({ open, setOpen, comment, setText }) {
       toast.success('Edited comment!')
     }
   })
-  const [textContent, setTextContent] = useState(emptyEditor)
-
-  useEffect(
-    () =>
-      setTextContent(
-        deserialize(
-          new DOMParser().parseFromString(comment.textContent, 'text/html').body
-        )
-      ),
-    []
-  )
+  const [textContent, setTextContent] = useState(comment.textContent)
 
   return (
     <Modal
@@ -42,13 +30,16 @@ export default function EditCommentModal({ open, setOpen, comment, setText }) {
         <div className="flex items-center">
           <button
             onClick={() => {
-              if (textContentEmpty(textContent)) return
               editComment.mutate({
                 commentId: comment.id,
-                newTextContent: serialize({ children: textContent })
+                newTextContent: textContent
               })
             }}
-            disabled={textContentEmpty(textContent)}
+            disabled={
+              !textContent ||
+              textContent === `<p></p>` ||
+              textContent === `<h3></h3>`
+            }
             className="ml-auto h-9 bg-blue-600 rounded-full px-6 cursor-pointer text-sm font-medium inline-flex items-center disabled:opacity-50"
           >
             Done

@@ -12,9 +12,7 @@ export default function PlanetHeader({ planet, show }) {
         className="inline-flex items-center"
       >
         <PlanetAvatar planet={planet} />
-        <div className="ml-4 text-xl font-bold tracking-tight leading-none">
-          +{planet.name}
-        </div>
+        <div className="ml-4 header-3">+{planet.name}</div>
       </NavLink>
 
       <div className="ml-auto">

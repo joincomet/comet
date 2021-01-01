@@ -119,14 +119,7 @@ export default function UserPopup({
                       href={`/user/${user.username}`}
                       className="leading-none mt-3 font-medium"
                     >
-                      {user.name}
-                    </NavLink>
-
-                    <NavLink
-                      href={`/user/${user.username}`}
-                      className="leading-none mt-1.5 font-medium text-xs text-tertiary"
-                    >
-                      @{user.username}
+                      {user.username}
                     </NavLink>
 
                     <div className="mt-3 text-sm text-secondary font-medium text-center line-clamp-3">

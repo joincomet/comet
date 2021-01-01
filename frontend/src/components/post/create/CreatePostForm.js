@@ -4,11 +4,9 @@ import { FiImage, FiLink, FiX } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { useSubmitPostMutation } from '@/lib/mutations/postMutations'
-import { serialize } from '@/lib/serializeHtml'
-import Editor from '@/components/Editor'
-import { emptyEditor } from '@/lib/emptyEditor'
 import toast from 'react-hot-toast'
 import Spinner from '@/components/Spinner'
+import Editor from '@/components/editor/Editor'
 
 const error = 'tip text-red-400 mb-2'
 
@@ -30,7 +28,7 @@ export default function CreatePostForm({ setOpen }) {
     mode: 'onChange'
   })
 
-  const [textContent, setTextContent] = useState(emptyEditor)
+  const [textContent, setTextContent] = useState('')
 
   const images = Array.from(watch('images') || [])
 
@@ -60,11 +58,7 @@ export default function CreatePostForm({ setOpen }) {
     const variables = {}
     if (title) variables.title = title
     if (link) variables.link = link
-
-    if (textContent !== emptyEditor) {
-      const html = serialize({ children: textContent })
-      if (html && html !== `<p></p>`) variables.textContent = html
-    }
+    if (textContent) variables.textContent = textContent
 
     if (images && images.length > 0) variables.images = images
     if (query.planetname) variables.planetName = query.planetname
@@ -79,19 +73,6 @@ export default function CreatePostForm({ setOpen }) {
     } catch {
       return false
     }
-  }
-
-  const disabled = () => {
-    let htmlEmpty = true
-    const html = serialize({ children: textContent })
-    if (html && html !== `<p></p>`) htmlEmpty = false
-
-    return (
-      htmlEmpty &&
-      (!link || (link && !validUrl(link))) &&
-      !title &&
-      (!images || images.length === 0)
-    )
   }
 
   return (
@@ -195,7 +176,15 @@ export default function CreatePostForm({ setOpen }) {
 
           <button
             type="submit"
-            disabled={submitPostMutation.isLoading || disabled()}
+            disabled={
+              submitPostMutation.isLoading ||
+              ((!textContent ||
+                textContent === `<p></p>` ||
+                textContent === `<h3></h3>`) &&
+                (!link || (link && !validUrl(link))) &&
+                !title &&
+                (!images || images.length === 0))
+            }
             className={`ml-auto ${postBtn}`}
           >
             {submitPostMutation.isLoading && (

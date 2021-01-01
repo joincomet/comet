@@ -54,7 +54,7 @@ module.exports = {
       typography: theme => ({
         DEFAULT: {
           css: {
-            color: theme('colors.gray.800'),
+            color: theme('colors.black'),
             a: {
               color: theme('colors.blue.500'),
               '&:hover': {
@@ -62,12 +62,32 @@ module.exports = {
                 textDecoration: 'underline'
               }
             },
-            'h2 a': {
-              color: theme('colors.gray.800'),
-              textDecoration: 'none'
+            'a strong': {
+              color: theme('colors.blue.500')
             },
-            '.tag a': {
-              textDecoration: 'none'
+            h1: {
+              color: theme('colors.black')
+            },
+            h2: {
+              color: theme('colors.black')
+            },
+            h3: {
+              color: theme('colors.black')
+            },
+            h4: {
+              color: theme('colors.black')
+            },
+            h5: {
+              color: theme('colors.black')
+            },
+            h6: {
+              color: theme('colors.black')
+            },
+            strong: {
+              color: theme('colors.black')
+            },
+            code: {
+              color: theme('colors.black')
             },
             blockquote: {
               borderLeftColor: theme('colors.gray.300'),
@@ -85,22 +105,9 @@ module.exports = {
         dark: {
           css: {
             color: theme('colors.white'),
-            a: {
-              color: theme('colors.blue.500'),
-              '&:hover': {
-                color: theme('colors.blue.500'),
-                textDecoration: 'underline'
-              }
-            },
-
             'a strong': {
               color: theme('colors.blue.500')
             },
-
-            'h2 a': {
-              color: theme('colors.blue.500')
-            },
-
             h1: {
               color: theme('colors.white')
             },
@@ -119,19 +126,12 @@ module.exports = {
             h6: {
               color: theme('colors.white')
             },
-
             strong: {
               color: theme('colors.white')
             },
-
             code: {
               color: theme('colors.white')
             },
-
-            figcaption: {
-              color: theme('colors.white')
-            },
-
             blockquote: {
               borderLeftColor: theme('colors.gray.700'),
               backgroundColor: theme('colors.gray.800'),
