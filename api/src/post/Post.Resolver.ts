@@ -275,6 +275,9 @@ export class PostResolver {
     { title, link, textContent, planetName, images, nsfw }: SubmitPostArgs,
     @Ctx() { userId }: Context
   ) {
+    if (textContent)
+      textContent = textContent.replace(/<[^/>][^>]*><\/[^>]+>/, '')
+
     if (!title && !link && !textContent && (!images || images.length === 0))
       throw new Error('At least one field is required')
 

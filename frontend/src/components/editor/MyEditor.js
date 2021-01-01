@@ -127,9 +127,16 @@ export default function MyEditor({ value, setValue }) {
     })
   )
 
-  useEffect(() => setValue(toHtml({ node: json.doc, schema: json.schema })), [
-    json
-  ])
+  useEffect(
+    () =>
+      setValue(
+        toHtml({ node: json.doc, schema: json.schema }).replace(
+          /<[^/>][^>]*><\/[^>]+>/,
+          ''
+        )
+      ),
+    [json]
+  )
 
   return (
     <RemirrorProvider

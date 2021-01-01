@@ -178,9 +178,7 @@ export default function CreatePostForm({ setOpen }) {
             type="submit"
             disabled={
               submitPostMutation.isLoading ||
-              ((!textContent ||
-                textContent === `<p></p>` ||
-                textContent === `<h3></h3>`) &&
+              (!textContent &&
                 (!link || (link && !validUrl(link))) &&
                 !title &&
                 (!images || images.length === 0))

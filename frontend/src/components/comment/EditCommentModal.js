@@ -1,6 +1,6 @@
 import { FiX } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useEditCommentMutation } from '@/lib/mutations/commentMutations'
 import Editor from '@/components/editor/Editor'
 import toast from 'react-hot-toast'
@@ -35,11 +35,7 @@ export default function EditCommentModal({ open, setOpen, comment, setText }) {
                 newTextContent: textContent
               })
             }}
-            disabled={
-              !textContent ||
-              textContent === `<p></p>` ||
-              textContent === `<h3></h3>`
-            }
+            disabled={!textContent}
             className="ml-auto h-9 bg-blue-600 rounded-full px-6 cursor-pointer text-sm font-medium inline-flex items-center disabled:opacity-50"
           >
             Done

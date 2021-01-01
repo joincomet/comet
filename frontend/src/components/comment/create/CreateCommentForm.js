@@ -82,12 +82,7 @@ export default function CreateCommentForm({
         <div className="flex">
           <button
             type="submit"
-            disabled={
-              submitCommentMutation.isLoading ||
-              !textContent ||
-              textContent === `<p></p>` ||
-              textContent === `<h3></h3>`
-            }
+            disabled={submitCommentMutation.isLoading || !textContent}
             className={`ml-auto ${postBtn}`}
           >
             {submitCommentMutation.isLoading && (

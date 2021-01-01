@@ -41,6 +41,9 @@ export class CommentResolver {
     @Args() { textContent, postId, parentCommentId }: SubmitCommentArgs,
     @Ctx() { userId }: Context
   ) {
+    textContent = textContent.replace(/<[^/>][^>]*><\/[^>]+>/, '')
+    if (!textContent) throw new Error('Comment cannot be empty')
+
     const post = await this.postRepo
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })

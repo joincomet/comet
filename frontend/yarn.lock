@@ -4674,7 +4674,7 @@ __metadata:
     react-intersection-observer: ^8.31.0
     react-player: ^2.7.2
     react-popper: ^2.2.4
-    react-query: ^3.5.6
+    react-query: ^3.5.7
     react-responsive-modal: ^6.0.0
     react-scrollbars-custom: ^4.0.25
     react-twemoji: ^0.3.0
@@ -7720,9 +7720,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.5.6":
-  version: 3.5.6
-  resolution: "react-query@npm:3.5.6"
+"react-query@npm:^3.5.7":
+  version: 3.5.7
+  resolution: "react-query@npm:3.5.7"
   dependencies:
     "@babel/runtime": ^7.5.5
     match-sorter: ^6.0.2
@@ -7733,7 +7733,7 @@ fsevents@~2.1.2:
       optional: true
     react-native:
       optional: true
-  checksum: 8d07c21113bbe7e90275d2fd29eea22da1e66c6cf29bdd159cf53b92fad5eed39bf92b72f6be2b98b0a160b9bea001b92ae970f1c2b02aa78a3f088fab248bb9
+  checksum: dc7956078ec5719ed7ac755d52f7563bd819584a055d0b41b3781c2fdb4b2122c9ac1107e1b38d3342fab0764e14da955e1ad32da62cfeed7c33d18ae28cb0c7
   languageName: node
   linkType: hard
 
