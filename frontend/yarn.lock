@@ -546,39 +546,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/bundle-analyzer@npm:^10.0.4":
-  version: 10.0.4
-  resolution: "@next/bundle-analyzer@npm:10.0.4"
+"@next/bundle-analyzer@npm:^10.0.5-canary.8":
+  version: 10.0.5-canary.8
+  resolution: "@next/bundle-analyzer@npm:10.0.5-canary.8"
   dependencies:
     webpack-bundle-analyzer: 4.3.0
-  checksum: 6f45cf78ca8375c85d55c830f40d3fcca40b71b2899897d2d60427ecb934f7e32f4fa1682a836a3006c5dc562efc02b82a77e219df0f18b2d71b5329943a06d8
+  checksum: 53559e7e9d0883d51cedd074aeb409ebef6e118544d92f9b0a75bcb1a512b0875b4779cceebe7f3e31cd40ee38cb7d71432cbbc05898304476cc70fb49abd6b7
   languageName: node
   linkType: hard
 
-"@next/env@npm:10.0.5-canary.6":
-  version: 10.0.5-canary.6
-  resolution: "@next/env@npm:10.0.5-canary.6"
-  checksum: b2cd991f51974c939630f275311a86ae20bd42e0854ea8099a49ed7dffee05b6cef80fdddce0a4b9179420301c8e96ccf2d4e414d29982f4b6d0873a26accf22
+"@next/env@npm:10.0.5-canary.8":
+  version: 10.0.5-canary.8
+  resolution: "@next/env@npm:10.0.5-canary.8"
+  checksum: 33d29b396d5a7f1244116d6a78afc176261b9dbab3e0643dc0ed2e676e6776b719148addf03d69b623a02891bf5418aa6686d93f60127ce75321b239ed208106
   languageName: node
   linkType: hard
 
-"@next/polyfill-module@npm:10.0.5-canary.6":
-  version: 10.0.5-canary.6
-  resolution: "@next/polyfill-module@npm:10.0.5-canary.6"
-  checksum: 1aff65f64ca4643ec79717b18a1ef670331330d0978c7820750cc0ca9a0b9c2071a6040948ca90dcb358ddabff4e31e8fb272102b19dc1159f54dab6f88daca0
+"@next/polyfill-module@npm:10.0.5-canary.8":
+  version: 10.0.5-canary.8
+  resolution: "@next/polyfill-module@npm:10.0.5-canary.8"
+  checksum: d5fef723ea42546452fb74339d2b780848601f93995e5f7fae636a7df2767992e5beb9bae8dd578ed5b65918fecbec16bfefbf1cc04c5c859b9f0e3b9134f3bc
   languageName: node
   linkType: hard
 
-"@next/react-dev-overlay@npm:10.0.5-canary.6":
-  version: 10.0.5-canary.6
-  resolution: "@next/react-dev-overlay@npm:10.0.5-canary.6"
+"@next/react-dev-overlay@npm:10.0.5-canary.8":
+  version: 10.0.5-canary.8
+  resolution: "@next/react-dev-overlay@npm:10.0.5-canary.8"
   dependencies:
     "@babel/code-frame": 7.12.11
-    ally.js: 1.4.1
     anser: 1.4.9
     chalk: 4.0.0
     classnames: 2.2.6
+    css.escape: 1.5.1
     data-uri-to-buffer: 3.0.1
+    platform: 1.3.6
     shell-quote: 1.7.2
     source-map: 0.8.0-beta.0
     stacktrace-parser: 0.1.10
@@ -587,17 +588,17 @@ __metadata:
     react: ^16.9.0 || ^17
     react-dom: ^16.9.0 || ^17
     webpack: ^4 || ^5
-  checksum: 22cfa1e6d6368d7fe8a611ff6e39ccd4b2e92a42acdbd481bcce41eb75f34ba34dae4c0aebff823e4040af9f488c1235c3402447497acf20a0f23a976f574d0e
+  checksum: da568d9746f94cf143fde75eb812e8ab0515a46fc40da0396dbd60bb1ea504bc1da5304dae45968e51c338f4941ea2a04bcf384c38ed1117f2c300030856b679
   languageName: node
   linkType: hard
 
-"@next/react-refresh-utils@npm:10.0.5-canary.6":
-  version: 10.0.5-canary.6
-  resolution: "@next/react-refresh-utils@npm:10.0.5-canary.6"
+"@next/react-refresh-utils@npm:10.0.5-canary.8":
+  version: 10.0.5-canary.8
+  resolution: "@next/react-refresh-utils@npm:10.0.5-canary.8"
   peerDependencies:
     react-refresh: 0.8.3
     webpack: ^4 || ^5
-  checksum: 4cf2c1e553f8ec3b578fb8781530d5932f484107a9e6949c170ef011585898d569e912f190f9177f1a7dd15158af0080a027d3a5a24eaad28ce4e7c989bcd3fa
+  checksum: 5a09c9846281e5d0d2ecf0f2c737e87befba1f9208c6023ccf678b2b4cb4a3b48ae46a30b060b47e551d70f6a578c4599f7962728477c86ea590962e0b3eec54
   languageName: node
   linkType: hard
 
@@ -1762,13 +1763,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prop-types@npm:*":
-  version: 15.7.3
-  resolution: "@types/prop-types@npm:15.7.3"
-  checksum: bd0eab69d5120ad3784d0c9985f902653d5924707a7f2b3702a330e762dfd61b6494954cb54ad0c52b918ffd6f1e7e27c9270e4442bc15250de348596f2f60cb
-  languageName: node
-  linkType: hard
-
 "@types/prosemirror-collab@npm:^1.1.0":
   version: 1.1.0
   resolution: "@types/prosemirror-collab@npm:1.1.0"
@@ -1889,26 +1883,6 @@ __metadata:
     "@types/prosemirror-state": "*"
     "@types/prosemirror-transform": "*"
   checksum: dedc6f7843acacf4205dd66e078df3b0b1d8b4ff56922bf44de522d9d603b8171434ac7bd7734403911c952059f81c3e3f0b1f179ba77e2fdb2c2a8fd8736b9a
-  languageName: node
-  linkType: hard
-
-"@types/react-virtualized@npm:^9.21.10":
-  version: 9.21.10
-  resolution: "@types/react-virtualized@npm:9.21.10"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/react": "*"
-  checksum: 026297be9fd1e3bef226c1226a9c81b37e0ddcc26bd6d520891d89be4815fd8553a7958ef8a8b3acecc43f96857336dc814c7ccf25e1eea15903cfc8947bad20
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:*":
-  version: 17.0.0
-  resolution: "@types/react@npm:17.0.0"
-  dependencies:
-    "@types/prop-types": "*"
-    csstype: ^3.0.2
-  checksum: dcef2034b822a949c5528fa8fa3c64da654fdbb822bd8f0488c0084d84cadb8b90af68813a6c95153d4754079f50b1cab206552c7c20f6b67a26c3641383fe31
   languageName: node
   linkType: hard
 
@@ -2260,16 +2234,6 @@ __metadata:
     json-schema-traverse: ^0.4.1
     uri-js: ^4.2.2
   checksum: 19a8f3b0a06001eb68e6268f4f9f04424b32baadd5df6ba8292cd473e22e5f4019ed9ab17c3e3510394178ed8bef9b42ad0bdb5c675d65f042421a774780ce1a
-  languageName: node
-  linkType: hard
-
-"ally.js@npm:1.4.1":
-  version: 1.4.1
-  resolution: "ally.js@npm:1.4.1"
-  dependencies:
-    css.escape: ^1.5.0
-    platform: 1.3.3
-  checksum: bf1cda2f029033dd683b7a84199e376d82817d8c5ce70646d652ef5bb3268ffd839d6d85c352c1a7361cfc49781a84b5ca59a8b55c741484ae9c3027c9c073bc
   languageName: node
   linkType: hard
 
@@ -3451,7 +3415,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css.escape@npm:^1.5.0":
+"css.escape@npm:1.5.1":
   version: 1.5.1
   resolution: "css.escape@npm:1.5.1"
   checksum: 44fe5e93fee46fe60dbd0cdd078b14ef75697ee93519a7157f976b655463dd66eba598b0df16c16a897ac884c97845d2a3819cb8d370cbf91bc59bb557ebe826
@@ -3503,13 +3467,6 @@ __metadata:
   version: 2.6.14
   resolution: "csstype@npm:2.6.14"
   checksum: 9abe447b28534cc45304fca19a26d373c5bb8e9b18cedbb84330862937d102c9d8cc47f65d233f723c8512804e9d52b81d6fc57c23c6a4d5420f281827d73b03
-  languageName: node
-  linkType: hard
-
-"csstype@npm:^3.0.2":
-  version: 3.0.5
-  resolution: "csstype@npm:3.0.5"
-  checksum: d15967edea15457961ab1e3f1c4080c83792a595055551a087923b2fb67fffaddaa2eedafe10f665d12dc3f493af03c08322c9410fcd58e3dcf48104de15043c
   languageName: node
   linkType: hard
 
@@ -4641,14 +4598,13 @@ __metadata:
   dependencies:
     "@headlessui/react": ^0.2.0
     "@moxy/next-layout": ^2.2.2
-    "@next/bundle-analyzer": ^10.0.4
+    "@next/bundle-analyzer": ^10.0.5-canary.8
     "@popperjs/core": ^2.6.0
     "@reach/observe-rect": ^1.2.0
     "@tailwindcss/aspect-ratio": ^0.2.0
     "@tailwindcss/forms": ^0.2.1
     "@tailwindcss/typography": ^0.3.1
     "@tippyjs/react": ^4.2.0
-    "@types/react-virtualized": ^9.21.10
     autoprefixer: ^10.1.0
     babel-eslint: ^10.1.0
     eslint: ^7.16.0
@@ -4656,11 +4612,11 @@ __metadata:
     eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.22.0
     framer-motion: ^3.1.1
-    fuse.js: ^6.4.4
+    fuse.js: ^6.4.5
     graphql: ^15.4.0
     graphql-request: ^3.4.0
     graphql-tag: ^2.11.0
-    next: ^10.0.5-canary.6
+    next: ^10.0.5-canary.8
     next-seo: ^4.17.0
     nookies: ^2.5.0
     nprogress: ^0.2.0
@@ -4674,7 +4630,7 @@ __metadata:
     react-intersection-observer: ^8.31.0
     react-player: ^2.7.2
     react-popper: ^2.2.4
-    react-query: ^3.5.7
+    react-query: ^3.5.9
     react-responsive-modal: ^6.0.0
     react-scrollbars-custom: ^4.0.25
     react-twemoji: ^0.3.0
@@ -4780,10 +4736,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"fuse.js@npm:^6.4.4":
-  version: 6.4.4
-  resolution: "fuse.js@npm:6.4.4"
-  checksum: fcac76b056fd540f8c7af68d47cafba17ea5136ea6347154aa193051306ffd4310b988078511db069185cb9f5a1792f8fb39a1afe9332381d7bba6906eadeeb8
+"fuse.js@npm:^6.4.5":
+  version: 6.4.5
+  resolution: "fuse.js@npm:6.4.5"
+  checksum: 4c8b6737e1372c235226eaf8d5ef94fba3393abce3d9afca876a6a34bfa70357f682cb80ac0a5681846f1de7879751075628dcb13280ebcb9595f63c96e4f93a
   languageName: node
   linkType: hard
 
@@ -6452,17 +6408,17 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"next@npm:^10.0.5-canary.6":
-  version: 10.0.5-canary.6
-  resolution: "next@npm:10.0.5-canary.6"
+"next@npm:^10.0.5-canary.8":
+  version: 10.0.5-canary.8
+  resolution: "next@npm:10.0.5-canary.8"
   dependencies:
     "@ampproject/toolbox-optimizer": 2.7.1-alpha.0
     "@babel/runtime": 7.12.5
     "@hapi/accept": 5.0.1
-    "@next/env": 10.0.5-canary.6
-    "@next/polyfill-module": 10.0.5-canary.6
-    "@next/react-dev-overlay": 10.0.5-canary.6
-    "@next/react-refresh-utils": 10.0.5-canary.6
+    "@next/env": 10.0.5-canary.8
+    "@next/polyfill-module": 10.0.5-canary.8
+    "@next/react-dev-overlay": 10.0.5-canary.8
+    "@next/react-refresh-utils": 10.0.5-canary.8
     "@opentelemetry/api": 0.14.0
     ast-types: 0.13.2
     babel-plugin-transform-define: 2.0.0
@@ -6511,7 +6467,7 @@ fsevents@~2.1.2:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 73b71a1fb48a38f2fd427829a7dd84ac9ed0b1a74bb5a554e3e208b199e1da8d400104ec875b05ba82332b5bdb1bbf6ea9ed0a6ab8cb83490c90e610df4fb16c
+  checksum: e197b1707dc1ca118980841930906ee9e455c6446e4c807b969d067da1b3c149f5dd47842163b93ef008cc61e3a562ac381665f2e2d15848f4ba47ea92876fbb
   languageName: node
   linkType: hard
 
@@ -7012,10 +6968,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"platform@npm:1.3.3":
-  version: 1.3.3
-  resolution: "platform@npm:1.3.3"
-  checksum: 5687db874734b997e7bc75a7a97ad297cc36cb3b63fe8adcaffceb542410fd1ebc144f1ede2348378f481dac73aa9e4ac7bff958c9bae3ffdd6b23c3e186e1b5
+"platform@npm:1.3.6":
+  version: 1.3.6
+  resolution: "platform@npm:1.3.6"
+  checksum: d4d10d5a55476c6d369b03e02b31df50a4e7f1c565efabe707379b8a119709fb2a66dec090ab7fe520a30b767fe3791e3c4a5aba985918e51a17df45e469189f
   languageName: node
   linkType: hard
 
@@ -7720,9 +7676,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.5.7":
-  version: 3.5.7
-  resolution: "react-query@npm:3.5.7"
+"react-query@npm:^3.5.9":
+  version: 3.5.9
+  resolution: "react-query@npm:3.5.9"
   dependencies:
     "@babel/runtime": ^7.5.5
     match-sorter: ^6.0.2
@@ -7733,7 +7689,7 @@ fsevents@~2.1.2:
       optional: true
     react-native:
       optional: true
-  checksum: dc7956078ec5719ed7ac755d52f7563bd819584a055d0b41b3781c2fdb4b2122c9ac1107e1b38d3342fab0764e14da955e1ad32da62cfeed7c33d18ae28cb0c7
+  checksum: c6227d820d1a37be6e4e8b5f7e8183685db39f82876c00e1270a77e342fcebfe95c32c183b192de0585b66d6c5d8c3d974142ff2f8fad96cc8f93a2f7929ad10
   languageName: node
   linkType: hard
 
