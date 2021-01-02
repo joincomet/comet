@@ -23,7 +23,9 @@ export default function GalaxyPage() {
       <div className="mycontainer mt-14 mb-28">
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 py-6">
-            <div className="header-2 mb-6">{galaxiesMap[query.galaxyname]}</div>
+            <div className="header-2 mb-6 px-3 md:px-0">
+              {galaxiesMap[query.galaxyname]}
+            </div>
             <SortOptions />
             <Posts variables={usePostsVariables()} />
           </div>

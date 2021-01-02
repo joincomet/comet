@@ -5,3 +5,4 @@ latest.dump
 .graphqlconfig
 schema.graphql
 dump.sql
+.do/cometx.yaml
