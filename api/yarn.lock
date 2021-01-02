@@ -3397,7 +3397,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"domutils@npm:^2.4.4":
+"domutils@npm:^2.4.3, domutils@npm:^2.4.4":
   version: 2.4.4
   resolution: "domutils@npm:2.4.4"
   dependencies:
