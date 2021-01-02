@@ -104,14 +104,17 @@ export default function PlanetPage() {
           <div className="flex flex-col items-center md:items-start md:flex-row flex-grow mt-auto">
             <div className="label block md:hidden mb-4">
               {!planet.galaxies || planet.galaxies.length === 0 ? (
-                <span className="hover:underline cursor-pointer">
-                  uncategorized
-                </span>
+                <span>uncategorized</span>
               ) : (
                 planet.galaxies.map((galaxy, index) => (
-                  <span key={galaxy} className="hover:underline cursor-pointer">
+                  <span key={galaxy}>
                     {index !== 0 && <span>&nbsp;&middot;&nbsp;</span>}
-                    {galaxy}
+                    <NavLink
+                      href={`/galaxy/${galaxy}`}
+                      className="hover:underline cursor-pointer"
+                    >
+                      {galaxiesMap[galaxy]}
+                    </NavLink>
                   </span>
                 ))
               )}

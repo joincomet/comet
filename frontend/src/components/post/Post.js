@@ -53,7 +53,17 @@ export default function Post({
                   : ''
               }`}
             >
-              <div className="text-accent absolute top-2 right-3 cursor-pointer">
+              <div
+                className="absolute top-2 right-3 cursor-pointer"
+                style={{
+                  color:
+                    colorsMap[
+                      post.planet && post.planet.color
+                        ? post.planet.color
+                        : 'blue'
+                    ]
+                }}
+              >
                 <TiPinOutline size={22} style={{ marginTop: '-1px' }} />
               </div>
             </Tippy>
