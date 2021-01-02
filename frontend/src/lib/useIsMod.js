@@ -13,6 +13,9 @@ export function useIsMod(planet) {
 
 export function useIsModOrAdmin(planet) {
   const user = useCurrentUser().data
+
+  if (!planet) return user.admin
+
   return (
     user &&
     planet &&
