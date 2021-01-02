@@ -2,6 +2,7 @@ import { ArgsType, Field, ID } from 'type-graphql'
 import { PaginationArgs } from '@/PaginationArgs'
 import { PostSort } from '@/post/PostSort'
 import { TimeFilter } from '@/TimeFilter'
+import { Galaxy } from '@/Galaxy'
 
 @ArgsType()
 export class PostsArgs extends PaginationArgs {
@@ -29,11 +30,11 @@ export class PostsArgs extends PaginationArgs {
   })
   planet?: string
 
-  @Field({
+  @Field(() => Galaxy, {
     nullable: true,
     description: 'If provided, only posts from given galaxy will be returned'
   })
-  galaxy?: string
+  galaxy?: Galaxy
 
   @Field(() => ID, {
     nullable: true,

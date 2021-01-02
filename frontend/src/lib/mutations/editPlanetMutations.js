@@ -63,3 +63,33 @@ const addModerator = async variables => {
 
 export const useAddModeratorMutation = options =>
   useMutation(addModerator, options)
+
+const setPlanetColor = async variables => {
+  await request(
+    null,
+    gql`
+      mutation setPlanetColor($planetId: ID!, $color: Color!) {
+        setPlanetColor(planetId: $planetId, color: $color)
+      }
+    `,
+    variables
+  )
+}
+
+export const useSetPlanetColorMutation = options =>
+  useMutation(setPlanetColor, options)
+
+const setPlanetGalaxies = async variables => {
+  await request(
+    null,
+    gql`
+      mutation setPlanetGalaxies($planetId: ID!, $galaxies: [Galaxy!]!) {
+        setPlanetGalaxies(planetId: $planetId, galaxies: $galaxies)
+      }
+    `,
+    variables
+  )
+}
+
+export const useSetPlanetGalaxiesMutation = options =>
+  useMutation(setPlanetGalaxies, options)

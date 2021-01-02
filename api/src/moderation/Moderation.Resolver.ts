@@ -13,6 +13,8 @@ import { discordClient } from '@/discord/DiscordClient'
 import { Context } from '@/Context'
 import { TextChannel } from 'discord.js'
 import { Notification } from '@/notification/Notification.Entity'
+import { Color } from '@/Color'
+import { Galaxy } from '@/Galaxy'
 
 export class ModerationResolver {
   @InjectRepository(User) readonly userRepo: Repository<User>
@@ -192,6 +194,28 @@ export class ModerationResolver {
     if (description.length > 1000)
       throw new Error('Description cannot be longer than 1000 characters')
     await this.planetRepo.update(planetId, { description })
+    return true
+  }
+
+  @Authorized('MOD')
+  @Mutation(() => Boolean)
+  async setPlanetColor(
+    @Arg('planetId', () => ID) planetId: number,
+    @Arg('color', () => Color) color: Color
+  ) {
+    await this.planetRepo.update(planetId, { color })
+    return true
+  }
+
+  @Authorized('MOD')
+  @Mutation(() => Boolean)
+  async setPlanetGalaxies(
+    @Arg('planetId', () => ID) planetId: number,
+    @Arg('galaxies', () => [Galaxy]) galaxies: Galaxy[]
+  ) {
+    if (galaxies.length < 1 || galaxies.length > 3)
+      throw new Error('Must set 1-3 galaxies')
+    await this.planetRepo.update(planetId, { galaxies })
     return true
   }
 

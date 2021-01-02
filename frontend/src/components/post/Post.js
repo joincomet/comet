@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import Twemoji from 'react-twemoji'
 import Tippy from '@tippyjs/react'
 import EditPostModal from '@/components/post/EditPostModal'
+import { colorsMap } from '@/lib/colorsMap'
 
 export default function Post({
   post,
@@ -86,7 +87,7 @@ export default function Post({
                   <PlanetPopup planet={post.planet}>
                     <span
                       className={`font-semibold hover:underline cursor-pointer leading-normal`}
-                      style={{ color: post.planet.color || '#3B82F6' }}
+                      style={{ color: colorsMap[post.planet.color] }}
                     >
                       {post.planet.name}
                     </span>

@@ -1,6 +1,6 @@
 import { ArgsType, Field } from 'type-graphql'
 import { Length, Matches, ArrayMinSize, ArrayMaxSize } from 'class-validator'
-import { IsGalaxy } from '@/galaxiesList'
+import { Galaxy } from '@/Galaxy'
 
 @ArgsType()
 export class CreatePlanetArgs {
@@ -19,14 +19,10 @@ export class CreatePlanetArgs {
   })
   description: string
 
-  @Field(() => [String])
+  @Field(() => [Galaxy])
   @ArrayMinSize(1)
   @ArrayMaxSize(3)
-  @IsGalaxy({
-    message: 'Galaxy does not exist',
-    each: true
-  })
-  galaxies: string[]
+  galaxies: Galaxy[]
 
   @Field(() => Boolean, { defaultValue: false })
   nsfw = false

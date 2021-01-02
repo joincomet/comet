@@ -186,6 +186,12 @@ export class PostResolver {
       )
     }
 
+    if (galaxy) {
+      qb.andWhere(':galaxy = ANY(planet.galaxies)', {
+        galaxy
+      })
+    }
+
     let posts = await qb
       .andWhere('post.deleted = false')
       .andWhere('post.removed = false')
@@ -193,7 +199,7 @@ export class PostResolver {
       .take(pageSize)
       .getMany()
 
-    if (page === 0 && !q && (sort === PostSort.HOT || username)) {
+    if (page === 0 && !q && !galaxy && (sort === PostSort.HOT || username)) {
       const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.planet', 'planet')
@@ -343,7 +349,7 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Post)
-  async repost(
+  async createRepost(
     @Arg('postId', () => ID) postId: number,
     @Ctx() { userId }: Context
   ) {
@@ -359,7 +365,7 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Post)
-  async repostQuote(
+  async createRepostQuote(
     @Arg('postId', () => ID) postId: number,
     @Arg('title') title: string,
     @Ctx() { userId }: Context
@@ -513,6 +519,12 @@ export class PostResolver {
   async author(@Root() post: Post, @Ctx() { userLoader }: Context) {
     if (!post.authorId) return null
     return userLoader.load(post.authorId)
+  }
+
+  @FieldResolver()
+  async repost(@Root() post: Post, @Ctx() { postLoader }: Context) {
+    if (!post.repostId) return null
+    return postLoader.load(post.repostId)
   }
 
   @FieldResolver()

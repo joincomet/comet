@@ -7,6 +7,7 @@ export const postLoader = new DataLoader(async (keys: number[]) => {
     .createQueryBuilder('post')
     .whereInIds(keys)
     .leftJoinAndSelect('post.planet', 'planet')
+    .leftJoinAndSelect('post.author', 'author')
     .getMany()
 
   const entityMap: any = {}

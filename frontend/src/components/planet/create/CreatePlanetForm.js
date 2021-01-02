@@ -1,19 +1,30 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useCreatePlanetMutation } from '@/lib/mutations/planetMutations'
-import { galaxies } from '@/lib/galaxies'
+import { galaxiesMap } from '@/lib/galaxiesMap'
 import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 
 const createBtn =
   'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105 focus:outline-none'
 const error = 'tip text-red-400 mb-2'
 
 export default function CreatePlanetForm({ setOpen }) {
-  const createPlanetMutation = useCreatePlanetMutation()
+  const createPlanetMutation = useCreatePlanetMutation({
+    onSuccess: (result, variables) => {
+      setOpen(false)
+      push(`/planet/${variables.name}`)
+    },
+    onError: error => toast.error(error.response.errors[0].message)
+  })
 
-  const { handleSubmit, register, formState, errors } = useForm({
+  const { handleSubmit, register, formState, errors, watch } = useForm({
     mode: 'onChange'
   })
+
+  const galaxy1 = watch('galaxy1')
+  const galaxy2 = watch('galaxy2')
+  const galaxy3 = watch('galaxy3')
 
   const { push } = useRouter()
 
@@ -21,9 +32,7 @@ export default function CreatePlanetForm({ setOpen }) {
     const galaxies = [galaxy1]
     if (galaxy2 !== 'none') galaxies.push(galaxy2)
     if (galaxy3 !== 'none') galaxies.push(galaxy3)
-    await createPlanetMutation.mutateAsync({ name, description, galaxies })
-    setOpen(false)
-    push(`/planet/${name}`)
+    createPlanetMutation.mutate({ name, description, galaxies })
   }
 
   return (
@@ -72,45 +81,53 @@ export default function CreatePlanetForm({ setOpen }) {
         <select
           name="galaxy1"
           ref={register({ required: true, validate: val => val !== 'none' })}
-          className="rounded dark:bg-gray-900 border-none focus:ring-0 w-1/3"
+          className="rounded dark:bg-gray-900 border-none focus:ring-0 w-1/3 text-sm font-medium h-10"
           defaultValue="none"
         >
           <option value="none" disabled hidden>
             Galaxy 1
           </option>
-          {galaxies.map(galaxy => (
-            <option key={galaxy} value={galaxy}>
-              {galaxy}
-            </option>
-          ))}
+          {Object.keys(galaxiesMap)
+            .filter(val => val !== galaxy2 && val !== galaxy3)
+            .map(galaxy => (
+              <option key={galaxy} value={galaxy}>
+                {galaxiesMap[galaxy]}
+              </option>
+            ))}
         </select>
 
         <select
           name="galaxy2"
           ref={register}
-          className="rounded dark:bg-gray-900 border-none focus:ring-0 w-1/3"
+          className="rounded dark:bg-gray-900 border-none focus:ring-0 w-1/3 text-sm font-medium h-10 disabled:opacity-50 transition"
           defaultValue="none"
+          disabled={galaxy1 === 'none'}
         >
           <option value="none">Galaxy 2 (Optional)</option>
-          {galaxies.map(galaxy => (
-            <option key={galaxy} value={galaxy}>
-              {galaxy}
-            </option>
-          ))}
+          {Object.keys(galaxiesMap)
+            .filter(val => val !== galaxy1 && val !== galaxy3)
+            .map(galaxy => (
+              <option key={galaxy} value={galaxy}>
+                {galaxiesMap[galaxy]}
+              </option>
+            ))}
         </select>
 
         <select
           name="galaxy3"
           ref={register}
-          className="rounded dark:bg-gray-900 border-none focus:ring-0 w-1/3"
+          className="rounded dark:bg-gray-900 border-none focus:ring-0 w-1/3 text-sm font-medium h-10 disabled:opacity-50 transition"
           defaultValue="none"
+          disabled={galaxy2 === 'none'}
         >
           <option value="none">Galaxy 3 (Optional)</option>
-          {galaxies.map(galaxy => (
-            <option key={galaxy} value={galaxy}>
-              {galaxy}
-            </option>
-          ))}
+          {Object.keys(galaxiesMap)
+            .filter(val => val !== galaxy1 && val !== galaxy2)
+            .map(galaxy => (
+              <option key={galaxy} value={galaxy}>
+                {galaxiesMap[galaxy]}
+              </option>
+            ))}
         </select>
       </div>
 

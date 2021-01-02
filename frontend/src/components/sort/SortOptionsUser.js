@@ -74,7 +74,7 @@ export default function SortOptionsUser({ user }) {
         >
           {user.postCount} Post{user.postCount === 1 ? '' : 's'}
         </NavLink>
-        <NavLink
+        {/*<NavLink
           href={{
             pathname,
             query: (() => {
@@ -89,7 +89,7 @@ export default function SortOptionsUser({ user }) {
           }`}
         >
           {user.commentCount} Comment{user.commentCount === 1 ? '' : 's'}
-        </NavLink>
+        </NavLink>*/}
       </div>
     </div>
   )

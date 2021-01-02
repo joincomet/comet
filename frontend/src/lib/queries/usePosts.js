@@ -13,7 +13,7 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
         $time: TimeFilter
         $joinedOnly: Boolean
         $planet: String
-        $galaxy: String
+        $galaxy: Galaxy
         $username: String
         $q: String
       ) {

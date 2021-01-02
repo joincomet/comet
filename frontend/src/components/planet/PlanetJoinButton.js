@@ -1,4 +1,3 @@
-import { FiMoreHorizontal } from 'react-icons/fi'
 import React from 'react'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import {

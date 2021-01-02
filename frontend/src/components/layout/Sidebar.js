@@ -15,6 +15,7 @@ import Fuse from 'fuse.js'
 import CreatePlanetButton from '@/components/planet/create/CreatePlanetButton'
 import { FixedSizeList as List } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { colorsMap } from '@/lib/colorsMap'
 
 const link =
   'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-10 flex items-center transition'
@@ -161,7 +162,7 @@ const CustomScrollbarsVirtualList = React.forwardRef((props, ref) => (
 ))
 
 const planetClass =
-  'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-8 flex items-center transition'
+  'cursor-pointer relative z-0 text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-8 flex items-center transition'
 
 function Planets() {
   const [searchPlanets, setSearchPlanets] = useState('')
@@ -199,12 +200,30 @@ function Planets() {
         className={`${planetClass} ${
           pathname === '/planet/[planetname]' &&
           query.planetname === planet.name
-            ? 'text-accent navitem-active'
+            ? ''
             : 'text-tertiary'
         }`}
+        style={{
+          color:
+            pathname === '/planet/[planetname]' &&
+            query.planetname === planet.name
+              ? colorsMap[planet.color]
+              : ''
+        }}
         key={planet.id}
         href={`/planet/${planet.name}`}
       >
+        <div
+          className="absolute left-0 top-0 bottom-0 w-1 z-10"
+          style={{
+            backgroundColor:
+              pathname === '/planet/[planetname]' &&
+              query.planetname === planet.name
+                ? colorsMap[planet.color]
+                : 'transparent'
+          }}
+        />
+
         <PlanetAvatar className="w-5 h-5" planet={planet} />
 
         <span className="ml-3">{planet.name}</span>

@@ -1,4 +1,4 @@
-import { Authorized, Field, ID, Int, ObjectType } from 'type-graphql'
+import { Field, ID, Int, ObjectType } from 'type-graphql'
 import {
   Column,
   CreateDateColumn,
@@ -13,6 +13,8 @@ import { User } from '@/user/User.Entity'
 import { Post } from '@/post/Post.Entity'
 import { PlanetRule } from '@/planet/PlanetRule'
 import dayjs from 'dayjs'
+import { Color } from '@/Color'
+import { Galaxy } from '@/Galaxy'
 
 @ObjectType()
 @Entity()
@@ -42,9 +44,9 @@ export class Planet {
   @Column({ default: false })
   nsfw: boolean
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  color?: string
+  @Field(() => Color, { nullable: true })
+  @Column({ type: 'enum', enum: Color, default: Color.blue })
+  color: Color
 
   @Field(() => [PlanetRule])
   @Column('jsonb', {
@@ -78,9 +80,9 @@ export class Planet {
   @JoinTable()
   users: Promise<User[]>
 
-  @Field(() => [String], { nullable: true })
-  @Column('text', { array: true, nullable: true })
-  galaxies?: string[]
+  @Field(() => [Galaxy])
+  @Column({ type: 'enum', enum: Galaxy, array: true, default: [] })
+  galaxies: Galaxy[]
 
   @ManyToMany(() => User)
   @JoinTable()

@@ -42,6 +42,15 @@ export default function usePostsVariables() {
       planet: query.planetname,
       page: query.page ? parseInt(query.page) - 1 : 0
     }
+  } else if (pathname === '/galaxy/[galaxyname]') {
+    const sort = query.sort ? query.sort.toUpperCase() : 'HOT'
+    const time = query.time ? query.time.toUpperCase() : 'ALL'
+    return {
+      sort,
+      time,
+      galaxy: query.galaxyname,
+      page: query.page ? parseInt(query.page) - 1 : 0
+    }
   }
 
   return undefined
