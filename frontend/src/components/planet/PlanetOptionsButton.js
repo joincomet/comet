@@ -53,11 +53,7 @@ export default function PlanetOptionsButton({ planet }) {
                     <>
                       <Menu.Item>
                         {({ active }) => (
-                          <div
-                            className={`${
-                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                            } text-tertiary menu-item`}
-                          >
+                          <>
                             <input
                               name="bannerImage"
                               id="bannerImage"
@@ -68,12 +64,14 @@ export default function PlanetOptionsButton({ planet }) {
                             />
                             <label
                               htmlFor="bannerImage"
-                              className="flex items-center cursor-pointer"
+                              className={`flex items-center cursor-pointer ${
+                                active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                              } text-tertiary menu-item`}
                             >
                               <FiImage size={18} className="mr-4" />
                               Upload Banner
                             </label>
-                          </div>
+                          </>
                         )}
                       </Menu.Item>
 

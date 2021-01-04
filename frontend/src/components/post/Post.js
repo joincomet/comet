@@ -28,14 +28,14 @@ export default function Post({
   return (
     <>
       <EditPostModal post={post} setOpen={setEditing} open={editing} />
-      <div className="pb-0.5">
+      <div className="pb-2">
         <article
           onClick={() => {
             if (!showFullText) router.push(post.relativeUrl)
           }}
           className={`${className} ${
             !showFullText ? 'cursor-pointer' : ''
-          } bg-white dark:bg-gray-900 relative flex md:rounded pt-3 pl-3 md:px-4 pr-3 pb-1`}
+          } bg-white dark:bg-gray-900 shadow relative flex md:rounded pt-3 pl-3 md:px-4 pr-3 pb-1`}
         >
           {(post.pinned || post.pinnedByAuthor) && (
             <Tippy

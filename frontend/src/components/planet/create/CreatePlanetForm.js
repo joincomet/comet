@@ -30,8 +30,8 @@ export default function CreatePlanetForm({ setOpen }) {
 
   const onSubmit = async ({ name, description, galaxy1, galaxy2, galaxy3 }) => {
     const galaxies = [galaxy1]
-    if (galaxy2 !== 'none') galaxies.push(galaxy2)
-    if (galaxy3 !== 'none') galaxies.push(galaxy3)
+    if (galaxy2 && galaxy2 !== 'none') galaxies.push(galaxy2)
+    if (galaxy3 && galaxy3 !== 'none') galaxies.push(galaxy3)
     createPlanetMutation.mutate({ name, description, galaxies })
   }
 
