@@ -4069,18 +4069,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "eslint-plugin-prettier@npm:3.3.0"
+"eslint-plugin-prettier@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "eslint-plugin-prettier@npm:3.3.1"
   dependencies:
     prettier-linter-helpers: ^1.0.0
   peerDependencies:
     eslint: ">=5.0.0"
     prettier: ">=1.13.0"
   peerDependenciesMeta:
-    eslint-plugin-prettier:
+    eslint-config-prettier:
       optional: true
-  checksum: d79ea6ed414f861d0b84818b9a3f7ac40f67998918d3a0c27e9d82f097768aeae8211f382cc5f9b059f4bdb417d098c8250ea8a552e6e18c904a961eb2b21681
+  checksum: cf35b0f0e9ef30782fe82913db92f6874181723d77f0c4613f9d69c87069f73d0dc420ef850ebc844613c00a8e87eb9762a36b7d028334c5c7b091763118347b
   languageName: node
   linkType: hard
 
@@ -4569,9 +4569,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "framer-motion@npm:3.1.1"
+"framer-motion@npm:^3.1.3":
+  version: 3.1.3
+  resolution: "framer-motion@npm:3.1.3"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     framesync: ^5.0.0
@@ -4585,7 +4585,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: f563f915b6685d30d6afa9eb06611568acf8b1d61b23dda270c3a0a473cfbf739de625aca825be838fa2c6cfd3e550456a7b9d8c1d2a6272e7b08ef639f7b00e
+  checksum: 43a08e669af5ab43e335d14ff0ba6b0c918bd9fdef13c7d3005516a93b5b2969db9124105085b5f4b9c1b8de761b1b44f6c641612a578a3aa1437238bf0e595d
   languageName: node
   linkType: hard
 
@@ -4613,9 +4613,9 @@ __metadata:
     babel-eslint: ^10.1.0
     eslint: ^7.17.0
     eslint-config-prettier: ^7.1.0
-    eslint-plugin-prettier: ^3.3.0
+    eslint-plugin-prettier: ^3.3.1
     eslint-plugin-react: ^7.22.0
-    framer-motion: ^3.1.1
+    framer-motion: ^3.1.3
     fuse.js: ^6.4.5
     graphql: ^15.4.0
     graphql-request: ^3.4.0

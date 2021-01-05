@@ -56,26 +56,26 @@ export default function PostEmbed({ post }) {
         className="mt-2 block rounded-lg border dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 transition"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-start">
-          <div className="w-24 h-24 relative flex-shrink-0 rounded-l-lg">
+        <div className="flex items-start items-stretch p-3 space-x-3">
+          <div className="w-16 h-16 md:w-28 md:h-28 relative flex-shrink-0 rounded-l-lg">
             {post.thumbnailUrl || post.logoUrl ? (
               <img
                 src={post.thumbnailUrl || post.logoUrl}
-                className="rounded-l-lg object-cover h-full w-full"
+                className="object-cover rounded h-full w-full"
               />
             ) : (
-              <div className="flex w-24 h-24 rounded-l-lg border-r border-gray-200 dark:border-gray-800">
+              <div className="flex rounded h-full w-full border-r border-gray-200 dark:border-gray-800">
                 <FiLink className="w-8 h-8 m-auto text-tertiary" />
               </div>
             )}
           </div>
 
-          <div className={`flex flex-col px-3 py-2 cursor-pointer h-24`}>
-            <div className="font-medium line-clamp-1 text-secondary text-base">
+          <div className={`flex flex-col cursor-pointer items-stretch`}>
+            <div className="font-medium text-secondary text-base">
               {post.meta && post.meta.title ? post.meta.title : post.linkUrl}
             </div>
 
-            <div className="text-xs font-medium text-tertiary line-clamp-1 mt-1">
+            <div className="text-13 text-tertiary mt-1 line-clamp-2">
               {post.meta && post.meta.description ? post.meta.description : ''}
             </div>
 

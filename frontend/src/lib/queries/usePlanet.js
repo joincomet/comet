@@ -26,7 +26,17 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
             id
             username
             name
+            timeSinceCreated
+            postCount
+            commentCount
+            followerCount
+            followingCount
+            isFollowing
+            isFollowed
+            bio
             avatarUrl
+            bannerUrl
+            isCurrentUser
           }
         }
       }
