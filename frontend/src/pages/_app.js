@@ -14,6 +14,8 @@ import SEO from '../next-seo.config'
 import { DefaultSeo } from 'next-seo'
 import RouteLoader from '@/components/RouteLoader'
 import ResponsiveToaster from '@/components/ResponsiveToaster'
+import { ApolloProvider } from '@apollo/client'
+import { useApollo } from '@/lib/apolloClient'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +27,8 @@ const queryClient = new QueryClient({
 })
 
 export default function App({ Component, pageProps }) {
+  const apolloClient = useApollo(pageProps)
+
   return (
     <>
       <Head>
@@ -45,19 +49,21 @@ export default function App({ Component, pageProps }) {
       <ResponsiveToaster />
 
       <ThemeProvider>
-        <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-            <LayoutTree
-              Component={Component}
-              pageProps={pageProps}
-              defaultLayout={<Layout />}
-            />
-          </Hydrate>
+        <ApolloProvider client={apolloClient}>
+          <QueryClientProvider client={queryClient}>
+            <Hydrate state={pageProps.dehydratedState}>
+              <LayoutTree
+                Component={Component}
+                pageProps={pageProps}
+                defaultLayout={<Layout />}
+              />
+            </Hydrate>
 
-          {process.env.NODE_ENV !== 'production' && (
-            <ReactQueryDevtools position="bottom-left" />
-          )}
-        </QueryClientProvider>
+            {process.env.NODE_ENV !== 'production' && (
+              <ReactQueryDevtools position="bottom-left" />
+            )}
+          </QueryClientProvider>
+        </ApolloProvider>
       </ThemeProvider>
     </>
   )

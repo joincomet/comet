@@ -14,12 +14,12 @@ export default function HomePage() {
   useEffect(() => setTitle('Home'), [])
 
   return (
-    <div>
+    <>
       <CreatePostButton />
 
-      <div className="mycontainer mt-14 mb-28">
-        <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-3 md:col-span-2 py-6">
+      <div className="mycontainer mt-14 mb-28 h-full">
+        <div className="grid grid-cols-3 gap-6 h-full">
+          <div className="col-span-3 md:col-span-2 py-6 h-full">
             <SortOptions />
             <Posts variables={usePostsVariables()} />
           </div>
@@ -31,7 +31,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

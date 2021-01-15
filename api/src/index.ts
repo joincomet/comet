@@ -21,6 +21,11 @@ import dayjsTwitter from 'dayjs-twitter'
 import { followedLoader } from '@/user/FollowedLoader'
 import { followingLoader } from '@/user/FollowingLoader'
 import { discordClient } from '@/discord/DiscordClient'
+import * as Redis from 'ioredis'
+import { RedisPubSub } from 'graphql-redis-subscriptions'
+
+const REDIS_HOST = 'http://redis'
+const REDIS_PORT = 6379
 
 dayjs.extend(dayjsTwitter)
 
@@ -36,6 +41,17 @@ TypeORM.useContainer(Container)
 async function bootstrap() {
   await connectDatabase()
 
+  /*const options: Redis.RedisOptions = {
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    retryStrategy: times => Math.max(times * 100, 3000)
+  }
+
+  const pubSub = new RedisPubSub({
+    publisher: new Redis(options),
+    subscriber: new Redis(options)
+  })*/
+
   // build TypeGraphQL executable schema
   const schema = await buildSchema({
     resolvers: [__dirname + '/**/*.Resolver.{ts,js}'],
@@ -44,6 +60,7 @@ async function bootstrap() {
     validate: true,
     authChecker: authChecker,
     authMode: 'null'
+    // pubSub
   })
 
   const app = express()
