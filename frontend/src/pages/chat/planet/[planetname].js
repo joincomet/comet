@@ -34,7 +34,7 @@ function PlanetChatPage() {
         <AutoSizer>
           {({ width, height }) => (
             <Scrollbars style={{ width, height }}>
-              <div className="mycontainer">
+              <div className="p-3">
                 {posts.map(post => (
                   <div key={post.id}>
                     <Post post={post} />

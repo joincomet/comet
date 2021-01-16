@@ -14,6 +14,8 @@ import Twemoji from 'react-twemoji'
 import Tippy from '@tippyjs/react'
 import EditPostModal from '@/components/post/EditPostModal'
 import { colorsMap } from '@/lib/colorsMap'
+import { BiRocket } from 'react-icons/bi'
+import { FiAlignLeft, FiLink, FiMessageCircle } from 'react-icons/fi'
 
 export default function Post({
   post,
@@ -28,109 +30,55 @@ export default function Post({
   return (
     <>
       <EditPostModal post={post} setOpen={setEditing} open={editing} />
-      <div className="pb-2">
+      <div>
         <article
           onClick={() => {
             if (!showFullText) router.push(post.relativeUrl)
           }}
           className={`${className} ${
             !showFullText ? 'cursor-pointer' : ''
-          } bg-white dark:bg-gray-900 shadow relative flex md:rounded pt-3 pl-3 md:px-4 pr-3 pb-1`}
+          } border-t border-l border-r dark:border-gray-750 relative flex transition dark:hover:bg-gray-850`}
         >
-          {(post.pinned || post.pinnedByAuthor) && (
-            <Tippy
-              content={`Pinned to ${
-                post.pinned && !post.pinnedByAuthor
-                  ? `+${post.planet.name}`
-                  : ''
-              }${
-                !post.pinned && post.pinnedByAuthor
-                  ? `@${post.author.username}`
-                  : ''
-              }${
-                post.pinned && post.pinnedByAuthor
-                  ? `+${post.planet.name} and @${post.author.username}`
-                  : ''
-              }`}
-            >
-              <div
-                className="absolute top-2 right-3 cursor-pointer"
-                style={{
-                  color:
-                    colorsMap[
-                      post.planet && post.planet.color
-                        ? post.planet.color
-                        : 'blue'
-                    ]
-                }}
-              >
-                <TiPinOutline size={22} style={{ marginTop: '-1px' }} />
-              </div>
-            </Tippy>
-          )}
-
-          <div className="flex-grow">
-            <div className="text-base flex items-center flex-wrap">
-              <UserPopup user={post.author}>
-                <UserAvatar
-                  user={post.author}
-                  className="cursor-pointer w-6 h-6 mr-2 transition hover:opacity-90"
-                />
-              </UserPopup>
-              {post.author ? (
-                <UserPopup user={post.author}>
-                  <span className="text-secondary font-semibold hover:underline cursor-pointer leading-normal">
-                    {post.author.name}
-                  </span>
-                </UserPopup>
-              ) : (
-                <span className="text-secondary font-semibold hover:underline cursor-pointer">
-                  [deleted]
-                </span>
-              )}
-
-              {post.planet && showPlanet && (
-                <>
-                  &nbsp;
-                  <CgArrowRight size={16} className="text-mid inline-block" />
-                  &nbsp;
-                  <PlanetPopup planet={post.planet}>
-                    <span
-                      className={`font-semibold hover:underline cursor-pointer leading-normal`}
-                      style={{ color: colorsMap[post.planet.color] }}
-                    >
-                      {post.planet.name}
-                    </span>
-                  </PlanetPopup>
-                </>
-              )}
-              <span className="text-mid">
-                &nbsp;&middot;&nbsp;{post.timeSince}
-              </span>
+          <div
+            className="flex flex-col justify-center items-center p-3"
+            style={{ marginTop: '-1px' }}
+          >
+            <BiRocket className="w-4 h-4 text-tertiary" />
+            <div className="mt-1.5 text-xs font-medium text-secondary">
+              {post.rocketCount}
             </div>
+          </div>
 
-            {post.title && (
-              <NavLink
-                href={post.relativeUrl}
-                className="text-base text-primary pt-2 block break-long-words"
-              >
-                <Twemoji options={{ className: 'twemoji' }}>
-                  {post.title}
-                </Twemoji>
-              </NavLink>
-            )}
+          <div className="relative w-28 py-2">
+            <div className="aspect-h-9 aspect-w-16 w-full rounded dark:bg-gray-750">
+              {post.thumbnailUrl || post.logoUrl ? (
+                <img
+                  src={post.thumbnailUrl || post.logoUrl}
+                  className="w-full h-full object-cover rounded"
+                />
+              ) : (
+                <div className="flex items-center justify-center text-mid">
+                  {post.linkUrl ? (
+                    <FiLink className="w-1/2 h-1/2" />
+                  ) : (
+                    <FiAlignLeft className="w-1/2 h-1/2" />
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
 
-            <PostText
-              post={post}
-              textContent={post.textContent}
-              showFullText={showFullText}
-            />
-
-            <PostImages post={post} />
-
-            <PostEmbed post={post} />
-
-            <PostActions post={post} setEditing={setEditing} />
+          <div className="py-2 px-3">
+            <div className="flex text-xs font-medium text-tertiary">
+              {post.author.username} &middot; {post.timeSince}
+            </div>
+            <div className="pt-1 font-semibold text-secondary">
+              {post.title || '(untitled)'}
+            </div>
+            <div className="pt-1.5 inline-flex items-center text-tertiary text-xs font-medium">
+              <FiMessageCircle className="w-4 h-4 mr-1.5" />
+              {post.commentCount}
+            </div>
           </div>
         </article>
       </div>
