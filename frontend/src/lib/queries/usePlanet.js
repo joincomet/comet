@@ -38,6 +38,26 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
             bannerUrl
             isCurrentUser
           }
+          users {
+            id
+            username
+            name
+            timeSinceCreated
+            postCount
+            commentCount
+            followerCount
+            followingCount
+            isFollowing
+            isFollowed
+            bio
+            avatarUrl
+            bannerUrl
+            isCurrentUser
+          }
+          channels {
+            id
+            name
+          }
         }
       }
     `,

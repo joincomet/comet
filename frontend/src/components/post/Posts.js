@@ -22,7 +22,7 @@ export default function Posts({ variables }) {
   const posts = data ? data.posts : []
 
   const rowVirtualizer = useVirtualWindow({
-    size: data ? (data.nextPage !== null ? posts.length + 1 : posts.length) : 0,
+    size: data ? (data.nextPage ? posts.length + 1 : posts.length) : 0,
     parentRef,
     estimateSize: useCallback(() => 200, []),
     overscan: 10,

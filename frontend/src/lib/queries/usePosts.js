@@ -10,6 +10,7 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
       query posts(
         $sort: PostSort
         $page: Int
+        $pageSize: Int
         $time: TimeFilter
         $joinedOnly: Boolean
         $planet: String
@@ -20,6 +21,7 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
         posts(
           sort: $sort
           page: $page
+          pageSize: $pageSize
           time: $time
           joinedOnly: $joinedOnly
           planet: $planet

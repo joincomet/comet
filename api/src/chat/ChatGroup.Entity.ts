@@ -1,4 +1,3 @@
-import { ChatBase } from '@/chat/ChatBase'
 import {
   OneToOne,
   JoinColumn,
@@ -6,16 +5,43 @@ import {
   ManyToMany,
   JoinTable,
   RelationId,
-  Column
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn
 } from 'typeorm'
 import { ChatChannel } from '@/chat/ChatChannel.Entity'
-import { ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType } from 'type-graphql'
 import { Lazy } from '@/Lazy'
 import { User } from '@/user/User.Entity'
 
 @ObjectType()
 @Entity()
-export class ChatGroup extends ChatBase {
+export class ChatGroup {
+  @Field(() => ID)
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  readonly id: number
+
+  @Field(() => User)
+  @ManyToOne(() => User)
+  creator: Lazy<User>
+
+  @Field(() => ID)
+  @Column()
+  creatorId: number
+
+  @Field({ nullable: true })
+  @Column('text', { nullable: true })
+  name: string
+
+  @Field({ nullable: true })
+  @Column('text', { nullable: true })
+  avatarUrl: string
+
+  @Field()
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date
+
   @OneToOne(() => ChatChannel)
   @JoinColumn()
   channel: Lazy<ChatChannel>
@@ -25,8 +51,8 @@ export class ChatGroup extends ChatBase {
 
   @ManyToMany(() => User, user => user.chatGroups)
   @JoinTable()
-  members: Lazy<User[]>
+  users: Lazy<User[]>
 
-  @RelationId((group: ChatGroup) => group.members)
-  memberIds: number[]
+  @RelationId((group: ChatGroup) => group.users)
+  userIds: number[]
 }

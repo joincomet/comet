@@ -9,9 +9,9 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { ChatMessage } from '@/chat/ChatMessage.Entity'
-import { ChatServer } from '@/chat/ChatServer.Entity'
 import { Lazy } from '@/Lazy'
 import { ChatGroup } from '@/chat/ChatGroup.Entity'
+import { Planet } from '@/planet/Planet.Entity'
 
 @ObjectType()
 @Entity()
@@ -36,10 +36,10 @@ export class ChatChannel {
   messages: Lazy<ChatMessage[]>
 
   @Column({ nullable: true })
-  serverId: number
+  planetId: number
 
-  @ManyToOne(() => ChatServer, server => server.channels, { nullable: true })
-  server: Lazy<ChatServer>
+  @ManyToOne(() => Planet, planet => planet.channels, { nullable: true })
+  planet: Lazy<Planet>
 
   @Column({ nullable: true })
   groupId: number

@@ -21,7 +21,7 @@
     "@reach/observe-rect": "^1.2.0",
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "@tailwindcss/forms": "^0.2.1",
-    "@tailwindcss/typography": "^0.3.1",
+    "@tailwindcss/typography": "^0.4.0",
     "@tippyjs/react": "^4.2.0",
     "autoprefixer": "^10.2.1",
     "deepmerge": "^4.2.2",
@@ -35,6 +35,7 @@
     "nookies": "^2.5.0",
     "nprogress": "^0.2.0",
     "postcss": "^8.2.4",
+    "rc-scrollbars": "^1.0.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.14.1",
@@ -43,28 +44,29 @@
     "react-intersection-observer": "^8.31.0",
     "react-player": "^2.7.2",
     "react-popper": "^2.2.4",
-    "react-query": "^3.5.12",
+    "react-query": "^3.5.14",
     "react-responsive-modal": "^6.0.1",
     "react-scrollbars-custom": "^4.0.25",
     "react-twemoji": "^0.3.0",
     "react-twitter-widgets": "^1.9.5",
     "react-use": "^15.3.8",
-    "react-virtualized-auto-sizer": "^1.0.3",
+    "react-virtualized-auto-sizer": "^1.0.4",
     "react-virtuoso": "^1.2.6",
     "react-window": "^1.8.6",
     "react-window-dynamic-list": "^2.3.5",
     "react-window-scroller": "^1.0.10",
     "remirror": "^1.0.0-next.60",
     "sass": "^1.32.4",
+    "simplebar-react": "^2.3.0",
     "subscriptions-transport-ws": "^0.9.18",
     "tailwindcss": "^2.0.2",
     "twemoji": "^13.0.1",
-    "webpack": "^5.14.0",
+    "webpack": "^5.15.0",
     "zustand": "^3.3.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.17.0",
+    "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",
@@ -72,6 +74,6 @@
     "prettier": "^2.2.1"
   },
   "resolutions": {
-    "webpack": "^5.14.0"
+    "webpack": "^5.15.0"
   }
 }

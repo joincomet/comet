@@ -22,10 +22,12 @@ import { PlanetSort } from '@/planet/PlanetSort'
 import { handleUnderscore } from '@/handleUnderscore'
 import { randomEnum } from '@/randomEnum'
 import { Color } from '@/Color'
+import { ChatChannel } from '@/chat/ChatChannel.Entity'
 
 @Resolver(() => Planet)
 export class PlanetResolver {
   @InjectRepository(Planet) readonly planetRepo: Repository<Planet>
+  @InjectRepository(ChatChannel) readonly channelRepo: Repository<ChatChannel>
   @InjectRepository(User) readonly userRepo: Repository<User>
 
   @Authorized()
@@ -87,6 +89,8 @@ export class PlanetResolver {
         name: handleUnderscore(name)
       })
       .leftJoinAndSelect('planet.moderators', 'moderator')
+      .leftJoinAndSelect('planet.users', 'user')
+      .leftJoinAndSelect('planet.channels', 'channel')
     return qb.getOne()
   }
 

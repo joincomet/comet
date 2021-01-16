@@ -7,7 +7,8 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  RelationId
 } from 'typeorm'
 import { User } from '@/user/User.Entity'
 import { Post } from '@/post/Post.Entity'
@@ -15,6 +16,8 @@ import { PlanetRule } from '@/planet/PlanetRule'
 import dayjs from 'dayjs'
 import { Color } from '@/Color'
 import { Galaxy } from '@/Galaxy'
+import { ChatChannel } from '@/chat/ChatChannel.Entity'
+import { Lazy } from '@/Lazy'
 
 @ObjectType()
 @Entity()
@@ -76,9 +79,13 @@ export class Planet {
   @OneToMany(() => Post, post => post.planet)
   posts: Promise<Post[]>
 
+  @Field(() => [User])
   @ManyToMany(() => User, user => user.joinedPlanets)
   @JoinTable()
   users: Promise<User[]>
+
+  @RelationId((planet: Planet) => planet.users)
+  userIds: number[]
 
   @Field(() => [Galaxy])
   @Column({ type: 'enum', enum: Galaxy, array: true, default: [] })
@@ -92,6 +99,9 @@ export class Planet {
   @ManyToMany(() => User, mod => mod.moderatedPlanets)
   @JoinTable()
   moderators: Promise<User[]>
+
+  @RelationId((planet: Planet) => planet.moderators)
+  moderatorIds: number[]
 
   @Field()
   isMuted: boolean
@@ -118,4 +128,16 @@ export class Planet {
   @Field({ nullable: true })
   @Column({ nullable: true })
   banReason?: string
+
+  @Field(() => [ChatChannel])
+  @OneToMany(() => ChatChannel, channel => channel.planet)
+  channels: Lazy<ChatChannel[]>
+
+  @Field(() => ID, { nullable: true })
+  @Column({ nullable: true })
+  defaultChannelId?: number
+
+  @Field()
+  @Column({ default: false })
+  private: boolean
 }

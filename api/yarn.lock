@@ -743,9 +743,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@eslint/eslintrc@npm:0.2.2"
+"@eslint/eslintrc@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@eslint/eslintrc@npm:0.3.0"
   dependencies:
     ajv: ^6.12.4
     debug: ^4.1.1
@@ -754,10 +754,10 @@ __metadata:
     ignore: ^4.0.6
     import-fresh: ^3.2.1
     js-yaml: ^3.13.1
-    lodash: ^4.17.19
+    lodash: ^4.17.20
     minimatch: ^3.0.4
     strip-json-comments: ^3.1.1
-  checksum: 049c98898934100aa5ad4912242ecbec136454787c00776a236e5321c73176dbc813917445a3d50d230a5a84531a99ec0e2885dd7a6838be68b46b6720fa1459
+  checksum: 00e87c194672eb85dcea22ba749fb3cabdd9768e952e748b2c727940f06691c873369d75cf3bddb239301eca8c38de6e098b0de4839fa7c16a2062e536e8ff5a
   languageName: node
   linkType: hard
 
@@ -1600,10 +1600,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.20":
-  version: 14.14.20
-  resolution: "@types/node@npm:14.14.20"
-  checksum: 84a9fd73de978967723f951173ff4d07dca259941d3e37c7a3dbb236c09b3f2294bb2098678a806afe6fd6cac39a7d0a1d399f602378c951bd5d01ede535d570
+"@types/node@npm:^14.14.21":
+  version: 14.14.21
+  resolution: "@types/node@npm:14.14.21"
+  checksum: b659823ffa01684ff2cb4edf0b70ea76d7eae6cd86af43de62ae6b460c174161850fb75a1be50ab60c4519c14babd4ec430ddbbe6689e341073ba10ff106311c
   languageName: node
   linkType: hard
 
@@ -1989,7 +1989,7 @@ __metadata:
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.11
     "@types/jsonwebtoken": ^8.5.0
-    "@types/node": ^14.14.20
+    "@types/node": ^14.14.21
     "@types/sharp": ^0.27.1
     "@typescript-eslint/eslint-plugin": ^4.13.0
     "@typescript-eslint/parser": ^4.13.0
@@ -2003,7 +2003,7 @@ __metadata:
     dayjs: ^1.10.3
     dayjs-twitter: ^0.4.0
     discord.js: ^12.5.1
-    eslint: ^7.17.0
+    eslint: ^7.18.0
     eslint-config-prettier: ^7.1.0
     eslint-plugin-prettier: ^3.3.1
     express: ^4.17.1
@@ -2026,7 +2026,7 @@ __metadata:
     metascraper-title: ^5.16.13
     metascraper-url: ^5.16.13
     metascraper-youtube: ^5.16.13
-    mime: ^2.4.7
+    mime: ^2.5.0
     pg: ^8.5.1
     prettier: ^2.2.1
     reflect-metadata: ^0.1.13
@@ -2038,7 +2038,7 @@ __metadata:
     typedi: ~0.8.0
     typeorm: ^0.2.30
     typeorm-naming-strategies: ^2.0.0
-    typeorm-typedi-extensions: ^0.2.3
+    typeorm-typedi-extensions: ^0.4.0
     typescript: ^4.1.3
     uuid: ^8.3.2
     xss: ^1.0.8
@@ -3763,12 +3763,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.17.0":
-  version: 7.17.0
-  resolution: "eslint@npm:7.17.0"
+"eslint@npm:^7.18.0":
+  version: 7.18.0
+  resolution: "eslint@npm:7.18.0"
   dependencies:
     "@babel/code-frame": ^7.0.0
-    "@eslint/eslintrc": ^0.2.2
+    "@eslint/eslintrc": ^0.3.0
     ajv: ^6.10.0
     chalk: ^4.0.0
     cross-spawn: ^7.0.2
@@ -3792,7 +3792,7 @@ __metadata:
     js-yaml: ^3.13.1
     json-stable-stringify-without-jsonify: ^1.0.1
     levn: ^0.4.1
-    lodash: ^4.17.19
+    lodash: ^4.17.20
     minimatch: ^3.0.4
     natural-compare: ^1.4.0
     optionator: ^0.9.1
@@ -3806,7 +3806,7 @@ __metadata:
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: 12b09a972eb0b81fabf9c1b38b3e9ada0cc051a22ee5022e31852e7babde6fe02a0135be3027451ee02c9ff4a6f738b55205d2953f98eb16a43350ad73070b27
+  checksum: 5c6f6ca0eb6c3738a0d14d3441a23f045ef9e7f73aaba4848aea0877c5fd50ec42937ccdaf53fb9107694f5700a9989bca55334b7b17e5d3be2f6e69a42241fa
   languageName: node
   linkType: hard
 
@@ -5919,12 +5919,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mime@npm:^2.4.7":
-  version: 2.4.7
-  resolution: "mime@npm:2.4.7"
+"mime@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "mime@npm:2.5.0"
   bin:
     mime: cli.js
-  checksum: ec0290ce2011f47ce99f93758b68f188e69c10676d2a1a0386518b921b47dc9c411d58237a82d5122971e5f945d57409894f84d37a5a9c57a0f00be78714d75e
+  checksum: 19f6f7046cea23d39fb75ee6b99caf1781303a5cbf189c0f209d5b70e4b467642b64106a9f9d3ffce08b6ddfdcfaa95fb60e449c12ae29fb979c229b978e420b
   languageName: node
   linkType: hard
 
@@ -8547,13 +8547,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"typeorm-typedi-extensions@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "typeorm-typedi-extensions@npm:0.2.3"
+"typeorm-typedi-extensions@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "typeorm-typedi-extensions@npm:0.4.0"
   peerDependencies:
-    typedi: ">=0.7.2"
-    typeorm: ">=0.2.0"
-  checksum: b12bf83b419022cb058fb493a836b46818c439a7c90e02fe0c6f201a652537e5ee3f142cff6486a5183ff821be542a8994821c5858c9382c4d1b7158dc556a4e
+    typedi: ">=0.10.0"
+    typeorm: ">=0.2.30"
+  checksum: 33687f47c5eea35d0873a7990a0e680786c36da2d67b28f7d6dba0a66082b50b47345ef275861892ff2e69826b7a11caffce1ed72e0f34bb8569ece4cdb4c891
   languageName: node
   linkType: hard
 

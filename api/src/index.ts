@@ -23,6 +23,9 @@ import { followingLoader } from '@/user/FollowingLoader'
 import { discordClient } from '@/discord/DiscordClient'
 import * as Redis from 'ioredis'
 import { RedisPubSub } from 'graphql-redis-subscriptions'
+import { getRepository } from 'typeorm'
+import { Planet } from '@/planet/Planet.Entity'
+import { ChatChannel } from '@/chat/ChatChannel.Entity'
 
 const REDIS_HOST = 'http://redis'
 const REDIS_PORT = 6379
@@ -128,6 +131,33 @@ async function bootstrap() {
   })
 
   await discordClient.login(process.env.DISCORD_TOKEN)
+
+  const planetRepo = getRepository(Planet)
+
+  const planets = await planetRepo
+    .createQueryBuilder('planet')
+    .leftJoinAndSelect('planet.channels', 'channel')
+    .getMany()
+
+  for (const planet of planets) {
+    const channels = planet.channels as ChatChannel[]
+    if (channels.length >= 1) {
+      if (!planet.defaultChannelId) {
+        await planetRepo.update(planet.id, { defaultChannelId: channels[0].id })
+      }
+      continue
+    }
+    const channel = await getRepository(ChatChannel).save({
+      name: 'general',
+      planetId: planet.id
+    })
+    await planetRepo
+      .createQueryBuilder()
+      .relation(Planet, 'channels')
+      .of(planet.id)
+      .add(channel.id)
+    await planetRepo.update(planet.id, { defaultChannelId: channel.id })
+  }
 }
 
 bootstrap()
