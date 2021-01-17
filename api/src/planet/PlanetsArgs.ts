@@ -9,8 +9,11 @@ export class PlanetsArgs {
   @Field({ defaultValue: false })
   joinedOnly: boolean
 
-  @Field(() => [String], { nullable: true })
-  galaxies?: string[]
+  @Field({ defaultValue: false })
+  featured: boolean
+
+  @Field({ nullable: true })
+  galaxy?: string
 
   @Field({ nullable: true })
   search?: string

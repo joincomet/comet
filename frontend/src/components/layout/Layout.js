@@ -1,35 +1,15 @@
-import Sidebar from './Sidebar'
-import BottomBar from '@/components/layout/BottomBar'
-import React, { useState } from 'react'
-import Header from '@/components/layout/Header'
+import React from 'react'
 import LoginModal from '@/components/login/LoginModal'
-import { Toaster } from 'react-hot-toast'
+import NavScroller from '@/components/layout/NavScroller'
 
 export default function Layout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
   return (
     <>
       <LoginModal />
 
-      <div className="relative">
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <NavScroller />
 
-        <Header />
-
-        <main className="md:ml-64 h-full">{children}</main>
-
-        <BottomBar />
-
-        {/*<TopBar setSidebarOpen={setSidebarOpen} />*/}
-
-        {/*<RightSidebar />*/}
-
-        <div id="userpopover" />
-        <div id="timepicker" />
-        <div id="useroptionsdropdown" />
-        <div id="postoptionsdropdown" />
-      </div>
+      <div className="h-full">{children}</div>
     </>
   )
 }

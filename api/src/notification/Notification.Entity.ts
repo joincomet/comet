@@ -10,6 +10,7 @@ import { Post } from '@/post/Post.Entity'
 import { Comment } from '@/comment/Comment.Entity'
 import { User } from '@/user/User.Entity'
 import dayjs from 'dayjs'
+import { Lazy } from '@/Lazy'
 
 @ObjectType()
 @Entity()
@@ -25,7 +26,7 @@ export class Notification {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User)
-  toUser: Promise<User>
+  toUser: Lazy<User>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
@@ -33,7 +34,7 @@ export class Notification {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User)
-  fromUser: Promise<User>
+  fromUser: Lazy<User>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
@@ -41,7 +42,7 @@ export class Notification {
 
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post)
-  post: Promise<Post>
+  post: Lazy<Post>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
@@ -49,7 +50,7 @@ export class Notification {
 
   @Field(() => Comment, { nullable: true })
   @ManyToOne(() => Comment)
-  comment: Promise<Comment>
+  comment: Lazy<Comment>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
@@ -71,7 +72,7 @@ export class Notification {
 
   @Field(() => Comment, { nullable: true })
   @ManyToOne(() => Comment)
-  parentComment: Promise<Comment>
+  parentComment: Lazy<Comment>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })

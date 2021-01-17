@@ -611,6 +611,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-dnd/asap@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@react-dnd/asap@npm:4.0.0"
+  checksum: d3fd66488e8f5da36d3093f8065c6c5f0b79ebeb8f51e7cb539435baf8afc5b35ebe742bca62183c92f582f9d77f00b49c35d9d15012e33a9d1003eb8d0997e3
+  languageName: node
+  linkType: hard
+
+"@react-dnd/invariant@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@react-dnd/invariant@npm:2.0.0"
+  checksum: 2217a3c25689fbfdcceddc09bccb750ba3ee2efaea33d32923853b55c9c281023aa7cb737945c26bce39a61c41d3cc59049f8648ae00054dd1b2791bb53b1d74
+  languageName: node
+  linkType: hard
+
+"@react-dnd/shallowequal@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@react-dnd/shallowequal@npm:2.0.0"
+  checksum: cbac47721d35114ee2c12a4001dfea5b953a9f88a860b9db7bca2c03f5fe99ae36258c8cb873a605ef787d2f68c4bf0014ba91533eab5691acee4893b308a00c
+  languageName: node
+  linkType: hard
+
 "@remirror/core-constants@npm:1.0.0-next.60":
   version: 1.0.0-next.60
   resolution: "@remirror/core-constants@npm:1.0.0-next.60"
@@ -1647,6 +1668,16 @@ __metadata:
   dependencies:
     "@types/unist": "*"
   checksum: 8aff367be477854d6cd3e5cf03d7154cd163a67bc3266777c2f4b1c32d07a335420ba58a8a799965dbc3190f1ed9989880008afb1392043290acc384a155a7a3
+  languageName: node
+  linkType: hard
+
+"@types/hoist-non-react-statics@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "@types/hoist-non-react-statics@npm:3.3.1"
+  dependencies:
+    "@types/react": "*"
+    hoist-non-react-statics: ^3.3.0
+  checksum: 16ab4c45d4920fa378c8be76554b10061247fc04d2c8af11bdb7d520b3967e9c06d7ad5efd9b0f1657fbc4d095f62c6e1325f03b9141eb1ef2c8095b96fd42f8
   languageName: node
   linkType: hard
 
@@ -3620,6 +3651,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"decouple@npm:0.0.2":
+  version: 0.0.2
+  resolution: "decouple@npm:0.0.2"
+  checksum: 726485c1a67002660f34ab277c8095e806ab1f2d8714b4a37947904ea0ca71f288f2d9ee009700bdf8d939cdaed1308d01f8b3a2773c645baa54ceb821abce06
+  languageName: node
+  linkType: hard
+
 "deep-extend@npm:^0.6.0":
   version: 0.6.0
   resolution: "deep-extend@npm:0.6.0"
@@ -3772,6 +3810,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dnd-core@npm:^11.1.3":
+  version: 11.1.3
+  resolution: "dnd-core@npm:11.1.3"
+  dependencies:
+    "@react-dnd/asap": ^4.0.0
+    "@react-dnd/invariant": ^2.0.0
+    redux: ^4.0.4
+  checksum: 7dd794ec66b0e2c2ff21cff34db6c437ccd7a05b736612db80650293f6ee17f83cd1af45318048913a7f1d77fb3b01365efd849b86542d0e4ad6c37d14801085
+  languageName: node
+  linkType: hard
+
 "doctrine@npm:^2.1.0":
   version: 2.1.0
   resolution: "doctrine@npm:2.1.0"
@@ -3913,6 +3962,13 @@ __metadata:
     minimalistic-assert: ^1.0.0
     minimalistic-crypto-utils: ^1.0.0
   checksum: b66cf0b8f8d9a4d47992e6f0b754cbe4c0681b78b7d6691529c99fc79d8a87069f354a665a528c4bdd0327e1d937c617f9bb2fef1aa92761e4c2b7f73200af38
+  languageName: node
+  linkType: hard
+
+"emitter@git+https://github.com/Mango/emitter.git#0.0.7":
+  version: 0.0.7
+  resolution: "emitter@https://github.com/Mango/emitter.git#commit=41ab8a3956269c7ed468bde50203e15b3274152f"
+  checksum: a4effb6f9d94e3f0a6ef3f98ff2286246e4c07edde65fa3e7b27937a812122e3a542522b3be55b66d2e9762294d6c59ed5b07c48914a6f7d72082260a607d8c4
   languageName: node
   linkType: hard
 
@@ -4717,12 +4773,15 @@ __metadata:
     lodash: ^4.17.20
     next: ^10.0.5
     next-seo: ^4.17.0
-    nookies: ^2.5.0
+    nookies: ^2.5.1
     nprogress: ^0.2.0
     postcss: ^8.2.4
     prettier: ^2.2.1
     rc-scrollbars: ^1.0.3
     react: ^17.0.1
+    react-dnd: ^11.1.3
+    react-dnd-html5-backend: ^11.1.3
+    react-dnd-touch-backend: ^11.1.3
     react-dom: ^17.0.1
     react-hook-form: ^6.14.1
     react-hot-toast: ^1.0.1
@@ -4737,13 +4796,14 @@ __metadata:
     react-twitter-widgets: ^1.9.5
     react-use: ^15.3.8
     react-virtualized-auto-sizer: ^1.0.4
-    react-virtuoso: ^1.2.6
+    react-virtuoso: ^1.2.7
     react-window: ^1.8.6
     react-window-dynamic-list: ^2.3.5
     react-window-scroller: ^1.0.10
     remirror: ^1.0.0-next.60
     sass: ^1.32.4
     simplebar-react: ^2.3.0
+    slideout: ^1.0.1
     subscriptions-transport-ws: ^0.9.18
     tailwindcss: ^2.0.2
     twemoji: ^13.0.1
@@ -5193,7 +5253,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.3.2":
+"hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -6736,13 +6796,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"nookies@npm:^2.5.0":
-  version: 2.5.0
-  resolution: "nookies@npm:2.5.0"
+"nookies@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "nookies@npm:2.5.1"
   dependencies:
     cookie: ^0.4.1
     set-cookie-parser: ^2.4.6
-  checksum: 367d6d320d2d7164c0e708cd0d7360fbc62242bfa0cb3eae0927819d51cde1d8587ea9b718a8e0395361f0af0120325dc396e7140d12c7060701d350d4542b7f
+  checksum: 60b670840f1605940c67450e4bb6c1d3b13a0404b4ed5e5b3582b3f3d244a8209d7bc605e98b7e9f34406a076a867623c2713cf671b577e2f757675d70aae8fd
   languageName: node
   linkType: hard
 
@@ -7819,6 +7879,40 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"react-dnd-html5-backend@npm:^11.1.3":
+  version: 11.1.3
+  resolution: "react-dnd-html5-backend@npm:11.1.3"
+  dependencies:
+    dnd-core: ^11.1.3
+  checksum: d43a35058bbdf1bfa2dd284a110840e2b4b0dae4f23074ebbbadea3d166f7c7bae0a2948fbd2c15c9fbee3ff17ead82ca45a6649c12ed3454636282ff5839474
+  languageName: node
+  linkType: hard
+
+"react-dnd-touch-backend@npm:^11.1.3":
+  version: 11.1.3
+  resolution: "react-dnd-touch-backend@npm:11.1.3"
+  dependencies:
+    "@react-dnd/invariant": ^2.0.0
+    dnd-core: ^11.1.3
+  checksum: 2b457a9e9fc8f6878a10cff28f2f9dac4d956b421365515ae36e710d601dd7be53c2206a8e730ae2ca7c2c84dddbd7748ba59a056a516aeb5ee91d3419fd90e8
+  languageName: node
+  linkType: hard
+
+"react-dnd@npm:^11.1.3":
+  version: 11.1.3
+  resolution: "react-dnd@npm:11.1.3"
+  dependencies:
+    "@react-dnd/shallowequal": ^2.0.0
+    "@types/hoist-non-react-statics": ^3.3.1
+    dnd-core: ^11.1.3
+    hoist-non-react-statics: ^3.3.0
+  peerDependencies:
+    react: ">= 16.9.0"
+    react-dom: ">= 16.9.0"
+  checksum: ba08188a1a1bb9cc8109bcaea5cd3c3e186d4aa4f04193ef398f8baacf1fe228860f1800903cebc1e73e84473e552198a65b06d244ed7116ee95e4a16c3920c7
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:^17.0.1":
   version: 17.0.1
   resolution: "react-dom@npm:17.0.1"
@@ -8044,9 +8138,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^1.2.6":
-  version: 1.2.6
-  resolution: "react-virtuoso@npm:1.2.6"
+"react-virtuoso@npm:^1.2.7":
+  version: 1.2.7
+  resolution: "react-virtuoso@npm:1.2.7"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.3
     "@virtuoso.dev/urx": ^0.2.3
@@ -8054,7 +8148,7 @@ fsevents@~2.3.1:
     resize-observer-polyfill: ^1.5.1
   peerDependencies:
     react: ">=16"
-  checksum: 5600cb04840554367585142fb1484082baf17793811a1eca0d42358f175c7d8c5f73c4dee4288da19c96f9392c1a8515e45c656371adca3d68cd933285544fa8
+  checksum: fd9093a998aa86c8025fa8357bc5f313c0ff9bf0e20aeee98e2472be491af8ef4d6b83c24ccf77fa67ca6d700beea463f4413dc12929efdeff650ca2766a4c93
   languageName: node
   linkType: hard
 
@@ -8150,6 +8244,16 @@ fsevents@~2.3.1:
     css-unit-converter: ^1.1.1
     postcss-value-parser: ^3.3.0
   checksum: 9db44f858fcad6dc58e55d269b639b2225a9ec9753307d5bc55db4115bcf3692d8697027559e7350b9253420249f049e1b5a0e30a51b57a76e650d876003d175
+  languageName: node
+  linkType: hard
+
+"redux@npm:^4.0.4":
+  version: 4.0.5
+  resolution: "redux@npm:4.0.5"
+  dependencies:
+    loose-envify: ^1.4.0
+    symbol-observable: ^1.2.0
+  checksum: 112739c2fb83ae2e18335d942a883b3ee14ebada31ff3a7924511a1f38a4278a762f5823491f3eb5083492de601ed76cb2687295c7d5db9a6e098c2542cdc05b
   languageName: node
   linkType: hard
 
@@ -8849,6 +8953,16 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"slideout@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "slideout@npm:1.0.1"
+  dependencies:
+    decouple: 0.0.2
+    emitter: "git+https://github.com/Mango/emitter.git#0.0.7"
+  checksum: 7e277877ccb78eaae142cd82416954dceb2613763a65ce3b1b68fc124fa2e875c684ebf472f021eef7bf78ac3e04b01eeea8ea22b56ff9d1a0b99701ce0728ac
+  languageName: node
+  linkType: hard
+
 "snapdragon-node@npm:^2.0.1":
   version: 2.1.1
   resolution: "snapdragon-node@npm:2.1.1"
@@ -9341,7 +9455,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"symbol-observable@npm:^1.0.4":
+"symbol-observable@npm:^1.0.4, symbol-observable@npm:^1.2.0":
   version: 1.2.0
   resolution: "symbol-observable@npm:1.2.0"
   checksum: 268834a1d4cba19d40f367e5c2755f612969c8418e43a3be17408e392802a667f8bb542893440d58a080a8ea8da05ea98e27e472b9f4ff6fbda78a21a1a41c53

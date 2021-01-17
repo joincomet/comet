@@ -70,19 +70,19 @@ export class Planet {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, { nullable: true })
-  creator: Promise<User>
+  creator: Lazy<User>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
   creatorId: number
 
   @OneToMany(() => Post, post => post.planet)
-  posts: Promise<Post[]>
+  posts: Lazy<Post[]>
 
   @Field(() => [User])
   @ManyToMany(() => User, user => user.joinedPlanets)
   @JoinTable()
-  users: Promise<User[]>
+  users: Lazy<User[]>
 
   @RelationId((planet: Planet) => planet.users)
   userIds: number[]
@@ -93,12 +93,12 @@ export class Planet {
 
   @ManyToMany(() => User)
   @JoinTable()
-  bannedUsers: Promise<User[]>
+  bannedUsers: Lazy<User[]>
 
   @Field(() => [User])
   @ManyToMany(() => User, mod => mod.moderatedPlanets)
   @JoinTable()
-  moderators: Promise<User[]>
+  moderators: Lazy<User[]>
 
   @RelationId((planet: Planet) => planet.moderators)
   moderatorIds: number[]
@@ -140,4 +140,8 @@ export class Planet {
   @Field()
   @Column({ default: false })
   private: boolean
+
+  @Field()
+  @Column({ default: false })
+  featured: boolean
 }

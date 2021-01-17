@@ -34,6 +34,7 @@ services:
       - ./frontend:/usr/src/app
       - /usr/src/app/.yarn/cache
       - /usr/src/app/node_modules
+      - /usr/src/app/.next
 
   postgres:
     image: "postgres:alpine"

@@ -17,6 +17,4 @@ export interface Context {
     { userId: number; commentId: number },
     boolean
   >
-  followingLoader: DataLoader<{ userId: number; followingId: number }, boolean>
-  followedLoader: DataLoader<{ userId: number; followedId: number }, boolean>
 }

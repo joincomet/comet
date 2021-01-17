@@ -48,10 +48,6 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
             username
             name
             avatarUrl
-            followerCount
-            followingCount
-            isFollowing
-            isFollowed
             isCurrentUser
           }
           timeSince

@@ -132,31 +132,25 @@ export class PostResolver {
         .leftJoinAndSelect('user.blocking', 'blockedUser')
         .leftJoinAndSelect('user.hiddenPosts', 'hiddenPost')
         .leftJoinAndSelect('user.joinedPlanets', 'joinedPlanet')
-        .leftJoinAndSelect('user.following', 'followingUser')
         .getOne()
 
       if (user) {
-        const mutedPlanets = (await user.mutedPlanets).map(planet => planet.id)
+        const mutedPlanets = (user.mutedPlanets as Planet[]).map(
+          planet => planet.id
+        )
 
-        const blocking = (await user.blocking).map(user => user.id)
-        const hiddenPosts = (await user.hiddenPosts).map(post => post.id)
+        const blocking = (user.blocking as User[]).map(user => user.id)
+        const hiddenPosts = (user.hiddenPosts as Post[]).map(post => post.id)
 
         if (joinedOnly) {
-          const joinedPlanets = (await user.joinedPlanets).map(
+          const joinedPlanets = (user.joinedPlanets as Planet[]).map(
             planet => planet.id
           )
 
-          const following = (await user.following).map(user => user.id)
-
-          if (joinedPlanets.length > 0 || following.length > 0) {
-            following.push(userId)
-            qb.andWhere(
-              new Brackets(qb => {
-                qb.andWhere('post.planetId = ANY(:joinedPlanets)', {
-                  joinedPlanets
-                }).orWhere('post.authorId = ANY(:following)', { following })
-              })
-            )
+          if (joinedPlanets.length > 0) {
+            qb.andWhere('post.planetId = ANY(:joinedPlanets)', {
+              joinedPlanets
+            })
           }
         }
 

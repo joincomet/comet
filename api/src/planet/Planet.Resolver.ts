@@ -155,7 +155,7 @@ export class PlanetResolver {
   @Query(() => [Planet])
   async planets(
     @Args()
-    { sort, joinedOnly, search, galaxies }: PlanetsArgs,
+    { sort, joinedOnly, search, galaxy, featured }: PlanetsArgs,
     @Ctx() { userId }: Context
   ) {
     const qb = this.planetRepo.createQueryBuilder('planet')
@@ -169,10 +169,16 @@ export class PlanetResolver {
     }
 
     if (userId && joinedOnly) {
-      const user = await this.userRepo.findOne(userId)
-      const joinedPlanets = (await user.joinedPlanets).map(p => p.id)
+      const user = await this.userRepo
+        .createQueryBuilder('user')
+        .whereInIds(userId)
+        .leftJoinAndSelect('user.joinedPlanets', 'planet')
+        .getOne()
+      const joinedPlanets = (user.joinedPlanets as Planet[]).map(p => p.id)
       qb.andWhere(`planet.id = ANY(:joinedPlanets)`, { joinedPlanets })
     }
+
+    if (featured) qb.andWhere('planet.featured = true')
 
     return qb.getMany()
   }

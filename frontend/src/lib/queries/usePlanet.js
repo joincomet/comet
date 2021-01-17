@@ -29,10 +29,6 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
             timeSinceCreated
             postCount
             commentCount
-            followerCount
-            followingCount
-            isFollowing
-            isFollowed
             bio
             avatarUrl
             bannerUrl
@@ -45,10 +41,6 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
             timeSinceCreated
             postCount
             commentCount
-            followerCount
-            followingCount
-            isFollowing
-            isFollowed
             bio
             avatarUrl
             bannerUrl

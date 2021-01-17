@@ -16,6 +16,8 @@ import { URL } from 'url'
 import dayjs from 'dayjs'
 import { isUrl } from '@/IsUrl'
 import { Metadata } from '@/metascraper/Metadata'
+import { Folder } from '@/folder/Folder.Entity'
+import { Lazy } from '@/Lazy'
 
 @ObjectType()
 @Entity()
@@ -59,6 +61,7 @@ export class Post {
 
   @Field({ nullable: true })
   get thumbnailUrl(): string | null {
+    if (this.imageUrls && this.imageUrls.length > 0) return this.imageUrls[0]
     if (!this.linkUrl) return null
     if (this.meta && this.meta.image) return this.meta.image
     if (this.meta && this.meta.logo) return this.meta.logo
@@ -91,7 +94,7 @@ export class Post {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.posts)
-  author: Promise<User>
+  author: Lazy<User>
 
   @Field(() => ID)
   @Column({ nullable: true })
@@ -105,6 +108,12 @@ export class Post {
   get timeSince(): string {
     // @ts-ignore
     return dayjs(new Date(this.createdAt)).twitter()
+  }
+
+  @Field()
+  get timeSinceFull(): string {
+    // @ts-ignore
+    return dayjs(new Date(this.createdAt)).format('dddd, MMMM D, YYYY h:mm A')
   }
 
   @Field({ nullable: true })
@@ -135,14 +144,14 @@ export class Post {
   pinnedByAuthor: boolean
 
   @OneToMany(() => Comment, comment => comment.post)
-  comments: Promise<Comment[]>
+  comments: Lazy<Comment[]>
 
   @Field(() => Planet, { nullable: true })
   @ManyToOne(() => Planet, planet => planet.posts, {
     cascade: true,
     nullable: true
   })
-  planet?: Promise<Planet>
+  planet?: Lazy<Planet>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
@@ -150,7 +159,7 @@ export class Post {
 
   @ManyToMany(() => User)
   @JoinTable()
-  rocketers: Promise<User[]>
+  rocketers: Lazy<User[]>
 
   @Field(() => Int)
   @Column({ default: 1 })
@@ -194,9 +203,13 @@ export class Post {
 
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post)
-  repost: Promise<Post>
+  repost: Lazy<Post>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
   repostId: number
+
+  @Field(() => [Folder])
+  @ManyToMany(() => Folder, folder => folder.posts)
+  folders: Lazy<Folder[]>
 }

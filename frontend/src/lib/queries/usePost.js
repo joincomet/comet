@@ -46,10 +46,6 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
             bio
             avatarUrl
             rocketCount
-            followerCount
-            followingCount
-            isFollowing
-            isFollowed
             isCurrentUser
           }
           timeSince
@@ -95,10 +91,6 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
               bio
               avatarUrl
               rocketCount
-              followerCount
-              followingCount
-              isFollowing
-              isFollowed
               isCurrentUser
             }
             timeSince
