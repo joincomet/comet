@@ -14,6 +14,7 @@ export enum Galaxy {
   Meta = 'Meta',
   News = 'News',
   Politics = 'Politics',
+  Programming = 'Programming',
   Science = 'Science',
   Sports = 'Sports',
   Technology = 'Technology',
