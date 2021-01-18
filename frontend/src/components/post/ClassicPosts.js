@@ -3,6 +3,10 @@ import { Scrollbars } from 'rc-scrollbars'
 import Post from '@/components/post/Post'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import React from 'react'
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi'
+import NavLink from '@/components/NavLink'
+import { useRouter } from 'next/router'
+import PageNavigator from '@/components/layout/PageNavigator'
 
 export default function ClassicPosts({ variables }) {
   const { data, isLoading } = usePosts(variables)
@@ -11,12 +15,13 @@ export default function ClassicPosts({ variables }) {
   return (
     <AutoSizer>
       {({ width, height }) => (
-        <Scrollbars style={{ width, height }}>
+        <Scrollbars style={{ width, height }} universal>
           <div className="md:rounded-xl dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
             {posts.map(post => (
-              <Post key={post.id} post={post} />
+              <Post key={post.id} postData={post} />
             ))}
           </div>
+          <PageNavigator nextEnabled={!!data.nextPage} />
         </Scrollbars>
       )}
     </AutoSizer>

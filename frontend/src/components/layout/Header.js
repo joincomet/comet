@@ -18,7 +18,7 @@ import NavLink from '@/components/NavLink'
 import Logo from '@/components/Logo'
 
 const menuBtn =
-  'block md:hidden inline-flex flex-shrink-0 items-center justify-center h-10 w-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition'
+  'mr-3 block md:hidden inline-flex flex-shrink-0 items-center justify-center h-10 w-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-750 transition'
 
 export default forwardRef(({ children, className, slideoutLeft }, ref) => {
   const currentUser = useCurrentUser().data
@@ -37,11 +37,11 @@ export default forwardRef(({ children, className, slideoutLeft }, ref) => {
       id="header"
       className={`flex fixed left-0 md:left-76 right-0 md:right-60 top-0 h-12 z-10 items-center px-3 bg-white dark:bg-gray-800`}
     >
-      <div className={menuBtn} onClick={() => slideoutLeft.open()}>
+      <div className={menuBtn} onClick={() => slideoutLeft.toggle()}>
         <FiMenu size={20} />
       </div>
 
-      <div className="px-4 text-lg inline-flex items-center font-semibold leading-none whitespace-nowrap truncate text-secondary">
+      <div className="text-lg inline-flex items-center font-semibold leading-none whitespace-nowrap truncate text-secondary">
         <HiHome className="w-5 h-5 mr-4" />
         Home
       </div>

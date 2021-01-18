@@ -6,7 +6,8 @@ import {
   JoinTable,
   ManyToMany,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  RelationId
 } from 'typeorm'
 import { Comment } from '@/comment/Comment.Entity'
 import { Post } from '@/post/Post.Entity'
@@ -47,13 +48,16 @@ export class User {
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
-  @Authorized()
   @Field({ nullable: true })
   @Column({ nullable: true })
   lastLogin?: Date
 
   @Field()
-  isOnline: boolean
+  get isOnline(): boolean {
+    if (!this.lastLogin) return false
+    const timeout = 5 * 60 * 1000 // five minutes
+    return new Date().getTime() - this.lastLogin.getTime() < timeout
+  }
 
   @Column()
   passwordHash: string
@@ -74,27 +78,41 @@ export class User {
   @OneToMany(() => Folder, folder => folder.creator)
   folders: Lazy<Folder[]>
 
+  @RelationId((user: User) => user.folders)
+  folderIds: number[]
+
   @ManyToMany(() => Planet, planet => planet.users)
   joinedPlanets: Lazy<Planet[]>
+
+  @RelationId((user: User) => user.joinedPlanets)
+  joinedPlanetIds: number[]
 
   @Field(() => [Planet])
   @ManyToMany(() => Planet, planet => planet.moderators)
   moderatedPlanets: Lazy<Planet[]>
 
-  @ManyToMany(() => Planet)
-  @JoinTable()
-  mutedPlanets: Lazy<Planet[]>
+  @RelationId((user: User) => user.moderatedPlanets)
+  moderatedPlanetIds: number[]
 
   @ManyToMany(() => Post)
   @JoinTable()
   hiddenPosts: Lazy<Post[]>
 
-  @ManyToMany(() => User, user => user.blocking)
-  blockers: Lazy<User[]>
+  @RelationId((user: User) => user.hiddenPosts)
+  hiddenPostIds: number[]
 
-  @ManyToMany(() => User, user => user.blockers)
+  @ManyToMany(() => User, user => user.blockedUsers)
+  blockedByUsers: Lazy<User[]>
+
+  @RelationId((user: User) => user.blockedByUsers)
+  blockedByUserIds: number[]
+
+  @ManyToMany(() => User, user => user.blockedByUsers)
   @JoinTable()
-  blocking: Lazy<User[]>
+  blockedUsers: Lazy<User[]>
+
+  @RelationId((user: User) => user.blockedUsers)
+  blockedUserIds: number[]
 
   @Field()
   @Column({ default: false })

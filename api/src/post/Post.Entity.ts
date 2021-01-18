@@ -7,7 +7,8 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  RelationId
 } from 'typeorm'
 import { Comment } from '@/comment/Comment.Entity'
 import { User } from '@/user/User.Entity'
@@ -161,6 +162,9 @@ export class Post {
   @JoinTable()
   rocketers: Lazy<User[]>
 
+  @RelationId((post: Post) => post.rocketers)
+  rocketerIds: number[]
+
   @Field(() => Int)
   @Column({ default: 1 })
   rocketCount: number
@@ -201,15 +205,10 @@ export class Post {
     return `/post/${this.id36}`
   }
 
-  @Field(() => Post, { nullable: true })
-  @ManyToOne(() => Post)
-  repost: Lazy<Post>
-
-  @Field(() => ID, { nullable: true })
-  @Column({ nullable: true })
-  repostId: number
-
   @Field(() => [Folder])
   @ManyToMany(() => Folder, folder => folder.posts)
   folders: Lazy<Folder[]>
+
+  @RelationId((post: Post) => post.folders)
+  folderIds: number[]
 }

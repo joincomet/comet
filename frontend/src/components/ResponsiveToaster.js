@@ -3,11 +3,11 @@ import { Toaster } from 'react-hot-toast'
 import React from 'react'
 
 export default function ResponsiveToaster() {
-  const small = useMedia('(max-width: 767.99px)')
+  const desktop = useMedia('(min-width: 768px)')
 
   return (
     <Toaster
-      position={small ? 'bottom-center' : 'bottom-right'}
+      position="bottom-center"
       toastOptions={{
         className: 'toast',
         success: {

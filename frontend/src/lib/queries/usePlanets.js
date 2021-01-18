@@ -7,17 +7,34 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
   const { planets } = await request(
     ctx,
     gql`
-      query planets($sort: PlanetSort, $joinedOnly: Boolean) {
-        planets(sort: $sort, joinedOnly: $joinedOnly) {
-          id
-          name
-          avatarUrl
-          userCount
-          isJoined
-          color
-          galaxies
-          timeSinceCreated
-          description
+      query planets(
+        $sort: PlanetSort
+        $joinedOnly: Boolean
+        $galaxy: Galaxy
+        $page: Int
+        $pageSize: Int
+      ) {
+        planets(
+          sort: $sort
+          joinedOnly: $joinedOnly
+          galaxy: $galaxy
+          page: $page
+          pageSize: $pageSize
+        ) {
+          page
+          nextPage
+          planets {
+            id
+            name
+            avatarUrl
+            bannerUrl
+            userCount
+            isJoined
+            color
+            galaxy
+            timeSinceCreated
+            description
+          }
         }
       }
     `,

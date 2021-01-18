@@ -23,6 +23,7 @@ import { handleUnderscore } from '@/handleUnderscore'
 import { randomEnum } from '@/randomEnum'
 import { Color } from '@/Color'
 import { ChatChannel } from '@/chat/ChatChannel.Entity'
+import { PlanetsResponse } from '@/planet/PlanetsResponse'
 
 @Resolver(() => Planet)
 export class PlanetResolver {
@@ -54,7 +55,7 @@ export class PlanetResolver {
       .whereInIds(userId)
       .leftJoinAndSelect('user.moderatedPlanets', 'moderatedPlanet')
       .getOne()
-    if ((await user.moderatedPlanets).length >= 5)
+    if (user.moderatedPlanetIds.length >= 5)
       throw new Error('Cannot moderate more than 5 planets')
 
     const planet = await this.planetRepo.save({
@@ -152,13 +153,27 @@ export class PlanetResolver {
     return true
   }
 
-  @Query(() => [Planet])
+  @Query(() => PlanetsResponse)
   async planets(
     @Args()
-    { sort, joinedOnly, search, galaxy, featured }: PlanetsArgs,
+    { sort, joinedOnly, galaxy, page, pageSize }: PlanetsArgs,
     @Ctx() { userId }: Context
   ) {
     const qb = this.planetRepo.createQueryBuilder('planet')
+
+    if (sort === PlanetSort.FEATURED) {
+      qb.andWhere('planet.featured = true').addOrderBy(
+        'planet.featuredPosition',
+        'ASC'
+      )
+    }
+
+    if (galaxy) {
+      qb.andWhere('planet.galaxy = :galaxy', { galaxy }).addOrderBy(
+        'planet.name',
+        'ASC'
+      )
+    }
 
     if (sort === PlanetSort.NEW) {
       qb.addOrderBy('planet.createdAt', 'DESC')
@@ -169,26 +184,28 @@ export class PlanetResolver {
     }
 
     if (userId && joinedOnly) {
-      const user = await this.userRepo
-        .createQueryBuilder('user')
-        .whereInIds(userId)
-        .leftJoinAndSelect('user.joinedPlanets', 'planet')
-        .getOne()
-      const joinedPlanets = (user.joinedPlanets as Planet[]).map(p => p.id)
-      qb.andWhere(`planet.id = ANY(:joinedPlanets)`, { joinedPlanets })
+      const user = await this.userRepo.findOne(userId)
+      qb.andWhere(`planet.id = ANY(:joinedPlanets)`, {
+        joinedPlanets: user.joinedPlanetIds
+      })
     }
 
-    if (featured) qb.andWhere('planet.featured = true')
+    if (page >= 0) {
+      qb.skip(page * pageSize).take(pageSize)
+    }
 
-    return qb.getMany()
+    const planets = await qb.getMany()
+
+    return {
+      planets,
+      page,
+      nextPage: page >= 0 && planets.length >= pageSize ? page + 1 : null
+    } as PlanetsResponse
   }
 
   @FieldResolver()
-  async isJoined(
-    @Root() planet: Planet,
-    @Ctx() { joinedLoader, userId }: Context
-  ) {
+  async isJoined(@Root() planet: Planet, @Ctx() { userId }: Context) {
     if (!userId) return false
-    return joinedLoader.load({ userId, planetId: planet.id })
+    return planet.userIds.includes(userId)
   }
 }

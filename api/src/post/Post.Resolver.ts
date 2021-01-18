@@ -69,6 +69,7 @@ export class PostResolver {
 
     const qb = this.postRepo
       .createQueryBuilder('post')
+      .andWhere('post.planetId IS NOT NULL')
       .leftJoinAndSelect('post.planet', 'planet')
       .leftJoinAndSelect('post.author', 'author')
 
@@ -128,43 +129,22 @@ export class PostResolver {
       const user = await this.userRepo
         .createQueryBuilder('user')
         .where({ id: userId })
-        .leftJoinAndSelect('user.mutedPlanets', 'mutedPlanet')
-        .leftJoinAndSelect('user.blocking', 'blockedUser')
-        .leftJoinAndSelect('user.hiddenPosts', 'hiddenPost')
-        .leftJoinAndSelect('user.joinedPlanets', 'joinedPlanet')
         .getOne()
 
       if (user) {
-        const mutedPlanets = (user.mutedPlanets as Planet[]).map(
-          planet => planet.id
-        )
-
-        const blocking = (user.blocking as User[]).map(user => user.id)
-        const hiddenPosts = (user.hiddenPosts as Post[]).map(post => post.id)
-
         if (joinedOnly) {
-          const joinedPlanets = (user.joinedPlanets as Planet[]).map(
-            planet => planet.id
-          )
-
-          if (joinedPlanets.length > 0) {
-            qb.andWhere('post.planetId = ANY(:joinedPlanets)', {
-              joinedPlanets
-            })
-          }
-        }
-
-        if (mutedPlanets.length > 0) {
-          qb.andWhere('NOT (post.planetId = ANY(:mutedPlanets))', {
-            mutedPlanets
+          qb.andWhere('post.planetId = ANY(:joinedPlanets)', {
+            joinedPlanets: user.joinedPlanetIds
           })
         }
 
-        qb.andWhere('NOT (post.authorId = ANY(:blocking))', {
-          blocking
+        qb.andWhere('NOT (post.authorId = ANY(:blockedUsers))', {
+          blockedUsers: user.blockedUserIds
         })
 
-        qb.andWhere('NOT (post.id = ANY(:hiddenPosts))', { hiddenPosts })
+        qb.andWhere('NOT (post.id = ANY(:hiddenPosts))', {
+          hiddenPosts: user.hiddenPostIds
+        })
       }
     }
 
@@ -185,6 +165,8 @@ export class PostResolver {
         galaxy
       })
     }
+
+    if (folderId) qb.andWhere(':folderId = ANY(post.folderIds)', { folderId })
 
     let posts = await qb
       .andWhere('post.deleted = false')
@@ -248,6 +230,7 @@ export class PostResolver {
       .createQueryBuilder('post')
       .where('post.id  = :postId', { postId })
       .leftJoinAndSelect('post.planet', 'planet')
+      .leftJoinAndSelect('post.author', 'author')
 
     const post = await qb.getOne()
 
@@ -328,50 +311,6 @@ export class PostResolver {
     if (imageUrls && imageUrls.length > 0) toSave.imageUrls = imageUrls
 
     const post = await this.postRepo.save(toSave)
-
-    await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
-    await this.userRepo.increment({ id: userId }, 'postCount', 1)
-
-    await this.postRepo
-      .createQueryBuilder()
-      .relation(Post, 'rocketers')
-      .of(post.id)
-      .add(userId)
-
-    return post
-  }
-
-  @Authorized()
-  @Mutation(() => Post)
-  async createRepost(
-    @Arg('postId', () => ID) postId: number,
-    @Ctx() { userId }: Context
-  ) {
-    const post = await this.postRepo.save({
-      repostId: postId,
-      authorId: userId
-    })
-
-    await this.userRepo.increment({ id: userId }, 'postCount', 1)
-
-    return post
-  }
-
-  @Authorized()
-  @Mutation(() => Post)
-  async createRepostQuote(
-    @Arg('postId', () => ID) postId: number,
-    @Arg('title') title: string,
-    @Ctx() { userId }: Context
-  ) {
-    if (title.length < 1 || title.length > 300)
-      throw new Error('Title must be between 1 and 300 characters')
-
-    const post = await this.postRepo.save({
-      repostId: postId,
-      authorId: userId,
-      title
-    })
 
     await this.userRepo.increment({ id: userId }, 'rocketCount', 1)
     await this.userRepo.increment({ id: userId }, 'postCount', 1)
@@ -510,24 +449,9 @@ export class PostResolver {
   }
 
   @FieldResolver()
-  async author(@Root() post: Post, @Ctx() { userLoader }: Context) {
-    if (!post.authorId) return null
-    return userLoader.load(post.authorId)
-  }
-
-  @FieldResolver()
-  async repost(@Root() post: Post, @Ctx() { postLoader }: Context) {
-    if (!post.repostId) return null
-    return postLoader.load(post.repostId)
-  }
-
-  @FieldResolver()
-  async isRocketed(
-    @Root() post: Post,
-    @Ctx() { postRocketedLoader, userId }: Context
-  ) {
+  async isRocketed(@Root() post: Post, @Ctx() { userId }: Context) {
     if (!userId) return false
-    return postRocketedLoader.load({ userId, postId: post.id })
+    return post.rocketerIds.includes(userId)
   }
 
   @Query(() => Metadata)

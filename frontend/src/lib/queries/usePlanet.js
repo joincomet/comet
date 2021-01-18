@@ -18,8 +18,8 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           bannerUrl
           userCount
           isJoined
-          galaxies
           timeSinceCreated
+          galaxy
           banned
           banReason
           moderators {

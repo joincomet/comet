@@ -87,9 +87,9 @@ export class Planet {
   @RelationId((planet: Planet) => planet.users)
   userIds: number[]
 
-  @Field(() => [Galaxy])
-  @Column({ type: 'enum', enum: Galaxy, array: true, default: [] })
-  galaxies: Galaxy[]
+  @Field(() => Galaxy)
+  @Column({ type: 'enum', enum: Galaxy, default: Galaxy.Uncategorized })
+  galaxy: Galaxy
 
   @ManyToMany(() => User)
   @JoinTable()
@@ -141,7 +141,9 @@ export class Planet {
   @Column({ default: false })
   private: boolean
 
-  @Field()
   @Column({ default: false })
   featured: boolean
+
+  @Column({ nullable: true })
+  featuredPosition: number
 }

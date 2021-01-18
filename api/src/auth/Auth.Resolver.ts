@@ -11,10 +11,12 @@ import { SignUpArgs } from '@/auth/SignUpArgs'
 import { bannedWords } from '@/BannedWords'
 import { format } from 'date-fns'
 import { handleUnderscore } from '@/handleUnderscore'
+import { Planet } from '@/planet/Planet.Entity'
 
 @Resolver()
 export class AuthResolver {
   @InjectRepository(User) readonly userRepo: Repository<User>
+  @InjectRepository(Planet) readonly planetRepo: Repository<Planet>
 
   @Mutation(() => LoginResponse)
   async signUp(
@@ -46,6 +48,14 @@ export class AuthResolver {
       passwordHash,
       lastLogin: new Date()
     } as User)
+
+    const cometxPlanet = await this.planetRepo.findOne({ name: 'CometX' })
+    await this.userRepo
+      .createQueryBuilder()
+      .relation(User, 'joinedPlanets')
+      .of(user.id)
+      .add(cometxPlanet.id)
+    await this.planetRepo.increment({ id: cometxPlanet.id }, 'userCount', 1)
 
     const accessToken = createAccessToken(user)
     res.cookie('accessToken', accessToken, {
