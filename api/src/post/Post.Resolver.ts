@@ -53,7 +53,6 @@ export class PostResolver {
       time,
       joinedOnly,
       folderId,
-      galaxy,
       planet,
       username,
       q
@@ -137,14 +136,6 @@ export class PostResolver {
             joinedPlanets: user.joinedPlanetIds
           })
         }
-
-        qb.andWhere('NOT (post.authorId = ANY(:blockedUsers))', {
-          blockedUsers: user.blockedUserIds
-        })
-
-        qb.andWhere('NOT (post.id = ANY(:hiddenPosts))', {
-          hiddenPosts: user.hiddenPostIds
-        })
       }
     }
 
@@ -160,12 +151,6 @@ export class PostResolver {
       )
     }
 
-    if (galaxy) {
-      qb.andWhere(':galaxy = ANY(planet.galaxies)', {
-        galaxy
-      })
-    }
-
     if (folderId) qb.andWhere(':folderId = ANY(post.folderIds)', { folderId })
 
     let posts = await qb
@@ -175,7 +160,7 @@ export class PostResolver {
       .take(pageSize)
       .getMany()
 
-    if (page === 0 && !q && !galaxy && (sort === PostSort.HOT || username)) {
+    if (page === 0 && !q && (sort === PostSort.HOT || username)) {
       const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.planet', 'planet')
@@ -195,7 +180,7 @@ export class PostResolver {
           })
           .andWhere('post.pinnedByAuthor = true')
           .addOrderBy('post.pinnedByAuthorAt', 'DESC')
-      } else if (!q && !galaxy && !folderId) {
+      } else if (!q && !folderId) {
         // Show stickies from CometX on home page
         stickiesQb
           .andWhere('planet.name ILIKE :planet', {

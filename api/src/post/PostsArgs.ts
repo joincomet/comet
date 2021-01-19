@@ -30,12 +30,6 @@ export class PostsArgs extends PaginationArgs {
   })
   planet?: string
 
-  @Field(() => Galaxy, {
-    nullable: true,
-    description: 'If provided, only posts from given galaxy will be returned'
-  })
-  galaxy?: Galaxy
-
   @Field(() => ID, {
     nullable: true,
     description: 'If provided, only posts from given folder ID will be returned'

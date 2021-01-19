@@ -10,7 +10,7 @@ export default forwardRef(({ children, left = true, right = false }, ref) => {
       }`}
     >
       {children}
-      {left && <CurrentUserInfo />}
+      {!right && <CurrentUserInfo />}
     </div>
   )
 })
