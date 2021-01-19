@@ -12,78 +12,80 @@ export default function PlanetsScroller() {
   const { data } = usePlanets({ joinedOnly: true, sort: 'AZ' })
   const planets = data ? data.planets : []
 
-  const router = useRouter()
+  const { pathname, query } = useRouter()
 
   return (
-    <div className="slideout-menu top-0 left-0 flex flex-col items-center relative w-16 bg-white dark:bg-gray-900 space-y-2">
-      <div className="relative h-full w-full py-1">
-        <AutoSizer>
-          {({ height, width }) => (
-            <List
-              height={height}
-              itemCount={planets.length + 2}
-              itemSize={56}
-              width={width}
-              className="hidescroll overflow-y-auto"
+    <div className="slideout-menu top-0 left-0 bottom-0 flex flex-col items-center w-16 bg-white dark:bg-gray-900">
+      <div className="h-full flex flex-col">
+        <div className="flex flex-col flex-shrink">
+          <Tippy content="Home" placement="right">
+            <div
+              className={`planetscroller-item ${
+                pathname === '/' ? 'planetscroller-item--active' : ''
+              }`}
             >
-              {({ index, style }) => {
-                const planet = planets[index - 2]
+              <NavLink href="/">
+                <div
+                  className={`planetscroller-item--dot hover:bg-blue-500 dark:hover:bg-blue-500 ${
+                    pathname === '/'
+                      ? 'bg-blue-500'
+                      : 'dark:bg-gray-800 bg-gray-200'
+                  }`}
+                >
+                  <HiHome
+                    className={`w-5 h-5 group-hover:text-white transition ${
+                      pathname === '/' ? 'text-white' : 'text-blue-500'
+                    }`}
+                  />
+                </div>
+              </NavLink>
+            </div>
+          </Tippy>
 
-                return (
-                  <div style={style}>
-                    {index === 0 && (
-                      <Tippy content="Home" placement="right">
-                        <div className="planetscroller-item">
-                          <NavLink href="/">
-                            <div
-                              className={`planetscroller-item-dot  hover:bg-blue-500 dark:hover:bg-blue-500 ${
-                                router.pathname === '/'
-                                  ? 'bg-blue-500'
-                                  : 'dark:bg-gray-800 bg-gray-200'
-                              }`}
-                            >
-                              <HiHome
-                                className={`w-5 h-5  group-hover:text-white transition ${
-                                  router.pathname === '/'
-                                    ? 'text-white'
-                                    : 'text-blue-500'
-                                }`}
-                              />
-                            </div>
-                          </NavLink>
-                        </div>
-                      </Tippy>
-                    )}
+          <Tippy content="Explore" placement="right">
+            <div
+              className={`planetscroller-item ${
+                pathname === '/explore' ? 'planetscroller-item--active' : ''
+              }`}
+            >
+              <NavLink href="/explore">
+                <div
+                  className={`planetscroller-item--dot hover:bg-green-500 dark:hover:bg-green-500 ${
+                    pathname === '/explore'
+                      ? 'bg-green-500'
+                      : 'dark:bg-gray-800 bg-gray-200'
+                  }`}
+                >
+                  <IoTelescope
+                    className={`w-5 h-5 group-hover:text-white transition ${
+                      pathname === '/explore' ? 'text-white' : 'text-green-500'
+                    }`}
+                  />
+                </div>
+              </NavLink>
+            </div>
+          </Tippy>
 
-                    {index === 1 && (
-                      <Tippy content="Explore" placement="right">
-                        <div className="planetscroller-item">
-                          <NavLink href="/explore">
-                            <div
-                              className={`planetscroller-item-dot hover:bg-green-500 dark:hover:bg-green-500 ${
-                                router.pathname === '/explore'
-                                  ? 'bg-green-500'
-                                  : 'dark:bg-gray-800 bg-gray-200'
-                              }`}
-                            >
-                              <IoTelescope
-                                className={`w-5 h-5 group-hover:text-white transition ${
-                                  router.pathname === '/explore'
-                                    ? 'text-white'
-                                    : 'text-green-500'
-                                }`}
-                              />
-                            </div>
-                          </NavLink>
-                        </div>
-                      </Tippy>
-                    )}
+          <div className="border-b-2 border-gray-200 dark:border-gray-750 h-2 mx-2 box-content" />
+        </div>
 
-                    {index === 2 && (
+        <div className="flex flex-col flex-grow">
+          <AutoSizer disableWidth>
+            {({ height }) => (
+              <List
+                height={height}
+                itemCount={planets.length + 1}
+                itemSize={56}
+                width="100%"
+                className="hidescroll overflow-y-auto"
+              >
+                {({ index, style }) => {
+                  if (index === 0)
+                    return (
                       <Tippy content="Create Planet" placement="right">
                         <div className="planetscroller-item">
                           <div
-                            className={`planetscroller-item-dot dark:bg-gray-800 bg-gray-200 hover:bg-purple-500 dark:hover:bg-purple-500`}
+                            className={`planetscroller-item--dot dark:bg-gray-800 bg-gray-200 hover:bg-purple-500 dark:hover:bg-purple-500`}
                           >
                             <svg
                               className={`w-5 h-5 text-purple-500 group-hover:text-white transition`}
@@ -97,25 +99,35 @@ export default function PlanetsScroller() {
                           </div>
                         </div>
                       </Tippy>
-                    )}
+                    )
 
-                    {index > 1 && (
+                  const planet = planets[index - 1]
+
+                  return (
+                    <div style={style}>
                       <Tippy
                         key={planet.id}
                         placement="right"
                         content={planet.name}
                       >
-                        <div className="planetscroller-item">
+                        <div
+                          className={`planetscroller-item ${
+                            pathname.startsWith('/planet/[planetname]') &&
+                            query.planetname === planet.name
+                              ? 'planetscroller-item--active'
+                              : ''
+                          }`}
+                        >
                           <NavLink href={`/planet/${planet.name}`}>
                             {planet.avatarUrl ? (
                               <img
                                 src={planet.avatarUrl}
-                                className="planetscroller-item-dot dark:bg-gray-800 bg-gray-200"
+                                className="planetscroller-item--dot dark:bg-gray-800 bg-gray-200"
                                 alt={planet.name}
                               />
                             ) : (
                               <div
-                                className={`planetscroller-item-dot dark:bg-gray-800 bg-gray-200 uppercase text-xl font-medium text-tertiary`}
+                                className={`planetscroller-item--dot dark:bg-gray-800 bg-gray-200 uppercase text-xl font-medium text-tertiary`}
                               >
                                 {planet.name[0]}
                               </div>
@@ -123,13 +135,13 @@ export default function PlanetsScroller() {
                           </NavLink>
                         </div>
                       </Tippy>
-                    )}
-                  </div>
-                )
-              }}
-            </List>
-          )}
-        </AutoSizer>
+                    </div>
+                  )
+                }}
+              </List>
+            )}
+          </AutoSizer>
+        </div>
       </div>
     </div>
   )

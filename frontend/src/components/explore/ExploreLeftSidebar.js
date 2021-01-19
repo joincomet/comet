@@ -2,7 +2,6 @@ import { HiSortAscending, HiClock, HiCheckCircle } from 'react-icons/hi'
 import { FaSortAlphaDown } from 'react-icons/fa'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { useRouter } from 'next/router'
 
 import { Scrollbars } from 'rc-scrollbars'
@@ -13,15 +12,10 @@ import { CurrentUserInfo } from '@/components/layout/CurrentUserInfo'
 import NavLink from '@/components/NavLink'
 
 export default forwardRef((props, ref) => {
-  const { sidebar, setSidebar } = useHeaderStore()
-
   const { query, pathname } = useRouter()
-
-  useEffect(() => setSidebar(false), [query, pathname])
 
   return (
     <Sidebar left ref={ref}>
-      <CurrentUserInfo />
       <div className="relative h-full w-full">
         <AutoSizer>
           {({ width, height }) => (

@@ -1,93 +1,74 @@
-import { FiHash, FiClock, FiCha } from 'react-icons/fi'
 import { RiFireFill } from 'react-icons/ri'
-import { HiSortAscending, HiClock, HiHashtag, HiFire } from 'react-icons/hi'
-import { BiHomeAlt } from 'react-icons/bi'
-import NavLink from '../NavLink'
-import Logo from '@/components/Logo'
-import React, { useEffect, useState } from 'react'
-import RSC from 'react-scrollbars-custom'
-import { AnimatePresence, motion } from 'framer-motion'
-import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import { useHeaderStore } from '@/lib/stores/useHeaderStore'
+import {
+  HiSortAscending,
+  HiClock,
+  HiHashtag,
+  HiCog,
+  HiChevronDown,
+  HiAdjustments
+} from 'react-icons/hi'
+import React from 'react'
 import { useRouter } from 'next/router'
-
-const link =
-  'rounded cursor-pointer inline-flex items-center text-tertiary text-sm font-medium px-4 w-full py-2 transition dark:hover:bg-gray-800'
-
-const label =
-  'px-4 pt-6 pb-2 text-tertiary uppercase text-xs font-semibold tracking-widest'
+import Sidebar from '@/components/layout/Sidebar'
+import PostSortButtons from '@/components/layout/PostSortButtons'
 
 export default function PlanetSidebar({ planet }) {
-  const currentUser = useCurrentUser().data
-
-  const { sidebar, setSidebar } = useHeaderStore()
-
   const { query, pathname } = useRouter()
 
-  useEffect(() => setSidebar(false), [query, pathname])
-
   return (
-    <>
-      <AnimatePresence>
-        {sidebar && (
-          <motion.div
-            initial={{
-              opacity: 0
-            }}
-            animate={{
-              opacity: 0.75
-            }}
-            exit={{
-              opacity: 0
-            }}
-            transition={{ duration: 0.15, ease: 'easeInOut' }}
-            onClick={() => setSidebar(false)}
-            className={`z-30 fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-gray-900`}
-          />
-        )}
-      </AnimatePresence>
-      <nav
-        className={`sidebar left-16 ${
-          sidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        }`}
+    <Sidebar left>
+      <div
+        className={`${
+          planet.bannerUrl ? 'h-32' : 'h-12'
+        } relative z-0 w-full bg-cover bg-center`}
+        style={
+          planet.bannerUrl
+            ? { backgroundImage: `url(${planet.bannerUrl})` }
+            : {}
+        }
       >
         <div
-          className="h-36 w-full bg-cover bg-center"
-          style={{ backgroundImage: `url(${planet.bannerUrl})` }}
-        ></div>
-
-        <div className="px-1">
-          <div className="sidebar-label">POSTS</div>
-
-          <div
-            className={`sidebar-item ${
-              !query.sort || query.sort === 'hot' ? 'dark:bg-gray-750' : ''
-            }`}
-          >
-            <RiFireFill className="w-5 h-5 mr-3" />
-            Hot
+          className={`flex items-center h-12 px-4 ${
+            planet.bannerUrl
+              ? 'dark:bg-gray-950 dark:bg-opacity-50 text-secondary'
+              : 'dark:bg-gray-850 text-primary'
+          }`}
+        >
+          {planet.avatarUrl && (
+            <img src={planet.avatarUrl} className="w-8 h-8 rounded-full mr-3" />
+          )}
+          <div className="font-medium text-sm mr-auto pr-3 truncate">
+            {planet.name}
           </div>
 
-          <div className="sidebar-item">
-            <HiClock className="w-5 h-5 mr-3" />
-            New
+          <div className="rounded-md p-1 transition dark:hover:bg-gray-750 cursor-pointer">
+            <HiAdjustments className="w-5 h-5 text-secondary" />
           </div>
+        </div>
+      </div>
 
-          <div className="sidebar-item">
-            <HiSortAscending className="w-5 h-5 mr-3" />
-            Top
-          </div>
+      <div className="px-1">
+        <div className="sidebar-label">POSTS</div>
 
-          <div className="sidebar-label">CHANNELS</div>
+        <PostSortButtons />
 
+        <div className="sidebar-label">CHANNELS</div>
+
+        <div className="space-y-0.5">
           {planet.channels.map(channel => (
-            <div key={channel.id} className="sidebar-item">
-              <HiHashtag className="w-5 h-5 mr-3" />
-              {channel.name}
-            </div>
+            <ChatChannel key={channel.id} channel={channel} />
           ))}
         </div>
-      </nav>
-    </>
+      </div>
+    </Sidebar>
+  )
+}
+
+function ChatChannel({ channel }) {
+  return (
+    <div className="sidebar-item">
+      <HiHashtag className="w-5 h-5 mr-3" />
+      {channel.name}
+    </div>
   )
 }

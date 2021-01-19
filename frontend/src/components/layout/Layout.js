@@ -9,6 +9,9 @@ export default function Layout({ children }) {
 
       <PlanetsScroller />
 
+      <div id="#userpopover" />
+      <div id="#planetpopover" />
+
       <div className="h-full">{children}</div>
     </>
   )

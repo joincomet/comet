@@ -202,7 +202,8 @@ export class Post {
       .join('-')
       .replace(/[^a-z0-9-]+/gi, '')
       .replace(/[-](.)\1+/g, '$1')*/
-    return `/post/${this.id36}`
+    const planet = this.planet as Planet
+    return `/planet/${planet ? planet.name : '_'}/post/${this.id36}`
   }
 
   @Field(() => [Folder])

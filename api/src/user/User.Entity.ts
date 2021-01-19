@@ -141,13 +141,13 @@ export class User {
    * Current user is blocked by this user
    */
   @Field()
-  isBlocked: boolean
+  isBlocked: boolean // TODO FieldResolver
 
   /**
    * Current user is blocking this user
    */
   @Field()
-  isBlocking: boolean
+  isBlocking: boolean // TODO FieldResolver
 
   @Field()
   get timeSinceCreated(): string {

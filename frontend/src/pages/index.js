@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import HomeSidebar from '@/components/home/HomeSidebar'
 import ClassicPosts from '@/components/post/ClassicPosts'
 import Header from '@/components/layout/Header'
-import PostsSidebar from '@/components/post/PostsSidebar'
+import PostsSidebar from '@/components/post/FoldersSidebar'
 import { QueryClient } from 'react-query'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { fetchPlanet } from '@/lib/queries/usePlanet'
@@ -67,6 +67,8 @@ export default function HomePage({ variables }) {
       slideoutLeft.on('beforeopen', function () {
         header.style.transition = 'transform 300ms ease'
         header.style.transform = `translateX(${paddingLeft}px)`
+        menuRight.current.classList.add('slideout-open--left')
+        slideoutRight.disableTouch()
       })
       slideoutLeft.on('beforeclose', function () {
         header.style.transition = 'transform 300ms ease'
@@ -93,6 +95,8 @@ export default function HomePage({ variables }) {
       slideoutRight.on('beforeopen', function () {
         header.style.transition = 'transform 300ms ease'
         header.style.transform = `translateX(${-paddingRight}px)`
+        menuLeft.current.classList.add('slideout-open--right')
+        slideoutLeft.disableTouch()
       })
       slideoutRight.on('beforeclose', function () {
         header.style.transition = 'transform 300ms ease'

@@ -314,11 +314,16 @@ body {
 }
 
 .planetscroller-item {
-  @apply flex-shrink-0 inline-flex items-center justify-center w-full h-full rounded-full cursor-pointer hover:shadow-lg;
+  @apply group flex-shrink-0 relative inline-flex items-end justify-center w-full h-14 rounded-full cursor-pointer;
 }
 
-.planetscroller-item-dot {
-  @apply w-12 h-12 group object-cover inline-flex items-center justify-center rounded-full transform transition hover:scale-105;
+.planetscroller-item--dot {
+  @apply w-12 h-12 object-cover inline-flex items-center justify-center rounded-full transform transition group-hover:scale-105 group-hover:shadow-lg;
+}
+
+.planetscroller-item--active::before {
+  content: "";
+  @apply absolute left-0 bottom-1 top-3 w-1 dark:bg-white rounded-r-2xl;
 }
 
 .sidebar {

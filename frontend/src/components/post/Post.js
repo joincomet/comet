@@ -23,7 +23,7 @@ import { useLoginStore } from '@/lib/stores/useLoginStore'
 
 export default function Post({
   postData,
-  showPlanet = true,
+  hidePlanet = false,
   showFullText = false,
   className = ''
 }) {
@@ -58,7 +58,7 @@ export default function Post({
 
         <div className="pr-3 min-w-0">
           <div className="flex truncate items-center text-13 font-medium text-tertiary">
-            {showPlanet && (
+            {!hidePlanet && (
               <>
                 {post.planet.avatarUrl && (
                   <img
@@ -95,9 +95,12 @@ export default function Post({
               'text post'}
             )
           </div>
-          <div className="pt-1 text-secondary text-base">
+          <NavLink
+            href={post.relativeUrl}
+            className="pt-1 text-secondary text-base"
+          >
             {post.title || '(untitled)'}
-          </div>
+          </NavLink>
           <div className="md:flex items-center pt-1 hidden space-x-1">
             <CommentCount post={post} />
             <Options post={post} />
@@ -166,10 +169,13 @@ function Rocket({ post, setPost, desktop = true, mobile = false }) {
 
 function CommentCount({ post }) {
   return (
-    <div className="inline-flex items-center text-tertiary text-xs font-medium h-7 px-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+    <NavLink
+      href={post.relativeUrl}
+      className="inline-flex items-center text-tertiary text-xs font-medium h-7 px-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+    >
       <HiChatAlt2 className="w-5 h-5 mr-1.5" />
       {post.commentCount}
-    </div>
+    </NavLink>
   )
 }
 
