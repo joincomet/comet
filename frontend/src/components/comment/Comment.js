@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
 import { TiPinOutline } from 'react-icons/ti'
+import { HiDotsHorizontal, HiReply } from 'react-icons/hi'
 import React, { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
@@ -32,9 +33,14 @@ import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
 import { useCommentStore } from '@/lib/stores/useCommentStore'
 import EditCommentModal from '@/components/comment/EditCommentModal'
+import {
+  useRocketPostMutation,
+  useUnrocketPostMutation
+} from '@/lib/mutations/postMutations'
+import { RiRocketFill } from 'react-icons/ri'
 
 export default function Comment({
-  comment,
+  commentData,
   post,
   level = 0,
   setParentComment
@@ -42,14 +48,125 @@ export default function Comment({
   const { setCreateComment } = useCommentStore()
   const [collapse, setCollapse] = useState(false)
   const [editing, setEditing] = useState(false)
+  const [comment, setComment] = useState(commentData)
   const [textContent, setTextContent] = useState(comment.textContent)
   const currentUser = useCurrentUser().data
+  const { setLogin } = useLoginStore()
 
-  if (!comment.author) {
-    comment.deleted = true
-    comment.author = { username: '[deleted]' }
-  }
+  return (
+    <>
+      <EditCommentModal
+        open={editing}
+        setOpen={setEditing}
+        comment={comment}
+        setText={setTextContent}
+      />
+      <div className={`relative`}>
+        <div id={comment.id36} />
 
+        <div
+          className="commentcollapse"
+          style={{ marginLeft: 1 * level + 'rem' }}
+          onClick={() => setCollapse(!collapse)}
+        />
+
+        <div
+          className="relative transition dark:hover:bg-gray-775"
+          style={{ paddingLeft: 1 * level + 'rem' }}
+        >
+          <div className="pl-4">
+            <div className="pl-4 pr-8 py-2 transition dark:hover:bg-gray-775">
+              <div
+                onClick={
+                  collapse
+                    ? () => {
+                        setCollapse(false)
+                      }
+                    : () => {}
+                }
+                className={`transition w-full ${
+                  collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
+                } ${collapse || comment.deleted ? 'h-10' : ''}`}
+              >
+                <div className="flex items-center text-13 font-medium pb-1 text-tertiary">
+                  <UserAvatar
+                    className="w-5 h-5 mr-1.5 cursor-pointer transition hover:opacity-90"
+                    user={comment.author}
+                    loading="lazy"
+                  />
+                  <span className="hover:underline cursor-pointer">
+                    {comment.author.username}
+                  </span>
+                  &nbsp;&middot;&nbsp;
+                  <Tippy content={comment.timeSinceFull}>
+                    <span>{comment.timeSince}</span>
+                  </Tippy>
+                </div>
+
+                {!collapse && !comment.deleted && (
+                  <>
+                    <Twemoji options={{ className: 'twemoji' }}>
+                      <div
+                        className="prose prose-sm dark:prose-dark max-w-none"
+                        dangerouslySetInnerHTML={{ __html: textContent }}
+                      />
+                    </Twemoji>
+
+                    <div className="flex items-center space-x-1 pt-1">
+                      <Rocket comment={comment} setComment={setComment} />
+
+                      {!comment.deleted && (
+                        <div
+                          onClick={() => {
+                            if (currentUser) {
+                              setParentComment(comment)
+                              setCreateComment(true)
+                            } else {
+                              setLogin(true)
+                            }
+                          }}
+                          className="flex text-tertiary items-center transition rounded-md dark:hover:bg-gray-700 cursor-pointer select-none"
+                        >
+                          <div className="text-xs font-medium">Reply</div>
+                          <HiReply className="w-5 h-5 ml-3" />
+                        </div>
+                      )}
+
+                      <Options comment={comment} />
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {!collapse &&
+          comment.childComments &&
+          comment.childComments.length > 0 &&
+          comment.childComments.map(childComment => (
+            <Comment
+              key={childComment.id}
+              commentData={childComment}
+              level={level + 1}
+              setParentComment={setParentComment}
+              post={post}
+            />
+          ))}
+      </div>
+    </>
+  )
+}
+
+function Options({ comment }) {
+  return (
+    <div className="inline-flex cursor-pointer items-center text-mid p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+      <HiDotsHorizontal className="w-5 h-5" />
+    </div>
+  )
+}
+
+function Rocket({ comment, setComment }) {
   const { setLogin } = useLoginStore()
   const variables = { commentId: comment.id }
   const rocketCommentMutation = useRocketCommentMutation()
@@ -67,7 +184,9 @@ export default function Comment({
     await unrocketCommentMutation.mutateAsync(variables)
   }
 
-  const toggle = () => {
+  const currentUser = useCurrentUser().data
+
+  const toggleRocket = () => {
     if (!currentUser) {
       setLogin(true)
       return
@@ -78,128 +197,18 @@ export default function Comment({
   }
 
   return (
-    <>
-      <EditCommentModal
-        open={editing}
-        setOpen={setEditing}
-        comment={comment}
-        setText={setTextContent}
-      />
-      <div className={`relative mt-3 ${level === 0 ? '' : 'ml-3'}`}>
-        <div id={comment.id36} />
-
-        <div
-          className="commentcollapse"
-          onClick={() => setCollapse(!collapse)}
-        />
-
-        <div className="pl-6">
-          <div
-            onClick={
-              collapse
-                ? () => {
-                    setCollapse(false)
-                  }
-                : () => {}
-            }
-            className={`transition w-full ${
-              collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
-            } ${collapse || comment.deleted ? 'h-10' : ''}`}
-          >
-            <div className="flex items-center text-13">
-              <UserAvatar
-                className="w-6 h-6 mr-3 cursor-pointer transition hover:opacity-90"
-                user={comment.author}
-                loading="lazy"
-              />
-              <span className="text-secondary hover:underline cursor-pointer">
-                {comment.author.username}
-              </span>
-              <div className="text-secondary">
-                &nbsp;&middot;&nbsp;{comment.timeSince}
-              </div>
-              {collapse && comment.childCount > 0 && (
-                <div className="ml-auto text-mid">
-                  {comment.childCount} hidden replies
-                </div>
-              )}
-            </div>
-
-            {!collapse && !comment.deleted && (
-              <>
-                <Twemoji options={{ className: 'twemoji' }}>
-                  <div
-                    className="prose prose-sm prose-blue dark:prose-dark max-w-none p-3 border-t border-gray-200 dark:border-gray-800"
-                    dangerouslySetInnerHTML={{ __html: textContent }}
-                  />
-                </Twemoji>
-
-                <div className="flex items-center h-10 border-t dark:border-gray-800 border-gray-200">
-                  <div
-                    onClick={() => toggle()}
-                    className={`flex items-center h-full px-4 font-medium select-none ${
-                      !comment.deleted
-                        ? 'transition cursor-pointer hover:text-red-400'
-                        : ''
-                    } ${comment.isRocketed ? 'text-red-400' : 'text-mid'}`}
-                  >
-                    <div className="label">{comment.rocketCount}</div>
-                    <BiRocket className="w-4.5 h-4.5 ml-3" />
-                  </div>
-
-                  {!comment.deleted && (
-                    <div
-                      onClick={() => {
-                        if (currentUser) {
-                          setParentComment(comment)
-                          setCreateComment(true)
-                        } else {
-                          setLogin(true)
-                        }
-                      }}
-                      className="flex text-mid items-center transition cursor-pointer hover:text-blue-500 h-full px-4 font-medium select-none"
-                    >
-                      <div className="label">Reply</div>
-                      <FiCornerUpLeft className="w-4.5 h-4.5 ml-3" />
-                    </div>
-                  )}
-
-                  <div className="mr-auto" />
-
-                  {comment.pinned && (
-                    <Tippy content="Pinned comment">
-                      <div className="mr-4 text-accent cursor-pointer">
-                        <TiPinOutline size={22} style={{ marginTop: '-1px' }} />
-                      </div>
-                    </Tippy>
-                  )}
-
-                  <MoreOptionsComment
-                    comment={comment}
-                    post={post}
-                    level={level}
-                    setEditing={setEditing}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        {!collapse &&
-          comment.childComments &&
-          comment.childComments.length > 0 &&
-          comment.childComments.map(childComment => (
-            <Comment
-              key={childComment.id}
-              comment={childComment}
-              level={level + 1}
-              setParentComment={setParentComment}
-              post={post}
-            />
-          ))}
-      </div>
-    </>
+    <div
+      onClick={e => {
+        e.stopPropagation()
+        toggleRocket()
+      }}
+      className={`flex items-center px-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer transition ${
+        comment.isRocketed ? 'text-red-400' : 'text-tertiary'
+      }`}
+    >
+      <RiRocketFill className="w-4 h-4" />
+      <div className="ml-1.5 text-xs font-medium">{comment.rocketCount}</div>
+    </div>
   )
 }
 

@@ -66,7 +66,7 @@ export default function PlanetsScroller() {
             </div>
           </Tippy>
 
-          <div className="border-b-2 border-gray-200 dark:border-gray-750 h-2 mx-2 box-content" />
+          <div className="border-b-2 border-gray-200 dark:border-gray-800 h-2 mx-3 box-content" />
         </div>
 
         <div className="flex flex-col flex-grow">

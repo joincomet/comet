@@ -67,20 +67,16 @@ module.exports = {
               color: theme('colors.blue.500')
             },
             h1: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0'
+              color: theme('colors.gray.800')
             },
             h2: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0'
+              color: theme('colors.gray.800')
             },
             h3: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0'
+              color: theme('colors.gray.800')
             },
             h4: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0'
+              color: theme('colors.gray.800')
             },
             code: {
               color: 'white',
@@ -90,14 +86,7 @@ module.exports = {
               }
             },
             p: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0',
-              'margin-bottom': '1em'
-            },
-            img: {
-              'margin-top': '0',
-              'margin-bottom': '0',
-              'box-shadow': '0px 2px 4px -2px rgba(0, 0, 0, 30%)'
+              color: theme('colors.gray.800')
             },
             'ul > li': {
               '&::before': {
@@ -116,12 +105,12 @@ module.exports = {
 
         dark: {
           css: {
-            color: 'white',
+            color: theme('colors.gray.200'),
             a: {
               color: theme('colors.blue.500'),
               'text-decoration': 'none',
               '&:hover, &.active': {
-                color: 'white',
+                color: theme('colors.gray.200'),
                 'background-color': theme('colors.blue.500')
               }
             },
@@ -129,20 +118,16 @@ module.exports = {
               color: theme('colors.blue.500')
             },
             h1: {
-              color: 'white',
-              'margin-top': '0'
+              color: theme('colors.gray.200')
             },
             h2: {
-              color: 'white',
-              'margin-top': '0'
+              color: theme('colors.gray.200')
             },
             h3: {
-              color: 'white',
-              'margin-top': '0'
+              color: theme('colors.gray.200')
             },
             h4: {
-              color: 'white',
-              'margin-top': '0'
+              color: theme('colors.gray.200')
             },
             code: {
               color: theme('colors.gray.100'),
@@ -151,24 +136,17 @@ module.exports = {
               }
             },
             p: {
-              color: 'white',
-              'margin-top': '0',
-              'margin-bottom': '1em'
-            },
-            img: {
-              'margin-top': '0',
-              'margin-bottom': '0',
-              'box-shadow': '0px 2px 4px -2px rgba(255, 255, 255, 30%)'
+              color: theme('colors.gray.200')
             },
             'ul > li': {
               '&::before': {
-                'background-color': 'white',
+                'background-color': theme('colors.gray.200'),
                 'font-weight': 'bold'
               }
             },
             'ol > li': {
               '&::before': {
-                color: 'white',
+                color: theme('colors.gray.200'),
                 'font-weight': 'bold'
               }
             }

@@ -170,35 +170,8 @@ body {
   @apply p-2.5 font-medium text-white text-sm !important;
 }
 
-.arrow-box {
-  position: relative;
-}
-
-.arrow-box::after, .arrow-box::before {
-  right: 100%;
-  top: calc(1.5rem - 4px);
-  border: solid transparent;
-  content: "";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-}
-
-.arrow-box::after {
-  @apply border-r-gray-50 dark:border-r-gray-900;
-  border-width: 8px;
-  margin-top: -8px;
-}
-
-.arrow-box::before {
-  @apply border-r-gray-300 dark:border-r-gray-900;
-  border-width: 9px;
-  margin-top: -9px;
-}
-
 .commentcollapse {
-  @apply absolute top-0 bottom-0 w-6 cursor-pointer group z-10;
+  @apply absolute top-0 bottom-0 w-8 cursor-pointer group z-10;
 }
 
 .commentcollapse::before {
@@ -318,7 +291,7 @@ body {
 }
 
 .planetscroller-item--dot {
-  @apply w-12 h-12 object-cover inline-flex items-center justify-center rounded-full transform transition group-hover:scale-105 group-hover:shadow-lg;
+  @apply w-12 h-12 object-cover inline-flex items-center justify-center rounded-full transform transition hover:scale-105 hover:shadow-lg;
 }
 
 .planetscroller-item--active::before {
@@ -348,4 +321,8 @@ body {
 
 .pagebutton {
   @apply flex items-center justify-center flex-grow transition dark:hover:bg-gray-800 h-full cursor-pointer;
+}
+
+.react-player {
+  @apply absolute top-0 left-0;
 }

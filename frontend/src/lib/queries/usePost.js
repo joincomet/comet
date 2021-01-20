@@ -49,6 +49,7 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
             isCurrentUser
           }
           timeSince
+          timeSinceFull
           timeSinceEdited
           deleted
           removed

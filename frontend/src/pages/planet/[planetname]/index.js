@@ -10,23 +10,37 @@ import ClassicPosts from '@/components/post/ClassicPosts'
 import SendMessageBar from '@/components/layout/SendMessageBar'
 import { fetchPosts } from '@/lib/queries/usePosts'
 import Header from '@/components/layout/Header'
+import { useSlideout } from '@/lib/useSlideout'
+import SlideoutOverlay from '@/components/SlideoutOverlay'
 
 export default function PlanetPostsPage({ variables }) {
   const { query } = useRouter()
   const planetQuery = usePlanet({ name: query.planetname })
   const planet = planetQuery.data
 
-  if (!planet) return <div>Planet!</div>
+  const {
+    slideoutRight,
+    slideoutLeft,
+    menuLeft,
+    menuRight,
+    header,
+    panel
+  } = useSlideout()
 
   return (
     <>
-      <Header />
-      <PlanetSidebar planet={planet} />
-      <PlanetUsersSidebar planet={planet} />
+      <Header title={planet.name} ref={header} slideoutLeft={slideoutLeft} />
+      <PlanetSidebar planet={planet} ref={menuLeft} />
+      <PlanetUsersSidebar planet={planet} ref={menuRight} />
       <main
         className="slideout-panel slideout-panel--right slideout-panel--header"
         id="panel"
+        ref={panel}
       >
+        <SlideoutOverlay
+          slideoutLeft={slideoutLeft}
+          slideoutRight={slideoutRight}
+        />
         <ClassicPosts variables={variables} hidePlanet />
 
         <SendMessageBar />

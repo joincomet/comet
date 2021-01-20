@@ -8,6 +8,8 @@ import { QueryClient } from 'react-query'
 import { dehydrate } from 'react-query/hydration'
 import { fetchPosts } from '@/lib/queries/usePosts'
 import { useSlideout } from '@/lib/useSlideout'
+import { globalPrefetch } from '@/lib/queries/globalPrefetch'
+import SlideoutOverlay from '@/components/SlideoutOverlay'
 
 export default function HomePage({ variables }) {
   const {
@@ -32,34 +34,29 @@ export default function HomePage({ variables }) {
         id="panel"
         ref={panel}
       >
-        {((slideoutLeft && slideoutLeft.isOpen()) ||
-          (slideoutRight && slideoutRight.isOpen())) && (
-          <div
-            className="fixed z-10 inset-0"
-            onClick={e => {
-              e.stopPropagation()
-              e.preventDefault()
-              slideoutLeft.close()
-              slideoutRight.close()
-            }}
-          />
-        )}
-
+        <SlideoutOverlay
+          slideoutLeft={slideoutLeft}
+          slideoutRight={slideoutRight}
+        />
         <ClassicPosts variables={variables} />
       </main>
     </>
   )
 }
 
-export async function getStaticProps(ctx) {
+export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
+
+  const { query } = ctx
+
+  await globalPrefetch(queryClient, ctx)
 
   const variables = {
     joinedOnly: true,
     pageSize: 20,
-    page: 0,
-    sort: 'HOT',
-    time: 'ALL'
+    page: query.page ? query.page - 1 : 0,
+    sort: query.sort ? query.sort.toUpperCase() : 'HOT',
+    time: query.time ? query.time.toUpperCase() : 'ALL'
   }
 
   await queryClient.prefetchQuery(['posts', variables], key =>
@@ -70,7 +67,6 @@ export async function getStaticProps(ctx) {
     props: {
       variables,
       dehydratedState: dehydrate(queryClient)
-    },
-    revalidate: 1
+    }
   }
 }

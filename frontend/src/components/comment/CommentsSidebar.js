@@ -4,14 +4,19 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import Sidebar from '@/components/layout/Sidebar'
 
-export default forwardRef(({ planet }, ref) => {
+export default forwardRef(({ post, comments }, ref) => {
   return (
     <Sidebar right ref={ref}>
       <div className="px-2">
-        <div className="sidebar-label">USERS</div>
-        {planet.users.map(user => (
-          <User key={user.id} user={user} />
-        ))}
+        <div className="sidebar-label">CREATOR</div>
+        <User user={post.author} />
+
+        <div className="sidebar-label">PARTICIPANTS</div>
+        {comments
+          .map(comment => comment.author)
+          .map(user => (
+            <User key={user.id} user={user} />
+          ))}
       </div>
     </Sidebar>
   )
