@@ -17,7 +17,7 @@ const link =
 const label =
   'px-4 pt-6 pb-2 text-tertiary uppercase text-xs font-semibold tracking-widest'
 
-export default function PlanetSidebar({ planet }) {
+export default function PlanetChatLeftSidebar({ planet }) {
   const currentUser = useCurrentUser().data
 
   const { sidebar, setSidebar } = useHeaderStore()
@@ -57,31 +57,27 @@ export default function PlanetSidebar({ planet }) {
         ></div>
 
         <div className="px-1">
-          <div className="sidebar-label">POSTS</div>
+          <div className={label}>POSTS</div>
 
-          <div
-            className={`sidebar-item ${
-              !query.sort || query.sort === 'hot' ? 'dark:bg-gray-750' : ''
-            }`}
-          >
+          <div className={link}>
             <RiFireFill className="w-5 h-5 mr-3" />
             Hot
           </div>
 
-          <div className="sidebar-item">
+          <div className={link}>
             <HiClock className="w-5 h-5 mr-3" />
             New
           </div>
 
-          <div className="sidebar-item">
+          <div className={link}>
             <HiSortAscending className="w-5 h-5 mr-3" />
             Top
           </div>
 
-          <div className="sidebar-label">CHANNELS</div>
+          <div className={label}>CHANNELS</div>
 
           {planet.channels.map(channel => (
-            <div key={channel.id} className="sidebar-item">
+            <div key={channel.id} className={link}>
               <HiHashtag className="w-5 h-5 mr-3" />
               {channel.name}
             </div>

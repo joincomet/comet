@@ -26,6 +26,10 @@ const submitComment = async variables => {
             username
             name
             avatarUrl
+            followerCount
+            followingCount
+            isFollowing
+            isFollowed
             isCurrentUser
           }
           timeSince

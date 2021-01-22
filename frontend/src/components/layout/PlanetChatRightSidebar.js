@@ -1,10 +1,24 @@
-import { FiUser } from 'react-icons/fi'
-import React, { useEffect } from 'react'
+import { FiSearch, FiUser, FiUserPlus } from 'react-icons/fi'
+import { CgInfinity } from 'react-icons/cg'
+import { BiHomeAlt } from 'react-icons/bi'
+import NavLink from '../NavLink'
+import Logo from '@/components/Logo'
+import React, { useEffect, useState } from 'react'
+import RSC from 'react-scrollbars-custom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { useRouter } from 'next/router'
 
-export default function PlanetUsersSidebar({ planet }) {
+const link =
+  'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-10 flex items-center transition'
+
+const label =
+  'px-4 pt-6 pb-2 text-tertiary uppercase text-xs font-semibold tracking-widest'
+
+export default function PlanetChatRightSidebar({ planet }) {
+  const currentUser = useCurrentUser().data
+
   const { sidebar, setSidebar } = useHeaderStore()
 
   const { query, pathname } = useRouter()
@@ -37,7 +51,7 @@ export default function PlanetUsersSidebar({ planet }) {
         }`}
       >
         <div className="px-2">
-          <div className="sidebar-label">USERS</div>
+          <div className={label}>USERS</div>
           {planet.users.map(user => (
             <div
               key={user.id}

@@ -14,7 +14,6 @@ import dayjs from 'dayjs'
 import { Planet } from '@/planet/Planet.Entity'
 import { ChatGroup } from '@/chat/ChatGroup.Entity'
 import { Lazy } from '@/Lazy'
-import { Folder } from '@/folder/Folder.Entity'
 
 @ObjectType()
 @Entity()
@@ -66,35 +65,39 @@ export class User {
   admin: boolean
 
   @OneToMany(() => Comment, comment => comment.author)
-  comments: Lazy<Comment[]>
+  comments: Promise<Comment[]>
 
   @OneToMany(() => Post, post => post.author)
-  posts: Lazy<Post[]>
-
-  @OneToMany(() => Folder, folder => folder.creator)
-  folders: Lazy<Folder[]>
+  posts: Promise<Post[]>
 
   @ManyToMany(() => Planet, planet => planet.users)
-  joinedPlanets: Lazy<Planet[]>
+  joinedPlanets: Promise<Planet[]>
 
   @Field(() => [Planet])
   @ManyToMany(() => Planet, planet => planet.moderators)
-  moderatedPlanets: Lazy<Planet[]>
+  moderatedPlanets: Promise<Planet[]>
 
   @ManyToMany(() => Planet)
   @JoinTable()
-  mutedPlanets: Lazy<Planet[]>
+  mutedPlanets: Promise<Planet[]>
 
   @ManyToMany(() => Post)
   @JoinTable()
-  hiddenPosts: Lazy<Post[]>
+  hiddenPosts: Promise<Post[]>
 
   @ManyToMany(() => User, user => user.blocking)
-  blockers: Lazy<User[]>
+  blockers: Promise<User[]>
 
   @ManyToMany(() => User, user => user.blockers)
   @JoinTable()
-  blocking: Lazy<User[]>
+  blocking: Promise<User[]>
+
+  @ManyToMany(() => User, user => user.following)
+  followers: Promise<User[]>
+
+  @ManyToMany(() => User, user => user.followers)
+  @JoinTable()
+  following: Promise<User[]>
 
   @Field()
   @Column({ default: false })
@@ -105,7 +108,21 @@ export class User {
   banReason?: string
 
   @Field()
+  isFollowing: boolean
+
+  @Field()
+  isFollowed: boolean
+
+  @Field()
   isCurrentUser: boolean
+
+  @Field(() => Int)
+  @Column('bigint', { default: 0 })
+  followerCount: number
+
+  @Field(() => Int)
+  @Column('bigint', { default: 0 })
+  followingCount: number
 
   @Field(() => Int)
   @Column({ default: 0 })

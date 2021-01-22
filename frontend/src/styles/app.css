@@ -1,18 +1,9 @@
-html,
-body,
-body > div:first-child,
-div#__next,
-div#__next > div,
-div#__next > div > div {
-  height: 100%;
-}
-
 html {
   @apply text-black bg-gray-100;
 }
 
 html.dark {
-  @apply text-white bg-gray-750;
+  @apply text-white bg-gray-800;
 }
 
 body {
@@ -168,15 +159,15 @@ body {
 }
 
 .tippy-box {
-  @apply bg-gray-850 shadow-md !important;
+  @apply bg-gray-950 shadow-lg !important;
 }
 
 .tippy-arrow {
-  @apply text-gray-850 shadow-md !important;
+  @apply text-gray-950 shadow-lg !important;
 }
 
 .tippy-content {
-  @apply p-2.5 font-medium text-white text-sm !important;
+  @apply p-3 font-semibold text-white text-base !important;
 }
 
 .arrow-box {
@@ -310,34 +301,14 @@ body {
   content: attr(data-placeholder);
 }
 
+.sidebar {
+  @apply w-64 top-0 bottom-0 fixed z-50 flex flex-col overflow-y-auto bg-white dark:bg-gray-850 transform duration-300 transition;
+}
+
 .hidescroll {
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
 }
 .hidescroll::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
-}
-
-.item {
-  @apply flex-shrink-0 inline-flex items-center justify-center w-full h-full rounded-full cursor-pointer hover:shadow-lg;
-}
-
-.planetscroller-item {
-  @apply flex-shrink-0 inline-flex items-center justify-center w-full h-full rounded-full cursor-pointer hover:shadow-lg;
-}
-
-.planetscroller-item-dot {
-  @apply w-12 h-12 group object-cover inline-flex items-center justify-center rounded-full transform transition hover:scale-105;
-}
-
-.sidebar {
-  @apply w-64 top-14 bottom-0 fixed z-50 flex flex-col overflow-y-auto bg-white dark:bg-gray-850 transform duration-300 transition;
-}
-
-.sidebar-item {
-  @apply rounded cursor-pointer inline-flex items-center text-sm font-medium px-4 w-full py-2 transition dark:hover:bg-gray-750;
-}
-
-.sidebar-label {
-  @apply px-4 pt-4 pb-2 text-tertiary uppercase text-xs font-semibold tracking-widest;
 }

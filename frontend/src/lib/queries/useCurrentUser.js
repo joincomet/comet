@@ -13,6 +13,8 @@ export const fetchCurrentUser = async (ctx = null) => {
           username
           avatarUrl
           postCount
+          followerCount
+          followingCount
           rocketCount
           name
           isCurrentUser

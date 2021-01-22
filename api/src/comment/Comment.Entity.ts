@@ -11,7 +11,6 @@ import {
 import { Post } from '@/post/Post.Entity'
 import { User } from '@/user/User.Entity'
 import dayjs from 'dayjs'
-import { Lazy } from '@/Lazy'
 
 @ObjectType()
 @Entity()
@@ -27,7 +26,7 @@ export class Comment {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.comments)
-  author: Lazy<User>
+  author: Promise<User>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
@@ -35,7 +34,7 @@ export class Comment {
 
   @Field(() => Post, { nullable: true })
   @ManyToOne(() => Post, post => post.comments)
-  post: Lazy<Post>
+  post: Promise<Post>
 
   @Field(() => ID, { nullable: true })
   @Column({ nullable: true })
@@ -72,7 +71,7 @@ export class Comment {
 
   @ManyToMany(() => User)
   @JoinTable()
-  rocketers: Lazy<User[]>
+  rocketers: Promise<User[]>
 
   @Field(() => Int)
   @Column({ default: 1 })

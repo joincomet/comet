@@ -2,7 +2,6 @@ import 'tippy.js/dist/tippy.css'
 import 'react-responsive-modal/styles.css'
 import '@/styles/tailwind.css'
 import '@/styles/app.css'
-import '@/styles/slideout.css'
 
 import Head from 'next/head'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -10,13 +9,13 @@ import { Hydrate } from 'react-query/hydration'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { LayoutTree } from '@moxy/next-layout'
 import { ThemeProvider } from '@/components/ThemeContext'
+import Layout from '@/components/layout/Layout'
 import SEO from '../next-seo.config'
 import { DefaultSeo } from 'next-seo'
 import RouteLoader from '@/components/RouteLoader'
 import ResponsiveToaster from '@/components/ResponsiveToaster'
 import { ApolloProvider } from '@apollo/client'
 import { useApollo } from '@/lib/apolloClient'
-import Layout from '@/components/layout/Layout'
 
 const queryClient = new QueryClient({
   defaultOptions: {

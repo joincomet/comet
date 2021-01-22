@@ -10,14 +10,11 @@ module.exports = {
       spacing: {
         4.5: '1.125rem',
         5.5: '1.375rem',
-        18: '4.5rem',
-        76: '19rem'
+        18: '4.5rem'
       },
       colors: {
         gray: {
-          650: '#494951',
           750: '#333338',
-          775: '#2D2D31',
           850: '#202023',
           950: '#0C0C0E'
         }
@@ -198,8 +195,7 @@ module.exports = {
       translate: ['focus-within'],
       scale: ['focus-within'],
       opacity: ['disabled'],
-      borderRadius: ['hover', 'focus', 'first', 'last'],
-      borderWidth: ['first', 'last']
+      borderRadius: ['hover', 'focus']
     }
   },
   darkMode: 'class',

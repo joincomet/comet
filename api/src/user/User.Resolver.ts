@@ -32,11 +32,7 @@ export class UserResolver {
       return null
     }
 
-    return this.userRepo
-      .createQueryBuilder('user')
-      .whereInIds(userId)
-      .leftJoinAndSelect('user.moderatedPlanets', 'mp')
-      .getOne()
+    return this.userRepo.createQueryBuilder('user').whereInIds(userId).getOne()
   }
 
   @Query(() => User, { nullable: true })
@@ -131,6 +127,50 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
+  async followUser(
+    @Arg('followedId', () => ID) followedId: number,
+    @Ctx() { userId }: Context
+  ) {
+    if (followedId === userId) {
+      throw new Error('Cannot follow yourself')
+    }
+
+    await this.userRepo
+      .createQueryBuilder()
+      .relation(User, 'following')
+      .of(userId)
+      .add(followedId)
+
+    await this.userRepo.increment({ id: userId }, 'followingCount', 1)
+    await this.userRepo.increment({ id: followedId }, 'followerCount', 1)
+
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async unfollowUser(
+    @Arg('followedId', () => ID) followedId: number,
+    @Ctx() { userId }: Context
+  ) {
+    if (followedId === userId) {
+      throw new Error('Cannot unfollow yourself')
+    }
+
+    await this.userRepo
+      .createQueryBuilder()
+      .relation(User, 'following')
+      .of(userId)
+      .remove(followedId)
+
+    await this.userRepo.decrement({ id: userId }, 'followingCount', 1)
+    await this.userRepo.decrement({ id: followedId }, 'followerCount', 1)
+
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
   async blockUser(
     @Arg('blockedId', () => ID) blockedId: number,
     @Ctx() { userId }: Context
@@ -172,5 +212,23 @@ export class UserResolver {
   @FieldResolver(() => Boolean)
   async isCurrentUser(@Root() user: User, @Ctx() { userId }: Context) {
     return user.id === userId
+  }
+
+  @FieldResolver(() => Boolean)
+  async isFollowing(
+    @Root() user: User,
+    @Ctx() { userId, followingLoader }: Context
+  ) {
+    if (!userId) return false
+    return followingLoader.load({ userId, followingId: user.id })
+  }
+
+  @FieldResolver(() => Boolean)
+  async isFollowed(
+    @Root() user: User,
+    @Ctx() { userId, followedLoader }: Context
+  ) {
+    if (!userId) return false
+    return followedLoader.load({ userId, followedId: user.id })
   }
 }

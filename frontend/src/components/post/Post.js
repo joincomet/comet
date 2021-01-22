@@ -1,11 +1,21 @@
 import React, { useState } from 'react'
+import { CgArrowRight } from 'react-icons/cg'
+import { TiPinOutline } from 'react-icons/ti'
+import NavLink from '@/components/NavLink'
+import PostEmbed from '@/components/post/PostEmbed'
+import PostActions from '@/components/post/PostActions'
+import PostText from '@/components/post/PostText'
+import UserAvatar from '@/components/user/UserAvatar'
+import UserPopup from '@/components/user/UserPopup'
+import PostImages from '@/components/post/PostImages'
+import PlanetPopup from '@/components/planet/PlanetPopup'
 import { useRouter } from 'next/router'
+import Twemoji from 'react-twemoji'
+import Tippy from '@tippyjs/react'
 import EditPostModal from '@/components/post/EditPostModal'
+import { colorsMap } from '@/lib/colorsMap'
 import { BiRocket } from 'react-icons/bi'
 import { FiAlignLeft, FiLink, FiMessageCircle } from 'react-icons/fi'
-import { HiLink, HiMenuAlt2 } from 'react-icons/hi'
-import NavLink from '@/components/NavLink'
-import Tippy from '@tippyjs/react'
 
 export default function Post({
   post,
@@ -20,89 +30,58 @@ export default function Post({
   return (
     <>
       <EditPostModal post={post} setOpen={setEditing} open={editing} />
-      <article
-        onClick={() => {
-          if (!showFullText) router.push(post.relativeUrl)
-        }}
-        className={`${className} ${
-          !showFullText ? 'cursor-pointer' : ''
-        } relative flex transition dark:hover:bg-gray-775 py-2 pr-3`}
-      >
-        <div className="flex flex-col justify-center items-center p-3">
-          <BiRocket className="w-4 h-4 text-tertiary" />
-          <div className="mt-1.5 text-xs font-medium text-secondary">
-            {post.rocketCount}
-          </div>
-        </div>
-
-        <Thumbnail post={post} className="hidden md:block pr-3" />
-
-        <div className="">
-          <div className="flex items-center text-13 font-medium text-tertiary">
-            {post.planet.avatarUrl && (
-              <img
-                className="rounded-full h-5 w-5 object-cover mr-1"
-                src={post.planet.avatarUrl}
-              />
-            )}
-            <NavLink
-              href={`/planet/${post.planet.name}`}
-              className="text-accent hover:underline cursor-pointer"
-            >
-              +{post.planet.name}
-            </NavLink>
-            &nbsp;&middot;&nbsp;
-            {post.author.username} &middot;&nbsp;
-            <Tippy content={post.timeSinceFull}>
-              <span>{post.timeSince}</span>
-            </Tippy>
-            &nbsp;&middot; ({post.linkUrl && post.domain}
-            {!post.linkUrl &&
-              post.imageUrls &&
-              post.imageUrls.length > 0 &&
-              'image post'}
-            {!post.linkUrl &&
-              (!post.imageUrls || post.imageUrls.length === 0) &&
-              'text post'}
-            )
-          </div>
-          <div className="pt-0.5 text-secondary text-base">
-            {post.title || '(untitled)'}
-          </div>
-          <div className="pt-1.5 inline-flex items-center text-tertiary text-xs font-medium">
-            <FiMessageCircle className="w-4 h-4 mr-1.5" />
-            {post.commentCount}
-          </div>
-        </div>
-
-        <Thumbnail post={post} className="block md:hidden ml-auto pl-3" />
-      </article>
-    </>
-  )
-}
-
-function Thumbnail({ post, className }) {
-  return (
-    <div className={className}>
-      <div className={`relative w-14 h-14 md:w-24 md:h-16 flex-shrink-0`}>
-        <div
-          className="h-full w-full rounded dark:bg-gray-650 bg-gray-200 inline-flex items-center justify-center text-tertiary bg-cover bg-center bg-no-repeat"
-          style={
-            post.thumbnailUrl || post.logoUrl
-              ? {
-                  backgroundImage: `url(${post.thumbnailUrl || post.logoUrl})`
-                }
-              : {}
-          }
+      <div>
+        <article
+          onClick={() => {
+            if (!showFullText) router.push(post.relativeUrl)
+          }}
+          className={`${className} ${
+            !showFullText ? 'cursor-pointer' : ''
+          } border-t border-l border-r dark:border-gray-750 relative flex transition dark:hover:bg-gray-850`}
         >
-          {!(post.thumbnailUrl || post.logoUrl) &&
-            (post.linkUrl ? (
-              <HiLink className="w-8 h-8" />
-            ) : (
-              <HiMenuAlt2 className="w-8 h-8" />
-            ))}
-        </div>
+          <div
+            className="flex flex-col justify-center items-center p-3"
+            style={{ marginTop: '-1px' }}
+          >
+            <BiRocket className="w-4 h-4 text-tertiary" />
+            <div className="mt-1.5 text-xs font-medium text-secondary">
+              {post.rocketCount}
+            </div>
+          </div>
+
+          <div className="relative w-28 py-2">
+            <div className="aspect-h-9 aspect-w-16 w-full rounded dark:bg-gray-750">
+              {post.thumbnailUrl || post.logoUrl ? (
+                <img
+                  src={post.thumbnailUrl || post.logoUrl}
+                  className="w-full h-full object-cover rounded"
+                />
+              ) : (
+                <div className="flex items-center justify-center text-mid">
+                  {post.linkUrl ? (
+                    <FiLink className="w-1/2 h-1/2" />
+                  ) : (
+                    <FiAlignLeft className="w-1/2 h-1/2" />
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="py-2 px-3">
+            <div className="flex text-xs font-medium text-tertiary">
+              {post.author.username} &middot; {post.timeSince}
+            </div>
+            <div className="pt-1 font-semibold text-secondary">
+              {post.title || '(untitled)'}
+            </div>
+            <div className="pt-1.5 inline-flex items-center text-tertiary text-xs font-medium">
+              <FiMessageCircle className="w-4 h-4 mr-1.5" />
+              {post.commentCount}
+            </div>
+          </div>
+        </article>
       </div>
-    </div>
+    </>
   )
 }
