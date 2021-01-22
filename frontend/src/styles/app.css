@@ -3,7 +3,7 @@ html {
 }
 
 html.dark {
-  @apply text-white bg-gray-800;
+  @apply text-white bg-gray-850;
 }
 
 body {
@@ -159,15 +159,12 @@ body {
 }
 
 .tippy-box {
-  @apply bg-gray-950 shadow-lg !important;
+  @apply bg-black shadow-lg p-1 font-medium text-gray-200 !important;
+  font-size: 0.8125rem !important;
 }
 
 .tippy-arrow {
-  @apply text-gray-950 shadow-lg !important;
-}
-
-.tippy-content {
-  @apply p-3 font-semibold text-white text-base !important;
+  @apply text-black shadow-lg !important;
 }
 
 .arrow-box {
@@ -299,16 +296,4 @@ body {
 .remirror-is-empty::before {
   @apply absolute opacity-33 h-0 pointer-events-none text-sm font-normal leading-normal;
   content: attr(data-placeholder);
-}
-
-.sidebar {
-  @apply w-64 top-0 bottom-0 fixed z-50 flex flex-col overflow-y-auto bg-white dark:bg-gray-850 transform duration-300 transition;
-}
-
-.hidescroll {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
-}
-.hidescroll::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
 }

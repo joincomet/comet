@@ -4,6 +4,14 @@ const colors = require('tailwindcss/colors')
 const flattenColorPalette = require('tailwindcss/lib/util/flattenColorPalette')
   .default
 
+const round = num =>
+  num
+    .toFixed(7)
+    .replace(/(\.[0-9]+?)0+$/, '$1')
+    .replace(/\.0$/, '')
+const rem = px => `${round(px / 16)}rem`
+const em = (px, base) => `${round(px / base)}em`
+
 module.exports = {
   theme: {
     extend: {
@@ -14,9 +22,7 @@ module.exports = {
       },
       colors: {
         gray: {
-          750: '#333338',
-          850: '#202023',
-          950: '#0C0C0E'
+          850: '#202023'
         }
       },
       fontFamily: {
@@ -48,126 +54,88 @@ module.exports = {
       typography: theme => ({
         DEFAULT: {
           css: {
-            color: theme('colors.gray.800'),
+            color: theme('colors.black'),
             a: {
               color: theme('colors.blue.500'),
-              'text-decoration': 'none',
-              '&:hover, &.active': {
-                color: 'white',
-                'background-color': theme('colors.blue.500'),
-                strong: {
-                  color: 'white'
-                }
+              '&:hover': {
+                color: theme('colors.blue.500'),
+                textDecoration: 'underline'
               }
             },
-            strong: {
+            'a strong': {
               color: theme('colors.blue.500')
             },
             h1: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0'
+              color: theme('colors.black')
             },
             h2: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0'
+              color: theme('colors.black')
             },
             h3: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0'
+              color: theme('colors.black')
             },
             h4: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0'
+              color: theme('colors.black')
+            },
+            h5: {
+              color: theme('colors.black')
+            },
+            h6: {
+              color: theme('colors.black')
+            },
+            strong: {
+              color: theme('colors.black')
             },
             code: {
-              color: 'white',
-              'background-color': theme('colors.gray.800'),
-              '&:before, &:after': {
-                display: 'none'
-              }
+              color: theme('colors.black')
             },
-            p: {
-              color: theme('colors.gray.800'),
-              'margin-top': '0',
-              'margin-bottom': '1em'
-            },
-            img: {
-              'margin-top': '0',
-              'margin-bottom': '0',
-              'box-shadow': '0px 2px 4px -2px rgba(0, 0, 0, 30%)'
-            },
-            'ul > li': {
-              '&::before': {
-                'background-color': theme('colors.gray.800'),
-                'font-weight': 'bold'
-              }
-            },
-            'ol > li': {
-              '&::before': {
-                color: theme('colors.gray.800'),
-                'font-weight': 'bold'
-              }
+            blockquote: {
+              borderLeftColor: theme('colors.gray.300'),
+              backgroundColor: theme('colors.gray.200'),
+              color: theme('colors.gray.600'),
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
+              paddingTop: '0.25rem',
+              paddingBottom: '0.25rem',
+              borderRadius: '0.25rem'
             }
           }
         },
 
         dark: {
           css: {
-            color: 'white',
-            a: {
-              color: theme('colors.blue.500'),
-              'text-decoration': 'none',
-              '&:hover, &.active': {
-                color: 'white',
-                'background-color': theme('colors.blue.500')
-              }
-            },
-            strong: {
+            color: theme('colors.white'),
+            'a strong': {
               color: theme('colors.blue.500')
             },
             h1: {
-              color: 'white',
-              'margin-top': '0'
+              color: theme('colors.white')
             },
             h2: {
-              color: 'white',
-              'margin-top': '0'
+              color: theme('colors.white')
             },
             h3: {
-              color: 'white',
-              'margin-top': '0'
+              color: theme('colors.white')
             },
             h4: {
-              color: 'white',
-              'margin-top': '0'
+              color: theme('colors.white')
+            },
+            h5: {
+              color: theme('colors.white')
+            },
+            h6: {
+              color: theme('colors.white')
+            },
+            strong: {
+              color: theme('colors.white')
             },
             code: {
-              color: theme('colors.gray.100'),
-              '&:before, &:after': {
-                display: 'none'
-              }
+              color: theme('colors.white')
             },
-            p: {
-              color: 'white',
-              'margin-top': '0',
-              'margin-bottom': '1em'
-            },
-            img: {
-              'margin-top': '0',
-              'margin-bottom': '0',
-              'box-shadow': '0px 2px 4px -2px rgba(255, 255, 255, 30%)'
-            },
-            'ul > li': {
-              '&::before': {
-                'background-color': 'white',
-                'font-weight': 'bold'
-              }
-            },
-            'ol > li': {
-              '&::before': {
-                color: 'white',
-                'font-weight': 'bold'
-              }
+            blockquote: {
+              borderLeftColor: theme('colors.gray.700'),
+              backgroundColor: theme('colors.gray.800'),
+              color: theme('colors.gray.400')
             }
           }
         }
@@ -194,8 +162,7 @@ module.exports = {
       typography: ['dark'],
       translate: ['focus-within'],
       scale: ['focus-within'],
-      opacity: ['disabled'],
-      borderRadius: ['hover', 'focus']
+      opacity: ['disabled']
     }
   },
   darkMode: 'class',

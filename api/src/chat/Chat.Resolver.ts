@@ -18,12 +18,12 @@ import { User } from '@/user/User.Entity'
 import { Repository } from 'typeorm'
 import { ChatMessage } from '@/chat/ChatMessage.Entity'
 import { ChatGroup } from '@/chat/ChatGroup.Entity'
+import { ChatServer } from '@/chat/ChatServer.Entity'
 import { ChatChannel } from '@/chat/ChatChannel.Entity'
 import { Topic } from '@/chat/Topic'
 import { MessageInput } from '@/chat/MessageInput'
 import { NewMessagesArgs } from '@/chat/NewMessagesArgs'
 import { Context } from '@/Context'
-import { Planet } from '@/planet/Planet.Entity'
 
 @Resolver()
 export class ChatResolver {
@@ -33,8 +33,8 @@ export class ChatResolver {
   readonly messageRepo: Repository<ChatMessage>
   @InjectRepository(ChatGroup)
   readonly groupRepo: Repository<ChatGroup>
-  @InjectRepository(Planet)
-  readonly planetRepo: Repository<Planet>
+  @InjectRepository(ChatServer)
+  readonly serverRepo: Repository<ChatServer>
   @InjectRepository(ChatChannel)
   readonly channelRepo: Repository<ChatChannel>
 
@@ -49,12 +49,12 @@ export class ChatResolver {
     const err = new Error(`You do not have access to this channel`)
     if (channel.groupId) {
       const group = await channel.group
-      const users = await group.users
-      if (!users.map(u => u.id).includes(userId)) throw err
-    } else if (channel.planetId) {
-      const planet = await channel.planet
-      const users = await planet.users
-      if (!users.map(u => u.id).includes(userId)) throw err
+      const members = await group.members
+      if (!members.map(m => m.id).includes(userId)) throw err
+    } else if (channel.serverId) {
+      const server = await channel.server
+      const members = await server.members
+      if (!members.map(m => m.id).includes(userId)) throw err
     }
 
     return this.messageRepo
@@ -132,11 +132,51 @@ export class ChatResolver {
   }
 
   @Authorized()
+  @Mutation(() => ID)
+  async createChatServer(
+    @Arg('name') name: string,
+    @Ctx() { userId }: Context
+  ) {
+    const server = await this.serverRepo.save({
+      name: name,
+      creatorId: userId,
+      memberIds: [userId],
+      channels: [
+        this.channelRepo.create({
+          name: 'general'
+        })
+      ]
+    })
+
+    return server.id
+  }
+
+  @Authorized()
   @Query(() => [ChatGroup])
   async chatGroups(@Ctx() { userId }: Context) {
     return this.groupRepo
       .createQueryBuilder('group')
       .andWhere(':userId = ANY(group.members)', { userId })
       .getMany()
+  }
+
+  @Authorized()
+  @Query(() => [ChatGroup])
+  async chatServers(@Ctx() { userId }: Context) {
+    return this.serverRepo
+      .createQueryBuilder('server')
+      .andWhere(':userId = ANY(server.members)', { userId })
+      .getMany()
+  }
+
+  @Authorized()
+  @Query(() => ChatServer)
+  async chatServer(@Arg('id', () => ID) id: number) {
+    return this.serverRepo
+      .createQueryBuilder('server')
+      .andWhereInIds(id)
+      .leftJoinAndSelect('server.channels', 'channel')
+      .leftJoinAndSelect('server.members', 'member')
+      .getOne()
   }
 }

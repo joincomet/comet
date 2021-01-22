@@ -16,7 +16,6 @@ import CreatePlanetButton from '@/components/planet/create/CreatePlanetButton'
 import { FixedSizeList as List } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { colorsMap } from '@/lib/colorsMap'
-import { CustomScrollbarsVirtualList } from '@/components/layout/CustomScrollbars'
 
 const link =
   'cursor-pointer relative text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-10 flex items-center transition'
@@ -121,6 +120,46 @@ function Sidebar() {
     </>
   )
 }
+
+function CustomScrollbars({
+  children,
+  forwardedRef,
+  onScroll,
+  style,
+  className
+}) {
+  return (
+    <RSC
+      className={className}
+      style={style}
+      scrollerProps={{
+        renderer: props => {
+          const { elementRef, onScroll: rscOnScroll, ...restProps } = props
+
+          return (
+            <span
+              {...restProps}
+              onScroll={e => {
+                onScroll(e)
+                rscOnScroll(e)
+              }}
+              ref={ref => {
+                forwardedRef(ref)
+                elementRef(ref)
+              }}
+            />
+          )
+        }
+      }}
+    >
+      {children}
+    </RSC>
+  )
+}
+
+const CustomScrollbarsVirtualList = React.forwardRef((props, ref) => (
+  <CustomScrollbars {...props} forwardedRef={ref} />
+))
 
 const planetClass =
   'cursor-pointer relative z-0 text-xs font-medium dark:hover:bg-gray-800 hover:bg-gray-200 px-6 h-8 flex items-center transition'
@@ -247,6 +286,52 @@ function Planets() {
       </div>
     </>
   )
+
+  /* return (
+    <div className="py-3 h-full">
+      <div className="mx-5 px-3 border-b dark:border-gray-700 relative mb-3">
+        <div className="h-8 absolute left-0 top-0 bottom-0 inline-flex items-center ml-1.5">
+          <FiSearch size={16} className="text-disabled" />
+        </div>
+
+        <input
+          type="text"
+          placeholder="Search planets"
+          className="w-full h-8 text-xs bg-transparent border-none font-medium focus:ring-0 pl-6 pr-3"
+          value={searchPlanets}
+          onChange={e => setSearchPlanets(e.target.value)}
+        />
+      </div>
+
+      {searchPlanets &&
+        results
+          .map(r => r.item)
+          .map((planet, index) => (
+            <MemoizedPlanet key={index} planet={planet} />
+          ))}
+
+      {currentUser &&
+        !searchPlanets &&
+        joinedPlanets &&
+        joinedPlanets.length > 0 && (
+          <>
+            <div className="label text-tertiary px-6 py-3">My Planets</div>
+            {joinedPlanets.map((planet, index) => (
+              <MemoizedPlanet key={index} planet={planet} />
+            ))}
+          </>
+        )}
+
+      {!searchPlanets && (
+        <>
+          <div className="label text-tertiary px-6 py-3">All Planets</div>
+          {topPlanets.map((planet, index) => (
+            <MemoizedPlanet key={index} planet={planet} />
+          ))}
+        </>
+      )}
+    </div>
+  )*/
 }
 
 export default Sidebar

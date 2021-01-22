@@ -17,7 +17,6 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
           color
           galaxies
           timeSinceCreated
-          description
         }
       }
     `,

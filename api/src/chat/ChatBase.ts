@@ -3,22 +3,31 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
+import { User } from '@/user/User.Entity'
+import dayjs from 'dayjs'
 import { ChatMessage } from '@/chat/ChatMessage.Entity'
-import { ChatServer } from '@/chat/ChatServer.Entity'
+import { ChatChannel } from '@/chat/ChatChannel.Entity'
 import { Lazy } from '@/Lazy'
-import { ChatGroup } from '@/chat/ChatGroup.Entity'
 
 @ObjectType()
-@Entity()
-export class ChatChannel {
+export abstract class ChatBase {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   readonly id: number
+
+  @Field(() => User)
+  @ManyToOne(() => User)
+  creator: Lazy<User>
+
+  @Field(() => ID)
+  @Column()
+  creatorId: number
 
   @Field({ nullable: true })
   @Column('text', { nullable: true })
@@ -26,24 +35,9 @@ export class ChatChannel {
 
   @Field({ nullable: true })
   @Column('text', { nullable: true })
-  description: string
+  avatarUrl: string
 
   @Field()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
-
-  @OneToMany(() => ChatMessage, message => message.channel)
-  messages: Lazy<ChatMessage[]>
-
-  @Column({ nullable: true })
-  serverId: number
-
-  @ManyToOne(() => ChatServer, server => server.channels, { nullable: true })
-  server: Lazy<ChatServer>
-
-  @Column({ nullable: true })
-  groupId: number
-
-  @OneToOne(() => ChatGroup, group => group.channel, { nullable: true })
-  group: Lazy<ChatGroup>
 }
