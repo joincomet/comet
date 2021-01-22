@@ -38,12 +38,12 @@ export default function ChatLayout({ children }) {
 
       <div className="relative h-full">
         <div className="fixed top-0 bottom-0 left-0 hidescroll overflow-y-auto z-50 flex flex-col items-center w-16 bg-white dark:bg-gray-900 space-y-2">
-          <div className="relative h-full w-full py-1">
+          <div className="relative h-full w-full">
             <AutoSizer>
               {({ height, width }) => (
                 <List
                   height={height}
-                  itemCount={planets.length}
+                  itemCount={planets.length + 1}
                   itemSize={56}
                   width={width}
                   className="hidescroll"
