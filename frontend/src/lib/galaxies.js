@@ -1,13 +1,16 @@
+// import { BiTv } from 'react-icons/all'
 import { MdTv } from 'react-icons/md'
+import { GiRetroController } from 'react-icons/gi'
 import {
   RiBasketballFill,
   RiFootprintFill,
-  RiPaletteFill
+  RiPaletteFill,
+  RiTvFill
 } from 'react-icons/ri'
-import { FaGamepad } from 'react-icons/fa'
+import { FaGamepad, FaTv, FaShoePrints } from 'react-icons/fa'
+import { MdPalette } from 'react-icons/md'
 import {
   HiChatAlt2,
-  HiCode,
   HiEmojiHappy,
   HiHeart,
   HiLibrary,
@@ -33,7 +36,6 @@ export const galaxies = [
   'Meta',
   'News',
   'Politics',
-  'Programming',
   'Science',
   'Sports',
   'Technology',
@@ -68,8 +70,6 @@ export const galaxyIcon = (galaxy, className) => {
       return <HiNewspaper className={className} />
     case 'Politics':
       return <HiLibrary className={className} />
-    case 'Programming':
-      return <HiCode className={className} />
     case 'Science': // HiBeaker
       return (
         <svg
