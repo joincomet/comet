@@ -169,10 +169,10 @@ export class ModerationResolver {
       .getOne()
 
     if (!user) throw new Error('User not found')
-    if (user.moderatedPlanetIds.find(id => id === planetId)) {
+    if ((await user.moderatedPlanets).find(p => p.id === planetId)) {
       throw new Error(`${user.username} is already a moderator`)
     }
-    if (user.moderatedPlanetIds.length >= 5)
+    if ((await user.moderatedPlanets).length >= 5)
       throw new Error(`${user.username} cannot moderate more than 5 planets`)
 
     const planet = await this.planetRepo.findOne(planetId)
@@ -209,11 +209,13 @@ export class ModerationResolver {
 
   @Authorized('MOD')
   @Mutation(() => Boolean)
-  async setPlanetGalaxy(
+  async setPlanetGalaxies(
     @Arg('planetId', () => ID) planetId: number,
-    @Arg('galaxy', () => Galaxy) galaxy: Galaxy
+    @Arg('galaxies', () => [Galaxy]) galaxies: Galaxy[]
   ) {
-    await this.planetRepo.update(planetId, { galaxy })
+    if (galaxies.length < 1 || galaxies.length > 3)
+      throw new Error('Must set 1-3 galaxies')
+    await this.planetRepo.update(planetId, { galaxies })
     return true
   }
 

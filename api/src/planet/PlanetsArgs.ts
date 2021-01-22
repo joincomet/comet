@@ -1,7 +1,5 @@
-import { ArgsType, Field, Int } from 'type-graphql'
+import { ArgsType, Field } from 'type-graphql'
 import { PlanetSort } from '@/planet/PlanetSort'
-import { Max, Min } from 'class-validator'
-import { Galaxy } from '@/Galaxy'
 
 @ArgsType()
 export class PlanetsArgs {
@@ -11,15 +9,12 @@ export class PlanetsArgs {
   @Field({ defaultValue: false })
   joinedOnly: boolean
 
-  @Field(() => Galaxy, { nullable: true })
-  galaxy?: Galaxy
+  @Field({ defaultValue: false })
+  featured: boolean
 
-  @Field(() => Int, { nullable: true })
-  @Min(0)
-  page?: number
+  @Field({ nullable: true })
+  galaxy?: string
 
-  @Field(() => Int, { defaultValue: 20 })
-  @Min(1)
-  @Max(100)
-  pageSize = 20
+  @Field({ nullable: true })
+  search?: string
 }

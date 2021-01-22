@@ -1,20 +1,39 @@
 import { RiFireFill } from 'react-icons/ri'
-import { HiSortAscending, HiClock, HiCog, HiChevronDown } from 'react-icons/hi'
+import { HiSortAscending, HiClock } from 'react-icons/hi'
 import React, { forwardRef } from 'react'
 import { useRouter } from 'next/router'
 import Logo from '@/components/Logo'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { FiUser, FiUserPlus } from 'react-icons/fi'
 import NavLink from '@/components/NavLink'
-import Sidebar from '@/components/layout/Sidebar'
-import TimePicker from '@/components/sort/TimePicker'
-import { CurrentUserInfo } from '@/components/layout/CurrentUserInfo'
 
 export default forwardRef((props, ref) => {
+  const currentUser = useCurrentUser().data
+
   const { pathname, query } = useRouter()
   return (
-    <Sidebar left ref={ref}>
-      <CurrentUserInfo />
+    <div
+      ref={ref}
+      className="slideout-menu md:z-10 left-0 ml-16 top-0 w-60 bg-gray-200 dark:bg-gray-800 h-full"
+    >
+      {currentUser && (
+        <div className="fixed bottom-0 left-0 ml-16 w-60 h-12 px-3 dark:bg-gray-850 right-0 inline-flex items-center">
+          <div className="h-8 w-8 relative rounded-full dark:bg-gray-800 inline-flex items-center justify-center">
+            {currentUser.avatarUrl ? (
+              <img
+                src={currentUser.avatarUrl}
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              <FiUser className="w-5 h-5 text-mid" />
+            )}
+          </div>
+
+          <div className="text-sm text-primary font-medium ml-3">
+            {currentUser.username}
+          </div>
+        </div>
+      )}
 
       <div className="w-full h-12 flex items-center px-4">
         <Logo className="h-4" />
@@ -34,7 +53,9 @@ export default forwardRef((props, ref) => {
               })()
             }}
             className={`sidebar-item ${
-              !query.sort || query.sort === 'hot' ? 'sidebar-item--active' : ''
+              !query.sort || query.sort === 'hot'
+                ? 'dark:bg-gray-750 text-secondary'
+                : 'text-tertiary'
             }`}
           >
             <RiFireFill className="w-5 h-5 mr-3" />
@@ -52,7 +73,9 @@ export default forwardRef((props, ref) => {
               })()
             }}
             className={`sidebar-item ${
-              query.sort === 'new' ? 'sidebar-item--active' : ''
+              query.sort === 'new'
+                ? 'dark:bg-gray-750 text-secondary'
+                : 'text-tertiary'
             }`}
           >
             <HiClock className="w-5 h-5 mr-3" />
@@ -70,38 +93,22 @@ export default forwardRef((props, ref) => {
               })()
             }}
             className={`sidebar-item ${
-              query.sort === 'top' ? 'sidebar-item--active' : ''
+              query.sort === 'top'
+                ? 'dark:bg-gray-750 text-secondary'
+                : 'text-tertiary'
             }`}
           >
-            <div className="inline-flex items-center h-full">
-              <HiSortAscending className="w-5 h-5 mr-3" />
-              Top
-            </div>
-
-            {query.sort === 'top' && (
-              <TimePicker className="ml-auto h-full inline-flex items-center focus:outline-none min-h-full">
-                <div className="mr-3 text-xs">
-                  {query.time
-                    ? `${
-                        query.time.substring(0, 1).toUpperCase() +
-                        query.time.substring(1).toLowerCase()
-                      }`
-                    : 'Day'}
-                </div>
-                <HiChevronDown className="w-5 h-5" />
-              </TimePicker>
-            )}
+            <HiSortAscending className="w-5 h-5 mr-3" />
+            Top
           </NavLink>
         </div>
 
         <div className="sidebar-label">DIRECT MESSAGES</div>
-        <div className="space-y-0.5">
-          <div className="sidebar-item sidebar-item--large">
-            <FiUserPlus className="w-5 h-5 mr-3" />
-            New DM
-          </div>
+        <div className="flex h-12 items-center px-4 text-mid text-sm font-medium cursor-pointer transition dark:hover:bg-gray-750 rounded">
+          <FiUserPlus className="w-5 h-5 mr-3" />
+          New DM
         </div>
       </div>
-    </Sidebar>
+    </div>
   )
 })

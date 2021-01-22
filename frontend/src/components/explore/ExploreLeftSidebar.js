@@ -1,18 +1,13 @@
 import { HiSortAscending, HiClock, HiCheckCircle } from 'react-icons/hi'
-import { FaSortAlphaDown } from 'react-icons/fa'
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { useRouter } from 'next/router'
-
+import { galaxiesMap } from '@/lib/galaxiesMap'
 import { Scrollbars } from 'rc-scrollbars'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import Sidebar from '@/components/layout/Sidebar'
-import { galaxies, galaxyIcon } from '@/lib/galaxies'
-import { CurrentUserInfo } from '@/components/layout/CurrentUserInfo'
-import NavLink from '@/components/NavLink'
 
-export default forwardRef((props, ref) => {
+export default function ExploreLeftSidebar() {
   const { sidebar, setSidebar } = useHeaderStore()
 
   const { query, pathname } = useRouter()
@@ -20,80 +15,69 @@ export default forwardRef((props, ref) => {
   useEffect(() => setSidebar(false), [query, pathname])
 
   return (
-    <Sidebar left ref={ref}>
-      <CurrentUserInfo />
-      <div className="relative h-full w-full">
-        <AutoSizer>
-          {({ width, height }) => (
-            <Scrollbars style={{ width, height }}>
-              <div className="text-xl font-semibold px-4 py-4 text-secondary">
-                Explore
-              </div>
-              <div className="px-1 pb-6">
-                <div className="space-y-0.5">
-                  <NavLink
-                    href={{ pathname, query: {} }}
-                    className={`sidebar-item ${
-                      (!query.sort && !query.galaxy) ||
-                      query.sort === 'featured'
-                        ? 'sidebar-item--active'
-                        : ''
-                    }`}
-                  >
+    <>
+      <AnimatePresence>
+        {sidebar && (
+          <motion.div
+            initial={{
+              opacity: 0
+            }}
+            animate={{
+              opacity: 0.75
+            }}
+            exit={{
+              opacity: 0
+            }}
+            transition={{ duration: 0.15, ease: 'easeInOut' }}
+            onClick={() => setSidebar(false)}
+            className={`z-30 fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-gray-900`}
+          />
+        )}
+      </AnimatePresence>
+      <nav
+        className={`sidebar left-16 ${
+          sidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
+        <div className="relative h-full w-full">
+          <AutoSizer>
+            {({ width, height }) => (
+              <Scrollbars style={{ width, height }}>
+                <div className="px-1 py-6">
+                  <div className="px-4 pb-6 text-lg font-semibold leading-none text-white">
+                    Explore Planets
+                  </div>
+
+                  <div className="sidebar-item">
                     <HiCheckCircle className="w-5 h-5 mr-3" />
                     Featured
-                  </NavLink>
+                  </div>
 
-                  <NavLink
-                    href={{ pathname, query: { sort: 'top' } }}
-                    className={`sidebar-item ${
-                      query.sort === 'top' ? 'sidebar-item--active' : ''
-                    }`}
-                  >
+                  <div className="sidebar-item">
                     <HiSortAscending className="w-5 h-5 mr-3" />
                     Most Popular
-                  </NavLink>
+                  </div>
 
-                  <NavLink
-                    href={{ pathname, query: { sort: 'new' } }}
-                    className={`sidebar-item ${
-                      query.sort === 'new' ? 'sidebar-item--active' : ''
-                    }`}
-                  >
+                  <div className="sidebar-item">
                     <HiClock className="w-5 h-5 mr-3" />
                     Recently Created
-                  </NavLink>
+                  </div>
 
-                  <NavLink
-                    href={{ pathname, query: { sort: 'az' } }}
-                    className={`sidebar-item ${
-                      query.sort === 'az' ? 'sidebar-item--active' : ''
-                    }`}
-                  >
-                    <FaSortAlphaDown className="w-5 h-5 mr-3" />
-                    All
-                  </NavLink>
+                  <div className="sidebar-label">GALAXIES</div>
+
+                  {Object.keys(galaxiesMap)
+                    .sort((a, b) => a.localeCompare(b))
+                    .map(key => (
+                      <div key={key} className="sidebar-item">
+                        {galaxiesMap[key]}
+                      </div>
+                    ))}
                 </div>
-
-                <div className="sidebar-label">GALAXIES</div>
-
-                {galaxies.map(galaxy => (
-                  <NavLink
-                    href={{ pathname, query: { galaxy } }}
-                    key={galaxy}
-                    className={`sidebar-item ${
-                      query.galaxy === galaxy ? 'sidebar-item--active' : ''
-                    }`}
-                  >
-                    {galaxyIcon(galaxy, 'h-5 w-5 mr-3')}
-                    {galaxy}
-                  </NavLink>
-                ))}
-              </div>
-            </Scrollbars>
-          )}
-        </AutoSizer>
-      </div>
-    </Sidebar>
+              </Scrollbars>
+            )}
+          </AutoSizer>
+        </div>
+      </nav>
+    </>
   )
-})
+}

@@ -29,9 +29,7 @@ export class NotificationResolver {
       .leftJoinAndSelect('notification.fromUser', 'fromUser')
       .leftJoinAndSelect('notification.post', 'post')
       .leftJoinAndSelect('post.planet', 'planet')
-      .leftJoinAndSelect('post.author', 'postauthor')
       .leftJoinAndSelect('notification.comment', 'comment')
-      .leftJoinAndSelect('comment.author', 'commentauthor')
       .addOrderBy('notification.createdAt', 'DESC')
       .andWhere('notification.toUserId = :userId', { userId })
 

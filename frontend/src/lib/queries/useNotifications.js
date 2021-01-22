@@ -56,6 +56,7 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
               bio
               avatarUrl
               rocketCount
+
               isCurrentUser
             }
             timeSince
@@ -72,6 +73,7 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
               username
               name
               avatarUrl
+
               isCurrentUser
             }
             timeSince

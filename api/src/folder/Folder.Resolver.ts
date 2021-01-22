@@ -26,8 +26,6 @@ import { Context } from '@/Context'
 import { Planet } from '@/planet/Planet.Entity'
 import { Post } from '@/post/Post.Entity'
 import { Folder } from '@/folder/Folder.Entity'
-import { randomEnum } from '@/randomEnum'
-import { Color } from '@/Color'
 
 @Resolver()
 export class FolderResolver {
@@ -44,16 +42,14 @@ export class FolderResolver {
     return this.folderRepo
       .createQueryBuilder('folder')
       .andWhere('folder.creatorId = :userId', { userId })
-      .andWhere('folder.deleted = false')
       .getMany()
   }
 
-  @Query(() => Folder)
+  @Query(() => [Folder])
   async folder(@Arg('folderId', () => ID) folderId: number) {
     return this.folderRepo
       .createQueryBuilder('folder')
       .andWhere('folder.id = :folderId', { folderId })
-      .andWhere('folder.deleted = false')
       .getOne()
   }
 
@@ -75,8 +71,6 @@ export class FolderResolver {
       .of(folderId)
       .add(postId)
 
-    await this.folderRepo.update(folderId, { updatedAt: new Date() })
-
     return true
   }
 
@@ -97,30 +91,6 @@ export class FolderResolver {
       .relation(Folder, 'posts')
       .of(folderId)
       .remove(postId)
-
-    await this.folderRepo.update(folderId, { updatedAt: new Date() })
-
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async createFolder(@Arg('name') name: string, @Ctx() { userId }: Context) {
-    if (name.length > 50)
-      throw new Error('Name cannot be longer than 50 characters')
-
-    const folder = await this.folderRepo
-      .createQueryBuilder('folder')
-      .where('folder.creatorId = :userId', { userId })
-      .andWhere('folder.name ILIKE :name', { name })
-      .getOne()
-    if (folder) throw new Error('You already have a folder with that name')
-
-    await this.folderRepo.save({
-      creatorId: userId,
-      name,
-      color: randomEnum(Color)
-    })
 
     return true
   }

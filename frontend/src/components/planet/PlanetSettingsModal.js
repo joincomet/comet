@@ -1,7 +1,7 @@
 import { FiX, FiCheck } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
 import React, { useEffect, useState } from 'react'
-
+import { galaxiesMap } from '@/lib/galaxiesMap'
 import { colorsMap } from '@/lib/colorsMap'
 import {
   useAddModeratorMutation,
@@ -11,7 +11,6 @@ import {
 import { useQueryClient } from 'react-query'
 import toast from 'react-hot-toast'
 import Spinner from '@/components/Spinner'
-import { galaxies } from '@/lib/galaxies'
 
 export default function PlanetSettingsModal({ open, setOpen, planet }) {
   const queryClient = useQueryClient()
@@ -88,11 +87,51 @@ export default function PlanetSettingsModal({ open, setOpen, planet }) {
             <option value="none" disabled hidden>
               Galaxy 1
             </option>
-            {galaxies
-              .filter(galaxy => galaxy !== galaxy2 && galaxy !== galaxy3)
-              .map(galaxy => (
-                <option key={galaxy} value={galaxy}>
-                  {galaxy}
+            {Object.keys(galaxiesMap)
+              .filter(val => val !== galaxy2 && val !== galaxy3)
+              .map(val => (
+                <option key={val} value={val}>
+                  {galaxiesMap[val]}
+                </option>
+              ))}
+          </select>
+
+          <select
+            name="galaxy2"
+            className="rounded dark:bg-gray-900 border-none focus:ring-0 w-1/3 disabled:opacity-50 transition text-sm font-medium h-10"
+            value={galaxy2}
+            disabled={galaxy1 === 'none'}
+            onChange={e => {
+              setGalaxy2(e.target.value)
+            }}
+          >
+            {galaxy3 === 'none' && (
+              <option value="none">Galaxy 2 (Optional)</option>
+            )}
+            {Object.keys(galaxiesMap)
+              .filter(val => val !== galaxy1 && val !== galaxy3)
+              .map(val => (
+                <option key={val} value={val}>
+                  {galaxiesMap[val]}
+                </option>
+              ))}
+          </select>
+
+          <select
+            name="galaxy3"
+            className="rounded dark:bg-gray-900 border-none focus:ring-0 w-1/3 disabled:opacity-50 transition text-sm font-medium h-10"
+            value={galaxy3}
+            disabled={galaxy2 === 'none'}
+            onChange={e => {
+              setGalaxy3(e.target.value)
+            }}
+          >
+            <option value="none">Galaxy 3 (Optional)</option>
+            {Object.keys(galaxiesMap)
+              .filter(val => val !== galaxy1 && val !== galaxy2)
+              .map(val => (
+                <option key={val} value={val}>
+                  {galaxiesMap[val]}
                 </option>
               ))}
           </select>

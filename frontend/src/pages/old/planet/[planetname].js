@@ -23,6 +23,7 @@ import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import PlanetOptionsButton from '@/components/planet/PlanetOptionsButton'
 import usePostsVariables from '@/lib/usePostsVariables'
+import { galaxiesMap, galaxyFromValue } from '@/lib/galaxiesMap'
 import NavLink from '@/components/NavLink'
 
 export default function PlanetPage() {
@@ -102,7 +103,21 @@ export default function PlanetPage() {
         <div className="absolute inset-x-0 bottom-0 top-14 flex flex-col md:flex-row items-center md:items-end align-center z-20 mycontainer pt-3 md:pt-6 md:pb-12">
           <div className="flex flex-col items-center md:items-start md:flex-row flex-grow mt-auto">
             <div className="label block md:hidden mb-4">
-              {planet.galaxy || 'Uncategorized'}
+              {!planet.galaxies || planet.galaxies.length === 0 ? (
+                <span>uncategorized</span>
+              ) : (
+                planet.galaxies.map((galaxy, index) => (
+                  <span key={galaxy}>
+                    {index !== 0 && <span>&nbsp;&middot;&nbsp;</span>}
+                    <NavLink
+                      href={`/galaxy/${galaxy}`}
+                      className="hover:underline cursor-pointer"
+                    >
+                      {galaxiesMap[galaxy]}
+                    </NavLink>
+                  </span>
+                ))
+              )}
             </div>
             <div className="relative group md:mr-6">
               <PlanetAvatar

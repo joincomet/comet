@@ -1,13 +1,13 @@
 import React from 'react'
 import LoginModal from '@/components/login/LoginModal'
-import PlanetsScroller from '@/components/layout/PlanetsScroller'
+import NavScroller from '@/components/layout/NavScroller'
 
 export default function Layout({ children }) {
   return (
     <>
       <LoginModal />
 
-      <PlanetsScroller />
+      <NavScroller />
 
       <div className="h-full">{children}</div>
     </>

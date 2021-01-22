@@ -18,7 +18,7 @@ export const connectDatabase = async (
           : false,
       entities: [__dirname + '/**/*.Entity.{ts,js}'],
       synchronize,
-      logging: ['error'],
+      logging,
       dropSchema: false, // CLEARS DATABASE ON START
       cache: true,
       namingStrategy: new SnakeNamingStrategy()

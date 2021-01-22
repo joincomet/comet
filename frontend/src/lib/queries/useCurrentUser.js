@@ -14,7 +14,6 @@ export const fetchCurrentUser = async (ctx = null) => {
           avatarUrl
           postCount
           rocketCount
-          isOnline
           name
           isCurrentUser
           moderatedPlanets {
@@ -28,4 +27,4 @@ export const fetchCurrentUser = async (ctx = null) => {
 }
 
 export const useCurrentUser = () =>
-  useQuery('currentUser', fetchCurrentUser, { refetchInterval: 5 * 60 * 1000 }) // refetch every 5 mins to update lastLogin/isOnline
+  useQuery('currentUser', fetchCurrentUser, { staleTime: Infinity })

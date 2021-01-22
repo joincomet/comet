@@ -17,13 +17,11 @@ import ResponsiveToaster from '@/components/ResponsiveToaster'
 import { ApolloProvider } from '@apollo/client'
 import { useApollo } from '@/lib/apolloClient'
 import Layout from '@/components/layout/Layout'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { DndProvider } from 'react-dnd'
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: true
+      refetchOnWindowFocus: false
       // staleTime: Infinity
     }
   }
@@ -51,25 +49,23 @@ export default function App({ Component, pageProps }) {
 
       <ResponsiveToaster />
 
-      <DndProvider backend={HTML5Backend}>
-        <ThemeProvider>
-          <ApolloProvider client={apolloClient}>
-            <QueryClientProvider client={queryClient}>
-              <Hydrate state={pageProps.dehydratedState}>
-                <LayoutTree
-                  Component={Component}
-                  pageProps={pageProps}
-                  defaultLayout={<Layout />}
-                />
-              </Hydrate>
+      <ThemeProvider>
+        <ApolloProvider client={apolloClient}>
+          <QueryClientProvider client={queryClient}>
+            <Hydrate state={pageProps.dehydratedState}>
+              <LayoutTree
+                Component={Component}
+                pageProps={pageProps}
+                defaultLayout={<Layout />}
+              />
+            </Hydrate>
 
-              {process.env.NODE_ENV !== 'production' && (
-                <ReactQueryDevtools position="bottom-left" />
-              )}
-            </QueryClientProvider>
-          </ApolloProvider>
-        </ThemeProvider>
-      </DndProvider>
+            {process.env.NODE_ENV !== 'production' && (
+              <ReactQueryDevtools position="bottom-left" />
+            )}
+          </QueryClientProvider>
+        </ApolloProvider>
+      </ThemeProvider>
     </>
   )
 }

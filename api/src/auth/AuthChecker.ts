@@ -50,7 +50,9 @@ export const authChecker: AuthChecker<Context> = async (
 
   // true if planet arg is in list of moderated planets
   else if (roles.includes('MOD') && args && args.planetId)
-    return !!user.moderatedPlanetIds.find(id => id === args.planetId)
+    return !!(await user.moderatedPlanets).find(
+      planet => planet.id === args.planetId
+    )
 
   // false if no other conditions met
   return false

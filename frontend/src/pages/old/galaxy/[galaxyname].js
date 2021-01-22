@@ -9,11 +9,12 @@ import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { useRouter } from 'next/router'
 import usePostsVariables from '@/lib/usePostsVariables'
+import { galaxiesMap } from '@/lib/galaxiesMap'
 
 export default function GalaxyPage() {
   const { query } = useRouter()
   const { setTitle } = useHeaderStore()
-  useEffect(() => setTitle(query.galaxyname), [])
+  useEffect(() => setTitle(galaxiesMap[query.galaxyname]), [])
 
   return (
     <div>
@@ -22,7 +23,9 @@ export default function GalaxyPage() {
       <div className="mycontainer mt-14 mb-28">
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 py-6">
-            <div className="header-2 mb-6 px-3 md:px-0">{query.galaxyname}</div>
+            <div className="header-2 mb-6 px-3 md:px-0">
+              {galaxiesMap[query.galaxyname]}
+            </div>
             <SortOptions />
             <Posts variables={usePostsVariables()} />
           </div>

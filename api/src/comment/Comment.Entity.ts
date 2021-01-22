@@ -6,8 +6,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  PrimaryGeneratedColumn,
-  RelationId
+  PrimaryGeneratedColumn
 } from 'typeorm'
 import { Post } from '@/post/Post.Entity'
 import { User } from '@/user/User.Entity'
@@ -74,9 +73,6 @@ export class Comment {
   @ManyToMany(() => User)
   @JoinTable()
   rocketers: Lazy<User[]>
-
-  @RelationId((comment: Comment) => comment.rocketers)
-  rocketerIds: number[]
 
   @Field(() => Int)
   @Column({ default: 1 })

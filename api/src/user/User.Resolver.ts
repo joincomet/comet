@@ -32,8 +32,6 @@ export class UserResolver {
       return null
     }
 
-    await this.userRepo.update(userId, { lastLogin: new Date() })
-
     return this.userRepo
       .createQueryBuilder('user')
       .whereInIds(userId)

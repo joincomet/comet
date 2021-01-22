@@ -14,6 +14,9 @@ import { connectDatabase } from './ConnectDatabase'
 import { userLoader } from '@/user/UserLoader'
 import { postLoader } from '@/post/PostLoader'
 import { commentLoader } from '@/comment/CommentLoader'
+import { joinedLoader } from '@/planet/JoinedLoader'
+import { postRocketedLoader } from '@/post/PostRocketedLoader'
+import { commentRocketedLoader } from '@/comment/CommentRocketedLoader'
 import dayjs from 'dayjs'
 import dayjsTwitter from 'dayjs-twitter'
 import { discordClient } from '@/discord/DiscordClient'
@@ -95,7 +98,10 @@ async function bootstrap() {
         ...getUser(req.cookies.accessToken),
         userLoader,
         postLoader,
-        commentLoader
+        commentLoader,
+        joinedLoader,
+        postRocketedLoader,
+        commentRocketedLoader
       } as Context
     },
     uploads: false,

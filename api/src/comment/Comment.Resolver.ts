@@ -115,18 +115,19 @@ export class CommentResolver {
 
     if (!post) return []
 
-    const qb = await this.commentRepo
-      .createQueryBuilder('comment')
-      .leftJoinAndSelect('comment.author', 'author')
+    const qb = await this.commentRepo.createQueryBuilder('comment')
 
     if (postId) {
-      qb.andWhere('comment.postId = :postId', { postId: post.id })
+      qb.where('comment.postId = :postId', { postId: post.id })
     }
 
     if (username) {
-      qb.andWhere('author.username ILIKE :username', {
-        username: handleUnderscore(username)
-      })
+      qb.leftJoinAndSelect('comment.author', 'author').where(
+        'author.username ILIKE :username',
+        {
+          username: handleUnderscore(username)
+        }
+      )
     }
 
     if (userId) {
@@ -244,13 +245,22 @@ export class CommentResolver {
   }
 
   @FieldResolver()
+  async author(@Root() comment: Comment, @Ctx() { userLoader }: Context) {
+    if (!comment.authorId) return null
+    return userLoader.load(comment.authorId)
+  }
+
+  @FieldResolver()
   async post(@Root() comment: Comment, @Ctx() { postLoader }: Context) {
     return postLoader.load(comment.postId)
   }
 
   @FieldResolver()
-  async isRocketed(@Root() comment: Comment, @Ctx() { userId }: Context) {
+  async isRocketed(
+    @Root() comment: Comment,
+    @Ctx() { commentRocketedLoader, userId }: Context
+  ) {
     if (!userId) return false
-    return comment.rocketerIds.includes(userId)
+    return commentRocketedLoader.load({ userId, commentId: comment.id })
   }
 }

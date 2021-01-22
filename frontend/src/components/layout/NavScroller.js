@@ -8,9 +8,8 @@ import React from 'react'
 import { usePlanets } from '@/lib/queries/usePlanets'
 import { useRouter } from 'next/router'
 
-export default function PlanetsScroller() {
-  const { data } = usePlanets({ joinedOnly: true, sort: 'AZ' })
-  const planets = data ? data.planets : []
+export default function NavScroller() {
+  const planets = usePlanets({ joinedOnly: true }).data || []
 
   const router = useRouter()
 

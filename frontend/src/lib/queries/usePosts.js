@@ -66,6 +66,7 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
               name
               bio
               avatarUrl
+
               isCurrentUser
             }
             timeSince
@@ -85,5 +86,4 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
   return posts
 }
 
-export const usePosts = variables =>
-  useQuery(['posts', variables], fetchPosts, { refetchOnWindowFocus: false })
+export const usePosts = variables => useQuery(['posts', variables], fetchPosts)
