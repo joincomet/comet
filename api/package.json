@@ -4,7 +4,8 @@
   "license": "MPL-2.0",
   "private": true,
   "engines": {
-    "node": "15.x.x"
+    "node": "15.x.x",
+    "yarn": "2.x.x"
   },
   "scripts": {
     "start": "NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
