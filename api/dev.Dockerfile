@@ -1,6 +1,6 @@
 FROM node:latest
 
-RUN apt update && apt upgrade
+RUN apt update && apt upgrade -y
 
 RUN mkdir -p /usr/src/app
 ENV NODE_ENV=development PORT=4000
