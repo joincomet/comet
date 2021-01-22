@@ -12,9 +12,6 @@ import { Comment } from '@/comment/Comment.Entity'
 import { Post } from '@/post/Post.Entity'
 import dayjs from 'dayjs'
 import { Planet } from '@/planet/Planet.Entity'
-import { ChatServer } from '@/chat/ChatServer.Entity'
-import { ChatGroup } from '@/chat/ChatGroup.Entity'
-import { Lazy } from '@/Lazy'
 
 @ObjectType()
 @Entity()
@@ -186,10 +183,4 @@ export class User {
   @Field()
   @Column({ default: false })
   private: boolean
-
-  @ManyToMany(() => ChatGroup, group => group.members)
-  chatGroups: Lazy<ChatGroup[]>
-
-  @ManyToMany(() => ChatServer, server => server.members)
-  chatServers: Lazy<ChatServer[]>
 }

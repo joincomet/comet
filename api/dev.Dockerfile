@@ -1,7 +1,5 @@
 FROM node:latest
 
-RUN apt update && apt install python -y
-
 RUN mkdir -p /usr/src/app
 ENV NODE_ENV=development PORT=4000
 EXPOSE 4000

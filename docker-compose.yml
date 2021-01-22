@@ -14,8 +14,6 @@ services:
       - .env
     volumes:
       - ./api:/usr/src/app
-      - /usr/src/app/.yarn/cache
-      - /usr/src/app/node_modules
     depends_on:
       - postgres
 
@@ -32,8 +30,6 @@ services:
       - .env
     volumes:
       - ./frontend:/usr/src/app
-      - /usr/src/app/.yarn/cache
-      - /usr/src/app/node_modules
 
   postgres:
     image: "postgres:alpine"

@@ -15,8 +15,6 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
           userCount
           isJoined
           color
-          galaxies
-          timeSinceCreated
         }
       }
     `,
