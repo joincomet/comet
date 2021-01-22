@@ -14,6 +14,7 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
         $time: TimeFilter
         $joinedOnly: Boolean
         $planet: String
+        $galaxy: Galaxy
         $username: String
         $q: String
       ) {
@@ -24,6 +25,7 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
           time: $time
           joinedOnly: $joinedOnly
           planet: $planet
+          galaxy: $galaxy
           username: $username
           q: $q
         ) {
