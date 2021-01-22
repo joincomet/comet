@@ -1,20 +1,25 @@
 import { QueryClient } from 'react-query'
-import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
 import { dehydrate } from 'react-query/hydration'
 import { useRouter } from 'next/router'
 import PlanetSidebar from '@/components/planet/PlanetSidebar'
 import PlanetUsersSidebar from '@/components/planet/PlanetUsersSidebar'
 import React from 'react'
-import ClassicPosts from '@/components/post/ClassicPosts'
-import SendMessageBar from '@/components/layout/SendMessageBar'
-import { fetchPosts } from '@/lib/queries/usePosts'
+import Posts from '@/components/post/Posts'
 import Header from '@/components/layout/Header'
 import { useSlideout } from '@/lib/useSlideout'
-import SlideoutOverlay from '@/components/SlideoutOverlay'
+import FoldersSidebar from '@/components/post/FoldersSidebar'
+import { HiFolder } from 'react-icons/hi'
 
-export default function PlanetPostsPage({ variables }) {
+export default function PlanetPostsPage() {
   const { query } = useRouter()
+  const variables = {
+    planet: query.planetname,
+    pageSize: 20,
+    page: query.page ? query.page - 1 : 0,
+    sort: query.sort ? query.sort.toUpperCase() : 'HOT',
+    time: query.time ? query.time.toUpperCase() : 'ALL'
+  }
   const planetQuery = usePlanet({ name: query.planetname })
   const planet = planetQuery.data
 
@@ -27,23 +32,33 @@ export default function PlanetPostsPage({ variables }) {
     panel
   } = useSlideout()
 
+  const title =
+    'Posts · ' +
+    (query.sort
+      ? query.sort.toUpperCase().substring(0, 1) +
+        query.sort.toLowerCase().substring(1)
+      : 'Hot') +
+    (query.time
+      ? ' · ' +
+        query.time.toUpperCase().substring(0, 1) +
+        query.time.toLowerCase().substring(1)
+      : '')
+
   return (
     <>
-      <Header title={planet.name} ref={header} slideoutLeft={slideoutLeft} />
+      <Header
+        ref={header}
+        {...{ slideoutLeft, slideoutRight, title }}
+        rightSidebarIcon={<HiFolder className="w-5 h-5" />}
+      />
       <PlanetSidebar planet={planet} ref={menuLeft} />
-      <PlanetUsersSidebar planet={planet} ref={menuRight} />
+      <FoldersSidebar ref={menuRight} />
       <main
         className="slideout-panel slideout-panel--right slideout-panel--header"
         id="panel"
         ref={panel}
       >
-        <SlideoutOverlay
-          slideoutLeft={slideoutLeft}
-          slideoutRight={slideoutRight}
-        />
-        <ClassicPosts variables={variables} hidePlanet />
-
-        <SendMessageBar />
+        <Posts variables={variables} draggable link thumbnail expandable />
       </main>
     </>
   )
@@ -53,8 +68,6 @@ export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
   const { query } = ctx
-
-  await globalPrefetch(queryClient, ctx)
 
   const k = ['planet', { name: query.planetname }]
 
@@ -70,21 +83,8 @@ export async function getServerSideProps(ctx) {
       }
     }
 
-  const variables = {
-    planet: query.planetname,
-    pageSize: 20,
-    page: query.page ? query.page - 1 : 0,
-    sort: query.sort ? query.sort.toUpperCase() : 'HOT',
-    time: query.time ? query.time.toUpperCase() : 'ALL'
-  }
-
-  await queryClient.prefetchQuery(['posts', variables], key =>
-    fetchPosts(key, ctx)
-  )
-
   return {
     props: {
-      variables,
       dehydratedState: dehydrate(queryClient)
     }
   }

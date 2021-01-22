@@ -1,17 +1,14 @@
 import {
-  FiCornerUpLeft,
   FiMoreHorizontal,
   FiEdit2,
   FiTrash,
   FiAlertCircle,
   FiShield
 } from 'react-icons/fi'
-import { BiRocket } from 'react-icons/bi'
 import { TiPinOutline } from 'react-icons/ti'
-import { HiDotsHorizontal, HiReply } from 'react-icons/hi'
+import { HiAnnotation, HiDotsHorizontal, HiReply } from 'react-icons/hi'
 import React, { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
-import UserPopup from '@/components/user/UserPopup'
 import Twemoji from 'react-twemoji'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import {
@@ -33,10 +30,6 @@ import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
 import { useCommentStore } from '@/lib/stores/useCommentStore'
 import EditCommentModal from '@/components/comment/EditCommentModal'
-import {
-  useRocketPostMutation,
-  useUnrocketPostMutation
-} from '@/lib/mutations/postMutations'
 import { RiRocketFill } from 'react-icons/ri'
 
 export default function Comment({
@@ -66,16 +59,16 @@ export default function Comment({
 
         <div
           className="commentcollapse"
-          style={{ marginLeft: 1 * level + 'rem' }}
+          style={{ marginLeft: 0.75 * level + 'rem' }}
           onClick={() => setCollapse(!collapse)}
         />
 
         <div
           className="relative transition dark:hover:bg-gray-775"
-          style={{ paddingLeft: 1 * level + 'rem' }}
+          style={{ paddingLeft: 0.75 * level + 'rem' }}
         >
-          <div className="pl-4">
-            <div className="pl-4 pr-8 py-2 transition dark:hover:bg-gray-775">
+          <div className="pl-3">
+            <div className="pl-3 pr-6 pt-3 pb-1.5 transition dark:hover:bg-gray-775">
               <div
                 onClick={
                   collapse
@@ -88,15 +81,23 @@ export default function Comment({
                   collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
                 } ${collapse || comment.deleted ? 'h-10' : ''}`}
               >
-                <div className="flex items-center text-13 font-medium pb-1 text-tertiary">
-                  <UserAvatar
-                    className="w-5 h-5 mr-1.5 cursor-pointer transition hover:opacity-90"
-                    user={comment.author}
-                    loading="lazy"
-                  />
-                  <span className="hover:underline cursor-pointer">
-                    {comment.author.username}
-                  </span>
+                <div className="flex items-center text-13 font-medium text-tertiary pb-1.5">
+                  {comment.author ? (
+                    <>
+                      <UserAvatar
+                        className="w-5 h-5 mr-1.5 cursor-pointer transition hover:opacity-90"
+                        user={comment.author}
+                        loading="lazy"
+                      />
+                      <span className="hover:underline cursor-pointer">
+                        {comment.author.username}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="hover:underline cursor-pointer">
+                      [deleted]
+                    </span>
+                  )}
                   &nbsp;&middot;&nbsp;
                   <Tippy content={comment.timeSinceFull}>
                     <span>{comment.timeSince}</span>
@@ -112,7 +113,7 @@ export default function Comment({
                       />
                     </Twemoji>
 
-                    <div className="flex items-center space-x-1 pt-1">
+                    <div className="flex items-center space-x-1 pt-1.5 -ml-2">
                       <Rocket comment={comment} setComment={setComment} />
 
                       {!comment.deleted && (
@@ -125,10 +126,10 @@ export default function Comment({
                               setLogin(true)
                             }
                           }}
-                          className="flex text-tertiary items-center transition rounded-md dark:hover:bg-gray-700 cursor-pointer select-none"
+                          className="action-chip text-tertiary"
                         >
+                          <HiAnnotation className="w-5 h-5 mr-1.5" />
                           <div className="text-xs font-medium">Reply</div>
-                          <HiReply className="w-5 h-5 ml-3" />
                         </div>
                       )}
 
@@ -202,7 +203,7 @@ function Rocket({ comment, setComment }) {
         e.stopPropagation()
         toggleRocket()
       }}
-      className={`flex items-center px-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer transition ${
+      className={`action-chip ${
         comment.isRocketed ? 'text-red-400' : 'text-tertiary'
       }`}
     >

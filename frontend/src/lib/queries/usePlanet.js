@@ -25,7 +25,6 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           moderators {
             id
             username
-            name
             timeSinceCreated
             postCount
             commentCount
@@ -37,7 +36,6 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           users {
             id
             username
-            name
             timeSinceCreated
             postCount
             commentCount

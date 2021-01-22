@@ -13,7 +13,7 @@ export default function BottomBar() {
   const { pathname } = useRouter()
 
   return (
-    <div className="block md:hidden items-center fixed z-10 justify-between text-tertiary bottom-0 left-0 right-0 h-14 bg-white dark:bg-gray-800 shadow-md flex border-t dark:border-gray-700">
+    <div className="block lg:hidden items-center fixed z-10 justify-between text-tertiary bottom-0 left-0 right-0 h-14 bg-white dark:bg-gray-800 shadow-md flex border-t dark:border-gray-700">
       <NavLink href="/" className={bottomButton}>
         <FiHome
           size={20}

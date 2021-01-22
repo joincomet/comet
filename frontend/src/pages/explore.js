@@ -1,19 +1,28 @@
-import { fetchPlanets, usePlanets } from '@/lib/queries/usePlanets'
+import { usePlanets } from '@/lib/queries/usePlanets'
 import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
 import ExploreLeftSidebar from '@/components/explore/ExploreLeftSidebar'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { Scrollbar } from 'react-scrollbars-custom'
 import PageNavigator from '@/components/layout/PageNavigator'
-import { QueryClient } from 'react-query'
-import { globalPrefetch } from '@/lib/queries/globalPrefetch'
-import { dehydrate } from 'react-query/hydration'
 import NavLink from '@/components/NavLink'
 import { HiSearch } from 'react-icons/hi'
-import SlideoutOverlay from '@/components/SlideoutOverlay'
 import { useSlideout } from '@/lib/useSlideout'
+import Header from '@/components/layout/Header'
 
-export default function ExplorePage({ variables }) {
+export default function ExplorePage() {
+  const { query } = useRouter()
+
+  const variables = {
+    pageSize: 20,
+    page: query.page ? query.page - 1 : 0,
+    sort: query.sort
+      ? query.sort.toUpperCase()
+      : query.galaxy
+      ? 'AZ'
+      : 'FEATURED',
+    galaxy: query.galaxy ? query.galaxy : null
+  }
   const { data } = usePlanets(variables)
 
   const planets = data ? data.planets : []
@@ -31,19 +40,26 @@ export default function ExplorePage({ variables }) {
     <>
       <ExploreLeftSidebar ref={menuLeft} />
 
-      <main className="slideout-panel" id="panel" ref={panel}>
-        <SlideoutOverlay
-          slideoutLeft={slideoutLeft}
-          slideoutRight={slideoutRight}
-        />
+      <Header
+        title="Explore Planets"
+        slideoutLeft={slideoutLeft}
+        ref={header}
+        mobileOnly
+      />
+
+      <main
+        className="slideout-panel slideout-panel--header-mobile"
+        id="panel"
+        ref={panel}
+      >
         <AutoSizer>
           {({ width, height }) => (
-            <Scrollbar style={{ width, height }}>
+            <Scrollbar mobileNative style={{ width, height }}>
               <div className="px-8 py-8">
                 <div className="flex pb-8 items-center justify-center">
-                  <div className="shadow-md max-w-screen-sm w-full flex h-10 relative bg-white rounded-md text-gray-600 transition focus-within:text-blue-600 focus-within:ring-2 dark:ring-blue-600">
+                  <div className="shadow-md max-w-screen-sm w-full flex h-10 relative bg-white dark:bg-gray-600 rounded-md dark:text-gray-400 transition dark:focus-within:text-white">
                     <input
-                      className="h-full rounded-l-md text-sm px-4 flex-grow focus:outline-none text-black placeholder-gray-600 font-medium"
+                      className="h-full dark:bg-gray-600 rounded-l-md text-sm px-4 flex-grow focus:outline-none dark:text-white dark:placeholder-gray-400 font-medium"
                       placeholder="Search planets"
                     />
                     <button
@@ -54,13 +70,16 @@ export default function ExplorePage({ variables }) {
                     </button>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3 2xl:grid-cols-5">
+                <div className="py-4 text-secondary text-lg font-medium">
+                  Top Planets
+                </div>
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5">
                   {planets.map(planet => (
                     <PlanetCard planet={planet} key={planet.id} />
                   ))}
                 </div>
               </div>
-              <PageNavigator nextEnabled={!!data.nextPage} />
+              <PageNavigator nextEnabled={!!data?.nextPage} />
             </Scrollbar>
           )}
         </AutoSizer>
@@ -73,7 +92,7 @@ function PlanetCard({ planet }) {
   return (
     <NavLink
       href={`/planet/${planet.name}`}
-      className="md:rounded-lg group dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 relative flex flex-col transform transition hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
+      className="rounded-lg group dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 relative flex flex-col transform transition hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
     >
       <div
         className="h-32 rounded-t-lg w-full bg-cover bg-center bg-no-repeat relative dark:bg-gray-800"
@@ -86,6 +105,7 @@ function PlanetCard({ planet }) {
         <div className="absolute inline-flex items-center justify-center w-12 h-12 ring-4 dark:ring-gray-850 transition rounded-full group-hover:shadow-md -bottom-3 left-4 dark:bg-gray-850">
           {planet.avatarUrl ? (
             <img
+              alt={planet.name}
               src={planet.avatarUrl}
               className="w-full h-full rounded-full"
             />
@@ -124,6 +144,7 @@ function PlanetCard({ planet }) {
   )
 }
 
+/*
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
@@ -153,3 +174,4 @@ export async function getServerSideProps(ctx) {
     }
   }
 }
+*/

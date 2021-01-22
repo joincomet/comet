@@ -1,5 +1,5 @@
 .slideout-menu {
-    @apply z-0 md:z-10 fixed bottom-0 min-h-screen hidden md:block;
+    @apply z-0 lg:z-10 fixed bottom-0 min-h-screen hidden lg:block;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -12,17 +12,21 @@
 }
 
 .slideout-panel {
-    @apply relative bg-gray-100 dark:bg-gray-750 min-h-screen h-full w-full md:pl-76;
+    @apply relative bg-gray-100 dark:bg-gray-750 min-h-screen h-full w-full lg:pl-76;
     z-index: 1;
     will-change: transform;
 }
 
 .slideout-panel--right {
-    @apply md:pr-60;
+    @apply lg:pr-60;
 }
 
 .slideout-panel--header {
     @apply pt-12;
+}
+
+.slideout-panel--header-mobile {
+    @apply pt-12 lg:pt-0;
 }
 
 .slideout-open,

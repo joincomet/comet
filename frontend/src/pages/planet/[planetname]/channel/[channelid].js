@@ -1,12 +1,11 @@
 import { QueryClient } from 'react-query'
-import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
 import { dehydrate } from 'react-query/hydration'
 import { useRouter } from 'next/router'
 import PlanetSidebar from '@/components/planet/PlanetSidebar'
 import PlanetUsersSidebar from '@/components/planet/PlanetUsersSidebar'
 import React from 'react'
-import ClassicPosts from '@/components/post/ClassicPosts'
+import Posts from '@/components/post/Posts'
 import SendMessageBar from '@/components/layout/SendMessageBar'
 
 export default function PlanetChatPage() {
@@ -24,7 +23,7 @@ export default function PlanetChatPage() {
         className="slideout-panel slideout-panel--right slideout-panel--header"
         id="panel"
       >
-        <ClassicPosts variables={{ planet: query.planetname, pageSize: 20 }} />
+        <Posts variables={{ planet: query.planetname, pageSize: 20 }} />
 
         <SendMessageBar />
       </main>
@@ -36,8 +35,6 @@ export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
   const { query } = ctx
-
-  await globalPrefetch(queryClient, ctx)
 
   const k = ['planet', { name: query.planetname }]
 

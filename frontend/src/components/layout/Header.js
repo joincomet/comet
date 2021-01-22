@@ -1,38 +1,75 @@
 import React, { forwardRef } from 'react'
-import { FiMenu } from 'react-icons/fi'
-import { HiHome, HiInbox } from 'react-icons/hi'
-import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import { useNotifications } from '@/lib/queries/useNotifications'
-import NavLink from '@/components/NavLink'
+import { HiMenu, HiPlusCircle } from 'react-icons/hi'
+import Tippy from '@tippyjs/react'
 
 const menuBtn =
-  'mr-3 block md:hidden inline-flex flex-shrink-0 items-center justify-center h-10 w-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-750 transition'
+  'block lg:hidden inline-flex flex-shrink-0 items-center justify-center h-10 w-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-750 transition'
 
 export default forwardRef(
-  ({ children, className, slideoutLeft, title = 'Home' }, ref) => {
-    const currentUser = useCurrentUser().data
-    const notifications = useNotifications({ unreadOnly: true }).data
-
+  (
+    {
+      children,
+      className,
+      slideoutLeft,
+      title = '',
+      rightSidebarIcon,
+      slideoutRight,
+      mobileOnly = false
+    },
+    ref
+  ) => {
     return (
       <header
         ref={ref}
         id="header"
-        className={`flex fixed left-0 md:left-76 right-0 md:right-60 top-0 h-12 z-10 items-center px-3 bg-white dark:bg-gray-800`}
+        className={`fixed left-0 lg:left-76 right-0 top-0 h-12 z-10 items-center px-1 bg-white dark:bg-gray-800 ${
+          mobileOnly ? 'flex lg:hidden' : 'flex'
+        }`}
       >
-        <div className={menuBtn} onClick={() => slideoutLeft.toggle()}>
-          <FiMenu size={20} />
+        <div
+          className={`mr-1 ${menuBtn}`}
+          onClick={e => {
+            slideoutLeft.toggle()
+            e.stopPropagation()
+            e.preventDefault()
+          }}
+        >
+          <HiMenu className="w-5 h-5" />
         </div>
 
-        <div className="text-lg md:text-sm inline-flex items-center font-semibold md:font-medium whitespace-nowrap truncate text-secondary">
-          {title}
+        {title && (
+          <div className="text-base inline-flex items-center font-bold whitespace-nowrap truncate text-secondary">
+            {title}
+          </div>
+        )}
+
+        <div className="pl-3 ml-auto">
+          <Tippy content="New Post">
+            <div className="text-gray-800 dark:text-gray-200 dark:hover:text-white hover:text-black cursor-pointer">
+              <HiPlusCircle className="h-5 w-5" />
+            </div>
+          </Tippy>
         </div>
 
-        <div className="ml-auto">
+        {rightSidebarIcon && slideoutRight && (
+          <div
+            className={`ml-3 text-tertiary ${menuBtn}`}
+            onClick={e => {
+              slideoutRight.toggle()
+              e.stopPropagation()
+              e.preventDefault()
+            }}
+          >
+            {rightSidebarIcon}
+          </div>
+        )}
+
+        {/*<div className="ml-auto">
           {currentUser && (
             <div className="flex items-center space-x-6">
               <NavLink
                 href="/notifications"
-                className="hidden md:block relative p-3 rounded-full transition bg-transparent dark:hover:bg-gray-700 cursor-pointer"
+                className="hidden lg:block relative p-3 rounded-full transition bg-transparent dark:hover:bg-gray-700 cursor-pointer"
               >
                 <HiInbox className="w-5 h-5 text-secondary" />
                 {notifications && notifications.length > 0 && (
@@ -43,7 +80,7 @@ export default forwardRef(
               </NavLink>
             </div>
           )}
-        </div>
+        </div>*/}
       </header>
     )
   }

@@ -15,7 +15,6 @@ export const fetchCurrentUser = async (ctx = null) => {
           postCount
           rocketCount
           isOnline
-          name
           isCurrentUser
           moderatedPlanets {
             id

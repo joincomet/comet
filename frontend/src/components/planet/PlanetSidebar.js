@@ -30,7 +30,7 @@ export default forwardRef(({ planet }, ref) => {
             {planet.name}
           </div>
 
-          <div className="rounded-md p-1 transition dark:hover:bg-gray-700 cursor-pointer">
+          <div className="rounded-md p-1 transition bg-white bg-opacity-0 hover:bg-opacity-20 cursor-pointer">
             <HiAdjustments className="w-5 h-5 text-secondary" />
           </div>
         </div>

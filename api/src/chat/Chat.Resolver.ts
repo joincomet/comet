@@ -76,8 +76,17 @@ export class ChatResolver {
     notifyAboutNewMessage: Publisher<ChatMessage>,
     @Ctx() { userId }: Context
   ): Promise<boolean> {
-    const channel = this.channelRepo.findOne(channelId)
-    if (!channel) return false
+    const channel = await this.channelRepo.findOne(channelId)
+    if (!channel) throw new Error('Invalid channel ID')
+    if (channel.groupId) {
+      const group = await this.groupRepo.findOne(channel.groupId)
+      if (!group.userIds.includes(userId))
+        throw new Error('You do not have access to this channel')
+    } else if (channel.planetId) {
+      const planet = await this.planetRepo.findOne(channel.planetId)
+      if (!planet.userIds.includes(userId))
+        throw new Error('You do not have access to this channel')
+    }
     const message = await this.messageRepo.save({
       channelId,
       text,

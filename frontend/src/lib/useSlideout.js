@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useClickAway } from 'react-use'
 
 export const useSlideout = () => {
   const menuLeft = useRef(null)
@@ -12,20 +13,42 @@ export const useSlideout = () => {
   const [sl, setSl] = useState(slideoutLeft)
   const [sr, setSr] = useState(slideoutRight)
 
+  useClickAway(
+    menuLeft,
+    e => {
+      e.stopPropagation()
+      e.preventDefault()
+      if (sl && sl.isOpen()) sl.close()
+    },
+    ['click']
+  )
+
+  useClickAway(
+    menuRight,
+    e => {
+      e.stopPropagation()
+      e.preventDefault()
+      if (sr && sr.isOpen()) sr.close()
+    },
+    ['click']
+  )
+
   useEffect(() => {
     async function setupSlideout() {
       const Slideout = (await import('slideout')).default
 
       const paddingLeft = 304
       const paddingRight = 240
+      const tolerance = 100 // default 70
+      const easing = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
       if (menuRight.current) {
         slideoutRight = new Slideout({
           panel: panel.current,
           menu: menuRight.current,
           padding: paddingRight,
-          tolerance: 70,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          tolerance,
+          easing,
           side: 'right'
         })
       }
@@ -35,8 +58,8 @@ export const useSlideout = () => {
           panel: panel.current,
           menu: menuLeft.current,
           padding: paddingLeft,
-          tolerance: 70,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+          tolerance,
+          easing
         })
 
         slideoutLeft.on('translate', function (translated) {

@@ -7,24 +7,26 @@ import React, { useState } from 'react'
 import Comment from '@/components/comment/Comment'
 import { dehydrate } from 'react-query/hydration'
 import { NextSeo } from 'next-seo'
-import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
 import PlanetSidebar from '@/components/planet/PlanetSidebar'
-import FoldersSidebar from '@/components/post/FoldersSidebar'
 import Header from '@/components/layout/Header'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { Scrollbar } from 'react-scrollbars-custom'
 import CommentsSidebar from '@/components/comment/CommentsSidebar'
 import { useSlideout } from '@/lib/useSlideout'
-import SlideoutOverlay from '@/components/SlideoutOverlay'
+import { HiUsers } from 'react-icons/hi'
 
-function PostPage({ postVariables, commentVariables }) {
+function PostPage({ postVariables }) {
   const { query, pathname } = useRouter()
   const post = usePost(postVariables).data
+  const commentVariables = {
+    postId: query.postid,
+    sort: query.sort ? query.sort.toUpperCase() : 'TOP'
+  }
   const commentsQuery = useComments(commentVariables)
-  const { comments, commentCount } = commentsQuery.data || {
+  const { comments, commentCount, users } = commentsQuery.data || {
     comments: [],
-    commentCount: []
+    commentCount: 0
   }
   const [parentComment, setParentComment] = useState(null)
 
@@ -68,27 +70,26 @@ function PostPage({ postVariables, commentVariables }) {
         title={post.title || '(untitled)'}
         ref={header}
         slideoutLeft={slideoutLeft}
+        slideoutRight={slideoutRight}
+        rightSidebarIcon={<HiUsers className="w-5 h-5" />}
       />
       <PlanetSidebar planet={planet} ref={menuLeft} />
-      <CommentsSidebar post={post} comments={comments} ref={menuRight} />
+      <CommentsSidebar post={post} users={users || []} ref={menuRight} />
 
       <main
         className="slideout-panel slideout-panel--right slideout-panel--header"
         id="panel"
         ref={panel}
       >
-        <SlideoutOverlay
-          slideoutLeft={slideoutLeft}
-          slideoutRight={slideoutRight}
-        />
         <AutoSizer disableWidth>
           {({ height }) => (
-            <Scrollbar style={{ width: '100%', height }}>
-              <Post postData={post} showDetails hideThumbnail hidePlanet />
+            <Scrollbar mobileNative style={{ width: '100%', height }}>
+              <Post postData={post} embed actionsLast />
 
               <div className="border-t-2 dark:border-gray-700">
-                <div className="px-4 py-4 text-sm font-medium text-secondary">
-                  {commentCount} Comment{commentCount === 1 ? '' : 's'}
+                <div className="px-3 py-3 text-sm font-medium text-secondary">
+                  {post.commentCount} Comment
+                  {post.commentCount === 1 ? '' : 's'}
                 </div>
                 {comments.map((comment, index) => (
                   <Comment
@@ -132,26 +133,23 @@ export async function getServerSideProps(ctx) {
 
   const postId = query.postid
   const postVariables = { postId }
-  const commentVariables = {
+  /*const commentVariables = {
     postId,
     sort: query.sort ? query.sort.toUpperCase() : 'TOP'
-  }
-
-  await globalPrefetch(queryClient, ctx)
+  }*/
 
   await queryClient.prefetchQuery(['post', postVariables], key =>
     fetchPost(key, ctx)
   )
 
-  await queryClient.prefetchQuery(['comments', commentVariables], key =>
+  /*await queryClient.prefetchQuery(['comments', commentVariables], key =>
     fetchComments(key, ctx)
-  )
+  )*/
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      postVariables,
-      commentVariables
+      postVariables
     }
   }
 }

@@ -1,8 +1,6 @@
 import React, { forwardRef } from 'react'
 import Logo from '@/components/Logo'
-import { FiUserPlus } from 'react-icons/fi'
 import Sidebar from '@/components/layout/Sidebar'
-import { CurrentUserInfo } from '@/components/layout/CurrentUserInfo'
 import PostSortButtons from '@/components/layout/PostSortButtons'
 import { HiUserAdd } from 'react-icons/hi'
 

@@ -27,7 +27,8 @@ module.exports = {
       },
       fontSize: {
         base: '.9375rem',
-        13: '.8125rem'
+        13: '.8125rem',
+        11: '0.6875rem'
       },
       transitionDelay: {
         400: '400ms',

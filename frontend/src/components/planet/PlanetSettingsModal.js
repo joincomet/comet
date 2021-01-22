@@ -72,7 +72,7 @@ export default function PlanetSettingsModal({ open, setOpen, planet }) {
       blockScroll={false}
       closeIcon={<FiX size={20} />}
     >
-      <div className="p-6 md:rounded-2xl bg-white dark:bg-gray-800 space-y-4">
+      <div className="p-6 lg:rounded-2xl bg-white dark:bg-gray-800 space-y-4">
         <div className="header-2 text-secondary">+{planet.name}</div>
 
         <div className="label text-tertiary">Galaxies</div>

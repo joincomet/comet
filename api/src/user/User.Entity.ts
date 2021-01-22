@@ -33,12 +33,6 @@ export class User {
   @Column()
   username: string
 
-  @Field(() => String)
-  get name() {
-    if (this.realName) return this.realName
-    return this.username
-  }
-
   @Authorized('USER')
   @Field()
   @Column({ nullable: true })
@@ -162,10 +156,6 @@ export class User {
   @Field({ nullable: true })
   @Column({ nullable: true })
   bannerUrl?: string
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  realName?: string
 
   @Field({ nullable: true })
   @Column('text', { nullable: true })

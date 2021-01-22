@@ -57,7 +57,7 @@ export default function CreateCommentForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-6 md:rounded-2xl bg-white dark:bg-gray-800 space-y-4"
+      className="p-6 lg:rounded-2xl bg-white dark:bg-gray-800 space-y-4"
     >
       <div className="label text-tertiary">
         Replying to{' '}

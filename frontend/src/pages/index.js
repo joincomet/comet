@@ -1,17 +1,13 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import HomeSidebar from '@/components/home/HomeSidebar'
-import ClassicPosts from '@/components/post/ClassicPosts'
+import Posts from '@/components/post/Posts'
 import Header from '@/components/layout/Header'
 import PostsSidebar from '@/components/post/FoldersSidebar'
-import { QueryClient } from 'react-query'
-import { dehydrate } from 'react-query/hydration'
-import { fetchPosts } from '@/lib/queries/usePosts'
 import { useSlideout } from '@/lib/useSlideout'
-import { globalPrefetch } from '@/lib/queries/globalPrefetch'
-import SlideoutOverlay from '@/components/SlideoutOverlay'
+import { HiFolder } from 'react-icons/hi'
 
-export default function HomePage({ variables }) {
+export default function HomePage() {
   const {
     panel,
     header,
@@ -21,29 +17,49 @@ export default function HomePage({ variables }) {
     slideoutRight
   } = useSlideout()
 
+  const { query } = useRouter()
+
+  const variables = {
+    joinedOnly: true,
+    pageSize: 20,
+    page: query.page ? query.page - 1 : 0,
+    sort: query.sort ? query.sort.toUpperCase() : 'HOT',
+    time: query.time ? query.time.toUpperCase() : 'ALL'
+  }
+
   return (
     <>
       <HomeSidebar ref={menuLeft} />
 
       <PostsSidebar ref={menuRight} />
 
-      <Header slideoutLeft={slideoutLeft} ref={header} />
+      <Header
+        slideoutLeft={slideoutLeft}
+        ref={header}
+        title="Home"
+        slideoutRight={slideoutRight}
+        rightSidebarIcon={<HiFolder className="w-5 h-5" />}
+      />
 
       <main
         className="slideout-panel slideout-panel--right slideout-panel--header"
         id="panel"
         ref={panel}
       >
-        <SlideoutOverlay
-          slideoutLeft={slideoutLeft}
-          slideoutRight={slideoutRight}
+        <Posts
+          variables={variables}
+          planet
+          draggable
+          link
+          thumbnail
+          expandable
         />
-        <ClassicPosts variables={variables} />
       </main>
     </>
   )
 }
 
+/*
 export async function getServerSideProps(ctx) {
   const queryClient = new QueryClient()
 
@@ -70,3 +86,4 @@ export async function getServerSideProps(ctx) {
     }
   }
 }
+*/

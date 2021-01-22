@@ -159,19 +159,20 @@ body {
 }
 
 .tippy-box {
-  @apply bg-gray-850 shadow-md !important;
+  @apply bg-gray-950 shadow-md !important;
+  border-radius: 5px;
 }
 
 .tippy-arrow {
-  @apply text-gray-850 shadow-md !important;
+  @apply text-gray-950 shadow-md !important;
 }
 
 .tippy-content {
-  @apply p-2.5 font-medium text-white text-sm !important;
+  @apply px-3 py-2.5 leading-none font-medium text-gray-800 dark:text-gray-200 text-13 !important;
 }
 
 .commentcollapse {
-  @apply absolute top-0 bottom-0 w-8 cursor-pointer group z-10;
+  @apply absolute top-0 bottom-0 w-6 cursor-pointer group z-10;
 }
 
 .commentcollapse::before {
@@ -188,7 +189,7 @@ body {
 }
 
 .mycontainer {
-  @apply container mx-auto 2xl:px-64 px-0 md:px-8;
+  @apply container mx-auto 2xl:px-64 px-0 lg:px-8;
 }
 
 .mycontainer-nopad {
@@ -196,7 +197,7 @@ body {
 }
 
 .header-1 {
-  @apply text-4xl md:text-7xl font-extrabold tracking-tight leading-none;
+  @apply text-4xl lg:text-7xl font-extrabold tracking-tight leading-none;
 }
 
 .header-2 {
@@ -316,7 +317,7 @@ body {
 }
 
 .sidebar-label {
-  @apply px-4 pt-4 pb-2 text-tertiary uppercase text-xs font-semibold tracking-widest;
+  @apply px-4 pt-4 pb-0.5 text-tertiary uppercase text-11 font-semibold tracking-widest;
 }
 
 .pagebutton {
@@ -325,4 +326,8 @@ body {
 
 .react-player {
   @apply absolute top-0 left-0;
+}
+
+.action-chip {
+  @apply text-xs font-medium inline-flex items-center cursor-pointer h-7 px-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition;
 }
