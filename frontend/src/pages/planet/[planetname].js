@@ -7,7 +7,6 @@ import PlanetSidebar from '@/components/planet/PlanetSidebar'
 import PlanetUsersSidebar from '@/components/planet/PlanetUsersSidebar'
 import React from 'react'
 import ClassicPosts from '@/components/post/ClassicPosts'
-import SendMessageBar from '@/components/layout/SendMessageBar'
 
 export default function PlanetChatPage() {
   const { query } = useRouter()
@@ -20,14 +19,16 @@ export default function PlanetChatPage() {
     <>
       <PlanetSidebar planet={planet} />
       <PlanetUsersSidebar planet={planet} />
-      <main
-        className="slideout-panel slideout-panel--right slideout-panel--header"
-        id="panel"
-      >
+      <div className="relative h-full w-full px-64">
         <ClassicPosts variables={{ planet: query.planetname, pageSize: 20 }} />
 
-        <SendMessageBar />
-      </main>
+        <div className="fixed bottom-0 p-6 left-80 right-64 dark:bg-gray-800">
+          <input
+            className="h-12 px-3 w-full dark:bg-gray-750 rounded text-sm focus:outline-none text-secondary"
+            placeholder="Send a message in #general"
+          />
+        </div>
+      </div>
     </>
   )
 }

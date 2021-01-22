@@ -86,7 +86,7 @@ export default function Comment({
         setText={setTextContent}
       />
       <div className={`relative mt-3 ${level === 0 ? '' : 'ml-3'}`}>
-        <div id={comment.id36} />
+        <div className="absolute -top-14 md:-top-28" id={comment.id36} />
 
         <div
           className="commentcollapse"
@@ -102,20 +102,24 @@ export default function Comment({
                   }
                 : () => {}
             }
-            className={`transition w-full ${
+            className={`transition bg-white dark:bg-gray-900 border border-gray-200 dark:border-transparent rounded-l md:rounded-r w-full ${
               collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
             } ${collapse || comment.deleted ? 'h-10' : ''}`}
           >
-            <div className="flex items-center text-13">
-              <UserAvatar
-                className="w-6 h-6 mr-3 cursor-pointer transition hover:opacity-90"
-                user={comment.author}
-                loading="lazy"
-              />
-              <span className="text-secondary hover:underline cursor-pointer">
-                {comment.author.username}
-              </span>
-              <div className="text-secondary">
+            <div className="h-10 px-3 flex items-center text-sm bg-gray-50 dark:bg-gray-900 rounded-t">
+              <UserPopup user={comment.author}>
+                <UserAvatar
+                  className="w-6 h-6 mr-3 cursor-pointer transition hover:opacity-90"
+                  user={comment.author}
+                  loading="lazy"
+                />
+              </UserPopup>
+              <UserPopup user={comment.author}>
+                <span className="text-secondary font-semibold hover:underline cursor-pointer">
+                  {comment.author.username}
+                </span>
+              </UserPopup>
+              <div className="text-mid">
                 &nbsp;&middot;&nbsp;{comment.timeSince}
               </div>
               {collapse && comment.childCount > 0 && (

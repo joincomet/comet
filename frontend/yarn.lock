@@ -4783,7 +4783,7 @@ __metadata:
     react-dnd-html5-backend: ^11.1.3
     react-dnd-touch-backend: ^11.1.3
     react-dom: ^17.0.1
-    react-hook-form: ^6.14.2
+    react-hook-form: ^6.14.1
     react-hot-toast: ^1.0.1
     react-icons: ^4.1.0
     react-intersection-observer: ^8.31.0
@@ -7943,12 +7943,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^6.14.2":
-  version: 6.14.2
-  resolution: "react-hook-form@npm:6.14.2"
+"react-hook-form@npm:^6.14.1":
+  version: 6.14.1
+  resolution: "react-hook-form@npm:6.14.1"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 1260e22f0e0b1ea9d2f4431fba37a52d1792481d14d59d2b844d1a82d03a9ff6dd77e548258fc568e78010b955539dbddc572a94ee17ed9acfc95b1a7060e6e8
+  checksum: 3e5a11674affea8403e17db8b1211fbe7d01f392abc84b7336df8a5ccb829f19cf4d1144dfb641ef62f0b496a66d87ec906d26402411df778540d3a1018f2dbc
   languageName: node
   linkType: hard
 

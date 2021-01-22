@@ -19,8 +19,8 @@ import {
   FiLink2,
   FiType
 } from 'react-icons/fi'
+import { CustomLinkExtension } from '@/lib/CustomLinkExtension'
 import Tippy from '@tippyjs/react'
-import { LinkExtension } from 'remirror/extension/link'
 
 const extensionTemplate = () => [
   new BoldExtension(),
@@ -28,7 +28,7 @@ const extensionTemplate = () => [
   new CodeBlockExtension(),
   new CodeExtension(),
   new ItalicExtension(),
-  new LinkExtension({ extraAttributes: { target: '_blank' } }),
+  new CustomLinkExtension(),
   new ParagraphExtension(),
   new PlaceholderExtension({
     placeholder: 'Details'

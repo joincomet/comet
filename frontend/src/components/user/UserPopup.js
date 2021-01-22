@@ -46,6 +46,32 @@ export default function UserPopup({
   const currentUser = useCurrentUser().data
   const { setLogin } = useLoginStore()
 
+  const followMutation = useFollowUserMutation()
+  const unfollowMutation = useUnfollowUserMutation()
+
+  const toggle = () => {
+    if (!currentUser) {
+      setLogin(true)
+      return
+    }
+    if (user.isFollowing) unfollow()
+    else follow()
+  }
+
+  const variables = { followedId: user.id }
+
+  const follow = async () => {
+    user.isFollowing = true
+    user.followerCount++
+    await followMutation.mutateAsync(variables)
+  }
+
+  const unfollow = async () => {
+    user.isFollowing = false
+    user.followerCount--
+    await unfollowMutation.mutateAsync(variables)
+  }
+
   return (
     <>
       <div
@@ -98,6 +124,46 @@ export default function UserPopup({
 
                     <div className="mt-3 text-sm text-secondary font-medium text-center line-clamp-3">
                       {user.bio || 'New CometX User'}
+                    </div>
+
+                    <div className="flex text-sm space-x-4 mt-3 text-tertiary">
+                      <div>
+                        <span className="text-secondary font-bold">
+                          {user.followerCount}
+                        </span>{' '}
+                        Follower
+                        {user.followerCount === 1 ? '' : 's'}
+                      </div>
+                      <div>
+                        <span className="text-secondary font-bold">
+                          {user.followingCount}
+                        </span>{' '}
+                        Following
+                      </div>
+                    </div>
+
+                    <div className="flex items-center mt-4 space-x-3 w-full">
+                      <NavLink
+                        href={`/user/${user.username}`}
+                        className="text-accent border rounded dark:border-gray-700 w-full h-9 inline-flex items-center justify-center text-sm font-medium cursor-pointer"
+                      >
+                        View profile
+                      </NavLink>
+
+                      <div
+                        onClick={() => {
+                          if (!user.isCurrentUser) toggle()
+                        }}
+                        className={`text-white w-full h-9 rounded inline-flex items-center justify-center text-sm font-medium select-none ${
+                          user.isCurrentUser ? 'opacity-25' : 'cursor-pointer'
+                        } ${
+                          user.isFollowing
+                            ? 'border border-gray-200 dark:border-gray-700 text-accent'
+                            : 'bg-blue-600 text-white'
+                        }`}
+                      >
+                        {user.isFollowing ? 'Following' : 'Follow'}
+                      </div>
                     </div>
                   </motion.div>
                 </>

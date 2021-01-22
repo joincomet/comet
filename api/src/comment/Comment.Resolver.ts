@@ -129,13 +129,19 @@ export class CommentResolver {
       })
     }
 
-    /*if (userId) {
-      const user = await this.userRepo.findOne(userId)
+    if (userId) {
+      const blocking = (
+        await this.userRepo
+          .createQueryBuilder()
+          .relation(User, 'blocking')
+          .of(userId)
+          .loadMany()
+      ).map(user => user.id)
 
-      qb.andWhere('NOT (comment.authorId = ANY(:blockedUsers))', {
-        blockedUsers: user.blockedUserIds
+      qb.andWhere('NOT (comment.authorId = ANY(:blocking))', {
+        blocking
       })
-    }*/
+    }
 
     if (sort === CommentSort.TOP) qb.addOrderBy('comment.rocketCount', 'DESC')
     else if (sort === CommentSort.NEW)

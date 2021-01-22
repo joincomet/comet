@@ -1,5 +1,4 @@
-import React, { forwardRef } from 'react'
-import { CurrentUserInfo } from '@/components/layout/CurrentUserInfo'
+import { forwardRef } from 'react'
 
 export default forwardRef(({ children, left = true, right = false }, ref) => {
   return (
@@ -10,7 +9,6 @@ export default forwardRef(({ children, left = true, right = false }, ref) => {
       }`}
     >
       {children}
-      {left && <CurrentUserInfo />}
     </div>
   )
 })

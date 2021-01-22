@@ -8,7 +8,7 @@ import NavLink from '@/components/NavLink'
 import { useRouter } from 'next/router'
 import PageNavigator from '@/components/layout/PageNavigator'
 
-export default function ClassicPosts({ variables, hidePlanet = false }) {
+export default function ClassicPosts({ variables }) {
   const { data, isLoading } = usePosts(variables)
   const posts = data ? data.posts : []
 
@@ -18,7 +18,7 @@ export default function ClassicPosts({ variables, hidePlanet = false }) {
         <Scrollbars style={{ width, height }} universal>
           <div className="md:rounded-xl dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
             {posts.map(post => (
-              <Post key={post.id} postData={post} hidePlanet={hidePlanet} />
+              <Post key={post.id} postData={post} />
             ))}
           </div>
           <PageNavigator nextEnabled={!!data.nextPage} />

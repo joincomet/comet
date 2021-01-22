@@ -1,95 +1,24 @@
-import NavLink from '@/components/NavLink'
-import { RiFireFill } from 'react-icons/ri'
-import { HiChevronDown, HiClock, HiSortAscending } from 'react-icons/hi'
 import React from 'react'
 import { useRouter } from 'next/router'
+import { FiChevronDown } from 'react-icons/fi'
+import NavLink from '@/components/NavLink'
 import { Menu, Transition } from '@headlessui/react'
 import { menuTransition } from '@/lib/menuTransition'
 
-export default function PostSortButtons() {
-  const { pathname, query } = useRouter()
+export default function TimePicker({ className, children }) {
+  const { query, pathname } = useRouter()
 
-  return (
-    <div className="space-y-0.5">
-      <NavLink
-        href={{
-          pathname,
-          query: (() => {
-            const q = { ...query }
-            delete q.time
-            delete q.sort
-            return q
-          })()
-        }}
-        className={`sidebar-item ${
-          !query.sort || query.sort === 'hot' ? 'sidebar-item--active' : ''
-        }`}
-      >
-        <RiFireFill className="w-5 h-5 mr-3" />
-        Hot
-      </NavLink>
-
-      <NavLink
-        href={{
-          pathname,
-          query: (() => {
-            const q = { ...query }
-            delete q.time
-            q.sort = 'new'
-            return q
-          })()
-        }}
-        className={`sidebar-item ${
-          query.sort === 'new' ? 'sidebar-item--active' : ''
-        }`}
-      >
-        <HiClock className="w-5 h-5 mr-3" />
-        New
-      </NavLink>
-
-      <NavLink
-        href={{
-          pathname,
-          query: (() => {
-            const q = { ...query }
-            q.time = 'day'
-            q.sort = 'top'
-            return q
-          })()
-        }}
-        className={`sidebar-item ${
-          query.sort === 'top' ? 'sidebar-item--active' : ''
-        }`}
-      >
-        <div className="inline-flex items-center h-full">
-          <HiSortAscending className="w-5 h-5 mr-3" />
-          Top
-        </div>
-
-        {query.sort === 'top' && (
-          <TimePicker className="ml-auto h-full inline-flex items-center focus:outline-none min-h-full">
-            <div className="mr-3 text-xs">
-              {query.time
-                ? `${
-                    query.time.substring(0, 1).toUpperCase() +
-                    query.time.substring(1).toLowerCase()
-                  }`
-                : 'Day'}
-            </div>
-            <HiChevronDown className="w-5 h-5" />
-          </TimePicker>
-        )}
-      </NavLink>
-    </div>
-  )
-}
-
-function TimePicker({ className, children }) {
   const item = ''
   const itemActive = ''
   const itemInactive = ''
 
-  const { query, pathname } = useRouter()
+  const text = () => {
+    if (!query.time) return 'Day'
+    return (
+      query.time.substring(0, 1).toUpperCase() +
+      query.time.substring(1).toLowerCase()
+    )
+  }
 
   return (
     <Menu>

@@ -195,12 +195,11 @@ module.exports = {
   variants: {
     extend: {
       typography: ['dark'],
-      translate: ['focus-within', 'group-hover'],
-      scale: ['focus-within', 'group-hover'],
+      translate: ['focus-within'],
+      scale: ['focus-within'],
       opacity: ['disabled'],
       borderRadius: ['hover', 'focus', 'first', 'last'],
-      borderWidth: ['first', 'last'],
-      backgroundOpacity: ['dark']
+      borderWidth: ['first', 'last']
     }
   },
   darkMode: 'class',
