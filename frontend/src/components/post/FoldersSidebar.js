@@ -20,7 +20,7 @@ import Sidebar from '@/components/layout/Sidebar'
 export default forwardRef((props, ref) => {
   const folders = useFolders().data || []
   return (
-    <Sidebar right ref={ref} header>
+    <Sidebar right ref={ref}>
       <div className="px-1">
         <div className="sidebar-label">FOLDERS</div>
 

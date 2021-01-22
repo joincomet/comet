@@ -13,8 +13,8 @@ export default function CreatePostButton() {
     <>
       <CreatePostModal open={open} setOpen={setOpen} />
 
-      <div className="fixed z-50 bottom-20 lg:bottom-8 left-0 lg:left-64 right-0 mycontainer grid grid-cols-3 pointer-events-none">
-        <div className="col-span-3 lg:col-span-2 flex">
+      <div className="fixed z-50 bottom-20 md:bottom-8 left-0 md:left-64 right-0 mycontainer grid grid-cols-3 pointer-events-none">
+        <div className="col-span-3 md:col-span-2 flex">
           <div
             onClick={() => {
               if (currentUser) setOpen(true)

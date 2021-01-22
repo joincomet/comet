@@ -46,7 +46,7 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
           author {
             id
             username
-            bio
+            name
             avatarUrl
             isCurrentUser
           }
@@ -63,16 +63,10 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
   )
 
   const commentCount = comments.length
-  const users = comments
-    .filter(c => !!c.author)
-    .map(c => c.author)
-    .filter(
-      (user, index, self) => self.findIndex(t => t.id === user.id) === index
-    )
   comments = unflatten(comments)
   comments.forEach(c => (c.childCount = countChildren(c)))
 
-  return { comments, commentCount, users }
+  return { comments, commentCount }
 }
 
 export const useComments = variables =>

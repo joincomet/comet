@@ -126,6 +126,10 @@ export class Post {
   pinnedAt?: Date
 
   @Field({ nullable: true })
+  @Column({ nullable: true })
+  pinnedByAuthorAt?: Date
+
+  @Field({ nullable: true })
   get timeSinceEdited(): string | null {
     if (!this.editedAt) return null
     // @ts-ignore
@@ -135,6 +139,10 @@ export class Post {
   @Field()
   @Column({ default: false })
   pinned: boolean
+
+  @Field()
+  @Column({ default: false })
+  pinnedByAuthor: boolean
 
   @OneToMany(() => Comment, comment => comment.post)
   comments: Lazy<Comment[]>

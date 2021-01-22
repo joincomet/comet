@@ -39,7 +39,7 @@ export default function CreatePlanetForm({ setOpen }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-6 lg:rounded-2xl bg-white dark:bg-gray-800 space-y-4"
+      className="p-6 md:rounded-2xl bg-white dark:bg-gray-800 space-y-4"
     >
       <div className="header-2 text-secondary">Create a Planet</div>
 

@@ -15,6 +15,7 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
           parentCommentId
           fromUser {
             id
+            name
             username
             avatarUrl
             bio
@@ -51,6 +52,7 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
             author {
               id
               username
+              name
               bio
               avatarUrl
               rocketCount
@@ -69,6 +71,7 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
             author {
               id
               username
+              name
               avatarUrl
               isCurrentUser
             }

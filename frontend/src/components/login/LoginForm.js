@@ -46,7 +46,7 @@ export default function LoginForm({ onFinish }) {
   return (
     <form
       onSubmit={login}
-      className={`shadow-xl bg-white dark:bg-gray-900 lg:rounded-2xl py-6 sm:py-12 px-12`}
+      className={`shadow-xl bg-white dark:bg-gray-900 md:rounded-2xl py-6 sm:py-12 px-12`}
     >
       <Logo className="mb-4 w-40" />
       <div className="text-secondary font-medium text-lg mb-6">

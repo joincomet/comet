@@ -7,11 +7,12 @@ export const fetchFolder = async (ctx = null) => {
     ctx,
     gql`
       query folder($folderId: ID!) {
-        folder(folderId: $folderId) {
-          id
-          avatarUrl
-          color
-          name
+          folder(folderId: $folderId) {
+              id
+              avatarUrl
+              color
+              name
+          }
         }
       }
     `

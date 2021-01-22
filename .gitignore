@@ -6,4 +6,3 @@ latest.dump
 schema.graphql
 dump.sql
 .do/cometx.yaml
-.do/staging.yml

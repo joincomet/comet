@@ -31,7 +31,7 @@ export default function EditPostModal({ open, setOpen, post }) {
       blockScroll={false}
       closeIcon={<FiX size={20} />}
     >
-      <div className="lg:rounded-2xl bg-white dark:bg-gray-800 p-6 space-y-4">
+      <div className="md:rounded-2xl bg-white dark:bg-gray-800 p-6 space-y-4">
         <div className="text-secondary header-2">Edit Post Details</div>
         <Editor value={textContent} setValue={setTextContent} />
         <div className="flex items-center">

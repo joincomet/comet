@@ -34,7 +34,8 @@ export class ModerationResolver {
     await this.postRepo.update(postId, {
       removed: true,
       removedReason: reason,
-      pinned: false
+      pinned: false,
+      pinnedByAuthor: false
     })
     const post = await this.postRepo.findOne(postId)
     await this.userRepo.decrement({ id: post.authorId }, 'postCount', 1)

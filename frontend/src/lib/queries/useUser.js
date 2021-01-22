@@ -12,6 +12,7 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
         user(username: $username) {
           id
           username
+          name
           timeSinceCreated
           postCount
           commentCount

@@ -2,7 +2,6 @@ import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { FiUser } from 'react-icons/fi'
 import { HiCog } from 'react-icons/hi'
 import React from 'react'
-import Tippy from '@tippyjs/react'
 
 export function CurrentUserInfo() {
   const currentUser = useCurrentUser().data
@@ -27,11 +26,9 @@ export function CurrentUserInfo() {
               {currentUser.username}
             </div>
 
-            <Tippy content="Settings">
-              <div className="p-1.5 rounded dark:hover:bg-gray-750 transition cursor-pointer ml-auto">
-                <HiCog className="w-5 h-5 text-tertiary" />
-              </div>
-            </Tippy>
+            <div className="p-1.5 rounded dark:hover:bg-gray-750 transition cursor-pointer ml-auto">
+              <HiCog className="w-5 h-5 text-tertiary" />
+            </div>
           </>
         ) : (
           <div>LOG IN!</div>

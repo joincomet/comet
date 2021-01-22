@@ -16,7 +16,7 @@ export default forwardRef((props, ref) => {
       <div className="relative h-full w-full">
         <AutoSizer disableWidth>
           {({ height }) => (
-            <Scrollbar mobileNative style={{ width: '100%', height }}>
+            <Scrollbar style={{ width: '100%', height }}>
               <div className="text-xl font-semibold px-4 py-4 text-secondary">
                 Explore
               </div>

@@ -42,7 +42,8 @@ export class AdminResolver {
       {
         removed: true,
         removedReason: reason,
-        pinned: false
+        pinned: false,
+        pinnedByAuthor: false
       }
     )
 

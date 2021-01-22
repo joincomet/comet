@@ -46,19 +46,45 @@ export class PostResolver {
   @Query(() => PostsResponse)
   async posts(
     @Args()
-    { page, pageSize, sort, time, joinedOnly, folderId, planet }: PostsArgs,
+    {
+      page,
+      pageSize,
+      sort,
+      time,
+      joinedOnly,
+      folderId,
+      planet,
+      username,
+      q
+    }: PostsArgs,
     @Ctx() { userId }: Context
   ) {
+    if (q === '')
+      return {
+        page: 0,
+        nextPage: null,
+        posts: []
+      } as PostsResponse
+
     const qb = this.postRepo
       .createQueryBuilder('post')
       .andWhere('post.planetId IS NOT NULL')
       .leftJoinAndSelect('post.planet', 'planet')
       .leftJoinAndSelect('post.author', 'author')
-      .andWhere('post.pinned = false')
-      .andWhere('post.deleted = false')
-      .andWhere('post.removed = false')
-      .skip(page * pageSize)
-      .take(pageSize)
+
+    if (planet) {
+      qb.andWhere('planet.name ILIKE :planet', {
+        planet: handleUnderscore(planet)
+      })
+    }
+
+    if (username) {
+      qb.andWhere('author.username ILIKE :username', {
+        username: handleUnderscore(username)
+      }).andWhere('post.pinnedByAuthor = false')
+    } else if (!q && sort === PostSort.HOT) {
+      qb.andWhere('post.pinned = false')
+    }
 
     if (sort === PostSort.NEW) {
       qb.addOrderBy('post.createdAt', 'DESC')
@@ -68,7 +94,7 @@ export class PostResolver {
         'post_hotrank'
       )
       qb.addOrderBy('post_hotrank', 'DESC')
-    } else if (sort === PostSort.TOP) {
+    } else if (sort === PostSort.TOP || sort === PostSort.COMMENTS) {
       switch (time) {
         case TimeFilter.HOUR:
           qb.andWhere("post.createdAt > NOW() - INTERVAL '1 hour'")
@@ -92,43 +118,81 @@ export class PostResolver {
       }
       if (sort === PostSort.TOP) {
         qb.addOrderBy('post.rocketCount', 'DESC')
+      } else if (sort === PostSort.COMMENTS) {
+        qb.addOrderBy('post.commentCount', 'DESC')
       }
       qb.addOrderBy('post.createdAt', 'DESC')
     }
 
-    if (userId && joinedOnly && !planet) {
+    if (userId && !q) {
       const user = await this.userRepo
         .createQueryBuilder('user')
         .where({ id: userId })
         .getOne()
 
       if (user) {
-        qb.andWhere('post.planetId = ANY(:joinedPlanets)', {
-          joinedPlanets: user.joinedPlanetIds
-        })
+        if (joinedOnly) {
+          qb.andWhere('post.planetId = ANY(:joinedPlanets)', {
+            joinedPlanets: user.joinedPlanetIds
+          })
+        }
       }
-    } else if (planet) {
-      qb.andWhere('planet.name ILIKE :planet', {
-        planet: handleUnderscore(planet)
-      })
-    } else if (folderId)
-      qb.andWhere(':folderId = ANY(post.folderIds)', { folderId })
+    }
 
-    let posts = await qb.getMany()
+    if (q) {
+      qb.andWhere(
+        new Brackets(qb => {
+          qb.andWhere('post.title ILIKE :searchTerm', {
+            searchTerm: `%${q}%`
+          }).orWhere('post.textContent ILIKE :searchTerm', {
+            searchTerm: `%${q}%`
+          })
+        })
+      )
+    }
 
-    if (page === 0 && sort === PostSort.HOT && planet) {
-      const stickies = await this.postRepo
+    if (folderId) qb.andWhere(':folderId = ANY(post.folderIds)', { folderId })
+
+    let posts = await qb
+      .andWhere('post.deleted = false')
+      .andWhere('post.removed = false')
+      .skip(page * pageSize)
+      .take(pageSize)
+      .getMany()
+
+    if (page === 0 && !q && (sort === PostSort.HOT || username)) {
+      const stickiesQb = await this.postRepo
         .createQueryBuilder('post')
         .leftJoinAndSelect('post.planet', 'planet')
         .leftJoinAndSelect('post.author', 'author')
-        .andWhere('planet.name ILIKE :planet', {
-          planet: handleUnderscore(planet)
-        })
-        .andWhere('post.pinned = true')
-        .addOrderBy('post.pinnedAt', 'DESC')
+
+      if (planet) {
+        stickiesQb
+          .andWhere('planet.name ILIKE :planet', {
+            planet: handleUnderscore(planet)
+          })
+          .andWhere('post.pinned = true')
+          .addOrderBy('post.pinnedAt', 'DESC')
+      } else if (username) {
+        stickiesQb
+          .andWhere('author.username ILIKE :username', {
+            username: handleUnderscore(username)
+          })
+          .andWhere('post.pinnedByAuthor = true')
+          .addOrderBy('post.pinnedByAuthorAt', 'DESC')
+      } else if (!q && !folderId) {
+        // Show stickies from CometX on home page
+        stickiesQb
+          .andWhere('planet.name ILIKE :planet', {
+            planet: 'CometX'
+          })
+          .andWhere('post.pinned = true')
+          .addOrderBy('post.pinnedAt', 'DESC')
+      }
+
+      const stickies = await stickiesQb
         .andWhere('post.deleted = false')
         .andWhere('post.removed = false')
-        .andWhere('post.deleted = false')
         .getMany()
 
       posts = stickies.concat(posts)
@@ -280,10 +344,28 @@ export class PostResolver {
 
     await this.postRepo.update(postId, {
       deleted: true,
-      pinned: false
+      pinned: false,
+      pinnedByAuthor: false
     })
     await this.userRepo.decrement({ id: userId }, 'postCount', 1)
 
+    return true
+  }
+
+  @Authorized('AUTHOR')
+  @Mutation(() => Boolean)
+  async pinPostProfile(@Arg('postId', () => ID) postId: number) {
+    await this.postRepo.update(postId, {
+      pinnedByAuthor: true,
+      pinnedByAuthorAt: new Date()
+    })
+    return true
+  }
+
+  @Authorized('AUTHOR')
+  @Mutation(() => Boolean)
+  async unpinPostProfile(@Arg('postId', () => ID) postId: number) {
+    await this.postRepo.update(postId, { pinnedByAuthor: false })
     return true
   }
 

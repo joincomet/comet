@@ -2548,12 +2548,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.2.3":
-  version: 10.2.3
-  resolution: "autoprefixer@npm:10.2.3"
+"autoprefixer@npm:^10.2.1":
+  version: 10.2.1
+  resolution: "autoprefixer@npm:10.2.1"
   dependencies:
     browserslist: ^4.16.1
-    caniuse-lite: ^1.0.30001178
+    caniuse-lite: ^1.0.30001173
     colorette: ^1.2.1
     fraction.js: ^4.0.13
     normalize-range: ^0.1.2
@@ -2562,7 +2562,7 @@ __metadata:
     postcss: ^8.1.0
   bin:
     autoprefixer: bin/autoprefixer
-  checksum: 18c9075d7af705de1de72108afe2b3bac454dfb97988a576a6f67b7a61a3dcc31e1da9c10911c34b536151ece291d117698549e838f690ba6b5de9a89d782a65
+  checksum: ede6dec5a51c1eaa2271e93acb238f840d89c26e9a2b88f5149488684487e23a0532c7d080359e70d52d24b252bd85ab3a7fad8c8051afd76f224a6041123f51
   languageName: node
   linkType: hard
 
@@ -2989,13 +2989,6 @@ __metadata:
   version: 1.0.30001176
   resolution: "caniuse-lite@npm:1.0.30001176"
   checksum: 77c8e220535910114e4b4f8c65af69c9fc7ee208a104cda7252d4f6c89b7c537723094409291840b4144f4ce325fd1aa35f7812bc590b6175759d7fbd9f6b3bd
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001178":
-  version: 1.0.30001178
-  resolution: "caniuse-lite@npm:1.0.30001178"
-  checksum: 313a8c784ac57db4423f90a19987ca6f9ad3ed51dc240264f6786c9b8f99a96b193c5b8ffb0a43fc6a85ca79b75ed8ed7c8c6e8cc221bdb50d86c89e496bd225
   languageName: node
   linkType: hard
 
@@ -4765,7 +4758,7 @@ __metadata:
     "@tailwindcss/forms": ^0.2.1
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.0
-    autoprefixer: ^10.2.3
+    autoprefixer: ^10.2.1
     babel-eslint: ^10.1.0
     deepmerge: ^4.2.2
     eslint: ^7.18.0
@@ -4780,7 +4773,7 @@ __metadata:
     lodash: ^4.17.20
     next: ^10.0.5
     next-seo: ^4.17.0
-    nookies: ^2.5.2
+    nookies: ^2.5.1
     nprogress: ^0.2.0
     postcss: ^8.2.4
     prettier: ^2.2.1
@@ -4794,7 +4787,7 @@ __metadata:
     react-hot-toast: ^1.0.1
     react-icons: ^4.1.0
     react-intersection-observer: ^8.31.0
-    react-player: ^2.8.1
+    react-player: ^2.7.2
     react-popper: ^2.2.4
     react-query: ^3.5.16
     react-responsive-modal: ^6.0.1
@@ -4803,18 +4796,18 @@ __metadata:
     react-twitter-widgets: ^1.9.5
     react-use: ^15.3.8
     react-virtualized-auto-sizer: ^1.0.4
-    react-virtuoso: ^1.3.0
+    react-virtuoso: ^1.2.7
     react-window: ^1.8.6
     react-window-dynamic-list: ^2.3.5
     react-window-scroller: ^1.0.10
     remirror: ^1.0.0-next.60
-    sass: ^1.32.5
+    sass: ^1.32.4
     simplebar-react: ^2.3.0
     slideout: ^1.0.1
     subscriptions-transport-ws: ^0.9.18
     tailwindcss: ^2.0.2
     twemoji: ^13.0.1
-    webpack: ^5.16.0
+    webpack: ^5.15.0
     zustand: ^3.3.1
   languageName: unknown
   linkType: soft
@@ -6803,13 +6796,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"nookies@npm:^2.5.2":
-  version: 2.5.2
-  resolution: "nookies@npm:2.5.2"
+"nookies@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "nookies@npm:2.5.1"
   dependencies:
     cookie: ^0.4.1
     set-cookie-parser: ^2.4.6
-  checksum: 46e65d329c14a2818c221f2261b43bc1d856e0a593b9206eddf9d1c985b68f346db0255cf47af8f99cbdcdcc38280daefca73d25633147437e83f4838edb28de
+  checksum: 60b670840f1605940c67450e4bb6c1d3b13a0404b4ed5e5b3582b3f3d244a8209d7bc605e98b7e9f34406a076a867623c2713cf671b577e2f757675d70aae8fd
   languageName: node
   linkType: hard
 
@@ -7996,9 +7989,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-player@npm:^2.8.1":
-  version: 2.8.1
-  resolution: "react-player@npm:2.8.1"
+"react-player@npm:^2.7.2":
+  version: 2.7.2
+  resolution: "react-player@npm:2.7.2"
   dependencies:
     deepmerge: ^4.0.0
     load-script: ^1.0.0
@@ -8007,7 +8000,7 @@ fsevents@~2.3.1:
     react-fast-compare: ^3.0.1
   peerDependencies:
     react: ">=16.6.0"
-  checksum: 8292b71eb9c464d69a7a7c4b8332e90d7b9b94b76521b93e254db53b3535aedf4ad5f523252793e8961ff16b8b73c0f8d38e6cb7c96efe29cc43ed5fe15f3bb5
+  checksum: 0e8ad0e623f1ee515557362017bf1d4471dd767b2e13bbe76f33bac1b3aac1619201d20f17a090e85d60d863c89a8b777fb75f94ae1aabfed3ff4f9dce41c711
   languageName: node
   linkType: hard
 
@@ -8145,9 +8138,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "react-virtuoso@npm:1.3.0"
+"react-virtuoso@npm:^1.2.7":
+  version: 1.2.7
+  resolution: "react-virtuoso@npm:1.2.7"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.3
     "@virtuoso.dev/urx": ^0.2.3
@@ -8155,7 +8148,7 @@ fsevents@~2.3.1:
     resize-observer-polyfill: ^1.5.1
   peerDependencies:
     react: ">=16"
-  checksum: 896a027db8c3fe41799e75ebf0d968d998a60ea3044bd7ac5923752802df769c3f40c00d49bfc7c12167957e5b9a67921807641a6aa364cdae900fdbdf03c931
+  checksum: fd9093a998aa86c8025fa8357bc5f313c0ff9bf0e20aeee98e2472be491af8ef4d6b83c24ccf77fa67ca6d700beea463f4413dc12929efdeff650ca2766a4c93
   languageName: node
   linkType: hard
 
@@ -8666,14 +8659,14 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.32.5":
-  version: 1.32.5
-  resolution: "sass@npm:1.32.5"
+"sass@npm:^1.32.4":
+  version: 1.32.4
+  resolution: "sass@npm:1.32.4"
   dependencies:
     chokidar: ">=2.0.0 <4.0.0"
   bin:
     sass: sass.js
-  checksum: 3aa568e58b9a7ca320a6a1ae217879eddeb6a1122b67157110a9c260e3ad7beeaab1ab64c81eff08aaae521b6a381a1146d0069e110ef7c4931ffbc9084298a9
+  checksum: d7ff2252fe702f122bb002f6b65a785213dd2e8c738b247b910d34c959a77215cce93655ceddd08ce1a7fecbb9fb6c376924d271fd9d9af036699d3076c2a4fd
   languageName: node
   linkType: hard
 
@@ -10114,9 +10107,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.16.0":
-  version: 5.16.0
-  resolution: "webpack@npm:5.16.0"
+"webpack@npm:^5.15.0":
+  version: 5.15.0
+  resolution: "webpack@npm:5.15.0"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.45
@@ -10147,7 +10140,7 @@ fsevents@~2.3.1:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 2709126257ce82acfc7e2915d30c9e47d8e311fd7e13ec01fdf09c9698ee73fec49e3a729a12e90286c2daa53bfb7a43222c06c8b9cb4ebe5179243b6e0c1931
+  checksum: ad6fbbbd926c6b16c5be737dad4edad369d05f08b262dded3162f5f5e7c87c3fec8f253b9617c58d4936c5ce487ef66e813b8d0c9dec231fc35f5e275201c19e
   languageName: node
   linkType: hard
 

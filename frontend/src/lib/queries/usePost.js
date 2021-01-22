@@ -14,6 +14,7 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           id36
           title
           pinned
+          pinnedByAuthor
           textContent
           linkUrl
           imageUrls
@@ -30,6 +31,7 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           }
           planet {
             id
+            name
             description
             color
             avatarUrl
@@ -40,8 +42,10 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
           author {
             id
             username
+            name
             bio
             avatarUrl
+            rocketCount
             isCurrentUser
           }
           timeSince
