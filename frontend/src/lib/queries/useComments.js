@@ -51,7 +51,6 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
             isCurrentUser
           }
           timeSince
-          timeSinceFull
           timeSinceEdited
           deleted
           removed

@@ -56,12 +56,6 @@ export class Comment {
     return dayjs(new Date(this.createdAt)).twitter()
   }
 
-  @Field()
-  get timeSinceFull(): string {
-    // @ts-ignore
-    return dayjs(new Date(this.createdAt)).format('dddd, MMMM D, YYYY h:mm A')
-  }
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   editedAt?: Date

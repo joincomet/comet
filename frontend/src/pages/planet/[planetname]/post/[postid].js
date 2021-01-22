@@ -3,20 +3,24 @@ import { fetchPost, usePost } from '@/lib/queries/usePost'
 import { useRouter } from 'next/router'
 import Post from '@/components/post/Post'
 import { fetchComments, useComments } from '@/lib/queries/useComments'
-import React, { useState } from 'react'
+import { FiCopy } from 'react-icons/fi'
+import React, { useEffect, useState } from 'react'
 import Comment from '@/components/comment/Comment'
+import Tippy from '@tippyjs/react'
+import { useCopyToClipboard } from 'react-use'
 import { dehydrate } from 'react-query/hydration'
+import CreateCommentButton from '@/components/comment/create/CreateCommentButton'
+import PlanetHeader from '@/components/planet/PlanetHeader'
+import UserHeader from '@/components/user/UserHeader'
+import InfoLinks from '@/components/InfoLinks'
+import NavLink from '@/components/NavLink'
 import { NextSeo } from 'next-seo'
+import PlanetAbout from '@/components/planet/PlanetAbout'
+import UserAbout from '@/components/user/UserAbout'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
 import PlanetSidebar from '@/components/planet/PlanetSidebar'
 import FoldersSidebar from '@/components/post/FoldersSidebar'
-import Header from '@/components/layout/Header'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { Scrollbar } from 'react-scrollbars-custom'
-import CommentsSidebar from '@/components/comment/CommentsSidebar'
-import { useSlideout } from '@/lib/useSlideout'
-import SlideoutOverlay from '@/components/SlideoutOverlay'
 
 function PostPage({ postVariables, commentVariables }) {
   const { query, pathname } = useRouter()
@@ -29,15 +33,6 @@ function PostPage({ postVariables, commentVariables }) {
   const [parentComment, setParentComment] = useState(null)
 
   const planet = usePlanet({ name: query.planetname }).data
-
-  const {
-    slideoutRight,
-    slideoutLeft,
-    menuLeft,
-    menuRight,
-    header,
-    panel
-  } = useSlideout()
 
   return (
     <>
@@ -64,46 +59,27 @@ function PostPage({ postVariables, commentVariables }) {
         }}
       />
 
-      <Header
-        title={post.title || '(untitled)'}
-        ref={header}
-        slideoutLeft={slideoutLeft}
-      />
-      <PlanetSidebar planet={planet} ref={menuLeft} />
-      <CommentsSidebar post={post} comments={comments} ref={menuRight} />
+      <PlanetSidebar planet={planet} />
+      <FoldersSidebar />
 
       <main
         className="slideout-panel slideout-panel--right slideout-panel--header"
         id="panel"
-        ref={panel}
       >
-        <SlideoutOverlay
-          slideoutLeft={slideoutLeft}
-          slideoutRight={slideoutRight}
-        />
-        <AutoSizer disableWidth>
-          {({ height }) => (
-            <Scrollbar style={{ width: '100%', height }}>
-              <Post postData={post} showDetails hideThumbnail hidePlanet />
+        <Post postData={post} className="md:rounded" showFullText />
 
-              <div className="border-t-2 dark:border-gray-700">
-                <div className="px-4 py-4 text-sm font-medium text-secondary">
-                  {commentCount} Comment{commentCount === 1 ? '' : 's'}
-                </div>
-                {comments.map((comment, index) => (
-                  <Comment
-                    commentData={comment}
-                    post={post}
-                    key={comment.id}
-                    setParentComment={setParentComment}
-                  />
-                ))}
+        <div className="">
+          {comments.map((comment, index) => (
+            <Comment
+              comment={comment}
+              post={post}
+              key={comment.id}
+              setParentComment={setParentComment}
+            />
+          ))}
 
-                {comments.length > 0 && <div className="h-64" />}
-              </div>
-            </Scrollbar>
-          )}
-        </AutoSizer>
+          {comments.length > 0 && <div className="h-64" />}
+        </div>
       </main>
     </>
   )

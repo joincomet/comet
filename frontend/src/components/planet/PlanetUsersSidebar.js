@@ -1,12 +1,12 @@
 import { FiUser } from 'react-icons/fi'
-import React, { forwardRef, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import Sidebar from '@/components/layout/Sidebar'
 
-export default forwardRef(({ planet }, ref) => {
+export default function PlanetUsersSidebar({ planet }) {
   return (
-    <Sidebar right ref={ref}>
+    <Sidebar right>
       <div className="px-2">
         <div className="sidebar-label">USERS</div>
         {planet.users.map(user => (
@@ -15,7 +15,7 @@ export default forwardRef(({ planet }, ref) => {
       </div>
     </Sidebar>
   )
-})
+}
 
 function User({ user }) {
   return (

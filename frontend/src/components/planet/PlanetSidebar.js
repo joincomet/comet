@@ -1,11 +1,22 @@
-import { HiHashtag, HiAdjustments } from 'react-icons/hi'
-import React, { forwardRef } from 'react'
+import { RiFireFill } from 'react-icons/ri'
+import {
+  HiSortAscending,
+  HiClock,
+  HiHashtag,
+  HiCog,
+  HiChevronDown,
+  HiAdjustments
+} from 'react-icons/hi'
+import React from 'react'
+import { useRouter } from 'next/router'
 import Sidebar from '@/components/layout/Sidebar'
 import PostSortButtons from '@/components/layout/PostSortButtons'
 
-export default forwardRef(({ planet }, ref) => {
+export default function PlanetSidebar({ planet }) {
+  const { query, pathname } = useRouter()
+
   return (
-    <Sidebar left ref={ref}>
+    <Sidebar left>
       <div
         className={`${
           planet.bannerUrl ? 'h-32' : 'h-12'
@@ -30,7 +41,7 @@ export default forwardRef(({ planet }, ref) => {
             {planet.name}
           </div>
 
-          <div className="rounded-md p-1 transition dark:hover:bg-gray-700 cursor-pointer">
+          <div className="rounded-md p-1 transition dark:hover:bg-gray-750 cursor-pointer">
             <HiAdjustments className="w-5 h-5 text-secondary" />
           </div>
         </div>
@@ -51,7 +62,7 @@ export default forwardRef(({ planet }, ref) => {
       </div>
     </Sidebar>
   )
-})
+}
 
 function ChatChannel({ channel }) {
   return (

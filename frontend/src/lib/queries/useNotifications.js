@@ -59,7 +59,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
               isCurrentUser
             }
             timeSince
-            timeSinceFull
             timeSinceEdited
           }
           comment {
@@ -76,7 +75,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
               isCurrentUser
             }
             timeSince
-            timeSinceFull
             timeSinceEdited
           }
         }

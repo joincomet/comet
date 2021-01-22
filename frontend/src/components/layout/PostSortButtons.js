@@ -7,27 +7,22 @@ import { Menu, Transition } from '@headlessui/react'
 import { menuTransition } from '@/lib/menuTransition'
 
 export default function PostSortButtons() {
-  const router = useRouter()
-  let { pathname, query } = router
-
-  pathname = pathname.startsWith('/planet/[planetname]')
-    ? '/planet/[planetname]'
-    : '/'
-
-  const baseQuery = {}
-  if (query.planetname) baseQuery.planetname = query.planetname
+  const { pathname, query } = useRouter()
 
   return (
     <div className="space-y-0.5">
       <NavLink
         href={{
           pathname,
-          query: { ...baseQuery }
+          query: (() => {
+            const q = { ...query }
+            delete q.time
+            delete q.sort
+            return q
+          })()
         }}
         className={`sidebar-item ${
-          (!query.sort || query.sort === 'hot') && router.pathname === pathname
-            ? 'sidebar-item--active'
-            : ''
+          !query.sort || query.sort === 'hot' ? 'sidebar-item--active' : ''
         }`}
       >
         <RiFireFill className="w-5 h-5 mr-3" />
@@ -37,12 +32,15 @@ export default function PostSortButtons() {
       <NavLink
         href={{
           pathname,
-          query: { sort: 'new', ...baseQuery }
+          query: (() => {
+            const q = { ...query }
+            delete q.time
+            q.sort = 'new'
+            return q
+          })()
         }}
         className={`sidebar-item ${
-          query.sort === 'new' && router.pathname === pathname
-            ? 'sidebar-item--active'
-            : ''
+          query.sort === 'new' ? 'sidebar-item--active' : ''
         }`}
       >
         <HiClock className="w-5 h-5 mr-3" />
@@ -52,12 +50,15 @@ export default function PostSortButtons() {
       <NavLink
         href={{
           pathname,
-          query: { sort: 'top', time: 'day', ...baseQuery }
+          query: (() => {
+            const q = { ...query }
+            q.time = 'day'
+            q.sort = 'top'
+            return q
+          })()
         }}
         className={`sidebar-item ${
-          query.sort === 'top' && router.pathname === pathname
-            ? 'sidebar-item--active'
-            : ''
+          query.sort === 'top' ? 'sidebar-item--active' : ''
         }`}
       >
         <div className="inline-flex items-center h-full">

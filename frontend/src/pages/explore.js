@@ -3,42 +3,33 @@ import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
 import ExploreLeftSidebar from '@/components/explore/ExploreLeftSidebar'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { Scrollbar } from 'react-scrollbars-custom'
+import { Scrollbars } from 'rc-scrollbars'
 import PageNavigator from '@/components/layout/PageNavigator'
 import { QueryClient } from 'react-query'
 import { globalPrefetch } from '@/lib/queries/globalPrefetch'
 import { dehydrate } from 'react-query/hydration'
 import NavLink from '@/components/NavLink'
 import { HiSearch } from 'react-icons/hi'
-import SlideoutOverlay from '@/components/SlideoutOverlay'
-import { useSlideout } from '@/lib/useSlideout'
+import { FiSearch } from 'react-icons/fi'
+import { RiSearch2Fill, RiSearchFill, RiSearchLine } from 'react-icons/ri'
 
 export default function ExplorePage({ variables }) {
   const { data } = usePlanets(variables)
 
   const planets = data ? data.planets : []
 
-  const {
-    slideoutRight,
-    slideoutLeft,
-    menuLeft,
-    menuRight,
-    header,
-    panel
-  } = useSlideout()
+  const { push } = useRouter()
+
+  const panel = useRef(null)
 
   return (
     <>
-      <ExploreLeftSidebar ref={menuLeft} />
+      <ExploreLeftSidebar />
 
       <main className="slideout-panel" id="panel" ref={panel}>
-        <SlideoutOverlay
-          slideoutLeft={slideoutLeft}
-          slideoutRight={slideoutRight}
-        />
         <AutoSizer>
           {({ width, height }) => (
-            <Scrollbar style={{ width, height }}>
+            <Scrollbars style={{ width, height }} universal>
               <div className="px-8 py-8">
                 <div className="flex pb-8 items-center justify-center">
                   <div className="shadow-md max-w-screen-sm w-full flex h-10 relative bg-white rounded-md text-gray-600 transition focus-within:text-blue-600 focus-within:ring-2 dark:ring-blue-600">
@@ -61,7 +52,7 @@ export default function ExplorePage({ variables }) {
                 </div>
               </div>
               <PageNavigator nextEnabled={!!data.nextPage} />
-            </Scrollbar>
+            </Scrollbars>
           )}
         </AutoSizer>
       </main>

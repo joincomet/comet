@@ -1,11 +1,14 @@
 import { HiSortAscending, HiClock, HiCheckCircle } from 'react-icons/hi'
 import { FaSortAlphaDown } from 'react-icons/fa'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
+
+import { Scrollbars } from 'rc-scrollbars'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { Scrollbar } from 'react-scrollbars-custom'
 import Sidebar from '@/components/layout/Sidebar'
 import { galaxies, galaxyIcon } from '@/lib/galaxies'
+import { CurrentUserInfo } from '@/components/layout/CurrentUserInfo'
 import NavLink from '@/components/NavLink'
 
 export default forwardRef((props, ref) => {
@@ -14,9 +17,9 @@ export default forwardRef((props, ref) => {
   return (
     <Sidebar left ref={ref}>
       <div className="relative h-full w-full">
-        <AutoSizer disableWidth>
-          {({ height }) => (
-            <Scrollbar style={{ width: '100%', height }}>
+        <AutoSizer>
+          {({ width, height }) => (
+            <Scrollbars style={{ width, height }}>
               <div className="text-xl font-semibold px-4 py-4 text-secondary">
                 Explore
               </div>
@@ -81,7 +84,7 @@ export default forwardRef((props, ref) => {
                   </NavLink>
                 ))}
               </div>
-            </Scrollbar>
+            </Scrollbars>
           )}
         </AutoSizer>
       </div>
