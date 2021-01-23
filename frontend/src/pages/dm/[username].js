@@ -1,6 +1,6 @@
 import { useSlideout } from '@/lib/useSlideout'
-import Header from '@/components/layout/Header'
-import HomeSidebar from '@/components/home/HomeSidebar'
+import Header from '@/components/ui/header/Header'
+import HomeSidebar from '@/components/sidebars/HomeSidebar'
 import React from 'react'
 
 export default function DirectMessagePage() {

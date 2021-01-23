@@ -1,6 +1,6 @@
 import { gql } from 'graphql-request'
 import { useQuery } from 'react-query'
-import { request } from '@/lib/Request'
+import { request } from '@/lib/network/request'
 
 const unflatten = comments => {
   const hashTable = Object.create(null)

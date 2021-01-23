@@ -8,11 +8,11 @@ import Comment from '@/components/comment/Comment'
 import { dehydrate } from 'react-query/hydration'
 import { NextSeo } from 'next-seo'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
-import PlanetSidebar from '@/components/planet/PlanetSidebar'
-import Header from '@/components/layout/Header'
+import PlanetSidebar from '@/components/sidebars/PlanetSidebar'
+import Header from '@/components/ui/header/Header'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { Scrollbar } from 'react-scrollbars-custom'
-import CommentsSidebar from '@/components/comment/CommentsSidebar'
+import CommentsSidebar from '@/components/sidebars/CommentsSidebar'
 import { useSlideout } from '@/lib/useSlideout'
 import { HiUsers } from 'react-icons/hi'
 
@@ -84,10 +84,10 @@ function PostPage({ postVariables }) {
         <AutoSizer disableWidth>
           {({ height }) => (
             <Scrollbar mobileNative style={{ width: '100%', height }}>
-              <Post postData={post} embed actionsLast />
+              <Post postData={post} embed actionsLast thumbnail />
 
               <div className="border-t-2 dark:border-gray-700">
-                <div className="px-3 py-3 text-sm font-medium text-secondary">
+                <div className="px-4 py-3 text-sm font-medium text-secondary">
                   {post.commentCount} Comment
                   {post.commentCount === 1 ? '' : 's'}
                 </div>

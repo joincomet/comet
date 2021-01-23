@@ -2,11 +2,11 @@ import { QueryClient } from 'react-query'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
 import { dehydrate } from 'react-query/hydration'
 import { useRouter } from 'next/router'
-import PlanetSidebar from '@/components/planet/PlanetSidebar'
-import PlanetUsersSidebar from '@/components/planet/PlanetUsersSidebar'
+import PlanetSidebar from '@/components/sidebars/PlanetSidebar'
+import PlanetUsersSidebar from '@/components/sidebars/PlanetUsersSidebar'
 import React from 'react'
 import Posts from '@/components/post/Posts'
-import SendMessageBar from '@/components/layout/SendMessageBar'
+import ChatMessageBar from '@/components/chat/ChatMessageBar'
 
 export default function PlanetChatPage() {
   const { query } = useRouter()
@@ -25,7 +25,7 @@ export default function PlanetChatPage() {
       >
         <Posts variables={{ planet: query.planetname, pageSize: 20 }} />
 
-        <SendMessageBar />
+        <ChatMessageBar />
       </main>
     </>
   )

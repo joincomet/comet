@@ -16,8 +16,8 @@ export const useSlideout = () => {
   useClickAway(
     menuLeft,
     e => {
-      e.stopPropagation()
-      e.preventDefault()
+      //e.stopPropagation()
+      //e.preventDefault()
       if (sl && sl.isOpen()) sl.close()
     },
     ['click']
@@ -26,8 +26,8 @@ export const useSlideout = () => {
   useClickAway(
     menuRight,
     e => {
-      e.stopPropagation()
-      e.preventDefault()
+      //e.stopPropagation()
+      //e.preventDefault()
       if (sr && sr.isOpen()) sr.close()
     },
     ['click']

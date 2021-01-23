@@ -8,7 +8,7 @@ import {
 import { TiPinOutline } from 'react-icons/ti'
 import { HiAnnotation, HiDotsHorizontal, HiReply } from 'react-icons/hi'
 import React, { useState } from 'react'
-import UserAvatar from '@/components/user/UserAvatar'
+import UserAvatar from '@/components/avatars/UserAvatar'
 import Twemoji from 'react-twemoji'
 import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import {
@@ -24,13 +24,13 @@ import {
   useRemoveCommentMutation,
   useReportCommentMutation
 } from '@/lib/mutations/moderationMutations'
-import { Menu, Transition } from '@headlessui/react'
-import { menuTransition } from '@/lib/menuTransition'
+import { Menu } from '@headlessui/react'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
-import { useCommentStore } from '@/lib/stores/useCommentStore'
-import EditCommentModal from '@/components/comment/EditCommentModal'
+import { useCommentStore } from '../../lib/stores/useCommentStore'
+import EditCommentModal from '@/components/modals/EditCommentModal'
 import { RiRocketFill } from 'react-icons/ri'
+import MenuTransition from '@/components/ui/MenuTransition'
 
 export default function Comment({
   commentData,
@@ -59,16 +59,16 @@ export default function Comment({
 
         <div
           className="commentcollapse"
-          style={{ marginLeft: 0.75 * level + 'rem' }}
+          style={{ marginLeft: 1 * level + 'rem' }}
           onClick={() => setCollapse(!collapse)}
         />
 
         <div
           className="relative transition dark:hover:bg-gray-775"
-          style={{ paddingLeft: 0.75 * level + 'rem' }}
+          style={{ paddingLeft: 1 * level + 'rem' }}
         >
-          <div className="pl-3">
-            <div className="pl-3 pr-6 pt-3 pb-1.5 transition dark:hover:bg-gray-775">
+          <div className="pl-4">
+            <div className="pl-4 pr-8 pt-3 pb-1.5 transition dark:hover:bg-gray-775">
               <div
                 onClick={
                   collapse
@@ -248,7 +248,7 @@ function MoreOptionsComment({ comment, post, level, setEditing }) {
               </Menu.Button>
             </span>
 
-            <Transition show={open} {...menuTransition}>
+            <MenuTransition show={open}>
               <Menu.Items
                 static
                 className="absolute right-full w-56 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
@@ -477,7 +477,7 @@ function MoreOptionsComment({ comment, post, level, setEditing }) {
                     </>
                   )}
               </Menu.Items>
-            </Transition>
+            </MenuTransition>
           </>
         )}
       </Menu>

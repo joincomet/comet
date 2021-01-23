@@ -1,0 +1,11 @@
+html {
+  @apply text-black bg-gray-100;
+}
+
+html.dark {
+  @apply text-white bg-gray-750;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+}

@@ -1,6 +1,6 @@
 import { gql } from 'graphql-request'
 import { useQuery } from 'react-query'
-import { request } from '@/lib/Request'
+import { request } from '@/lib/network/request'
 
 export const fetchPosts = async ({ queryKey }, ctx = null) => {
   const [_key, variables] = queryKey
@@ -55,6 +55,7 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
               color
               userCount
               avatarUrl
+              bannerUrl
               isJoined
             }
             author {

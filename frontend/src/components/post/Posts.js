@@ -3,7 +3,7 @@ import Post from '@/components/post/Post'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { Scrollbar } from 'react-scrollbars-custom'
 import React from 'react'
-import PageNavigator from '@/components/layout/PageNavigator'
+import PageNavigator from '@/components/ui/PageNavigator'
 
 export default function Posts({
   variables,

@@ -1,14 +1,21 @@
 import { usePlanets } from '@/lib/queries/usePlanets'
 import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
-import ExploreLeftSidebar from '@/components/explore/ExploreLeftSidebar'
+import ExploreLeftSidebar from '@/components/sidebars/ExploreSidebar'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { Scrollbar } from 'react-scrollbars-custom'
-import PageNavigator from '@/components/layout/PageNavigator'
-import NavLink from '@/components/NavLink'
-import { HiSearch } from 'react-icons/hi'
+import PageNavigator from '@/components/ui/PageNavigator'
+import {
+  HiSearch,
+  HiCheckCircle,
+  HiSortAscending,
+  HiClock
+} from 'react-icons/hi'
 import { useSlideout } from '@/lib/useSlideout'
-import Header from '@/components/layout/Header'
+import Header from '@/components/ui/header/Header'
+import PlanetInfoCard from '@/components/planet/PlanetInfoCard'
+import { FaSortAlphaDown } from 'react-icons/fa'
+import { galaxyIcon } from '@/lib/galaxyIcon'
 
 export default function ExplorePage() {
   const { query } = useRouter()
@@ -26,6 +33,14 @@ export default function ExplorePage() {
   const { data } = usePlanets(variables)
 
   const planets = data ? data.planets : []
+
+  const title = () => {
+    if (query.galaxy) return query.galaxy + ' Planets'
+    if (!query.sort) return 'Featured Planets'
+    if (query.sort === 'new') return 'Recently Created Planets'
+    if (query.sort === 'top') return 'Most Popular Planets'
+    if (query.sort === 'az') return 'All Planets (A-Z)'
+  }
 
   const {
     slideoutRight,
@@ -70,12 +85,27 @@ export default function ExplorePage() {
                     </button>
                   </div>
                 </div>
-                <div className="py-4 text-secondary text-lg font-medium">
-                  Top Planets
+                <div className="py-4 text-secondary text-xl font-semibold flex items-center">
+                  {
+                    !query.galaxy && !query.sort && (
+                      <HiCheckCircle className="h-6 w-6 mr-3" />
+                    ) // Featured
+                  }
+                  {query.sort === 'top' && (
+                    <HiSortAscending className="h-6 w-6 mr-3" />
+                  )}
+                  {query.sort === 'new' && <HiClock className="h-6 w-6 mr-3" />}
+                  {query.sort === 'az' && (
+                    <FaSortAlphaDown className="h-6 w-6 mr-3" />
+                  )}
+                  {query.galaxy && (
+                    <>{galaxyIcon(query.galaxy, 'h-6 w-6 mr-3')}</>
+                  )}
+                  {title()}
                 </div>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5">
                   {planets.map(planet => (
-                    <PlanetCard planet={planet} key={planet.id} />
+                    <PlanetInfoCard planet={planet} key={planet.id} />
                   ))}
                 </div>
               </div>
@@ -87,91 +117,3 @@ export default function ExplorePage() {
     </>
   )
 }
-
-function PlanetCard({ planet }) {
-  return (
-    <NavLink
-      href={`/planet/${planet.name}`}
-      className="rounded-lg group dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 relative flex flex-col transform transition hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
-    >
-      <div
-        className="h-32 rounded-t-lg w-full bg-cover bg-center bg-no-repeat relative dark:bg-gray-800"
-        style={
-          planet.bannerUrl
-            ? { backgroundImage: `url(${planet.bannerUrl})` }
-            : undefined
-        }
-      >
-        <div className="absolute inline-flex items-center justify-center w-12 h-12 ring-4 dark:ring-gray-850 transition rounded-full group-hover:shadow-md -bottom-3 left-4 dark:bg-gray-850">
-          {planet.avatarUrl ? (
-            <img
-              alt={planet.name}
-              src={planet.avatarUrl}
-              className="w-full h-full rounded-full"
-            />
-          ) : (
-            <div className="header-2 text-mid">{planet.name[0]}</div>
-          )}
-        </div>
-      </div>
-
-      <div className="flex flex-col flex-grow px-4 pt-6 pb-4 h-40">
-        <div className="text-base font-medium text-secondary">
-          {planet.name}
-        </div>
-
-        <div className="text-13 text-tertiary line-clamp-3">
-          {planet.description || 'New CometX Planet'}
-        </div>
-
-        <div className="flex space-x-6 mt-auto text-xs">
-          <div className="inline-flex items-center">
-            <div className="w-1.5 h-1.5 bg-green-600 rounded-full" />
-            <div className="ml-1.5 text-green-600">
-              {parseInt(Math.random() * planet.userCount)} online
-            </div>
-          </div>
-          <div className="inline-flex items-center">
-            <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
-            <div className="ml-1.5 text-tertiary">
-              {planet.userCount} member
-              {planet.userCount === 1 ? '' : 's'}
-            </div>
-          </div>
-        </div>
-      </div>
-    </NavLink>
-  )
-}
-
-/*
-export async function getServerSideProps(ctx) {
-  const queryClient = new QueryClient()
-
-  const { query } = ctx
-
-  await globalPrefetch(queryClient, ctx)
-
-  const variables = {
-    pageSize: 20,
-    page: query.page ? query.page - 1 : 0,
-    sort: query.sort
-      ? query.sort.toUpperCase()
-      : query.galaxy
-      ? 'AZ'
-      : 'FEATURED',
-    galaxy: query.galaxy ? query.galaxy : null
-  }
-
-  await queryClient.prefetchQuery(['planets', variables], key =>
-    fetchPlanets(key, ctx)
-  )
-
-  return {
-    props: {
-      variables,
-      dehydratedState: dehydrate(queryClient)
-    }
-  }
-}
-*/

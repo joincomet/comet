@@ -7,3 +7,4 @@ schema.graphql
 dump.sql
 .do/cometx.yaml
 .do/staging.yaml
+commands.txt

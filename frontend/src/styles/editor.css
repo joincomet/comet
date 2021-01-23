@@ -1,0 +1,8 @@
+.remirror-editor {
+  @apply focus:outline-none p-3 prose prose-sm dark:prose-dark rounded bg-gray-200 dark:bg-gray-900 max-w-none whitespace-pre-wrap;
+}
+
+.remirror-is-empty::before {
+  @apply absolute opacity-33 h-0 pointer-events-none text-sm font-normal leading-normal;
+  content: attr(data-placeholder);
+}

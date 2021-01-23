@@ -1,5 +1,5 @@
 import { gql } from 'graphql-request'
-import { request } from '@/lib/Request'
+import { request } from '@/lib/network/request'
 import { useQuery } from 'react-query'
 
 export const fetchFolders = async (ctx = null) => {

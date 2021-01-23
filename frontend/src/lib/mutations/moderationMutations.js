@@ -1,4 +1,4 @@
-import { request } from '@/lib/Request'
+import { request } from '@/lib/network/request'
 import { gql } from 'graphql-request'
 import { useMutation } from 'react-query'
 

@@ -2,14 +2,14 @@ import { QueryClient } from 'react-query'
 import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
 import { dehydrate } from 'react-query/hydration'
 import { useRouter } from 'next/router'
-import PlanetSidebar from '@/components/planet/PlanetSidebar'
-import PlanetUsersSidebar from '@/components/planet/PlanetUsersSidebar'
+import PlanetSidebar from '@/components/sidebars/PlanetSidebar'
 import React from 'react'
 import Posts from '@/components/post/Posts'
-import Header from '@/components/layout/Header'
+import Header from '@/components/ui/header/Header'
 import { useSlideout } from '@/lib/useSlideout'
-import FoldersSidebar from '@/components/post/FoldersSidebar'
+import FoldersSidebar from '@/components/sidebars/FoldersSidebar'
 import { HiFolder } from 'react-icons/hi'
+import HeaderNewPostButton from '@/components/ui/header/HeaderNewPostButton'
 
 export default function PlanetPostsPage() {
   const { query } = useRouter()
@@ -50,7 +50,9 @@ export default function PlanetPostsPage() {
         ref={header}
         {...{ slideoutLeft, slideoutRight, title }}
         rightSidebarIcon={<HiFolder className="w-5 h-5" />}
-      />
+      >
+        <HeaderNewPostButton />
+      </Header>
       <PlanetSidebar planet={planet} ref={menuLeft} />
       <FoldersSidebar ref={menuRight} />
       <main

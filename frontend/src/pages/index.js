@@ -1,11 +1,13 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import HomeSidebar from '@/components/home/HomeSidebar'
+import HomeSidebar from '@/components/sidebars/HomeSidebar'
 import Posts from '@/components/post/Posts'
-import Header from '@/components/layout/Header'
-import PostsSidebar from '@/components/post/FoldersSidebar'
+import Header from '@/components/ui/header/Header'
+import PostsSidebar from '@/components/sidebars/FoldersSidebar'
 import { useSlideout } from '@/lib/useSlideout'
 import { HiFolder } from 'react-icons/hi'
+import CreatePostButton from '@/components/modals/createpost/CreatePostButton'
+import HeaderNewPostButton from '@/components/ui/header/HeaderNewPostButton'
 
 export default function HomePage() {
   const {
@@ -39,7 +41,9 @@ export default function HomePage() {
         title="Home"
         slideoutRight={slideoutRight}
         rightSidebarIcon={<HiFolder className="w-5 h-5" />}
-      />
+      >
+        <HeaderNewPostButton />
+      </Header>
 
       <main
         className="slideout-panel slideout-panel--right slideout-panel--header"
