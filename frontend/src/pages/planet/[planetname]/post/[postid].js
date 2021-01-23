@@ -84,7 +84,7 @@ function PostPage({ postVariables }) {
         <AutoSizer disableWidth>
           {({ height }) => (
             <Scrollbar mobileNative style={{ width: '100%', height }}>
-              <Post postData={post} embed actionsLast thumbnail />
+              <Post postData={post} embed actionsLast />
 
               <div className="border-t-2 dark:border-gray-700">
                 <div className="px-4 py-3 text-sm font-medium text-secondary">
