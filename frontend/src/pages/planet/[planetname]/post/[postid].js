@@ -67,7 +67,7 @@ function PostPage({ postVariables }) {
       />
 
       <Header
-        title={post.title || '(untitled)'}
+        title={post.title || post?.meta?.title || '(untitled)'}
         ref={header}
         slideoutLeft={slideoutLeft}
         slideoutRight={slideoutRight}

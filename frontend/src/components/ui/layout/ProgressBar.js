@@ -5,7 +5,7 @@ import { useHeaderStore } from '@/lib/stores/useHeaderStore'
 
 const DELAY = 200
 
-export default function RouteLoader() {
+export default function ProgressBar() {
   const [isLoading, setLoading] = useState(false)
 
   const { setCanGoBack } = useHeaderStore()

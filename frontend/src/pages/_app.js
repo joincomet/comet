@@ -18,7 +18,7 @@ import { LayoutTree } from '@moxy/next-layout'
 import { ThemeProvider } from '@/components/ui/layout/ThemeContext'
 import SEO from '../next-seo.config'
 import { DefaultSeo } from 'next-seo'
-import RouteLoader from '@/components/ui/layout/RouteLoader'
+import ProgressBar from '@/components/ui/layout/ProgressBar'
 import ResponsiveToaster from '@/components/ui/layout/ResponsiveToaster'
 import { ApolloProvider } from '@apollo/client'
 import { useApollo } from '@/lib/network/apolloClient'
@@ -53,7 +53,7 @@ export default function App({ Component, pageProps }) {
 
       <DefaultSeo {...SEO} />
 
-      <RouteLoader />
+      <ProgressBar />
 
       <ResponsiveToaster />
 

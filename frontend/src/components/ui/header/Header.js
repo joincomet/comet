@@ -43,7 +43,9 @@ export default forwardRef(
           </div>
         )}
 
-        {children && <div className="px-4 ml-auto">{children}</div>}
+        <div className="ml-auto" />
+
+        {children && <div className="px-4">{children}</div>}
 
         {rightSidebarIcon && slideoutRight && (
           <div
