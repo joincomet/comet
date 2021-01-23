@@ -1,31 +1,38 @@
 # Installation
-[Join #dev on the CometX Discord server](https://discord.gg/7Ch6Yde)
 
-## Stack
-### Frontend
-* [React.js](https://reactjs.org/)
-* [Next.js](https://nextjs.org/)
-* [Tailwind CSS](https://tailwindcss.com/)
-  * Check out [Tailwind Play](https://play.tailwindcss.com/) to rapidly prototype components!
+## Create `.env`
+Create a file in the root folder called `.env` with the following contents:
+```
+# Required
+ACCESS_TOKEN_SECRET=<secret used to encrypt login tokens>
 
-### Backend
-* [Node.js](https://nodejs.org/en/)
-* [TypeScript](https://www.typescriptlang.org/)
-* [GraphQL](https://graphql.org/)
-* [PostgreSQL](https://www.postgresql.org/)
-* [Docker](https://www.docker.com/)
+# Optional, required for image uploads and embeds to work
+BUCKET=<name of S3 bucket>
+MEDIA_DOMAIN=<domain for bucket>
+AWS_ENDPOINT=<AWS endpoint i.e. region.amazonaws.com>
+AWS_ACCESS_KEY_ID=<AWS access key ID>
+AWS_SECRET_ACCESS_KEY=<AWS secret access key>
+```
 
-## Development environment
+## Start with Docker-Compose
+Must have [Docker](https://www.docker.com/) installed.
 
-### Create `.env`
-Create a file in the project root called `.env` based on [template.env](./template.env). Only `ACCESS_TOKEN_SECRET` is required to start the server.
-If the other environment variables omitted, image uploading will fail, but everything else should work fine.
+Commands:
+- Build (must be done after dependency change): `./build-dev.sh`
+- Start: `docker-compose up -d`
+- Stop: `docker-compose down`
+- View logs: `docker logs --follow <api|frontend|postgres>`
+- Restart service: `docker-compose restart <api|frontend|postgres>`
 
-### Start with Docker-Compose
-Simply install [Docker](https://www.docker.com/) on your development machine and run `docker-compose up`.
 When finished starting, the following services will be available:
 * Frontend (http://localhost:3000)
 * API w/ GraphQL Playground (http://localhost:4000/graphql)
 * PostgreSQL (`postgres://postgres:password@localhost:5432/postgres`)
 
+## Deploy Production to DigitalOcean
+CometX is configured to run on DigitalOcean App Platform.
 
+Create app (Must have [doctl](https://www.digitalocean.com/docs/apis-clis/doctl/) installed):
+```sh
+doctl apps create --spec .do/app.yaml
+```

@@ -1,16 +1,26 @@
 # CometX ([cometx.io](https://www.cometx.io))
 
-Find, join, and create Planets, share content, and engage in discussion.
+All-in-one chat and forums for communities.
+
+## Tech Stack
+
+### Frontend
+- React.js
+- Next.js
+- Tailwind CSS
+- React Query
+
+### Backend
+- Node.js
+- TypeScript
+- PostgreSQL
+- Express.js
+- Apollo GraphQL Server
+- TypeGraphQL
+- TypeORM
 
 [Join our Discord server](https://discord.gg/NPCMGSm)
 
 [Installation instructions](INSTALLATION.md)
 
 [Contributing info](CONTRIBUTING.md)
-
-This README is a WIP
-
-### Deploy to DigitalOcean
-```sh
-doctl apps create --spec .do/app.yaml
-```
