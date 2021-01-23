@@ -48,6 +48,7 @@ export const useSlideout = () => {
           menu: menuRight.current,
           padding: paddingRight,
           tolerance,
+          touch: false,
           easing,
           side: 'right'
         })
@@ -58,6 +59,7 @@ export const useSlideout = () => {
           panel: panel.current,
           menu: menuLeft.current,
           padding: paddingLeft,
+          touch: false,
           tolerance,
           easing
         })
@@ -70,7 +72,7 @@ export const useSlideout = () => {
         slideoutLeft.on('translatestart', function () {
           if (menuRight.current && slideoutRight) {
             menuRight.current.classList.add('slideout-open--left')
-            slideoutRight.disableTouch()
+            //slideoutRight.disableTouch()
           }
         })
         slideoutLeft.on('beforeopen', function () {
@@ -80,7 +82,7 @@ export const useSlideout = () => {
           }
           if (menuRight.current && slideoutRight) {
             menuRight.current.classList.add('slideout-open--left')
-            slideoutRight.disableTouch()
+            //slideoutRight.disableTouch()
           }
         })
         slideoutLeft.on('beforeclose', function () {
@@ -100,7 +102,7 @@ export const useSlideout = () => {
           }
           if (menuRight.current && slideoutRight) {
             menuRight.current.classList.remove('slideout-open--left')
-            slideoutRight.enableTouch()
+            //slideoutRight.enableTouch()
           }
         })
       }
@@ -114,7 +116,7 @@ export const useSlideout = () => {
         slideoutRight.on('translatestart', function () {
           if (menuLeft.current && slideoutLeft) {
             menuLeft.current.classList.add('slideout-open--right')
-            slideoutLeft.disableTouch()
+            //slideoutLeft.disableTouch()
           }
         })
         slideoutRight.on('beforeopen', function () {
@@ -124,7 +126,7 @@ export const useSlideout = () => {
           }
           if (menuLeft.current && slideoutLeft) {
             menuLeft.current.classList.add('slideout-open--right')
-            slideoutLeft.disableTouch()
+            //slideoutLeft.disableTouch()
           }
         })
         slideoutRight.on('beforeclose', function () {
@@ -141,7 +143,7 @@ export const useSlideout = () => {
         slideoutRight.on('close', function () {
           if (menuLeft.current && slideoutLeft) {
             menuLeft.current.classList.remove('slideout-open--right')
-            slideoutLeft.enableTouch()
+            //slideoutLeft.enableTouch()
           }
           if (header.current) {
             header.current.style.transition = ''
