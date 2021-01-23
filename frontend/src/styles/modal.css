@@ -7,5 +7,5 @@
 }
 
 .react-responsive-modal-closeButton {
-  @apply top-8 right-8 text-tertiary focus:outline-none !important;
+  @apply top-8 right-8 text-gray-600 dark:text-gray-400 focus:outline-none !important;
 }
