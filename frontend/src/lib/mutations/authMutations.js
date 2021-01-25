@@ -14,7 +14,6 @@ const login = async variables => {
             admin
             username
             avatarUrl
-            name
           }
         }
       }
@@ -38,7 +37,6 @@ const signUp = async variables => {
             admin
             username
             avatarUrl
-            name
           }
         }
       }

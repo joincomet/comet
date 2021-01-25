@@ -67,13 +67,9 @@ const createPlanet = async variables => {
       mutation createPlanet(
         $name: String!
         $description: String!
-        $galaxies: [Galaxy!]!
+        $galaxy: Galaxy!
       ) {
-        createPlanet(
-          name: $name
-          description: $description
-          galaxies: $galaxies
-        )
+        createPlanet(name: $name, description: $description, galaxy: $galaxy)
       }
     `,
     variables

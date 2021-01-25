@@ -6,7 +6,7 @@ import { colorsMap } from '@/lib/colorsMap'
 import {
   useAddModeratorMutation,
   useSetPlanetColorMutation,
-  useSetPlanetGalaxiesMutation
+  useSetPlanetGalaxyMutation
 } from '@/lib/mutations/editPlanetMutations'
 import { useQueryClient } from 'react-query'
 import toast from 'react-hot-toast'
@@ -16,7 +16,7 @@ import { galaxyIcon } from '@/lib/galaxyIcon'
 export default function PlanetSettingsModal({ open, setOpen, planet }) {
   const queryClient = useQueryClient()
 
-  const mutateGalaxies = useSetPlanetGalaxiesMutation({
+  const mutateGalaxies = useSetPlanetGalaxyMutation({
     onMutate: variables => {
       queryClient.setQueryData(['planet', { name: planet.name }], old => ({
         ...old,

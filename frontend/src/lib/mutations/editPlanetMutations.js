@@ -79,17 +79,17 @@ const setPlanetColor = async variables => {
 export const useSetPlanetColorMutation = options =>
   useMutation(setPlanetColor, options)
 
-const setPlanetGalaxies = async variables => {
+const setPlanetGalaxy = async variables => {
   await request(
     null,
     gql`
-      mutation setPlanetGalaxies($planetId: ID!, $galaxies: [Galaxy!]!) {
-        setPlanetGalaxies(planetId: $planetId, galaxies: $galaxies)
+      mutation setPlanetGalaxy($planetId: ID!, $galaxy: Galaxy!) {
+        setPlanetGalaxy(planetId: $planetId, galaxy: $galaxy)
       }
     `,
     variables
   )
 }
 
-export const useSetPlanetGalaxiesMutation = options =>
-  useMutation(setPlanetGalaxies, options)
+export const useSetPlanetGalaxyMutation = options =>
+  useMutation(setPlanetGalaxy, options)

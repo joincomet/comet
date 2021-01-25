@@ -61,36 +61,6 @@ const unpinPost = async variables => {
 
 export const useUnpinPostMutation = options => useMutation(unpinPost, options)
 
-const pinPostProfile = async variables => {
-  await request(
-    null,
-    gql`
-      mutation pinPostProfile($postId: ID!) {
-        pinPostProfile(postId: $postId)
-      }
-    `,
-    variables
-  )
-}
-
-export const usePinPostProfileMutation = options =>
-  useMutation(pinPostProfile, options)
-
-const unpinPostProfile = async variables => {
-  await request(
-    null,
-    gql`
-      mutation unpinPostProfile($postId: ID!) {
-        unpinPostProfile(postId: $postId)
-      }
-    `,
-    variables
-  )
-}
-
-export const useUnpinPostProfileMutation = options =>
-  useMutation(unpinPostProfile, options)
-
 const deletePost = async variables => {
   await request(
     null,

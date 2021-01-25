@@ -24,7 +24,6 @@ const submitComment = async variables => {
           author {
             id
             username
-            name
             avatarUrl
             isCurrentUser
           }
