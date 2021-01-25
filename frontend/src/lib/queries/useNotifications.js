@@ -85,5 +85,8 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
   return notifications
 }
 
+// TODO Notifications should use GraphQL subscriptions
 export const useNotifications = variables =>
-  useQuery(['notifications', variables], fetchNotifications)
+  useQuery(['notifications', variables], fetchNotifications, {
+    refetchOnWindowFocus: true
+  })

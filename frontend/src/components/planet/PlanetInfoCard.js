@@ -1,11 +1,15 @@
 import NavLink from '@/components/ui/NavLink'
 import React from 'react'
 
-export default function PlanetInfoCard({ planet, shadow = false }) {
+export default function PlanetInfoCard({
+  planet,
+  shadow = false,
+  className = ''
+}) {
   return (
     <NavLink
       href={`/planet/${planet.name}`}
-      className={`cursor-pointer relative flex flex-col w-full rounded-lg group dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 transform transition hover:shadow-xl hover:-translate-y-0.5 ${
+      className={`${className} cursor-pointer relative flex flex-col w-full rounded-lg group dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 transform transition hover:shadow-xl ${
         shadow ? 'shadow-lg' : ''
       }`}
     >

@@ -37,16 +37,27 @@ export default function Popup({ children, render, className }) {
     <>
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className={`fixed bottom-0 right-0 left-0 block lg:hidden w-full ${className}`}
-            style={{ zIndex: 9999 }}
-          >
-            {render}
-          </motion.div>
+          <>
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+              className={`fixed bottom-0 right-0 left-0 block lg:hidden w-full ${className}`}
+              style={{ zIndex: 9999 }}
+            >
+              {render}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.75 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+              className={`fixed bottom-0 top-0 right-0 left-0 block lg:hidden bg-black`}
+              style={{ zIndex: 9998 }}
+            />
+          </>
         )}
       </AnimatePresence>
 

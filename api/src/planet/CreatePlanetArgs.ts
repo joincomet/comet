@@ -19,11 +19,6 @@ export class CreatePlanetArgs {
   })
   description: string
 
-  @Field(() => [Galaxy])
-  @ArrayMinSize(1)
-  @ArrayMaxSize(3)
-  galaxies: Galaxy[]
-
-  @Field(() => Boolean, { defaultValue: false })
-  nsfw = false
+  @Field(() => Galaxy)
+  galaxy: Galaxy
 }

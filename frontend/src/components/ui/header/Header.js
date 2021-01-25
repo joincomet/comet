@@ -22,7 +22,7 @@ export default forwardRef(
       <header
         ref={ref}
         id="header"
-        className={`fixed left-0 lg:left-76 right-0 lg:right-60 top-0 h-12 z-10 items-center bg-white dark:bg-gray-800 ${
+        className={`fixed left-0 lg:left-76 right-0 lg:right-60 z-10 top-0 h-12 items-center bg-white dark:bg-gray-800 ${
           mobileOnly ? 'flex lg:hidden' : 'flex'
         }`}
       >

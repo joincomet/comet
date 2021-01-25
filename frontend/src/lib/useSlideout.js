@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { useClickAway } from 'react-use'
 
 export const useSlideout = () => {
   const menuLeft = useRef(null)
@@ -13,34 +12,24 @@ export const useSlideout = () => {
   const [sl, setSl] = useState(slideoutLeft)
   const [sr, setSr] = useState(slideoutRight)
 
-  useClickAway(
-    menuLeft,
-    e => {
-      //e.stopPropagation()
-      //e.preventDefault()
-      if (sl && sl.isOpen()) sl.close()
-    },
-    ['click']
-  )
-
-  useClickAway(
-    menuRight,
-    e => {
-      //e.stopPropagation()
-      //e.preventDefault()
-      if (sr && sr.isOpen()) sr.close()
-    },
-    ['click']
-  )
-
   useEffect(() => {
     async function setupSlideout() {
-      const Slideout = (await import('slideout')).default
+      const Slideout = (await import('@/lib/slideout')).default
 
       const paddingLeft = 304
       const paddingRight = 240
-      const tolerance = 100 // default 70
+      const tolerance = 70 // default 70
       const easing = 'cubic-bezier(0.4, 0, 0.2, 1)'
+
+      const closeLeft = e => {
+        e.preventDefault()
+        slideoutLeft.close()
+      }
+
+      const closeRight = e => {
+        e.preventDefault()
+        slideoutRight.close()
+      }
 
       if (menuRight.current) {
         slideoutRight = new Slideout({
@@ -48,7 +37,6 @@ export const useSlideout = () => {
           menu: menuRight.current,
           padding: paddingRight,
           tolerance,
-          touch: false,
           easing,
           side: 'right'
         })
@@ -59,7 +47,6 @@ export const useSlideout = () => {
           panel: panel.current,
           menu: menuLeft.current,
           padding: paddingLeft,
-          touch: false,
           tolerance,
           easing
         })
@@ -69,40 +56,50 @@ export const useSlideout = () => {
             header.current.style.transform = `translateX(${translated}px)`
           }
         })
-        slideoutLeft.on('translatestart', function () {
+        slideoutLeft.on('translatestart', () => {
           if (menuRight.current && slideoutRight) {
             menuRight.current.classList.add('slideout-open--left')
-            //slideoutRight.disableTouch()
+            slideoutRight.disableTouch()
           }
         })
-        slideoutLeft.on('beforeopen', function () {
+        slideoutLeft.on('beforeopen', () => {
+          if (panel.current) {
+            panel.current.classList.add('slideout-panel--open')
+          }
           if (header.current) {
             header.current.style.transition = 'transform 300ms ease'
             header.current.style.transform = `translateX(${paddingLeft}px)`
           }
           if (menuRight.current && slideoutRight) {
             menuRight.current.classList.add('slideout-open--left')
-            //slideoutRight.disableTouch()
+            slideoutRight.disableTouch()
           }
         })
-        slideoutLeft.on('beforeclose', function () {
+        slideoutLeft.on('beforeclose', () => {
+          if (panel.current) {
+            panel.current.classList.remove('slideout-panel--open')
+            panel.current.removeEventListener('click', closeLeft)
+          }
           if (header.current) {
             header.current.style.transition = 'transform 300ms ease'
             header.current.style.transform = 'translateX(0px)'
           }
         })
-        slideoutLeft.on('open', function () {
+        slideoutLeft.on('open', () => {
+          if (panel.current) {
+            panel.current.addEventListener('click', closeLeft)
+          }
           if (header.current) {
             header.current.style.transition = ''
           }
         })
-        slideoutLeft.on('close', function () {
+        slideoutLeft.on('close', () => {
           if (header.current) {
             header.current.style.transition = ''
           }
           if (menuRight.current && slideoutRight) {
             menuRight.current.classList.remove('slideout-open--left')
-            //slideoutRight.enableTouch()
+            slideoutRight.enableTouch()
           }
         })
       }
@@ -113,37 +110,47 @@ export const useSlideout = () => {
             header.current.style.transform = `translateX(${translated}px)`
           }
         })
-        slideoutRight.on('translatestart', function () {
+        slideoutRight.on('translatestart', () => {
           if (menuLeft.current && slideoutLeft) {
             menuLeft.current.classList.add('slideout-open--right')
-            //slideoutLeft.disableTouch()
+            slideoutLeft.disableTouch()
           }
         })
-        slideoutRight.on('beforeopen', function () {
+        slideoutRight.on('beforeopen', () => {
+          if (panel.current) {
+            panel.current.classList.add('slideout-panel--open')
+          }
           if (header.current) {
             header.current.style.transition = 'transform 300ms ease'
             header.current.style.transform = `translateX(${-paddingRight}px)`
           }
           if (menuLeft.current && slideoutLeft) {
             menuLeft.current.classList.add('slideout-open--right')
-            //slideoutLeft.disableTouch()
+            slideoutLeft.disableTouch()
           }
         })
-        slideoutRight.on('beforeclose', function () {
+        slideoutRight.on('beforeclose', () => {
+          if (panel.current) {
+            panel.current.classList.remove('slideout-panel--open')
+            panel.current.removeEventListener('click', closeRight)
+          }
           if (header.current) {
             header.current.style.transition = 'transform 300ms ease'
             header.current.style.transform = 'translateX(0px)'
           }
         })
-        slideoutRight.on('open', function () {
+        slideoutRight.on('open', () => {
+          if (panel.current) {
+            panel.current.addEventListener('click', closeRight)
+          }
           if (header.current) {
             header.current.style.transition = ''
           }
         })
-        slideoutRight.on('close', function () {
+        slideoutRight.on('close', () => {
           if (menuLeft.current && slideoutLeft) {
             menuLeft.current.classList.remove('slideout-open--right')
-            //slideoutLeft.enableTouch()
+            slideoutLeft.enableTouch()
           }
           if (header.current) {
             header.current.style.transition = ''

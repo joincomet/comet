@@ -8,17 +8,14 @@ export default function UserPopup({ user, children }) {
     <Popup
       className="w-64"
       render={
-        <div className="w-full relative border border-gray-200 dark:border-transparent bg-white dark:bg-gray-800 rounded-md shadow-lg p-3 flex flex-col items-center z-50 w-64">
+        <div className="w-full relative rounded-md shadow-lg dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 transform transition hover:shadow-xl p-3 flex flex-col items-center z-50 w-64">
           <NavLink className="w-20 h-20" href={`/user/${user.username}`}>
             <UserAvatar user={user} className="w-20 h-20" />
           </NavLink>
 
-          <NavLink
-            href={`/user/${user.username}`}
-            className="mt-3 text-primary font-medium"
-          >
+          <div className="mt-3 text-base text-primary font-medium">
             {user.username}
-          </NavLink>
+          </div>
 
           <div className="mt-3 text-sm text-secondary font-medium text-center line-clamp-3 whitespace-normal">
             {user.bio || 'New CometX User'}

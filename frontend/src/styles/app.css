@@ -100,3 +100,7 @@
     opacity: 0;
   }
 }
+
+.textbox {
+  @apply w-full bg-gray-200 dark:bg-gray-650 placeholder-gray-600 dark:placeholder-gray-400 text-sm font-medium rounded focus:outline-none px-3 h-10;
+}

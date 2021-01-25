@@ -38,9 +38,9 @@ export class FolderResolver {
   @InjectRepository(Folder)
   readonly folderRepo: Repository<Folder>
 
-  @Authorized()
   @Query(() => [Folder])
   async folders(@Ctx() { userId }: Context) {
+    if (!userId) return []
     return this.folderRepo
       .createQueryBuilder('folder')
       .andWhere('folder.creatorId = :userId', { userId })

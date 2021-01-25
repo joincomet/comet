@@ -29,7 +29,7 @@ import { DndProvider } from 'react-dnd'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: true
+      refetchOnWindowFocus: false
       // staleTime: Infinity
     }
   }

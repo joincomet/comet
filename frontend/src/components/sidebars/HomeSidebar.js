@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import Logo from '@/components/ui/Logo'
+import Logo from '@/components/ui/icons/Logo'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
 import { HiUserAdd } from 'react-icons/hi'

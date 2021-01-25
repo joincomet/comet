@@ -34,7 +34,7 @@ export class PlanetResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async createPlanet(
-    @Args() { name, description, galaxies, nsfw }: CreatePlanetArgs,
+    @Args() { name, description, galaxy }: CreatePlanetArgs,
     @Ctx() { userId }: Context
   ) {
     bannedWords.forEach(u => {
@@ -62,8 +62,7 @@ export class PlanetResolver {
       name,
       description,
       creatorId: userId,
-      galaxies,
-      nsfw,
+      galaxy,
       color: randomEnum(Color)
     })
 
@@ -161,7 +160,7 @@ export class PlanetResolver {
   ) {
     const qb = this.planetRepo.createQueryBuilder('planet')
 
-    if (sort === PlanetSort.FEATURED) {
+    if (sort === PlanetSort.FEATURED || (!userId && joinedOnly)) {
       qb.andWhere('planet.featured = true').addOrderBy(
         'planet.featuredPosition',
         'ASC'

@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import Logo from '@/components/ui/Logo'
+import Logo from '@/components/ui/icons/Logo'
 import {
   useLoginMutation,
   useSignUpMutation

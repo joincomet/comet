@@ -59,4 +59,5 @@ export const fetchPost = async ({ queryKey }, ctx = null) => {
   return post
 }
 
-export const usePost = variables => useQuery(['post', variables], fetchPost)
+export const usePost = variables =>
+  useQuery(['post', variables], fetchPost, { refetchOnWindowFocus: true })
