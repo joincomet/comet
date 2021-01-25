@@ -230,8 +230,8 @@ Slideout.prototype._initTouchEvents = function () {
       (!self.isOpen() && self.menu.clientWidth !== 0) ||
       (!self.isOpen() &&
         (self._side === 'right'
-          ? eve.touches[0].clientX < screen.width - screen.width * 0.33
-          : eve.touches[0].clientX > screen.width * 0.33))
+          ? eve.touches[0].clientX < screen.width - screen.width * 0.4
+          : eve.touches[0].clientX > screen.width * 0.4))
   }
 
   this.panel.addEventListener(touch.start, this._resetTouchFn)
