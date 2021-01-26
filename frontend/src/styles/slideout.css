@@ -1,5 +1,5 @@
 .slideout-menu {
-    @apply fixed bottom-0 min-h-screen hidden lg:block lg:z-10;
+    @apply fixed bottom-0 min-h-screen hidden lg:block;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -12,9 +12,15 @@
 }
 
 .slideout-panel {
-    @apply relative bg-gray-100 dark:bg-gray-750 min-h-screen h-full w-full lg:pl-76;
+    @apply relative bg-gray-100 dark:bg-gray-750 h-screen w-full lg:ml-76;
     will-change: transform;
     z-index: 1;
+}
+
+@media (min-width: 1024px) {
+    .slideout-panel {
+        width: calc(100% - 19rem);
+    }
 }
 
 .slideout-panel:before {
@@ -28,15 +34,28 @@
 }
 
 .slideout-panel--right {
-    @apply lg:pr-60;
+    @apply lg:mr-60;
+}
+
+@media (min-width: 1024px) {
+    .slideout-panel--right {
+        width: calc(100% - 34rem);
+    }
 }
 
 .slideout-panel--header {
-    @apply pt-12;
+    @apply mt-12;
+    height: calc(100vh - 3rem);
 }
 
 .slideout-panel--header-mobile {
-    @apply pt-12 lg:pt-0;
+    @apply mt-12 lg:mt-0;
+}
+
+@media (min-width: 1024px) {
+    .slideout-panel--header-mobile {
+        @apply h-screen;
+    }
 }
 
 .slideout-open,

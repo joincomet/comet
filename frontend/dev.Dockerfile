@@ -13,6 +13,6 @@ RUN yarn install
 
 COPY . /usr/src/app
 
-RUN npx next telemetry disable
+RUN npx next telemetry disable && npx browserslist@latest --update-db
 
 CMD [ "yarn", "run", "dev" ]

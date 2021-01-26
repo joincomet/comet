@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-responsive-modal'
 
-export default function Dialog({ children, closeIcon, activator }) {
+export default function Dialog({ children, activator }) {
   const [open, setOpen] = useState(false)
   return (
     <>

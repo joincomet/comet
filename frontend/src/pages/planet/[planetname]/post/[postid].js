@@ -15,6 +15,7 @@ import { Scrollbar } from 'react-scrollbars-custom'
 import CommentsSidebar from '@/components/sidebars/CommentsSidebar'
 import { useSlideout } from '@/lib/useSlideout'
 import { HiUsers } from 'react-icons/hi'
+import SidebarUser from '@/components/ui/sidebar/SidebarUser'
 
 function PostPage({ postVariables }) {
   const { query, pathname } = useRouter()

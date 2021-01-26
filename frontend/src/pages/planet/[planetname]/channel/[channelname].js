@@ -7,16 +7,17 @@ import PlanetUsersSidebar from '@/components/sidebars/PlanetUsersSidebar'
 import React from 'react'
 import Posts from '@/components/post/Posts'
 import ChatMessageBar from '@/components/chat/ChatMessageBar'
+import Header from '@/components/ui/header/Header'
 
 export default function PlanetChatPage() {
   const { query } = useRouter()
   const planetQuery = usePlanet({ name: query.planetname })
   const planet = planetQuery.data
-
-  if (!planet) return <div>Planet!</div>
+  const channel = planet.channels.find(c => c.name === query.channelname)
 
   return (
     <>
+      <Header title={`${channel.name}`} />
       <PlanetSidebar planet={planet} />
       <PlanetUsersSidebar planet={planet} />
       <main

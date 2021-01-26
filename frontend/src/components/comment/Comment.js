@@ -31,6 +31,7 @@ import { useCommentStore } from '../../lib/stores/useCommentStore'
 import EditCommentModal from '@/components/modals/EditCommentModal'
 import { RiRocketFill } from 'react-icons/ri'
 import MenuTransition from '@/components/ui/MenuTransition'
+import UserPopup from '@/components/popups/UserPopup'
 
 export default function Comment({
   commentData,
@@ -84,14 +85,18 @@ export default function Comment({
                 <div className="flex items-center text-13 font-medium text-tertiary pb-1.5">
                   {comment.author ? (
                     <>
-                      <UserAvatar
-                        className="w-5 h-5 mr-1.5 cursor-pointer transition hover:opacity-90"
-                        user={comment.author}
-                        loading="lazy"
-                      />
-                      <span className="hover:underline cursor-pointer">
-                        {comment.author.username}
-                      </span>
+                      <UserPopup user={comment.author}>
+                        <UserAvatar
+                          className="w-5 h-5 mr-1.5 cursor-pointer transition hover:opacity-90"
+                          user={comment.author}
+                          loading="lazy"
+                        />
+                      </UserPopup>
+                      <UserPopup user={comment.author}>
+                        <span className="hover:underline cursor-pointer">
+                          {comment.author.username}
+                        </span>
+                      </UserPopup>
                     </>
                   ) : (
                     <span className="hover:underline cursor-pointer">

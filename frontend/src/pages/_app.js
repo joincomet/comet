@@ -6,7 +6,6 @@ import '@/styles/editor.css'
 import '@/styles/index.css'
 import '@/styles/modal.css'
 import '@/styles/slideout.css'
-import '@/styles/tailwind.css'
 import '@/styles/tippy.css'
 import '@/styles/typography.css'
 

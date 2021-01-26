@@ -3,10 +3,11 @@ import Popup from '@/components/ui/Popup'
 import NavLink from '@/components/ui/NavLink'
 import UserAvatar from '@/components/avatars/UserAvatar'
 
-export default function UserPopup({ user, children }) {
+export default function UserPopup({ user, children, placement = 'right' }) {
   return (
     <Popup
       className="w-64"
+      placement={placement}
       render={
         <div className="w-full relative rounded-md shadow-lg dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 transform transition hover:shadow-xl p-3 flex flex-col items-center z-50 w-64">
           <NavLink className="w-20 h-20" href={`/user/${user.username}`}>

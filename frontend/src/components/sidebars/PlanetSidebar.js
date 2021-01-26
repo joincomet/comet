@@ -1,7 +1,10 @@
-import { HiHashtag, HiAdjustments } from 'react-icons/hi'
+import { HiHashtag, HiAdjustments, HiCheckCircle } from 'react-icons/hi'
 import React, { forwardRef } from 'react'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
+import Tippy from '@tippyjs/react'
+import NavLink from '@/components/ui/NavLink'
+import { useRouter } from 'next/router'
 
 export default forwardRef(({ planet }, ref) => {
   return (
@@ -16,22 +19,25 @@ export default forwardRef(({ planet }, ref) => {
             : {}
         }
       >
+        <div className="absolute inset-0 bg-gray-950 bg-opacity-25 z-0" />
+
         <div
-          className={`flex items-center h-12 px-4 ${
-            planet.bannerUrl
-              ? 'dark:bg-gray-950 dark:bg-opacity-50 text-secondary'
-              : 'dark:bg-gray-850 text-primary'
-          }`}
+          className={`relative flex items-center h-12 px-4 text-primary z-10`}
         >
-          {planet.avatarUrl && (
-            <img src={planet.avatarUrl} className="w-8 h-8 rounded-full mr-3" />
+          {planet.featured && (
+            <Tippy content="Featured Planet">
+              <div className="mr-3 cursor-pointer">
+                <HiCheckCircle className="w-5 h-5 text-shadow" />
+              </div>
+            </Tippy>
           )}
-          <div className="font-medium text-sm mr-auto pr-3 truncate">
+
+          <div className="font-semibold text-base mr-auto pr-3 truncate text-shadow">
             {planet.name}
           </div>
 
           <div className="rounded-md p-1 transition bg-white bg-opacity-0 hover:bg-opacity-20 cursor-pointer">
-            <HiAdjustments className="w-5 h-5 text-secondary" />
+            <HiAdjustments className="w-5 h-5 text-primary text-shadow" />
           </div>
         </div>
       </div>
@@ -54,10 +60,14 @@ export default forwardRef(({ planet }, ref) => {
 })
 
 function ChatChannel({ channel }) {
+  const { pathname, query } = useRouter()
   return (
-    <div className="sidebar-item">
+    <NavLink
+      href={`/planet/${query.planetname}/channel/${channel.name}`}
+      className="sidebar-item"
+    >
       <HiHashtag className="w-5 h-5 mr-3" />
       {channel.name}
-    </div>
+    </NavLink>
   )
 }

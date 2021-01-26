@@ -6,8 +6,8 @@ import Header from '@/components/ui/header/Header'
 import PostsSidebar from '@/components/sidebars/FoldersSidebar'
 import { useSlideout } from '@/lib/useSlideout'
 import { HiFolder } from 'react-icons/hi'
-import CreatePostButton from '@/components/modals/createpost/CreatePostButton'
 import HeaderNewPostButton from '@/components/ui/header/HeaderNewPostButton'
+import CreatePostDialog from '@/components/modals/createpost/CreatePostDialog'
 
 export default function HomePage() {
   const {
@@ -42,7 +42,9 @@ export default function HomePage() {
         slideoutRight={slideoutRight}
         rightSidebarIcon={<HiFolder className="w-5 h-5" />}
       >
-        <HeaderNewPostButton />
+        <CreatePostDialog
+          activator={({ setOpen }) => <HeaderNewPostButton setOpen={setOpen} />}
+        />
       </Header>
 
       <main

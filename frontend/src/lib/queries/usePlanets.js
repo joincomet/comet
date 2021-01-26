@@ -34,6 +34,7 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
             galaxy
             timeSinceCreated
             description
+            featured
           }
         }
       }

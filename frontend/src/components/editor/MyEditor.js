@@ -19,6 +19,17 @@ import {
   FiLink2,
   FiType
 } from 'react-icons/fi'
+import {
+  FaHeading,
+  FaBold,
+  FaUnderline,
+  FaStrikethrough,
+  FaItalic,
+  FaLink,
+  FaUnlink,
+  FaCode,
+  FaFileCode
+} from 'react-icons/fa'
 import Tippy from '@tippyjs/react'
 import { LinkExtension } from 'remirror/extension/link'
 
@@ -31,7 +42,7 @@ const extensionTemplate = () => [
   new LinkExtension({ extraAttributes: { target: '_blank' } }),
   new ParagraphExtension(),
   new PlaceholderExtension({
-    placeholder: 'Details'
+    placeholder: 'Text'
   }),
   new StrikeExtension(),
   new UnderlineExtension(),
@@ -39,21 +50,21 @@ const extensionTemplate = () => [
 ]
 
 const button =
-  'focus:outline-none w-8 h-8 inline-flex items-center justify-center'
+  'focus:outline-none transition hover:text-black dark:hover:text-white'
 
 function EditorInner() {
   const { getRootProps, commands } = useRemirror()
 
   return (
     <div>
-      <div className="flex items-center mb-2">
+      <div className="flex items-center space-x-3 text-tertiary mb-4 ml-1">
         <Tippy content="Bold">
           <button
             type="button"
             onClick={() => commands.toggleBold()}
             className={button}
           >
-            <FiBold size={16} />
+            <FaBold className="w-4 h-4" />
           </button>
         </Tippy>
 
@@ -63,7 +74,7 @@ function EditorInner() {
             onClick={() => commands.toggleItalic()}
             className={button}
           >
-            <FiItalic size={16} />
+            <FaItalic className="w-4 h-4" />
           </button>
         </Tippy>
 
@@ -73,7 +84,7 @@ function EditorInner() {
             onClick={() => commands.toggleUnderline()}
             className={button}
           >
-            <FiUnderline size={16} />
+            <FaUnderline className="w-4 h-4" />
           </button>
         </Tippy>
 
@@ -87,7 +98,7 @@ function EditorInner() {
             }}
             className={button}
           >
-            <FiLink2 size={16} />
+            <FaLink className="w-4 h-4" />
           </button>
         </Tippy>
 
@@ -97,7 +108,7 @@ function EditorInner() {
             onClick={() => commands.toggleCode()}
             className={button}
           >
-            <FiCode size={16} />
+            <FaCode className="w-4 h-4" />
           </button>
         </Tippy>
 
@@ -107,7 +118,7 @@ function EditorInner() {
             onClick={() => commands.toggleHeading({ level: 3 })}
             className={button}
           >
-            <FiType size={16} />
+            <FaHeading className="w-4 h-4" />
           </button>
         </Tippy>
       </div>

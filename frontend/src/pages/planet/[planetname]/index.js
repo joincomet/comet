@@ -33,13 +33,14 @@ export default function PlanetPostsPage() {
   } = useSlideout()
 
   const title =
-    'Posts · ' +
+    planet.name +
+    ' / Posts / ' +
     (query.sort
       ? query.sort.toUpperCase().substring(0, 1) +
         query.sort.toLowerCase().substring(1)
       : 'Hot') +
     (query.time
-      ? ' · ' +
+      ? ' / ' +
         query.time.toUpperCase().substring(0, 1) +
         query.time.toLowerCase().substring(1)
       : '')

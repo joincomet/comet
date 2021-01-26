@@ -141,6 +141,7 @@ export class Planet {
   @Column({ default: false })
   private: boolean
 
+  @Field()
   @Column({ default: false })
   featured: boolean
 

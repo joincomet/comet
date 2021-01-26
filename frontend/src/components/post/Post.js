@@ -86,14 +86,12 @@ export default function Post({
             )}
             {planet && (
               <>
-                {post.planet.avatarUrl && (
-                  <PlanetPopup planet={post.planet}>
-                    <PlanetAvatar
-                      planet={post.planet}
-                      className="h-5 w-5 mr-1.5"
-                    />
-                  </PlanetPopup>
-                )}
+                <PlanetPopup planet={post.planet}>
+                  <PlanetAvatar
+                    planet={post.planet}
+                    className="h-5 w-5 mr-1.5"
+                  />
+                </PlanetPopup>
                 <PlanetPopup planet={post.planet}>
                   <span className="text-accent hover:underline cursor-pointer">
                     +{post.planet.name}
@@ -102,14 +100,12 @@ export default function Post({
                 &nbsp;&middot;&nbsp;
               </>
             )}
-            {post.author.avatarUrl && (
-              <UserPopup user={post.author}>
-                <UserAvatar
-                  user={post.author}
-                  className="rounded-full h-5 w-5 mr-1.5 cursor-pointer"
-                />
-              </UserPopup>
-            )}
+            <UserPopup user={post.author}>
+              <UserAvatar
+                user={post.author}
+                className="rounded-full h-5 w-5 mr-1.5 cursor-pointer"
+              />
+            </UserPopup>
             <UserPopup user={post.author}>
               <span className="hover:underline cursor-pointer">
                 {post.author.username}

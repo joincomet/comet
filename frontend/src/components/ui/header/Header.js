@@ -38,7 +38,7 @@ export default forwardRef(
         </div>
 
         {title && (
-          <div className="lg:ml-4 ml-2 text-base inline-flex items-center font-medium whitespace-nowrap truncate text-secondary">
+          <div className="lg:ml-4 ml-2 text-base inline-flex items-center font-semibold whitespace-nowrap truncate text-secondary">
             {title}
           </div>
         )}

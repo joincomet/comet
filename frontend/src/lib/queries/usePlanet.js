@@ -22,6 +22,7 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           galaxy
           banned
           banReason
+          featured
           moderators {
             id
             username

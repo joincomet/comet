@@ -9,7 +9,8 @@ export default function Layout({ children }) {
 
       <LeftScroller />
 
-      <div className="h-full">{children}</div>
+      {children}
+      <div id="popup" />
     </>
   )
 }
