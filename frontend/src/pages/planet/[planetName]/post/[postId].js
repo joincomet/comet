@@ -21,7 +21,7 @@ function PostPage({ postVariables }) {
   const { query, pathname } = useRouter()
   const post = usePost(postVariables).data
   const commentVariables = {
-    postId: query.postid,
+    postId: query.postId,
     sort: query.sort ? query.sort.toUpperCase() : 'TOP'
   }
   const commentsQuery = useComments(commentVariables)
@@ -31,7 +31,7 @@ function PostPage({ postVariables }) {
   }
   const [parentComment, setParentComment] = useState(null)
 
-  const planet = usePlanet({ name: query.planetname }).data
+  const planet = usePlanet({ name: query.planetName }).data
 
   const {
     slideoutRight,
@@ -118,21 +118,21 @@ export async function getServerSideProps(ctx) {
 
   const { query } = ctx
 
-  const k = ['planet', { name: query.planetname }]
+  const k = ['planet', { name: query.planetName }]
 
   await queryClient.prefetchQuery(k, key => fetchPlanet(key, ctx))
 
   const planet = queryClient.getQueryData(k)
 
-  if (query.planetname !== planet.name)
+  if (query.planetName !== planet.name)
     return {
       redirect: {
-        destination: `/planet/${planet.name}`,
+        destination: `/planet/${planet.name}/post/${query.postId}`,
         permanent: true
       }
     }
 
-  const postId = query.postid
+  const postId = query.postId
   const postVariables = { postId }
   /*const commentVariables = {
     postId,

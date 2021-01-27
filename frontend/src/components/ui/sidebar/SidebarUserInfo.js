@@ -8,7 +8,7 @@ export function SidebarUserInfo() {
   const currentUser = useCurrentUser().data
 
   return (
-    <div className="sticky bottom-0 left-0 right-0 w-60 h-12 px-3 dark:bg-gray-850 inline-flex items-center">
+    <div className="fixed bottom-0 left-16 right-0 w-60 h-12 px-3 dark:bg-gray-850 inline-flex items-center">
       {currentUser ? (
         <>
           <div className="h-8 w-8 relative rounded-full dark:bg-gray-800 inline-flex items-center justify-center">

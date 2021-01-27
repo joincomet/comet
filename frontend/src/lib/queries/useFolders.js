@@ -19,5 +19,4 @@ export const fetchFolders = async (ctx = null) => {
   return folders
 }
 
-export const useFolders = () =>
-  useQuery('folders', fetchFolders, { refetchOnWindowFocus: true })
+export const useFolders = () => useQuery('folders', fetchFolders)

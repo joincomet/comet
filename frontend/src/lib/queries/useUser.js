@@ -31,5 +31,4 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
   return user
 }
 
-export const useUser = variables =>
-  useQuery(['user', variables], fetchUser, { refetchOnWindowFocus: true })
+export const useUser = variables => useQuery(['user', variables], fetchUser)

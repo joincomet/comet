@@ -45,4 +45,4 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
 }
 
 export const usePlanets = variables =>
-  useQuery(['planets', variables], fetchPlanets, { refetchOnWindowFocus: true })
+  useQuery(['planets', variables], fetchPlanets)

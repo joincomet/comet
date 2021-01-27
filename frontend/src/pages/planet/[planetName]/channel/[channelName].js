@@ -11,9 +11,9 @@ import Header from '@/components/ui/header/Header'
 
 export default function PlanetChatPage() {
   const { query } = useRouter()
-  const planetQuery = usePlanet({ name: query.planetname })
+  const planetQuery = usePlanet({ name: query.planetName })
   const planet = planetQuery.data
-  const channel = planet.channels.find(c => c.name === query.channelname)
+  const channel = planet.channels.find(c => c.name === query.channelName)
 
   return (
     <>
@@ -24,8 +24,6 @@ export default function PlanetChatPage() {
         className="slideout-panel slideout-panel--right slideout-panel--header"
         id="panel"
       >
-        <Posts variables={{ planet: query.planetname, pageSize: 20 }} />
-
         <ChatMessageBar />
       </main>
     </>
@@ -37,16 +35,16 @@ export async function getServerSideProps(ctx) {
 
   const { query } = ctx
 
-  const k = ['planet', { name: query.planetname }]
+  const k = ['planet', { name: query.planetName }]
 
   await queryClient.prefetchQuery(k, key => fetchPlanet(key, ctx))
 
   const planet = queryClient.getQueryData(k)
 
-  if (query.planetname !== planet.name)
+  if (query.planetName !== planet.name)
     return {
       redirect: {
-        destination: `/planet/${planet.name}`,
+        destination: `/planet/${planet.name}/channel/${query.channelName}`,
         permanent: true
       }
     }

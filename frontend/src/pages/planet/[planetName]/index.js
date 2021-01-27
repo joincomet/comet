@@ -10,17 +10,18 @@ import { useSlideout } from '@/lib/useSlideout'
 import FoldersSidebar from '@/components/sidebars/FoldersSidebar'
 import { HiFolder } from 'react-icons/hi'
 import HeaderNewPostButton from '@/components/ui/header/HeaderNewPostButton'
+import CreatePostDialog from '@/components/modals/createpost/CreatePostDialog'
 
 export default function PlanetPostsPage() {
   const { query } = useRouter()
   const variables = {
-    planet: query.planetname,
+    planet: query.planetName,
     pageSize: 20,
     page: query.page ? query.page - 1 : 0,
     sort: query.sort ? query.sort.toUpperCase() : 'HOT',
     time: query.time ? query.time.toUpperCase() : 'ALL'
   }
-  const planetQuery = usePlanet({ name: query.planetname })
+  const planetQuery = usePlanet({ name: query.planetName })
   const planet = planetQuery.data
 
   const {
@@ -52,7 +53,9 @@ export default function PlanetPostsPage() {
         {...{ slideoutLeft, slideoutRight, title }}
         rightSidebarIcon={<HiFolder className="w-5 h-5" />}
       >
-        <HeaderNewPostButton />
+        <CreatePostDialog
+          activator={({ setOpen }) => <HeaderNewPostButton setOpen={setOpen} />}
+        />
       </Header>
       <PlanetSidebar planet={planet} ref={menuLeft} />
       <FoldersSidebar ref={menuRight} />
@@ -72,13 +75,13 @@ export async function getServerSideProps(ctx) {
 
   const { query } = ctx
 
-  const k = ['planet', { name: query.planetname }]
+  const k = ['planet', { name: query.planetName }]
 
   await queryClient.prefetchQuery(k, key => fetchPlanet(key, ctx))
 
   const planet = queryClient.getQueryData(k)
 
-  if (query.planetname !== planet.name)
+  if (query.planetName !== planet.name)
     return {
       redirect: {
         destination: `/planet/${planet.name}`,

@@ -10,12 +10,12 @@ export default function SidebarSortButtons() {
   const router = useRouter()
   let { pathname, query } = router
 
-  pathname = pathname.startsWith('/planet/[planetname]')
-    ? '/planet/[planetname]'
+  pathname = pathname.startsWith('/planet/[planetName]')
+    ? '/planet/[planetName]'
     : '/'
 
   const baseQuery = {}
-  if (query.planetname) baseQuery.planetname = query.planetname
+  if (query.planetName) baseQuery.planetName = query.planetName
 
   return (
     <div className="space-y-0.5">

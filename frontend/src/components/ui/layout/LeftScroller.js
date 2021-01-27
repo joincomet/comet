@@ -125,8 +125,8 @@ export default function LeftScroller() {
                         >
                           <div
                             className={`planetscroller-item ${
-                              pathname.startsWith('/planet/[planetname]') &&
-                              query.planetname === planet.name
+                              pathname.startsWith('/planet/[planetName]') &&
+                              query.planetName === planet.name
                                 ? 'planetscroller-item--active'
                                 : ''
                             }`}

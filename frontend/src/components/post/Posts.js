@@ -4,6 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { Scrollbar } from 'react-scrollbars-custom'
 import React from 'react'
 import PageNavigator from '@/components/ui/PageNavigator'
+import { Virtuoso } from 'react-virtuoso'
 
 export default function Posts({
   variables,
@@ -14,25 +15,22 @@ export default function Posts({
   draggable = false,
   expandable = false
 }) {
-  const { data, isLoading } = usePosts(variables)
-  const posts = data ? data.posts : []
+  const { data, isLoading, fetchNextPage, hasNextPage } = usePosts(variables)
+  const posts = data ? data.pages.flatMap(page => page.posts) : []
 
   return (
-    <AutoSizer disableWidth>
-      {({ height }) => (
-        <Scrollbar mobileNative style={{ width: '100%', height }}>
-          <div className="lg:rounded-xl dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
-            {posts.map(post => (
-              <Post
-                key={post.id}
-                postData={post}
-                {...{ planet, embed, thumbnail, link, draggable, expandable }}
-              />
-            ))}
-          </div>
-          <PageNavigator nextEnabled={data ? !!data.nextPage : false} />
-        </Scrollbar>
+    <Virtuoso
+      overscan={500}
+      endReached={() => {
+        if (hasNextPage) fetchNextPage()
+      }}
+      data={posts}
+      itemContent={(index, post) => (
+        <Post
+          postData={post}
+          {...{ planet, embed, thumbnail, link, draggable, expandable }}
+        />
       )}
-    </AutoSizer>
+    />
   )
 }

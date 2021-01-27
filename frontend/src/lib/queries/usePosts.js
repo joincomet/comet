@@ -1,5 +1,5 @@
 import { gql } from 'graphql-request'
-import { useQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import { request } from '@/lib/network/request'
 
 export const fetchPosts = async ({ queryKey }, ctx = null) => {
@@ -83,4 +83,7 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
 }
 
 export const usePosts = variables =>
-  useQuery(['posts', variables], fetchPosts, { refetchOnWindowFocus: false })
+  useInfiniteQuery(['posts', variables], fetchPosts, {
+    getNextPageParam: lastPage => lastPage.nextPage,
+    hasNextPage: lastPage => !!lastPage.nextPage
+  })

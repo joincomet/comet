@@ -7,8 +7,7 @@ module.exports = withBundleAnalyzer({
   experimental: {
     scrollRestoration: true
   },
-  images: {
-    domains: ['media.cometx.io', 'i.getcomet.net'],
-    deviceSizes: [640, 768, 1024, 1280, 1536]
+  future: {
+    webpack5: true
   }
 })

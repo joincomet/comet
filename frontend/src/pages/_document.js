@@ -31,7 +31,7 @@ class MyDocument extends Document {
             sizes="180x180"
             href="/icons/apple-touch-icon.png"
           />
-          <link rel="manifest" href="/manifest.json" />
+          <link rel="manifest" href="/manifest.webmanifest" />
           <link rel="shortcut icon" href="/icons/favicon.ico" />
 
           {/*<script src="https://accounts.google.com/gsi/client" async defer />*/}

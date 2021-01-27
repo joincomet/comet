@@ -56,25 +56,25 @@ export default function App({ Component, pageProps }) {
 
       <ResponsiveToaster />
 
-      <DndProvider backend={HTML5Backend}>
-        <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
           <ApolloProvider client={apolloClient}>
-            <QueryClientProvider client={queryClient}>
-              <Hydrate state={pageProps.dehydratedState}>
+            <DndProvider backend={HTML5Backend}>
+              <ThemeProvider>
                 <LayoutTree
                   Component={Component}
                   pageProps={pageProps}
                   defaultLayout={<Layout />}
                 />
-              </Hydrate>
-
-              {process.env.NODE_ENV !== 'production' && (
-                <ReactQueryDevtools position="bottom-left" />
-              )}
-            </QueryClientProvider>
+              </ThemeProvider>
+            </DndProvider>
           </ApolloProvider>
-        </ThemeProvider>
-      </DndProvider>
+        </Hydrate>
+
+        {process.env.NODE_ENV !== 'production' && (
+          <ReactQueryDevtools position="bottom-left" />
+        )}
+      </QueryClientProvider>
     </>
   )
 }

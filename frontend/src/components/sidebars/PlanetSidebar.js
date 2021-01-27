@@ -63,7 +63,7 @@ function ChatChannel({ channel }) {
   const { pathname, query } = useRouter()
   return (
     <NavLink
-      href={`/planet/${query.planetname}/channel/${channel.name}`}
+      href={`/planet/${query.planetName}/channel/${channel.name}`}
       className="sidebar-item"
     >
       <HiHashtag className="w-5 h-5 mr-3" />

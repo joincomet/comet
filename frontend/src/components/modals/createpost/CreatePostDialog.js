@@ -73,7 +73,7 @@ export default function CreatePostDialog({ activator }) {
     if (textContent) variables.textContent = textContent
 
     if (images && images.length > 0) variables.images = images
-    if (query.planetname) variables.planetName = query.planetname
+    if (query.planetName) variables.planetName = query.planetName
     submitPostMutation.mutate(variables)
   }
 
