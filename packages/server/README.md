@@ -1,0 +1,4 @@
+# Server
+- TypeScript
+- TypeGraphQL
+- TypeORM

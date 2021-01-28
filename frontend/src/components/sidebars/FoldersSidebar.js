@@ -45,7 +45,6 @@ function Folder({ folder }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.POST,
     drop: (item, monitor) => {
-      console.log(item)
       toast.success(`Added to ${folder.name}`)
     },
     collect: monitor => ({

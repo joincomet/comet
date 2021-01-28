@@ -1,0 +1,11 @@
+.react-responsive-modal-modal {
+  @apply overflow-hidden bg-transparent shadow-none max-w-screen-sm w-full p-0 m-0 !important;
+}
+
+.react-responsive-modal-overlay {
+  @apply bg-black bg-opacity-75 !important;
+}
+
+.react-responsive-modal-closeButton {
+  @apply top-8 right-8 text-gray-600 dark:text-gray-400 focus:outline-none !important;
+}
