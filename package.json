@@ -1,7 +1,21 @@
 {
 	"name": "comet",
 	"license": "MPL-2.0",
+	"author": {
+		"name": "Comet",
+		"email": "admin@cometx.io"
+	},
+	"repository": {
+		"url": "https://github.com/cometx-io/cometx"
+	},
 	"workspaces": [
-		"packages/*"
-	]
+		"core",
+		"server",
+		"web"
+	],
+	"scripts": {
+		"dev-web": "yarn workspace web run dev:vite",
+		"dev-electron": "yarn workspace web run dev",
+		"dev-server": "yarn workspace server run dev"
+	}
 }
