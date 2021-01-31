@@ -9,9 +9,7 @@
 		"url": "https://github.com/cometx-io/cometx"
 	},
 	"workspaces": [
-		"core",
-		"server",
-		"web"
+		"packages/*"
 	],
 	"scripts": {
 		"dev-web": "yarn workspace web run dev:vite",
