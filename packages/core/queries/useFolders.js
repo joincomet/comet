@@ -1,6 +1,6 @@
-import { gql } from "graphql-request";
-import { request } from "core/network/request";
-import { useQuery } from "react-query";
+import { gql } from 'graphql-request'
+import { request } from '../network/request'
+import { useQuery } from 'react-query'
 
 export const fetchFolders = async (ctx = null) => {
   const { folders } = await request(
@@ -10,13 +10,12 @@ export const fetchFolders = async (ctx = null) => {
         folders {
           id
           avatarUrl
-          color
           name
         }
       }
     `
-  );
-  return folders;
-};
+  )
+  return folders
+}
 
-export const useFolders = () => useQuery("folders", fetchFolders);
+export const useFolders = () => useQuery('folders', fetchFolders)

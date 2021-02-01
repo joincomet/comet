@@ -1,8 +1,9 @@
-import { Field, ID } from 'type-graphql'
+import { Field, ID, InterfaceType } from 'type-graphql'
 import { PrimaryKey, Property } from '@mikro-orm/core'
 import { NativeBigIntType } from '@/NativeBigIntType'
 import dayjs from 'dayjs'
 
+@InterfaceType()
 export abstract class BaseEntity {
   @Field(() => ID)
   @PrimaryKey({ type: NativeBigIntType })

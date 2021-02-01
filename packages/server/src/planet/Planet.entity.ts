@@ -15,7 +15,7 @@ import {
 import { NativeBigIntType } from '@/NativeBigIntType'
 import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: BaseEntity })
 @Entity()
 export class Planet extends BaseEntity {
   @Field()
@@ -42,7 +42,7 @@ export class Planet extends BaseEntity {
   users = new Collection<User>(this)
 
   @Field(() => Galaxy)
-  @Enum({ type: () => Galaxy, default: Galaxy.Uncategorized })
+  @Enum({ items: () => Galaxy, default: Galaxy.Uncategorized })
   galaxy: Galaxy
 
   @ManyToMany(() => User)
@@ -53,14 +53,11 @@ export class Planet extends BaseEntity {
   moderators = new Collection<User>(this)
 
   @Field()
-  isMuted: boolean
-
-  @Field()
   isJoined: boolean
 
   @Field(() => Int)
-  @Property({ default: 1, type: NativeBigIntType })
-  userCount: bigint
+  @Property({ type: NativeBigIntType })
+  userCount: bigint = 1n
 
   @Field({ nullable: true })
   @Property({ nullable: true })

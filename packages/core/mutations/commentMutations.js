@@ -1,8 +1,8 @@
-import { request } from "core/network/request";
-import { gql } from "graphql-request";
-import { useMutation } from "react-query";
+import { request } from '../network/request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
 
-const submitComment = async (variables) => {
+const submitComment = async variables => {
   const { submitComment } = await request(
     null,
     gql`
@@ -36,14 +36,14 @@ const submitComment = async (variables) => {
       }
     `,
     variables
-  );
-  return submitComment;
-};
+  )
+  return submitComment
+}
 
-export const useSubmitCommentMutation = (options) =>
-  useMutation(submitComment, options);
+export const useSubmitCommentMutation = options =>
+  useMutation(submitComment, options)
 
-const rocketComment = async (variables) => {
+const rocketComment = async variables => {
   await request(
     null,
     gql`
@@ -52,13 +52,13 @@ const rocketComment = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useRocketCommentMutation = (options) =>
-  useMutation(rocketComment, options);
+export const useRocketCommentMutation = options =>
+  useMutation(rocketComment, options)
 
-const unrocketComment = async (variables) => {
+const unrocketComment = async variables => {
   await request(
     null,
     gql`
@@ -67,13 +67,13 @@ const unrocketComment = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useUnrocketCommentMutation = (options) =>
-  useMutation(unrocketComment, options);
+export const useUnrocketCommentMutation = options =>
+  useMutation(unrocketComment, options)
 
-const deleteComment = async (variables) => {
+const deleteComment = async variables => {
   await request(
     null,
     gql`
@@ -82,13 +82,13 @@ const deleteComment = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useDeleteCommentMutation = (options) =>
-  useMutation(deleteComment, options);
+export const useDeleteCommentMutation = options =>
+  useMutation(deleteComment, options)
 
-const editComment = async (variables) => {
+const editComment = async variables => {
   await request(
     null,
     gql`
@@ -97,8 +97,8 @@ const editComment = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useEditCommentMutation = (options) =>
-  useMutation(editComment, options);
+export const useEditCommentMutation = options =>
+  useMutation(editComment, options)

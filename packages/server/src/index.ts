@@ -13,6 +13,28 @@ import { commentLoader } from '@/comment/CommentLoader'
 import dayjs from 'dayjs'
 import dayjsTwitter from 'dayjs-twitter'
 import { MikroORM, ReflectMetadataProvider } from '@mikro-orm/core'
+import { UserResolver } from '@/user/User.resolver'
+import { CommentResolver } from '@/comment/Comment.resolver'
+import { PostResolver } from '@/post/Post.resolver'
+import { AdminResolver } from '@/moderation/Admin.resolver'
+import { ModerationResolver } from '@/moderation/Moderation.resolver'
+import { PlanetResolver } from '@/planet/Planet.resolver'
+import { FolderResolver } from '@/folder/Folder.resolver'
+import { ChatResolver } from '@/chat/Chat.resolver'
+import { ChatChannel } from '@/chat/ChatChannel.entity'
+import { EditableEntity } from '@/Editable.entity'
+import { Metadata } from '@/metascraper/Metadata.entity'
+import { NotificationResolver } from '@/notification/Notification.resolver'
+import { Notification } from '@/notification/Notification.entity'
+import { BaseEntity } from '@/Base.entity'
+import { ChatGroup } from '@/chat/ChatGroup.entity'
+import { ChatMessage } from '@/chat/ChatMessage.entity'
+import { Comment } from '@/comment/Comment.entity'
+import { Folder } from '@/folder/Folder.entity'
+import { Planet } from '@/planet/Planet.entity'
+import { User } from '@/user/User.entity'
+import { AuthResolver } from '@/auth/Auth.Resolver'
+import { Post } from '@/post/Post.entity'
 
 dayjs.extend(dayjsTwitter)
 
@@ -30,6 +52,11 @@ if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
     'ACCESS_TOKEN_SECRET environment variable missing. Shutting down.'
   )
+  process.exit()
+}
+
+if (process.env.NODE_ENV === 'production' && !process.env.CORS_ORIGIN) {
+  console.error('CORS_ORIGIN environment variable missing. Shutting down.')
   process.exit()
 }
 
@@ -55,15 +82,39 @@ if (
 }
 
 async function bootstrap() {
+  console.log(`Initializing database connection...`)
   const orm = await MikroORM.init({
     metadataProvider: ReflectMetadataProvider,
     cache: { enabled: false },
-    entities: [__dirname + '/**/*.entity.{ts,js}'],
-    dbName: process.env.DATABASE_NAME,
+    entities: [
+      BaseEntity,
+      ChatChannel,
+      ChatGroup,
+      ChatMessage,
+      Comment,
+      EditableEntity,
+      Folder,
+      Metadata,
+      Notification,
+      Planet,
+      Post,
+      User
+    ],
     type: 'postgresql',
-    clientUrl: process.env.DATABASE_URL,
+    clientUrl:
+      process.env.DATABASE_URL ||
+      'postgresql://postgres:password@localhost:5432',
+    dbName: process.env.DATABASE_NAME || 'postgres',
     debug: process.env.NODE_ENV !== 'production'
   })
+
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Setting up the database...`)
+    const generator = orm.getSchemaGenerator()
+    await generator.dropSchema()
+    await generator.createSchema()
+    await generator.updateSchema()
+  }
 
   /*const options: Redis.RedisOptions = {
     host: process.env.REDIS_HOST,
@@ -76,9 +127,20 @@ async function bootstrap() {
     subscriber: new Redis(options)
   })*/
 
-  // build TypeGraphQL executable schema
+  console.log(`Bootstraping schema and server...`)
   const schema = await buildSchema({
-    resolvers: [__dirname + '/**/*.resolver.{ts,js}'],
+    resolvers: [
+      AdminResolver,
+      AuthResolver,
+      ChatResolver,
+      CommentResolver,
+      FolderResolver,
+      ModerationResolver,
+      NotificationResolver,
+      PlanetResolver,
+      PostResolver,
+      UserResolver
+    ],
     emitSchemaFile: false,
     validate: true,
     authChecker: authChecker,
@@ -96,16 +158,6 @@ async function bootstrap() {
       maxFiles: 10
     })
   )
-
-  const logPlugin = {
-    requestDidStart(requestContext: any) {
-      const { query, variables } = requestContext.request
-      console.log({ query, variables })
-      const name = requestContext.request.operationName
-      if (!name || name === 'IntrospectionQuery') return
-      console.log('GraphQL: ' + name)
-    }
-  }
 
   const server = new ApolloServer({
     // plugins: process.env.NODE_ENV === 'production' ? [] : [logPlugin],
@@ -207,4 +259,4 @@ async function bootstrap() {
   }*/
 }
 
-bootstrap()
+bootstrap().catch(console.error)

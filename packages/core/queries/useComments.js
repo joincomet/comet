@@ -1,42 +1,42 @@
-import { gql } from "graphql-request";
-import { useQuery } from "react-query";
-import { request } from "@/network/request";
+import { gql } from 'graphql-request'
+import { useQuery } from 'react-query'
+import { request } from '../network/request'
 
-const unflatten = (comments) => {
-  const hashTable = Object.create(null);
+const unflatten = comments => {
+  const hashTable = Object.create(null)
   comments.forEach(
-    (comment) => (hashTable[comment.id] = { ...comment, childComments: [] })
-  );
-  const commentTree = [];
-  comments.forEach((comment) => {
+    comment => (hashTable[comment.id] = { ...comment, childComments: [] })
+  )
+  const commentTree = []
+  comments.forEach(comment => {
     if (comment.parentCommentId)
       hashTable[comment.parentCommentId].childComments.push(
         hashTable[comment.id]
-      );
-    else commentTree.push(hashTable[comment.id]);
-  });
-  return commentTree;
-};
+      )
+    else commentTree.push(hashTable[comment.id])
+  })
+  return commentTree
+}
 
-const countChildren = (comment) => {
-  if (!comment.childComments || comment.childComments.length === 0) return 0;
-  let count = 0;
-  comment.childComments.forEach((c) => {
-    count++;
-    c.childCount = countChildren(c);
-    count += c.childCount;
-  });
-  return count;
-};
+const countChildren = comment => {
+  if (!comment.childComments || comment.childComments.length === 0) return 0
+  let count = 0
+  comment.childComments.forEach(c => {
+    count++
+    c.childCount = countChildren(c)
+    count += c.childCount
+  })
+  return count
+}
 
 export const fetchComments = async ({ queryKey }, ctx = null) => {
-  const [_key, variables] = queryKey;
+  const [_key, variables] = queryKey
 
   let { comments } = await request(
     ctx,
     gql`
-      query comments($postId: ID, $username: String, $sort: CommentSort) {
-        comments(postId: $postId, username: $username, sort: $sort) {
+      query comments($postId36: ID, $sort: CommentSort) {
+        comments(postId36: $postId36, sort: $sort) {
           id
           id36
           parentCommentId
@@ -60,20 +60,20 @@ export const fetchComments = async ({ queryKey }, ctx = null) => {
       }
     `,
     variables
-  );
+  )
 
-  const commentCount = comments.length;
+  const commentCount = comments.length
   const users = comments
-    .filter((c) => !!c.author)
-    .map((c) => c.author)
+    .filter(c => !!c.author)
+    .map(c => c.author)
     .filter(
-      (user, index, self) => self.findIndex((t) => t.id === user.id) === index
-    );
-  comments = unflatten(comments);
-  comments.forEach((c) => (c.childCount = countChildren(c)));
+      (user, index, self) => self.findIndex(t => t.id === user.id) === index
+    )
+  comments = unflatten(comments)
+  comments.forEach(c => (c.childCount = countChildren(c)))
 
-  return { comments, commentCount, users };
-};
+  return { comments, commentCount, users }
+}
 
-export const useComments = (variables) =>
-  useQuery(["comments", variables], fetchComments);
+export const useComments = variables =>
+  useQuery(['comments', variables], fetchComments)

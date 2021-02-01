@@ -1,23 +1,22 @@
-import { request } from "core/network/request";
-import { gql } from "graphql-request";
-import { useMutation } from "react-query";
+import { request } from '../network/request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
 
-const removePost = async (variables) => {
+const removePost = async variables => {
   await request(
     null,
     gql`
-      mutation removePost($planetId: ID, $postId: ID!, $reason: String!) {
+      mutation removePost($planetId: ID!, $postId: ID!, $reason: String!) {
         removePost(planetId: $planetId, postId: $postId, reason: $reason)
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useRemovePostMutation = (options) =>
-  useMutation(removePost, options);
+export const useRemovePostMutation = options => useMutation(removePost, options)
 
-const removeComment = async (variables) => {
+const removeComment = async variables => {
   await request(
     null,
     gql`
@@ -34,36 +33,28 @@ const removeComment = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useRemoveCommentMutation = (options) =>
-  useMutation(removeComment, options);
+export const useRemoveCommentMutation = options =>
+  useMutation(removeComment, options)
 
-const banUserFromPlanet = async (variables) => {
+const banUserFromPlanet = async variables => {
   await request(
     null,
     gql`
-      mutation banUserFromPlanet(
-        $planetId: ID!
-        $bannedId: ID!
-        $reason: String!
-      ) {
-        banUserFromPlanet(
-          planetId: $planetId
-          bannedId: $bannedId
-          reason: $reason
-        )
+      mutation banUserFromPlanet($planetId: ID!, $bannedId: ID!) {
+        banUserFromPlanet(planetId: $planetId, bannedId: $bannedId)
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useBanUserFromPlanetMutation = (options) =>
-  useMutation(banUserFromPlanet, options);
+export const useBanUserFromPlanetMutation = options =>
+  useMutation(banUserFromPlanet, options)
 
-const banUser = async (variables) => {
+const banUser = async variables => {
   await request(
     null,
     gql`
@@ -72,12 +63,12 @@ const banUser = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useBanUserMutation = (options) => useMutation(banUser, options);
+export const useBanUserMutation = options => useMutation(banUser, options)
 
-const banAndPurgeUser = async (variables) => {
+const banAndPurgeUser = async variables => {
   await request(
     null,
     gql`
@@ -86,38 +77,8 @@ const banAndPurgeUser = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useBanAndPurgeUserMutation = (options) =>
-  useMutation(banAndPurgeUser, options);
-
-const reportPost = async (variables) => {
-  await request(
-    null,
-    gql`
-      mutation reportPost($postId: ID!, $reason: String!) {
-        reportPost(postId: $postId, reason: $reason)
-      }
-    `,
-    variables
-  );
-};
-
-export const useReportPostMutation = (options) =>
-  useMutation(reportPost, options);
-
-const reportComment = async (variables) => {
-  await request(
-    null,
-    gql`
-      mutation reportComment($commentId: ID!, $reason: String!) {
-        reportComment(commentId: $commentId, reason: $reason)
-      }
-    `,
-    variables
-  );
-};
-
-export const useReportCommentMutation = (options) =>
-  useMutation(reportComment, options);
+export const useBanAndPurgeUserMutation = options =>
+  useMutation(banAndPurgeUser, options)

@@ -1,9 +1,9 @@
-import { gql } from "graphql-request";
-import { useInfiniteQuery, useQuery } from "react-query";
-import { request } from "core/network/request";
+import { gql } from 'graphql-request'
+import { useInfiniteQuery } from 'react-query'
+import { request } from '../network/request'
 
 export const fetchPosts = async ({ queryKey }, ctx = null) => {
-  const [_key, variables] = queryKey;
+  const [_key, variables] = queryKey
   const { posts } = await request(
     ctx,
     gql`
@@ -52,7 +52,6 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
               id
               name
               description
-              color
               userCount
               avatarUrl
               bannerUrl
@@ -78,12 +77,12 @@ export const fetchPosts = async ({ queryKey }, ctx = null) => {
       }
     `,
     variables
-  );
-  return posts;
-};
+  )
+  return posts
+}
 
-export const usePosts = (variables) =>
-  useInfiniteQuery(["posts", variables], fetchPosts, {
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-    hasNextPage: (lastPage) => !!lastPage.nextPage,
-  });
+export const usePosts = variables =>
+  useInfiniteQuery(['posts', variables], fetchPosts, {
+    getNextPageParam: lastPage => lastPage.nextPage,
+    hasNextPage: lastPage => !!lastPage.nextPage
+  })

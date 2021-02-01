@@ -1,13 +1,13 @@
-import { request } from "core/network/request";
-import { gql } from "graphql-request";
-import { useMutation } from "react-query";
+import { request } from '../network/request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
 
-const login = async (variables) => {
+const login = async variables => {
   const { login } = await request(
     null,
     gql`
-      mutation login($username: String!, $password: String!) {
-        login(username: $username, password: $password) {
+      mutation login($name: String!, $password: String!) {
+        login(name: $name, password: $password) {
           accessToken
           user {
             id
@@ -19,13 +19,13 @@ const login = async (variables) => {
       }
     `,
     variables
-  );
-  return login;
-};
+  )
+  return login
+}
 
-export const useLoginMutation = (options) => useMutation(login, options);
+export const useLoginMutation = options => useMutation(login, options)
 
-const signUp = async (variables) => {
+const signUp = async variables => {
   const { signUp } = await request(
     null,
     gql`
@@ -42,23 +42,8 @@ const signUp = async (variables) => {
       }
     `,
     variables
-  );
-  return signUp;
-};
+  )
+  return signUp
+}
 
-export const useSignUpMutation = (options) => useMutation(signUp, options);
-
-const logout = async (variables) => {
-  const { signUp } = await request(
-    null,
-    gql`
-      mutation logout {
-        logout
-      }
-    `,
-    variables
-  );
-  return signUp;
-};
-
-export const useLogoutMutation = (options) => useMutation(logout, options);
+export const useSignUpMutation = options => useMutation(signUp, options)

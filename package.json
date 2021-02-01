@@ -12,8 +12,9 @@
 		"packages/*"
 	],
 	"scripts": {
-		"dev-web": "yarn workspace web run dev:vite",
-		"dev-electron": "yarn workspace web run dev",
-		"dev-server": "yarn workspace server run dev"
+		"dev-web": "yarn workspace @comet/web run dev:vite",
+		"dev-electron": "yarn workspace @comet/web run dev",
+		"dev-server": "yarn workspace @comet/server run dev",
+		"prod-server": "yarn workspace @comet/server run start"
 	}
 }

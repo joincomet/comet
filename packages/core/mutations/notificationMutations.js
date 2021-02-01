@@ -1,8 +1,8 @@
-import { request } from "core/network/request";
-import { gql } from "graphql-request";
-import { useMutation } from "react-query";
+import { request } from '../network/request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
 
-const markNotificationRead = async (variables) => {
+const markNotificationRead = async variables => {
   await request(
     null,
     gql`
@@ -11,11 +11,11 @@ const markNotificationRead = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useMarkNotificationReadMutation = (options) =>
-  useMutation(markNotificationRead, options);
+export const useMarkNotificationReadMutation = options =>
+  useMutation(markNotificationRead, options)
 
 const markAllNotificationsRead = async () => {
   await request(
@@ -25,8 +25,8 @@ const markAllNotificationsRead = async () => {
         markAllNotificationsRead
       }
     `
-  );
-};
+  )
+}
 
-export const useMarkAllNotificationsReadMutation = (options) =>
-  useMutation(markAllNotificationsRead, options);
+export const useMarkAllNotificationsReadMutation = options =>
+  useMutation(markAllNotificationsRead, options)

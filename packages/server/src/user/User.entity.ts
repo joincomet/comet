@@ -12,7 +12,7 @@ import { ChatGroup } from '@/chat/ChatGroup.entity'
 import { Folder } from '@/folder/Folder.entity'
 import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: BaseEntity })
 @Entity()
 export class User extends BaseEntity {
   @Field()

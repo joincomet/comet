@@ -1,9 +1,9 @@
-import { gql } from "graphql-request";
-import { useQuery } from "react-query";
-import { request } from "core/network/request";
+import { gql } from 'graphql-request'
+import { useQuery } from 'react-query'
+import { request } from '../network/request'
 
 export const fetchNotifications = async ({ queryKey }, ctx = null) => {
-  const [_key, variables] = queryKey;
+  const [_key, variables] = queryKey
 
   const { notifications } = await request(
     ctx,
@@ -12,7 +12,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
         notifications(unreadOnly: $unreadOnly) {
           id
           timeSince
-          parentCommentId
           fromUser {
             id
             username
@@ -42,7 +41,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
               id
               name
               description
-              color
               avatarUrl
               bannerUrl
               isJoined
@@ -53,7 +51,6 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
               username
               bio
               avatarUrl
-              rocketCount
               isCurrentUser
             }
             timeSince
@@ -80,11 +77,11 @@ export const fetchNotifications = async ({ queryKey }, ctx = null) => {
       }
     `,
     variables
-  );
+  )
 
-  return notifications;
-};
+  return notifications
+}
 
 // TODO Notifications should use GraphQL subscriptions
-export const useNotifications = (variables) =>
-  useQuery(["notifications", variables], fetchNotifications);
+export const useNotifications = variables =>
+  useQuery(['notifications', variables], fetchNotifications)

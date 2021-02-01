@@ -1,8 +1,8 @@
-import { request } from "core/network/request";
-import { gql } from "graphql-request";
-import { useMutation } from "react-query";
+import { request } from '../network/request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
 
-const joinPlanet = async (variables) => {
+const joinPlanet = async variables => {
   await request(
     null,
     gql`
@@ -11,13 +11,12 @@ const joinPlanet = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useJoinPlanetMutation = (options) =>
-  useMutation(joinPlanet, options);
+export const useJoinPlanetMutation = options => useMutation(joinPlanet, options)
 
-const leavePlanet = async (variables) => {
+const leavePlanet = async variables => {
   await request(
     null,
     gql`
@@ -26,43 +25,13 @@ const leavePlanet = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useLeavePlanetMutation = (options) =>
-  useMutation(leavePlanet, options);
+export const useLeavePlanetMutation = options =>
+  useMutation(leavePlanet, options)
 
-const mutePlanet = async (variables) => {
-  await request(
-    null,
-    gql`
-      mutation mutePlanet($planetId: ID!) {
-        mutePlanet(planetId: $planetId)
-      }
-    `,
-    variables
-  );
-};
-
-export const useMutePlanetMutation = (options) =>
-  useMutation(mutePlanet, options);
-
-const unmutePlanet = async (variables) => {
-  await request(
-    null,
-    gql`
-      mutation unmutePlanet($planetId: ID!) {
-        unmutePlanet(planetId: $planetId)
-      }
-    `,
-    variables
-  );
-};
-
-export const useUnmutePlanetMutation = (options) =>
-  useMutation(unmutePlanet, options);
-
-const createPlanet = async (variables) => {
+const createPlanet = async variables => {
   await request(
     null,
     gql`
@@ -75,8 +44,8 @@ const createPlanet = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useCreatePlanetMutation = (options) =>
-  useMutation(createPlanet, options);
+export const useCreatePlanetMutation = options =>
+  useMutation(createPlanet, options)

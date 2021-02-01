@@ -1,8 +1,8 @@
-import { request } from "core/network/request";
-import { gql } from "graphql-request";
-import { useMutation } from "react-query";
+import { request } from '../network/request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
 
-const uploadPlanetAvatar = async (variables) => {
+const uploadPlanetAvatar = async variables => {
   const { uploadPlanetAvatar } = await request(
     null,
     gql`
@@ -11,14 +11,14 @@ const uploadPlanetAvatar = async (variables) => {
       }
     `,
     variables
-  );
-  return uploadPlanetAvatar;
-};
+  )
+  return uploadPlanetAvatar
+}
 
-export const useUploadPlanetAvatarMutation = (options) =>
-  useMutation(uploadPlanetAvatar, options);
+export const useUploadPlanetAvatarMutation = options =>
+  useMutation(uploadPlanetAvatar, options)
 
-const uploadPlanetBanner = async (variables) => {
+const uploadPlanetBanner = async variables => {
   const { uploadPlanetBanner } = await request(
     null,
     gql`
@@ -27,14 +27,14 @@ const uploadPlanetBanner = async (variables) => {
       }
     `,
     variables
-  );
-  return uploadPlanetBanner;
-};
+  )
+  return uploadPlanetBanner
+}
 
-export const useUploadPlanetBannerMutation = (options) =>
-  useMutation(uploadPlanetBanner, options);
+export const useUploadPlanetBannerMutation = options =>
+  useMutation(uploadPlanetBanner, options)
 
-const editPlanetDescription = async (variables) => {
+const editPlanetDescription = async variables => {
   await request(
     null,
     gql`
@@ -43,13 +43,13 @@ const editPlanetDescription = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useEditPlanetDescriptionMutation = (options) =>
-  useMutation(editPlanetDescription, options);
+export const useEditPlanetDescriptionMutation = options =>
+  useMutation(editPlanetDescription, options)
 
-const addModerator = async (variables) => {
+const addModerator = async variables => {
   await request(
     null,
     gql`
@@ -58,28 +58,13 @@ const addModerator = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useAddModeratorMutation = (options) =>
-  useMutation(addModerator, options);
+export const useAddModeratorMutation = options =>
+  useMutation(addModerator, options)
 
-const setPlanetColor = async (variables) => {
-  await request(
-    null,
-    gql`
-      mutation setPlanetColor($planetId: ID!, $color: Color!) {
-        setPlanetColor(planetId: $planetId, color: $color)
-      }
-    `,
-    variables
-  );
-};
-
-export const useSetPlanetColorMutation = (options) =>
-  useMutation(setPlanetColor, options);
-
-const setPlanetGalaxy = async (variables) => {
+const setPlanetGalaxy = async variables => {
   await request(
     null,
     gql`
@@ -88,8 +73,8 @@ const setPlanetGalaxy = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useSetPlanetGalaxyMutation = (options) =>
-  useMutation(setPlanetGalaxy, options);
+export const useSetPlanetGalaxyMutation = options =>
+  useMutation(setPlanetGalaxy, options)

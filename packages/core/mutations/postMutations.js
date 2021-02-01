@@ -1,23 +1,23 @@
-import { request } from "core/network/request";
-import { gql } from "graphql-request";
-import { useMutation } from "react-query";
+import { request } from '../network/request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
 
-const submitPost = async (variables) => {
+const submitPost = async variables => {
   const { submitPost } = await request(
     null,
     gql`
       mutation submitPost(
         $title: String
-        $link: String
+        $linkUrl: String
         $textContent: String
-        $planetName: String
+        $planetId: ID!
         $images: [Upload!]
       ) {
         submitPost(
           title: $title
-          link: $link
+          linkUrl: $linkUrl
           textContent: $textContent
-          planetName: $planetName
+          planetId: $planetId
           images: $images
         ) {
           id
@@ -27,14 +27,13 @@ const submitPost = async (variables) => {
       }
     `,
     variables
-  );
-  return submitPost;
-};
+  )
+  return submitPost
+}
 
-export const useSubmitPostMutation = (options) =>
-  useMutation(submitPost, options);
+export const useSubmitPostMutation = options => useMutation(submitPost, options)
 
-const pinPost = async (variables) => {
+const pinPost = async variables => {
   await request(
     null,
     gql`
@@ -43,12 +42,12 @@ const pinPost = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const usePinPostMutation = (options) => useMutation(pinPost, options);
+export const usePinPostMutation = options => useMutation(pinPost, options)
 
-const unpinPost = async (variables) => {
+const unpinPost = async variables => {
   await request(
     null,
     gql`
@@ -57,13 +56,12 @@ const unpinPost = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useUnpinPostMutation = (options) =>
-  useMutation(unpinPost, options);
+export const useUnpinPostMutation = options => useMutation(unpinPost, options)
 
-const deletePost = async (variables) => {
+const deletePost = async variables => {
   await request(
     null,
     gql`
@@ -72,13 +70,12 @@ const deletePost = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useDeletePostMutation = (options) =>
-  useMutation(deletePost, options);
+export const useDeletePostMutation = options => useMutation(deletePost, options)
 
-const rocketPost = async (variables) => {
+const rocketPost = async variables => {
   await request(
     null,
     gql`
@@ -87,13 +84,12 @@ const rocketPost = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useRocketPostMutation = (options) =>
-  useMutation(rocketPost, options);
+export const useRocketPostMutation = options => useMutation(rocketPost, options)
 
-const unrocketPost = async (variables) => {
+const unrocketPost = async variables => {
   await request(
     null,
     gql`
@@ -102,13 +98,13 @@ const unrocketPost = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useUnrocketPostMutation = (options) =>
-  useMutation(unrocketPost, options);
+export const useUnrocketPostMutation = options =>
+  useMutation(unrocketPost, options)
 
-const editPost = async (variables) => {
+const editPost = async variables => {
   await request(
     null,
     gql`
@@ -117,7 +113,7 @@ const editPost = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useEditPostMutation = (options) => useMutation(editPost, options);
+export const useEditPostMutation = options => useMutation(editPost, options)

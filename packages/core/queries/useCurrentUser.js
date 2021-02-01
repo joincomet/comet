@@ -1,6 +1,6 @@
-import { gql } from "graphql-request";
-import { request } from "../network/request";
-import { useQuery } from "react-query";
+import { gql } from 'graphql-request'
+import { request } from '../network/request'
+import { useQuery } from 'react-query'
 
 export const fetchCurrentUser = async (ctx = null) => {
   const { currentUser } = await request(
@@ -12,8 +12,6 @@ export const fetchCurrentUser = async (ctx = null) => {
           admin
           username
           avatarUrl
-          postCount
-          rocketCount
           isOnline
           isCurrentUser
           moderatedPlanets {
@@ -22,14 +20,14 @@ export const fetchCurrentUser = async (ctx = null) => {
         }
       }
     `
-  );
-  return currentUser;
-};
+  )
+  return currentUser
+}
 
 export const useCurrentUser = () =>
-  useQuery("currentUser", fetchCurrentUser, {
+  useQuery('currentUser', fetchCurrentUser, {
     refetchInterval: 5 * 60 * 1000,
-    refetchOnWindowFocus: true,
-  }); // refetch
+    refetchOnWindowFocus: true
+  }) // refetch
 // every 5 mins to update
 // lastLogin/isOnline

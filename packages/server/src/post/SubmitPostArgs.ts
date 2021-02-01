@@ -1,4 +1,4 @@
-import { ArgsType, Field } from 'type-graphql'
+import { ArgsType, Field, ID } from 'type-graphql'
 import { ArrayMaxSize, IsOptional, Length, Matches } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
@@ -20,7 +20,7 @@ export class SubmitPostArgs {
   })
   textContent?: string
 
-  @Field({ nullable: true })
+  @Field(() => ID)
   planetId: bigint
 
   @Field(() => [GraphQLUpload], { nullable: true })

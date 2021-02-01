@@ -10,19 +10,20 @@ import {
 } from '@mikro-orm/core'
 import { NativeBigIntType } from '@/NativeBigIntType'
 import { EditableEntity } from '@/Editable.entity'
+import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: [BaseEntity, EditableEntity] })
 @Entity()
 export class Comment extends EditableEntity {
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User)
   author: User
 
-  @ManyToOne({ entity: () => User, nullable: true })
+  @ManyToOne(() => Post)
   post: Post
 
   @Field()
-  @Property('text')
+  @Property()
   textContent: string
 
   @Field(() => ID, { nullable: true })

@@ -3,8 +3,9 @@ import { User } from '@/user/User.entity'
 import { ChatChannel } from '@/chat/ChatChannel.entity'
 import { Entity, ManyToOne, Property } from '@mikro-orm/core'
 import { EditableEntity } from '@/Editable.entity'
+import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: BaseEntity })
 @Entity()
 export class ChatMessage extends EditableEntity {
   @Field(() => User)
@@ -12,7 +13,7 @@ export class ChatMessage extends EditableEntity {
   author: User
 
   @Field()
-  @Property('text')
+  @Property()
   text: string
 
   @ManyToOne(() => ChatChannel)

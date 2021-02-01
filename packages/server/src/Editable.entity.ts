@@ -1,8 +1,9 @@
 import { BaseEntity } from '@/Base.entity'
-import { Field } from 'type-graphql'
+import { Field, InterfaceType } from 'type-graphql'
 import { Property } from '@mikro-orm/core'
 import dayjs from 'dayjs'
 
+@InterfaceType({ implements: BaseEntity })
 export abstract class EditableEntity extends BaseEntity {
   @Field({ nullable: true })
   @Property({ nullable: true })

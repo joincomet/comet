@@ -12,7 +12,7 @@ import {
 } from '@mikro-orm/core'
 import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: BaseEntity })
 @Entity()
 export class ChatChannel extends BaseEntity {
   @Field({ nullable: true })

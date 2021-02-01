@@ -4,7 +4,7 @@ import { User } from '@/user/User.entity'
 import { Planet } from '@/planet/Planet.entity'
 import { URL } from 'url'
 import { isUrl } from '@/IsUrl'
-import { Metadata } from '@/metascraper/Metadata'
+import { Metadata } from '@/metascraper/Metadata.entity'
 import { Folder } from '@/folder/Folder.entity'
 import {
   ArrayType,
@@ -18,8 +18,9 @@ import {
   Property
 } from '@mikro-orm/core'
 import { EditableEntity } from '@/Editable.entity'
+import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: [BaseEntity, EditableEntity] })
 @Entity()
 export class Post extends EditableEntity {
   @Field({ nullable: true })

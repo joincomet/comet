@@ -13,7 +13,7 @@ import {
 import { NativeBigIntType } from '@/NativeBigIntType'
 import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: BaseEntity })
 @Entity()
 export class ChatGroup extends BaseEntity {
   @Field(() => User)
@@ -35,6 +35,6 @@ export class ChatGroup extends BaseEntity {
   @OneToOne(() => ChatChannel)
   channel: ChatChannel
 
-  @ManyToMany(() => User, 'chatGroups')
+  @ManyToMany(() => User, 'chatGroups', { owner: true })
   users = new Collection<User>(this)
 }

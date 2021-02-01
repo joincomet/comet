@@ -30,9 +30,8 @@ export const fetchPlanets = async ({ queryKey }, ctx = null) => {
             bannerUrl
             userCount
             isJoined
-            color
             galaxy
-            timeSinceCreated
+            timeSince
             description
             featured
           }

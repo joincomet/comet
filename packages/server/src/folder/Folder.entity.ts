@@ -10,11 +10,11 @@ import {
 } from '@mikro-orm/core'
 import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: BaseEntity })
 @Entity()
 export class Folder extends BaseEntity {
   @Field()
-  @Property('text')
+  @Property()
   name: string
 
   @Field({ nullable: true })

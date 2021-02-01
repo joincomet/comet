@@ -1,9 +1,9 @@
-import { gql } from "graphql-request";
-import { useQuery } from "react-query";
-import { request } from "core/network/request";
+import { gql } from 'graphql-request'
+import { useQuery } from 'react-query'
+import { request } from '../network/request'
 
 export const fetchUser = async ({ queryKey }, ctx = null) => {
-  const [_key, variables] = queryKey;
+  const [_key, variables] = queryKey
 
   const { user } = await request(
     ctx,
@@ -12,9 +12,7 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
         user(username: $username) {
           id
           username
-          timeSinceCreated
-          postCount
-          commentCount
+          timeSince
           isOnline
           bio
           avatarUrl
@@ -26,9 +24,9 @@ export const fetchUser = async ({ queryKey }, ctx = null) => {
       }
     `,
     variables
-  );
+  )
 
-  return user;
-};
+  return user
+}
 
-export const useUser = (variables) => useQuery(["user", variables], fetchUser);
+export const useUser = variables => useQuery(['user', variables], fetchUser)

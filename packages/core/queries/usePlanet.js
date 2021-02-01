@@ -1,9 +1,9 @@
-import { gql } from "graphql-request";
-import { useQuery } from "react-query";
-import { request } from "core/network/request";
+import { gql } from 'graphql-request'
+import { useQuery } from 'react-query'
+import { request } from '../network/request'
 
 export const fetchPlanet = async ({ queryKey }, ctx = null) => {
-  const [_key, variables] = queryKey;
+  const [_key, variables] = queryKey
 
   const { planet } = await request(
     ctx,
@@ -13,12 +13,11 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           id
           name
           description
-          color
           avatarUrl
           bannerUrl
           userCount
           isJoined
-          timeSinceCreated
+          timeSince
           galaxy
           banned
           banReason
@@ -26,9 +25,7 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           moderators {
             id
             username
-            timeSinceCreated
-            postCount
-            commentCount
+            timeSince
             bio
             avatarUrl
             bannerUrl
@@ -37,9 +34,7 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
           users {
             id
             username
-            timeSinceCreated
-            postCount
-            commentCount
+            timeSince
             bio
             avatarUrl
             bannerUrl
@@ -53,10 +48,10 @@ export const fetchPlanet = async ({ queryKey }, ctx = null) => {
       }
     `,
     variables
-  );
+  )
 
-  return planet;
-};
+  return planet
+}
 
-export const usePlanet = (variables) =>
-  useQuery(["planet", variables], fetchPlanet);
+export const usePlanet = variables =>
+  useQuery(['planet', variables], fetchPlanet)

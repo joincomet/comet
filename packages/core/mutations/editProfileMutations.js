@@ -1,8 +1,8 @@
-import { request } from "core/network/request";
-import { gql } from "graphql-request";
-import { useMutation } from "react-query";
+import { request } from '../network/request'
+import { gql } from 'graphql-request'
+import { useMutation } from 'react-query'
 
-const uploadAvatar = async (variables) => {
+const uploadAvatar = async variables => {
   const { uploadAvatar } = await request(
     null,
     gql`
@@ -11,14 +11,14 @@ const uploadAvatar = async (variables) => {
       }
     `,
     variables
-  );
-  return uploadAvatar;
-};
+  )
+  return uploadAvatar
+}
 
-export const useUploadAvatarMutation = (options) =>
-  useMutation(uploadAvatar, options);
+export const useUploadAvatarMutation = options =>
+  useMutation(uploadAvatar, options)
 
-const uploadBanner = async (variables) => {
+const uploadBanner = async variables => {
   const { uploadBanner } = await request(
     null,
     gql`
@@ -27,14 +27,14 @@ const uploadBanner = async (variables) => {
       }
     `,
     variables
-  );
-  return uploadBanner;
-};
+  )
+  return uploadBanner
+}
 
-export const useUploadBannerMutation = (options) =>
-  useMutation(uploadBanner, options);
+export const useUploadBannerMutation = options =>
+  useMutation(uploadBanner, options)
 
-const editBio = async (variables) => {
+const editBio = async variables => {
   await request(
     null,
     gql`
@@ -43,12 +43,12 @@ const editBio = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useEditBioMutation = (options) => useMutation(editBio, options);
+export const useEditBioMutation = options => useMutation(editBio, options)
 
-const changePassword = async (variables) => {
+const changePassword = async variables => {
   await request(
     null,
     gql`
@@ -59,8 +59,8 @@ const changePassword = async (variables) => {
       }
     `,
     variables
-  );
-};
+  )
+}
 
-export const useChangePasswordMutation = (options) =>
-  useMutation(changePassword, options);
+export const useChangePasswordMutation = options =>
+  useMutation(changePassword, options)

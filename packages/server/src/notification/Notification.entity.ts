@@ -5,7 +5,7 @@ import { User } from '@/user/User.entity'
 import { Entity, ManyToOne, Property } from '@mikro-orm/core'
 import { BaseEntity } from '@/Base.entity'
 
-@ObjectType()
+@ObjectType({ implements: BaseEntity })
 @Entity()
 export class Notification extends BaseEntity {
   @Field(() => User)
