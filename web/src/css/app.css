@@ -8,7 +8,7 @@ html {
 }
 
 html.dark {
-  @apply text-white bg-gray-750;
+  @apply text-white bg-gray-900;
 }
 
 body {

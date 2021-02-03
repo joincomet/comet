@@ -29,9 +29,7 @@ export default function PlanetScroller() {
   return (
     <>
       <div
-        className={`${
-          window.electron ? 'top-5.5' : 'top-0'
-        } fixed left-0 bottom-0 flex flex-col items-center w-16 bg-white dark:bg-gray-900`}
+        className={`top-0 electron:top-5.5 fixed left-0 bottom-0 flex flex-col items-center w-18 bg-white dark:bg-gray-900`}
       >
         <div className="h-full flex flex-col">
           <div className="flex flex-col flex-shrink">

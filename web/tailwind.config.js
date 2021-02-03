@@ -5,7 +5,9 @@ module.exports = {
   presets: [require('@comet/core/tailwind-preset.js')],
   variants: {
     extend: {
-      inset: ['electron']
+      inset: ['electron'],
+      padding: ['electron'],
+      margin: ['electron']
     },
     scrollbar: ['dark', 'rounded']
   },

@@ -22,9 +22,7 @@ export default forwardRef(
       <header
         ref={ref}
         id="header"
-        className={`fixed left-0 lg:left-76 right-0 lg:right-60 z-10 ${
-          window.electron ? 'top-5.5' : 'top-0'
-        } h-12 items-center bg-white dark:bg-gray-750 border-b dark:border-gray-800 shadow-sm ${
+        className={`fixed left-0 lg:left-78 right-0 z-10 top-0 electron:top-5.5 h-12 items-center bg-white dark:bg-gray-750 border-b dark:border-gray-800 shadow ${
           mobileOnly ? 'flex lg:hidden' : 'flex'
         }`}
       >

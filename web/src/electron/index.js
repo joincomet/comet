@@ -13,12 +13,37 @@ const Store = require('electron-store')
 
 const store = new Store()
 
+let loadingScreen
+
+const createLoadingScreen = () => {
+  /// create a browser window
+  loadingScreen = new BrowserWindow({
+    /// set the window height / width
+    width: 300,
+    height: 300,
+    /// remove the window frame, so it will rendered without frames
+    frame: false,
+    /// and set the transparency to true, to remove any kind of background
+    transparent: true,
+    webPreferences: {
+      contextIsolation: true
+    }
+  })
+  loadingScreen.setResizable(false)
+  loadingScreen.loadURL(join(__dirname, './loading.html'))
+  loadingScreen.on('closed', () => (loadingScreen = null))
+  loadingScreen.webContents.on('did-finish-load', () => {
+    loadingScreen.show()
+  })
+}
+
 function createWindow() {
   const options = {
     frame: false,
     backgroundColor: '#fff',
     width: 1280,
     height: 800,
+    show: false,
     webPreferences: {
       contextIsolation: true,
       preload: join(__dirname, 'preload.js'),
@@ -61,7 +86,7 @@ function createWindow() {
   // and load the index.html of the app.
   isDev ? window?.loadURL(url) : window?.loadFile(url)
 
-  window.once('ready-to-show', window.show)
+  // window.once('ready-to-show', window.show)
 
   window.on('resize', saveBoundsSoon)
   window.on('move', saveBoundsSoon)
@@ -76,12 +101,18 @@ function createWindow() {
     }, 1000)
   }
 
-  // Open the DevTools.
-  if (isDev) window.webContents.openDevTools()
-
   window.webContents.on('new-window', function (e, url) {
     e.preventDefault()
     shell.openExternal(url)
+  })
+
+  window.webContents.on('did-finish-load', () => {
+    /// when the content has loaded, hide the loading screen and show the main window
+    if (loadingScreen) {
+      loadingScreen.close()
+    }
+    window.show()
+    // if (isDev) window.webContents.openDevTools()
   })
 }
 
@@ -89,6 +120,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  createLoadingScreen()
   createWindow()
 
   app.on('activate', function () {

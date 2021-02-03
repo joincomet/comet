@@ -34,7 +34,7 @@ export default function App() {
           <Router>
             {window.electron && <TitleBar />}
             <PlanetScroller />
-            <div className={`h-full ${window.electron ? 'pt-5.5' : ''}`}>
+            <div className={`h-full electron:pt-5.5`}>
               {/*<PlanetScroller />*/}
               <Switch>
                 <Route path="/">
