@@ -3,18 +3,23 @@
 	"license": "MPL-2.0",
 	"author": {
 		"name": "Comet",
-		"email": "admin@cometx.io"
+		"email": "admin@joincomet.app"
 	},
 	"repository": {
-		"url": "https://github.com/cometx-io/cometx"
+		"url": "https://github.com/joincomet/comet"
 	},
 	"workspaces": [
-		"packages/*"
+		"core",
+		"server",
+		"web"
 	],
 	"scripts": {
 		"dev-web": "yarn workspace @comet/web run dev:vite",
 		"dev-electron": "yarn workspace @comet/web run dev",
 		"dev-server": "yarn workspace @comet/server run dev",
 		"prod-server": "yarn workspace @comet/server run start"
+	},
+	"devDependencies": {
+		"rimraf": "^3.0.2"
 	}
 }

@@ -1,4 +1,4 @@
-# CometX ([cometx.io](https://www.cometx.io))
+# Comet ([joincomet.app](https://joincomet.app))
 
 All-in-one chat and forums for communities.
 
