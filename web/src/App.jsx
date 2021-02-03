@@ -26,6 +26,7 @@ const queryClient = new QueryClient({
 })
 
 export default function App() {
+  if (window.electron) document.documentElement.classList.add('electron')
   return (
     <>
       <QueryClientProvider client={queryClient}>
