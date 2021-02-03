@@ -38,25 +38,25 @@ import { Post } from '@/post/Post.entity'
 
 dayjs.extend(dayjsTwitter)
 
-if (!process.env.DATABASE_URL) {
-  console.error('DATABASE_URL environment variable missing. Shutting down.')
-  process.exit()
-}
-
-if (!process.env.DATABASE_NAME) {
-  console.error('DATABASE_NAME environment variable missing. Shutting down.')
-  process.exit()
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.DATABASE_URL) {
+    console.error('DATABASE_URL environment variable missing. Shutting down.')
+    process.exit()
+  }
+  if (!process.env.DATABASE_NAME) {
+    console.error('DATABASE_NAME environment variable missing. Shutting down.')
+    process.exit()
+  }
+  if (!process.env.CORS_ORIGIN) {
+    console.error('CORS_ORIGIN environment variable missing. Shutting down.')
+    process.exit()
+  }
 }
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   console.error(
     'ACCESS_TOKEN_SECRET environment variable missing. Shutting down.'
   )
-  process.exit()
-}
-
-if (process.env.NODE_ENV === 'production' && !process.env.CORS_ORIGIN) {
-  console.error('CORS_ORIGIN environment variable missing. Shutting down.')
   process.exit()
 }
 

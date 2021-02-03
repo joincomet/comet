@@ -177,12 +177,14 @@ module.exports = {
       borderRadius: ['hover', 'focus', 'first', 'last'],
       borderWidth: ['first', 'last'],
       backgroundOpacity: ['dark']
-    }
+    },
+    scrollbar: ['dark', 'rounded']
   },
   darkMode: 'class',
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/typography')
+    require('@tailwindcss/typography'),
+    require('tailwind-scrollbar')
   ]
 }
