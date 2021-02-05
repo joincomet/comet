@@ -1,11 +1,11 @@
-$n: 7; // 流星數量
+$n: 7;
 
 $shadow: ();
 
 @for $i from 1 through $n {
-  $v: random(90) + 9; // left
-  $h: random(250) + 50; // top
-  $d: random(70)/10 + 3; // 秒數
+  $v: random(90) + 9;
+  $h: random(250) + 50;
+  $d: random(70)/10 + 3;
   .meteor-#{$i} {
     z-index: 10;
     position: absolute;

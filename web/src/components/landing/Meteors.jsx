@@ -1,23 +1,24 @@
 import React from 'react'
+import c from './Meteors.module.scss'
 
 export default function Meteors() {
   return (
     <>
-      <div className="meteor-1"></div>
-      <div className="meteor-2"></div>
-      <div className="meteor-3"></div>
-      <div className="meteor-4"></div>
-      <div className="meteor-5"></div>
-      <div className="meteor-6"></div>
-      <div className="meteor-7"></div>
-      <div className="meteor-8"></div>
-      <div className="meteor-9"></div>
-      <div className="meteor-10"></div>
-      <div className="meteor-11"></div>
-      <div className="meteor-12"></div>
-      <div className="meteor-13"></div>
-      <div className="meteor-14"></div>
-      <div className="meteor-15"></div>
+      <div className={c.meteor1} />
+      <div className={c.meteor2} />
+      <div className={c.meteor3} />
+      <div className={c.meteor4} />
+      <div className={c.meteor5} />
+      <div className={c.meteor6} />
+      <div className={c.meteor7} />
+      <div className={c.meteor8} />
+      <div className={c.meteor9} />
+      <div className={c.meteor10} />
+      <div className={c.meteor11} />
+      <div className={c.meteor12} />
+      <div className={c.meteor13} />
+      <div className={c.meteor14} />
+      <div className={c.meteor15} />
     </>
   )
 }

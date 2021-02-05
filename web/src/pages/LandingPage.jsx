@@ -1,14 +1,12 @@
-import Logo from '@/components/Logo'
+import Logo from '@/components/ui/icons/Logo'
 import { SiDiscord, SiGithub, SiPatreon, SiTwitter } from 'react-icons/si'
 import { FiArrowRight, FiMessageCircle } from 'react-icons/fi'
 import { BiRocket } from 'react-icons/bi'
+import { HiDownload } from 'react-icons/hi'
 import Tippy from '@tippyjs/react'
-import { People } from '@/components/People'
-import Particles from 'react-tsparticles'
-import { MoveDirection, OutMode, ShapeType } from 'tsparticles'
-import Grass from '@/components/Grass'
-import Telescope from '@/components/Telescope'
-import Meteors from '@/components/Meteors'
+import Grass from '@/components/landing/Grass'
+import Telescope from '@/components/landing/Telescope'
+import Meteors from '@/components/landing/Meteors'
 import React, { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
@@ -18,6 +16,29 @@ const iconButton =
 const link = 'hover:underline cursor-pointer flex items-center'
 
 export default function LandingPage() {
+  function getOS() {
+    let userAgent = window.navigator.userAgent,
+      platform = window.navigator.platform,
+      macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+      windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+      iosPlatforms = ['iPhone', 'iPad', 'iPod'],
+      os = null
+
+    if (macosPlatforms.indexOf(platform) !== -1) {
+      os = 'Mac OS'
+    } else if (iosPlatforms.indexOf(platform) !== -1) {
+      os = 'iOS'
+    } else if (windowsPlatforms.indexOf(platform) !== -1) {
+      os = 'Windows'
+    } else if (/Android/.test(userAgent)) {
+      os = 'Android'
+    } else if (/Linux/.test(platform)) {
+      os = 'Linux'
+    }
+
+    return os
+  }
+
   const { ref, inView, entry } = useInView()
 
   return (
@@ -81,83 +102,36 @@ export default function LandingPage() {
         <Telescope className="absolute bottom-0 right-32 text-gray-900 z-10 h-96" />
         <Meteors />
 
-        <Particles
-          className="absolute inset-0"
-          id="tsparticles"
-          options={{
-            background: {
-              color: {
-                value: 'transparent'
-              }
-            },
-            fpsLimit: 60,
-            particles: {
-              color: {
-                value: '#A1A1AA'
-              },
-              lineLinked: {
-                enable: false
-              },
-              move: {
-                bounce: false,
-                direction: MoveDirection.none,
-                enable: true,
-                outMode: OutMode.out,
-                random: true,
-                speed: 0.3,
-                straight: false
-              },
-              opacity: {
-                anim: {
-                  enable: true,
-                  minimumValue: 0,
-                  speed: 1,
-                  sync: false
-                },
-                random: true,
-                value: 1
-              },
-              shape: {
-                type: ShapeType.circle
-              },
-              size: {
-                random: true,
-                value: 3
-              }
-            },
-            detectRetina: true
-          }}
-        />
         <div className={container}>
           <div className="text-center flex flex-col items-center space-y-12">
             {/*<Logo className="h-16 text-gray-200" />*/}
 
             <h1 className="inline-flex items-center">
-              <div className="text-7xl text-white font-semibold tracking-tight">
-                See what's in orbit.
+              <div className="text-5xl text-white font-semibold tracking-tight">
+                All-in-one chat and forums for communities.
               </div>
             </h1>
             <p className="text-white text-xl max-w-screen-md">
-              No matter who you are, CometX lets you find or create a community
-              for your passions and share your thoughts and creations.
+              The age of fragmented communities is over. Say goodbye to Reddit
+              and Discord, and run your entire community on Comet.
             </p>
             <div className="inline-flex items-center space-x-6">
               <a
                 to="https://www.getcomet.net"
                 rel="noopener"
-                className="bg-blue-500 select-none h-12 px-6 rounded-full inline-flex items-center font-medium text-base text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
+                className="bg-blue-500 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
               >
-                Continue to getcomet.net
-                <FiArrowRight size={20} className="ml-3" />
+                Download for {getOS()}
+                <HiDownload className="w-6 h-6 ml-3" />
               </a>
 
-              <div
-                style={{ color: '#F96854', borderColor: '#F96854' }}
-                className="select-none border h-12 px-6 rounded-full inline-flex items-center font-medium text-base bg-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
+              <a
+                to="https://www.getcomet.net"
+                rel="noopener"
+                className="border border-gray-700 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
               >
-                <SiPatreon size={20} className="mr-3" />
-                Support CometX on Patreon
-              </div>
+                Open in Browser
+              </a>
             </div>
           </div>
         </div>

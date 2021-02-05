@@ -40,7 +40,7 @@ body {
 }
 
 .sidebar-item {
-  @apply rounded cursor-pointer flex items-center text-sm font-medium px-4 w-full h-9 transition dark:hover:bg-gray-750 text-gray-600 dark:text-gray-400;
+  @apply rounded cursor-pointer flex items-center text-base font-medium px-4 w-full h-9 transition dark:hover:bg-gray-750 text-gray-600 dark:text-gray-400;
 }
 
 .sidebar-item--large {
@@ -52,7 +52,7 @@ body {
 }
 
 .sidebar-label {
-  @apply px-4 pt-4 pb-0.5 text-gray-600 dark:text-gray-400 uppercase text-11 font-semibold tracking-widest;
+  @apply px-3 pt-4 pb-1 text-gray-600 dark:text-gray-400 uppercase text-11 font-semibold tracking-widest;
 }
 
 .pagebutton {

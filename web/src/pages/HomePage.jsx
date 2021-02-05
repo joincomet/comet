@@ -25,7 +25,7 @@ export default function HomePage() {
       <FoldersSidebar />
       <Header />
 
-      <div className="h-full pl-78 pr-60 pt-12">
+      <div className="h-full pl-76 pr-60 pt-12">
         <div className="h-full dark:bg-gray-750">
           <Posts />
         </div>

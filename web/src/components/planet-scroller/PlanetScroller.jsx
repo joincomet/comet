@@ -29,7 +29,7 @@ export default function PlanetScroller() {
   return (
     <>
       <div
-        className={`top-0 electron:top-5.5 fixed left-0 bottom-0 flex flex-col items-center w-18 bg-white dark:bg-gray-900`}
+        className={`top-0 electron:top-5.5 fixed left-0 bottom-0 flex flex-col items-center w-16 bg-white dark:bg-gray-900`}
       >
         <div className="h-full flex flex-col">
           <div className="flex flex-col flex-shrink">
@@ -81,13 +81,13 @@ export default function PlanetScroller() {
               {({ height }) => (
                 <List
                   height={height}
-                  itemCount={currentUser ? planets.length + 1 : planets.length}
+                  itemCount={planets.length + 1}
                   itemSize={56}
                   width="100%"
                   className="hidescroll overflow-y-auto"
                 >
                   {({ index, style }) => {
-                    if (currentUser && index === 0)
+                    if (index === 0)
                       return (
                         <CreatePlanetDialog
                           open={open}
@@ -111,7 +111,7 @@ export default function PlanetScroller() {
                         />
                       )
 
-                    const planet = planets[currentUser ? index - 1 : index]
+                    const planet = planets[index - 1]
 
                     return (
                       <div style={style}>
