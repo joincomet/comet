@@ -1,0 +1,3 @@
+.textbox {
+  @apply rounded-md dark:bg-gray-650 h-9 placeholder-gray-600 dark:placeholder-gray-400 block px-3 focus:outline-none focus:ring-1 transition ring-blue-500 w-full text-base;
+}

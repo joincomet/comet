@@ -22,6 +22,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import ExplorePage from '@/pages/ExplorePage'
 import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
 import LandingPage from '@/pages/LandingPage'
+import LoginPage from '@/pages/login/LoginPage'
+import Routes from '@/pages/Routes'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,14 +35,12 @@ const queryClient = new QueryClient({
 })
 
 export default function App() {
-  if (window.electron) document.documentElement.classList.add('electron')
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <DndProvider backend={HTML5Backend}>
           <Router>
             {window.electron && <TitleBar />}
-            <PlanetScroller />
             <div className={`h-full electron:pt-5.5`}>
               <Routes />
             </div>
@@ -52,51 +52,5 @@ export default function App() {
         )}
       </QueryClientProvider>
     </>
-  )
-}
-
-function PrivateRoute({ children, ...rest }) {
-  const user = useCurrentUser().data
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        user ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: location }
-            }}
-          />
-        )
-      }
-    />
-  )
-}
-
-function Routes() {
-  const user = useCurrentUser().data
-  return (
-    <Switch>
-      <Route
-        path="/"
-        render={() => {
-          if (user) return <Redirect to="/home" />
-          if (window.electron) {
-            return <Redirect to="/login" />
-          } else {
-            return <LandingPage />
-          }
-        }}
-      />
-      <Route path="/home">
-        <HomePage />
-      </Route>
-      <Route path="/explore">
-        <ExplorePage />
-      </Route>
-    </Switch>
   )
 }
