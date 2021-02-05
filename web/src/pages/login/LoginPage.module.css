@@ -1,3 +1,7 @@
 .textbox {
-  @apply rounded-md dark:bg-gray-650 h-9 placeholder-gray-600 dark:placeholder-gray-400 block px-3 focus:outline-none focus:ring-1 transition ring-blue-500 w-full text-base;
+  @apply rounded dark:bg-gray-775 border dark:border-gray-800 duration-300 dark:focus:border-blue-500 h-9 placeholder-gray-600 dark:placeholder-gray-400 block px-3 focus:outline-none transition w-full text-base;
+}
+
+.label {
+  @apply pb-1.5 uppercase text-11 font-semibold tracking-widest text-gray-600 dark:text-gray-400;
 }
