@@ -5,25 +5,14 @@ import './css/slideout.css'
 import './css/tippy.css'
 import './css/editor.css'
 
-import React, { useState } from 'react'
+import React from 'react'
 import TitleBar from '@/electron/titlebar/TitleBar'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from 'react-router-dom'
-import PlanetScroller from '@/components/planet-scroller/PlanetScroller'
-import HomePage from '@/pages/HomePage'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import ExplorePage from '@/pages/ExplorePage'
-import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
-import LandingPage from '@/pages/LandingPage'
-import LoginPage from '@/pages/login/LoginPage'
-import Routes from '@/pages/Routes'
+import Routes from '@/Routes'
 
 const queryClient = new QueryClient({
   defaultOptions: {

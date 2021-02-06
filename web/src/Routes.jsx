@@ -5,11 +5,28 @@ import LandingPage from '@/pages/LandingPage'
 import HomePage from '@/pages/HomePage'
 import ExplorePage from '@/pages/ExplorePage'
 import LoginPage from '@/pages/login/LoginPage'
+import RegisterPage from '@/pages/login/RegisterPage'
+import LoginLayout from '@/pages/LoginLayout'
 
 export default function Routes() {
   const user = useCurrentUser().data
   return (
     <Switch>
+      <Route>
+        <LoginLayout>
+          <Switch>
+            <Route
+              path="/login"
+              render={() => (user ? <Redirect to="/home" /> : <LoginPage />)}
+            />
+            <Route
+              path="/register"
+              render={() => (user ? <Redirect to="/home" /> : <RegisterPage />)}
+            />
+          </Switch>
+        </LoginLayout>
+      </Route>
+
       <Route
         path="/"
         exact
@@ -28,10 +45,6 @@ export default function Routes() {
       <PrivateRoute path="/explore">
         <ExplorePage />
       </PrivateRoute>
-      <Route
-        path="/login"
-        render={() => (user ? <Redirect to="/home" /> : <LoginPage />)}
-      />
     </Switch>
   )
 }
