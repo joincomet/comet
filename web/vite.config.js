@@ -16,6 +16,7 @@ export default ({ command }) => ({
   },
   css: {
     modules: {
+      localsConvention: 'camelCaseOnly',
       generateScopedName: (name, filename, css) => {
         if (name === 'dark') return 'dark'
         const i = css.indexOf(`.${name}`)

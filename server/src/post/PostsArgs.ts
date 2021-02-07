@@ -34,7 +34,7 @@ export class PostsArgs extends PaginationArgs {
     nullable: true,
     description: 'If provided, only posts from given folder ID will be returned'
   })
-  folderId?: bigint
+  folderId?: string
 
   @Field({
     nullable: true,

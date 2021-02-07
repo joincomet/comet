@@ -10,8 +10,6 @@ import { authChecker } from '@/auth/AuthChecker'
 import { userLoader } from '@/user/UserLoader'
 import { postLoader } from '@/post/PostLoader'
 import { commentLoader } from '@/comment/CommentLoader'
-import dayjs from 'dayjs'
-import dayjsTwitter from 'dayjs-twitter'
 import { MikroORM, ReflectMetadataProvider } from '@mikro-orm/core'
 import { UserResolver } from '@/user/User.resolver'
 import { CommentResolver } from '@/comment/Comment.resolver'
@@ -22,7 +20,6 @@ import { PlanetResolver } from '@/planet/Planet.resolver'
 import { FolderResolver } from '@/folder/Folder.resolver'
 import { ChatResolver } from '@/chat/Chat.resolver'
 import { ChatChannel } from '@/chat/ChatChannel.entity'
-import { EditableEntity } from '@/Editable.entity'
 import { Metadata } from '@/metascraper/Metadata.entity'
 import { NotificationResolver } from '@/notification/Notification.resolver'
 import { Notification } from '@/notification/Notification.entity'
@@ -35,8 +32,8 @@ import { Planet } from '@/planet/Planet.entity'
 import { User } from '@/user/User.entity'
 import { AuthResolver } from '@/auth/Auth.Resolver'
 import { Post } from '@/post/Post.entity'
-
-dayjs.extend(dayjsTwitter)
+import { PlanetInvite } from '@/planet/PlanetInvite.entity'
+import * as http from 'http'
 
 if (process.env.NODE_ENV === 'production') {
   if (!process.env.DATABASE_URL) {
@@ -92,11 +89,11 @@ async function bootstrap() {
       ChatGroup,
       ChatMessage,
       Comment,
-      EditableEntity,
       Folder,
       Metadata,
       Notification,
       Planet,
+      PlanetInvite,
       Post,
       User
     ],
@@ -112,8 +109,8 @@ async function bootstrap() {
   if (process.env.NODE_ENV !== 'production') {
     console.log(`Setting up the database...`)
     const generator = orm.getSchemaGenerator()
-    await generator.dropSchema()
-    await generator.createSchema()
+    // await generator.dropSchema()
+    // await generator.createSchema()
     await generator.updateSchema()
   }
 
@@ -144,8 +141,7 @@ async function bootstrap() {
     ],
     emitSchemaFile: false,
     validate: true,
-    authChecker: authChecker,
-    authMode: 'null'
+    authChecker: authChecker
     // pubSub
   })
 
@@ -161,7 +157,6 @@ async function bootstrap() {
   )
 
   const server = new ApolloServer({
-    // plugins: process.env.NODE_ENV === 'production' ? [] : [logPlugin],
     schema,
     playground: process.env.NODE_ENV !== 'production',
     tracing: true,
@@ -170,14 +165,22 @@ async function bootstrap() {
         em: orm.em.fork(),
         req,
         res,
-        userId: getUserId(req.headers.authorization),
-        userLoader,
-        postLoader,
-        commentLoader
+        userId: getUserId(req.headers.authorization)
       } as Context
     },
     uploads: false,
-    introspection: true
+    introspection: true,
+    subscriptions: {
+      onConnect: (connectionParams: { authToken: string }, webSocket) => {
+        if (connectionParams.authToken) {
+          return {
+            userId: getUserId(connectionParams.authToken)
+          }
+        }
+
+        throw new Error('Missing auth token!')
+      }
+    }
   } as ApolloServerExpressConfig)
 
   server.applyMiddleware({
@@ -191,11 +194,16 @@ async function bootstrap() {
     }
   })
 
-  app.listen({ port: process.env.PORT || 4000 }, () => {
+  const httpServer = http.createServer(app)
+  server.installSubscriptionHandlers(httpServer)
+
+  const PORT = process.env.PORT || 4000
+  httpServer.listen(PORT, () => {
     console.log(
-      `Server ready at http://localhost:${process.env.PORT || 4000}${
-        server.graphqlPath
-      }`
+      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+    )
+    console.log(
+      `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
     )
   })
 

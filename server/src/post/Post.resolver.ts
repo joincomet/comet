@@ -3,20 +3,16 @@ import {
   Args,
   Authorized,
   Ctx,
-  FieldResolver,
   ID,
   Mutation,
   Query,
-  Resolver,
-  Root
+  Resolver
 } from 'type-graphql'
 import { Post } from '@/post/Post.entity'
 import { SubmitPostArgs } from '@/post/SubmitPostArgs'
 import { Context } from '@/Context'
 import { PostsArgs } from '@/post/PostsArgs'
 import { User } from '@/user/User.entity'
-import { filterXSS } from 'xss'
-import { whiteList } from '@/XSSWhiteList'
 import { uploadImage } from '@/S3Storage'
 import { TimeFilter } from '@/TimeFilter'
 import { PostSort } from '@/post/PostSort'
@@ -25,7 +21,6 @@ import { Metadata } from '@/metascraper/Metadata.entity'
 import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
 import { handleUnderscore } from '@/handleUnderscore'
 import { QueryOrder } from '@mikro-orm/core'
-import { base36ToBigInt } from '@/base36ToBigInt'
 import { Planet } from '@/planet/Planet.entity'
 import { handleText } from '@/handleText'
 
@@ -44,18 +39,21 @@ export class PostResolver {
     else if (sort === PostSort.HOT) orderBy = { hotRank: QueryOrder.DESC }
     else if (sort === PostSort.TOP) orderBy = { rocketCount: QueryOrder.DESC }
 
-    let interval = 'NOW() - INTERVAL 1 ' + time.toString().toLowerCase()
-    if (!time || time === TimeFilter.ALL) interval = '0'
-
     const posts = await em.find(
       Post,
       {
         $and: [
           { removed: false },
           { deleted: false },
-          { createdAt: { $gt: interval } },
+          !time || time === TimeFilter.ALL
+            ? {}
+            : {
+                createdAt: {
+                  $gt: 'NOW() - INTERVAL 1 ' + time.toString().toLowerCase()
+                }
+              },
           { planet: { $ne: null } },
-          user ? { planet: user.joinedPlanets.getItems(false) } : {},
+          user ? { planet: user.planets.getItems(false) } : {},
           planet
             ? { planet: { name: { $ilike: handleUnderscore(planet) } } }
             : {}
@@ -76,18 +74,16 @@ export class PostResolver {
 
   @Query(() => Post, { nullable: true })
   async post(
-    @Arg('postId36', () => ID) postId36: string,
+    @Arg('postId', () => ID) postId: string,
     @Ctx() { userId, em }: Context
   ) {
-    if (!postId36) throw new Error('postId36 cannot be empty')
-
-    const postId = base36ToBigInt(postId36)
-
     const post = await em.findOne(Post, postId, ['planet', 'author'])
 
     if (!post) return null
 
-    if (post.planet.private && post.planet.users.contains(userId, false))
+    const user = await em.findOne(User, userId, ['planets'])
+
+    if (post.planet.private && !user.planets.contains(post.planet))
       throw new Error(
         'This post is in a private planet that you have not joined!'
       )
@@ -158,7 +154,7 @@ export class PostResolver {
   @Authorized('AUTHOR')
   @Mutation(() => Boolean)
   async editPost(
-    @Arg('postId', () => ID) postId: bigint,
+    @Arg('postId', () => ID) postId: string,
     @Arg('newTextContent') newTextContent: string,
     @Ctx() { userId, em }: Context
   ) {
@@ -180,7 +176,7 @@ export class PostResolver {
   @Authorized('AUTHOR')
   @Mutation(() => Boolean)
   async deletePost(
-    @Arg('postId', () => ID) postId: bigint,
+    @Arg('postId', () => ID) postId: string,
     @Ctx() { userId, em }: Context
   ) {
     const post = await em.findOne(Post, postId, ['author'])
@@ -195,7 +191,7 @@ export class PostResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async rocketPost(
-    @Arg('postId', () => ID) postId: bigint,
+    @Arg('postId', () => ID) postId: string,
     @Ctx() { userId, em }: Context
   ) {
     const post = await em.findOne(Post, postId)
@@ -208,7 +204,7 @@ export class PostResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async unrocketPost(
-    @Arg('postId', () => ID) postId: bigint,
+    @Arg('postId', () => ID) postId: string,
     @Ctx() { userId, em }: Context
   ) {
     const post = await em.findOne(Post, postId)

@@ -1,4 +1,4 @@
-import { usePosts } from '@comet/core/queries/usePosts'
+import { usePosts } from '@/lib/queries/usePosts'
 import Post from '@/components/post/Post'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { Scrollbar } from 'react-scrollbars-custom'
@@ -15,15 +15,12 @@ export default function Posts({
   draggable = false,
   expandable = false
 }) {
-  const { data, isLoading, fetchNextPage, hasNextPage } = usePosts(variables)
-  const posts = data ? data.pages.flatMap(page => page.posts) : []
+  const data = usePosts(variables)
+  const posts = data ? data.posts : []
 
   return (
     <Virtuoso
       overscan={500}
-      endReached={() => {
-        if (hasNextPage) fetchNextPage()
-      }}
       data={posts}
       itemContent={(index, post) => (
         <Post

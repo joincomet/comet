@@ -1,5 +1,5 @@
 import { QueryClient } from 'react-query'
-import { fetchPlanet, usePlanet } from '@comet/core/queries/usePlanet'
+import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
 import { dehydrate } from 'react-query/hydration'
 import { useRouter } from 'next/router'
 import PlanetSidebar from '@/components/sidebars/PlanetSidebar'

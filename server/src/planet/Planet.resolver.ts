@@ -3,14 +3,11 @@ import {
   Args,
   Authorized,
   Ctx,
-  FieldResolver,
   ID,
   Mutation,
   Query,
-  Resolver,
-  Root
+  Resolver
 } from 'type-graphql'
-import { CreatePlanetArgs } from '@/planet/CreatePlanetArgs'
 import { Planet } from '@/planet/Planet.entity'
 import { Context } from '@/Context'
 import { User } from '@/user/User.entity'
@@ -20,22 +17,20 @@ import { handleUnderscore } from '@/handleUnderscore'
 import { ChatChannel } from '@/chat/ChatChannel.entity'
 import { PlanetsResponse } from '@/planet/PlanetsResponse'
 import { QueryOrder } from '@mikro-orm/core'
+import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 @Resolver(() => Planet)
 export class PlanetResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async createPlanet(
-    @Args() { name, customName, description, galaxy }: CreatePlanetArgs,
+    @Arg('name') name: string,
+    @Arg('avatarFile', () => GraphQLUpload) avatarFile: FileUpload,
     @Ctx() { userId, em }: Context
   ) {
-    const foundPlanet = await em.findOne(Planet, {
-      name: { $ilike: handleUnderscore(name) }
-    })
-    if (foundPlanet) throw new Error('Planet already exists')
-    const user = await em.findOne(User, userId, ['moderatedPlanets'])
-    if (user.moderatedPlanets.length >= 10)
-      throw new Error('Cannot moderate more than 10 planets')
+    const user = await em.findOne(User, userId, ['planets'])
+    if (user.planets.length >= 100)
+      throw new Error('Cannot join more than 100 planets')
 
     const channel = em.create(ChatChannel, {
       name: 'general'
@@ -43,9 +38,7 @@ export class PlanetResolver {
 
     const planet = em.create(Planet, {
       name,
-      description,
       creator: user,
-      galaxy,
       moderators: [user],
       users: [user],
       userCount: 1,
@@ -67,11 +60,14 @@ export class PlanetResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async joinPlanet(
-    @Arg('planetId', () => ID) planetId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
     @Ctx() { userId, em }: Context
   ) {
+    const user = await em.findOne(User, userId, ['planets'])
+    if (user.planets.length >= 100)
+      throw new Error('Cannot join more than 100 planets')
+
     const planet = await em.findOne(Planet, planetId)
-    const user = await em.findOne(User, userId)
     planet.users.add(user)
     planet.userCount++
     await em.persistAndFlush(planet)
@@ -81,7 +77,7 @@ export class PlanetResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async leavePlanet(
-    @Arg('planetId', () => ID) planetId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
     @Ctx() { userId, em }: Context
   ) {
     const planet = await em.findOne(Planet, planetId)
@@ -98,7 +94,7 @@ export class PlanetResolver {
     { sort, joinedOnly, galaxy, page, pageSize }: PlanetsArgs,
     @Ctx() { userId, em }: Context
   ) {
-    const user = await em.findOne(User, userId, ['joinedPlanets'])
+    const user = await em.findOne(User, userId, ['planets'])
 
     let where = {}
     let orderBy = {}
@@ -120,7 +116,7 @@ export class PlanetResolver {
     }
 
     if (userId && joinedOnly) {
-      where = { id: user.joinedPlanets.getItems(false) }
+      where = { id: user.planets.getItems(false) }
     }
 
     const planets = await em.find(

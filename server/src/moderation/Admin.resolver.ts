@@ -9,7 +9,7 @@ export class AdminResolver {
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
   async banUser(
-    @Arg('bannedId', () => ID) bannedId: bigint,
+    @Arg('bannedId', () => ID) bannedId: string,
     @Arg('reason') reason: string,
     @Ctx() { em }: Context
   ) {
@@ -18,7 +18,7 @@ export class AdminResolver {
       .update({
         banned: true,
         banReason: reason,
-        joinedPlanets: [],
+        planets: [],
         moderatedPlanets: []
       })
       .where({ id: bannedId })
@@ -29,7 +29,7 @@ export class AdminResolver {
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
   async unbanUser(
-    @Arg('bannedId', () => ID) bannedId: bigint,
+    @Arg('bannedId', () => ID) bannedId: string,
     @Ctx() { em }: Context
   ) {
     await em
@@ -46,14 +46,14 @@ export class AdminResolver {
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
   async banAndPurgeUser(
-    @Arg('bannedId', () => ID) bannedId: bigint,
+    @Arg('bannedId', () => ID) bannedId: string,
     @Arg('reason') reason: string,
     @Ctx() { em }: Context
   ) {
     const bannedUser = em.assign(await em.findOne(User, bannedId), {
       banned: true,
       banReason: reason,
-      joinedPlanets: [],
+      planets: [],
       moderatedPlanets: []
     })
 

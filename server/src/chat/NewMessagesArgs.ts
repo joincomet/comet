@@ -4,7 +4,7 @@ import { Max, Min } from 'class-validator'
 @ArgsType()
 export class NewMessagesArgs {
   @Field(() => ID)
-  channelId: bigint
+  channelId: string
 
   @Field(() => Int, { defaultValue: 0 })
   @Min(0)

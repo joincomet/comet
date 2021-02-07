@@ -1,4 +1,4 @@
-import { usePlanets } from '@comet/core/queries/usePlanets'
+import { usePlanets } from '@/lib/queries/usePlanets'
 import React, { useRef } from 'react'
 import ExploreLeftSidebar from '@/components/sidebars/ExploreSidebar'
 import AutoSizer from 'react-virtualized-auto-sizer'

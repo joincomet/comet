@@ -1,7 +1,7 @@
 import { FiX } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
 import React, { useState } from 'react'
-import { useEditCommentMutation } from '@comet/core/mutations/commentMutations'
+import { useEditCommentMutation } from '@/lib/mutations/commentMutations'
 import Editor from '@/components/editor/Editor'
 import toast from 'react-hot-toast'
 

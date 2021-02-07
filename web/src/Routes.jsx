@@ -1,32 +1,17 @@
-import React from 'react'
-import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
+import React, { useEffect } from 'react'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import LandingPage from '@/pages/LandingPage'
 import HomePage from '@/pages/HomePage'
 import ExplorePage from '@/pages/ExplorePage'
-import LoginPage from '@/pages/login/LoginPage'
-import RegisterPage from '@/pages/login/RegisterPage'
-import LoginLayout from '@/pages/LoginLayout'
+import LoginPage from '@/pages/auth/LoginPage'
+import RegisterPage from '@/pages/auth/RegisterPage'
+import AuthLayout from '@/pages/auth/AuthLayout'
 
 export default function Routes() {
-  const user = useCurrentUser().data
+  const user = useCurrentUser()
   return (
     <Switch>
-      <Route>
-        <LoginLayout>
-          <Switch>
-            <Route
-              path="/login"
-              render={() => (user ? <Redirect to="/home" /> : <LoginPage />)}
-            />
-            <Route
-              path="/register"
-              render={() => (user ? <Redirect to="/home" /> : <RegisterPage />)}
-            />
-          </Switch>
-        </LoginLayout>
-      </Route>
-
       <Route
         path="/"
         exact
@@ -39,18 +24,34 @@ export default function Routes() {
           }
         }}
       />
+
       <PrivateRoute path="/home">
         <HomePage />
       </PrivateRoute>
       <PrivateRoute path="/explore">
         <ExplorePage />
       </PrivateRoute>
+
+      <Route>
+        <AuthLayout>
+          <Switch>
+            <Route
+              path="/login"
+              render={() => (user ? <Redirect to="/home" /> : <LoginPage />)}
+            />
+            <Route
+              path="/register"
+              render={() => (user ? <Redirect to="/home" /> : <RegisterPage />)}
+            />
+          </Switch>
+        </AuthLayout>
+      </Route>
     </Switch>
   )
 }
 
 function PrivateRoute({ children, ...rest }) {
-  const user = useCurrentUser().data
+  const user = useCurrentUser()
   return (
     <Route
       {...rest}

@@ -17,12 +17,11 @@ import {
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { EditableEntity } from '@/Editable.entity'
 import { BaseEntity } from '@/Base.entity'
 
-@ObjectType({ implements: [BaseEntity, EditableEntity] })
+@ObjectType({ implements: BaseEntity })
 @Entity()
-export class Post extends EditableEntity {
+export class Post extends BaseEntity {
   @Field({ nullable: true })
   @Property({ nullable: true })
   title: string
@@ -113,7 +112,7 @@ export class Post extends EditableEntity {
       .replace(/[^a-z0-9-]+/gi, '')
       .replace(/[-](.)\1+/g, '$1')*/
     const planet = this.planet as Planet
-    return `/planet/${planet ? planet.name : '_'}/post/${this.id36}`
+    return `/planet/${planet.id}/post/${this.id}`
   }
 
   @Field(() => [Folder])
@@ -125,4 +124,20 @@ export class Post extends EditableEntity {
       ' CAST(EXTRACT(EPOCH FROM created_at) AS int)+5000) AS FLOAT)/100.0)^(1.618))'
   )
   hotRank: number
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  editedAt?: Date
+
+  @Field()
+  @Property({ default: false })
+  deleted: boolean
+
+  @Field()
+  @Property({ default: false })
+  removed: boolean
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  removedReason?: string
 }

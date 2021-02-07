@@ -10,10 +10,10 @@ import { BiText } from 'react-icons/bi'
 import React, { useState } from 'react'
 import Dialog from '@/components/ui/Dialog'
 import { useForm } from 'react-hook-form'
-import { useSubmitPostMutation } from '@comet/core/mutations/postMutations'
+import { useSubmitPostMutation } from '@/lib/mutations/postMutations'
 import toast from 'react-hot-toast'
 // import Editor from '@/components/editor/Editor'
-import Spinner from '@/components/ui/Spinner'
+import IconSpinner from '@/components/ui/icons/IconSpinner'
 import PlanetsSelect from '@/components/ui/PlanetsSelect'
 import { useHistory, useParams } from 'react-router-dom'
 
@@ -206,7 +206,7 @@ export default function CreatePostDialog({ activator }) {
                 >
                   {submitPostMutation.isLoading ? (
                     <div className="mr-3">
-                      <Spinner />
+                      <IconSpinner />
                     </div>
                   ) : (
                     <HiUpload className="w-5 h-5 mr-3" />

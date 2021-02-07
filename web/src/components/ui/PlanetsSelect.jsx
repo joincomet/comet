@@ -1,5 +1,5 @@
 import { Listbox, Transition } from '@headlessui/react'
-import { usePlanets } from '@comet/core/queries/usePlanets'
+import { usePlanets } from '@/lib/queries/usePlanets'
 import { useState } from 'react'
 
 export default function PlanetsSelect() {

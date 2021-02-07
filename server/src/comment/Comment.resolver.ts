@@ -94,14 +94,12 @@ export class CommentResolver {
 
   @Query(() => [Comment])
   async comments(
-    @Args() { postId36, sort }: CommentsArgs,
+    @Args() { postId, sort }: CommentsArgs,
     @Ctx() { userId, em }: Context
   ) {
-    const postId = base36ToBigInt(postId36)
-
     const post = await em.findOne(Post, postId)
 
-    if (!post) throw new Error('Invalid post ID')
+    if (!post) throw new Error('Post not found')
 
     const comments = await em.find(
       Comment,
@@ -132,7 +130,7 @@ export class CommentResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async deleteComment(
-    @Arg('commentId', () => ID) commentId: bigint,
+    @Arg('commentId', () => ID) commentId: string,
     @Ctx() { userId, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId, ['author', 'post'])
@@ -150,7 +148,7 @@ export class CommentResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async editComment(
-    @Arg('commentId', () => ID) commentId: bigint,
+    @Arg('commentId', () => ID) commentId: string,
     @Arg('newTextContent') newTextContent: string,
     @Ctx() { userId, em }: Context
   ) {
@@ -167,7 +165,7 @@ export class CommentResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async rocketComment(
-    @Arg('commentId', () => ID) commentId: bigint,
+    @Arg('commentId', () => ID) commentId: string,
     @Ctx() { userId, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId)
@@ -181,7 +179,7 @@ export class CommentResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async unrocketComment(
-    @Arg('commentId', () => ID) commentId: bigint,
+    @Arg('commentId', () => ID) commentId: string,
     @Ctx() { userId, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId)

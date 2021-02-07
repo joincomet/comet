@@ -4,7 +4,7 @@ import React, { forwardRef } from 'react'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import { galaxyIcon } from '@/lib/galaxyIcon'
 import { Link, useHistory, useParams } from 'react-router-dom'
-import { galaxies } from '@comet/core/galaxies'
+import { galaxies } from '@/lib/galaxies'
 
 export default forwardRef((props, ref) => {
   const query = useParams()

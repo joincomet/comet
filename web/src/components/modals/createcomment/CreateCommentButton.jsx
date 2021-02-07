@@ -1,8 +1,8 @@
 import { FiMessageCircle } from 'react-icons/fi'
 import React from 'react'
-import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import CreateCommentModal from '@/components/modals/createcomment/CreateCommentModal'
-import { useLoginStore } from '@comet/core/stores/useLoginStore'
+import { useLoginStore } from '@/lib/stores/useLoginStore'
 import { useCommentStore } from '../../../lib/stores/useCommentStore'
 
 export default function CreateCommentButton({

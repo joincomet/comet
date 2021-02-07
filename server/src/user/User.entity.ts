@@ -20,11 +20,11 @@ export class User extends BaseEntity {
   username: string
 
   @Field()
-  @Property({ default: '0001' })
+  @Property()
   tag: string
 
   @Field()
-  @Formula('concat(username, #, tag)')
+  @Formula("username || '#' || tag")
   name: string
 
   @Authorized('USER')
@@ -57,7 +57,7 @@ export class User extends BaseEntity {
   folders = new Collection<Folder>(this)
 
   @ManyToMany(() => Planet, 'users')
-  joinedPlanets = new Collection<Planet>(this)
+  planets = new Collection<Planet>(this)
 
   @ManyToMany(() => ChatGroup, group => group.users)
   chatGroups = new Collection<ChatGroup>(this)

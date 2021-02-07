@@ -25,7 +25,7 @@ export class FolderResolver {
 
   @Query(() => Folder, { nullable: true })
   async folder(
-    @Arg('folderId', () => ID) folderId: bigint,
+    @Arg('folderId', () => ID) folderId: string,
     @Ctx() { em }: Context
   ) {
     return em.findOne(Folder, { id: folderId, deleted: false })
@@ -34,8 +34,8 @@ export class FolderResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async addPostToFolder(
-    @Arg('postId', () => ID) postId: bigint,
-    @Arg('folderId', () => ID) folderId: bigint,
+    @Arg('postId', () => ID) postId: string,
+    @Arg('folderId', () => ID) folderId: string,
     @Ctx() { userId, em }: Context
   ) {
     const folder = await em.findOne(Folder, folderId, ['creator'])
@@ -53,8 +53,8 @@ export class FolderResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async removePostFromFolder(
-    @Arg('postId', () => ID) postId: bigint,
-    @Arg('folderId', () => ID) folderId: bigint,
+    @Arg('postId', () => ID) postId: string,
+    @Arg('folderId', () => ID) folderId: string,
     @Ctx() { userId, em }: Context
   ) {
     const folder = await em.findOne(Folder, folderId, ['creator'])

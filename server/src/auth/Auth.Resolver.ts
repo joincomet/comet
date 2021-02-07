@@ -6,6 +6,10 @@ import { createAccessToken } from '@/auth/AuthTokens'
 import * as argon2 from 'argon2'
 import { handleUnderscore } from '@/handleUnderscore'
 import { Planet } from '@/planet/Planet.entity'
+import { customAlphabet } from 'nanoid'
+import isEmail from 'validator/lib/isEmail'
+
+const tagGenerator = customAlphabet('0123456789', 4)
 
 @Resolver()
 export class AuthResolver {
@@ -16,6 +20,9 @@ export class AuthResolver {
     @Arg('password') password: string,
     @Arg('email', { nullable: true }) email?: string
   ) {
+    if (email && !isEmail(email.toLowerCase()))
+      throw new Error('Invalid email address')
+
     username = username
       .replace(/ +(?= )/g, '') // remove repeated spaces
       .replace(/[\u200B-\u200D\uFEFF]/g, '') // remove zero-width characters
@@ -30,23 +37,34 @@ export class AuthResolver {
         throw new Error(`Username cannot contain '${s}'`)
     }
 
-    const foundUser = await em.findOne(User, {
-      username: handleUnderscore(username)
-    })
-    if (foundUser) throw new Error('Username taken')
+    if (email) {
+      const foundUser = await em.findOne(User, {
+        email: handleUnderscore(email.toLowerCase())
+      })
+      if (foundUser) throw new Error('Email already in use')
+    }
 
     const passwordHash = await argon2.hash(password)
-    const cometPlanet = await em.findOne(Planet, { name: 'Comet' })
-    cometPlanet.userCount++
+
+    let tag = tagGenerator()
+
+    while (
+      await em.findOne(User, {
+        $and: [{ username: { $ilike: handleUnderscore(username) } }, { tag }]
+      })
+    ) {
+      tag = tagGenerator()
+    }
+
     const user = em.create(User, {
       username,
+      tag,
       passwordHash,
       lastLogin: new Date(),
-      joinedPlanets: [cometPlanet],
       email: email.toLowerCase()
     })
     const accessToken = createAccessToken(user)
-    await em.persistAndFlush([cometPlanet, user])
+    await em.persistAndFlush(user)
     return {
       accessToken,
       user
@@ -56,23 +74,31 @@ export class AuthResolver {
   @Mutation(() => LoginResponse)
   async login(
     @Ctx() { em }: Context,
-    @Arg('password') password: string,
-    @Arg('name', { nullable: true }) name?: string,
-    @Arg('email', { nullable: true }) email?: string
+    @Arg('name') name: string,
+    @Arg('password') password: string
   ) {
-    if (!name && !email)
-      throw new Error('Must log in with either username or email')
+    const usernameRegex = /^[^#]{2,32}#\d{4}$/
     let user
-    if (name) {
-      user = await em.findOne(User, { name })
-    } else if (email) {
-      user = await em.findOne(User, { email: email.toLowerCase() })
+    if (usernameRegex.test(name)) {
+      // username#tag
+      const split = name.split('#')
+      const username = split[0]
+      const tag = split[1]
+      user = await em.findOne(User, {
+        $and: [{ username: { $ilike: handleUnderscore(username) } }, { tag }]
+      })
+    } else if (isEmail(name.toLowerCase())) {
+      // email
+      user = await em.findOne(User, {
+        email: handleUnderscore(name.toLowerCase())
+      })
+    } else {
+      throw new Error('Must log in with email or username#tag')
     }
     if (!user) throw new Error('Invalid Login')
     if (user.banned) throw new Error('Banned: ' + user.banReason)
     const match = await argon2.verify(user.passwordHash, password)
     if (!match) throw new Error('Invalid Login')
-
     user.lastLogin = new Date()
     await em.persistAndFlush(user)
     const accessToken = createAccessToken(user)

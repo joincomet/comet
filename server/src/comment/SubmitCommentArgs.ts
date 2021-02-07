@@ -11,8 +11,8 @@ export class SubmitCommentArgs {
   textContent: string
 
   @Field(() => ID)
-  postId: bigint
+  postId: string
 
   @Field(() => ID, { nullable: true })
-  parentCommentId?: bigint
+  parentCommentId?: string
 }

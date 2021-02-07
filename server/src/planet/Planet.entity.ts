@@ -14,6 +14,7 @@ import {
 } from '@mikro-orm/core'
 import { NativeBigIntType } from '@/NativeBigIntType'
 import { BaseEntity } from '@/Base.entity'
+import { PlanetInvite } from '@/planet/PlanetInvite.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -38,7 +39,7 @@ export class Planet extends BaseEntity {
   posts = new Collection<Post>(this)
 
   @Field(() => [User])
-  @ManyToMany(() => User, 'joinedPlanets', { owner: true })
+  @ManyToMany(() => User, 'planets', { owner: true })
   users = new Collection<User>(this)
 
   @Field(() => Galaxy)
@@ -89,4 +90,7 @@ export class Planet extends BaseEntity {
 
   @Property({ nullable: true })
   featuredRank: number
+
+  @OneToMany(() => PlanetInvite, 'planet')
+  invites = new Collection<PlanetInvite>(this)
 }

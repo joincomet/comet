@@ -1,10 +1,10 @@
 import React from 'react'
-import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import {
   useJoinPlanetMutation,
   useLeavePlanetMutation
-} from '@comet/core/mutations/planetMutations'
-import { useLoginStore } from '@comet/core/stores/useLoginStore'
+} from '@/lib/mutations/planetMutations'
+import { useLoginStore } from '@/lib/stores/useLoginStore'
 
 export default function PlanetJoinButton({ planet }) {
   const currentUser = useCurrentUser().data

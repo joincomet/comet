@@ -2,13 +2,14 @@ import Logo from '@/components/ui/icons/Logo'
 import { SiDiscord, SiGithub, SiPatreon, SiTwitter } from 'react-icons/si'
 import { HiDownload } from 'react-icons/hi'
 import Tippy from '@tippyjs/react'
-import Grass from '@/components/landing/Grass'
-import Telescope from '@/components/landing/Telescope'
-import Meteors from '@/components/landing/Meteors'
+import Grass from '@/components/graphics/Grass'
+import Telescope from '@/components/graphics/Telescope'
+import Meteors from '@/components/graphics/Meteors'
 import React, { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 import { getOS } from '@/lib/getOS'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
@@ -17,6 +18,7 @@ const link = 'hover:underline cursor-pointer flex items-center'
 
 export default function LandingPage() {
   const { ref, inView, entry } = useInView()
+  const user = useCurrentUser()
 
   return (
     <div className="relative flex flex-col items-center">
@@ -71,7 +73,7 @@ export default function LandingPage() {
       >
         <div
           ref={ref}
-          className="flex absolute bottom-0 left-0 right-0 -mb-8 z-10 text-gray-900"
+          className="flex absolute bottom-0 left-0 right-0 z-10 text-gray-900"
         >
           <Grass className="w-1/2" />
           <Grass className="w-1/2" />
@@ -103,7 +105,7 @@ export default function LandingPage() {
               </a>
 
               <Link
-                to="/login"
+                to={user ? '/home' : '/login'}
                 className="border border-gray-700 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
               >
                 Open in Browser

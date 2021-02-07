@@ -14,7 +14,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async removePost(
-    @Arg('postId', () => ID) postId: bigint,
+    @Arg('postId', () => ID) postId: string,
     @Arg('reason') reason: string,
     @Arg('planetId', () => ID) planetId: string,
     @Ctx() { em }: Context
@@ -33,8 +33,8 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async pinPost(
-    @Arg('planetId', () => ID) planetId: bigint,
-    @Arg('postId', () => ID) postId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
+    @Arg('postId', () => ID) postId: string,
     @Ctx() { em }: Context
   ) {
     await em.persistAndFlush(
@@ -48,8 +48,8 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async unpinPost(
-    @Arg('planetId', () => ID) planetId: bigint,
-    @Arg('postId', () => ID) postId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
+    @Arg('postId', () => ID) postId: string,
     @Ctx() { em }: Context
   ) {
     await em.persistAndFlush(
@@ -64,8 +64,8 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async removeComment(
-    @Arg('planetId', () => ID) planetId: bigint,
-    @Arg('commentId', () => ID) commentId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
+    @Arg('commentId', () => ID) commentId: string,
     @Arg('reason') reason: string,
     @Ctx() { em }: Context
   ) {
@@ -85,8 +85,8 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async banUserFromPlanet(
-    @Arg('planetId', () => ID) planetId: bigint,
-    @Arg('bannedId', () => ID) bannedId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
+    @Arg('bannedId', () => ID) bannedId: string,
     @Ctx() { em }: Context
   ) {
     const bannedUser = await em.findOne(User, bannedId)
@@ -100,8 +100,8 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async unbanUserFromPlanet(
-    @Arg('planetId', () => ID) planetId: bigint,
-    @Arg('bannedId', () => ID) bannedId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
+    @Arg('bannedId', () => ID) bannedId: string,
     @Ctx() { em }: Context
   ) {
     const bannedUser = await em.findOne(User, bannedId)
@@ -114,7 +114,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async uploadPlanetAvatar(
-    @Arg('planetId', () => ID) planetId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload,
     @Ctx() { em }: Context
   ) {
@@ -136,7 +136,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async uploadPlanetBanner(
-    @Arg('planetId', () => ID) planetId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload,
     @Ctx() { em }: Context
   ) {
@@ -157,7 +157,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async addModerator(
-    @Arg('planetId', () => ID) planetId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
     @Arg('username') username: string,
     @Ctx() { em }: Context
   ) {
@@ -185,7 +185,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async editPlanetDescription(
-    @Arg('planetId', () => ID) planetId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
     @Arg('description') description: string,
     @Ctx() { em }: Context
   ) {
@@ -203,7 +203,7 @@ export class ModerationResolver {
   @Authorized('MOD')
   @Mutation(() => Boolean)
   async setPlanetGalaxy(
-    @Arg('planetId', () => ID) planetId: bigint,
+    @Arg('planetId', () => ID) planetId: string,
     @Arg('galaxy', () => Galaxy) galaxy: Galaxy,
     @Ctx() { em }: Context
   ) {

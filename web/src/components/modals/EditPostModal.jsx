@@ -3,7 +3,7 @@ import { Modal } from 'react-responsive-modal'
 import React, { useState } from 'react'
 // import Editor from '@/components/editor/Editor'
 import toast from 'react-hot-toast'
-import { useEditPostMutation } from '@comet/core/mutations/postMutations'
+import { useEditPostMutation } from '@/lib/mutations/postMutations'
 
 export default function EditPostModal({ open, setOpen, post }) {
   const editPost = useEditPostMutation({

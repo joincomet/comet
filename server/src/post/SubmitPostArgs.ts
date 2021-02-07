@@ -21,7 +21,7 @@ export class SubmitPostArgs {
   textContent?: string
 
   @Field(() => ID)
-  planetId: bigint
+  planetId: string
 
   @Field(() => [GraphQLUpload], { nullable: true })
   @IsOptional()

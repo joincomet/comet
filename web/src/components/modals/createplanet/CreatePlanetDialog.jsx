@@ -1,9 +1,9 @@
 import React from 'react'
 import Dialog from '@/components/ui/Dialog'
-import { useCreatePlanetMutation } from '@comet/core/mutations/planetMutations'
+import { useCreatePlanetMutation } from '@/lib/mutations/planetMutations'
 import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
-import { galaxies } from '@comet/core/galaxies'
+import { galaxies } from '@/lib/galaxies'
 import IconPlanetCreate from '@/components/ui/icons/IconPlanetCreate'
 import { useHistory } from 'react-router-dom'
 

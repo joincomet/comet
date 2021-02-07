@@ -10,12 +10,12 @@ import { HiAnnotation, HiDotsHorizontal } from 'react-icons/hi'
 import React, { useState } from 'react'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import Twemoji from 'react-twemoji'
-import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import {
   useDeleteCommentMutation,
   useRocketCommentMutation,
   useUnrocketCommentMutation
-} from '@comet/core/mutations/commentMutations'
+} from '@/lib/mutations/commentMutations'
 import { useLoginStore } from '@/lib/stores/useLoginStore'
 import {
   useBanAndPurgeUserMutation,
@@ -23,7 +23,7 @@ import {
   useBanUserMutation,
   useRemoveCommentMutation,
   useReportCommentMutation
-} from '@comet/core/mutations/moderationMutations'
+} from '@/lib/mutations/moderationMutations'
 import { Menu } from '@headlessui/react'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'

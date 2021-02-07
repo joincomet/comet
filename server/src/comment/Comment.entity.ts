@@ -9,12 +9,11 @@ import {
   Property
 } from '@mikro-orm/core'
 import { NativeBigIntType } from '@/NativeBigIntType'
-import { EditableEntity } from '@/Editable.entity'
 import { BaseEntity } from '@/Base.entity'
 
-@ObjectType({ implements: [BaseEntity, EditableEntity] })
+@ObjectType({ implements: BaseEntity })
 @Entity()
-export class Comment extends EditableEntity {
+export class Comment extends BaseEntity {
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User)
   author: User
@@ -28,7 +27,7 @@ export class Comment extends EditableEntity {
 
   @Field(() => ID, { nullable: true })
   @Property({ nullable: true, type: NativeBigIntType })
-  parentCommentId: bigint
+  parentCommentId: string
 
   @ManyToMany(() => User)
   rocketers = new Collection<User>(this)
@@ -47,4 +46,20 @@ export class Comment extends EditableEntity {
   @Field({ nullable: true })
   @Property({ nullable: true })
   pinRank?: number
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  editedAt?: Date
+
+  @Field()
+  @Property({ default: false })
+  deleted: boolean
+
+  @Field()
+  @Property({ default: false })
+  removed: boolean
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  removedReason?: string
 }

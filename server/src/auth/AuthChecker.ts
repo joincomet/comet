@@ -3,6 +3,11 @@ import { AuthChecker } from 'type-graphql'
 import { Context } from '@/Context'
 import { Post } from '@/post/Post.entity'
 
+/*
+@Authorized(): must be logged in
+@Authorized('ADMIN'): must be admin
+@Authorized('USER'): must be same user as user being queried (i.e. email)
+ */
 export const authChecker: AuthChecker<Context> = async (
   { root, args, context: { userId, em }, info },
   roles
@@ -28,24 +33,12 @@ export const authChecker: AuthChecker<Context> = async (
   // true if admin
   if (user.admin) return true
 
+  // fields on user only accessible to same user (i.e. email)
   if (roles.includes('USER')) {
     if (root && root.id) {
       return root.id === user.id
     }
-  } else if (roles.includes('AUTHOR')) {
-    if (args && args.postId) {
-      const post = await em.findOne(Post, args.postId)
-      if (!post) return false
-      return post.authorId === userId
-    }
   }
-
-  // true if planet arg is in list of moderated planets
-  else if (roles.includes('MOD') && args && args.planetId)
-    return !!user.moderatedPlanets
-      .getItems()
-      .map(p => p.id)
-      .find(id => id === args.planetId)
 
   // false if no other conditions met
   return false

@@ -4,11 +4,10 @@ import { FixedSizeList as List } from 'react-window'
 import Tippy from '@tippyjs/react'
 import { HiHome } from 'react-icons/hi'
 import { IoTelescope } from 'react-icons/io5'
-import { usePlanets } from '@comet/core/queries/usePlanets'
-import PlanetAvatar from '@/components/avatars/PlanetAvatar'
+import { usePlanets } from '@/lib/queries/usePlanets'
+import PlanetAvatar from '@/components/planet/PlanetAvatar'
 import CreatePlanetDialog from '@/components/modals/createplanet/CreatePlanetDialog'
 import IconPlanetCreate from '@/components/ui/icons/IconPlanetCreate'
-import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
 import { NavLink, useLocation, useParams } from 'react-router-dom'
 import {
   planetScrollerItem,
@@ -17,9 +16,7 @@ import {
 } from './PlanetScroller.module.scss'
 
 export default function PlanetScroller() {
-  const currentUser = useCurrentUser().data
-  const { data } = usePlanets({ joinedOnly: true, sort: 'AZ' })
-  const planets = data ? data.planets : []
+  const planets = usePlanets({ joinedOnly: true, sort: 'AZ' }) || []
 
   const [open, setOpen] = useState(false)
 

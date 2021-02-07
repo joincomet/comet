@@ -1,9 +1,9 @@
-import { useSlideout } from '@comet/core/useSlideout'
+import { useSlideout } from '@/lib/useSlideout'
 import Header from '@/components/ui/header/Header'
 import HomeSidebar from '@/components/sidebars/HomeSidebar'
 import React from 'react'
 import GroupUsersSidebar from '@/components/sidebars/GroupSidebar'
-import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 
 export default function GroupMessagePage() {
   const {

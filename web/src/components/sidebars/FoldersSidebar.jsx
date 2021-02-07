@@ -1,6 +1,6 @@
 import { HiStar, HiArchive } from 'react-icons/hi'
 import React, { forwardRef } from 'react'
-import { useFolders } from '@comet/core/queries/useFolders'
+import { useFolders } from '@/lib/queries/useFolders'
 import { FiFolder, FiFolderPlus } from 'react-icons/fi'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'

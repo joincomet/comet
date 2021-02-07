@@ -1,4 +1,4 @@
 export interface NewMessagePayload {
-  channelId: bigint
+  channelId: string
   text: string
 }

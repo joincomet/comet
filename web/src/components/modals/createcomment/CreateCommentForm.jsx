@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSubmitCommentMutation } from '@comet/core/mutations/commentMutations'
+import { useSubmitCommentMutation } from '@/lib/mutations/commentMutations'
 import { useCommentStore } from '../../../lib/stores/useCommentStore'
 import { useQueryClient } from 'react-query'
-import { useComments } from '@comet/core/queries/useComments'
+import { useComments } from '@/lib/queries/useComments'
 import Editor from '@/components/editor/Editor'
-import Spinner from '@/components/ui/Spinner'
-import { useUpdatePost } from '@comet/core/useUpdatePost'
+import IconSpinner from '@/components/ui/icons/IconSpinner'
+import { useUpdatePost } from '@/lib/useUpdatePost'
 
 const postBtn =
   'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105 focus:outline-none'
@@ -87,7 +87,7 @@ export default function CreateCommentForm({
           >
             {submitCommentMutation.isLoading && (
               <div className="mr-3">
-                <Spinner />
+                <IconSpinner />
               </div>
             )}
             Done

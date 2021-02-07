@@ -2,16 +2,16 @@ import { FiX, FiCheck } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
 import React, { useEffect, useState } from 'react'
 
-import { colorsMap } from '@comet/core/colorsMap'
+import { colorsMap } from '@/lib/colorsMap'
 import {
   useAddModeratorMutation,
   useSetPlanetColorMutation,
   useSetPlanetGalaxyMutation
-} from '@comet/core/mutations/editPlanetMutations'
+} from '@/lib/mutations/editPlanetMutations'
 import { useQueryClient } from 'react-query'
 import toast from 'react-hot-toast'
-import Spinner from '@/components/ui/Spinner'
-import { galaxyIcon } from '@comet/core/galaxyIcon'
+import IconSpinner from '@/components/ui/icons/IconSpinner'
+import { galaxyIcon } from '@/lib/galaxyIcon'
 
 export default function PlanetSettingsModal({ open, setOpen, planet }) {
   const queryClient = useQueryClient()
@@ -138,7 +138,7 @@ export default function PlanetSettingsModal({ open, setOpen, planet }) {
           >
             {addMod.isLoading && (
               <div className="mr-3">
-                <Spinner />
+                <IconSpinner />
               </div>
             )}
             Add

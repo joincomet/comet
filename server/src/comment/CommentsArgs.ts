@@ -5,9 +5,9 @@ import { CommentSort } from '@/comment/CommentSort'
 export class CommentsArgs {
   @Field(() => ID, {
     nullable: true,
-    description: 'Return all comments for given post ID (base-36)'
+    description: 'Return all comments for given post ID'
   })
-  postId36: string
+  postId: string
 
   @Field(() => CommentSort, {
     nullable: true,

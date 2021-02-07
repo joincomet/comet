@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk'
-import { v4 as uuidv4 } from 'uuid'
+import { nanoid } from 'nanoid'
 import mime from 'mime'
 import sharp from 'sharp'
 
@@ -35,9 +35,8 @@ export const uploadImage = async (
   contentType: string,
   resize?: any
 ): Promise<string> => {
-  const uuid = uuidv4()
   const ext = mime.getExtension(contentType)
-  const key = `${uuid}.${ext}`
+  const key = `${nanoid()}.${ext}`
 
   const s = sharp().webp({ quality: 75 })
   if (resize) s.resize(resize)

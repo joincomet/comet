@@ -68,7 +68,7 @@ body {
 }
 
 .toast {
-  @apply bg-white dark:bg-gray-950 text-sm font-medium text-black dark:text-white !important;
+  @apply bg-white dark:bg-gray-950 text-sm font-normal text-black dark:text-white !important;
 }
 
 .twemoji {

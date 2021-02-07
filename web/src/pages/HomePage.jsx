@@ -3,10 +3,8 @@ import HomeSidebar from '@/components/sidebars/HomeSidebar'
 import Posts from '@/components/post/Posts'
 import Header from '@/components/ui/header/Header'
 import FoldersSidebar from '@/components/sidebars/FoldersSidebar'
-import { HiFolder } from 'react-icons/hi'
-import HeaderNewPostButton from '@/components/ui/header/HeaderNewPostButton'
-import CreatePostDialog from '@/components/modals/createpost/CreatePostDialog'
 import { useParams } from 'react-router-dom'
+import PlanetScroller from '@/components/planet-scroller/PlanetScroller'
 
 export default function HomePage() {
   const query = useParams()
@@ -21,6 +19,7 @@ export default function HomePage() {
 
   return (
     <>
+      <PlanetScroller />
       <HomeSidebar />
       <FoldersSidebar />
       <Header />

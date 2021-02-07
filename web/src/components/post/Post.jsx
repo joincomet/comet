@@ -19,13 +19,13 @@ import { DragItemTypes } from '@/lib/DragItemTypes'
 import {
   useRocketPostMutation,
   useUnrocketPostMutation
-} from '@comet/core/mutations/postMutations'
-import { useCurrentUser } from '@comet/core/queries/useCurrentUser'
+} from '@/lib/mutations/postMutations'
+import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import { useLoginStore } from '@/lib/stores/useLoginStore'
 import ReactPlayer from 'react-player'
 import { TiPin } from 'react-icons/ti'
 import UserAvatar from '@/components/avatars/UserAvatar'
-import PlanetAvatar from '@/components/avatars/PlanetAvatar'
+import PlanetAvatar from '@/components/planet/PlanetAvatar'
 import PlanetPopup from '@/components/popups/PlanetPopup'
 import UserPopup from '@/components/popups/UserPopup'
 
