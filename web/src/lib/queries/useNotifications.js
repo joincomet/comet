@@ -1,86 +1,64 @@
-
 import { useQuery, gql } from '@apollo/client'
 
-
-export const fetchNotifications = async ({ queryKey }) => {
-  const [_key, variables] = queryKey
-
-  const { notifications } = await request(
-    gql`
-      query notifications($unreadOnly: Boolean) {
-        notifications(unreadOnly: $unreadOnly) {
+const NOTIFICATIONS_QUERY = gql`
+  query notifications($unreadOnly: Boolean) {
+    notifications(unreadOnly: $unreadOnly) {
+      id
+      fromUser {
+        id
+        username
+        avatarUrl
+        bio
+        isCurrentUser
+      }
+      post {
+        id
+        title
+        pinned
+        textContent
+        linkUrl
+        imageUrls
+        relativeUrl
+        commentCount
+        rocketCount
+        isRocketed
+        thumbnailUrl
+        logoUrl
+        domain
+        meta {
+          title
+          description
+        }
+        planet {
           id
-          timeSince
-          fromUser {
-            id
-            username
-            avatarUrl
-            bio
-            isCurrentUser
-          }
-          post {
-            id
-            title
-            pinned
-            textContent
-            linkUrl
-            imageUrls
-            relativeUrl
-            commentCount
-            rocketCount
-            isRocketed
-            thumbnailUrl
-            logoUrl
-            domain
-            meta {
-              title
-              description
-            }
-            planet {
-              id
-              name
-              description
-              avatarUrl
-              bannerUrl
-              isJoined
-              userCount
-            }
-            author {
-              id
-              username
-              bio
-              avatarUrl
-              isCurrentUser
-            }
-            timeSince
-            timeSinceFull
-            timeSinceEdited
-          }
-          comment {
-            id
-            id36
-            parentCommentId
-            textContent
-            rocketCount
-            author {
-              id
-              username
-              avatarUrl
-              isCurrentUser
-            }
-            timeSince
-            timeSinceFull
-            timeSinceEdited
-          }
+          name
+          description
+          avatarUrl
+          bannerUrl
+          userCount
+        }
+        author {
+          id
+          username
+          bio
+          avatarUrl
+          isCurrentUser
         }
       }
-    `,
-    variables
-  )
-
-  return notifications
-}
+      comment {
+        id
+        parentCommentId
+        textContent
+        rocketCount
+        author {
+          id
+          username
+          avatarUrl
+          isCurrentUser
+        }
+      }
+    }
+  }
+`
 
 // TODO Notifications should use GraphQL subscriptions
-export const useNotifications = variables =>
-  useQuery(['notifications', variables], fetchNotifications)

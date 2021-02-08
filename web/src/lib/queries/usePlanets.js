@@ -1,6 +1,6 @@
 import { useQuery, gql } from '@apollo/client'
 
-const PLANETS_QUERY = gql`
+export const PLANETS_QUERY = gql`
   query planets(
     $sort: PlanetSort
     $joinedOnly: Boolean
@@ -23,9 +23,7 @@ const PLANETS_QUERY = gql`
         avatarUrl
         bannerUrl
         userCount
-        isJoined
         galaxy
-        timeSince
         description
         featured
       }

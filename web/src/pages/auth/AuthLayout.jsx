@@ -10,7 +10,7 @@ const logo = <Logo className="absolute left-8 top-8 h-6" />
 export default function AuthLayout({ children }) {
   return (
     <div
-      className="h-full flex items-center justify-center relative"
+      className="h-full flex items-center justify-center relative overflow-x-hidden"
       style={{
         backgroundImage:
           'radial-gradient(ellipse at top , #18181B 0%,  #27272A 95%)'

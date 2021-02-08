@@ -56,15 +56,12 @@ export class User extends BaseEntity {
   @OneToMany(() => Folder, 'creator')
   folders = new Collection<Folder>(this)
 
+  @Field(() => [Planet])
   @ManyToMany(() => Planet, 'users')
   planets = new Collection<Planet>(this)
 
   @ManyToMany(() => ChatGroup, group => group.users)
   chatGroups = new Collection<ChatGroup>(this)
-
-  @Field(() => [Planet])
-  @ManyToMany(() => Planet, 'moderators')
-  moderatedPlanets = new Collection<Planet>(this)
 
   @Field()
   @Property({ default: false })

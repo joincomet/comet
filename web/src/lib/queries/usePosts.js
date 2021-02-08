@@ -48,7 +48,6 @@ const POSTS_QUERY = gql`
           userCount
           avatarUrl
           bannerUrl
-          isJoined
         }
         author {
           id

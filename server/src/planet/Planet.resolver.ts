@@ -18,16 +18,18 @@ import { ChatChannel } from '@/chat/ChatChannel.entity'
 import { PlanetsResponse } from '@/planet/PlanetsResponse'
 import { QueryOrder } from '@mikro-orm/core'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
+import { uploadImage } from '@/S3Storage'
 
 @Resolver(() => Planet)
 export class PlanetResolver {
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => Planet)
   async createPlanet(
+    @Ctx() { userId, em }: Context,
     @Arg('name') name: string,
-    @Arg('avatarFile', () => GraphQLUpload) avatarFile: FileUpload,
-    @Ctx() { userId, em }: Context
-  ) {
+    @Arg('avatarFile', () => GraphQLUpload, { nullable: true })
+    avatarFile?: FileUpload
+  ): Promise<Planet> {
     const user = await em.findOne(User, userId, ['planets'])
     if (user.planets.length >= 100)
       throw new Error('Cannot join more than 100 planets')
@@ -36,16 +38,28 @@ export class PlanetResolver {
       name: 'general'
     })
 
+    let avatarUrl = null
+    if (avatarFile) {
+      const { createReadStream, mimetype } = await avatarFile
+      if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
+        throw new Error('Image must be PNG or JPEG')
+      avatarUrl = await uploadImage(createReadStream(), avatarFile.mimetype, {
+        width: 256,
+        height: 256
+      })
+    }
+
     const planet = em.create(Planet, {
       name,
-      creator: user,
+      owner: user,
       moderators: [user],
       users: [user],
       userCount: 1,
-      channels: [channel]
+      channels: [channel],
+      avatarUrl
     })
     await em.persistAndFlush([planet, channel])
-    return true
+    return planet
   }
 
   @Query(() => Planet, { nullable: true })

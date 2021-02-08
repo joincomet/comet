@@ -18,8 +18,7 @@ export class AdminResolver {
       .update({
         banned: true,
         banReason: reason,
-        planets: [],
-        moderatedPlanets: []
+        planets: []
       })
       .where({ id: bannedId })
       .execute()
@@ -53,8 +52,7 @@ export class AdminResolver {
     const bannedUser = em.assign(await em.findOne(User, bannedId), {
       banned: true,
       banReason: reason,
-      planets: [],
-      moderatedPlanets: []
+      planets: []
     })
 
     await em

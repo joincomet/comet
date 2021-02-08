@@ -10,8 +10,14 @@ export const CURRENT_USER_QUERY = gql`
       avatarUrl
       isOnline
       isCurrentUser
-      moderatedPlanets {
+      planets {
         id
+        name
+        channels {
+          id
+          name
+          description
+        }
       }
     }
   }

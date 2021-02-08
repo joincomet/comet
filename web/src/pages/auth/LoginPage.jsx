@@ -1,11 +1,9 @@
 import React from 'react'
-import { textbox, label, button } from './Auth.module.css'
 import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import { useForm } from 'react-hook-form'
 import { gql, useMutation } from '@apollo/client'
 import IconSpinner from '@/components/ui/icons/IconSpinner'
-import toast from 'react-hot-toast'
 import { CURRENT_USER_QUERY } from '@/lib/queries/useCurrentUser'
 
 const LOGIN_MUTATION = gql`
@@ -23,10 +21,7 @@ const LOGIN_MUTATION = gql`
 `
 
 export default function LoginPage() {
-  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION, {
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    awaitRefetchQueries: true
-  })
+  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 
@@ -45,31 +40,31 @@ export default function LoginPage() {
   return (
     <AuthCard>
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-        <div className="text-2xl font-bold mb-6 text-center">Welcome back!</div>
+        <div className="title mb-6">Welcome back!</div>
         <div className="mb-4">
-          <label htmlFor="name" className={label}>
+          <label htmlFor="name" className="label">
             Email or Username#tag
           </label>
           <input
-            className={textbox}
+            className="textbox"
             id="name"
             {...register('name', { required: true })}
           />
         </div>
 
         <div className="mb-6">
-          <label htmlFor="password" className={label}>
+          <label htmlFor="password" className="label">
             PASSWORD
           </label>
           <input
-            className={textbox}
+            className="textbox"
             type="password"
             id="password"
             {...register('password', { required: true })}
           />
         </div>
 
-        <button type="submit" className={button}>
+        <button type="submit" className="button" disabled={loading}>
           Log In
           {loading && <IconSpinner className="w-5 h-5 ml-3" />}
         </button>

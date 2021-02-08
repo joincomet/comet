@@ -1,0 +1,7 @@
+.modal {
+  @apply overflow-hidden bg-transparent shadow-none max-w-md w-full p-0 m-0 !important;
+}
+
+.overlay {
+  @apply bg-black bg-opacity-75 !important;
+}

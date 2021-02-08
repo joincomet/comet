@@ -1,19 +1,13 @@
-import { QueryClient } from 'react-query'
-import { fetchPlanet, usePlanet } from '@/lib/queries/usePlanet'
-import { dehydrate } from 'react-query/hydration'
-import { useRouter } from 'next/router'
 import PlanetSidebar from '@/components/sidebars/PlanetSidebar'
 import React from 'react'
 import Posts from '@/components/post/Posts'
 import Header from '@/components/ui/header/Header'
-import { useSlideout } from '@/lib/useSlideout'
 import FoldersSidebar from '@/components/sidebars/FoldersSidebar'
 import { HiFolder } from 'react-icons/hi'
 import HeaderNewPostButton from '@/components/ui/header/HeaderNewPostButton'
 import CreatePostDialog from '@/components/modals/createpost/CreatePostDialog'
 
 export default function PlanetPostsPage() {
-  const { query } = useRouter()
   const variables = {
     planet: query.planetName,
     pageSize: 20,
@@ -23,15 +17,6 @@ export default function PlanetPostsPage() {
   }
   const planetQuery = usePlanet({ name: query.planetName })
   const planet = planetQuery.data
-
-  const {
-    slideoutRight,
-    slideoutLeft,
-    menuLeft,
-    menuRight,
-    header,
-    panel
-  } = useSlideout()
 
   const title =
     planet.name +
@@ -68,30 +53,4 @@ export default function PlanetPostsPage() {
       </main>
     </>
   )
-}
-
-export async function getServerSideProps(ctx) {
-  const queryClient = new QueryClient()
-
-  const { query } = ctx
-
-  const k = ['planet', { name: query.planetName }]
-
-  await queryClient.prefetchQuery(k, key => fetchPlanet(key, ctx))
-
-  const planet = queryClient.getQueryData(k)
-
-  if (query.planetName !== planet.name)
-    return {
-      redirect: {
-        destination: `/planet/${planet.name}`,
-        permanent: true
-      }
-    }
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient)
-    }
-  }
 }

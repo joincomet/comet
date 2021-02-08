@@ -7,10 +7,8 @@ import {
   ManyToMany,
   ManyToOne,
   OneToOne,
-  PrimaryKey,
   Property
 } from '@mikro-orm/core'
-import { NativeBigIntType } from '@/NativeBigIntType'
 import { BaseEntity } from '@/Base.entity'
 
 @ObjectType({ implements: BaseEntity })

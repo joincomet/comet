@@ -11,113 +11,136 @@ import { Notification } from '@/notification/Notification.Entity'
 import { Galaxy } from '@/Galaxy'
 
 export class ModerationResolver {
-  @Authorized('MOD')
+  @Authorized()
   @Mutation(() => Boolean)
   async removePost(
     @Arg('postId', () => ID) postId: string,
     @Arg('reason') reason: string,
-    @Arg('planetId', () => ID) planetId: string,
-    @Ctx() { em }: Context
+    @Ctx() { em, userId }: Context
   ) {
-    await em.persistAndFlush(
-      em.assign(await em.findOne(Post, postId), {
-        removed: true,
-        removedReason: reason,
-        pinned: false,
-        pinRank: null
-      })
-    )
-    return true
-  }
+    const user = await em.findOne(User, userId)
+    const post = await em.findOne(Post, postId, ['planet.moderators'])
+    if (!post.planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
 
-  @Authorized('MOD')
-  @Mutation(() => Boolean)
-  async pinPost(
-    @Arg('planetId', () => ID) planetId: string,
-    @Arg('postId', () => ID) postId: string,
-    @Ctx() { em }: Context
-  ) {
-    await em.persistAndFlush(
-      em.assign(await em.findOne(Post, postId), {
-        pinned: true
-      })
-    )
-    return true
-  }
-
-  @Authorized('MOD')
-  @Mutation(() => Boolean)
-  async unpinPost(
-    @Arg('planetId', () => ID) planetId: string,
-    @Arg('postId', () => ID) postId: string,
-    @Ctx() { em }: Context
-  ) {
-    await em.persistAndFlush(
-      em.assign(await em.findOne(Post, postId), {
-        pinned: false,
-        pinRank: null
-      })
-    )
-    return true
-  }
-
-  @Authorized('MOD')
-  @Mutation(() => Boolean)
-  async removeComment(
-    @Arg('planetId', () => ID) planetId: string,
-    @Arg('commentId', () => ID) commentId: string,
-    @Arg('reason') reason: string,
-    @Ctx() { em }: Context
-  ) {
-    const comment = em.assign(await em.findOne(Comment, commentId, ['post']), {
+    em.assign(post, {
       removed: true,
       removedReason: reason,
       pinned: false,
       pinRank: null
     })
-    await em.nativeDelete(Notification, { comment })
-    const post = await em.findOne(Post, comment.post.id)
-    post.commentCount--
-    await em.persistAndFlush([comment, post])
+    await em.persistAndFlush(post)
     return true
   }
 
-  @Authorized('MOD')
+  @Authorized()
+  @Mutation(() => Boolean)
+  async pinPost(
+    @Arg('postId', () => ID) postId: string,
+    @Ctx() { em, userId }: Context
+  ) {
+    const user = await em.findOne(User, userId)
+    const post = await em.findOne(Post, postId, ['planet.moderators'])
+    if (!post.planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
+    post.pinned = true
+    await em.persistAndFlush(post)
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async unpinPost(
+    @Arg('postId', () => ID) postId: string,
+    @Ctx() { em, userId }: Context
+  ) {
+    const user = await em.findOne(User, userId)
+    const post = await em.findOne(Post, postId, ['planet.moderators'])
+    if (!post.planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
+    post.pinned = false
+    await em.persistAndFlush(post)
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async removeComment(
+    @Arg('commentId', () => ID) commentId: string,
+    @Arg('reason') reason: string,
+    @Ctx() { em, userId }: Context
+  ) {
+    const user = await em.findOne(User, userId)
+    const comment = await em.findOne(Comment, commentId, [
+      'post.planet.moderators'
+    ])
+    if (!comment.post.planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
+    em.assign(comment, {
+      removed: true,
+      removedReason: reason,
+      pinned: false,
+      pinRank: null
+    })
+
+    await em.nativeDelete(Notification, { comment })
+    comment.post.commentCount--
+    await em.persistAndFlush(comment)
+    return true
+  }
+
+  @Authorized()
   @Mutation(() => Boolean)
   async banUserFromPlanet(
     @Arg('planetId', () => ID) planetId: string,
     @Arg('bannedId', () => ID) bannedId: string,
-    @Ctx() { em }: Context
+    @Ctx() { em, userId }: Context
   ) {
+    const user = await em.findOne(User, userId)
+    const planet = await em.findOne(Planet, planetId, ['moderators'])
+    if (!planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
     const bannedUser = await em.findOne(User, bannedId)
-    const planet = await em.findOne(Planet, planetId)
     planet.bannedUsers.add(bannedUser)
     planet.users.remove(bannedUser)
     await em.persistAndFlush(planet)
     return true
   }
 
-  @Authorized('MOD')
+  @Authorized()
   @Mutation(() => Boolean)
   async unbanUserFromPlanet(
     @Arg('planetId', () => ID) planetId: string,
     @Arg('bannedId', () => ID) bannedId: string,
-    @Ctx() { em }: Context
+    @Ctx() { em, userId }: Context
   ) {
+    const user = await em.findOne(User, userId)
+    const planet = await em.findOne(Planet, planetId, ['moderators'])
+    if (!planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
     const bannedUser = await em.findOne(User, bannedId)
-    const planet = await em.findOne(Planet, planetId)
     planet.bannedUsers.remove(bannedUser)
     await em.persistAndFlush(planet)
     return true
   }
 
-  @Authorized('MOD')
+  @Authorized()
   @Mutation(() => Boolean)
   async uploadPlanetAvatar(
     @Arg('planetId', () => ID) planetId: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload,
-    @Ctx() { em }: Context
+    @Ctx() { em, userId }: Context
   ) {
+    const user = await em.findOne(User, userId)
+    const planet = await em.findOne(Planet, planetId, ['moderators'])
+    if (!planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
     const { createReadStream, mimetype } = await file
     if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
       throw new Error('Image must be PNG or JPEG')
@@ -125,82 +148,83 @@ export class ModerationResolver {
       width: 256,
       height: 256
     })
-    await em
-      .createQueryBuilder(Planet)
-      .update({ avatarUrl })
-      .where({ id: planetId })
-      .execute()
+    planet.avatarUrl = avatarUrl
+    await em.persistAndFlush(planet)
     return true
   }
 
-  @Authorized('MOD')
+  @Authorized()
   @Mutation(() => Boolean)
   async uploadPlanetBanner(
     @Arg('planetId', () => ID) planetId: string,
     @Arg('file', () => GraphQLUpload) file: FileUpload,
-    @Ctx() { em }: Context
+    @Ctx() { em, userId }: Context
   ) {
+    const user = await em.findOne(User, userId)
+    const planet = await em.findOne(Planet, planetId, ['moderators'])
+    if (!planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
     const { createReadStream, mimetype } = await file
     if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
       throw new Error('Image must be PNG or JPEG')
     const bannerUrl = await uploadImage(createReadStream(), file.mimetype, {
       width: 1920
     })
-    await em
-      .createQueryBuilder(Planet)
-      .update({ bannerUrl })
-      .where({ id: planetId })
-      .execute()
-    return true
-  }
-
-  @Authorized('MOD')
-  @Mutation(() => Boolean)
-  async addModerator(
-    @Arg('planetId', () => ID) planetId: string,
-    @Arg('username') username: string,
-    @Ctx() { em }: Context
-  ) {
-    const user = await em.findOne(
-      User,
-      { username: { $ilike: handleUnderscore(username) } },
-      ['moderatedPlanets']
-    )
-    if (!user) throw new Error('User not found')
-    if (
-      user.moderatedPlanets
-        .getItems()
-        .map(p => p.id)
-        .find(id => id === planetId)
-    )
-      throw new Error(`${user.username} is already a moderator`)
-    if (user.moderatedPlanets.length >= 10)
-      throw new Error(`${user.username} cannot moderate more than 10 planets`)
-    const planet = await em.findOne(Planet, planetId)
-    planet.moderators.add(user)
+    planet.bannerUrl = bannerUrl
     await em.persistAndFlush(planet)
     return true
   }
 
-  @Authorized('MOD')
+  @Authorized()
+  @Mutation(() => Boolean)
+  async addModerator(
+    @Arg('planetId', () => ID) planetId: string,
+    @Arg('username') username: string,
+    @Ctx() { em, userId }: Context
+  ) {
+    const user = await em.findOne(User, userId)
+    const planet = await em.findOne(Planet, planetId, ['moderators'])
+    if (!planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
+    const addedUser = await em.findOne(User, {
+      username: { $ilike: handleUnderscore(username) }
+    })
+    if (!addedUser) throw new Error('User not found')
+    if (
+      planet.moderators
+        .getItems()
+        .map(m => m.id)
+        .find(id => id === addedUser.id)
+    )
+      throw new Error(`${addedUser.username} is already a moderator`)
+    planet.moderators.add(addedUser)
+    await em.persistAndFlush(planet)
+    return true
+  }
+
+  @Authorized()
   @Mutation(() => Boolean)
   async editPlanetDescription(
     @Arg('planetId', () => ID) planetId: string,
     @Arg('description') description: string,
-    @Ctx() { em }: Context
+    @Ctx() { em, userId }: Context
   ) {
+    const user = await em.findOne(User, userId)
+    const planet = await em.findOne(Planet, planetId, ['moderators'])
+    if (!planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
     if (description.length > 1000)
       throw new Error('Description cannot be longer than 1000 characters')
 
-    await em
-      .createQueryBuilder(Planet)
-      .update({ description })
-      .where({ id: planetId })
-      .execute()
+    planet.description = description
+    await em.persistAndFlush(planet)
     return true
   }
 
-  @Authorized('MOD')
+  @Authorized()
   @Mutation(() => Boolean)
   async setPlanetGalaxy(
     @Arg('planetId', () => ID) planetId: string,

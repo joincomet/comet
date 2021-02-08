@@ -2,13 +2,13 @@ import { Field, ID, Int, ObjectType } from 'type-graphql'
 import { Post } from '@/post/Post.entity'
 import { User } from '@/user/User.entity'
 import {
+  BigIntType,
   Collection,
   Entity,
   ManyToMany,
   ManyToOne,
   Property
 } from '@mikro-orm/core'
-import { NativeBigIntType } from '@/NativeBigIntType'
 import { BaseEntity } from '@/Base.entity'
 
 @ObjectType({ implements: BaseEntity })
@@ -26,7 +26,7 @@ export class Comment extends BaseEntity {
   textContent: string
 
   @Field(() => ID, { nullable: true })
-  @Property({ nullable: true, type: NativeBigIntType })
+  @Property({ nullable: true, type: BigIntType })
   parentCommentId: string
 
   @ManyToMany(() => User)

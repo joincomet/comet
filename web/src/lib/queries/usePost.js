@@ -1,6 +1,4 @@
-
 import { useQuery, gql } from '@apollo/client'
-
 
 export const fetchPost = async ({ queryKey }) => {
   const [_key, variables] = queryKey
@@ -32,7 +30,6 @@ export const fetchPost = async ({ queryKey }) => {
             description
             avatarUrl
             bannerUrl
-            isJoined
             userCount
           }
           author {
@@ -42,9 +39,6 @@ export const fetchPost = async ({ queryKey }) => {
             avatarUrl
             isCurrentUser
           }
-          timeSince
-          timeSinceFull
-          timeSinceEdited
           deleted
           removed
           removedReason

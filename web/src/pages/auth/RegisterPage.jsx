@@ -1,5 +1,4 @@
 import React from 'react'
-import { textbox, label, button } from './Auth.module.css'
 import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import isEmail from 'validator/es/lib/isEmail'
@@ -23,10 +22,7 @@ const SIGNUP_MUTATION = gql`
 `
 
 export default function RegisterPage() {
-  const [signUp, { data, loading, error }] = useMutation(SIGNUP_MUTATION, {
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    awaitRefetchQueries: true
-  })
+  const [signUp, { data, loading, error }] = useMutation(SIGNUP_MUTATION)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 
@@ -47,26 +43,24 @@ export default function RegisterPage() {
   return (
     <AuthCard>
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-        <div className="text-2xl font-bold mb-6 text-center">
-          Create an account
-        </div>
+        <div className="title mb-6">Create an account</div>
         <div className="mb-4">
-          <label htmlFor="username" className={label}>
+          <label htmlFor="username" className="label">
             Username
           </label>
           <input
-            className={textbox}
+            className="textbox"
             id="username"
             {...register('username', { required: true })}
           />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className={label}>
+          <label htmlFor="email" className="label">
             Email (Recommended)
           </label>
           <input
-            className={textbox}
+            className="textbox"
             id="email"
             type="email"
             {...register('email', { validate: email => isEmail(email) })}
@@ -74,18 +68,18 @@ export default function RegisterPage() {
         </div>
 
         <div className="mb-6">
-          <label htmlFor="password" className={label}>
+          <label htmlFor="password" className="label">
             PASSWORD
           </label>
           <input
-            className={textbox}
+            className="textbox"
             type="password"
             id="password"
             {...register('password', { required: true })}
           />
         </div>
 
-        <button type="submit" className={button}>
+        <button type="submit" className="button" disabled={loading}>
           Continue
           {loading && <IconSpinner className="w-5 h-5 ml-3" />}
         </button>

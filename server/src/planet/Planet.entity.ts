@@ -12,7 +12,6 @@ import {
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { NativeBigIntType } from '@/NativeBigIntType'
 import { BaseEntity } from '@/Base.entity'
 import { PlanetInvite } from '@/planet/PlanetInvite.entity'
 
@@ -27,13 +26,9 @@ export class Planet extends BaseEntity {
   @Property({ nullable: true })
   description?: string
 
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  customName?: string
-
-  @Field(() => User, { nullable: true })
-  @ManyToOne({ entity: () => User, nullable: true })
-  creator?: User
+  @Field(() => User)
+  @ManyToOne(() => User)
+  owner: User
 
   @OneToMany(() => Post, 'planet')
   posts = new Collection<Post>(this)
@@ -50,15 +45,12 @@ export class Planet extends BaseEntity {
   bannedUsers = new Collection<User>(this)
 
   @Field(() => [User])
-  @ManyToMany(() => User, 'moderatedPlanets', { owner: true })
+  @ManyToMany(() => User)
   moderators = new Collection<User>(this)
 
-  @Field()
-  isJoined: boolean
-
   @Field(() => Int)
-  @Property({ type: NativeBigIntType })
-  userCount: bigint = 1n
+  @Property()
+  userCount: number = 0
 
   @Field({ nullable: true })
   @Property({ nullable: true })

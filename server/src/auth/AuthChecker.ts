@@ -16,7 +16,7 @@ export const authChecker: AuthChecker<Context> = async (
 
   if (!userId) return false
 
-  const user = await em.findOne(User, userId, ['moderatedPlanets'])
+  const user = await em.findOne(User, userId)
 
   // false if not logged in
   if (!user) return false

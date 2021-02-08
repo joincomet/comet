@@ -21,7 +21,7 @@ export class UserResolver {
     if (!userId) {
       return null
     }
-    const user = await em.findOne(User, userId, ['moderatedPlanets'])
+    const user = await em.findOne(User, userId, ['planets'])
     user.lastLogin = new Date()
     await em.persistAndFlush(user)
     return user
@@ -30,11 +30,9 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async user(@Arg('username') username: string, @Ctx() { em }: Context) {
     if (!username) return null
-    return em.findOne(
-      User,
-      { username: { $ilike: handleUnderscore(username) } },
-      ['moderatedPlanets']
-    )
+    return em.findOne(User, {
+      username: { $ilike: handleUnderscore(username) }
+    })
   }
 
   @Mutation(() => String)
