@@ -1,22 +1,27 @@
-import React, { useEffect } from 'react'
-import {
-  CURRENT_USER_QUERY,
-  useCurrentUser
-} from '@/lib/queries/useCurrentUser'
+import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import LandingPage from '@/pages/LandingPage'
-import HomePage from '@/pages/HomePage'
-import ExplorePage from '@/pages/ExplorePage'
+import HomePage from '@/pages/home/HomePage'
+import ExplorePage from '@/pages/explore/ExplorePage'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
 import AuthLayout from '@/pages/auth/AuthLayout'
-import LoadingScreen from '@/components/LoadingScreen'
-import { useQuery } from '@apollo/client'
+import LoadingScreen from '@/pages/LoadingScreen'
 import { BrowserRouter } from 'react-router-dom'
-import PlanetPostsPage from '@/pages/planet/[planetName]/PlanetPostsPage'
+import PlanetPostsPage from '@/pages/planet/PlanetPostsPage'
+import { useCurrentUserQuery } from '@/lib/queries'
+import PlanetScroller from '@/components/planet-scroller/PlanetScroller'
+import HomeLayout from '@/pages/home/HomeLayout'
+import PlanetLayout from '@/pages/planet/PlanetLayout'
+import GroupPage from '@/pages/group/GroupPage'
+import FolderPage from '@/pages/folder/FolderPage'
+import PlanetChannelPage from '@/pages/channel/PlanetChannelPage'
+import PlanetPostPage from '@/pages/post/PlanetPostPage'
+import PlanetFolderPage from '@/pages/folder/PlanetFolderPage'
+import NotFound from '@/pages/NotFound'
 
 export default function Router() {
-  const { data } = useQuery(CURRENT_USER_QUERY)
+  const [{ data }] = useCurrentUserQuery()
   return (
     <BrowserRouter>
       <Switch>
@@ -25,7 +30,7 @@ export default function Router() {
           exact
           render={() => {
             if (window.electron) {
-              if (data && data.currentUser) return <Redirect to="/home" />
+              if (data?.currentUser) return <Redirect to="/home" />
               return <Redirect to="/login" />
             } else {
               return <LandingPage />
@@ -39,41 +44,77 @@ export default function Router() {
               <Route
                 path="/login"
                 render={() =>
-                  data && data.currentUser ? (
-                    <Redirect to="/home" />
-                  ) : (
-                    <LoginPage />
-                  )
+                  data?.currentUser ? <Redirect to="/home" /> : <LoginPage />
                 }
               />
               <Route
                 path="/register"
                 render={() =>
-                  data && data.currentUser ? (
-                    <Redirect to="/home" />
-                  ) : (
-                    <RegisterPage />
-                  )
+                  data?.currentUser ? <Redirect to="/home" /> : <RegisterPage />
                 }
               />
             </Switch>
           </AuthLayout>
         </Route>
 
-        <Route>
+        <Route
+          path={[
+            '/home',
+            '/home/folder/:folderId',
+            '/home/chat/:groupId',
+            '/explore',
+            '/planet/:planetId',
+            '/planet/:planetId/channel/:channelId',
+            '/planet/:planetId/post/:postId',
+            '/planet/:planetId/folder/:folderId'
+          ]}
+          exact
+        >
           <LoadingScreen>
+            <PlanetScroller />
             <Switch>
               <PrivateRoute path="/home">
-                <HomePage />
+                <HomeLayout>
+                  <Switch>
+                    <PrivateRoute path="/home" exact>
+                      <HomePage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/home/folder/:folderId">
+                      <FolderPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/home/chat/:groupId">
+                      <GroupPage />
+                    </PrivateRoute>
+                  </Switch>
+                </HomeLayout>
               </PrivateRoute>
               <PrivateRoute path="/explore">
                 <ExplorePage />
               </PrivateRoute>
               <PrivateRoute path="/planet/:planetId">
-                <PlanetPostsPage />
+                <PlanetLayout>
+                  <Switch>
+                    <PrivateRoute path="/planet/:planetId" exact>
+                      <PlanetPostsPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/planet/:planetId/channel/:channelId">
+                      <PlanetChannelPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/planet/:planetId/post/:postId">
+                      <PlanetPostPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/planet/:planetId/folder/:folderId">
+                      <PlanetFolderPage />
+                    </PrivateRoute>
+                  </Switch>
+                </PlanetLayout>
               </PrivateRoute>
             </Switch>
           </LoadingScreen>
+        </Route>
+
+        <Route>
+          <NotFound />
         </Route>
       </Switch>
     </BrowserRouter>
@@ -81,13 +122,11 @@ export default function Router() {
 }
 
 function PrivateRoute({ children, ...rest }) {
-  const { data } = useQuery(CURRENT_USER_QUERY)
+  const [{ data }] = useCurrentUserQuery()
   return (
     <Route
       {...rest}
-      render={() =>
-        data && data.currentUser ? children : <Redirect to="/login" />
-      }
+      render={() => (data?.currentUser ? children : <Redirect to="/login" />)}
     />
   )
 }

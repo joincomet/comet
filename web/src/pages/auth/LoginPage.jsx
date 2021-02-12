@@ -2,26 +2,11 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import { useForm } from 'react-hook-form'
-import { gql, useMutation } from '@apollo/client'
-import IconSpinner from '@/components/ui/icons/IconSpinner'
-import { CURRENT_USER_QUERY } from '@/lib/queries/useCurrentUser'
-
-const LOGIN_MUTATION = gql`
-  mutation login($name: String!, $password: String!) {
-    login(name: $name, password: $password) {
-      accessToken
-      user {
-        id
-        admin
-        username
-        avatarUrl
-      }
-    }
-  }
-`
+import { useLoginMutation } from '@/lib/mutations'
+import Button from '@/components/Button'
 
 export default function LoginPage() {
-  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION)
+  const [{ data, fetching, error }, login] = useLoginMutation()
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 
@@ -64,10 +49,7 @@ export default function LoginPage() {
           />
         </div>
 
-        <button type="submit" className="button" disabled={loading}>
-          Log In
-          {loading && <IconSpinner className="w-5 h-5 ml-3" />}
-        </button>
+        <Button loading={fetching}>Log In</Button>
         <div className="pt-3 text-mid text-sm">
           Need an account?{' '}
           <Link to="/register" className="text-accent hover:underline">

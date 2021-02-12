@@ -8,22 +8,8 @@ import {
 import { TiPinOutline } from 'react-icons/ti'
 import { HiAnnotation, HiDotsHorizontal } from 'react-icons/hi'
 import React, { useState } from 'react'
-import UserAvatar from '@/components/avatars/UserAvatar'
+import UserAvatar from '@/components/user/UserAvatar'
 import Twemoji from 'react-twemoji'
-import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import {
-  useDeleteCommentMutation,
-  useRocketCommentMutation,
-  useUnrocketCommentMutation
-} from '@/lib/mutations/commentMutations'
-import { useLoginStore } from '@/lib/stores/useLoginStore'
-import {
-  useBanAndPurgeUserMutation,
-  useBanUserFromPlanetMutation,
-  useBanUserMutation,
-  useRemoveCommentMutation,
-  useReportCommentMutation
-} from '@/lib/mutations/moderationMutations'
 import { Menu } from '@headlessui/react'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
@@ -31,8 +17,13 @@ import { useCommentStore } from '@/lib/stores/useCommentStore'
 import EditCommentModal from '@/components/modals/EditCommentModal'
 import { RiRocketFill } from 'react-icons/ri'
 import MenuTransition from '@/components/ui/MenuTransition'
-import UserPopup from '@/components/popups/UserPopup'
+import UserPopup from '@/components/user/UserPopup'
 import { commentCollapse } from './Comment.module.scss'
+import { useMutation } from 'urql'
+import {
+  ROCKET_COMMENT_MUTATION,
+  UNROCKET_COMMENT_MUTATION
+} from '@/lib/mutations'
 
 export default function Comment({
   commentData,
@@ -45,8 +36,6 @@ export default function Comment({
   const [editing, setEditing] = useState(false)
   const [comment, setComment] = useState(commentData)
   const [textContent, setTextContent] = useState(comment.textContent)
-  const currentUser = useCurrentUser().data
-  const { setLogin } = useLoginStore()
 
   return (
     <>
@@ -57,7 +46,7 @@ export default function Comment({
         setText={setTextContent}
       />
       <div className={`relative`}>
-        <div id={comment.id36} />
+        <div id={comment.id} />
 
         <div
           className={commentCollapse}
@@ -125,12 +114,8 @@ export default function Comment({
                       {!comment.deleted && (
                         <div
                           onClick={() => {
-                            if (currentUser) {
-                              setParentComment(comment)
-                              setCreateComment(true)
-                            } else {
-                              setLogin(true)
-                            }
+                            setParentComment(comment)
+                            setCreateComment(true)
                           }}
                           className="action-chip text-tertiary"
                         >
@@ -174,10 +159,9 @@ function Options({ comment }) {
 }
 
 function Rocket({ comment, setComment }) {
-  const { setLogin } = useLoginStore()
   const variables = { commentId: comment.id }
-  const rocketCommentMutation = useRocketCommentMutation()
-  const unrocketCommentMutation = useUnrocketCommentMutation()
+  const [rocketCommentMutation] = useMutation(ROCKET_COMMENT_MUTATION)
+  const [unrocketCommentMutation] = useMutation(UNROCKET_COMMENT_MUTATION)
 
   const rocket = async () => {
     comment.isRocketed = true
@@ -191,14 +175,7 @@ function Rocket({ comment, setComment }) {
     await unrocketCommentMutation.mutateAsync(variables)
   }
 
-  const currentUser = useCurrentUser().data
-
   const toggleRocket = () => {
-    if (!currentUser) {
-      setLogin(true)
-      return
-    }
-
     if (comment.isRocketed) unrocket()
     else rocket()
   }
@@ -215,278 +192,6 @@ function Rocket({ comment, setComment }) {
     >
       <RiRocketFill className="w-4 h-4" />
       <div className="ml-1.5 text-xs font-medium">{comment.rocketCount}</div>
-    </div>
-  )
-}
-
-function MoreOptionsComment({ comment, post, level, setEditing }) {
-  const menuItem =
-    'cursor-pointer transition flex items-center w-full px-4 py-2.5 text-sm font-medium text-left focus:outline-none select-none'
-
-  const currentUser = useCurrentUser().data
-
-  const deleteComment = useDeleteCommentMutation()
-  const removeComment = useRemoveCommentMutation()
-  const banUserFromPlanet = useBanUserFromPlanetMutation()
-  const banUser = useBanUserMutation()
-  const banAndPurgeUser = useBanAndPurgeUserMutation()
-  const reportComment = useReportCommentMutation()
-
-  const isModerator =
-    currentUser &&
-    post.planet &&
-    currentUser.moderatedPlanets &&
-    currentUser.moderatedPlanets.map(p => p.id).includes(post.planet.id)
-
-  return (
-    <div className="relative inline-block z-30 h-full">
-      <Menu>
-        {({ open }) => (
-          <>
-            <span
-              className={`cursor-pointer select-none text-disabled mr-3 h-full inline-flex items-center`}
-              onClick={e => e.stopPropagation()}
-            >
-              <Menu.Button
-                className={`transition rounded-full h-8 w-8 dark:hover:bg-gray-800 focus:outline-none inline-flex items-center justify-center`}
-              >
-                <FiMoreHorizontal size={18} />
-              </Menu.Button>
-            </span>
-
-            <MenuTransition show={open}>
-              <Menu.Items
-                static
-                className="absolute right-full w-56 origin-top-right bg-white border border-gray-200 dark:border-transparent dark:bg-gray-800 rounded-md shadow-lg outline-none"
-              >
-                {currentUser &&
-                  (isModerator ||
-                    currentUser.admin ||
-                    post.author.isCurrentUser) &&
-                  level === 0 && (
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div
-                          onClick={e => {
-                            e.stopPropagation()
-                          }}
-                          className={`${
-                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-accent ${menuItem}`}
-                        >
-                          <TiPinOutline
-                            size={22}
-                            style={{ marginTop: '-1px' }}
-                            className="mr-4"
-                          />
-                          {comment.pinned ? `Unpin comment` : `Pin comment`}
-                        </div>
-                      )}
-                    </Menu.Item>
-                  )}
-
-                {comment.author.isCurrentUser ? (
-                  <>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div
-                          onClick={() => setEditing(true)}
-                          className={`${
-                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-tertiary ${menuItem}`}
-                        >
-                          <FiEdit2 size={18} className="mr-4" />
-                          Edit
-                        </div>
-                      )}
-                    </Menu.Item>
-
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div
-                          onClick={e => {
-                            e.stopPropagation()
-                            if (!window.confirm('Confirm Delete')) return
-                            comment.deleted = true
-                            deleteComment.mutateAsync({ commentId: comment.id })
-                            toast.success('Deleted comment!')
-                          }}
-                          className={`${
-                            active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } text-red-400 ${menuItem}`}
-                        >
-                          <FiTrash size={18} className="mr-4" />
-                          Delete
-                        </div>
-                      )}
-                    </Menu.Item>
-                  </>
-                ) : (
-                  <Menu.Item>
-                    {({ active }) => (
-                      <div
-                        onClick={e => {
-                          e.stopPropagation()
-                          const reason = window.prompt('Reason for removal:')
-                          if (!reason) return
-                          reportComment.mutateAsync({
-                            commentId: comment.id,
-                            reason
-                          })
-                          toast.success('Reported comment!')
-                        }}
-                        className={`${
-                          active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                        } text-red-400 ${menuItem}`}
-                      >
-                        <FiAlertCircle size={18} className="mr-4" />
-                        Report
-                      </div>
-                    )}
-                  </Menu.Item>
-                )}
-
-                {currentUser &&
-                  !comment.author.isCurrentUser &&
-                  (currentUser.admin || isModerator) && (
-                    <>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <div
-                            onClick={e => {
-                              e.stopPropagation()
-                              const reason = window.prompt(
-                                'Reason for removal:'
-                              )
-                              if (!reason) return
-                              comment.removed = true
-                              comment.removedReason = reason
-                              removeComment.mutateAsync({
-                                commentId: comment.id,
-                                planetId: post.planet.id,
-                                reason
-                              })
-                              toast.success('Removed comment!')
-                            }}
-                            className={`${
-                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                            } text-red-400 ${menuItem}`}
-                          >
-                            <FiShield size={18} className="mr-4" />
-                            Remove
-                          </div>
-                        )}
-                      </Menu.Item>
-
-                      {post.planet && (
-                        <Menu.Item>
-                          {({ active }) => (
-                            <div
-                              onClick={e => {
-                                e.stopPropagation()
-                                const reason = window.prompt('Reason for ban:')
-                                if (!reason) return
-                                banUserFromPlanet.mutateAsync({
-                                  planetId: post.planet.id,
-                                  bannedId: comment.author.id,
-                                  reason
-                                })
-                                toast.success(
-                                  `Banned @${comment.author.username} from +${post.planet.name}!`
-                                )
-                              }}
-                              className={`${
-                                active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                              } text-red-400 ${menuItem}`}
-                            >
-                              <FiShield
-                                size={18}
-                                className="mr-4 flex-shrink-0"
-                              />
-                              Ban @{comment.author.username} from +
-                              {post.planet.name}
-                            </div>
-                          )}
-                        </Menu.Item>
-                      )}
-                    </>
-                  )}
-
-                {currentUser &&
-                  currentUser.admin &&
-                  !post.author.isCurrentUser && (
-                    <>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <div
-                            onClick={e => {
-                              e.stopPropagation()
-                              const reason = window.prompt('Reason for ban:')
-                              if (!reason) return
-                              banUser.mutateAsync({
-                                bannedId: comment.author.id,
-                                reason
-                              })
-                              toast.success(
-                                `Banned @${comment.author.username} from CometX!`
-                              )
-                            }}
-                            className={`${
-                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                            } text-red-400 ${menuItem}`}
-                          >
-                            <FiShield
-                              size={18}
-                              className="mr-4 flex-shrink-0"
-                            />
-                            Ban @{comment.author.username} from CometX
-                          </div>
-                        )}
-                      </Menu.Item>
-
-                      <Menu.Item>
-                        {({ active }) => (
-                          <div
-                            onClick={e => {
-                              e.stopPropagation()
-                              const reason = window.prompt(
-                                'Reason for ban and purge:'
-                              )
-                              if (!reason) return
-                              if (
-                                !window.confirm(
-                                  `Confirm ban and purge - will remove all posts by ${comment.author.username}`
-                                )
-                              )
-                                return
-                              banAndPurgeUser.mutateAsync({
-                                bannedId: comment.author.id,
-                                reason
-                              })
-                              toast.success(
-                                `Banned and purged @${comment.author.username}!`
-                              )
-                            }}
-                            className={`${
-                              active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                            } text-red-400 ${menuItem}`}
-                          >
-                            <FiShield
-                              size={18}
-                              className="mr-4 flex-shrink-0"
-                            />
-                            Ban @{comment.author.username} from CometX and purge
-                            posts
-                          </div>
-                        )}
-                      </Menu.Item>
-                    </>
-                  )}
-              </Menu.Items>
-            </MenuTransition>
-          </>
-        )}
-      </Menu>
     </div>
   )
 }

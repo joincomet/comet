@@ -2,18 +2,21 @@ import { Field, Int, ObjectType } from 'type-graphql'
 import { User } from '@/user/User.entity'
 import { Post } from '@/post/Post.entity'
 import { Galaxy } from '@/Galaxy'
-import { ChatChannel } from '@/chat/ChatChannel.entity'
+import { Channel } from '@/chat/Channel.entity'
 import {
+  ArrayType,
   Collection,
   Entity,
   Enum,
   ManyToMany,
   ManyToOne,
   OneToMany,
-  Property
+  Property,
+  QueryOrder
 } from '@mikro-orm/core'
 import { BaseEntity } from '@/Base.entity'
 import { PlanetInvite } from '@/planet/PlanetInvite.entity'
+import { Folder } from '@/folder/Folder.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -33,9 +36,15 @@ export class Planet extends BaseEntity {
   @OneToMany(() => Post, 'planet')
   posts = new Collection<Post>(this)
 
-  @Field(() => [User])
   @ManyToMany(() => User, 'planets', { owner: true })
   users = new Collection<User>(this)
+
+  @Field(() => [Folder])
+  @OneToMany(() => Folder, 'planet', { orderBy: { createdAt: QueryOrder.ASC } })
+  folders = new Collection<Folder>(this)
+
+  @Property({ type: ArrayType, default: [] })
+  foldersSort: string[]
 
   @Field(() => Galaxy)
   @Enum({ items: () => Galaxy, default: Galaxy.Uncategorized })
@@ -68,9 +77,14 @@ export class Planet extends BaseEntity {
   @Property({ nullable: true })
   banReason?: string
 
-  @Field(() => [ChatChannel])
-  @OneToMany(() => ChatChannel, 'planet')
-  channels = new Collection<ChatChannel>(this)
+  @Field(() => [Channel])
+  @OneToMany(() => Channel, 'planet', {
+    orderBy: { createdAt: QueryOrder.ASC }
+  })
+  channels = new Collection<Channel>(this)
+
+  @Property({ type: ArrayType, default: [] })
+  channelsSort: string[]
 
   @Field()
   @Property({ default: false })

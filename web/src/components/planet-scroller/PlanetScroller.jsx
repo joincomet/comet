@@ -10,17 +10,17 @@ import {
   planetScrollerItemActive,
   planetScrollerItemDot
 } from './PlanetScroller.module.scss'
-import { useQuery } from '@apollo/client'
-import { CURRENT_USER_QUERY } from '@/lib/queries/useCurrentUser'
+import { useQuery } from 'urql'
+import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/lib/queries'
 
 export default function PlanetScroller() {
-  const {
-    data: {
-      currentUser: { planets }
+  const [
+    {
+      data: {
+        currentUser: { planets }
+      }
     }
-  } = useQuery(CURRENT_USER_QUERY)
-
-  const [open, setOpen] = useState(false)
+  ] = useCurrentUserQuery()
 
   const { pathname } = useLocation()
 
@@ -29,9 +29,9 @@ export default function PlanetScroller() {
       <div
         className={`top-0 electron:top-5.5 fixed left-0 bottom-0 flex flex-col items-center w-16 bg-white dark:bg-gray-900`}
       >
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col w-full">
           <Tippy content="Home" placement="right">
-            <NavLink to="/" className={planetScrollerItem}>
+            <NavLink to="/home" className={planetScrollerItem}>
               <div
                 className={`${planetScrollerItemDot} hover:bg-blue-500 dark:hover:bg-blue-500 ${
                   pathname === '/'

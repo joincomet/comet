@@ -19,17 +19,17 @@ import { PostSort } from '@/post/PostSort'
 import { PostsResponse } from '@/post/PostsResponse'
 import { Metadata } from '@/metascraper/Metadata.entity'
 import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
-import { handleUnderscore } from '@/handleUnderscore'
 import { QueryOrder } from '@mikro-orm/core'
 import { Planet } from '@/planet/Planet.entity'
 import { handleText } from '@/handleText'
 
 @Resolver(() => Post)
 export class PostResolver {
+  @Authorized()
   @Query(() => PostsResponse)
   async posts(
     @Args()
-    { page, pageSize, sort, time, joinedOnly, folderId, planet }: PostsArgs,
+    { page, pageSize, sort, time, joinedOnly, folderId, planetId }: PostsArgs,
     @Ctx() { userId, em }: Context
   ) {
     const user = userId ? await em.findOne(User, userId) : null
@@ -54,9 +54,7 @@ export class PostResolver {
               },
           { planet: { $ne: null } },
           user ? { planet: user.planets.getItems(false) } : {},
-          planet
-            ? { planet: { name: { $ilike: handleUnderscore(planet) } } }
-            : {}
+          planetId ? { planet: { id: planetId } } : {}
         ]
       },
       ['author', 'planet'],

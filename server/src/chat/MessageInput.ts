@@ -1,8 +1,8 @@
 import { Field, ID, InputType } from 'type-graphql'
-import { ChatMessage } from '@/chat/ChatMessage.entity'
+import { Message } from '@/chat/Message.entity'
 
 @InputType()
-export class MessageInput implements Partial<ChatMessage> {
+export class MessageInput implements Partial<Message> {
   @Field(() => ID)
   channelId: string
 

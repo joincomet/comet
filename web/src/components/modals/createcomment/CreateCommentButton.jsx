@@ -1,9 +1,7 @@
 import { FiMessageCircle } from 'react-icons/fi'
 import React from 'react'
-import { useCurrentUser } from '@/lib/queries/useCurrentUser'
 import CreateCommentModal from '@/components/modals/createcomment/CreateCommentModal'
-import { useLoginStore } from '@/lib/stores/useLoginStore'
-import { useCommentStore } from '../../../lib/stores/useCommentStore'
+import { useCommentStore } from '@/lib/stores/useCommentStore'
 
 export default function CreateCommentButton({
   post,
@@ -11,8 +9,6 @@ export default function CreateCommentButton({
   setParentComment,
   commentVariables
 }) {
-  const currentUser = useCurrentUser().data
-  const { setLogin } = useLoginStore()
   const { setCreateComment } = useCommentStore()
 
   return (
@@ -27,12 +23,8 @@ export default function CreateCommentButton({
         <div className="col-span-3 lg:col-span-2 flex">
           <div
             onClick={() => {
-              if (currentUser) {
-                setParentComment(null)
-                setCreateComment(true)
-              } else {
-                setLogin(true)
-              }
+              setParentComment(null)
+              setCreateComment(true)
             }}
             className="pointer-events-auto text-white opacity-90 hover:opacity-100 rounded-full shadow-md bg-blue-600 mx-auto h-8 w-48 flex items-center justify-center label cursor-pointer transition transform hover:scale-105"
           >

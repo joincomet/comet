@@ -7,9 +7,6 @@ import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express'
 import { Context } from '@/Context'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { authChecker } from '@/auth/AuthChecker'
-import { userLoader } from '@/user/UserLoader'
-import { postLoader } from '@/post/PostLoader'
-import { commentLoader } from '@/comment/CommentLoader'
 import { MikroORM, ReflectMetadataProvider } from '@mikro-orm/core'
 import { UserResolver } from '@/user/User.resolver'
 import { CommentResolver } from '@/comment/Comment.resolver'
@@ -19,13 +16,13 @@ import { ModerationResolver } from '@/moderation/Moderation.resolver'
 import { PlanetResolver } from '@/planet/Planet.resolver'
 import { FolderResolver } from '@/folder/Folder.resolver'
 import { ChatResolver } from '@/chat/Chat.resolver'
-import { ChatChannel } from '@/chat/ChatChannel.entity'
+import { Channel } from '@/chat/Channel.entity'
 import { Metadata } from '@/metascraper/Metadata.entity'
 import { NotificationResolver } from '@/notification/Notification.resolver'
 import { Notification } from '@/notification/Notification.entity'
 import { BaseEntity } from '@/Base.entity'
-import { ChatGroup } from '@/chat/ChatGroup.entity'
-import { ChatMessage } from '@/chat/ChatMessage.entity'
+import { Group } from '@/chat/Group.entity'
+import { Message } from '@/chat/Message.entity'
 import { Comment } from '@/comment/Comment.entity'
 import { Folder } from '@/folder/Folder.entity'
 import { Planet } from '@/planet/Planet.entity'
@@ -34,6 +31,7 @@ import { AuthResolver } from '@/auth/Auth.Resolver'
 import { Post } from '@/post/Post.entity'
 import { PlanetInvite } from '@/planet/PlanetInvite.entity'
 import * as http from 'http'
+import { UserStatus } from '@/user/UserStatus'
 
 if (process.env.NODE_ENV === 'production') {
   if (!process.env.DATABASE_URL) {
@@ -85,9 +83,9 @@ async function bootstrap() {
     cache: { enabled: false },
     entities: [
       BaseEntity,
-      ChatChannel,
-      ChatGroup,
-      ChatMessage,
+      Channel,
+      Group,
+      Message,
       Comment,
       Folder,
       Metadata,
@@ -95,7 +93,8 @@ async function bootstrap() {
       Planet,
       PlanetInvite,
       Post,
-      User
+      User,
+      UserStatus
     ],
     type: 'postgresql',
     clientUrl:
@@ -171,10 +170,10 @@ async function bootstrap() {
     uploads: false,
     introspection: true,
     subscriptions: {
-      onConnect: (connectionParams: { authToken: string }, webSocket) => {
-        if (connectionParams.authToken) {
+      onConnect: (connectionParams: { token: string }, webSocket) => {
+        if (connectionParams.token) {
           return {
-            userId: getUserId(connectionParams.authToken)
+            userId: getUserId(connectionParams.token)
           }
         }
 

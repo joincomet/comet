@@ -9,22 +9,22 @@ import TitleBar from '@/electron/titlebar/TitleBar'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Router from '@/Router'
-import { ApolloProvider } from '@apollo/client'
-import { apolloClient } from '@/lib/apolloClient'
+import { Provider as UrqlProvider } from 'urql'
+import { urqlClient } from '@/lib/urqlClient'
 import ResponsiveToaster from '@/components/ui/layout/ResponsiveToaster'
 
 export default function App() {
   return (
     <>
       <ResponsiveToaster />
-      <ApolloProvider client={apolloClient}>
+      <UrqlProvider value={urqlClient}>
         <DndProvider backend={HTML5Backend}>
           {window.electron && <TitleBar />}
           <div className={`h-full electron:pt-5.5`}>
             <Router />
           </div>
         </DndProvider>
-      </ApolloProvider>
+      </UrqlProvider>
     </>
   )
 }

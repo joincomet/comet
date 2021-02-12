@@ -3,26 +3,11 @@ import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import isEmail from 'validator/es/lib/isEmail'
 import { useForm } from 'react-hook-form'
-import { gql, useMutation } from '@apollo/client'
-import IconSpinner from '@/components/ui/icons/IconSpinner'
-import { CURRENT_USER_QUERY } from '@/lib/queries/useCurrentUser'
-
-const SIGNUP_MUTATION = gql`
-  mutation signUp($username: String!, $email: String, $password: String!) {
-    signUp(username: $username, email: $email, password: $password) {
-      accessToken
-      user {
-        id
-        admin
-        username
-        avatarUrl
-      }
-    }
-  }
-`
+import { useSignUpMutation } from '@/lib/mutations'
+import Button from '@/components/Button'
 
 export default function RegisterPage() {
-  const [signUp, { data, loading, error }] = useMutation(SIGNUP_MUTATION)
+  const [{ data, fetching, error }, signUp] = useSignUpMutation()
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 
@@ -79,10 +64,7 @@ export default function RegisterPage() {
           />
         </div>
 
-        <button type="submit" className="button" disabled={loading}>
-          Continue
-          {loading && <IconSpinner className="w-5 h-5 ml-3" />}
-        </button>
+        <Button loading={fetching}>Continue</Button>
         <div className="pt-3 text-mid text-sm">
           <Link to="/login" className="text-accent hover:underline">
             Already have an account?

@@ -24,11 +24,11 @@ export class PostsArgs extends PaginationArgs {
   })
   joinedOnly = false
 
-  @Field({
+  @Field(() => ID, {
     nullable: true,
-    description: 'If provided, only posts from given planet will be returned'
+    description: 'If provided, only posts from given planet ID will be returned'
   })
-  planet?: string
+  planetId?: string
 
   @Field(() => ID, {
     nullable: true,

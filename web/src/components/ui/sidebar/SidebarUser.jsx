@@ -1,7 +1,7 @@
 import { FiUser } from 'react-icons/fi'
 import React from 'react'
-import UserPopup from '@/components/popups/UserPopup'
-import UserAvatar from '@/components/avatars/UserAvatar'
+import UserPopup from '@/components/user/UserPopup'
+import UserAvatar from '@/components/user/UserAvatar'
 
 export default function SidebarUser({ user }) {
   return (

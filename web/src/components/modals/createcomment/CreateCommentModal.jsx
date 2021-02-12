@@ -1,9 +1,8 @@
 import { FiX } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
 import React from 'react'
-import { useRouter } from 'next/router'
 import CreateCommentForm from '@/components/modals/createcomment/CreateCommentForm'
-import { useCommentStore } from '../../../lib/stores/useCommentStore'
+import { useCommentStore } from '@/lib/stores/useCommentStore'
 
 export default function CreateCommentModal({
   post,

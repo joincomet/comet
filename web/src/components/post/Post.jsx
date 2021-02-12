@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import EditPostModal from '@/components/modals/EditPostModal'
 import { RiRocketFill } from 'react-icons/ri'
-import { FiAlignLeft, FiLink, FiMessageCircle } from 'react-icons/fi'
 import {
   HiLink,
   HiMenuAlt2,
@@ -16,18 +15,14 @@ import { Link, useHistory } from 'react-router-dom'
 import Tippy from '@tippyjs/react'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
-import {
-  useRocketPostMutation,
-  useUnrocketPostMutation
-} from '@/lib/mutations/postMutations'
-import { useCurrentUser } from '@/lib/queries/useCurrentUser'
-import { useLoginStore } from '@/lib/stores/useLoginStore'
 import ReactPlayer from 'react-player'
 import { TiPin } from 'react-icons/ti'
-import UserAvatar from '@/components/avatars/UserAvatar'
+import UserAvatar from '@/components/user/UserAvatar'
 import PlanetAvatar from '@/components/planet/PlanetAvatar'
-import PlanetPopup from '@/components/popups/PlanetPopup'
-import UserPopup from '@/components/popups/UserPopup'
+import PlanetPopup from '@/components/planet/PlanetPopup'
+import UserPopup from '@/components/user/UserPopup'
+import { useMutation } from 'urql'
+import { ROCKET_POST_MUTATION, UNROCKET_POST_MUTATION } from '@/lib/mutations'
 
 export default function Post({
   postData,
@@ -199,7 +194,7 @@ function Embed({ post }) {
                         />
                       ) : (
                         <div className="flex w-24 h-24 rounded-l-md border-r border-gray-200 dark:border-gray-800">
-                          <FiLink className="w-8 h-8 m-auto text-tertiary" />
+                          <HiLink className="w-8 h-8 m-auto text-tertiary" />
                         </div>
                       )}
                     </div>
@@ -286,26 +281,11 @@ function Actions({
 }
 
 function Rocket({ post, setPost }) {
-  const rocket = useRocketPostMutation({
-    onMutate: () => {
-      setPost({ ...post, rocketCount: post.rocketCount + 1, isRocketed: true })
-    }
-  })
+  const [rocket] = useMutation(ROCKET_POST_MUTATION)
+  const [unrocket] = useMutation(UNROCKET_POST_MUTATION)
 
-  const unrocket = useUnrocketPostMutation({
-    onMutate: () => {
-      setPost({ ...post, rocketCount: post.rocketCount - 1, isRocketed: false })
-    }
-  })
-
-  const currentUser = useCurrentUser().data
-  const { setLogin } = useLoginStore()
   const rocketVariables = { postId: post.id }
   const toggleRocket = () => {
-    if (!currentUser) {
-      setLogin(true)
-      return
-    }
     if (post.isRocketed) unrocket.mutate(rocketVariables)
     else rocket.mutate(rocketVariables)
   }

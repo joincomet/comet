@@ -1,18 +1,14 @@
 import { FiX } from 'react-icons/fi'
 import { Modal } from 'react-responsive-modal'
 import React, { useState } from 'react'
-import { useEditCommentMutation } from '@/lib/mutations/commentMutations'
-import Editor from '@/components/editor/Editor'
+// import Editor from '@/components/editor/Editor'
 import toast from 'react-hot-toast'
+import { useMutation } from 'urql'
+import { EDIT_COMMENT_MUTATION } from '@/lib/mutations'
 
 export default function EditCommentModal({ open, setOpen, comment, setText }) {
-  const editComment = useEditCommentMutation({
-    onMutate: ({ newTextContent }) => {
-      setOpen(false)
-      setText(newTextContent)
-      toast.success('Edited comment!')
-    }
-  })
+  const [editComment] = useMutation(EDIT_COMMENT_MUTATION)
+
   const [textContent, setTextContent] = useState(comment.textContent)
 
   return (
@@ -26,7 +22,7 @@ export default function EditCommentModal({ open, setOpen, comment, setText }) {
     >
       <div className="lg:rounded-2xl bg-white dark:bg-gray-800 p-6 space-y-4">
         <div className="text-secondary header-2">Edit Comment</div>
-        <Editor value={textContent} setValue={setTextContent} />
+        {/*<Editor value={textContent} setValue={setTextContent} />*/}
         <div className="flex items-center">
           <button
             onClick={() => {

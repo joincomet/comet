@@ -14,9 +14,9 @@ import {
   Subscription
 } from 'type-graphql'
 import { User } from '@/user/User.entity'
-import { ChatMessage } from '@/chat/ChatMessage.entity'
-import { ChatGroup } from '@/chat/ChatGroup.entity'
-import { ChatChannel } from '@/chat/ChatChannel.entity'
+import { Message } from '@/chat/Message.entity'
+import { Group } from '@/chat/Group.entity'
+import { Channel } from '@/chat/Channel.entity'
 import { Topic } from '@/chat/Topic'
 import { MessageInput } from '@/chat/MessageInput'
 import { NewMessagesArgs } from '@/chat/NewMessagesArgs'
@@ -27,12 +27,12 @@ import { wrap } from '@mikro-orm/core'
 @Resolver()
 export class ChatResolver {
   @Authorized()
-  @Query(() => [ChatMessage])
+  @Query(() => [Message])
   async messages(
     @Args() { channelId, page, pageSize }: NewMessagesArgs,
     @Ctx() { userId, em }: Context
   ) {
-    const channel = await em.findOne(ChatChannel, channelId, [
+    const channel = await em.findOne(Channel, channelId, [
       'group.users',
       'planet.users'
     ])
@@ -61,7 +61,7 @@ export class ChatResolver {
     }
 
     return em.find(
-      ChatMessage,
+      Message,
       { removed: false, deleted: false, channel: { id: channelId } },
       { limit: pageSize, offset: page * pageSize }
     )
@@ -72,11 +72,11 @@ export class ChatResolver {
   async sendMessage(
     @Arg('message') { text, channelId }: MessageInput,
     @PubSub(Topic.NewMessage)
-    notifyAboutNewMessage: Publisher<ChatMessage>,
+    notifyAboutNewMessage: Publisher<Message>,
     @Ctx() { userId, em }: Context
   ): Promise<boolean> {
     const err = new Error('You do not have access to this channel')
-    const channel = await em.findOne(ChatChannel, channelId, [
+    const channel = await em.findOne(Channel, channelId, [
       'group.users',
       'planet.users'
     ])
@@ -98,7 +98,7 @@ export class ChatResolver {
     )
       throw err
 
-    const message = em.create(ChatMessage, {
+    const message = em.create(Message, {
       text,
       channel,
       author: userId
@@ -111,19 +111,19 @@ export class ChatResolver {
   }
 
   @Authorized()
-  @Subscription(() => ChatMessage, {
+  @Subscription(() => Message, {
     topics: Topic.NewMessage,
     filter: ({
       payload,
       args
-    }: ResolverFilterData<ChatMessage, NewMessagesArgs>) => {
+    }: ResolverFilterData<Message, NewMessagesArgs>) => {
       return payload.channel.id === args.channelId
     }
   })
   newMessages(
-    @Root() newMessage: ChatMessage,
+    @Root() newMessage: Message,
     @Args() { channelId }: NewMessagesArgs
-  ): ChatMessage {
+  ): Message {
     return newMessage
   }
 }

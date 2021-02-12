@@ -8,6 +8,7 @@ import { handleUnderscore } from '@/handleUnderscore'
 import { Planet } from '@/planet/Planet.entity'
 import { customAlphabet } from 'nanoid'
 import isEmail from 'validator/lib/isEmail'
+import { Folder } from '@/folder/Folder.entity'
 
 const tagGenerator = customAlphabet('0123456789', 4)
 
@@ -64,7 +65,20 @@ export class AuthResolver {
       email: email.toLowerCase()
     })
     const accessToken = createAccessToken(user)
-    await em.persistAndFlush(user)
+
+    const favoritesFolder = em.create(Folder, {
+      name: 'Favorites',
+      owner: user
+    })
+
+    const readLaterFolder = em.create(Folder, {
+      name: 'Read Later',
+      owner: user
+    })
+    user.folders.add(favoritesFolder, readLaterFolder)
+    user.foldersSort = [favoritesFolder.id, readLaterFolder.id]
+    await em.persistAndFlush([favoritesFolder, readLaterFolder])
+
     return {
       accessToken,
       user

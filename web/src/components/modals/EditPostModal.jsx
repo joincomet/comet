@@ -3,15 +3,12 @@ import { Modal } from 'react-responsive-modal'
 import React, { useState } from 'react'
 // import Editor from '@/components/editor/Editor'
 import toast from 'react-hot-toast'
-import { useEditPostMutation } from '@/lib/mutations/postMutations'
+import { useMutation } from 'urql'
+import { EDIT_POST_MUTATION } from '@/lib/mutations'
 
 export default function EditPostModal({ open, setOpen, post }) {
-  const editPost = useEditPostMutation({
-    onMutate: ({ newTextContent }) => {
-      setOpen(false)
-      toast.success('Edited post!')
-    }
-  })
+  const [editPost, { data, loading }] = useMutation(EDIT_POST_MUTATION)
+
   const [textContent, setTextContent] = useState(post.textContent || '')
 
   return (

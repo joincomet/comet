@@ -17,20 +17,6 @@ import { handleUnderscore } from '@/handleUnderscore'
 
 @Resolver()
 export class FolderResolver {
-  @Query(() => [Folder])
-  async folders(@Ctx() { userId, em }: Context) {
-    if (!userId) return []
-    return em.find(Folder, { creator: userId, deleted: false })
-  }
-
-  @Query(() => Folder, { nullable: true })
-  async folder(
-    @Arg('folderId', () => ID) folderId: string,
-    @Ctx() { em }: Context
-  ) {
-    return em.findOne(Folder, { id: folderId, deleted: false })
-  }
-
   @Authorized()
   @Mutation(() => Boolean)
   async addPostToFolder(
@@ -38,10 +24,10 @@ export class FolderResolver {
     @Arg('folderId', () => ID) folderId: string,
     @Ctx() { userId, em }: Context
   ) {
-    const folder = await em.findOne(Folder, folderId, ['creator'])
+    const folder = await em.findOne(Folder, folderId, ['creator', 'planet'])
     if (!folder) throw new Error('Invalid folder')
     if (folder.deleted) throw new Error('Folder has been deleted')
-    if (folder.creator.id !== userId)
+    if (folder.owner.id !== userId)
       throw new Error('You do not have permission to modify this folder')
     const post = await em.findOne(Post, postId)
     folder.posts.add(post)
@@ -60,7 +46,7 @@ export class FolderResolver {
     const folder = await em.findOne(Folder, folderId, ['creator'])
     if (!folder) throw new Error('Invalid folder')
     if (folder.deleted) throw new Error('Folder has been deleted')
-    if (folder.creator.id !== userId)
+    if (folder.owner.id !== userId)
       throw new Error('You do not have permission to modify this folder')
     const post = await em.findOne(Post, postId)
     folder.posts.remove(post)
@@ -79,10 +65,7 @@ export class FolderResolver {
       throw new Error('Name cannot be longer than 300 characters')
     if (
       await em.findOne(Folder, {
-        $and: [
-          { name: { $ilike: handleUnderscore(name) } },
-          { creator: userId }
-        ]
+        $and: [{ name: { $ilike: handleUnderscore(name) } }, { owner: userId }]
       })
     )
       throw new Error('You already have a folder with that name')

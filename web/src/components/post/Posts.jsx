@@ -1,10 +1,8 @@
-import { usePosts } from '@/lib/queries/usePosts'
 import Post from '@/components/post/Post'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { Scrollbar } from 'react-scrollbars-custom'
 import React from 'react'
-import PageNavigator from '@/components/ui/PageNavigator'
 import { Virtuoso } from 'react-virtuoso'
+import { useQuery } from 'urql'
+import { POSTS_QUERY, usePostsQuery } from '@/lib/queries'
 
 export default function Posts({
   variables,
@@ -15,8 +13,8 @@ export default function Posts({
   draggable = false,
   expandable = false
 }) {
-  const data = usePosts(variables)
-  const posts = data ? data.posts : []
+  const { data } = usePostsQuery(variables)
+  const posts = data?.posts?.posts || []
 
   return (
     <Virtuoso

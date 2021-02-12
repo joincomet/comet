@@ -9,6 +9,7 @@ import {
   Property
 } from '@mikro-orm/core'
 import { BaseEntity } from '@/Base.entity'
+import { Planet } from '@/planet/Planet.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -29,9 +30,13 @@ export class Folder extends BaseEntity {
   @ManyToMany(() => Post, 'folders', { owner: true })
   posts = new Collection<Post>(this)
 
-  @Field(() => User)
-  @ManyToOne(() => User)
-  creator: User
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
+  owner?: User
+
+  @Field(() => Planet, { nullable: true })
+  @ManyToOne(() => Planet, { nullable: true })
+  planet?: Planet
 
   @Field()
   @Property({ default: false })

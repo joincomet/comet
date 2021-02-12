@@ -14,11 +14,13 @@ import { User } from '@/user/User.entity'
 import { PlanetsArgs } from '@/planet/PlanetsArgs'
 import { PlanetSort } from '@/planet/PlanetSort'
 import { handleUnderscore } from '@/handleUnderscore'
-import { ChatChannel } from '@/chat/ChatChannel.entity'
+import { Channel } from '@/chat/Channel.entity'
 import { PlanetsResponse } from '@/planet/PlanetsResponse'
 import { QueryOrder } from '@mikro-orm/core'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { uploadImage } from '@/S3Storage'
+import { Group } from '@/chat/Group.entity'
+import { Folder } from '@/folder/Folder.entity'
 
 @Resolver(() => Planet)
 export class PlanetResolver {
@@ -34,9 +36,11 @@ export class PlanetResolver {
     if (user.planets.length >= 100)
       throw new Error('Cannot join more than 100 planets')
 
-    const channel = em.create(ChatChannel, {
+    const channel = em.create(Channel, {
       name: 'general'
     })
+
+    em.persist(channel)
 
     let avatarUrl = null
     if (avatarFile) {
@@ -56,19 +60,33 @@ export class PlanetResolver {
       users: [user],
       userCount: 1,
       channels: [channel],
+      channelsSort: [channel.id],
       avatarUrl
     })
-    await em.persistAndFlush([planet, channel])
+    await em.persistAndFlush(planet)
     return planet
   }
 
-  @Query(() => Planet, { nullable: true })
-  async planet(@Arg('name') name: string, @Ctx() { em }: Context) {
-    return em.findOne(Planet, { name: { $ilike: handleUnderscore(name) } }, [
-      'moderators',
-      'users',
-      'channels'
-    ])
+  @Mutation(() => Channel)
+  async createChannel(
+    @Ctx() { userId, em }: Context,
+    @Arg('planetId', () => ID) planetId: string,
+    @Arg('name') name: string,
+    @Arg('modOnly', { defaultValue: false }) modOnly: boolean = false
+  ) {
+    const user = await em.findOne(User, userId)
+    const planet = await em.findOne(Planet, planetId, ['moderators'])
+    if (!planet.moderators.contains(user))
+      throw new Error('You are not a moderator')
+
+    const channel = em.create(Channel, {
+      name,
+      planet,
+      modOnly
+    })
+
+    await em.persistAndFlush(channel)
+    return channel
   }
 
   @Authorized()
@@ -84,7 +102,8 @@ export class PlanetResolver {
     const planet = await em.findOne(Planet, planetId)
     planet.users.add(user)
     planet.userCount++
-    await em.persistAndFlush(planet)
+    user.planetsSort.push(planet.id)
+    await em.persistAndFlush([planet, user])
     return true
   }
 
@@ -98,7 +117,8 @@ export class PlanetResolver {
     const user = await em.findOne(User, userId)
     planet.users.remove(user)
     planet.userCount--
-    await em.persistAndFlush(planet)
+    user.planetsSort = user.planetsSort.filter(id => id !== planet.id)
+    await em.persistAndFlush([planet, user])
     return true
   }
 

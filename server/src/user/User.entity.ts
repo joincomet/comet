@@ -1,16 +1,22 @@
 import { Authorized, Field, ObjectType } from 'type-graphql'
 import {
-  Property,
-  Entity,
-  OneToMany,
-  ManyToMany,
+  ArrayType,
   Collection,
-  Formula
+  Embedded,
+  Entity,
+  Enum,
+  Formula,
+  ManyToMany,
+  OneToMany,
+  Property,
+  QueryOrder
 } from '@mikro-orm/core'
 import { Planet } from '@/planet/Planet.entity'
-import { ChatGroup } from '@/chat/ChatGroup.entity'
+import { Group } from '@/chat/Group.entity'
 import { Folder } from '@/folder/Folder.entity'
 import { BaseEntity } from '@/Base.entity'
+import { UserStatus } from '@/user/UserStatus'
+import { UserAvailability } from '@/user/UserAvailability'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -53,15 +59,25 @@ export class User extends BaseEntity {
   @Property({ default: false })
   admin: boolean
 
-  @OneToMany(() => Folder, 'creator')
+  @Field(() => [Folder])
+  @OneToMany(() => Folder, 'owner', { orderBy: { createdAt: QueryOrder.DESC } })
   folders = new Collection<Folder>(this)
+
+  @Property({ type: ArrayType, default: [] })
+  foldersSort: string[]
 
   @Field(() => [Planet])
   @ManyToMany(() => Planet, 'users')
   planets = new Collection<Planet>(this)
 
-  @ManyToMany(() => ChatGroup, group => group.users)
-  chatGroups = new Collection<ChatGroup>(this)
+  @Property({ type: ArrayType, default: [] })
+  planetsSort: string[]
+
+  @Field(() => [Group])
+  @ManyToMany(() => Group, group => group.users, {
+    orderBy: { updatedAt: QueryOrder.DESC }
+  })
+  groups = new Collection<Group>(this)
 
   @Field()
   @Property({ default: false })
@@ -71,18 +87,18 @@ export class User extends BaseEntity {
   @Property({ nullable: true })
   banReason?: string
 
-  @Field()
-  isCurrentUser: boolean
-
   @Field({ nullable: true })
   @Property({ nullable: true })
   avatarUrl?: string
 
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  bannerUrl?: string
+  @Field(() => UserStatus, { nullable: true })
+  @Embedded({ entity: () => UserStatus, nullable: true, object: true })
+  status?: UserStatus
 
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  bio?: string
+  @Field(() => UserAvailability)
+  @Enum({ items: () => UserAvailability, default: UserAvailability.OFFLINE })
+  availability: UserAvailability
+
+  @Field()
+  isCurrentUser: boolean
 }

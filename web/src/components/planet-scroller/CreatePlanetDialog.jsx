@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import IconPlanetCreate from '@/components/ui/icons/IconPlanetCreate'
 import { useHistory } from 'react-router-dom'
-import { gql, useMutation } from '@apollo/client'
-import { PLANETS_QUERY } from '@/lib/queries/usePlanets'
+import { useMutation } from 'urql'
 import Modal from 'react-responsive-modal'
 import Tippy from '@tippyjs/react'
 import 'react-responsive-modal/styles.css'
@@ -15,23 +14,12 @@ import { modal, overlay } from './CreatePlanetDialog.module.css'
 import { HiOutlinePhotograph, HiOutlinePencil } from 'react-icons/hi'
 import { Switch } from '@headlessui/react'
 import IconSpinner from '@/components/ui/icons/IconSpinner'
-
-const CREATE_PLANET_MUTATION = gql`
-  mutation createPlanet($name: String!, $avatarFile: Upload) {
-    createPlanet(name: $name, avatarFile: $avatarFile) {
-      id
-    }
-  }
-`
+import { CURRENT_USER_QUERY } from '@/lib/queries'
+import Button from '@/components/Button'
+import { useCreatePlanetMutation } from '@/lib/mutations'
 
 export default function CreatePlanetDialog() {
-  const [createPlanet, { data, loading, error }] = useMutation(
-    CREATE_PLANET_MUTATION,
-    {
-      refetchQueries: [{ query: PLANETS_QUERY }],
-      awaitRefetchQueries: true
-    }
-  )
+  const [createPlanet, { data, loading, error }] = useCreatePlanetMutation()
   const [open, setOpen] = useState(false)
   const [privatePlanet, setPrivate] = useState(true)
 
@@ -145,10 +133,7 @@ export default function CreatePlanetDialog() {
             />
           </div>
 
-          <button type="submit" className="button" disabled={loading}>
-            Continue
-            {loading && <IconSpinner className="ml-3" />}
-          </button>
+          <Button loading={loading}>Continue</Button>
 
           <Switch.Group
             as="div"

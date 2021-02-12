@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSubmitCommentMutation } from '@/lib/mutations/commentMutations'
-import { useCommentStore } from '../../../lib/stores/useCommentStore'
-import { useQueryClient } from 'react-query'
-import { useComments } from '@/lib/queries/useComments'
-import Editor from '@/components/editor/Editor'
+// import Editor from '@/components/editor/Editor'
 import IconSpinner from '@/components/ui/icons/IconSpinner'
-import { useUpdatePost } from '@/lib/useUpdatePost'
+import { useCommentStore } from '@/lib/stores/useCommentStore'
+import { useMutation } from 'urql'
+import { SUBMIT_COMMENT_MUTATION } from '@/lib/mutations'
 
 const postBtn =
   'disabled:opacity-50 rounded-full h-8 px-6 label inline-flex items-center justify-center bg-blue-600 cursor-pointer transition transform hover:scale-105 focus:outline-none'
@@ -20,26 +18,9 @@ export default function CreateCommentForm({
 
   const [textContent, setTextContent] = useState('')
 
-  const submitCommentMutation = useSubmitCommentMutation({
-    onSuccess: (comment, variables) => {
-      if (parentComment) {
-        if (!parentComment.childComments) parentComment.childComments = []
-        parentComment.childComments.unshift(comment)
-      } else {
-        comments.unshift(comment)
-        queryClient.setQueryData(['comments', commentVariables], {
-          comments,
-          commentCount: commentCount + 1
-        })
-      }
-      setCreateComment(false)
-    }
-  })
+  const [submitMutation] = useMutation(SUBMIT_COMMENT_MUTATION)
 
   const { handleSubmit } = useForm()
-
-  const queryClient = useQueryClient()
-  const { comments, commentCount } = useComments(commentVariables).data
 
   const onSubmit = () => {
     const variables = {
@@ -50,8 +31,6 @@ export default function CreateCommentForm({
     if (parentComment) variables.parentCommentId = parentComment.id
 
     if (!variables.textContent) return
-
-    submitCommentMutation.mutate(variables)
   }
 
   return (
@@ -76,7 +55,7 @@ export default function CreateCommentForm({
         />
       )}
 
-      <Editor value={textContent} setValue={setTextContent} />
+      {/*<Editor value={textContent} setValue={setTextContent} />*/}
 
       <div>
         <div className="flex">

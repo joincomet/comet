@@ -5,15 +5,11 @@ import Tippy from '@tippyjs/react'
 import Grass from '@/components/graphics/Grass'
 import Telescope from '@/components/graphics/Telescope'
 import Meteors from '@/components/graphics/Meteors'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 import { getOS } from '@/lib/getOS'
-import {
-  CURRENT_USER_QUERY,
-  useCurrentUser
-} from '@/lib/queries/useCurrentUser'
-import { useQuery } from '@apollo/client'
+import { useCurrentUserQuery } from '@/lib/queries'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
@@ -22,7 +18,7 @@ const link = 'hover:underline cursor-pointer flex items-center'
 
 export default function LandingPage() {
   const { ref, inView, entry } = useInView()
-  const { data } = useQuery(CURRENT_USER_QUERY)
+  const [{ data }] = useCurrentUserQuery()
 
   return (
     <div className="relative flex flex-col items-center">
@@ -109,7 +105,7 @@ export default function LandingPage() {
               </a>
 
               <Link
-                to={data && data.currentUser ? '/home' : '/login'}
+                to={data?.currentUser ? '/home' : '/login'}
                 className="border border-gray-700 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
               >
                 Open in Browser
