@@ -84,6 +84,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@apollographql/graphql-upload-8-fork@npm:^8.1.3":
+  version: 8.1.3
+  resolution: "@apollographql/graphql-upload-8-fork@npm:8.1.3"
+  dependencies:
+    "@types/express": "*"
+    "@types/fs-capacitor": "*"
+    "@types/koa": "*"
+    busboy: ^0.3.1
+    fs-capacitor: ^2.0.4
+    http-errors: ^1.7.3
+    object-path: ^0.11.4
+  peerDependencies:
+    graphql: 0.13.1 - 15
+  checksum: ca7c557586307e5446414ef19ff39a1c0bdb25d9ed830fcd4ca959c9da76bf498fefc175e6767394700e7165c20b4551eea1a4ec66e99fae81907d6e4910bbc9
+  languageName: node
+  linkType: hard
+
 "@ardatan/aggregate-error@npm:0.0.6":
   version: 0.0.6
   resolution: "@ardatan/aggregate-error@npm:0.0.6"
@@ -2716,18 +2733,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/graphql-upload@npm:^8.0.0":
-  version: 8.0.4
-  resolution: "@types/graphql-upload@npm:8.0.4"
-  dependencies:
-    "@types/express": "*"
-    "@types/fs-capacitor": "*"
-    "@types/koa": "*"
-    graphql: ^15.3.0
-  checksum: d148db8a1b70bb8582cd23186d25294205e25e77d7b4568bd0d874cb94744828ea1f60cb6c1877376f4eaa475a55fc47253df10126ff97783b3c2adf108ceac7
-  languageName: node
-  linkType: hard
-
 "@types/hast@npm:^2.0.0":
   version: 2.3.1
   resolution: "@types/hast@npm:2.3.1"
@@ -2919,10 +2924,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.25":
-  version: 14.14.25
-  resolution: "@types/node@npm:14.14.25"
-  checksum: 64c42730f4169e49ec378870622ef06c5d820b31340e224cc1b45bf06c8b0cfa28daa587b4ae2b8ea1f712ef049bae4d9c92925b157ba9ba7cde3b22ff552513
+"@types/node@npm:^14.14.27":
+  version: 14.14.27
+  resolution: "@types/node@npm:14.14.27"
+  checksum: efc78cf6e698e09925a2542bbea932dfe092408f4ce39b8f260b71df502221d76c925fd3227bc1f7427edd9cfb6f8c81c68a56b9ab690f08425e7e6e177e61e0
   languageName: node
   linkType: hard
 
@@ -3457,6 +3462,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@use-it/event-listener@npm:^0.1.2":
+  version: 0.1.6
+  resolution: "@use-it/event-listener@npm:0.1.6"
+  peerDependencies:
+    react: ^16.8.0
+  checksum: 7ba9bb306cc25207eb3b67965c176ae892614250dea04d237d2b20222438ce277b4e0b5aececece8212cdcba68fd1b9b5e13bc2d5d3c15a377b664cff6587cde
+  languageName: node
+  linkType: hard
+
 "@virtuoso.dev/react-urx@npm:^0.2.4":
   version: 0.2.4
   resolution: "@virtuoso.dev/react-urx@npm:0.2.4"
@@ -3870,13 +3884,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-core@npm:^2.20.0":
-  version: 2.20.0
-  resolution: "apollo-server-core@npm:2.20.0"
+"apollo-server-core@npm:^2.21.0":
+  version: 2.21.0
+  resolution: "apollo-server-core@npm:2.21.0"
   dependencies:
     "@apollographql/apollo-tools": ^0.4.3
     "@apollographql/graphql-playground-html": 1.6.26
-    "@types/graphql-upload": ^8.0.0
+    "@apollographql/graphql-upload-8-fork": ^8.1.3
     "@types/ws": ^7.0.0
     apollo-cache-control: ^0.11.6
     apollo-datasource: ^0.7.3
@@ -3892,8 +3906,7 @@ __metadata:
     fast-json-stable-stringify: ^2.0.0
     graphql-extensions: ^0.12.8
     graphql-tag: ^2.11.0
-    graphql-tools: ^4.0.0
-    graphql-upload: ^8.0.2
+    graphql-tools: ^4.0.8
     loglevel: ^1.6.7
     lru-cache: ^6.0.0
     sha.js: ^2.4.11
@@ -3902,7 +3915,7 @@ __metadata:
     ws: ^6.0.0
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: ddcf1ee2d706a1e03e988fcee10e3911f41fb7c3cd4e0f3e61fbc20bb07799908e7fe297760ed742d8e6d8bce4ce81d7883f399e7f131fb8eeab02172af0417d
+  checksum: b89917c2b1fc6327189ccf0c6e9700ba562505fb95bbdb23d18ff5048cddbba8cf308f8bd88ddf0c09a85f45f69ab9fd659b410ab3af3d174c6a9fa242c349ff
   languageName: node
   linkType: hard
 
@@ -3925,9 +3938,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-express@npm:^2.20.0":
-  version: 2.20.0
-  resolution: "apollo-server-express@npm:2.20.0"
+"apollo-server-express@npm:^2.21.0":
+  version: 2.21.0
+  resolution: "apollo-server-express@npm:2.21.0"
   dependencies:
     "@apollographql/graphql-playground-html": 1.6.26
     "@types/accepts": ^1.3.5
@@ -3936,19 +3949,19 @@ __metadata:
     "@types/express": 4.17.7
     "@types/express-serve-static-core": 4.17.18
     accepts: ^1.3.5
-    apollo-server-core: ^2.20.0
+    apollo-server-core: ^2.21.0
     apollo-server-types: ^0.6.3
     body-parser: ^1.18.3
     cors: ^2.8.4
     express: ^4.17.1
     graphql-subscriptions: ^1.0.0
-    graphql-tools: ^4.0.0
+    graphql-tools: ^4.0.8
     parseurl: ^1.3.2
     subscriptions-transport-ws: ^0.9.16
     type-is: ^1.6.16
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 0e951abee825ef752d4f38d5754d734ecc0ee59516ba3f2d6d4ee54665dc3f1f78fdf13c87b744f9e1461af205eb77820a9046c9ec8509d820eaf4e6d3cc8550
+  checksum: 0aa592c9a50e2df5b0800253a2eb08f8306a2f688ca6563a1dcd0630e4e8ecc5e48be1026059f0a1246024872163a6c081f46193ad173cc63eb1984f860d7397
   languageName: node
   linkType: hard
 
@@ -8059,7 +8072,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql-tools@npm:^4.0.0":
+"graphql-tools@npm:^4.0.8":
   version: 4.0.8
   resolution: "graphql-tools@npm:4.0.8"
   dependencies:
@@ -8133,20 +8146,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql-upload@npm:^8.0.2":
-  version: 8.1.0
-  resolution: "graphql-upload@npm:8.1.0"
-  dependencies:
-    busboy: ^0.3.1
-    fs-capacitor: ^2.0.4
-    http-errors: ^1.7.3
-    object-path: ^0.11.4
-  peerDependencies:
-    graphql: 0.13.1 - 14
-  checksum: e5fa68b3ebcc74d54bf9e6e413456c3e89a9ee7bb6c203fb1baa1cb8284df15936a3c8635b77ea7d3b80284352f9ed600738e318bb7d7d890759bdd6dcfda277
-  languageName: node
-  linkType: hard
-
 "graphql-ws@npm:4.1.0":
   version: 4.1.0
   resolution: "graphql-ws@npm:4.1.0"
@@ -8156,7 +8155,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql@npm:^15.3.0, graphql@npm:^15.5.0":
+"graphql@npm:^15.5.0":
   version: 15.5.0
   resolution: "graphql@npm:15.5.0"
   checksum: 789cdcb069a3e00592e779002217a6bc5fd09efad63ee8c4190c4b3ea96c89010e74f085fb1cba876a0bb0e324e01df2eddb84d79dca90a28e582bc425fef9ef
@@ -13860,11 +13859,11 @@ fsevents@~2.3.1:
     "@types/express": ^4.17.11
     "@types/jsonwebtoken": ^8.5.0
     "@types/mime": ^2.0.3
-    "@types/node": ^14.14.25
+    "@types/node": ^14.14.27
     "@types/sharp": ^0.27.1
     "@typescript-eslint/eslint-plugin": ^4.15.0
     "@typescript-eslint/parser": ^4.15.0
-    apollo-server-express: ^2.20.0
+    apollo-server-express: ^2.21.0
     argon2: ^0.27.1
     aws-sdk: ^2.842.0
     class-validator: ^0.13.1
@@ -15626,16 +15625,28 @@ typescript@^4.1.5:
   languageName: node
   linkType: hard
 
-"urql@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "urql@npm:2.0.0"
+"urql@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "urql@npm:2.0.1"
   dependencies:
     "@urql/core": ^2.0.0
     wonka: ^4.0.14
   peerDependencies:
     graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
     react: ">= 16.8.0"
-  checksum: 72e7ed23f8ea6d06608a59948ef7f9e7facd0c19aad1d6e1ede506de3252b2af282c77857f4c8f98fea5a4e314213a0f19fe86db521286b3bbcfd13983388729
+  checksum: 5f6a246e7da85a73419a3e2afffc968b3b84cf4a0834eec9dc507614399eb3b46a170c607c5ddb05d6998e2df74bcf811a1212ce544e53a73e781457d073ef19
+  languageName: node
+  linkType: hard
+
+"use-dark-mode@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "use-dark-mode@npm:2.3.1"
+  dependencies:
+    "@use-it/event-listener": ^0.1.2
+    use-persisted-state: ^0.3.0
+  peerDependencies:
+    react: ^16.8.0
+  checksum: ea12e45eee0025461fcb5f356f0ce46ef668364a10eeca9105a09326c72c943ca849d3a552b81468f4daeafca1a36d12c2813bef9f9d4ee6cc66de3f724d04c3
   languageName: node
   linkType: hard
 
@@ -15648,6 +15659,17 @@ typescript@^4.1.5:
     "@types/react":
       optional: true
   checksum: a2db589f28955044c2c7058bc80343c797bd8c4a86419f479d4e6ac335db7c75a7cf6f7cc324dd104401e294f096aeabc8b3aa996d59d99668f8c90959642406
+  languageName: node
+  linkType: hard
+
+"use-persisted-state@npm:^0.3.0":
+  version: 0.3.3
+  resolution: "use-persisted-state@npm:0.3.3"
+  dependencies:
+    "@use-it/event-listener": ^0.1.2
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0
+  checksum: c767b3d24a611a6b919bbfa2ef9fc1743bd7fe015731d32e9e291f1d80c29f13f66758cc51a800f7a300455e77115110eaec07c4cc77e1e3a2ab2f97a7d6657f
   languageName: node
   linkType: hard
 
@@ -15791,9 +15813,9 @@ typescript@^4.1.5:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.0.0-beta.68":
-  version: 2.0.0-beta.68
-  resolution: "vite@npm:2.0.0-beta.68"
+"vite@npm:^2.0.0-beta.69":
+  version: 2.0.0-beta.69
+  resolution: "vite@npm:2.0.0-beta.69"
   dependencies:
     esbuild: ^0.8.34
     fsevents: ~2.3.1
@@ -15805,7 +15827,7 @@ typescript@^4.1.5:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 778263b4d5d284ab3a7984936660cf642d5db49d5b1a07f80635d4b8b65979eb62251738fdc8f1f4cbce6ac4c0768c14d2bceba2bdcfdf1395b5f95890020e38
+  checksum: eca8b693d86349d6bcd667e4ed4a59cd7a35dd30cace265f4c8cc20a33aeb67b77608146b710c8f3dfce4ae0e394ffcad7430815d7e37be016c3a0b793b41fee
   languageName: node
   linkType: hard
 
@@ -15853,7 +15875,7 @@ typescript@^4.1.5:
     "@tailwindcss/forms": ^0.2.1
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.0
-    "@types/node": ^14.14.25
+    "@types/node": ^14.14.27
     "@types/react": ^17.0.1
     "@types/react-dom": ^17.0.0
     "@types/react-router-dom": ^5.1.7
@@ -15913,9 +15935,10 @@ typescript@^4.1.5:
     tailwind-scrollbar: ^1.2.3
     tailwindcss: ^2.0.3
     twemoji: ^13.0.1
-    urql: ^2.0.0
+    urql: ^2.0.1
+    use-dark-mode: ^2.3.1
     validator: ^13.5.2
-    vite: ^2.0.0-beta.68
+    vite: ^2.0.0-beta.69
     zustand: ^3.3.1
   languageName: unknown
   linkType: soft

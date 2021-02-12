@@ -12,7 +12,7 @@
   "dependencies": {
     "@mikro-orm/core": "^4.4.2",
     "@mikro-orm/postgresql": "^4.4.2",
-    "apollo-server-express": "^2.20.0",
+    "apollo-server-express": "^2.21.0",
     "argon2": "^0.27.1",
     "aws-sdk": "^2.842.0",
     "class-validator": "^0.13.1",
@@ -52,7 +52,7 @@
     "@types/express": "^4.17.11",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mime": "^2.0.3",
-    "@types/node": "^14.14.25",
+    "@types/node": "^14.14.27",
     "@types/sharp": "^0.27.1",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
