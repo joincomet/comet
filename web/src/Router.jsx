@@ -22,6 +22,7 @@ import NotFound from '@/pages/NotFound'
 
 export default function Router() {
   const [{ data }] = useCurrentUserQuery()
+  const currentUser = data?.currentUser
   return (
     <BrowserRouter>
       <Switch>
@@ -30,7 +31,7 @@ export default function Router() {
           exact
           render={() => {
             if (window.electron) {
-              if (data?.currentUser) return <Redirect to="/home" />
+              if (currentUser) return <Redirect to="/home" />
               return <Redirect to="/login" />
             } else {
               return <LandingPage />
@@ -44,13 +45,13 @@ export default function Router() {
               <Route
                 path="/login"
                 render={() =>
-                  data?.currentUser ? <Redirect to="/home" /> : <LoginPage />
+                  currentUser ? <Redirect to="/home" /> : <LoginPage />
                 }
               />
               <Route
                 path="/register"
                 render={() =>
-                  data?.currentUser ? <Redirect to="/home" /> : <RegisterPage />
+                  currentUser ? <Redirect to="/home" /> : <RegisterPage />
                 }
               />
             </Switch>
@@ -123,10 +124,12 @@ export default function Router() {
 
 function PrivateRoute({ children, ...rest }) {
   const [{ data }] = useCurrentUserQuery()
+  const currentUser = data?.currentUser
+
   return (
     <Route
       {...rest}
-      render={() => (data?.currentUser ? children : <Redirect to="/login" />)}
+      render={() => (currentUser ? children : <Redirect to="/login" />)}
     />
   )
 }

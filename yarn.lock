@@ -3567,6 +3567,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@welldone-software/why-did-you-render@npm:^6.0.5":
+  version: 6.0.5
+  resolution: "@welldone-software/why-did-you-render@npm:6.0.5"
+  dependencies:
+    lodash: ^4
+  peerDependencies:
+    react: ^16 || ^17
+  checksum: 7616b704a28e09f611e86330b9f87b4e27a881b7df995eea28c2cbdadf856ee1cec99d3cd52a1bd024c01cf9d965accb7dccd77c3fbd4821261063802e5db90b
+  languageName: node
+  linkType: hard
+
 "@wry/context@npm:^0.5.2":
   version: 0.5.3
   resolution: "@wry/context@npm:0.5.3"
@@ -9980,7 +9991,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.20, lodash@npm:^4.17.10, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:~4.17.20":
+"lodash@npm:4.17.20, lodash@npm:^4, lodash@npm:^4.17.10, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:~4.17.20":
   version: 4.17.20
   resolution: "lodash@npm:4.17.20"
   checksum: c62101d2500c383b5f174a7e9e6fe8098149ddd6e9ccfa85f36d4789446195f5c4afd3cfba433026bcaf3da271256566b04a2bf2618e5a39f6e67f8c12030cb6
@@ -15885,6 +15896,7 @@ typescript@^4.1.5:
     "@urql/exchange-graphcache": ^4.0.0
     "@urql/exchange-multipart-fetch": ^0.1.11
     "@vitejs/plugin-react-refresh": ^1.3.1
+    "@welldone-software/why-did-you-render": ^6.0.5
     autoprefixer: ^10.2.4
     babel-eslint: ^10.1.0
     concurrently: ^5.3.0
