@@ -58,7 +58,7 @@ export const urqlClient = createClient({
   exchanges: [
     devtoolsExchange,
     dedupExchange,
-    cacheExchange({}),
+    cacheExchange({ keys: { PostsResponse: () => null } }),
     authExchange({
       getAuth,
       addAuthToOperation

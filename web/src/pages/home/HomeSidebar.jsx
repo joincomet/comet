@@ -16,7 +16,7 @@ export default forwardRef((props, ref) => {
         <SidebarSortButtons />
 
         <div className={`sidebar-label sidebar-label--plus`}>
-          CHANNELS
+          DIRECT MESSAGES
           <HiPlus className="w-4 h-4" />
         </div>
       </div>

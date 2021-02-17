@@ -5,8 +5,10 @@ import stringHash from 'string-hash'
 export default ({ command }) => ({
   base: command === 'serve' ? '/' : '/dist/',
   plugins: [reactRefresh()],
-  alias: {
-    '@': resolve(__dirname, '/src')
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, '/src')
+    }
   },
   server: {
     port: process.env.PORT ? +process.env.PORT : 3000
