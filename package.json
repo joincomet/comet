@@ -1,0 +1,24 @@
+{
+	"name": "comet",
+	"license": "MPL-2.0",
+	"author": {
+		"name": "Comet",
+		"email": "admin@joincomet.app"
+	},
+	"repository": {
+		"url": "https://github.com/joincomet/comet"
+	},
+	"workspaces": [
+		"server",
+		"web"
+	],
+	"scripts": {
+		"dev:web": "yarn workspace web run dev:vite",
+		"dev:electron": "yarn workspace web run dev:electron",
+		"dev:server": "yarn workspace server run dev",
+		"prod:server": "yarn workspace server run start"
+	},
+	"devDependencies": {
+		"rimraf": "^3.0.2"
+	}
+}

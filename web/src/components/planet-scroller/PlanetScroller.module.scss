@@ -1,0 +1,12 @@
+.planet-scroller-item {
+    @apply group flex-shrink-0 relative inline-flex items-end justify-center w-full h-14 rounded-full cursor-pointer;
+
+    &__dot {
+        @apply w-12 h-12 object-cover inline-flex items-center justify-center rounded-full transform transition hover:scale-105 hover:shadow-lg group;
+    }
+
+    &--active::before {
+        @apply absolute left-0 bottom-1 top-3 w-1 dark:bg-white rounded-r-2xl;
+        content: "";
+    }
+}

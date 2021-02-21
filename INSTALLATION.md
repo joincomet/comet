@@ -1,31 +1,35 @@
 # Installation
-[Join #dev on the CometX Discord server](https://discord.gg/7Ch6Yde)
 
-## Stack
-### Frontend
-* [React.js](https://reactjs.org/)
-* [Next.js](https://nextjs.org/)
-* [Tailwind CSS](https://tailwindcss.com/)
-  * Check out [Tailwind Play](https://play.tailwindcss.com/) to rapidly prototype components!
+## Create `.env`
+Create a file in the root folder called `.env` with the following contents:
+```
+# Required
+ACCESS_TOKEN_SECRET=<secret used to encrypt login tokens>
 
-### Backend
-* [Node.js](https://nodejs.org/en/)
-* [TypeScript](https://www.typescriptlang.org/)
-* [GraphQL](https://graphql.org/)
-* [PostgreSQL](https://www.postgresql.org/)
-* [Docker](https://www.docker.com/)
+# Defaults to `postgresql://postgres:password@localhost:5432`
+DATABASE_URL=<postgres connection URL>
+# Defaults to `postgres`
+DATABASE_NAME=<postgres database name>
 
-## Development environment
+# The following are required for image uploads and link embeds & thumbnails to work
+BUCKET=<name of S3 bucket>
+MEDIA_DOMAIN=<domain for bucket>
+AWS_ENDPOINT=<AWS endpoint i.e. region.amazonaws.com>
+AWS_ACCESS_KEY_ID=<AWS access key ID>
+AWS_SECRET_ACCESS_KEY=<AWS secret access key>
+```
 
-### Create `.env`
-Create a file in the project root called `.env` based on [template.env](./template.env). Only `ACCESS_TOKEN_SECRET` is required to start the server.
-If the other environment variables omitted, image uploading will fail, but everything else should work fine.
+## Development
+A postgres database must be available at `DATABASE_URL`
 
-### Start with Docker-Compose
-Simply install [Docker](https://www.docker.com/) on your development machine and run `docker-compose up`.
-When finished starting, the following services will be available:
-* Frontend (http://localhost:3000)
-* API w/ GraphQL Playground (http://localhost:4000/graphql)
-* PostgreSQL (`postgres://postgres:password@localhost:5432/postgres`)
+* Web (http://localhost:3000): `yarn workspace web run dev:vite`
+* Electron app (Web must be running first): `yarn workspace web run dev:electron`
+* Server w/ GraphQL Playground (http://localhost:4000/graphql): `yarn workspace server run dev`
 
+## Deploy Production to DigitalOcean
+Comet is configured to run on DigitalOcean App Platform.
 
+Create app (Must have [doctl](https://www.digitalocean.com/docs/apis-clis/doctl/) installed):
+```sh
+doctl apps create --spec .do/app.yaml
+```
