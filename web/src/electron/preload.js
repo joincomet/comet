@@ -1,7 +1,7 @@
 const {
   contextBridge,
   globalShortcut,
-  remote: { getCurrentWindow }
+  remote: { getCurrentWindow, Notification }
 } = require('electron')
 
 contextBridge.exposeInMainWorld('electron', {
@@ -9,7 +9,8 @@ contextBridge.exposeInMainWorld('electron', {
   maximize: () => getCurrentWindow().maximize(),
   unmaximize: () => getCurrentWindow().unmaximize(),
   close: () => getCurrentWindow().close(),
-  isMaximized: () => getCurrentWindow().isMaximized()
+  isMaximized: () => getCurrentWindow().isMaximized(),
+  showNotification: options => new Notification(options).show()
 })
 
 /*
