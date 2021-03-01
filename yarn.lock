@@ -5984,10 +5984,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.16.1, date-fns@npm:^2.17.0":
+"date-fns@npm:^2.16.1":
   version: 2.17.0
   resolution: "date-fns@npm:2.17.0"
   checksum: 51ee9e264aac54d2a16471691d560838bad681f729573f520b03ec0c21f28904c73bf98ec2d33603e71bdabf8506140449c2b50d0db6fdd042faed9fe5467b92
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.18.0":
+  version: 2.18.0
+  resolution: "date-fns@npm:2.18.0"
+  checksum: 58320ad5122bb2ae2f5aa23e2c432529d3390222bbec49339f8c360c2c07e5db8c26b40fe2cb2c947b4507732b9e1f9c195ec39572e14014291788ca07a5de6f
   languageName: node
   linkType: hard
 
@@ -7662,15 +7669,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "framer-motion@npm:3.7.0"
+"framer-motion@npm:^3.8.1":
+  version: 3.8.1
+  resolution: "framer-motion@npm:3.8.1"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
-    framesync: ^5.1.0
+    framesync: 5.2.0
     hey-listen: ^1.0.8
-    popmotion: 9.2.1
-    style-value-types: 4.0.3
+    popmotion: 9.3.0
+    style-value-types: 4.1.1
     tslib: ^1.10.0
   peerDependencies:
     react: ">=16.8 || ^17.0.0"
@@ -7678,14 +7685,14 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: e64968c63fda7fc4443eb980665621ce152d6796ee21d2ba5a68b772651fbdb7eb4d1b279c15fb263396b6dfad4e82422835284794b2e99ece38a61f90a85c3d
+  checksum: ca1a312be9a79f45d1a09d7924e9585068a428fb5be515fcd5ade3c200b11ef0b6c75896a8968894fb3a0b87a7efa99ca05f0348cd87d59a12ffd230b0466c76
   languageName: node
   linkType: hard
 
-"framesync@npm:5.1.0, framesync@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "framesync@npm:5.1.0"
-  checksum: 9dfccf7bfcd166506b83ac9f188906bf9c8bbe8d943966e71e8b2e67c52ddf1a37dcc3e990f6489aa7903a12cdab440babc8642ee41c70803baf5498daa8434b
+"framesync@npm:5.2.0":
+  version: 5.2.0
+  resolution: "framesync@npm:5.2.0"
+  checksum: ef7c4d349bdcdd2c487ceb9e45570dfb49972a2a9660cebc372b4a129186b408502946e8953d73a4b951174a54425d22f6c7be0e8a9a7f051ba7be07e9188c8f
   languageName: node
   linkType: hard
 
@@ -11930,15 +11937,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"popmotion@npm:9.2.1":
-  version: 9.2.1
-  resolution: "popmotion@npm:9.2.1"
+"popmotion@npm:9.3.0":
+  version: 9.3.0
+  resolution: "popmotion@npm:9.3.0"
   dependencies:
-    framesync: 5.1.0
+    framesync: 5.2.0
     hey-listen: ^1.0.8
-    style-value-types: 4.0.3
+    style-value-types: 4.1.1
     tslib: ^1.10.0
-  checksum: f7908017156a0ad7ac23142f777e3118563c4ae56e0ece8b382e33b7f05c82ce639b8330d5be47994c5a6db056ae082c08c0fd96fd542af5f5a9a9010e9e7459
+  checksum: 06367f46d3e1490d1a63594fb1025f4113075c2f0555b9eca77e2c28ec25a0a218e5fbcdba9bb3fb553125cf8df3a6ae9b34ac2628152a1ed7e00e30dd3c9c5f
   languageName: node
   linkType: hard
 
@@ -14492,13 +14499,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"style-value-types@npm:4.0.3":
-  version: 4.0.3
-  resolution: "style-value-types@npm:4.0.3"
+"style-value-types@npm:4.1.1":
+  version: 4.1.1
+  resolution: "style-value-types@npm:4.1.1"
   dependencies:
     hey-listen: ^1.0.8
     tslib: ^1.10.0
-  checksum: 1f1fc2fdc5465a2f70a6b5dd0d2e6a462552b9fbf866e3d916af4cea492e96cc3c53e9167b4a1e4577ec8b1e4c9b198dcb374c52293885ce6304d6ace8fa0c98
+  checksum: 3fcabc3cc9f7763b7937a97e3015c3cfa2b5bb1e209cd1197492026f8f5ec8b8bf395a666a9e14d858b1225a4c6b55ebbdac303849c7730ca20f457f2a71f073
   languageName: node
   linkType: hard
 
@@ -15773,7 +15780,7 @@ typescript@^4.1.5:
     autoprefixer: ^10.2.4
     babel-eslint: ^10.1.0
     concurrently: ^6.0.0
-    date-fns: ^2.17.0
+    date-fns: ^2.18.0
     dayjs: ^1.10.4
     dayjs-twitter: ^0.4.0
     electron: ^11.3.0
@@ -15785,7 +15792,7 @@ typescript@^4.1.5:
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
     eslint-plugin-react: ^7.22.0
-    framer-motion: ^3.7.0
+    framer-motion: ^3.8.1
     fuse.js: ^6.4.6
     graphql: ^15.5.0
     graphql-tag: ^2.11.0
