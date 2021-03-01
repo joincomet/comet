@@ -1,4 +1,9 @@
-import { createClient, dedupExchange, subscriptionExchange } from 'urql'
+import {
+  createClient,
+  dedupExchange,
+  subscriptionExchange,
+  errorExchange
+} from 'urql'
 import { authExchange } from '@urql/exchange-auth'
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch'
 import { makeOperation } from '@urql/core'
@@ -7,6 +12,7 @@ import { cacheExchange } from '@urql/exchange-graphcache'
 import { devtoolsExchange } from '@urql/devtools'
 import { MESSAGES_QUERY } from '@/lib/queries'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
+import toast from 'react-hot-toast'
 
 const subscriptionClient = new SubscriptionClient(
   process.env.NODE_ENV === 'production'
@@ -106,6 +112,12 @@ export const urqlClient = createClient({
     authExchange({
       getAuth,
       addAuthToOperation
+    }),
+    errorExchange({
+      onError(error) {
+        toast.error(error.message.substring(10))
+        if (process.env.NODE_ENV !== 'production') console.error(error)
+      }
     }),
     multipartFetchExchange,
     subscriptionExchange({

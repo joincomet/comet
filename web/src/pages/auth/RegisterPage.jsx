@@ -32,7 +32,7 @@ export default function RegisterPage() {
             Username
           </label>
           <input
-            className="textbox"
+            className="textbox px-3"
             id="username"
             {...register('username', { required: true })}
           />
@@ -43,7 +43,7 @@ export default function RegisterPage() {
             Email (Recommended)
           </label>
           <input
-            className="textbox"
+            className="textbox px-3"
             id="email"
             type="email"
             {...register('email', { validate: email => isEmail(email) })}
@@ -55,7 +55,7 @@ export default function RegisterPage() {
             PASSWORD
           </label>
           <input
-            className="textbox"
+            className="textbox px-3"
             type="password"
             id="password"
             {...register('password', { required: true })}

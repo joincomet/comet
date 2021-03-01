@@ -31,7 +31,7 @@ export default function LoginPage() {
             Email or Username#tag
           </label>
           <input
-            className="textbox"
+            className="textbox px-3"
             id="name"
             {...register('name', { required: true })}
           />
@@ -42,7 +42,7 @@ export default function LoginPage() {
             PASSWORD
           </label>
           <input
-            className="textbox"
+            className="textbox px-3"
             type="password"
             id="password"
             {...register('password', { required: true })}
