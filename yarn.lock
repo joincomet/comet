@@ -1301,12 +1301,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/core@npm:^4.4.4":
-  version: 4.4.4
-  resolution: "@mikro-orm/core@npm:4.4.4"
+"@mikro-orm/core@npm:next":
+  version: 4.4.5-dev.28
+  resolution: "@mikro-orm/core@npm:4.4.5-dev.28"
   dependencies:
     ansi-colors: 4.1.1
     clone: 2.1.2
+    dotenv: 8.2.0
     escaya: 0.0.61
     fs-extra: 9.1.0
     globby: 11.0.2
@@ -1335,16 +1336,16 @@ __metadata:
       optional: true
     "@mikro-orm/sqlite":
       optional: true
-  checksum: b44d048f0b4132b29ed042b6481fcb3eedb7f184fd18e273e6704971ba5cb5674881908c9e844a2aad317d9cc69edff9c16cf6b1d7c848901fe44375207859b1
+  checksum: a3b21c307e4a785080145755928cc1c04b19ef014dfd48d599e4bfa9707a15326e6f04603d88160cf2efc8c7d20ae9277cf279a204e0a276c4c59ce1991d4e6a
   languageName: node
   linkType: hard
 
-"@mikro-orm/knex@npm:^4.4.4":
-  version: 4.4.4
-  resolution: "@mikro-orm/knex@npm:4.4.4"
+"@mikro-orm/knex@npm:^4.4.5-dev.28+ec50be48a1":
+  version: 4.4.5-dev.28
+  resolution: "@mikro-orm/knex@npm:4.4.5-dev.28"
   dependencies:
     fs-extra: 9.1.0
-    knex: 0.21.17
+    knex: 0.21.18
     sqlstring: 2.3.2
   peerDependencies:
     "@mikro-orm/core": ^4.0.0
@@ -1364,19 +1365,19 @@ __metadata:
       optional: true
     sqlite3:
       optional: true
-  checksum: 9e79761e47fd34b4c1579bb480e35928c26b62567c1fdafa72030ddf1a572b6d8c8bd155d7c506ceae855692450f490b01f0cec313d8527f30542313d9754388
+  checksum: 91d0863e937fd9dd4125adc343e46ddfbaf2aae666941a7d2f995d34b2943f72ad582e5040aed94c2b025ba75abaa66cd58830aeeab4664a51d4203fe3c6b366
   languageName: node
   linkType: hard
 
-"@mikro-orm/postgresql@npm:^4.4.4":
-  version: 4.4.4
-  resolution: "@mikro-orm/postgresql@npm:4.4.4"
+"@mikro-orm/postgresql@npm:next":
+  version: 4.4.5-dev.28
+  resolution: "@mikro-orm/postgresql@npm:4.4.5-dev.28"
   dependencies:
-    "@mikro-orm/knex": ^4.4.4
+    "@mikro-orm/knex": ^4.4.5-dev.28+ec50be48a1
     pg: 8.5.1
   peerDependencies:
     "@mikro-orm/core": ^4.0.0
-  checksum: 33eeca1c998c84f148cb77905a945a0f96ea93594ad4270869ebd2b4eb4e2e6f10307bbb9d13362c431455a7b2be703c5898b89f24dc7c551ce4f14cccb433e4
+  checksum: ecfcb7a41516ac7ef28dd263c44b9a5f9060642722a2ca763237703c00047c74afa0c10a28c0a7f1446b1a15d0f43065046ee94c8fdee0b25d1bd2cf2a5a5066
   languageName: node
   linkType: hard
 
@@ -6507,7 +6508,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^8.2.0":
+"dotenv@npm:8.2.0, dotenv@npm:^8.2.0":
   version: 8.2.0
   resolution: "dotenv@npm:8.2.0"
   checksum: 16cb89cbd7b98b053899b8aba8c5044c8fb61a2db8a81fe70360b75035fce5fed53bd7a34d772be717d0880c0321122a4c09423f518025e1b52d96791521b1a7
@@ -9793,9 +9794,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"knex@npm:0.21.17":
-  version: 0.21.17
-  resolution: "knex@npm:0.21.17"
+"knex@npm:0.21.18":
+  version: 0.21.18
+  resolution: "knex@npm:0.21.18"
   dependencies:
     colorette: 1.2.1
     commander: ^6.2.0
@@ -9828,7 +9829,7 @@ fsevents@~2.3.1:
       optional: true
   bin:
     knex: bin/cli.js
-  checksum: 351bb9e9ef399f34da093cd7e524fccde2b52df318c7f613cf578e67136a8983aecc6f169623c70ac67c1af2cee6d8d8bf6c4b5ad190cd8b2df2e7e79e1cde41
+  checksum: a23df2ee4a8f123f4efa99ad42bff2ceb46ded0e061b73eb113846bcd3b4d4861dfd328c9b9d1261c0922b93cf43ae478c25be3923583bcb06e9cc23719d5cf0
   languageName: node
   linkType: hard
 
@@ -13736,8 +13737,8 @@ fsevents@~2.3.1:
   version: 0.0.0-use.local
   resolution: "server@workspace:server"
   dependencies:
-    "@mikro-orm/core": ^4.4.4
-    "@mikro-orm/postgresql": ^4.4.4
+    "@mikro-orm/core": next
+    "@mikro-orm/postgresql": next
     "@types/async": ^3.2.5
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.11

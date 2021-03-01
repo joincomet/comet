@@ -10,8 +10,8 @@
     "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register --transpile-only src/index.ts"
   },
   "dependencies": {
-    "@mikro-orm/core": "^4.4.4",
-    "@mikro-orm/postgresql": "^4.4.4",
+    "@mikro-orm/core": "next",
+    "@mikro-orm/postgresql": "next",
     "apollo-server-express": "^2.21.0",
     "argon2": "^0.27.1",
     "aws-sdk": "^2.850.0",
