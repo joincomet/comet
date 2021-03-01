@@ -2,7 +2,7 @@
 const { join } = require('path')
 
 // Packages
-const { BrowserWindow, app, shell, screen } = require('electron')
+const { BrowserWindow, app, shell, screen, Tray, Menu } = require('electron')
 const isDev = require('electron-is-dev')
 
 const contextMenu = require('electron-context-menu')
@@ -90,7 +90,11 @@ function createWindow() {
 
   window.on('resize', saveBoundsSoon)
   window.on('move', saveBoundsSoon)
-  window.on('close', () => store.set('windowBounds', window.getNormalBounds()))
+  window.on('close', e => {
+    store.set('windowBounds', window.getNormalBounds())
+    e.preventDefault()
+    window.hide()
+  })
   let saveBoundsCookie
 
   function saveBoundsSoon() {
@@ -119,7 +123,29 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+let appIcon = null
 app.whenReady().then(() => {
+  appIcon = new Tray('/public/icons/favicon.ico')
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show App',
+      click: function () {
+        window.show()
+      }
+    },
+    {
+      label: 'Quit',
+      click: function () {
+        window.destroy()
+        app.quit()
+      }
+    }
+  ])
+
+  contextMenu.items[1].checked = false
+
+  appIcon.setContextMenu(contextMenu)
+
   createLoadingScreen()
   createWindow()
 

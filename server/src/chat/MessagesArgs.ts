@@ -2,7 +2,7 @@ import { ArgsType, Field, ID, Int } from 'type-graphql'
 import { Max, Min } from 'class-validator'
 
 @ArgsType()
-export class NewMessagesArgs {
+export class MessagesArgs {
   @Field(() => ID)
   channelId: string
 

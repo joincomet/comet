@@ -16,17 +16,20 @@ import {
 import { Message } from '@/chat/Message.entity'
 import { Channel } from '@/chat/Channel.entity'
 import { Topic } from '@/chat/Topic'
-import { NewMessagesArgs } from '@/chat/NewMessagesArgs'
+import { MessagesSubscriptionArgs } from '@/chat/MessagesSubscriptionArgs'
 import { Context } from '@/Context'
 import { QueryOrder } from '@mikro-orm/core'
 import { MessagesResponse } from '@/chat/MessagesResponse'
+import { EntityManager } from '@mikro-orm/postgresql'
+import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
+import { MessagesArgs } from '@/chat/MessagesArgs'
 
 @Resolver()
 export class ChatResolver {
   @Authorized()
   @Query(() => MessagesResponse)
   async messages(
-    @Args() { channelId, page, pageSize }: NewMessagesArgs,
+    @Args() { channelId, page, pageSize }: MessagesArgs,
     @Ctx() { userId, em }: Context
   ) {
     const channel = await em.findOne(Channel, channelId, [
@@ -80,7 +83,9 @@ export class ChatResolver {
     @Arg('text') text: string,
     @Arg('channelId', () => ID) channelId: string,
     @PubSub(Topic.NewMessage)
-    notifyAboutNewMessage: Publisher<Message>,
+    notifyNewMessage: Publisher<Message>,
+    @PubSub(Topic.UpdateMessage)
+    notifyUpdateMessage: Publisher<Message>,
     @Ctx() { userId, em }: Context
   ): Promise<boolean> {
     const err = new Error('You do not have access to this channel')
@@ -113,9 +118,51 @@ export class ChatResolver {
     })
 
     await em.persistAndFlush(message)
-    await notifyAboutNewMessage(message)
+    await notifyNewMessage(message)
+
+    this.getLinkMetas(em, notifyUpdateMessage, message)
 
     return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async editMessage(
+    @Arg('text') text: string,
+    @Arg('messageId', () => ID) messageId: string,
+    @PubSub(Topic.UpdateMessage)
+    notifyUpdateMessage: Publisher<Message>,
+    @Ctx() { userId, em }: Context
+  ): Promise<boolean> {
+    if (!text) throw new Error('Text cannot be empty')
+    const message = await em.findOne(Message, messageId, ['author'])
+    if (!message) throw new Error('Invalid message ID')
+    if (message.author.id !== userId)
+      throw new Error('You are not the author of this message')
+
+    message.text = text
+    await em.persistAndFlush(message)
+    await notifyUpdateMessage(message)
+
+    this.getLinkMetas(em, notifyUpdateMessage, message)
+
+    return true
+  }
+
+  async getLinkMetas(
+    em: EntityManager,
+    notifyUpdateMessage: Publisher<Message>,
+    message: Message
+  ) {
+    const linkRegex = /(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/gi
+    const links = message.text.match(linkRegex)
+    message.metas = []
+    for (const link of links) {
+      const meta = await scrapeMetadata(link)
+      if (meta) message.metas.push(meta)
+    }
+    await em.persistAndFlush(message)
+    await notifyUpdateMessage(message)
   }
 
   @Authorized()
@@ -124,14 +171,31 @@ export class ChatResolver {
     filter: ({
       payload,
       args
-    }: ResolverFilterData<Message, NewMessagesArgs>) => {
+    }: ResolverFilterData<Message, MessagesSubscriptionArgs>) => {
       return payload.channel.id === args.channelId
     }
   })
   newMessage(
     @Root() newMessage: Message,
-    @Args() { channelId }: NewMessagesArgs
+    @Args() { channelId }: MessagesSubscriptionArgs
   ): Message {
     return newMessage
+  }
+
+  @Authorized()
+  @Subscription(() => Message, {
+    topics: Topic.UpdateMessage,
+    filter: ({
+      payload,
+      args
+    }: ResolverFilterData<Message, MessagesSubscriptionArgs>) => {
+      return payload.channel.id === args.channelId
+    }
+  })
+  updateMessage(
+    @Root() updatedMessage: Message,
+    @Args() { channelId }: MessagesSubscriptionArgs
+  ): Message {
+    return updatedMessage
   }
 }
