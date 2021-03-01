@@ -101,11 +101,11 @@ body {
 }
 
 .label {
-  @apply block pb-2 uppercase text-11 font-semibold tracking-widest text-gray-600 dark:text-gray-400;
+  @apply text-left block pb-2 uppercase text-11 font-semibold tracking-widest text-gray-600 dark:text-gray-400;
 }
 
 .card {
-  @apply flex flex-col items-center rounded shadow-lg dark:bg-gray-750 max-w-md w-full p-4 z-20;
+  @apply  rounded shadow-lg dark:bg-gray-750 max-w-md w-full p-4 z-20;
 }
 
 .title {

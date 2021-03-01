@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import EditPostModal from '@/components/modals/EditPostModal'
 import { RiRocketFill } from 'react-icons/ri'
 import {
   HiLink,
@@ -65,7 +64,6 @@ export default function Post({
         link ? 'cursor-pointer' : ''
       } relative transition dark:hover:bg-gray-775 pt-3 px-4 pb-1.5`}
     >
-      <EditPostModal post={post} setOpen={setEditing} open={editing} />
       <div className="flex flex-row-reverse lg:flex-row w-full">
         {thumbnail && <Thumbnail post={post} />}
 

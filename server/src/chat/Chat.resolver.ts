@@ -13,21 +13,18 @@ import {
   Root,
   Subscription
 } from 'type-graphql'
-import { User } from '@/user/User.entity'
 import { Message } from '@/chat/Message.entity'
-import { Group } from '@/chat/Group.entity'
 import { Channel } from '@/chat/Channel.entity'
 import { Topic } from '@/chat/Topic'
-import { MessageInput } from '@/chat/MessageInput'
 import { NewMessagesArgs } from '@/chat/NewMessagesArgs'
 import { Context } from '@/Context'
-import { Planet } from '@/planet/Planet.entity'
-import { wrap } from '@mikro-orm/core'
+import { QueryOrder } from '@mikro-orm/core'
+import { MessagesResponse } from '@/chat/MessagesResponse'
 
 @Resolver()
 export class ChatResolver {
   @Authorized()
-  @Query(() => [Message])
+  @Query(() => MessagesResponse)
   async messages(
     @Args() { channelId, page, pageSize }: NewMessagesArgs,
     @Ctx() { userId, em }: Context
@@ -60,17 +57,28 @@ export class ChatResolver {
         throw err
     }
 
-    return em.find(
-      Message,
-      { removed: false, deleted: false, channel: { id: channelId } },
-      { limit: pageSize, offset: page * pageSize }
-    )
+    return {
+      messages: (
+        await em.find(
+          Message,
+          { removed: false, deleted: false, channel: { id: channelId } },
+          {
+            limit: pageSize,
+            offset: page * pageSize,
+            orderBy: { createdAt: QueryOrder.DESC }
+          }
+        )
+      ).reverse(),
+      page,
+      nextPage: page + 1
+    }
   }
 
   @Authorized()
   @Mutation(() => Boolean)
   async sendMessage(
-    @Arg('message') { text, channelId }: MessageInput,
+    @Arg('text') text: string,
+    @Arg('channelId', () => ID) channelId: string,
     @PubSub(Topic.NewMessage)
     notifyAboutNewMessage: Publisher<Message>,
     @Ctx() { userId, em }: Context
@@ -120,7 +128,7 @@ export class ChatResolver {
       return payload.channel.id === args.channelId
     }
   })
-  newMessages(
+  newMessage(
     @Root() newMessage: Message,
     @Args() { channelId }: NewMessagesArgs
   ): Message {

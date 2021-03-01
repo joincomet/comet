@@ -1,5 +1,5 @@
 import { gql } from '@urql/core'
-import { useQuery } from 'urql'
+import { useQuery, useSubscription } from 'urql'
 
 export const PLANETS_QUERY = gql`
   query planets(
@@ -274,3 +274,56 @@ export const POSTS_QUERY = gql`
 
 export const usePostsQuery = variables =>
   useQuery({ query: POSTS_QUERY, variables })
+
+const NEW_MESSAGE_SUBSCRIPTION = gql`
+  subscription newMessage($channelId: ID!) {
+    newMessage(channelId: $channelId) {
+      id
+      text
+      createdAt
+      editedAt
+      author {
+        id
+        username
+        status {
+          status
+        }
+        avatarUrl
+        isCurrentUser
+      }
+    }
+  }
+`
+
+export const useNewMessageSubscription = (variables, handleSubscription) =>
+  useSubscription(
+    { query: NEW_MESSAGE_SUBSCRIPTION, variables },
+    handleSubscription
+  )
+
+export const MESSAGES_QUERY = gql`
+  query messages($channelId: ID!) {
+    messages(channelId: $channelId) {
+      messages {
+        id
+        text
+        createdAt
+        editedAt
+        author {
+          id
+          username
+          status {
+            status
+          }
+          avatarUrl
+          isCurrentUser
+        }
+      }
+      page
+      nextPage
+    }
+  }
+`
+
+export const useMessagesQuery = variables =>
+  useQuery({ query: MESSAGES_QUERY, variables })

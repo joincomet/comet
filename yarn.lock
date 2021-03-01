@@ -12566,12 +12566,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^6.15.4":
-  version: 6.15.4
-  resolution: "react-hook-form@npm:6.15.4"
+"react-hook-form@npm:beta":
+  version: 7.0.0-beta.15
+  resolution: "react-hook-form@npm:7.0.0-beta.15"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 4f866330ddf30e0607e0c5c2ecdb7838e70872fad5b4d39240ecbf2e5f81e37357edf8b667bd939ce019976d6872a52dda94d4991862cb2010636050a779c4f0
+  checksum: 41708bc70e454fbbe74306e949fb1288156161ddf1d00754ccbed93727ab4d5080acf61537d4e57fd438b1217d284297a5dae21e555843230ef7818111971d83
   languageName: node
   linkType: hard
 
@@ -15797,7 +15797,7 @@ typescript@^4.1.5:
     react-dnd-touch-backend: ^12.0.0
     react-dom: ^17.0.1
     react-helmet: ^6.1.0
-    react-hook-form: ^6.15.4
+    react-hook-form: beta
     react-hot-toast: ^1.0.2
     react-icons: ^4.2.0
     react-intersection-observer: ^8.31.0

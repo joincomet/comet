@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { FiUser } from 'react-icons/fi'
+import { HiUser } from 'react-icons/hi'
 import Avatar from '@/components/ui/Avatar'
 
 export default forwardRef(
@@ -13,7 +13,7 @@ export default forwardRef(
         loading={loading}
         className={className}
       >
-        <FiUser className="text-gray-500 w-1/2 h-1/2" />
+        <HiUser className="text-gray-500 w-1/2 h-1/2" />
       </Avatar>
     )
   }

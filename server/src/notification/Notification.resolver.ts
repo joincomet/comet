@@ -34,7 +34,7 @@ export class NotificationResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async markNotificationRead(
-    @Arg('id', () => ID) Id: string,
+    @Arg('id', () => ID) id: string,
     @Ctx() { userId, em }: Context
   ) {
     await em

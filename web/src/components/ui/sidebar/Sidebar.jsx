@@ -1,7 +1,5 @@
 import React, { forwardRef } from 'react'
 import { SidebarUserInfo } from '@/components/ui/sidebar/SidebarUserInfo'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { Scrollbar } from 'react-scrollbars-custom'
 
 export default forwardRef(({ children, right = false }, ref) => {
   return (

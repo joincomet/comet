@@ -12,9 +12,7 @@ export default function RegisterPage() {
   const { push } = useHistory()
 
   const onSubmit = variables =>
-    signUp({
-      variables
-    }).then(
+    signUp(variables).then(
       ({
         data: {
           login: { accessToken }

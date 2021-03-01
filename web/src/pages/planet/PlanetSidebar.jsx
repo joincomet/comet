@@ -1,11 +1,9 @@
 import React, { forwardRef, useEffect, useState } from 'react'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
-import { Link, NavLink, useHistory } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import { HiPlus, HiChevronDown, HiHashtag } from 'react-icons/hi'
-import { useMutation, useQuery } from 'urql'
-import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/lib/queries'
-import Modal from 'react-responsive-modal'
+import { useCurrentUserQuery } from '@/lib/queries'
 import { useForm } from 'react-hook-form'
 import {
   modal,
@@ -14,6 +12,8 @@ import {
 import { Switch } from '@headlessui/react'
 import Button from '@/components/Button'
 import { useCreateChannelMutation } from '@/lib/mutations'
+import { Dialog } from '@headlessui/react'
+import StyledDialog from '@/components/StyledDialog'
 
 export default forwardRef(({ planet }, ref) => {
   return (
@@ -63,16 +63,16 @@ function CreateChannel({ planet }) {
 
   if (!isMod) return <div className="sidebar-label">CHANNELS</div>
 
-  const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const [modOnly, setModOnly] = useState(false)
 
   const { handleSubmit, register, reset } = useForm()
 
   useEffect(() => {
-    if (!open) return
+    if (!isOpen) return
     reset()
     setModOnly(false)
-  }, [open])
+  }, [isOpen])
 
   const { push } = useHistory()
 
@@ -82,7 +82,7 @@ function CreateChannel({ planet }) {
     createChannel({
       variables: { ...variables, planetId: planet.id }
     }).then(({ data: { createChannel } }) => {
-      setOpen(false)
+      setIsOpen(false)
       push(createChannel.id)
     })
   }
@@ -91,25 +91,16 @@ function CreateChannel({ planet }) {
     <>
       <div
         className="sidebar-label sidebar-label--plus"
-        onClick={() => setOpen(true)}
+        onClick={() => setIsOpen(true)}
       >
         CHANNELS
         <HiPlus className="w-4 h-4" />
       </div>
 
-      <Modal
-        center
-        open={open}
-        onClose={() => setOpen(false)}
-        classNames={{
-          modal,
-          overlay
-        }}
-        showCloseIcon={false}
-      >
-        <form onSubmit={handleSubmit(onSubmit)} className="card">
-          <div className="title mb-4">Create Channel</div>
+      <StyledDialog isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Dialog.Title className="title mb-4">Create Channel</Dialog.Title>
 
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4 w-full">
             <label className="label" htmlFor="name">
               Channel Name
@@ -175,7 +166,7 @@ function CreateChannel({ planet }) {
             </Switch>
           </Switch.Group>
         </form>
-      </Modal>
+      </StyledDialog>
     </>
   )
 }

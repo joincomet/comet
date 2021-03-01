@@ -159,21 +159,23 @@ async function bootstrap() {
     schema,
     playground: process.env.NODE_ENV !== 'production',
     tracing: true,
-    context: ({ req, res }) => {
+    context: ({ req, res, connection }) => {
       return {
         em: orm.em.fork(),
         req,
         res,
-        userId: getUserId(req.headers.authorization)
+        userId: connection
+          ? connection.context.userId
+          : getUserId(req.headers.authorization)
       } as Context
     },
     uploads: false,
     introspection: true,
     subscriptions: {
-      onConnect: (connectionParams: { token: string }, webSocket) => {
-        if (connectionParams.token) {
+      onConnect: (connectionParams: { authorization: string }, webSocket) => {
+        if (connectionParams.authorization) {
           return {
-            userId: getUserId(connectionParams.token)
+            userId: getUserId(connectionParams.authorization)
           }
         }
 

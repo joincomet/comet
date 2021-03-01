@@ -1,40 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import IconPlanetCreate from '@/components/ui/icons/IconPlanetCreate'
 import { useHistory } from 'react-router-dom'
-import { useMutation } from 'urql'
-import Modal from 'react-responsive-modal'
 import Tippy from '@tippyjs/react'
-import 'react-responsive-modal/styles.css'
 import {
   planetScrollerItem,
   planetScrollerItemDot
 } from './PlanetScroller.module.scss'
-import { modal, overlay } from './CreatePlanetDialog.module.css'
-import { HiOutlinePhotograph, HiOutlinePencil } from 'react-icons/hi'
-import { Switch } from '@headlessui/react'
-import IconSpinner from '@/components/ui/icons/IconSpinner'
-import { CURRENT_USER_QUERY } from '@/lib/queries'
-import Button from '@/components/Button'
+import StyledDialog from '@/components/StyledDialog'
 import { useCreatePlanetMutation } from '@/lib/mutations'
+import { HiOutlinePencil, HiOutlinePhotograph } from 'react-icons/hi'
+import Button from '@/components/Button'
+import { Switch, Dialog } from '@headlessui/react'
+import { readURL } from '@/lib/readURL'
 
 export default function CreatePlanetDialog() {
   const [createPlanet, { data, loading, error }] = useCreatePlanetMutation()
-  const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const [privatePlanet, setPrivate] = useState(true)
 
   const { handleSubmit, register, watch, reset } = useForm()
 
   const avatarFile = watch('avatarFile')
-
-  const readURL = file => {
-    return new Promise((res, rej) => {
-      const reader = new FileReader()
-      reader.onload = e => res(e.target.result)
-      reader.onerror = e => rej(e)
-      reader.readAsDataURL(file)
-    })
-  }
 
   const [avatarSrc, setAvatarSrc] = useState(null)
 
@@ -63,7 +50,7 @@ export default function CreatePlanetDialog() {
   return (
     <>
       <Tippy content="Create Planet" placement="right">
-        <div className={planetScrollerItem} onClick={() => setOpen(true)}>
+        <div className={planetScrollerItem} onClick={() => setIsOpen(true)}>
           <div
             className={`${planetScrollerItemDot} dark:bg-gray-800 bg-gray-200 hover:bg-purple-500 dark:hover:bg-purple-500`}
           >
@@ -74,19 +61,12 @@ export default function CreatePlanetDialog() {
         </div>
       </Tippy>
 
-      <Modal
-        center
-        open={open}
-        onClose={() => setOpen(false)}
-        classNames={{
-          modal,
-          overlay
-        }}
-        showCloseIcon={false}
-      >
-        <form onSubmit={handleSubmit(onSubmit)} className="card">
-          <div className="title mb-4">Create a Planet</div>
-
+      <StyledDialog isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Dialog.Title className="title mb-4">Create a Planet</Dialog.Title>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col items-center"
+        >
           <input
             type="file"
             {...register('avatarFile')}
@@ -118,7 +98,7 @@ export default function CreatePlanetDialog() {
           )}
 
           <div className="mb-4 w-full">
-            <label className="label" htmlFor="name">
+            <label className="label text-left" htmlFor="name">
               Planet Name
             </label>
 
@@ -160,7 +140,7 @@ export default function CreatePlanetDialog() {
             </Switch>
           </Switch.Group>
         </form>
-      </Modal>
+      </StyledDialog>
     </>
   )
 }

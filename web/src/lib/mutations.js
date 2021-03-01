@@ -271,3 +271,11 @@ export const LOGIN_MUTATION = gql`
 `
 
 export const useLoginMutation = () => useMutation(LOGIN_MUTATION)
+
+const SEND_MESSAGE_MUTATION = gql`
+  mutation sendMessage($text: String!, $channelId: ID!) {
+    sendMessage(text: $text, channelId: $channelId)
+  }
+`
+
+export const useSendMessageMutation = () => useMutation(SEND_MESSAGE_MUTATION)

@@ -11,7 +11,7 @@ export default function LoginPage() {
   const { push } = useHistory()
 
   const onSubmit = variables =>
-    login({ variables }).then(
+    login(variables).then(
       ({
         data: {
           login: { accessToken }

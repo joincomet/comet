@@ -20,6 +20,7 @@ export default function App() {
       <UrqlProvider value={urqlClient}>
         <DndProvider backend={HTML5Backend}>
           {window.electron && <TitleBar />}
+          <div id="popup" />
           <div className={`h-full electron:pt-5.5`}>
             <Router />
           </div>
