@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import LandingPage from '@/pages/LandingPage'
 import HomePage from '@/pages/home/HomePage'
@@ -9,7 +9,7 @@ import AuthLayout from '@/pages/auth/AuthLayout'
 import LoadingScreen from '@/pages/LoadingScreen'
 import { BrowserRouter } from 'react-router-dom'
 import PlanetPostsPage from '@/pages/planet/PlanetPostsPage'
-import { useCurrentUserQuery } from '@/lib/queries'
+import { useCurrentUserQuery } from '@/graphql/queries'
 import PlanetScroller from '@/components/planet-scroller/PlanetScroller'
 import HomeLayout from '@/pages/home/HomeLayout'
 import PlanetLayout from '@/pages/planet/PlanetLayout'
@@ -34,7 +34,7 @@ export default function Router() {
               if (currentUser) return <Redirect to="/home" />
               return <Redirect to="/login" />
             } else {
-              return <LandingPage />
+              return <LandingPage currentUser={currentUser} />
             }
           }}
         />
@@ -71,7 +71,7 @@ export default function Router() {
           ]}
           exact
         >
-          <LoadingScreen>
+          <Suspense fallback={<LoadingScreen />}>
             <PlanetScroller />
             <Switch>
               <PrivateRoute path="/home">
@@ -111,7 +111,7 @@ export default function Router() {
                 </PlanetLayout>
               </PrivateRoute>
             </Switch>
-          </LoadingScreen>
+          </Suspense>
         </Route>
 
         <Route>

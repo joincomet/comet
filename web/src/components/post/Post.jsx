@@ -21,7 +21,10 @@ import PlanetAvatar from '@/components/planet/PlanetAvatar'
 import PlanetPopup from '@/components/planet/PlanetPopup'
 import UserPopup from '@/components/user/UserPopup'
 import { useMutation } from 'urql'
-import { ROCKET_POST_MUTATION, UNROCKET_POST_MUTATION } from '@/lib/mutations'
+import {
+  ROCKET_POST_MUTATION,
+  UNROCKET_POST_MUTATION
+} from '@/graphql/mutations'
 
 export default function Post({
   postData,

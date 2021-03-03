@@ -1,7 +1,7 @@
 import React from 'react'
 import PlanetSidebar from '@/pages/planet/PlanetSidebar'
 import { useParams } from 'react-router-dom'
-import { useCurrentUserQuery } from '@/lib/queries'
+import { useCurrentUserQuery } from '@/graphql/queries'
 
 export default function PlanetLayout({ children }) {
   const { planetId } = useParams()

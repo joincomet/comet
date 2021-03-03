@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import isEmail from 'validator/es/lib/isEmail'
 import { useForm } from 'react-hook-form'
-import { useSignUpMutation } from '@/lib/mutations'
+import { useSignUpMutation } from '@/graphql/mutations'
 import Button from '@/components/Button'
 
 export default function RegisterPage() {
@@ -15,7 +15,7 @@ export default function RegisterPage() {
     signUp(variables).then(
       ({
         data: {
-          login: { accessToken }
+          signUp: { accessToken }
         }
       }) => {
         localStorage.setItem('token', accessToken)

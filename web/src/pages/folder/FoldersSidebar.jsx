@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import { useLocation, useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
-import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/lib/queries'
+import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/graphql/queries'
 
 export default forwardRef((props, ref) => {
   const [

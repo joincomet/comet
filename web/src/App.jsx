@@ -10,7 +10,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Router from '@/Router'
 import { Provider as UrqlProvider } from 'urql'
-import { urqlClient } from '@/lib/urqlClient'
+import { urqlClient } from '@/graphql/urqlClient'
 import ResponsiveToaster from '@/components/ui/layout/ResponsiveToaster'
 
 export default function App() {

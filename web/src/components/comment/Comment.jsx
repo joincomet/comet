@@ -11,7 +11,7 @@ import { useMutation } from 'urql'
 import {
   ROCKET_COMMENT_MUTATION,
   UNROCKET_COMMENT_MUTATION
-} from '@/lib/mutations'
+} from '@/graphql/mutations'
 
 export default function Comment({
   commentData,

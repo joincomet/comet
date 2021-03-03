@@ -15,7 +15,6 @@ import {
 } from 'type-graphql'
 import { Message } from '@/chat/Message.entity'
 import { Channel } from '@/chat/Channel.entity'
-import { Topic } from '@/chat/Topic'
 import { MessagesSubscriptionArgs } from '@/chat/MessagesSubscriptionArgs'
 import { Context } from '@/Context'
 import { QueryOrder } from '@mikro-orm/core'
@@ -23,6 +22,7 @@ import { MessagesResponse } from '@/chat/MessagesResponse'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
 import { MessagesArgs } from '@/chat/MessagesArgs'
+import { MESSAGE_CREATED, MESSAGE_UPDATED } from '@/subscriptions'
 
 @Resolver()
 export class ChatResolver {
@@ -82,9 +82,9 @@ export class ChatResolver {
   async sendMessage(
     @Arg('text') text: string,
     @Arg('channelId', () => ID) channelId: string,
-    @PubSub(Topic.NewMessage)
+    @PubSub(SubscriptionTopic.NewMessage)
     notifyNewMessage: Publisher<Message>,
-    @PubSub(Topic.UpdateMessage)
+    @PubSub(SubscriptionTopic.UpdateMessage)
     notifyUpdateMessage: Publisher<Message>,
     @Ctx() { userId, em }: Context
   ): Promise<boolean> {
@@ -130,7 +130,7 @@ export class ChatResolver {
   async editMessage(
     @Arg('text') text: string,
     @Arg('messageId', () => ID) messageId: string,
-    @PubSub(Topic.UpdateMessage)
+    @PubSub(MESSAGE_UPDATED)
     notifyUpdateMessage: Publisher<Message>,
     @Ctx() { userId, em }: Context
   ): Promise<boolean> {
@@ -167,7 +167,7 @@ export class ChatResolver {
 
   @Authorized()
   @Subscription(() => Message, {
-    topics: Topic.NewMessage,
+    topics: MESSAGE_CREATED,
     filter: ({
       payload,
       args
@@ -184,7 +184,7 @@ export class ChatResolver {
 
   @Authorized()
   @Subscription(() => Message, {
-    topics: Topic.UpdateMessage,
+    topics: MESSAGE_UPDATED,
     filter: ({
       payload,
       args

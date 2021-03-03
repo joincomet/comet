@@ -1,5 +1,6 @@
 import { gql } from '@urql/core'
 import { useMutation } from 'urql'
+import { COMMENT_FRAGMENT, USER_FRAGMENT } from '@/graphql/fragments'
 
 export const SUBMIT_COMMENT_MUTATION = gql`
   mutation submitComment(
@@ -12,22 +13,10 @@ export const SUBMIT_COMMENT_MUTATION = gql`
       postId: $postId
       parentCommentId: $parentCommentId
     ) {
-      id
-      parentCommentId
-      textContent
-      rocketCount
-      isRocketed
-      author {
-        id
-        username
-        avatarUrl
-        isCurrentUser
-      }
-      deleted
-      removed
-      removedReason
+      ...COMMENT_FRAGMENT
     }
   }
+  ${COMMENT_FRAGMENT}
 `
 
 export const DELETE_COMMENT_MUTATION = gql`
@@ -78,16 +67,6 @@ export const useCreatePlanetMutation = () => useMutation(CREATE_PLANET_MUTATION)
 export const UPLOAD_AVATAR_MUTATION = gql`
   mutation uploadAvatar($file: Upload!) {
     uploadAvatar(file: $file)
-  }
-`
-
-export const SET_STATUS_MUTATION = gql`
-  mutation setStatus(
-    $status: String!
-    $emoji: String
-    $duration: StatusDuration
-  ) {
-    setStatus(status: $status, emoji: $emoji, duration: $duration)
   }
 `
 
@@ -245,13 +224,11 @@ export const SIGNUP_MUTATION = gql`
     signUp(username: $username, email: $email, password: $password) {
       accessToken
       user {
-        id
-        admin
-        username
-        avatarUrl
+        ...USER_FRAGMENT
       }
     }
   }
+  ${USER_FRAGMENT}
 `
 
 export const useSignUpMutation = () => useMutation(SIGNUP_MUTATION)
@@ -261,13 +238,11 @@ export const LOGIN_MUTATION = gql`
     login(name: $name, password: $password) {
       accessToken
       user {
-        id
-        admin
-        username
-        avatarUrl
+        ...USER_FRAGMENT
       }
     }
   }
+  ${USER_FRAGMENT}
 `
 
 export const useLoginMutation = () => useMutation(LOGIN_MUTATION)

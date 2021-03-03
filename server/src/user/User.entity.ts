@@ -15,8 +15,6 @@ import { Planet } from '@/planet/Planet.entity'
 import { Group } from '@/chat/Group.entity'
 import { Folder } from '@/folder/Folder.entity'
 import { BaseEntity } from '@/Base.entity'
-import { UserStatus } from '@/user/UserStatus'
-import { UserAvailability } from '@/user/UserAvailability'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -90,14 +88,6 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   @Property({ nullable: true })
   avatarUrl?: string
-
-  @Field(() => UserStatus, { nullable: true })
-  @Embedded({ entity: () => UserStatus, nullable: true, object: true })
-  status?: UserStatus
-
-  @Field(() => UserAvailability)
-  @Enum({ items: () => UserAvailability, default: UserAvailability.OFFLINE })
-  availability: UserAvailability
 
   @Field()
   isCurrentUser: boolean

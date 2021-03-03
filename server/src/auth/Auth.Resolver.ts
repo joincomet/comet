@@ -64,7 +64,6 @@ export class AuthResolver {
       lastLogin: new Date(),
       email: email.toLowerCase()
     })
-    const accessToken = createAccessToken(user)
 
     const favoritesFolder = em.create(Folder, {
       name: 'Favorites',
@@ -75,10 +74,11 @@ export class AuthResolver {
       name: 'Read Later',
       owner: user
     })
-    user.folders.add(favoritesFolder, readLaterFolder)
+    await em.persistAndFlush([user, favoritesFolder, readLaterFolder])
     user.foldersSort = [favoritesFolder.id, readLaterFolder.id]
-    await em.persistAndFlush([favoritesFolder, readLaterFolder])
+    await em.persistAndFlush(user)
 
+    const accessToken = createAccessToken(user)
     return {
       accessToken,
       user

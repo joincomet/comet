@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import { useForm } from 'react-hook-form'
-import { useLoginMutation } from '@/lib/mutations'
+import { useLoginMutation } from '@/graphql/mutations'
 import Button from '@/components/Button'
 
 export default function LoginPage() {

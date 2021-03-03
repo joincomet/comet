@@ -5,7 +5,7 @@ import Header from '@/components/ui/header/Header'
 import FoldersSidebar from '@/pages/folder/FoldersSidebar'
 import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
-import { CURRENT_USER_QUERY } from '@/lib/queries'
+import { CURRENT_USER_QUERY } from '@/graphql/queries'
 
 export default function PlanetPostsPage() {
   const { planetId } = useParams()

@@ -2,7 +2,7 @@ import Post from '@/components/post/Post'
 import React from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import { useQuery } from 'urql'
-import { POSTS_QUERY, usePostsQuery } from '@/lib/queries'
+import { POSTS_QUERY, usePostsQuery } from '@/graphql/queries'
 
 export default function Posts({
   variables,

@@ -11,7 +11,7 @@ import {
   planetScrollerItemDot
 } from './PlanetScroller.module.scss'
 import { useQuery } from 'urql'
-import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/lib/queries'
+import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/graphql/queries'
 
 export default function PlanetScroller() {
   const [

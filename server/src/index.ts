@@ -3,7 +3,11 @@ import { buildSchema } from 'type-graphql'
 import { getUserId } from '@/auth/AuthTokens'
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express'
+import {
+  ApolloServer,
+  ApolloServerExpressConfig,
+  PubSub
+} from 'apollo-server-express'
 import { Context } from '@/Context'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { authChecker } from '@/auth/AuthChecker'
@@ -31,7 +35,7 @@ import { AuthResolver } from '@/auth/Auth.Resolver'
 import { Post } from '@/post/Post.entity'
 import { PlanetInvite } from '@/planet/PlanetInvite.entity'
 import * as http from 'http'
-import { UserStatus } from '@/user/UserStatus'
+import { getPubSub } from '@/subscriptions'
 
 if (process.env.NODE_ENV === 'production') {
   if (!process.env.DATABASE_URL) {
@@ -93,8 +97,7 @@ async function bootstrap() {
       Planet,
       PlanetInvite,
       Post,
-      User,
-      UserStatus
+      User
     ],
     type: 'postgresql',
     clientUrl:
@@ -113,17 +116,6 @@ async function bootstrap() {
     await generator.updateSchema()
   }
 
-  /*const options: Redis.RedisOptions = {
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-    retryStrategy: times => Math.max(times * 100, 3000)
-  }
-
-  const pubSub = new RedisPubSub({
-    publisher: new Redis(options),
-    subscriber: new Redis(options)
-  })*/
-
   console.log(`Bootstraping schema and server...`)
   const schema = await buildSchema({
     resolvers: [
@@ -140,8 +132,8 @@ async function bootstrap() {
     ],
     emitSchemaFile: false,
     validate: true,
-    authChecker: authChecker
-    // pubSub
+    authChecker: authChecker,
+    pubSub: getPubSub()
   })
 
   const app = express()
@@ -207,66 +199,6 @@ async function bootstrap() {
       `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
     )
   })
-
-  /*const planets = await Planet
-    .createQueryBuilder('planet')
-    .leftJoinAndSelect('planet.channels', 'channel')
-    .getMany()
-
-  for (const planet of planets) {
-    const channels = planet.channels as ChatChannel[]
-    if (channels.length >= 1) {
-      if (!planet.defaultChannelId) {
-        await planetRepo.update(planet.id, { defaultChannelId: channels[0].id })
-      }
-      continue
-    }
-    const channel = ChatChannel.save({
-      name: 'general',
-      planetId: planet.id
-    })
-    await planetRepo
-      .createQueryBuilder()
-      .relation(Planet, 'channels')
-      .of(planet.id)
-      .add(channel.id)
-    await planetRepo.update(planet.id, { defaultChannelId: channel.id })
-  }
-
-  const users = await userRepo
-    .createQueryBuilder('user')
-    .leftJoinAndSelect('user.folders', 'folder')
-    .getMany()
-
-  for (const user of users) {
-    const folders = user.folders as Folder[]
-    if (folders.length >= 2) {
-      continue
-    }
-    const readLater = await folderRepo.save({
-      name: 'Read Later',
-      creatorId: user.id,
-      color: Color.blue
-    })
-
-    await folderRepo
-      .createQueryBuilder()
-      .relation(User, 'folders')
-      .of(user.id)
-      .add(readLater.id)
-
-    const favorites = await folderRepo.save({
-      name: 'Favorites',
-      creatorId: user.id,
-      color: Color.yellow
-    })
-
-    await folderRepo
-      .createQueryBuilder()
-      .relation(User, 'folders')
-      .of(user.id)
-      .add(favorites.id)
-  }*/
 }
 
 bootstrap().catch(console.error)

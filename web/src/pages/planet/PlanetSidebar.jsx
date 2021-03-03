@@ -3,7 +3,7 @@ import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
 import { NavLink, useHistory } from 'react-router-dom'
 import { HiPlus, HiChevronDown, HiHashtag } from 'react-icons/hi'
-import { useCurrentUserQuery } from '@/lib/queries'
+import { useCurrentUserQuery } from '@/graphql/queries'
 import { useForm } from 'react-hook-form'
 import {
   modal,
@@ -11,7 +11,7 @@ import {
 } from '@/components/planet-scroller/CreatePlanetDialog.module.css'
 import { Switch } from '@headlessui/react'
 import Button from '@/components/Button'
-import { useCreateChannelMutation } from '@/lib/mutations'
+import { useCreateChannelMutation } from '@/graphql/mutations'
 import { Dialog } from '@headlessui/react'
 import StyledDialog from '@/components/StyledDialog'
 

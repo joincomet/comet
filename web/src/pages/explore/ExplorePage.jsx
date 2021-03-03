@@ -13,7 +13,7 @@ import { FaSortAlphaDown } from 'react-icons/fa'
 import { galaxyIcon } from '@/lib/galaxyIcon'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
-import { PLANETS_QUERY, usePlanetsQuery } from '@/lib/queries'
+import { PLANETS_QUERY, usePlanetsQuery } from '@/graphql/queries'
 
 export default function ExplorePage() {
   const query = useParams()

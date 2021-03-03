@@ -8,7 +8,7 @@ import {
   planetScrollerItemDot
 } from './PlanetScroller.module.scss'
 import StyledDialog from '@/components/StyledDialog'
-import { useCreatePlanetMutation } from '@/lib/mutations'
+import { useCreatePlanetMutation } from '@/graphql/mutations'
 import { HiOutlinePencil, HiOutlinePhotograph } from 'react-icons/hi'
 import Button from '@/components/Button'
 import { Switch, Dialog } from '@headlessui/react'

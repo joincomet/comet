@@ -2,7 +2,7 @@ import { HiCog, HiUser } from 'react-icons/hi'
 import React from 'react'
 import Tippy from '@tippyjs/react'
 import { useQuery } from 'urql'
-import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/lib/queries'
+import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/graphql/queries'
 
 export function SidebarUserInfo() {
   const [

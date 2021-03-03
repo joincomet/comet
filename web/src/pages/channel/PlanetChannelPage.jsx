@@ -7,7 +7,7 @@ import {
   useCurrentUserQuery,
   useMessagesQuery,
   useNewMessageSubscription
-} from '@/lib/queries'
+} from '@/graphql/queries'
 import PlanetChannelSidebar from '@/pages/channel/PlanetChannelSidebar'
 import ChatMessage from '@/components/chat/ChatMessage'
 import { Virtuoso } from 'react-virtuoso'

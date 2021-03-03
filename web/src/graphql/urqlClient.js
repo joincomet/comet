@@ -10,7 +10,7 @@ import { makeOperation } from '@urql/core'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { cacheExchange } from '@urql/exchange-graphcache'
 import { devtoolsExchange } from '@urql/devtools'
-import { MESSAGES_QUERY } from '@/lib/queries'
+import { MESSAGES_QUERY } from '@/graphql/queries'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
 import toast from 'react-hot-toast'
 
@@ -68,6 +68,7 @@ const addAuthToOperation = ({ authState, operation }) => {
 }
 
 export const urqlClient = createClient({
+  suspense: true,
   url:
     process.env.NODE_ENV === 'production'
       ? `https://${process.env.APP_DOMAIN}/${process.env.SERVER_PATH}/graphql`

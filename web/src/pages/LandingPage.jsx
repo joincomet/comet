@@ -6,27 +6,17 @@ import Grass from '@/components/graphics/Grass'
 import Telescope from '@/components/graphics/Telescope'
 import Meteors from '@/components/graphics/Meteors'
 import React from 'react'
-import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 import { getOS } from '@/lib/getOS'
-import { useCurrentUserQuery } from '@/lib/queries'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
   'p-3 hover:bg-gray-700 transition rounded-full cursor-pointer'
-const link = 'hover:underline cursor-pointer flex items-center'
 
-export default function LandingPage() {
-  const { ref, inView, entry } = useInView()
-  const [{ data }] = useCurrentUserQuery()
-
+export default function LandingPage({ currentUser }) {
   return (
     <div className="relative flex flex-col items-center">
-      <div
-        className={`fixed top-0 left-0 right-0 z-50 bg-gray-900 transition ${
-          inView ? 'bg-opacity-0' : 'bg-opacity-90'
-        }`}
-      >
+      <div className={`fixed top-0 left-0 right-0 z-50 bg-gray-900 transition`}>
         <div className="h-1 bg-gradient-to-r from-blue-500 to-red-500 w-full" />
 
         <div className="px-24 h-16 flex items-center">
@@ -71,10 +61,7 @@ export default function LandingPage() {
         }}
         className="overflow-hidden py-64 w-full relative"
       >
-        <div
-          ref={ref}
-          className="flex absolute bottom-0 left-0 right-0 z-10 text-gray-900"
-        >
+        <div className="flex absolute bottom-0 left-0 right-0 z-10 text-gray-900">
           <Grass className="w-1/2" />
           <Grass className="w-1/2" />
         </div>
@@ -105,7 +92,7 @@ export default function LandingPage() {
               </a>
 
               <Link
-                to={data?.currentUser ? '/home' : '/login'}
+                to={currentUser ? '/home' : '/login'}
                 className="border border-gray-700 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
               >
                 Open in Browser
