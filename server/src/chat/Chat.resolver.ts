@@ -82,9 +82,9 @@ export class ChatResolver {
   async sendMessage(
     @Arg('text') text: string,
     @Arg('channelId', () => ID) channelId: string,
-    @PubSub(SubscriptionTopic.NewMessage)
+    @PubSub(MESSAGE_CREATED)
     notifyNewMessage: Publisher<Message>,
-    @PubSub(SubscriptionTopic.UpdateMessage)
+    @PubSub(MESSAGE_UPDATED)
     notifyUpdateMessage: Publisher<Message>,
     @Ctx() { userId, em }: Context
   ): Promise<boolean> {
