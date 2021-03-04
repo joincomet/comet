@@ -8,25 +8,22 @@ import {
   Resolver
 } from 'type-graphql'
 import { Notification } from '@/notification/Notification.Entity'
-import { Context } from '@/Context'
+import { Context } from '@/types/Context'
 import { QueryOrder } from '@mikro-orm/core'
 import { User } from '@/user/User.entity'
 
 @Resolver()
 export class NotificationResolver {
+  @Authorized()
   @Query(() => [Notification])
-  async notifications(
+  async getNotifications(
     @Arg('unreadOnly', { defaultValue: false }) unreadOnly: boolean,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
-    if (!userId) return []
-    const user = await em.findOne(User, userId)
     return em.find(
       Notification,
-      unreadOnly
-        ? { $and: [{ toUser: user }, { read: false }] }
-        : { toUser: user },
-      ['fromUser', 'post.author', 'post.planet', 'comment.author'],
+      unreadOnly ? { $and: [{ user }, { read: false }] } : { user },
+      ['user', 'comment.author', 'comment.post.author'],
       { createdAt: QueryOrder.DESC }
     )
   }
@@ -35,24 +32,23 @@ export class NotificationResolver {
   @Mutation(() => Boolean)
   async markNotificationRead(
     @Arg('id', () => ID) id: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
-    await em
-      .createQueryBuilder(Notification)
-      .update({ read: true })
-      .where({ id })
-      .andWhere({ toUserId: userId })
-      .execute()
+    const notif = await em.findOne(Notification, id)
+    if (!notif) throw new Error('Notification not found')
+    if (notif.user !== user) throw new Error('This is not your notification')
+    notif.read = true
+    await em.persistAndFlush(notif)
     return true
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async markAllNotificationsRead(@Ctx() { userId, em }: Context) {
+  async markAllNotificationsRead(@Ctx() { user, em }: Context) {
     await em
       .createQueryBuilder(Notification)
       .update({ read: true })
-      .where({ toUserId: userId })
+      .where({ user })
       .execute()
     return true
   }

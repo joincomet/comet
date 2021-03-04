@@ -1,18 +1,18 @@
 import { ArgsType, Field, Int } from 'type-graphql'
-import { PlanetSort } from '@/planet/PlanetSort'
+import { ServerSort } from '@/server/ServerSort'
 import { Max, Min } from 'class-validator'
-import { Galaxy } from '@/Galaxy'
+import { ServerCategory } from '@/types/ServerCategory'
 
 @ArgsType()
-export class PlanetsArgs {
-  @Field(() => PlanetSort, { defaultValue: PlanetSort.AZ })
-  sort: PlanetSort = PlanetSort.AZ
+export class ServersArgs {
+  @Field(() => ServerSort, { defaultValue: ServerSort.AZ })
+  sort: ServerSort = ServerSort.AZ
 
   @Field({ defaultValue: false })
   joinedOnly: boolean
 
-  @Field(() => Galaxy, { nullable: true })
-  galaxy?: Galaxy
+  @Field(() => ServerCategory, { nullable: true })
+  category?: ServerCategory
 
   @Field(() => Int, { nullable: true })
   @Min(0)

@@ -11,8 +11,8 @@ export const USER_FRAGMENT = gql`
   }
 `
 
-export const PLANET_FRAGMENT = gql`
-  fragment PLANET_FRAGMENT on Planet {
+export const SERVER_FRAGMENT = gql`
+  fragment SERVER_FRAGMENT on Server {
     id
     name
     description
@@ -26,17 +26,13 @@ export const COMMENT_FRAGMENT = gql`
   fragment COMMENT_FRAGMENT on Comment {
     id
     parentCommentId
-    textContent
+    text
     rocketCount
     isRocketed
     deleted
     removed
     removedReason
-    author {
-      ...USER_FRAGMENT
-    }
   }
-  ${USER_FRAGMENT}
 `
 
 export const POST_FRAGMENT = gql`
@@ -44,7 +40,7 @@ export const POST_FRAGMENT = gql`
     id
     title
     pinned
-    textContent
+    text
     linkUrl
     imageUrls
     relativeUrl
@@ -61,15 +57,7 @@ export const POST_FRAGMENT = gql`
       title
       description
     }
-    author {
-      ...USER_FRAGMENT
-    }
-    planet {
-      ...PLANET_FRAGMENT
-    }
   }
-  ${USER_FRAGMENT}
-  ${PLANET_FRAGMENT}
 `
 
 export const MESSAGE_FRAGMENT = gql`
@@ -78,9 +66,14 @@ export const MESSAGE_FRAGMENT = gql`
     text
     createdAt
     editedAt
-    author {
-      ...USER_FRAGMENT
-    }
   }
-  ${USER_FRAGMENT}
+`
+
+export const FOLDER_FRAGMENT = gql`
+  fragment FOLDER_FRAGMENT on Folder {
+    id
+    name
+    avatarUrl
+    description
+  }
 `

@@ -8,8 +8,8 @@ import {
   ManyToOne,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/Base.entity'
-import { Planet } from '@/planet/Planet.entity'
+import { BaseEntity } from '@/types/Base.entity'
+import { Server } from '@/server/Server.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -34,9 +34,9 @@ export class Folder extends BaseEntity {
   @ManyToOne(() => User, { nullable: true })
   owner?: User
 
-  @Field(() => Planet, { nullable: true })
-  @ManyToOne(() => Planet, { nullable: true })
-  planet?: Planet
+  @Field(() => Server, { nullable: true })
+  @ManyToOne(() => Server, { nullable: true })
+  server?: Server
 
   @Field()
   @Property({ default: false })

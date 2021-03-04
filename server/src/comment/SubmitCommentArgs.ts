@@ -8,7 +8,7 @@ export class SubmitCommentArgs {
     message: 'Text must be between 1 and 100000 characters'
   })
   @Matches(/[^ ]+/)
-  textContent: string
+  text: string
 
   @Field(() => ID)
   postId: string

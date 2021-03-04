@@ -3,11 +3,7 @@ import PlanetSidebar from '@/pages/planet/PlanetSidebar'
 import ChatMessageBar from '@/components/chat/ChatMessageBar'
 import Header from '@/components/ui/header/Header'
 import { useParams } from 'react-router-dom'
-import {
-  useCurrentUserQuery,
-  useMessagesQuery,
-  useNewMessageSubscription
-} from '@/graphql/queries'
+import { useCurrentUserQuery, useMessagesQuery } from '@/graphql/queries'
 import PlanetChannelSidebar from '@/pages/channel/PlanetChannelSidebar'
 import ChatMessage from '@/components/chat/ChatMessage'
 import { Virtuoso } from 'react-virtuoso'
@@ -23,9 +19,6 @@ export default function PlanetChannelPage() {
   const channel = planet.channels.find(c => c.id === channelId)
 
   const [{ data: messagesData, fetching, error }] = useMessagesQuery({
-    channelId
-  })
-  const [{ data: newMessagesData }] = useNewMessageSubscription({
     channelId
   })
 

@@ -1,9 +1,9 @@
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { Field, ID, ObjectType } from 'type-graphql'
 import { customAlphabet } from 'nanoid'
-import { Planet } from '@/planet/Planet.entity'
+import { Server } from '@/server/Server.entity'
 import { User } from '@/user/User.entity'
-import { InviteDuration } from '@/planet/InviteDuration'
+import { InviteDuration } from '@/server/InviteDuration'
 
 const nanoid = customAlphabet(
   'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -12,7 +12,7 @@ const nanoid = customAlphabet(
 
 @ObjectType()
 @Entity()
-export class PlanetInvite {
+export class ServerInvite {
   @Field(() => ID)
   @PrimaryKey()
   id: string = nanoid()
@@ -40,9 +40,9 @@ export class PlanetInvite {
     return new Date().getTime() > this.createdAt.getTime() + this.duration
   }
 
-  @Field(() => Planet)
-  @ManyToOne(() => Planet)
-  planet: Planet
+  @Field(() => Server)
+  @ManyToOne(() => Server)
+  server: Server
 
   @ManyToOne(() => User)
   creator: User

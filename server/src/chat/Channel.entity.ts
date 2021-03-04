@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { Message } from '@/chat/Message.entity'
 import { Group } from '@/chat/Group.entity'
-import { Planet } from '@/planet/Planet.entity'
+import { Server } from '@/server/Server.entity'
 import {
   Collection,
   Entity,
@@ -10,7 +10,7 @@ import {
   OneToOne,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/Base.entity'
+import { BaseEntity } from '@/types/Base.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -26,11 +26,11 @@ export class Channel extends BaseEntity {
   @OneToMany(() => Message, 'channel')
   messages = new Collection<Message>(this)
 
-  @ManyToOne(() => Planet)
-  planet: Planet
+  @ManyToOne({ entity: () => Server, nullable: true, inversedBy: 'channels' })
+  server?: Server
 
   @OneToOne({ entity: () => Group, nullable: true, inversedBy: 'channel' })
-  group: Group
+  group?: Group
 
   @Field()
   @Property({ default: false })

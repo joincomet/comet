@@ -3,7 +3,7 @@ import { useQuery, useSubscription } from 'urql'
 import {
   COMMENT_FRAGMENT,
   MESSAGE_FRAGMENT,
-  PLANET_FRAGMENT,
+  SERVER_FRAGMENT,
   POST_FRAGMENT,
   USER_FRAGMENT
 } from '@/graphql/fragments'
@@ -98,7 +98,7 @@ export const NOTIFICATIONS_QUERY = gql`
     }
   }
   ${USER_FRAGMENT}
-  ${PLANET_FRAGMENT}
+  ${SERVER_FRAGMENT}
 `
 
 export const POST_QUERY = gql`

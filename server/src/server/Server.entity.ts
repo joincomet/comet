@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from 'type-graphql'
 import { User } from '@/user/User.entity'
 import { Post } from '@/post/Post.entity'
-import { Galaxy } from '@/Galaxy'
+import { ServerCategory } from '@/types/ServerCategory'
 import { Channel } from '@/chat/Channel.entity'
 import {
   ArrayType,
@@ -14,13 +14,13 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/Base.entity'
-import { PlanetInvite } from '@/planet/PlanetInvite.entity'
+import { BaseEntity } from '@/types/Base.entity'
+import { ServerInvite } from '@/server/ServerInvite.entity'
 import { Folder } from '@/folder/Folder.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
-export class Planet extends BaseEntity {
+export class Server extends BaseEntity {
   @Field()
   @Property()
   name: string
@@ -33,22 +33,22 @@ export class Planet extends BaseEntity {
   @ManyToOne(() => User)
   owner: User
 
-  @OneToMany(() => Post, 'planet')
+  @OneToMany(() => Post, 'server')
   posts = new Collection<Post>(this)
 
-  @ManyToMany(() => User, 'planets', { owner: true })
+  @ManyToMany(() => User, 'servers', { owner: true })
   users = new Collection<User>(this)
 
   @Field(() => [Folder])
-  @OneToMany(() => Folder, 'planet', { orderBy: { createdAt: QueryOrder.ASC } })
+  @OneToMany(() => Folder, 'server', { orderBy: { createdAt: QueryOrder.ASC } })
   folders = new Collection<Folder>(this)
 
   @Property({ type: ArrayType, default: [] })
   foldersSort: string[]
 
-  @Field(() => Galaxy)
-  @Enum({ items: () => Galaxy, default: Galaxy.Uncategorized })
-  galaxy: Galaxy
+  @Field(() => ServerCategory)
+  @Enum({ items: () => ServerCategory, default: ServerCategory.Uncategorized })
+  category: ServerCategory
 
   @ManyToMany(() => User)
   bannedUsers = new Collection<User>(this)
@@ -78,7 +78,7 @@ export class Planet extends BaseEntity {
   banReason?: string
 
   @Field(() => [Channel])
-  @OneToMany(() => Channel, 'planet', {
+  @OneToMany(() => Channel, 'server', {
     orderBy: { createdAt: QueryOrder.ASC }
   })
   channels = new Collection<Channel>(this)
@@ -97,6 +97,6 @@ export class Planet extends BaseEntity {
   @Property({ nullable: true })
   featuredRank: number
 
-  @OneToMany(() => PlanetInvite, 'planet')
-  invites = new Collection<PlanetInvite>(this)
+  @OneToMany(() => ServerInvite, 'server')
+  invites = new Collection<ServerInvite>(this)
 }

@@ -3,58 +3,49 @@ import {
   Args,
   Authorized,
   Ctx,
-  FieldResolver,
   ID,
   Mutation,
   Query,
-  Resolver,
-  Root
+  Resolver
 } from 'type-graphql'
-import { Context } from '@/Context'
+import { Context } from '@/types/Context'
 import { Comment } from '@/comment/Comment.Entity'
 import { SubmitCommentArgs } from '@/comment/SubmitCommentArgs'
 import { CommentsArgs } from '@/comment/CommentsArgs'
 import { Notification } from '@/notification/Notification.Entity'
 import { filterXSS } from 'xss'
-import { whiteList } from '@/XSSWhiteList'
+import { whiteList } from '@/util/XSSWhiteList'
 import { CommentSort } from '@/comment/CommentSort'
 import { Post } from '@/post/Post.entity'
-import { QueryOrder, wrap } from '@mikro-orm/core'
-import { base36ToBigInt } from '@/base36ToBigInt'
-import { User } from '@/user/User.entity'
+import { QueryOrder } from '@mikro-orm/core'
 
 @Resolver(() => Comment)
 export class CommentResolver {
   @Authorized()
   @Mutation(() => Comment)
   async submitComment(
-    @Args() { textContent, postId, parentCommentId }: SubmitCommentArgs,
-    @Ctx() { userId, em }: Context
+    @Args() { text, postId, parentCommentId }: SubmitCommentArgs,
+    @Ctx() { user, em }: Context
   ) {
-    textContent = textContent.replace(/<[^/>][^>]*><\/[^>]+>/, '')
-    if (!textContent) throw new Error('Comment cannot be empty')
+    text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
+    if (!text) throw new Error('Comment cannot be empty')
 
-    const post = await em.findOne(Post, postId, ['planet.bannedUsers'])
+    const post = await em.findOne(Post, postId, ['server.bannedUsers'])
+    if (!post) throw new Error('Post not found')
     post.commentCount++
     em.persist(post)
 
-    if (
-      post.planet &&
-      post.planet.bannedUsers
-        .getItems()
-        .map(u => u.id)
-        .includes(userId)
-    )
-      throw new Error('You have been banned from ' + post.planet.name)
+    if (post.server.bannedUsers.contains(user))
+      throw new Error('You have been banned from ' + post.server.name)
 
-    textContent = filterXSS(textContent, { whiteList })
+    text = filterXSS(text, { whiteList })
 
     const savedComment = em.create(Comment, {
-      textContent,
+      text: text,
       parentCommentId,
-      post: postId,
-      author: userId,
-      rocketers: [userId]
+      post,
+      author: user,
+      rocketers: [user]
     })
     em.persist(savedComment)
 
@@ -62,26 +53,21 @@ export class CommentResolver {
       const parentComment = await em.findOne(Comment, parentCommentId, [
         'author'
       ])
-      if (parentComment.author.id !== userId) {
+      if (parentComment.author !== user) {
         em.persist(
           em.create(Notification, {
-            commentId: savedComment.id,
-            fromUserId: userId,
-            toUserId: parentComment.author.id,
-            postId,
-            parentCommentId
+            comment: savedComment,
+            user: parentComment.author
           })
         )
       }
     } else {
       const post = await em.findOne(Post, postId, ['author'])
-      if (post.author.id !== userId) {
+      if (post.author !== user) {
         em.persist(
           em.create(Notification, {
-            commentId: savedComment.id,
-            fromUserId: userId,
-            toUserId: post.author.id,
-            postId
+            comment: savedComment,
+            user: post.author
           })
         )
       }
@@ -93,12 +79,11 @@ export class CommentResolver {
   }
 
   @Query(() => [Comment])
-  async comments(
+  async getComments(
     @Args() { postId, sort }: CommentsArgs,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
     const post = await em.findOne(Post, postId)
-
     if (!post) throw new Error('Post not found')
 
     const comments = await em.find(
@@ -112,11 +97,11 @@ export class CommentResolver {
 
     comments.forEach(comment => {
       if (comment.deleted) {
-        comment.textContent = `<p>[deleted]</p>`
+        comment.text = `<p>[deleted]</p>`
         comment.author = null
       }
       if (comment.removed) {
-        comment.textContent = `<p>[removed: ${comment.removedReason}]</p>`
+        comment.text = `<p>[removed: ${comment.removedReason}]</p>`
         comment.author = null
       }
 
@@ -131,10 +116,10 @@ export class CommentResolver {
   @Mutation(() => Boolean)
   async deleteComment(
     @Arg('commentId', () => ID) commentId: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId, ['author', 'post'])
-    if (comment.author.id !== userId)
+    if (comment.author !== user)
       throw new Error('Attempt to delete post by someone other than author')
 
     comment.post.commentCount--
@@ -149,15 +134,15 @@ export class CommentResolver {
   @Mutation(() => Boolean)
   async editComment(
     @Arg('commentId', () => ID) commentId: string,
-    @Arg('newTextContent') newTextContent: string,
-    @Ctx() { userId, em }: Context
+    @Arg('newText') newText: string,
+    @Ctx() { user, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId, ['author'])
-    if (comment.author.id !== userId)
+    if (comment.author !== user)
       throw new Error('Attempt to edit post by someone other than author')
-    newTextContent = filterXSS(newTextContent, { whiteList })
+    newText = filterXSS(newText, { whiteList })
     comment.editedAt = new Date()
-    comment.textContent = newTextContent
+    comment.text = newText
     await em.persistAndFlush(comment)
     return true
   }
@@ -166,10 +151,9 @@ export class CommentResolver {
   @Mutation(() => Boolean)
   async rocketComment(
     @Arg('commentId', () => ID) commentId: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId)
-    const user = await em.findOne(User, userId)
     comment.rocketers.add(user)
     comment.rocketCount++
     await em.persistAndFlush(comment)
@@ -180,10 +164,9 @@ export class CommentResolver {
   @Mutation(() => Boolean)
   async unrocketComment(
     @Arg('commentId', () => ID) commentId: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId)
-    const user = await em.findOne(User, userId)
     comment.rocketers.remove(user)
     comment.rocketCount--
     await em.persistAndFlush(comment)

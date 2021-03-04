@@ -1,11 +1,11 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
 import { LoginResponse } from '@/auth/LoginResponse'
-import { Context } from '@/Context'
+import { Context } from '@/types/Context'
 import { User } from '@/user/User.entity'
 import { createAccessToken } from '@/auth/AuthTokens'
 import * as argon2 from 'argon2'
-import { handleUnderscore } from '@/handleUnderscore'
-import { Planet } from '@/planet/Planet.entity'
+import { handleUnderscore } from '@/util/handleUnderscore'
+import { Server } from '@/server/Server.entity'
 import { customAlphabet } from 'nanoid'
 import isEmail from 'validator/lib/isEmail'
 import { Folder } from '@/folder/Folder.entity'
@@ -127,9 +127,8 @@ export class AuthResolver {
   async changePassword(
     @Arg('oldPassword') oldPassword: string,
     @Arg('newPassword') newPassword: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
-    const user = await em.findOne(User, userId)
     const match = await argon2.verify(user.passwordHash, oldPassword)
     if (!match) throw new Error('Current password incorrect!')
 

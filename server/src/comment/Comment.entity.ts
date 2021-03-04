@@ -9,7 +9,7 @@ import {
   ManyToOne,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/Base.entity'
+import { BaseEntity } from '@/types/Base.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -23,7 +23,7 @@ export class Comment extends BaseEntity {
 
   @Field()
   @Property()
-  textContent: string
+  text: string
 
   @Field(() => ID, { nullable: true })
   @Property({ nullable: true, type: BigIntType })

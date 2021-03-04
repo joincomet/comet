@@ -8,7 +8,7 @@ import {
   ApolloServerExpressConfig,
   PubSub
 } from 'apollo-server-express'
-import { Context } from '@/Context'
+import { Context } from '@/types/Context'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { authChecker } from '@/auth/AuthChecker'
 import { MikroORM, ReflectMetadataProvider } from '@mikro-orm/core'
@@ -17,23 +17,23 @@ import { CommentResolver } from '@/comment/Comment.resolver'
 import { PostResolver } from '@/post/Post.resolver'
 import { AdminResolver } from '@/moderation/Admin.resolver'
 import { ModerationResolver } from '@/moderation/Moderation.resolver'
-import { PlanetResolver } from '@/planet/Planet.resolver'
+import { ServerResolver } from '@/server/Server.resolver'
 import { FolderResolver } from '@/folder/Folder.resolver'
 import { ChatResolver } from '@/chat/Chat.resolver'
 import { Channel } from '@/chat/Channel.entity'
 import { Metadata } from '@/metascraper/Metadata.entity'
 import { NotificationResolver } from '@/notification/Notification.resolver'
 import { Notification } from '@/notification/Notification.entity'
-import { BaseEntity } from '@/Base.entity'
+import { BaseEntity } from '@/types/Base.entity'
 import { Group } from '@/chat/Group.entity'
 import { Message } from '@/chat/Message.entity'
 import { Comment } from '@/comment/Comment.entity'
 import { Folder } from '@/folder/Folder.entity'
-import { Planet } from '@/planet/Planet.entity'
+import { Server } from '@/server/Server.entity'
 import { User } from '@/user/User.entity'
 import { AuthResolver } from '@/auth/Auth.Resolver'
 import { Post } from '@/post/Post.entity'
-import { PlanetInvite } from '@/planet/PlanetInvite.entity'
+import { ServerInvite } from '@/server/ServerInvite.entity'
 import * as http from 'http'
 import { getPubSub } from '@/subscriptions'
 
@@ -94,8 +94,8 @@ async function bootstrap() {
       Folder,
       Metadata,
       Notification,
-      Planet,
-      PlanetInvite,
+      Server,
+      ServerInvite,
       Post,
       User
     ],
@@ -126,7 +126,7 @@ async function bootstrap() {
       FolderResolver,
       ModerationResolver,
       NotificationResolver,
-      PlanetResolver,
+      ServerResolver,
       PostResolver,
       UserResolver
     ],
@@ -151,14 +151,17 @@ async function bootstrap() {
     schema,
     playground: process.env.NODE_ENV !== 'production',
     tracing: true,
-    context: ({ req, res, connection }) => {
+    context: async ({ req, res, connection }) => {
+      const em = orm.em.fork()
+      const userId = connection
+        ? connection.context.userId
+        : getUserId(req.headers.authorization)
+      const user = userId ? await em.findOne(User, userId) : null
       return {
-        em: orm.em.fork(),
+        em,
         req,
         res,
-        userId: connection
-          ? connection.context.userId
-          : getUserId(req.headers.authorization)
+        user
       } as Context
     },
     uploads: false,
@@ -169,9 +172,9 @@ async function bootstrap() {
           return {
             userId: getUserId(connectionParams.authorization)
           }
+        } else {
+          return { userId: null }
         }
-
-        throw new Error('Missing auth token!')
       }
     }
   } as ApolloServerExpressConfig)

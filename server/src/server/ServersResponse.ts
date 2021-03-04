@@ -1,14 +1,14 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { Planet } from '@/planet/Planet.entity'
+import { Server } from '@/server/Server.entity'
 
 @ObjectType()
-export class PlanetsResponse {
+export class ServersResponse {
   @Field(() => Int, { nullable: true })
   page?: number
 
   @Field(() => Int, { nullable: true })
   nextPage?: number
 
-  @Field(() => [Planet])
-  planets: Planet[]
+  @Field(() => [Server])
+  servers: Server[]
 }

@@ -1,7 +1,7 @@
 import { useSubscription } from 'urql'
-import { NEW_MESSAGE, UPDATE_MESSAGE } from '@/graphql/subscriptions/message'
+import { MESSAGE_CREATED, MESSAGE_UPDATED } from '@/graphql/subscriptions'
 
 export default function useSubscriptions() {
-  useSubscription({ query: NEW_MESSAGE })
-  useSubscription({ query: UPDATE_MESSAGE })
+  useSubscription({ query: MESSAGE_CREATED })
+  useSubscription({ query: MESSAGE_UPDATED })
 }

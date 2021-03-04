@@ -1,8 +1,8 @@
 import { ArgsType, Field, ID } from 'type-graphql'
-import { PaginationArgs } from '@/PaginationArgs'
+import { PaginationArgs } from '@/types/PaginationArgs'
 import { PostSort } from '@/post/PostSort'
-import { TimeFilter } from '@/TimeFilter'
-import { Galaxy } from '@/Galaxy'
+import { TimeFilter } from '@/types/TimeFilter'
+import { ServerCategory } from '@/types/ServerCategory'
 
 @ArgsType()
 export class PostsArgs extends PaginationArgs {
@@ -20,15 +20,15 @@ export class PostsArgs extends PaginationArgs {
 
   @Field(() => Boolean, {
     defaultValue: false,
-    description: 'Show posts from only joined planets'
+    description: 'Show posts from only joined servers'
   })
   joinedOnly = false
 
   @Field(() => ID, {
     nullable: true,
-    description: 'If provided, only posts from given planet ID will be returned'
+    description: 'If provided, only posts from given server ID will be returned'
   })
-  planetId?: string
+  serverId?: string
 
   @Field(() => ID, {
     nullable: true,

@@ -18,10 +18,10 @@ export class SubmitPostArgs {
   @Length(1, 100000, {
     message: 'Text must be between 1 and 100000 characters'
   })
-  textContent?: string
+  text?: string
 
   @Field(() => ID)
-  planetId: string
+  serverId: string
 
   @Field(() => [GraphQLUpload], { nullable: true })
   @IsOptional()

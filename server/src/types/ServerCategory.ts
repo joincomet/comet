@@ -1,6 +1,6 @@
 import { registerEnumType } from 'type-graphql'
 
-export enum Galaxy {
+export enum ServerCategory {
   Arts = 'Arts',
   Business = 'Business',
   Culture = 'Culture',
@@ -21,4 +21,4 @@ export enum Galaxy {
   Uncategorized = 'Uncategorized'
 }
 
-registerEnumType(Galaxy, { name: 'Galaxy' })
+registerEnumType(ServerCategory, { name: 'ServerCategory' })

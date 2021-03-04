@@ -10,30 +10,28 @@ import {
 } from 'type-graphql'
 import { Post } from '@/post/Post.entity'
 import { SubmitPostArgs } from '@/post/SubmitPostArgs'
-import { Context } from '@/Context'
+import { Context } from '@/types/Context'
 import { PostsArgs } from '@/post/PostsArgs'
 import { User } from '@/user/User.entity'
-import { uploadImage } from '@/S3Storage'
-import { TimeFilter } from '@/TimeFilter'
+import { uploadImage } from '@/util/S3Storage'
+import { TimeFilter } from '@/types/TimeFilter'
 import { PostSort } from '@/post/PostSort'
 import { PostsResponse } from '@/post/PostsResponse'
 import { Metadata } from '@/metascraper/Metadata.entity'
 import { scrapeMetadata } from '@/metascraper/scrapeMetadata'
 import { QueryOrder } from '@mikro-orm/core'
-import { Planet } from '@/planet/Planet.entity'
-import { handleText } from '@/handleText'
+import { Server } from '@/server/Server.entity'
+import { handleText } from '@/util/handleText'
 
 @Resolver(() => Post)
 export class PostResolver {
   @Authorized()
   @Query(() => PostsResponse)
-  async posts(
+  async getPosts(
     @Args()
-    { page, pageSize, sort, time, joinedOnly, folderId, planetId }: PostsArgs,
-    @Ctx() { userId, em }: Context
+    { page, pageSize, sort, time, joinedOnly, folderId, serverId }: PostsArgs,
+    @Ctx() { user, em }: Context
   ) {
-    const user = userId ? await em.findOne(User, userId) : null
-
     let orderBy = {}
     if (sort === PostSort.NEW) orderBy = { createdAt: QueryOrder.DESC }
     else if (sort === PostSort.HOT) orderBy = { hotRank: QueryOrder.DESC }
@@ -52,12 +50,12 @@ export class PostResolver {
                   $gt: 'NOW() - INTERVAL 1 ' + time.toString().toLowerCase()
                 }
               },
-          { planet: { $ne: null } },
-          user ? { planet: user.planets.getItems(false) } : {},
-          planetId ? { planet: { id: planetId } } : {}
+          { server: { $ne: null } },
+          user ? { server: user.servers.getItems(false) } : {},
+          serverId ? { server: { id: serverId } } : {}
         ]
       },
-      ['author', 'planet'],
+      ['author', 'server'],
       orderBy,
       pageSize,
       page * pageSize
@@ -71,29 +69,29 @@ export class PostResolver {
   }
 
   @Query(() => Post, { nullable: true })
-  async post(
+  async getPost(
     @Arg('postId', () => ID) postId: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
-    const post = await em.findOne(Post, postId, ['planet', 'author'])
+    const post = await em.findOne(Post, postId, ['server', 'author'])
 
     if (!post) return null
 
-    const user = await em.findOne(User, userId, ['planets'])
+    await em.populate(user, ['servers'])
 
-    if (post.planet.private && !user.planets.contains(post.planet))
+    if (post.server.private && !user.servers.contains(post.server))
       throw new Error(
-        'This post is in a private planet that you have not joined!'
+        'This post is in a private server that you have not joined!'
       )
 
     if (post.deleted) {
       post.author = null
-      post.textContent = '<p>[deleted]</p>'
+      post.text = '<p>[deleted]</p>'
     }
 
     if (post.removed) {
       post.author = null
-      post.textContent = `<p>[removed: ${post.removedReason}]</p>`
+      post.text = `<p>[removed: ${post.removedReason}]</p>`
     }
 
     return post
@@ -103,19 +101,18 @@ export class PostResolver {
   @Mutation(() => Post)
   async submitPost(
     @Args()
-    { title, linkUrl, textContent, planetId, images }: SubmitPostArgs,
-    @Ctx() { userId, em }: Context
+    { title, linkUrl, text, serverId, images }: SubmitPostArgs,
+    @Ctx() { user, em }: Context
   ) {
-    if (textContent) {
-      textContent = handleText(textContent)
-      if (!textContent) textContent = null
+    if (text) {
+      text = handleText(text)
+      if (!text) text = null
     }
 
-    const user = await em.findOne(User, userId)
-    const planet = await em.findOne(Planet, planetId)
+    const server = await em.findOne(Server, serverId)
 
-    if (planet.bannedUsers.contains(user))
-      throw new Error('You have been banned from ' + planet.name)
+    if (server.bannedUsers.contains(user))
+      throw new Error('You have been banned from ' + server.name)
 
     const imageUrls = []
 
@@ -135,10 +132,10 @@ export class PostResolver {
       title,
       linkUrl,
       author: user,
-      planet,
+      server,
       meta: linkUrl ? await scrapeMetadata(linkUrl) : null,
       imageUrls,
-      textContent,
+      text: text,
       rocketers: [user],
       rocketCount: 1,
       isRocketed: true
@@ -153,17 +150,17 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async editPost(
     @Arg('postId', () => ID) postId: string,
-    @Arg('newTextContent') newTextContent: string,
-    @Ctx() { userId, em }: Context
+    @Arg('newText') newText: string,
+    @Ctx() { user, em }: Context
   ) {
     const post = await em.findOne(Post, postId, ['author'])
-    if (post.author.id !== userId)
+    if (post.author !== user)
       throw new Error('You must be the author to edit this post!')
 
-    newTextContent = handleText(newTextContent)
-    if (!newTextContent) newTextContent = null
+    newText = handleText(newText)
+    if (!newText) newText = null
 
-    post.textContent = newTextContent
+    post.text = newText
     post.editedAt = new Date()
 
     await em.persistAndFlush(post)
@@ -175,10 +172,10 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async deletePost(
     @Arg('postId', () => ID) postId: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
     const post = await em.findOne(Post, postId, ['author'])
-    if (post.author.id !== userId)
+    if (post.author !== user)
       throw new Error('You must be the author to delete this post!')
     post.deleted = true
     post.pinned = false
@@ -190,10 +187,9 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async rocketPost(
     @Arg('postId', () => ID) postId: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
     const post = await em.findOne(Post, postId)
-    const user = await em.findOne(User, userId)
     post.rocketers.add(user)
     post.rocketCount++
     return true
@@ -203,10 +199,9 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async unrocketPost(
     @Arg('postId', () => ID) postId: string,
-    @Ctx() { userId, em }: Context
+    @Ctx() { user, em }: Context
   ) {
     const post = await em.findOne(Post, postId)
-    const user = await em.findOne(User, userId)
     post.rocketers.remove(user)
     post.rocketCount--
     return true

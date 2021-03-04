@@ -2,26 +2,25 @@ import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { PubSub } from 'apollo-server-express'
 import * as Redis from 'ioredis'
 
-export const MESSAGE_CREATED = 'MESSAGE_CREATED'
-export const MESSAGE_UPDATED = 'MESSAGE_UPDATED' // edited, link meta scraped, etc
-export const MESSAGE_DELETED = 'MESSAGE_DELETED'
-export const MESSAGE_MENTION = 'MESSAGE_MENTION'
+export enum SubscriptionTopic {
+  MessageCreated = 'MESSAGE_CREATED',
+  MessageUpdated = 'MESSAGE_UPDATED',
+  MessageDeleted = 'MESSAGE_DELETED',
+  MessageMentioned = 'MESSAGE_MENTIONED',
 
-export const GROUP_ADDED = 'GROUP_ADDED'
+  GroupAdded = 'GROUP_ADDED',
+  GroupUpdated = 'GROUP_UPDATED',
+  GroupRemoved = 'GROUP_REMOVED',
 
-export const CHANNEL_CREATED = 'CHANNEL_CREATED'
-export const CHANNEL_RENAMED = 'CHANNEL_RENAMED'
-export const CHANNEL_DELETED = 'CHANNEL_DELETED'
+  ServerUpdated = 'SERVER_UPDATED',
+  ServerDeleted = 'SERVER_DELETED',
 
-export const SERVER_DELETED = 'SERVER_DELETED'
-export const SERVER_UPDATED = 'SERVER_UPDATED' // change name, change avatar, etc
+  UserJoinedServer = 'USER_JOINED_SERVER',
+  UserLeftServer = 'USER_LEFT_SERVER',
+  UserUpdated = 'USER_UPDATED',
 
-export const USER_JOINED_SERVER = 'USER_JOINED_SERVER'
-export const USER_LEFT_SERVER = 'USER_LEFT_SERVER'
-export const USER_UPDATED = 'USER_UPDATED' // change name, change online status, etc
-
-export const REPLY_POST = 'REPLY_POST'
-export const REPLY_COMMENT = 'REPLY_COMMENT'
+  CommentReplied = 'COMMENT_REPLIED'
+}
 
 const redisOptions: Redis.RedisOptions = {
   host: process.env.REDIS_HOST,

@@ -9,7 +9,7 @@ import {
   OneToOne,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/Base.entity'
+import { BaseEntity } from '@/types/Base.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

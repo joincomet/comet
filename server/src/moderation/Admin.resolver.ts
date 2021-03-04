@@ -1,6 +1,6 @@
 import { Arg, Authorized, Ctx, ID, Mutation } from 'type-graphql'
 import { User } from '@/user/User.entity'
-import { Context } from '@/Context'
+import { Context } from '@/types/Context'
 import { Post } from '@/post/Post.entity'
 import { Comment } from '@/comment/Comment.Entity'
 import { Notification } from '@/notification/Notification.Entity'
@@ -18,7 +18,7 @@ export class AdminResolver {
       .update({
         banned: true,
         banReason: reason,
-        planets: []
+        servers: []
       })
       .where({ id: bannedId })
       .execute()
@@ -52,7 +52,7 @@ export class AdminResolver {
     const bannedUser = em.assign(await em.findOne(User, bannedId), {
       banned: true,
       banReason: reason,
-      planets: []
+      servers: []
     })
 
     await em
@@ -78,7 +78,7 @@ export class AdminResolver {
       .execute()
 
     await em.persistAndFlush([bannedUser])
-    await em.nativeDelete(Notification, { fromUser: bannedUser })
+    // await em.nativeDelete(Notification, { fromUser: bannedUser })
     return true
   }
 }

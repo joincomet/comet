@@ -11,10 +11,10 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
-import { Planet } from '@/planet/Planet.entity'
+import { Server } from '@/server/Server.entity'
 import { Group } from '@/chat/Group.entity'
 import { Folder } from '@/folder/Folder.entity'
-import { BaseEntity } from '@/Base.entity'
+import { BaseEntity } from '@/types/Base.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -64,12 +64,12 @@ export class User extends BaseEntity {
   @Property({ type: ArrayType, default: [] })
   foldersSort: string[]
 
-  @Field(() => [Planet])
-  @ManyToMany(() => Planet, 'users')
-  planets = new Collection<Planet>(this)
+  @Field(() => [Server])
+  @ManyToMany(() => Server, 'users')
+  servers = new Collection<Server>(this)
 
   @Property({ type: ArrayType, default: [] })
-  planetsSort: string[]
+  serversSort: string[]
 
   @Field(() => [Group])
   @ManyToMany(() => Group, group => group.users, {

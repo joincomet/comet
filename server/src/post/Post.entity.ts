@@ -1,9 +1,9 @@
 import { Field, Int, ObjectType } from 'type-graphql'
 import { Comment } from '@/comment/Comment.Entity'
 import { User } from '@/user/User.entity'
-import { Planet } from '@/planet/Planet.entity'
+import { Server } from '@/server/Server.entity'
 import { URL } from 'url'
-import { isUrl } from '@/IsUrl'
+import { isUrl } from '@/util/IsUrl'
 import { Metadata } from '@/metascraper/Metadata.entity'
 import { Folder } from '@/folder/Folder.entity'
 import {
@@ -17,7 +17,7 @@ import {
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/Base.entity'
+import { BaseEntity } from '@/types/Base.entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -28,7 +28,7 @@ export class Post extends BaseEntity {
 
   @Field({ nullable: true })
   @Property({ nullable: true })
-  textContent?: string
+  text?: string
 
   @Field({ nullable: true })
   @Property({ nullable: true })
@@ -83,9 +83,9 @@ export class Post extends BaseEntity {
   @OneToMany(() => Comment, 'post')
   comments = new Collection<Comment>(this)
 
-  @Field(() => Planet, { nullable: true })
-  @ManyToOne({ entity: () => Planet, nullable: true })
-  planet?: Planet
+  @Field(() => Server)
+  @ManyToOne({ entity: () => Server })
+  server: Server
 
   @ManyToMany(() => User)
   rocketers = new Collection<User>(this)
@@ -111,8 +111,8 @@ export class Post extends BaseEntity {
       .join('-')
       .replace(/[^a-z0-9-]+/gi, '')
       .replace(/[-](.)\1+/g, '$1')*/
-    const planet = this.planet as Planet
-    return `/planet/${planet.id}/post/${this.id}`
+    const server = this.server as Server
+    return `/server/${server.id}/post/${this.id}`
   }
 
   @Field(() => [Folder])

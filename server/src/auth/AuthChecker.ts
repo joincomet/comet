@@ -1,6 +1,6 @@
 import { User } from '@/user/User.entity'
 import { AuthChecker } from 'type-graphql'
-import { Context } from '@/Context'
+import { Context } from '@/types/Context'
 import { Post } from '@/post/Post.entity'
 
 /*
@@ -9,14 +9,10 @@ import { Post } from '@/post/Post.entity'
 @Authorized('USER'): must be same user as user being queried (i.e. email)
  */
 export const authChecker: AuthChecker<Context> = async (
-  { root, args, context: { userId, em }, info },
+  { root, args, context: { user, em }, info },
   roles
 ) => {
   const role = roles && roles.length > 0 ? roles[0] : null
-
-  if (!userId) return false
-
-  const user = await em.findOne(User, userId)
 
   // false if not logged in
   if (!user) return false

@@ -1,7 +1,7 @@
 import got from 'got'
 import { Metadata } from '@/metascraper/Metadata.entity'
-import { uploadImage } from '@/S3Storage'
-import { isUrl } from '@/IsUrl'
+import { uploadImage } from '@/util/S3Storage'
+import { isUrl } from '@/util/IsUrl'
 const metascraper = require('metascraper')([
   require('metascraper-author')(),
   require('metascraper-date')(),
