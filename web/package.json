@@ -13,7 +13,8 @@
     "build:electron": "electron-builder --dir",
     "export:electron": "electron-builder",
     "export": "yarn run clean && yarn run build:vite && yarn run export:electron",
-    "clean": "rimraf dist dist-electron node_modules"
+    "clean": "rimraf dist dist-electron node_modules",
+    "upgrade": "yarn up-all --exclude \"@headlessui/react @remirror/react remirror react-hook-form\""
   },
   "dependencies": {
     "@headlessui/react": "dev",
@@ -29,7 +30,7 @@
     "@urql/exchange-auth": "^0.1.2",
     "@urql/exchange-graphcache": "^4.0.0",
     "@urql/exchange-multipart-fetch": "^0.1.11",
-    "date-fns": "^2.18.0",
+    "date-fns": "^2.19.0",
     "dayjs": "^1.10.4",
     "dayjs-twitter": "^0.4.0",
     "electron-context-menu": "^2.5.0",
@@ -71,7 +72,7 @@
     "@types/react-dom": "^17.0.1",
     "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react-refresh": "^1.3.1",
-    "autoprefixer": "^10.2.4",
+    "autoprefixer": "^10.2.5",
     "babel-eslint": "^10.1.0",
     "concurrently": "^6.0.0",
     "electron": "^12.0.0",
@@ -81,7 +82,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",
     "graphql-tag": "^2.11.0",
-    "postcss": "^8.2.6",
+    "postcss": "^8.2.7",
     "prettier": "^2.2.1",
     "sass": "^1.32.8",
     "string-hash": "^1.1.3",

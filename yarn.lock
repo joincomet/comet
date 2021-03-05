@@ -4596,13 +4596,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.2.4":
-  version: 10.2.4
-  resolution: "autoprefixer@npm:10.2.4"
+"autoprefixer@npm:^10.2.5":
+  version: 10.2.5
+  resolution: "autoprefixer@npm:10.2.5"
   dependencies:
-    browserslist: ^4.16.1
-    caniuse-lite: ^1.0.30001181
-    colorette: ^1.2.1
+    browserslist: ^4.16.3
+    caniuse-lite: ^1.0.30001196
+    colorette: ^1.2.2
     fraction.js: ^4.0.13
     normalize-range: ^0.1.2
     postcss-value-parser: ^4.1.0
@@ -4610,13 +4610,13 @@ __metadata:
     postcss: ^8.1.0
   bin:
     autoprefixer: bin/autoprefixer
-  checksum: c07fb325ee63e535a2246be4ac0d6afc9e9e43e66386e39c495015bdc8d83547ffdc0797be22d88781d044d3eecbbcb13d8a550ef94eb684091b24a05eb0c83e
+  checksum: bd346dd75b7cb3bc8edca6e36edf1f4e0ae5bf0a51b2ac6d07523efd21d272d8932643f9a9410b4ee2ff36936531f7b6fa9d30d87b044579612f249fb96b9c78
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.855.0":
-  version: 2.855.0
-  resolution: "aws-sdk@npm:2.855.0"
+"aws-sdk@npm:^2.857.0":
+  version: 2.857.0
+  resolution: "aws-sdk@npm:2.857.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4627,7 +4627,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 93b89918bdcdc1ba542eb210183b9cb6901699fff65a99e6d4b5e89dda0d8c591a0634aef646ae39088a39ebcd1b9ae247afcd77f5aa749b0700cafc45126860
+  checksum: c6bbc8b10eb2996b418ca73562e47cef217edb5e9f17bb3d9e5b37629b1fa5fdbe57127eb6a8caef74846e770e22797866bb8e1a4339079f3e014fc065ee5383
   languageName: node
   linkType: hard
 
@@ -4906,7 +4906,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.16.1":
+"browserslist@npm:^4.16.3":
   version: 4.16.3
   resolution: "browserslist@npm:4.16.3"
   dependencies:
@@ -5157,6 +5157,13 @@ __metadata:
   version: 1.0.30001183
   resolution: "caniuse-lite@npm:1.0.30001183"
   checksum: effa2502ea0739da9792d77b32dc7c585146e93c06ee7dfcc513ea7c358bd7a8d7ee22a9efe0045ba01cfab393801d3630eb19881acca5d773ea08db3fd5f7f6
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001196":
+  version: 1.0.30001196
+  resolution: "caniuse-lite@npm:1.0.30001196"
+  checksum: 42c38418062cd00c43793679c1a8766f98127c3cb99c9775156b8d7843e2e12fd188791360e890c0c25a2c492ff30d9072d1727cb65a860e87a9d9fd11b0d917
   languageName: node
   linkType: hard
 
@@ -5500,6 +5507,13 @@ __metadata:
   version: 1.2.1
   resolution: "colorette@npm:1.2.1"
   checksum: 1cc21ad4b84777a424794f78b6bb6a44b614ae17dcea91762199339f8047598e6d981249eeef7ea588c99eaf062be8fcdcd4866c112998922ed854db6dde96f9
+  languageName: node
+  linkType: hard
+
+"colorette@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "colorette@npm:1.2.2"
+  checksum: e240f0c94b8d9f34b52bd17b50fc13a3b74f9e662edeaa2b0c65e06ec6b1fc6367fb42b834ec5a1d819d68b74a3d850f3bd3e284f9e614d6c4ffa122f83c6ec5
   languageName: node
   linkType: hard
 
@@ -5992,10 +6006,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.18.0":
-  version: 2.18.0
-  resolution: "date-fns@npm:2.18.0"
-  checksum: 58320ad5122bb2ae2f5aa23e2c432529d3390222bbec49339f8c360c2c07e5db8c26b40fe2cb2c947b4507732b9e1f9c195ec39572e14014291788ca07a5de6f
+"date-fns@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "date-fns@npm:2.19.0"
+  checksum: 99ec34199c3a61cdb7fd27dcd68dd3c0c949ddfc34aa1daba9a6b2e0b5381bf42d8955d28ec2770f72eee429f5e7ab10fadba7b69108379d2545f003461d04f7
   languageName: node
   linkType: hard
 
@@ -12126,14 +12140,14 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.2.6":
-  version: 8.2.6
-  resolution: "postcss@npm:8.2.6"
+"postcss@npm:^8.2.7":
+  version: 8.2.7
+  resolution: "postcss@npm:8.2.7"
   dependencies:
-    colorette: ^1.2.1
+    colorette: ^1.2.2
     nanoid: ^3.1.20
     source-map: ^0.6.1
-  checksum: 31dcc6632589e5b0d06ae3854122073a38952f3a25280511fa4bd8c2bc254c05d1d1db0913848ed3171c84d41b233ec3fe5d7349de4700f624a16fa93553ccac
+  checksum: cd2a7a8b9c1950783afd05e906d65a6433b13bcce5a52f3c2802c524479e7ba6893f516338ed1bc755b3a8545eb5a181daf0fcf25af694ad2e33e9d9fe7d4254
   languageName: node
   linkType: hard
 
@@ -13769,7 +13783,7 @@ fsevents@~2.3.1:
     "@typescript-eslint/parser": ^4.16.1
     apollo-server-express: ^2.21.0
     argon2: ^0.27.1
-    aws-sdk: ^2.855.0
+    aws-sdk: ^2.857.0
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
@@ -13806,7 +13820,7 @@ fsevents@~2.3.1:
     ts-node-dev: ^1.1.6
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
-    typescript: ^4.2.2
+    typescript: ^4.2.3
     validator: ^13.5.2
     xss: ^1.0.8
   languageName: unknown
@@ -15318,23 +15332,23 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-typescript@^4.2.2:
-  version: 4.2.2
-  resolution: "typescript@npm:4.2.2"
+typescript@^4.2.3:
+  version: 4.2.3
+  resolution: "typescript@npm:4.2.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: b2e3d5551a12c51b6b7a14f0e78d2664c136fab4dfb3eecaaf7a6e8e7e608f2cf43c6ebe81387d194db2588793b769720d2df523d445a1664b7585c5b9a85984
+  checksum: 06e8470f317db6f5e2fce809b20eb84a67a7d8179057abff36e5427bd1b891bd08e54581ff81f0fa36aef9b6d1eb0f54eaf6e2643c6dbd4e37a0adcc41eed256
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.2.2#builtin<compat/typescript>":
-  version: 4.2.2
-  resolution: "typescript@patch:typescript@npm%3A4.2.2#builtin<compat/typescript>::version=4.2.2&hash=a45b0e"
+"typescript@patch:typescript@^4.2.3#builtin<compat/typescript>":
+  version: 4.2.3
+  resolution: "typescript@patch:typescript@npm%3A4.2.3#builtin<compat/typescript>::version=4.2.3&hash=a45b0e"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ea1f1b6be22c9e3348f61692719d3169dd4abaad34b2132edff44a8d5a748bde8f3116fa2fae41d61c92b3a7cf1c35d0c7276058b2f35196ff3cde3b7d57c84b
+  checksum: a8956044aabf730699bcc3c2475efdd3f35e509329325cf60b4989761d4c2188e2c474183e2cf92b8c201fcf976814a5a16f144508b2a832643c4f972d0ab803
   languageName: node
   linkType: hard
 
@@ -15797,10 +15811,10 @@ typescript@^4.2.2:
     "@urql/exchange-graphcache": ^4.0.0
     "@urql/exchange-multipart-fetch": ^0.1.11
     "@vitejs/plugin-react-refresh": ^1.3.1
-    autoprefixer: ^10.2.4
+    autoprefixer: ^10.2.5
     babel-eslint: ^10.1.0
     concurrently: ^6.0.0
-    date-fns: ^2.18.0
+    date-fns: ^2.19.0
     dayjs: ^1.10.4
     dayjs-twitter: ^0.4.0
     electron: ^12.0.0
@@ -15816,7 +15830,7 @@ typescript@^4.2.2:
     fuse.js: ^6.4.6
     graphql: ^15.5.0
     graphql-tag: ^2.11.0
-    postcss: ^8.2.6
+    postcss: ^8.2.7
     prettier: ^2.2.1
     react: ^17.0.1
     react-dnd: ^13.1.1
