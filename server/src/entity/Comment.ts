@@ -1,6 +1,5 @@
 import { Field, ID, Int, ObjectType } from 'type-graphql'
-import { Post } from '@/entity/Post'
-import { User } from '@/entity/User'
+import { Post, User, BaseEntity } from '@/entity'
 import {
   BigIntType,
   Collection,
@@ -9,7 +8,6 @@ import {
   ManyToOne,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -18,6 +16,7 @@ export class Comment extends BaseEntity {
   @ManyToOne(() => User)
   author: User
 
+  @Field(() => Post)
   @ManyToOne(() => Post)
   post: Post
 

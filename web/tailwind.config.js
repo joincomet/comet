@@ -5,6 +5,27 @@ const plugin = require('tailwindcss/plugin')
 module.exports = {
   purge: ['./src/index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
+    nightwind: {
+      typography: true,
+      colors: {
+        background: {
+          1: 'gray.950',
+          2: 'gray.900',
+          3: 'gray.850',
+          4: 'gray.800',
+          5: 'gray.750',
+          6: 'gray.700',
+          7: 'gray.650',
+          hover: 'gray.775'
+        },
+        primary: 'white',
+        secondary: 'gray.200',
+        tertiary: 'gray.400',
+        mid: 'gray.500',
+        disabled: 'gray.600',
+        accent: 'blue.500'
+      }
+    },
     extend: {
       spacing: {
         4.5: '1.125rem',
@@ -21,7 +42,23 @@ module.exports = {
           775: '#2D2D31',
           850: '#202023',
           950: '#0C0C0E'
-        }
+        },
+        background: {
+          1: colors.gray['50'],
+          2: colors.gray['100'],
+          3: colors.gray['150'],
+          4: colors.gray['200'],
+          5: colors.gray['250'],
+          6: colors.gray['300'],
+          7: colors.gray['350'],
+          hover: colors.gray['350']
+        },
+        primary: colors.black,
+        secondary: colors.gray['800'],
+        tertiary: colors.gray['600'],
+        mid: colors.gray['500'],
+        disabled: colors.gray['400'],
+        accent: colors.blue['500']
       },
       fontFamily: {
         sans: ['Inter var', 'Inter', ...defaultTheme.fontFamily.sans]
@@ -104,56 +141,6 @@ module.exports = {
               }
             }
           }
-        },
-
-        dark: {
-          css: {
-            color: theme('colors.gray.200'),
-            a: {
-              color: theme('colors.blue.500'),
-              'text-decoration': 'none',
-              '&:hover, &.active': {
-                color: theme('colors.gray.200'),
-                'background-color': theme('colors.blue.500')
-              }
-            },
-            strong: {
-              color: theme('colors.blue.500')
-            },
-            h1: {
-              color: theme('colors.gray.200')
-            },
-            h2: {
-              color: theme('colors.gray.200')
-            },
-            h3: {
-              color: theme('colors.gray.200')
-            },
-            h4: {
-              color: theme('colors.gray.200')
-            },
-            code: {
-              color: theme('colors.gray.100'),
-              '&:before, &:after': {
-                display: 'none'
-              }
-            },
-            p: {
-              color: theme('colors.gray.200')
-            },
-            'ul > li': {
-              '&::before': {
-                'background-color': theme('colors.gray.200'),
-                'font-weight': 'bold'
-              }
-            },
-            'ol > li': {
-              '&::before': {
-                color: theme('colors.gray.200'),
-                'font-weight': 'bold'
-              }
-            }
-          }
         }
       })
     },
@@ -190,6 +177,7 @@ module.exports = {
   },
   darkMode: 'class',
   plugins: [
+    require('nightwind'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/typography'),

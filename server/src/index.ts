@@ -1,13 +1,13 @@
 import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
-import { getUserId } from '@/modules/auth/AuthTokens'
+import { getUserId } from '@/util/auth'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express'
-import { Context } from '@/types/Context'
+import { Context } from '@/types'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { MikroORM } from '@mikro-orm/core'
-import { User } from '@/entity/User'
+import { User } from '@/entity'
 import * as http from 'http'
 import { onConnect } from '@/config/redis'
 import checkEnv from '@/util/checkEnv'
@@ -46,7 +46,7 @@ async function bootstrap() {
     schema,
     playground: process.env.NODE_ENV !== 'production',
     tracing: true,
-    context: async ({ req, res, connection }) => {
+    context: async ({ req, connection }) => {
       const em = orm.em.fork()
       const userId = connection
         ? connection.context.userId

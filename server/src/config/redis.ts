@@ -1,5 +1,5 @@
 import * as Redis from 'ioredis'
-import { getUserId } from '@/modules/auth/AuthTokens'
+import { getUserId } from '@/util/auth'
 
 export default {
   host: process.env.REDIS_HOST,

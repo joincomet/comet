@@ -1,0 +1,5 @@
+export * from './CreatePostArgs'
+export * from './GetPostsArgs'
+export * from './GetPostsResponse'
+export * from './GetPostsSort'
+export * from './GetPostsTime'

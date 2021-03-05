@@ -1,6 +1,5 @@
-import { ChatChannel } from '@/entity/ChatChannel'
-import { Field, ID, ObjectType } from 'type-graphql'
-import { User } from '@/entity/User'
+import { ChatChannel, User, BaseEntity } from '@/entity'
+import { Field, ObjectType } from 'type-graphql'
 import {
   Collection,
   Entity,
@@ -9,7 +8,6 @@ import {
   OneToOne,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

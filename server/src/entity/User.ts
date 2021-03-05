@@ -10,10 +10,7 @@ import {
   QueryOrder,
   Unique
 } from '@mikro-orm/core'
-import { Server } from '@/entity/Server'
-import { ChatGroup } from '@/entity/ChatGroup'
-import { Folder } from '@/entity/Folder'
-import { BaseEntity } from '@/entity/BaseEntity'
+import { Server, ChatGroup, Folder, BaseEntity } from '@/entity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

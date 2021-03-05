@@ -10929,6 +10929,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"nightwind@npm:^1.1.6":
+  version: 1.1.6
+  resolution: "nightwind@npm:1.1.6"
+  dependencies:
+    tailwindcss: ^2.0.0
+  checksum: bbb0dc53f205de636bd5639a46fbf4f357c47a411fdec30a83cc215a89df43090ccf008ff1d496be7a049054f8cf811905bdaea8732d70dee5aa19c3085e4cff
+  languageName: node
+  linkType: hard
+
 "no-case@npm:^3.0.4":
   version: 3.0.4
   resolution: "no-case@npm:3.0.4"
@@ -14708,7 +14717,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^2.0.3":
+"tailwindcss@npm:^2.0.0, tailwindcss@npm:^2.0.3":
   version: 2.0.3
   resolution: "tailwindcss@npm:2.0.3"
   dependencies:
@@ -15830,6 +15839,7 @@ typescript@^4.2.3:
     fuse.js: ^6.4.6
     graphql: ^15.5.0
     graphql-tag: ^2.11.0
+    nightwind: ^1.1.6
     postcss: ^8.2.7
     prettier: ^2.2.1
     react: ^17.0.1

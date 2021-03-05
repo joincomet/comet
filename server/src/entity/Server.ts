@@ -1,8 +1,13 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { User } from '@/entity/User'
-import { Post } from '@/entity/Post'
-import { ServerCategory } from '@/modules/server/types/ServerCategory'
-import { ChatChannel } from '@/entity/ChatChannel'
+import {
+  User,
+  Post,
+  ChatChannel,
+  BaseEntity,
+  ServerInvite,
+  Folder
+} from '@/entity'
+import { ServerCategory } from '@/resolver/server'
 import {
   ArrayType,
   Collection,
@@ -11,12 +16,8 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  Property,
-  QueryOrder
+  Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/entity/BaseEntity'
-import { ServerInvite } from '@/entity/ServerInvite'
-import { Folder } from '@/entity/Folder'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

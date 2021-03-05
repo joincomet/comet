@@ -2,14 +2,14 @@ import { HiCog, HiUser } from 'react-icons/hi'
 import React from 'react'
 import Tippy from '@tippyjs/react'
 import { useQuery } from 'urql'
-import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/graphql/queries'
+import { GET_CURRENT_USER } from '@/graphql/queries'
 
 export function SidebarUserInfo() {
   const [
     {
       data: { currentUser }
     }
-  ] = useCurrentUserQuery()
+  ] = useQuery({ query: GET_CURRENT_USER })
 
   return (
     <div className="fixed bottom-0 left-16 right-0 w-60 h-12 px-3 dark:bg-gray-850 flex items-center">

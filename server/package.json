@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
-    "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register --transpile-only src/index.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
     "upgrade": "yarn up-all --exclude \"@mikro-orm/core @mikro-orm/postgresql\""
   },
   "dependencies": {

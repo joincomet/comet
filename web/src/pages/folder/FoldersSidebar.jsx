@@ -1,23 +1,14 @@
 import { HiStar, HiArchive, HiPlus } from 'react-icons/hi'
 import React, { forwardRef } from 'react'
-import { FiFolder, FiFolderPlus } from 'react-icons/fi'
+import { FiFolder } from 'react-icons/fi'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
 import toast from 'react-hot-toast'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import { useLocation, useParams } from 'react-router-dom'
-import { useQuery } from 'urql'
-import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/graphql/queries'
 
 export default forwardRef((props, ref) => {
-  const [
-    {
-      data: {
-        currentUser: { folders }
-      }
-    }
-  ] = useCurrentUserQuery()
-
+  const folders = []
   return (
     <Sidebar right ref={ref} header>
       <div className="px-2">

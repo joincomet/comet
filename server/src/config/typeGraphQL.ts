@@ -1,16 +1,19 @@
-import { AdminResolver } from '@/modules/admin/AdminResolver'
-import { AuthResolver } from '@/modules/auth/AuthResolver'
-import { ChatResolver } from '@/modules/chat'
-import { CommentResolver } from '@/modules/comment/CommentResolver'
-import { FolderResolver } from '@/modules/folder/FolderResolver'
-import { ModerationResolver } from '@/modules/moderation/ModerationResolver'
-import { NotificationResolver } from '@/modules/notification/NotificationResolver'
-import { ServerResolver } from '@/modules/server/ServerResolver'
-import { PostResolver } from '@/modules/post/PostResolver'
-import { UserResolver } from '@/modules/user/UserResolver'
-import { authChecker } from '@/modules/auth/AuthChecker'
-import { getPubSub } from '@/modules/subscriptions'
+import {
+  AdminResolver,
+  AuthResolver,
+  ChatResolver,
+  CommentResolver,
+  FolderResolver,
+  ModerationResolver,
+  NotificationResolver,
+  ServerResolver,
+  PostResolver,
+  UserResolver
+} from '@/resolver'
+import { authChecker } from '@/util/auth'
+import { getPubSub } from '@/util/subscriptions'
 import { BuildSchemaOptions } from 'type-graphql'
+import path from 'path'
 
 export default {
   resolvers: [
@@ -25,7 +28,10 @@ export default {
     PostResolver,
     UserResolver
   ],
-  emitSchemaFile: false,
+  emitSchemaFile:
+    process.env.NODE_ENV === 'production'
+      ? false
+      : path.resolve(__dirname, '../../../schema.graphql'),
   validate: true,
   authChecker: authChecker,
   pubSub: getPubSub()

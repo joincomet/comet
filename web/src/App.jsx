@@ -1,6 +1,4 @@
-import './css/typography.css'
 import './css/app.css'
-import './css/slideout.css'
 import './css/tippy.css'
 import './css/editor.css'
 

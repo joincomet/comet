@@ -1,5 +1,5 @@
 .remirror-editor {
-  @apply focus:outline-none overflow-auto h-32 prose dark:prose-dark rounded-md p-3 bg-gray-200 dark:bg-gray-800 max-w-none whitespace-pre-wrap;
+  @apply focus:outline-none overflow-auto h-32 prose rounded-md p-3 bg-gray-200 dark:bg-gray-800 max-w-none whitespace-pre-wrap;
 }
 
 .remirror-is-empty::before {

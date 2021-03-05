@@ -1,9 +1,6 @@
-import { Field, ID, ObjectType } from 'type-graphql'
-import { User } from '@/entity/User'
-import { ChatChannel } from '@/entity/ChatChannel'
+import { Field, ObjectType } from 'type-graphql'
+import { User, ChatChannel, BaseEntity, LinkMetadata } from '@/entity'
 import { Embedded, Entity, ManyToOne, Property } from '@mikro-orm/core'
-import { BaseEntity } from '@/entity/BaseEntity'
-import { LinkEmbed } from '@/entity/LinkEmbed'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -39,7 +36,7 @@ export class ChatMessage extends BaseEntity {
   @Property({ nullable: true })
   removedReason?: string
 
-  @Field(() => [LinkEmbed])
-  @Embedded(() => LinkEmbed, { object: true, array: true })
-  linkEmbeds: LinkEmbed[] = []
+  @Field(() => [LinkMetadata])
+  @Embedded(() => LinkMetadata, { object: true, array: true })
+  linkMetadatas: LinkMetadata[] = []
 }

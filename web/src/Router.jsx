@@ -9,7 +9,6 @@ import AuthLayout from '@/pages/auth/AuthLayout'
 import LoadingScreen from '@/pages/LoadingScreen'
 import { BrowserRouter } from 'react-router-dom'
 import PlanetPostsPage from '@/pages/planet/PlanetPostsPage'
-import { useCurrentUserQuery } from '@/graphql/queries'
 import PlanetScroller from '@/components/planet-scroller/PlanetScroller'
 import HomeLayout from '@/pages/home/HomeLayout'
 import PlanetLayout from '@/pages/planet/PlanetLayout'
@@ -19,9 +18,14 @@ import PlanetChannelPage from '@/pages/channel/PlanetChannelPage'
 import PlanetPostPage from '@/pages/post/PlanetPostPage'
 import PlanetFolderPage from '@/pages/folder/PlanetFolderPage'
 import NotFound from '@/pages/NotFound'
+import { useQuery } from 'urql'
+import { GET_CURRENT_USER } from '@/graphql/queries'
 
 export default function Router() {
-  const [{ data }] = useCurrentUserQuery()
+  const [{ data }] = useQuery({
+    query: GET_CURRENT_USER,
+    context: { suspense: false }
+  })
   const currentUser = data?.currentUser
   return (
     <BrowserRouter>

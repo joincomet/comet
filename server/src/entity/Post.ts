@@ -1,11 +1,14 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { Comment } from '@/entity/Comment'
-import { User } from '@/entity/User'
-import { Server } from '@/entity/Server'
+import {
+  Comment,
+  User,
+  Server,
+  LinkMetadata,
+  Folder,
+  BaseEntity
+} from '@/entity'
 import { URL } from 'url'
 import { isUrl } from '@/util/isUrl'
-import { LinkEmbed } from '@/entity/LinkEmbed'
-import { Folder } from '@/entity/Folder'
 import {
   ArrayType,
   Collection,
@@ -17,7 +20,6 @@ import {
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -34,16 +36,18 @@ export class Post extends BaseEntity {
   @Property({ nullable: true })
   linkUrl?: string
 
-  @Field(() => LinkEmbed, { nullable: true })
-  @Embedded({ entity: () => LinkEmbed, nullable: true, object: true })
-  linkEmbed?: LinkEmbed
+  @Field(() => LinkMetadata, { nullable: true })
+  @Embedded({ entity: () => LinkMetadata, nullable: true, object: true })
+  linkMetadata?: LinkMetadata
 
   @Field({ nullable: true })
   get thumbnailUrl(): string | null {
     if (this.imageUrls && this.imageUrls.length > 0) return this.imageUrls[0]
     if (!this.linkUrl) return null
-    if (this.linkEmbed && this.linkEmbed.image) return this.linkEmbed.image
-    if (this.linkEmbed && this.linkEmbed.logo) return this.linkEmbed.logo
+    if (this.linkMetadata && this.linkMetadata.image)
+      return this.linkMetadata.image
+    if (this.linkMetadata && this.linkMetadata.logo)
+      return this.linkMetadata.logo
     return null
   }
 

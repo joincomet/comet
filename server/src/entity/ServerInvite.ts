@@ -1,9 +1,8 @@
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { Field, ID, ObjectType } from 'type-graphql'
 import { customAlphabet } from 'nanoid'
-import { Server } from '@/entity/Server'
-import { User } from '@/entity/User'
-import { ServerInviteDuration } from '@/modules/server/types/ServerInviteDuration'
+import { Server, User } from '@/entity'
+import { ServerInviteDuration } from '@/resolver/server'
 
 const nanoid = customAlphabet(
   'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',

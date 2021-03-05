@@ -10,19 +10,11 @@ import {
   planetScrollerItemActive,
   planetScrollerItemDot
 } from './PlanetScroller.module.scss'
-import { useQuery } from 'urql'
-import { CURRENT_USER_QUERY, useCurrentUserQuery } from '@/graphql/queries'
 
 export default function PlanetScroller() {
-  const [
-    {
-      data: {
-        currentUser: { planets }
-      }
-    }
-  ] = useCurrentUserQuery()
-
   const { pathname } = useLocation()
+
+  const planets = []
 
   return (
     <>
