@@ -1,1 +1,2 @@
-export * from './FolderResolver'
+export * from './FolderMutations'
+export * from './FolderQueries'

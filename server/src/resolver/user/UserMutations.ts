@@ -1,19 +1,21 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
-import { LoginResponse } from '@/resolver/auth'
+import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
-import { User, Folder } from '@/entity'
-import { createAccessToken } from '@/util/auth'
-import * as argon2 from 'argon2'
-import { handleUnderscore } from '@/util/text'
-import { customAlphabet } from 'nanoid'
+import { User, Folder, Post, Comment } from '@/entity'
+import { uploadImage } from '@/util/s3'
+import { FileUpload, GraphQLUpload } from 'graphql-upload'
+import { LoginResponse } from '@/resolver/user/types'
 import isEmail from 'validator/lib/isEmail'
+import { handleUnderscore } from '@/util/text'
+import * as argon2 from 'argon2'
+import { createAccessToken } from '@/util/auth'
+import { customAlphabet } from 'nanoid'
 
 const tagGenerator = customAlphabet('0123456789', 4)
 
 @Resolver()
-export class AuthResolver {
+export class UserMutations {
   @Mutation(() => LoginResponse)
-  async signUp(
+  async createAccount(
     @Ctx() { em }: Context,
     @Arg('name') name: string,
     @Arg('password') password: string,
@@ -118,5 +120,99 @@ export class AuthResolver {
       accessToken: createAccessToken(user),
       user
     } as LoginResponse
+  }
+
+  @Authorized()
+  @Mutation(() => String)
+  async uploadAvatar(
+    @Arg('file', () => GraphQLUpload) file: FileUpload,
+    @Ctx() { user, em }: Context
+  ) {
+    const { createReadStream, mimetype } = await file
+    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
+      throw new Error('Image must be PNG or JPEG')
+    const avatarUrl = await uploadImage(createReadStream(), file.mimetype, {
+      width: 256,
+      height: 256
+    })
+    user.avatarUrl = avatarUrl
+    await em.persistAndFlush(user)
+    return avatarUrl
+  }
+
+  @Authorized('ADMIN')
+  @Mutation(() => Boolean)
+  async banUser(
+    @Arg('bannedId', () => ID) bannedId: string,
+    @Arg('reason') reason: string,
+    @Ctx() { em }: Context
+  ) {
+    await em
+      .createQueryBuilder(User)
+      .update({
+        banned: true,
+        banReason: reason,
+        servers: []
+      })
+      .where({ id: bannedId })
+      .execute()
+    return true
+  }
+
+  @Authorized('ADMIN')
+  @Mutation(() => Boolean)
+  async unbanUser(
+    @Arg('bannedId', () => ID) bannedId: string,
+    @Ctx() { em }: Context
+  ) {
+    await em
+      .createQueryBuilder(User)
+      .update({
+        banned: false,
+        banReason: null
+      })
+      .where({ id: bannedId })
+      .execute()
+    return true
+  }
+
+  @Authorized('ADMIN')
+  @Mutation(() => Boolean)
+  async banAndPurgeUser(
+    @Arg('bannedId', () => ID) bannedId: string,
+    @Arg('reason') reason: string,
+    @Ctx() { em }: Context
+  ) {
+    const bannedUser = em.assign(await em.findOne(User, bannedId), {
+      banned: true,
+      banReason: reason,
+      servers: []
+    })
+
+    await em
+      .createQueryBuilder(Post)
+      .update({
+        removed: true,
+        removedReason: reason,
+        pinned: false,
+        pinRank: null
+      })
+      .where({ author: bannedUser })
+      .execute()
+
+    await em
+      .createQueryBuilder(Comment)
+      .update({
+        removed: true,
+        removedReason: reason,
+        pinned: false,
+        pinRank: null
+      })
+      .where({ author: bannedUser })
+      .execute()
+
+    await em.persistAndFlush([bannedUser])
+    // await em.nativeDelete(Notification, { fromUser: bannedUser })
+    return true
   }
 }

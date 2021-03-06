@@ -24,7 +24,7 @@ import { useMutation } from 'urql'
 import {
   ROCKET_POST_MUTATION,
   UNROCKET_POST_MUTATION
-} from '@/graphql/mutations'
+} from '@/graphql/oldmutations'
 
 export default function Post({
   postData,

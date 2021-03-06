@@ -12,25 +12,7 @@ import { Folder, Post, Server } from '@/entity'
 import { handleUnderscore } from '@/util/text'
 
 @Resolver()
-export class FolderResolver {
-  @Authorized()
-  @Query(() => [Folder])
-  async getServerFolders(
-    @Ctx() { user, em }: Context,
-    @Arg('serverId', () => ID) serverId: string
-  ) {
-    const server = await em.findOne(Server, serverId, ['folders'])
-    if (!server) throw new Error('Server not found')
-    return server.folders
-  }
-
-  @Authorized()
-  @Query(() => [Folder])
-  async getUserFolders(@Ctx() { user, em }: Context) {
-    await em.populate(user, 'folders')
-    return user.folders
-  }
-
+export class FolderMutations {
   @Authorized()
   @Mutation(() => Boolean)
   async addPostToFolder(
@@ -69,7 +51,10 @@ export class FolderResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async createFolder(@Arg('name') name: string, @Ctx() { user, em }: Context) {
+  async createUserFolder(
+    @Arg('name') name: string,
+    @Ctx() { user, em }: Context
+  ) {
     if (name.length > 300)
       throw new Error('Name cannot be longer than 300 characters')
     if (

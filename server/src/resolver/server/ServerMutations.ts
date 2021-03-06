@@ -1,42 +1,21 @@
 import {
   Arg,
-  Args,
   Authorized,
   Ctx,
-  Field,
   ID,
   Mutation,
-  ObjectType,
   Publisher,
   PubSub,
-  Query,
-  Resolver,
-  Root,
-  Subscription
+  Resolver
 } from 'type-graphql'
 import { ChatChannel, Server, User } from '@/entity'
-import {
-  GetServersArgs,
-  GetServersSort,
-  GetServersResponse
-} from '@/resolver/server'
-import { QueryOrder } from '@mikro-orm/core'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { uploadImage } from '@/util/s3'
-import { SubscriptionTopic, SubscriptionFilter, Context } from '@/types'
+import { SubscriptionTopic, Context } from '@/types'
+import { ServerCategory, UserServerPayload } from '@/resolver/server'
 
-const filter = ({
-  payload: { users },
-  context: { user }
-}: SubscriptionFilter<Server>) => users.contains(user)
-
-const joinLeaveFilter = ({
-  payload: { server },
-  context: { user: currentUser }
-}: SubscriptionFilter<UserServerPayload>) => server.users.contains(currentUser)
-
-@Resolver(() => Server)
-export class ServerResolver {
+@Resolver()
+export class ServerMutations {
   @Authorized()
   @Mutation(() => Server)
   async createServer(
@@ -150,123 +129,103 @@ export class ServerResolver {
     return true
   }
 
-  @Query(() => GetServersResponse)
-  async getServers(
-    @Args()
-    { sort, joinedOnly, category, page, pageSize }: GetServersArgs,
-    @Ctx() { user, em }: Context
+  @Authorized()
+  @Mutation(() => Boolean)
+  async banUserFromServer(
+    @Arg('serverId', () => ID) serverId: string,
+    @Arg('bannedId', () => ID) bannedId: string,
+    @Ctx() { em, user }: Context
   ) {
-    await em.populate(user, ['servers'])
+    const server = await em.findOne(Server, serverId)
 
-    let where = {}
-    let orderBy = {}
-
-    if (sort === GetServersSort.FEATURED || (!user && joinedOnly)) {
-      where = { featured: true }
-      orderBy = { featuredPosition: QueryOrder.ASC }
-    } else if (category) {
-      where = { category: category }
-      orderBy = { name: QueryOrder.ASC }
-    }
-
-    if (sort === GetServersSort.NEW) {
-      orderBy = { createdAt: QueryOrder.DESC }
-    } else if (sort === GetServersSort.TOP) {
-      orderBy = { userCount: QueryOrder.DESC }
-    } else if (sort === GetServersSort.AZ) {
-      orderBy = { name: QueryOrder.ASC }
-    }
-
-    if (user && joinedOnly) {
-      where = { id: user.servers.getItems(false) }
-    }
-
-    const servers = await em.find(
-      Server,
-      where,
-      [],
-      orderBy,
-      pageSize,
-      page * pageSize
-    )
-
-    return {
-      servers: servers,
-      page,
-      nextPage: page >= 0 && servers.length >= pageSize ? page + 1 : null
-    } as GetServersResponse
-  }
-
-  @Query(() => [Server])
-  async getJoinedServers(@Ctx() { user, em }: Context) {
-    await em.populate(user, ['servers'])
-
-    return user.servers
-      .getItems()
-      .sort(
-        (a, b) =>
-          user.serversSort.indexOf(a.id) - user.serversSort.indexOf(b.id)
-      )
-  }
-
-  // --- Subscriptions ---
-
-  @Authorized()
-  @Subscription(() => Server, {
-    topics: SubscriptionTopic.ServerUpdated,
-    filter
-  })
-  serverUpdated(@Root() server: Server) {
-    return server
+    const bannedUser = await em.findOne(User, bannedId)
+    server.bannedUsers.add(bannedUser)
+    server.users.remove(bannedUser)
+    await em.persistAndFlush(server)
+    return true
   }
 
   @Authorized()
-  @Subscription(() => ID, {
-    topics: SubscriptionTopic.ServerDeleted,
-    filter
-  })
-  serverDeleted(@Root() server: Server) {
-    return server.id
+  @Mutation(() => Boolean)
+  async unbanUserFromServer(
+    @Arg('serverId', () => ID) serverId: string,
+    @Arg('bannedId', () => ID) bannedId: string,
+    @Ctx() { em, user }: Context
+  ) {
+    const server = await em.findOne(Server, serverId)
+
+    const bannedUser = await em.findOne(User, bannedId)
+    server.bannedUsers.remove(bannedUser)
+    await em.persistAndFlush(server)
+    return true
   }
 
   @Authorized()
-  @Subscription(() => UserJoinedServerResponse, {
-    topics: SubscriptionTopic.UserJoinedServer,
-    filter: joinLeaveFilter
-  })
-  userJoinedServer(@Root() { user, server }: UserServerPayload) {
-    return { user: user, serverId: server.id } as UserJoinedServerResponse
+  @Mutation(() => Boolean)
+  async uploadServerAvatar(
+    @Arg('serverId', () => ID) serverId: string,
+    @Arg('file', () => GraphQLUpload) file: FileUpload,
+    @Ctx() { em, user }: Context
+  ) {
+    const server = await em.findOne(Server, serverId)
+
+    const { createReadStream, mimetype } = await file
+    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
+      throw new Error('Image must be PNG or JPEG')
+    server.avatarUrl = await uploadImage(createReadStream(), file.mimetype, {
+      width: 256,
+      height: 256
+    })
+    await em.persistAndFlush(server)
+    return true
   }
 
   @Authorized()
-  @Subscription(() => UserLeftServerResponse, {
-    topics: SubscriptionTopic.UserLeftServer,
-    filter: joinLeaveFilter
-  })
-  userLeftServer(@Root() { user, server }: UserServerPayload) {
-    return { userId: user.id, serverId: server.id } as UserLeftServerResponse
+  @Mutation(() => Boolean)
+  async uploadServerBanner(
+    @Arg('serverId', () => ID) serverId: string,
+    @Arg('file', () => GraphQLUpload) file: FileUpload,
+    @Ctx() { em, user }: Context
+  ) {
+    const server = await em.findOne(Server, serverId)
+
+    const { createReadStream, mimetype } = await file
+    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
+      throw new Error('Image must be PNG or JPEG')
+    server.bannerUrl = await uploadImage(createReadStream(), file.mimetype, {
+      width: 1920
+    })
+    await em.persistAndFlush(server)
+    return true
   }
-}
 
-interface UserServerPayload {
-  user: User
-  server: Server
-}
+  @Authorized()
+  @Mutation(() => Boolean)
+  async editServerDescription(
+    @Arg('serverId', () => ID) serverId: string,
+    @Arg('description') description: string,
+    @Ctx() { em, user }: Context
+  ) {
+    const server = await em.findOne(Server, serverId)
 
-@ObjectType()
-class UserJoinedServerResponse {
-  @Field(() => User)
-  user: User
+    if (description.length > 1000)
+      throw new Error('Description cannot be longer than 1000 characters')
 
-  @Field(() => ID)
-  serverId: string
-}
+    server.description = description
+    await em.persistAndFlush(server)
+    return true
+  }
 
-@ObjectType()
-class UserLeftServerResponse {
-  @Field(() => ID)
-  userId: string
-
-  @Field(() => ID)
-  serverId: string
+  @Authorized()
+  @Mutation(() => Boolean)
+  async setServerCategory(
+    @Arg('serverId', () => ID) serverId: string,
+    @Arg('category', () => ServerCategory) category: ServerCategory,
+    @Ctx() { em }: Context
+  ) {
+    const server = await em.findOne(Server, serverId)
+    server.category = category
+    await em.persistAndFlush(server)
+    return true
+  }
 }

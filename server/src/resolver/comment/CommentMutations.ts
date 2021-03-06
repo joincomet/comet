@@ -19,10 +19,10 @@ import { QueryOrder } from '@mikro-orm/core'
 import { handleText } from '@/util/text'
 
 @Resolver(() => Comment)
-export class CommentResolver {
+export class CommentMutations {
   @Authorized()
   @Mutation(() => Comment)
-  async submitComment(
+  async createComment(
     @Args() { text, postId, parentCommentId }: CreateCommentArgs,
     @Ctx() { user, em }: Context
   ) {
@@ -75,40 +75,6 @@ export class CommentResolver {
     await em.flush()
 
     return savedComment
-  }
-
-  @Query(() => [Comment])
-  async getComments(
-    @Args() { postId, sort }: GetCommentsArgs,
-    @Ctx() { user, em }: Context
-  ) {
-    const post = await em.findOne(Post, postId)
-    if (!post) throw new Error('Post not found')
-
-    const comments = await em.find(
-      Comment,
-      { post },
-      ['author'],
-      sort === GetCommentsSort.TOP
-        ? { rocketCount: QueryOrder.DESC }
-        : { createdAt: QueryOrder.DESC }
-    )
-
-    comments.forEach(comment => {
-      if (comment.deleted) {
-        comment.text = `<p>[deleted]</p>`
-        comment.author = null
-      }
-      if (comment.removed) {
-        comment.text = `<p>[removed: ${comment.removedReason}]</p>`
-        comment.author = null
-      }
-
-      /*if (userId)
-        comment.isRocketed = comment.rocketers.getItems(false).includes(userId)*/
-    })
-
-    return comments
   }
 
   @Authorized()
@@ -168,6 +134,28 @@ export class CommentResolver {
     const comment = await em.findOne(Comment, commentId)
     comment.rocketers.remove(user)
     comment.rocketCount--
+    await em.persistAndFlush(comment)
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async removeComment(
+    @Arg('commentId', () => ID) commentId: string,
+    @Arg('reason') reason: string,
+    @Ctx() { em, user }: Context
+  ) {
+    const comment = await em.findOne(Comment, commentId)
+
+    em.assign(comment, {
+      removed: true,
+      removedReason: reason,
+      pinned: false,
+      pinRank: null
+    })
+
+    await em.nativeDelete(Notification, { comment })
+    comment.post.commentCount--
     await em.persistAndFlush(comment)
     return true
   }

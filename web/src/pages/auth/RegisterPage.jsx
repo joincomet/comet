@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import isEmail from 'validator/es/lib/isEmail'
 import { useForm } from 'react-hook-form'
-import { useSignUpMutation } from '@/graphql/mutations'
+import { useSignUpMutation } from '@/graphql/oldmutations'
 import Button from '@/components/Button'
 
 export default function RegisterPage() {

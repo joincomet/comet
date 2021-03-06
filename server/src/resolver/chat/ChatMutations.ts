@@ -24,52 +24,11 @@ import {
   PaginationArgs
 } from '@/types'
 
-const filter = ({
-  payload: { channel },
-  context: { user }
-}: SubscriptionFilter<ChatMessage>) =>
-  channel.server
-    ? channel.server.users.contains(user)
-    : channel.group.users.contains(user)
-
 @Resolver()
-export class ChatResolver {
-  @Authorized()
-  @Query(() => GetMessagesResponse)
-  async getMessages(
-    @Args() { page, pageSize }: PaginationArgs,
-    @Arg('channelId', () => ID) channelId: string,
-    @Ctx() { user, em }: Context
-  ) {
-    const channel = await em.findOne(ChatChannel, channelId, [
-      'group.users',
-      'server.users'
-    ])
-    if (!channel) throw new Error(`Channel ${channelId} does not exist`)
-    const err = new Error(`You do not have access to this channel`)
-    if (channel.group && !channel.group.users.contains(user)) throw err
-    else if (channel.server && !channel.server.users.contains(user)) throw err
-
-    return {
-      messages: (
-        await em.find(
-          ChatMessage,
-          { removed: false, deleted: false, channel: { id: channelId } },
-          {
-            limit: pageSize,
-            offset: page * pageSize,
-            orderBy: { createdAt: QueryOrder.DESC }
-          }
-        )
-      ).reverse(),
-      page,
-      nextPage: page + 1
-    }
-  }
-
+export class ChatMutations {
   @Authorized()
   @Mutation(() => Boolean)
-  async sendMessage(
+  async createMessage(
     @Arg('text') text: string,
     @Arg('channelId', () => ID) channelId: string,
     @PubSub(SubscriptionTopic.MessageCreated)
@@ -158,34 +117,5 @@ export class ChatResolver {
     }
     await em.persistAndFlush(message)
     await messageUpdated(message)
-  }
-
-  // --- Subscriptions ---
-
-  @Authorized()
-  @Subscription(() => ChatMessage, {
-    topics: SubscriptionTopic.MessageCreated,
-    filter
-  })
-  messageCreated(@Root() message: ChatMessage) {
-    return message
-  }
-
-  @Authorized()
-  @Subscription(() => ChatMessage, {
-    topics: SubscriptionTopic.MessageUpdated,
-    filter
-  })
-  messageUpdated(@Root() message: ChatMessage) {
-    return message
-  }
-
-  @Authorized()
-  @Subscription(() => ID, {
-    topics: SubscriptionTopic.MessageDeleted,
-    filter
-  })
-  messageDeleted(@Root() message: ChatMessage) {
-    return message.id
   }
 }

@@ -1,14 +1,20 @@
 import {
-  AdminResolver,
-  AuthResolver,
-  ChatResolver,
-  CommentResolver,
-  FolderResolver,
-  ModerationResolver,
-  NotificationResolver,
-  ServerResolver,
-  PostResolver,
-  UserResolver
+  ChatMutations,
+  ChatQueries,
+  ChatSubscriptions,
+  CommentMutations,
+  CommentQueries,
+  FolderMutations,
+  FolderQueries,
+  NotificationMutations,
+  NotificationQueries,
+  PostMutations,
+  PostQueries,
+  ServerMutations,
+  ServerQueries,
+  ServerSubscriptions,
+  UserMutations,
+  UserQueries
 } from '@/resolver'
 import { authChecker } from '@/util/auth'
 import { getPubSub } from '@/util/subscriptions'
@@ -17,16 +23,28 @@ import path from 'path'
 
 export default {
   resolvers: [
-    AdminResolver,
-    AuthResolver,
-    ChatResolver,
-    CommentResolver,
-    FolderResolver,
-    ModerationResolver,
-    NotificationResolver,
-    ServerResolver,
-    PostResolver,
-    UserResolver
+    ChatMutations,
+    ChatQueries,
+    ChatSubscriptions,
+
+    CommentMutations,
+    CommentQueries,
+
+    FolderMutations,
+    FolderQueries,
+
+    NotificationMutations,
+    NotificationQueries,
+
+    PostMutations,
+    PostQueries,
+
+    ServerMutations,
+    ServerQueries,
+    ServerSubscriptions,
+
+    UserMutations,
+    UserQueries
   ],
   emitSchemaFile:
     process.env.NODE_ENV === 'production'

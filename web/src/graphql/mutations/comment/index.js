@@ -1,0 +1,5 @@
+export { default as CREATE_COMMENT } from './CreateComment'
+export { default as DELETE_COMMENT } from './DeleteComment'
+export { default as EDIT_COMMENT } from './EditComment'
+export { default as REMOVE_COMMENT } from './RemoveComment'
+export { default as VOTE_COMMENT } from './VoteComment'

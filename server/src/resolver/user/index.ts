@@ -1,1 +1,2 @@
-export * from './UserResolver'
+export * from './UserMutations'
+export * from './UserQueries'

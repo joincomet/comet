@@ -1,2 +1,4 @@
 export * from './types'
-export * from './ServerResolver'
+export * from './ServerMutations'
+export * from './ServerQueries'
+export * from './ServerSubscriptions'

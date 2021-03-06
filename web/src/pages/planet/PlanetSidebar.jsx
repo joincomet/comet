@@ -11,7 +11,7 @@ import {
 } from '@/components/planet-scroller/CreatePlanetDialog.module.css'
 import { Switch } from '@headlessui/react'
 import Button from '@/components/Button'
-import { useCreateChannelMutation } from '@/graphql/mutations'
+import { useCreateChannelMutation } from '@/graphql/oldmutations'
 import { Dialog } from '@headlessui/react'
 import StyledDialog from '@/components/StyledDialog'
 

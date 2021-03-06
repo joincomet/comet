@@ -1,1 +1,2 @@
-export * from './NotificationResolver'
+export * from './NotificationMutations'
+export * from './NotificationQueries'

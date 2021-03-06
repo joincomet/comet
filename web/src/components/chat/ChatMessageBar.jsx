@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSendMessageMutation } from '@/graphql/mutations'
+import { useSendMessageMutation } from '@/graphql/oldmutations'
 
 export default function ChatMessageBar({ channel }) {
   const [{ data, fetching, error }, sendMessage] = useSendMessageMutation()
