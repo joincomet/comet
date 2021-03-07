@@ -1,4 +1,0 @@
-# Server
-- TypeScript
-- TypeGraphQL
-- TypeORM

@@ -59,24 +59,6 @@ export const REMOVE_COMMENT_MUTATION = gql`
   }
 `
 
-export const BAN_USER_PLANET_MUTATION = gql`
-  mutation banUserFromPlanet($planetId: ID!, $bannedId: ID!) {
-    banUserFromPlanet(planetId: $planetId, bannedId: $bannedId)
-  }
-`
-
-export const BAN_USER_GLOBAL_MUTATION = gql`
-  mutation banUser($bannedId: ID!, $reason: String!) {
-    banUser(bannedId: $bannedId, reason: $reason)
-  }
-`
-
-export const BAN_PURGE_GLOBAL_MUTATION = gql`
-  mutation banAndPurgeUser($bannedId: ID!, $reason: String!) {
-    banAndPurgeUser(bannedId: $bannedId, reason: $reason)
-  }
-`
-
 export const MARK_NOTIF_READ_MUTATION = gql`
   mutation markNotificationRead($id: ID!) {
     markNotificationRead(id: $id)
@@ -89,18 +71,6 @@ export const MARK_ALL_NOTIFS_READ_MUTATION = gql`
   }
 `
 
-export const JOIN_PLANET_MUTATION = gql`
-  mutation joinPlanet($planetId: ID!) {
-    joinPlanet(planetId: $planetId)
-  }
-`
-
-export const LEAVE_PLANET_MUTATION = gql`
-  mutation leavePlanet($planetId: ID!) {
-    leavePlanet(planetId: $planetId)
-  }
-`
-
 export const PIN_POST_MUTATION = gql`
   mutation pinPost($postId: ID!) {
     pinPost(postId: $postId)
@@ -110,18 +80,6 @@ export const PIN_POST_MUTATION = gql`
 export const UNPIN_POST_MUTATION = gql`
   mutation unpinPost($postId: ID!) {
     unpinPost(postId: $postId)
-  }
-`
-
-export const ROCKET_POST_MUTATION = gql`
-  mutation rocketPost($postId: ID!) {
-    rocketPost(postId: $postId)
-  }
-`
-
-export const UNROCKET_POST_MUTATION = gql`
-  mutation unrocketPost($postId: ID!) {
-    unrocketPost(postId: $postId)
   }
 `
 

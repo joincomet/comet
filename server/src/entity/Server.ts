@@ -18,6 +18,8 @@ import {
   OneToMany,
   Property
 } from '@mikro-orm/core'
+import { UserBanServer } from '@/entity/UserBanServer'
+import { UserJoinServer } from '@/entity/UserJoinServer'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -36,24 +38,21 @@ export class Server extends BaseEntity {
   @OneToMany(() => Post, 'server')
   posts = new Collection<Post>(this)
 
-  @ManyToMany(() => User, 'servers', { owner: true })
-  users = new Collection<User>(this)
+  @OneToMany(() => UserJoinServer, 'server')
+  userJoins = new Collection<UserJoinServer>(this)
 
   @OneToMany(() => Folder, 'server')
   folders = new Collection<Folder>(this)
-
-  @Property({ type: ArrayType, default: [] })
-  foldersSort: string[]
 
   @Field(() => ServerCategory)
   @Enum({ items: () => ServerCategory, default: ServerCategory.Uncategorized })
   category: ServerCategory
 
-  @ManyToMany(() => User)
-  bannedUsers = new Collection<User>(this)
+  @OneToMany(() => UserBanServer, 'server')
+  bans = new Collection<UserBanServer>(this)
 
-  @Field(() => Int)
-  @Property()
+  @Field()
+  @Property({ default: 0 })
   userCount: number = 0
 
   @Field({ nullable: true })
@@ -68,19 +67,12 @@ export class Server extends BaseEntity {
   @Property({ default: false })
   banned: boolean
 
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  banReason?: string
-
   @OneToMany(() => ChatChannel, 'server')
   channels = new Collection<ChatChannel>(this)
 
-  @Property({ type: ArrayType, default: [] })
-  channelsSort: string[]
-
   @Field()
   @Property({ default: false })
-  private: boolean
+  searchable: boolean
 
   @Field()
   @Property({ default: false })

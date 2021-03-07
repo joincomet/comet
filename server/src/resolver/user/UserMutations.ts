@@ -1,4 +1,12 @@
-import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Args,
+  Authorized,
+  Ctx,
+  ID,
+  Mutation,
+  Resolver
+} from 'type-graphql'
 import { Context } from '@/types'
 import { User, Folder, Post, Comment } from '@/entity'
 import { uploadImage } from '@/util/s3'
@@ -9,6 +17,7 @@ import { handleUnderscore } from '@/util/text'
 import * as argon2 from 'argon2'
 import { createAccessToken } from '@/util/auth'
 import { customAlphabet } from 'nanoid'
+import { UpdateUserArgs } from '@/resolver/user/types/UpdateUserArgs'
 
 const tagGenerator = customAlphabet('0123456789', 4)
 
@@ -72,7 +81,6 @@ export class UserMutations {
       owner: user
     })
     await em.persistAndFlush([user, favoritesFolder, readLaterFolder])
-    user.foldersSort = [favoritesFolder.id, readLaterFolder.id]
     await em.persistAndFlush(user)
 
     const accessToken = createAccessToken(user)
@@ -123,29 +131,46 @@ export class UserMutations {
   }
 
   @Authorized()
-  @Mutation(() => String)
-  async uploadAvatar(
-    @Arg('file', () => GraphQLUpload) file: FileUpload,
+  @Mutation(() => LoginResponse)
+  async updateUser(
+    @Args()
+    { name, email, avatarFile, password, currentPassword }: UpdateUserArgs,
     @Ctx() { user, em }: Context
   ) {
-    const { createReadStream, mimetype } = await file
-    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-      throw new Error('Image must be PNG or JPEG')
-    const avatarUrl = await uploadImage(createReadStream(), file.mimetype, {
-      width: 256,
-      height: 256
+    let passwordHash = user.passwordHash
+    if (password) {
+      if (!currentPassword) throw new Error('Must provide current password')
+      const match = await argon2.verify(user.passwordHash, currentPassword)
+      if (!match) throw new Error('Incorrect password')
+      passwordHash = await argon2.hash(password)
+    }
+
+    const avatarUrl = avatarFile
+      ? await uploadImage(avatarFile, {
+          width: 256,
+          height: 256
+        })
+      : user.avatarUrl
+    em.assign(user, {
+      name: name ? name : user.name,
+      email: email ? email : user.email,
+      avatarUrl,
+      passwordHash
     })
-    user.avatarUrl = avatarUrl
     await em.persistAndFlush(user)
-    return avatarUrl
+    return {
+      accessToken: createAccessToken(user),
+      user
+    } as LoginResponse
   }
 
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
-  async banUser(
-    @Arg('bannedId', () => ID) bannedId: string,
-    @Arg('reason') reason: string,
-    @Ctx() { em }: Context
+  async banUserGlobal(
+    @Ctx() { em }: Context,
+    @Arg('userId', () => ID) userId: string,
+    @Arg('purge', { defaultValue: false }) purge: boolean,
+    @Arg('reason', { nullable: true }) reason?: string
   ) {
     await em
       .createQueryBuilder(User)
@@ -154,14 +179,14 @@ export class UserMutations {
         banReason: reason,
         servers: []
       })
-      .where({ id: bannedId })
+      .where({ id: userId })
       .execute()
     return true
   }
 
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
-  async unbanUser(
+  async unbanUserGlobal(
     @Arg('bannedId', () => ID) bannedId: string,
     @Ctx() { em }: Context
   ) {
@@ -178,7 +203,7 @@ export class UserMutations {
 
   @Authorized('ADMIN')
   @Mutation(() => Boolean)
-  async banAndPurgeUser(
+  async banPurgeUserGlobal(
     @Arg('bannedId', () => ID) bannedId: string,
     @Arg('reason') reason: string,
     @Ctx() { em }: Context

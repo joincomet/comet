@@ -37,5 +37,8 @@ export default {
     process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5432',
   dbName: process.env.DATABASE_NAME || 'postgres',
   debug: process.env.NODE_ENV !== 'production',
-  forceUtcTimezone: true
+  forceUtcTimezone: true,
+  findOneOrFailHandler: (entityName: string) => {
+    return new Error(`${entityName} not found!`)
+  }
 } as Options<PostgreSqlDriver>

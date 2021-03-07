@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Authorized,
   Ctx,
   ID,
@@ -8,11 +9,14 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { ChatChannel, Server, User } from '@/entity'
-import { FileUpload, GraphQLUpload } from 'graphql-upload'
+import { ChatChannel, Server, ServerInvite, User } from '@/entity'
 import { uploadImage } from '@/util/s3'
 import { SubscriptionTopic, Context } from '@/types'
-import { ServerCategory, UserServerPayload } from '@/resolver/server'
+import { UserServerPayload } from '@/resolver/server'
+import { UserJoinServer } from '@/entity/UserJoinServer'
+import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
+import { CreateServerArgs } from '@/resolver/server/types/CreateServerArgs'
+import { UserBanServer } from '@/entity/UserBanServer'
 
 @Resolver()
 export class ServerMutations {
@@ -20,12 +24,11 @@ export class ServerMutations {
   @Mutation(() => Server)
   async createServer(
     @Ctx() { user, em }: Context,
-    @Arg('name') name: string,
-    @Arg('avatarFile', () => GraphQLUpload, { nullable: true })
-    avatarFile?: FileUpload
+    @Args() { name, avatarFile, searchable, category }: CreateServerArgs,
+    @PubSub(SubscriptionTopic.UserJoinedServer)
+    userJoinedServer: Publisher<UserServerPayload>
   ): Promise<Server> {
-    await em.populate(user, ['servers'])
-    if (user.servers.length >= 100)
+    if ((await em.count(UserJoinServer, { user })) >= 100)
       throw new Error('Cannot join more than 100 servers')
 
     const channel = em.create(ChatChannel, {
@@ -36,10 +39,7 @@ export class ServerMutations {
 
     let avatarUrl = null
     if (avatarFile) {
-      const { createReadStream, mimetype } = await avatarFile
-      if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-        throw new Error('Image must be PNG or JPEG')
-      avatarUrl = await uploadImage(createReadStream(), avatarFile.mimetype, {
+      avatarUrl = await uploadImage(avatarFile, {
         width: 256,
         height: 256
       })
@@ -48,13 +48,13 @@ export class ServerMutations {
     const server = em.create(Server, {
       name,
       owner: user,
-      users: [user],
-      userCount: 1,
       channels: [channel],
-      channelsSort: [channel.id],
-      avatarUrl
+      avatarUrl,
+      category,
+      searchable
     })
-    await em.persistAndFlush(server)
+    await em.persistAndFlush([server])
+    await user.joinServer(server, em, userJoinedServer)
     return server
   }
 
@@ -64,20 +64,13 @@ export class ServerMutations {
     @Ctx() { user, em }: Context,
     @Arg('serverId', () => ID) serverId: string,
     @Arg('name') name: string,
-    @Arg('modOnly', { defaultValue: false }) modOnly: boolean,
     @PubSub(SubscriptionTopic.ServerUpdated) serverUpdated: Publisher<Server>
   ) {
-    const server = await em.findOne(Server, serverId, [
-      'moderators',
-      'channels'
-    ])
-    /*if (!server.moderators.contains(user))
-      throw new Error('You are not a moderator')*/
+    const server = await em.findOne(Server, serverId, ['channels'])
 
     const channel = em.create(ChatChannel, {
       name,
-      server,
-      modOnly
+      server
     })
 
     await em.persistAndFlush([channel, server])
@@ -87,25 +80,31 @@ export class ServerMutations {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async joinServer(
+  async joinPublicServer(
     @Arg('serverId', () => ID) serverId: string,
     @Ctx() { user, em }: Context,
     @PubSub(SubscriptionTopic.UserJoinedServer)
     userJoinedServer: Publisher<UserServerPayload>
   ) {
-    await em.populate(user, ['servers'])
-    if (user.servers.length >= 100)
-      throw new Error('Cannot join more than 100 servers')
+    const server = await em.findOneOrFail(Server, serverId)
+    if (!server.searchable)
+      throw new Error('Invite required to join this server')
+    await user.joinServer(server, em, userJoinedServer)
+    return true
+  }
 
-    const server = await em.findOne(Server, serverId, ['users'])
-    if (!server) throw new Error('Server not found')
-    if (server.users.contains(user))
-      throw new Error('You have already joined this server')
-    server.users.add(user)
-    server.userCount++
-    user.serversSort.push(server.id)
-    await em.persistAndFlush([server, user])
-    await userJoinedServer({ server, user })
+  @Authorized()
+  @Mutation(() => Boolean)
+  async joinServerWithInvite(
+    @Arg('inviteId', () => ID) inviteId: string,
+    @Ctx() { user, em }: Context,
+    @PubSub(SubscriptionTopic.UserJoinedServer)
+    userJoinedServer: Publisher<UserServerPayload>
+  ) {
+    const invite = await em.findOneOrFail(ServerInvite, inviteId, ['server'])
+    if (invite.expired) throw new Error('This invite has expired.')
+    const server = invite.server
+    await user.joinServer(server, em, userJoinedServer)
     return true
   }
 
@@ -117,31 +116,34 @@ export class ServerMutations {
     @PubSub(SubscriptionTopic.UserLeftServer)
     userLeftServer: Publisher<UserServerPayload>
   ) {
-    const server = await em.findOne(Server, serverId, ['users'])
-    if (!server) throw new Error('Server not found')
-    if (!server.users.contains(user))
-      throw new Error('You have not joined that server')
-    server.users.remove(user)
-    server.userCount--
-    user.serversSort = user.serversSort.filter(id => id !== server.id)
-    await em.persistAndFlush([server, user])
-    await userLeftServer({ server, user })
+    const server = await em.findOneOrFail(Server, serverId)
+    await user.leaveServer(server, em, userLeftServer)
     return true
   }
 
   @Authorized()
   @Mutation(() => Boolean)
   async banUserFromServer(
+    @Ctx() { em, user: currentUser }: Context,
+    @PubSub(SubscriptionTopic.UserLeftServer)
+    userLeftServer: Publisher<UserServerPayload>,
     @Arg('serverId', () => ID) serverId: string,
-    @Arg('bannedId', () => ID) bannedId: string,
-    @Ctx() { em, user }: Context
+    @Arg('userId', () => ID) userId: string,
+    @Arg('reason', { nullable: true }) reason?: string
   ) {
-    const server = await em.findOne(Server, serverId)
+    const server = await em.findOneOrFail(Server, serverId)
+    const user = await em.findOneOrFail(User, userId)
 
-    const bannedUser = await em.findOne(User, bannedId)
-    server.bannedUsers.add(bannedUser)
-    server.users.remove(bannedUser)
-    await em.persistAndFlush(server)
+    const ban = em.create(UserBanServer, {
+      user,
+      server,
+      reason,
+      bannedBy: currentUser
+    })
+
+    await user.leaveServer(server, em, userLeftServer)
+
+    await em.persistAndFlush(ban)
     return true
   }
 
@@ -149,83 +151,49 @@ export class ServerMutations {
   @Mutation(() => Boolean)
   async unbanUserFromServer(
     @Arg('serverId', () => ID) serverId: string,
-    @Arg('bannedId', () => ID) bannedId: string,
-    @Ctx() { em, user }: Context
+    @Arg('userId', () => ID) userId: string,
+    @Ctx() { em }: Context
   ) {
-    const server = await em.findOne(Server, serverId)
-
-    const bannedUser = await em.findOne(User, bannedId)
-    server.bannedUsers.remove(bannedUser)
-    await em.persistAndFlush(server)
+    const server = await em.findOneOrFail(Server, serverId)
+    const user = await em.findOneOrFail(User, userId)
+    await em.nativeDelete(UserBanServer, { user, server })
     return true
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async uploadServerAvatar(
-    @Arg('serverId', () => ID) serverId: string,
-    @Arg('file', () => GraphQLUpload) file: FileUpload,
-    @Ctx() { em, user }: Context
+  async updateServer(
+    @Ctx() { user, em }: Context,
+    @Args()
+    {
+      serverId,
+      name,
+      description,
+      avatarFile,
+      bannerFile,
+      category,
+      searchable
+    }: UpdateServerArgs
   ) {
-    const server = await em.findOne(Server, serverId)
+    const server = await em.findOneOrFail(Server, serverId)
 
-    const { createReadStream, mimetype } = await file
-    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-      throw new Error('Image must be PNG or JPEG')
-    server.avatarUrl = await uploadImage(createReadStream(), file.mimetype, {
+    const avatarUrl = await uploadImage(avatarFile, {
       width: 256,
       height: 256
     })
-    await em.persistAndFlush(server)
-    return true
-  }
 
-  @Authorized()
-  @Mutation(() => Boolean)
-  async uploadServerBanner(
-    @Arg('serverId', () => ID) serverId: string,
-    @Arg('file', () => GraphQLUpload) file: FileUpload,
-    @Ctx() { em, user }: Context
-  ) {
-    const server = await em.findOne(Server, serverId)
-
-    const { createReadStream, mimetype } = await file
-    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-      throw new Error('Image must be PNG or JPEG')
-    server.bannerUrl = await uploadImage(createReadStream(), file.mimetype, {
-      width: 1920
+    const bannerUrl = await uploadImage(bannerFile, {
+      width: 256,
+      height: 256
     })
-    await em.persistAndFlush(server)
-    return true
-  }
 
-  @Authorized()
-  @Mutation(() => Boolean)
-  async editServerDescription(
-    @Arg('serverId', () => ID) serverId: string,
-    @Arg('description') description: string,
-    @Ctx() { em, user }: Context
-  ) {
-    const server = await em.findOne(Server, serverId)
-
-    if (description.length > 1000)
-      throw new Error('Description cannot be longer than 1000 characters')
-
-    server.description = description
-    await em.persistAndFlush(server)
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async setServerCategory(
-    @Arg('serverId', () => ID) serverId: string,
-    @Arg('category', () => ServerCategory) category: ServerCategory,
-    @Ctx() { em }: Context
-  ) {
-    const server = await em.findOne(Server, serverId)
-    server.category = category
-    await em.persistAndFlush(server)
-    return true
+    em.assign(server, {
+      name,
+      description,
+      avatarUrl,
+      bannerUrl,
+      category,
+      searchable
+    })
   }
 }

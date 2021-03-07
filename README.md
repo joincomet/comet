@@ -8,7 +8,7 @@ All-in-one chat and forums for communities.
 - [React.js](https://reactjs.org/)
 - [Electron](https://www.electronjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Apollo GraphQL Client](https://www.apollographql.com/docs/react/)
+- [urql](https://formidable.com/open-source/urql/docs/)
 - [Vite](https://vitejs.dev/guide/introduction.html)
 
 ### Backend

@@ -2,14 +2,20 @@ import { nanoid } from 'nanoid'
 import mime from 'mime'
 import sharp from 'sharp'
 import s3 from '@/config/s3'
+import { FileUpload } from 'graphql-upload'
 
 const Bucket = process.env.BUCKET
 
 export const uploadImage = async (
-  body: any,
-  contentType: string,
+  file: FileUpload,
   resize?: any
 ): Promise<string> => {
+  const { createReadStream, mimetype } = await file
+  if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
+    throw new Error('Image must be PNG or JPEG')
+  let body = createReadStream()
+  const contentType = file.mimetype
+
   const ext = mime.getExtension(contentType)
   const key = `${nanoid()}.${ext}`
 

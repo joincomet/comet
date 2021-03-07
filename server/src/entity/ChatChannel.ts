@@ -29,7 +29,6 @@ export class ChatChannel extends BaseEntity {
   @OneToOne({ entity: () => ChatGroup, nullable: true, inversedBy: 'channel' })
   group?: ChatGroup
 
-  @Field()
-  @Property({ default: false })
-  modOnly: boolean
+  @Property({ default: 0 })
+  rank: number
 }

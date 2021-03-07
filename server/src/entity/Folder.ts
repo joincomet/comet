@@ -41,4 +41,7 @@ export class Folder extends BaseEntity {
 
   @Property({ nullable: true })
   updatedAt?: Date
+
+  @Property({ default: 0 })
+  rank: number
 }
