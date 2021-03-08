@@ -3259,7 +3259,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.31, @types/node@npm:^14.6.2":
+"@types/node@npm:^14.14.32":
+  version: 14.14.32
+  resolution: "@types/node@npm:14.14.32"
+  checksum: ae73f3b668242da660b4f4f2047114fc047f5a6a92b8f9f4ab2f8ca1325c914c08cf13b6f90e6e88016fafb7a662d1963b075a6220d2208651a98a1cb3407221
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^14.6.2":
   version: 14.14.31
   resolution: "@types/node@npm:14.14.31"
   checksum: 635dc8a0898a923621e02ca179e17baa39fdfa44f0096fcc1b7046c9b32317e74a99956a7b45ca0e8069874f51f4e7873a418239a318a4b6e7936f6510ac5992
@@ -3382,13 +3389,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^17.0.2":
-  version: 17.0.2
-  resolution: "@types/react@npm:17.0.2"
+"@types/react@npm:^17.0.3":
+  version: 17.0.3
+  resolution: "@types/react@npm:17.0.3"
   dependencies:
     "@types/prop-types": "*"
+    "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: de1cd27ce57a961379978f83676d60d88bf729337683d1d4cb22dd8f285ed4200db19f7243052dc67c80133fe6798da1497456fe6f67a5bba5f5e30ce2544bfa
+  checksum: 5bcaabadc90a23ad9008540eae98a5819b638c4cf1b968adc67be47d6a8dc8cb100061d877dae97618fb275e405dc484b37154080c7ac0ea7df5efcdd8f98c24
   languageName: node
   linkType: hard
 
@@ -3426,6 +3434,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e6e6613c800aeda63e2331e753e8d21df1a2c9aa7a4bc71ed792a848e4811fc96e609759089355314a2318c76eff1f161499cd242044838ab1e6f56e463ebb9c
+  languageName: node
+  linkType: hard
+
+"@types/scheduler@npm:*":
+  version: 0.16.1
+  resolution: "@types/scheduler@npm:0.16.1"
+  checksum: 0124c2e4dee5e9b8c8524fcd6b1b8ea0b807b132e593925db04cdcc92ca2779a0d27c79414e60454b4458361a4d8319fa2b59d20585054f21617d1e9acf46a6f
   languageName: node
   linkType: hard
 
@@ -4643,9 +4658,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.857.0":
-  version: 2.857.0
-  resolution: "aws-sdk@npm:2.857.0"
+"aws-sdk@npm:^2.858.0":
+  version: 2.858.0
+  resolution: "aws-sdk@npm:2.858.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4656,7 +4671,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: c6bbc8b10eb2996b418ca73562e47cef217edb5e9f17bb3d9e5b37629b1fa5fdbe57127eb6a8caef74846e770e22797866bb8e1a4339079f3e014fc065ee5383
+  checksum: 55d71c1e07459d393a10148fbaff1c27c0bc908ee34efd34c3eec9278ff9c190c735df983084c7be5029505ade83191b6a0332f92199b093ac93c07d1e77a7d2
   languageName: node
   linkType: hard
 
@@ -12860,9 +12875,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^1.5.10":
-  version: 1.5.10
-  resolution: "react-virtuoso@npm:1.5.10"
+"react-virtuoso@npm:^1.5.13":
+  version: 1.5.13
+  resolution: "react-virtuoso@npm:1.5.13"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.5
     "@virtuoso.dev/urx": ^0.2.5
@@ -12870,7 +12885,7 @@ fsevents@~2.3.1:
     resize-observer-polyfill: ^1.5.1
   peerDependencies:
     react: ">=16"
-  checksum: 077deac18662e46dcad95fe958152411c3cccc8cf2541f8aa9e27f24b8d9a649ceb9dde7779fbc5b4f53fd0cd2189a67576309f71db70ff72b795278cc0ea541
+  checksum: f68d4c9d72ee713cab17b59dcd84df47165fc2f07c56e505489a1b71512ae7676589deae7d025c4a9d3cf6b274790ed1c9b6c8fae37f89ea0ba9e92c299f2ba4
   languageName: node
   linkType: hard
 
@@ -13845,13 +13860,13 @@ fsevents@~2.3.1:
     "@types/graphql-upload": ^8.0.4
     "@types/jsonwebtoken": ^8.5.0
     "@types/mime": ^2.0.3
-    "@types/node": ^14.14.31
+    "@types/node": ^14.14.32
     "@types/sharp": ^0.27.1
     "@typescript-eslint/eslint-plugin": ^4.16.1
     "@typescript-eslint/parser": ^4.16.1
     apollo-server-express: ^2.21.0
     argon2: ^0.27.1
-    aws-sdk: ^2.857.0
+    aws-sdk: ^2.858.0
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
@@ -15891,8 +15906,8 @@ typescript@^4.2.3:
     "@tailwindcss/line-clamp": ^0.2.0
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.3
-    "@types/node": ^14.14.31
-    "@types/react": ^17.0.2
+    "@types/node": ^14.14.32
+    "@types/react": ^17.0.3
     "@types/react-dom": ^17.0.1
     "@types/react-router-dom": ^5.1.7
     "@urql/core": ^2.0.0
@@ -15940,7 +15955,7 @@ typescript@^4.2.3:
     react-twitter-widgets: ^1.9.5
     react-use: ^17.1.1
     react-virtualized-auto-sizer: ^1.0.4
-    react-virtuoso: ^1.5.10
+    react-virtuoso: ^1.5.13
     react-window: ^1.8.6
     remirror: pr706
     sass: ^1.32.8
