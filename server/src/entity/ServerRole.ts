@@ -9,20 +9,15 @@ import {
   Property
 } from '@mikro-orm/core'
 import { Server, User } from '@/entity'
-import { ServerPermission } from '@/types/ServerPermission'
-
-export const defaultServerPermissions = [
-  ServerPermission.ViewChannels,
-  ServerPermission.CreateInvite,
-  ServerPermission.ChangeNickname,
-  ServerPermission.SendMessages,
-  ServerPermission.EmbedLinks,
-  ServerPermission.AttachFiles
-]
+import {
+  defaultServerPermissions,
+  ServerPermission
+} from '@/types/ServerPermission'
+import { Lexico } from '@/util/Lexico'
 
 @Entity()
 export class ServerRole {
-  @ManyToOne({ entity: () => Server, primary: true })
+  @ManyToOne({ entity: () => Server, primary: true, inversedBy: 'roles' })
   server: Server
 
   @PrimaryKey()
@@ -35,6 +30,9 @@ export class ServerRole {
 
   @Property()
   createdAt: Date = new Date()
+
+  @Property({ default: Lexico.FIRST_POSITION })
+  position: string
 
   @Property({ nullable: true })
   color?: string

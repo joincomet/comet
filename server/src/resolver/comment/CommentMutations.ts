@@ -17,10 +17,13 @@ import {
 } from '@/resolver/comment'
 import { QueryOrder } from '@mikro-orm/core'
 import { handleText } from '@/util/text'
+import { UserBanServer } from '@/entity/UserBanServer'
+import { CommentVote } from '@/entity/CommentVote'
+import { ServerPermission } from '@/types/ServerPermission'
 
 @Resolver(() => Comment)
 export class CommentMutations {
-  @Authorized()
+  @Authorized(ServerPermission.CreateComment)
   @Mutation(() => Comment)
   async createComment(
     @Args() { text, postId, parentCommentId }: CreateCommentArgs,
@@ -29,13 +32,12 @@ export class CommentMutations {
     text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
     if (!text) throw new Error('Comment cannot be empty')
 
-    const post = await em.findOne(Post, postId, ['server.bannedUsers'])
-    if (!post) throw new Error('Post not found')
-    post.commentCount++
-    em.persist(post)
+    const post = await em.findOneOrFail(Post, postId)
 
-    if (post.server.bannedUsers.contains(user))
-      throw new Error('You have been banned from ' + post.server.name)
+    const ban = await em.findOne(UserBanServer, { user, server: post.server })
+    if (ban) {
+      throw new Error('You are banned from this server')
+    }
 
     text = handleText(text)
 
@@ -43,10 +45,11 @@ export class CommentMutations {
       text: text,
       parentCommentId,
       post,
-      author: user,
-      rocketers: [user]
+      author: user
     })
-    em.persist(savedComment)
+    post.commentCount++
+
+    em.persist([savedComment, post])
 
     if (parentCommentId) {
       const parentComment = await em.findOne(Comment, parentCommentId, [
@@ -61,7 +64,7 @@ export class CommentMutations {
         )
       }
     } else {
-      const post = await em.findOne(Post, postId, ['author'])
+      await em.populate(post, ['author'])
       if (post.author !== user) {
         em.persist(
           em.create(Notification, {
@@ -77,7 +80,7 @@ export class CommentMutations {
     return savedComment
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.CreateComment)
   @Mutation(() => Boolean)
   async deleteComment(
     @Arg('commentId', () => ID) commentId: string,
@@ -95,57 +98,60 @@ export class CommentMutations {
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.CreateComment)
   @Mutation(() => Boolean)
-  async editComment(
+  async updateComment(
     @Arg('commentId', () => ID) commentId: string,
-    @Arg('newText') newText: string,
+    @Arg('text') text: string,
     @Ctx() { user, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId, ['author'])
     if (comment.author !== user)
       throw new Error('Attempt to edit post by someone other than author')
-    newText = handleText(newText)
+    text = handleText(text)
     comment.editedAt = new Date()
-    comment.text = newText
+    comment.text = text
     await em.persistAndFlush(comment)
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.VoteComment)
   @Mutation(() => Boolean)
-  async rocketComment(
+  async voteComment(
     @Arg('commentId', () => ID) commentId: string,
     @Ctx() { user, em }: Context
   ) {
-    const comment = await em.findOne(Comment, commentId)
-    comment.rocketers.add(user)
-    comment.rocketCount++
-    await em.persistAndFlush(comment)
+    const comment = await em.findOneOrFail(Comment, commentId)
+    let vote = await em.findOne(CommentVote, { user, comment })
+    if (vote) throw new Error('You have already voted this comment')
+    vote = em.create(CommentVote, { user, comment })
+    comment.voteCount++
+    await em.persistAndFlush([comment, vote])
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.VoteComment)
   @Mutation(() => Boolean)
-  async unrocketComment(
+  async unvoteComment(
     @Arg('commentId', () => ID) commentId: string,
     @Ctx() { user, em }: Context
   ) {
-    const comment = await em.findOne(Comment, commentId)
-    comment.rocketers.remove(user)
-    comment.rocketCount--
+    const comment = await em.findOneOrFail(Comment, commentId)
+    const vote = await em.findOneOrFail(CommentVote, { user, comment })
+    await em.remove(vote)
+    comment.voteCount--
     await em.persistAndFlush(comment)
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.ManageComments)
   @Mutation(() => Boolean)
   async removeComment(
     @Arg('commentId', () => ID) commentId: string,
     @Arg('reason') reason: string,
     @Ctx() { em, user }: Context
   ) {
-    const comment = await em.findOne(Comment, commentId)
+    const comment = await em.findOneOrFail(Comment, commentId)
 
     em.assign(comment, {
       removed: true,

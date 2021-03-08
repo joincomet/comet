@@ -3,13 +3,6 @@ import { ChatChannel } from '@/entity'
 import { ServerRole } from '@/entity/ServerRole'
 import { ChannelPermission } from '@/types/ChannelPermission'
 
-export const defaultChannelPermissions = [
-  ChannelPermission.ViewChannel,
-  ChannelPermission.SendMessages,
-  ChannelPermission.EmbedLinks,
-  ChannelPermission.AttachFiles
-]
-
 @Entity()
 export class ChannelRolePermissions {
   @ManyToOne({ entity: () => ChatChannel, primary: true })
@@ -23,7 +16,14 @@ export class ChannelRolePermissions {
   @Enum({
     items: () => ChannelPermission,
     array: true,
-    default: defaultChannelPermissions
+    default: []
   })
-  permissions: ChannelPermission[] = defaultChannelPermissions
+  allowedPermissions: ChannelPermission[] = []
+
+  @Enum({
+    items: () => ChannelPermission,
+    array: true,
+    default: []
+  })
+  deniedPermissions: ChannelPermission[] = []
 }

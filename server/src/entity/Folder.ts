@@ -7,6 +7,7 @@ import {
   ManyToOne,
   Property
 } from '@mikro-orm/core'
+import { Lexico } from '@/util/Lexico'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -42,6 +43,6 @@ export class Folder extends BaseEntity {
   @Property({ nullable: true })
   updatedAt?: Date
 
-  @Property({ default: 0 })
-  rank: number
+  @Property({ default: Lexico.FIRST_POSITION })
+  position: string
 }

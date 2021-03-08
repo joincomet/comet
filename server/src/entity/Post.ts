@@ -20,6 +20,8 @@ import {
   OneToMany,
   Property
 } from '@mikro-orm/core'
+import { CommentVote } from '@/entity/CommentVote'
+import { PostVote } from '@/entity/PostVote'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -82,19 +84,19 @@ export class Post extends BaseEntity {
   @ManyToOne({ entity: () => Server })
   server: Server
 
-  @ManyToMany(() => User)
-  rocketers = new Collection<User>(this)
-
   @Field(() => Int)
-  @Property({ default: 1 })
-  rocketCount: number
+  @Property({ default: 0 })
+  voteCount: number
+
+  @Field()
+  isVoted: boolean
+
+  @OneToMany(() => PostVote, 'post')
+  votes = new Collection<PostVote>(this)
 
   @Field(() => Int)
   @Property({ default: 0 })
   commentCount: number
-
-  @Field()
-  isRocketed: boolean
 
   @Field()
   get relativeUrl(): string {

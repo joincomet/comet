@@ -6,8 +6,11 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   Property
 } from '@mikro-orm/core'
+import { PostVote } from '@/entity/PostVote'
+import { CommentVote } from '@/entity/CommentVote'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -28,15 +31,15 @@ export class Comment extends BaseEntity {
   @Property({ nullable: true, type: BigIntType })
   parentCommentId: string
 
-  @ManyToMany(() => User)
-  rocketers = new Collection<User>(this)
-
   @Field(() => Int)
-  @Property({ default: 1 })
-  rocketCount: number
+  @Property({ default: 0 })
+  voteCount: number
 
   @Field()
-  isRocketed: boolean
+  isVoted: boolean
+
+  @OneToMany(() => CommentVote, 'comment')
+  votes = new Collection<CommentVote>(this)
 
   @Field()
   @Property({ default: false })

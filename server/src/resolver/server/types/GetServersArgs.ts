@@ -7,9 +7,6 @@ export class GetServersArgs {
   @Field(() => GetServersSort, { defaultValue: 2 })
   sort: GetServersSort = GetServersSort.AZ
 
-  @Field({ defaultValue: false })
-  joinedOnly: boolean
-
   @Field(() => ServerCategory, { nullable: true })
   category?: ServerCategory
 

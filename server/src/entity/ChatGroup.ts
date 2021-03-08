@@ -14,7 +14,7 @@ import {
 export class ChatGroup extends BaseEntity {
   @Field(() => User)
   @ManyToOne(() => User)
-  creator: User
+  owner: User
 
   @Field({ nullable: true })
   @Property({ nullable: true })

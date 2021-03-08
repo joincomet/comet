@@ -1,25 +1,26 @@
-import { Field, Int, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql'
 import {
-  User,
-  Post,
-  ChatChannel,
   BaseEntity,
+  ChatChannel,
+  Folder,
+  Post,
   ServerInvite,
-  Folder
+  User
 } from '@/entity'
 import { ServerCategory } from '@/resolver/server'
 import {
-  ArrayType,
   Collection,
   Entity,
   Enum,
-  ManyToMany,
   ManyToOne,
   OneToMany,
-  Property
+  Property,
+  QueryOrder
 } from '@mikro-orm/core'
 import { UserBanServer } from '@/entity/UserBanServer'
 import { UserJoinServer } from '@/entity/UserJoinServer'
+import { ServerRole } from '@/entity/ServerRole'
+import { Lexico } from '@/util/Lexico'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -38,10 +39,19 @@ export class Server extends BaseEntity {
   @OneToMany(() => Post, 'server')
   posts = new Collection<Post>(this)
 
-  @OneToMany(() => UserJoinServer, 'server')
+  @OneToMany(() => ServerRole, 'server', {
+    orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
+  })
+  roles = new Collection<ServerRole>(this)
+
+  @OneToMany(() => UserJoinServer, 'server', {
+    orderBy: { createdAt: QueryOrder.DESC }
+  })
   userJoins = new Collection<UserJoinServer>(this)
 
-  @OneToMany(() => Folder, 'server')
+  @OneToMany(() => Folder, 'server', {
+    orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
+  })
   folders = new Collection<Folder>(this)
 
   @Field(() => ServerCategory)
@@ -67,7 +77,9 @@ export class Server extends BaseEntity {
   @Property({ default: false })
   banned: boolean
 
-  @OneToMany(() => ChatChannel, 'server')
+  @OneToMany(() => ChatChannel, 'server', {
+    orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
+  })
   channels = new Collection<ChatChannel>(this)
 
   @Field()
@@ -78,8 +90,8 @@ export class Server extends BaseEntity {
   @Property({ default: false })
   featured: boolean
 
-  @Property({ nullable: true })
-  featuredRank: number
+  @Property({ default: Lexico.FIRST_POSITION })
+  featuredPosition: string
 
   @OneToMany(() => ServerInvite, 'server')
   invites = new Collection<ServerInvite>(this)

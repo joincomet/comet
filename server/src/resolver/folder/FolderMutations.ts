@@ -1,19 +1,12 @@
-import {
-  Arg,
-  Authorized,
-  Ctx,
-  ID,
-  Mutation,
-  Query,
-  Resolver
-} from 'type-graphql'
+import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
-import { Folder, Post, Server } from '@/entity'
+import { Folder, Post } from '@/entity'
 import { handleUnderscore } from '@/util/text'
+import { ServerPermission } from '@/types/ServerPermission'
 
 @Resolver()
 export class FolderMutations {
-  @Authorized()
+  @Authorized(ServerPermission.ManagePosts)
   @Mutation(() => Boolean)
   async addPostToFolder(
     @Arg('postId', () => ID) postId: string,
@@ -31,7 +24,7 @@ export class FolderMutations {
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.ManagePosts)
   @Mutation(() => Boolean)
   async removePostFromFolder(
     @Arg('postId', () => ID) postId: string,

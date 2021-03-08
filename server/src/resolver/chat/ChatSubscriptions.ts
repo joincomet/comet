@@ -1,36 +1,23 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  ID,
-  Mutation,
-  Publisher,
-  PubSub,
-  Query,
-  Resolver,
-  Root,
-  Subscription
-} from 'type-graphql'
-import { ChatMessage, ChatChannel } from '@/entity'
-import { QueryOrder } from '@mikro-orm/core'
-import { GetMessagesResponse, GetMessagesArgs } from '@/resolver/chat'
-import { EntityManager } from '@mikro-orm/postgresql'
-import { scrapeMetadata } from '@/util/metascraper'
-import {
-  SubscriptionTopic,
-  SubscriptionFilter,
-  Context,
-  PaginationArgs
-} from '@/types'
+import { Authorized, ID, Resolver, Root, Subscription } from 'type-graphql'
+import { ChatMessage } from '@/entity'
+import { SubscriptionFilter, SubscriptionTopic } from '@/types'
+import { ChannelPermission } from '@/types/ChannelPermission'
+import { ServerPermission } from '@/types/ServerPermission'
 
-const filter = ({
+const filter = async ({
   payload: { channel },
-  context: { user }
-}: SubscriptionFilter<ChatMessage>) =>
-  channel.server
-    ? channel.server.users.contains(user)
+  context: { user, em }
+}: SubscriptionFilter<ChatMessage>) => {
+  await em.populate(channel, ['group.users'])
+  return channel.server
+    ? user.hasChannelPermission(
+        em,
+        ChannelPermission.ViewChannel,
+        ServerPermission.ViewChannels,
+        channel
+      )
     : channel.group.users.contains(user)
+}
 
 @Resolver()
 export class ChatSubscriptions {

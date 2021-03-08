@@ -8,7 +8,7 @@ import {
   Query,
   Resolver
 } from 'type-graphql'
-import { Post, LinkMetadata, Server } from '@/entity'
+import { Post, LinkMetadata, Server, Comment } from '@/entity'
 import {
   CreatePostArgs,
   GetPostsArgs,
@@ -21,10 +21,14 @@ import { uploadImage } from '@/util/s3'
 import { scrapeMetadata } from '@/util/metascraper'
 import { QueryOrder } from '@mikro-orm/core'
 import { handleText } from '@/util/text'
+import { ServerPermission } from '@/types/ServerPermission'
+import { CommentVote } from '@/entity/CommentVote'
+import { PostVote } from '@/entity/PostVote'
+import { Auth } from '@/util/auth'
 
 @Resolver()
 export class PostMutations {
-  @Authorized()
+  @Authorized(ServerPermission.CreatePost)
   @Mutation(() => Post)
   async createPost(
     @Args()
@@ -37,9 +41,6 @@ export class PostMutations {
     }
 
     const server = await em.findOne(Server, serverId)
-
-    if (server.bannedUsers.contains(user))
-      throw new Error('You have been banned from ' + server.name)
 
     const imageUrls = []
 
@@ -73,21 +74,19 @@ export class PostMutations {
     return post
   }
 
-  @Authorized('AUTHOR')
+  @Authorized(Auth.Author)
   @Mutation(() => Boolean)
-  async editPost(
+  async updatePost(
     @Arg('postId', () => ID) postId: string,
-    @Arg('newText') newText: string,
+    @Arg('text') text: string,
     @Ctx() { user, em }: Context
   ) {
-    const post = await em.findOne(Post, postId, ['author'])
-    if (post.author !== user)
-      throw new Error('You must be the author to edit this post!')
+    const post = await em.findOne(Post, postId)
 
-    newText = handleText(newText)
-    if (!newText) newText = null
+    text = handleText(text)
+    if (!text) text = null
 
-    post.text = newText
+    post.text = text
     post.editedAt = new Date()
 
     await em.persistAndFlush(post)
@@ -95,46 +94,49 @@ export class PostMutations {
     return true
   }
 
-  @Authorized('AUTHOR')
+  @Authorized(Auth.Author)
   @Mutation(() => Boolean)
   async deletePost(
     @Arg('postId', () => ID) postId: string,
     @Ctx() { user, em }: Context
   ) {
-    const post = await em.findOne(Post, postId, ['author'])
-    if (post.author !== user)
-      throw new Error('You must be the author to delete this post!')
+    const post = await em.findOne(Post, postId)
     post.deleted = true
     post.pinned = false
     await em.persistAndFlush(post)
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.VotePost)
   @Mutation(() => Boolean)
-  async rocketPost(
+  async votePost(
     @Arg('postId', () => ID) postId: string,
     @Ctx() { user, em }: Context
   ) {
-    const post = await em.findOne(Post, postId)
-    post.rocketers.add(user)
-    post.rocketCount++
+    const post = await em.findOneOrFail(Post, postId)
+    let vote = await em.findOne(PostVote, { user, post })
+    if (vote) throw new Error('You have already voted this post')
+    vote = em.create(PostVote, { user, post })
+    post.voteCount++
+    await em.persistAndFlush([post, vote])
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.VotePost)
   @Mutation(() => Boolean)
-  async unrocketPost(
+  async unvotePost(
     @Arg('postId', () => ID) postId: string,
     @Ctx() { user, em }: Context
   ) {
-    const post = await em.findOne(Post, postId)
-    post.rocketers.remove(user)
-    post.rocketCount--
+    const post = await em.findOneOrFail(Post, postId)
+    const vote = await em.findOneOrFail(PostVote, { user, post })
+    await em.remove(vote)
+    post.voteCount--
+    await em.persistAndFlush(post)
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.ManagePosts)
   @Mutation(() => Boolean)
   async removePost(
     @Arg('postId', () => ID) postId: string,
@@ -153,7 +155,7 @@ export class PostMutations {
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.ManagePosts)
   @Mutation(() => Boolean)
   async pinPost(
     @Arg('postId', () => ID) postId: string,
@@ -166,7 +168,7 @@ export class PostMutations {
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.ManagePosts)
   @Mutation(() => Boolean)
   async unpinPost(
     @Arg('postId', () => ID) postId: string,

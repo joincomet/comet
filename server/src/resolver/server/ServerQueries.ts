@@ -1,36 +1,22 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  Field,
-  ID,
-  Mutation,
-  ObjectType,
-  Publisher,
-  PubSub,
-  Query,
-  Resolver,
-  Root,
-  Subscription
-} from 'type-graphql'
+import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { ChatChannel, Server, User } from '@/entity'
 import {
   GetServersArgs,
-  GetServersSort,
-  GetServersResponse
+  GetServersResponse,
+  GetServersSort
 } from '@/resolver/server'
 import { QueryOrder } from '@mikro-orm/core'
-import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { uploadImage } from '@/util/s3'
-import { SubscriptionTopic, SubscriptionFilter, Context } from '@/types'
+import { Context } from '@/types'
+import { ServerPermission } from '@/types/ServerPermission'
+import { ChannelPermission } from '@/types/ChannelPermission'
 
 @Resolver(() => Server)
 export class ServerQueries {
+  @Authorized()
   @Query(() => GetServersResponse)
   async getServers(
     @Args()
-    { sort, joinedOnly, category, page, pageSize }: GetServersArgs,
+    { sort, category, page, pageSize }: GetServersArgs,
     @Ctx() { user, em }: Context
   ) {
     await em.populate(user, ['servers'])
@@ -38,7 +24,7 @@ export class ServerQueries {
     let where = {}
     let orderBy = {}
 
-    if (sort === GetServersSort.FEATURED || (!user && joinedOnly)) {
+    if (sort === GetServersSort.FEATURED) {
       where = { featured: true }
       orderBy = { featuredPosition: QueryOrder.ASC }
     } else if (category) {
@@ -52,10 +38,6 @@ export class ServerQueries {
       orderBy = { userCount: QueryOrder.DESC }
     } else if (sort === GetServersSort.AZ) {
       orderBy = { name: QueryOrder.ASC }
-    }
-
-    if (user && joinedOnly) {
-      where = { id: user.servers.getItems(false) }
     }
 
     const servers = await em.find(
@@ -74,26 +56,22 @@ export class ServerQueries {
     } as GetServersResponse
   }
 
+  @Authorized()
   @Query(() => [Server])
   async getJoinedServers(@Ctx() { user, em }: Context) {
-    await em.populate(user, ['servers'])
-
-    return user.servers
-      .getItems()
-      .sort(
-        (a, b) =>
-          user.serversSort.indexOf(a.id) - user.serversSort.indexOf(b.id)
-      )
+    await em.populate(user, ['serverJoins.server'])
+    const joins = user.serverJoins
+    return joins.getItems().map(join => join.server)
   }
 
-  @Authorized()
+  @Authorized([ChannelPermission.ViewChannel, ServerPermission.ViewChannels])
   @Query(() => [User])
-  async getServerUsers(
+  async getChannelUsers(
     @Ctx() { user, em }: Context,
-    @Arg('serverId', () => ID) serverId: string
+    @Arg('channelId', () => ID) channelId: string
   ) {
-    const server = await em.findOne(Server, serverId, ['users'])
-    if (!server) throw new Error('Server not found')
-    return server.users
+    // TODO
+    const channel = await em.findOneOrFail(ChatChannel, channelId)
+    return []
   }
 }

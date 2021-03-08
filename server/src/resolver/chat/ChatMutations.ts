@@ -23,10 +23,12 @@ import {
   Context,
   PaginationArgs
 } from '@/types'
+import { UserJoinServer } from '@/entity/UserJoinServer'
+import { ServerPermission } from '@/types/ServerPermission'
 
 @Resolver()
 export class ChatMutations {
-  @Authorized()
+  @Authorized(ServerPermission.SendMessages)
   @Mutation(() => Boolean)
   async createMessage(
     @Arg('text') text: string,
@@ -38,13 +40,18 @@ export class ChatMutations {
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
     const err = new Error('You do not have access to this channel')
-    const channel = await em.findOne(ChatChannel, channelId, [
-      'group.users',
-      'server.users'
-    ])
-    if (!channel) throw new Error('Invalid channel ID')
+    const channel = await em.findOneOrFail(ChatChannel, channelId)
     if (channel.group && !channel.group.users.contains(user)) throw err
-    else if (channel.server && !channel.server.users.contains(user)) throw err
+    else if (channel.server) {
+      await em.findOneOrFail(
+        UserJoinServer,
+        { user, server: channel.server },
+        {
+          failHandler: () =>
+            new Error("You have not joined this channel's server.")
+        }
+      )
+    }
 
     const message = em.create(ChatMessage, {
       text,
@@ -60,9 +67,9 @@ export class ChatMutations {
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.SendMessages)
   @Mutation(() => Boolean)
-  async editMessage(
+  async updateMessage(
     @Arg('text') text: string,
     @Arg('messageId', () => ID) messageId: string,
     @PubSub(SubscriptionTopic.MessageUpdated)
@@ -70,9 +77,8 @@ export class ChatMutations {
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
     if (!text) throw new Error('Text cannot be empty')
-    const message = await em.findOne(ChatMessage, messageId, ['author'])
-    if (!message) throw new Error('Invalid message ID')
-    if (message.author.id !== user.id)
+    const message = await em.findOneOrFail(ChatMessage, messageId)
+    if (message.author !== user)
       throw new Error('You are not the author of this message')
 
     message.text = text
@@ -84,7 +90,7 @@ export class ChatMutations {
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.SendMessages)
   @Mutation(() => Boolean)
   async deleteMessage(
     @Arg('messageId', () => ID) messageId: string,
@@ -92,8 +98,7 @@ export class ChatMutations {
     messageDeleted: Publisher<ChatMessage>,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
-    const message = await em.findOne(ChatMessage, messageId, ['author'])
-    if (!message) throw new Error('Invalid message ID')
+    const message = await em.findOneOrFail(ChatMessage, messageId, ['author'])
     if (message.author.id !== user.id)
       throw new Error('You are not the author of this message')
 

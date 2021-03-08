@@ -7,22 +7,22 @@ import {
   UserLeftServerResponse
 } from '@/resolver/server'
 
-const filter = ({
-  payload: { users },
-  context: { user }
-}: SubscriptionFilter<Server>) => users.contains(user)
+const serverFilter = async ({
+  payload: server,
+  context: { em, user }
+}: SubscriptionFilter<Server>) => user.hasJoinedServer(em, server)
 
-const joinLeaveFilter = ({
+const joinLeaveFilter = async ({
   payload: { server },
-  context: { user: currentUser }
-}: SubscriptionFilter<UserServerPayload>) => server.users.contains(currentUser)
+  context: { em, user }
+}: SubscriptionFilter<UserServerPayload>) => user.hasJoinedServer(em, server)
 
 @Resolver(() => Server)
 export class ServerSubscriptions {
   @Authorized()
   @Subscription(() => Server, {
     topics: SubscriptionTopic.ServerUpdated,
-    filter
+    filter: serverFilter
   })
   serverUpdated(@Root() server: Server) {
     return server
@@ -31,7 +31,7 @@ export class ServerSubscriptions {
   @Authorized()
   @Subscription(() => ID, {
     topics: SubscriptionTopic.ServerDeleted,
-    filter
+    filter: serverFilter
   })
   serverDeleted(@Root() server: Server) {
     return server.id

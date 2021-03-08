@@ -16,7 +16,7 @@ import { UserServerPayload } from '@/resolver/server'
 import { UserJoinServer } from '@/entity/UserJoinServer'
 import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
 import { CreateServerArgs } from '@/resolver/server/types/CreateServerArgs'
-import { UserBanServer } from '@/entity/UserBanServer'
+import { ServerPermission } from '@/types/ServerPermission'
 
 @Resolver()
 export class ServerMutations {
@@ -54,14 +54,14 @@ export class ServerMutations {
       searchable
     })
     await em.persistAndFlush([server])
-    await user.joinServer(server, em, userJoinedServer)
+    await user.joinServer(em, server, userJoinedServer)
     return server
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.ManageChannels)
   @Mutation(() => ChatChannel)
   async createChannel(
-    @Ctx() { user, em }: Context,
+    @Ctx() { em }: Context,
     @Arg('serverId', () => ID) serverId: string,
     @Arg('name') name: string,
     @PubSub(SubscriptionTopic.ServerUpdated) serverUpdated: Publisher<Server>
@@ -89,7 +89,8 @@ export class ServerMutations {
     const server = await em.findOneOrFail(Server, serverId)
     if (!server.searchable)
       throw new Error('Invite required to join this server')
-    await user.joinServer(server, em, userJoinedServer)
+    await user.checkBannedFromServer(em, server)
+    await user.joinServer(em, server, userJoinedServer)
     return true
   }
 
@@ -104,7 +105,8 @@ export class ServerMutations {
     const invite = await em.findOneOrFail(ServerInvite, inviteId, ['server'])
     if (invite.expired) throw new Error('This invite has expired.')
     const server = invite.server
-    await user.joinServer(server, em, userJoinedServer)
+    await user.checkBannedFromServer(em, server)
+    await user.joinServer(em, server, userJoinedServer)
     return true
   }
 
@@ -117,11 +119,11 @@ export class ServerMutations {
     userLeftServer: Publisher<UserServerPayload>
   ) {
     const server = await em.findOneOrFail(Server, serverId)
-    await user.leaveServer(server, em, userLeftServer)
+    await user.leaveServer(em, server, userLeftServer)
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.BanUser)
   @Mutation(() => Boolean)
   async banUserFromServer(
     @Ctx() { em, user: currentUser }: Context,
@@ -133,21 +135,11 @@ export class ServerMutations {
   ) {
     const server = await em.findOneOrFail(Server, serverId)
     const user = await em.findOneOrFail(User, userId)
-
-    const ban = em.create(UserBanServer, {
-      user,
-      server,
-      reason,
-      bannedBy: currentUser
-    })
-
-    await user.leaveServer(server, em, userLeftServer)
-
-    await em.persistAndFlush(ban)
+    await user.banFromServer(em, server, userLeftServer, reason, currentUser)
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.BanUser)
   @Mutation(() => Boolean)
   async unbanUserFromServer(
     @Arg('serverId', () => ID) serverId: string,
@@ -156,14 +148,14 @@ export class ServerMutations {
   ) {
     const server = await em.findOneOrFail(Server, serverId)
     const user = await em.findOneOrFail(User, userId)
-    await em.nativeDelete(UserBanServer, { user, server })
+    await user.unbanFromServer(em, server)
     return true
   }
 
-  @Authorized()
+  @Authorized(ServerPermission.ManageServer)
   @Mutation(() => Boolean)
   async updateServer(
-    @Ctx() { user, em }: Context,
+    @Ctx() { em }: Context,
     @Args()
     {
       serverId,

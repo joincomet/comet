@@ -1,26 +1,13 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  ID,
-  Mutation,
-  Query,
-  Resolver
-} from 'type-graphql'
+import { Args, Authorized, Ctx, Query, Resolver } from 'type-graphql'
 import { Context } from '@/types'
-import { Comment, Notification, Post } from '@/entity'
-import {
-  CreateCommentArgs,
-  GetCommentsArgs,
-  GetCommentsSort
-} from '@/resolver/comment'
+import { Comment, Post } from '@/entity'
+import { GetCommentsArgs, GetCommentsSort } from '@/resolver/comment'
 import { QueryOrder } from '@mikro-orm/core'
-import { handleText } from '@/util/text'
+import { ServerPermission } from '@/types/ServerPermission'
 
 @Resolver(() => Comment)
 export class CommentQueries {
-  @Authorized()
+  @Authorized(ServerPermission.ViewComments)
   @Query(() => [Comment])
   async getComments(
     @Args() { postId, sort }: GetCommentsArgs,

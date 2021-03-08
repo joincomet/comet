@@ -9,10 +9,13 @@ import {
 import { Context } from '@/types'
 import { scrapeMetadata } from '@/util/metascraper'
 import { QueryOrder } from '@mikro-orm/core'
+import { ServerPermission } from '@/types/ServerPermission'
+import { UserJoinServer } from '@/entity/UserJoinServer'
+import { Auth } from '@/util/auth'
 
 @Resolver(() => Post)
 export class PostQueries {
-  @Authorized()
+  @Authorized(ServerPermission.ViewPosts)
   @Query(() => GetPostsResponse)
   async getPosts(
     @Args()
@@ -33,6 +36,12 @@ export class PostQueries {
     else if (sort === GetPostsSort.TOP)
       orderBy = { rocketCount: QueryOrder.DESC }
 
+    let servers = []
+    if (joinedOnly) {
+      const joins = await em.find(UserJoinServer, { user })
+      servers = joins.map(join => join.server)
+    }
+
     const posts = await em.find(
       Post,
       {
@@ -47,7 +56,7 @@ export class PostQueries {
                 }
               },
           { server: { $ne: null } },
-          user ? { server: user.servers.getItems(false) } : {},
+          joinedOnly ? { server: servers } : {},
           serverId ? { server: { id: serverId } } : {}
         ]
       },
@@ -64,18 +73,20 @@ export class PostQueries {
     } as GetPostsResponse
   }
 
-  @Query(() => Post, { nullable: true })
+  @Authorized(ServerPermission.ViewPosts)
+  @Query(() => Post)
   async getPost(
     @Arg('postId', () => ID) postId: string,
     @Ctx() { user, em }: Context
   ) {
-    const post = await em.findOne(Post, postId, ['server', 'author'])
+    const post = await em.findOneOrFail(Post, postId, ['server', 'author'])
 
     if (!post) return null
 
-    await em.populate(user, ['servers'])
-
-    if (post.server.private && !user.servers.contains(post.server))
+    if (
+      !post.server.searchable &&
+      !(await user.hasJoinedServer(em, post.server))
+    )
       throw new Error(
         'This post is in a private server that you have not joined!'
       )
@@ -93,6 +104,7 @@ export class PostQueries {
     return post
   }
 
+  @Authorized(Auth.Admin)
   @Query(() => LinkMetadata)
   async getUrlEmbed(@Arg('url') url: string) {
     return scrapeMetadata(url)

@@ -8,6 +8,7 @@ import {
   OneToOne,
   Property
 } from '@mikro-orm/core'
+import { Lexico } from '@/util/Lexico'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -29,6 +30,6 @@ export class ChatChannel extends BaseEntity {
   @OneToOne({ entity: () => ChatGroup, nullable: true, inversedBy: 'channel' })
   group?: ChatGroup
 
-  @Property({ default: 0 })
-  rank: number
+  @Property({ default: Lexico.FIRST_POSITION })
+  position: string
 }

@@ -10,14 +10,14 @@ import {
 import { Context } from '@/types'
 import { User, Folder, Post, Comment } from '@/entity'
 import { uploadImage } from '@/util/s3'
-import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { LoginResponse } from '@/resolver/user/types'
 import isEmail from 'validator/lib/isEmail'
 import { handleUnderscore } from '@/util/text'
 import * as argon2 from 'argon2'
-import { createAccessToken } from '@/util/auth'
+import { Auth, createAccessToken } from '@/util/auth'
 import { customAlphabet } from 'nanoid'
 import { UpdateUserArgs } from '@/resolver/user/types/UpdateUserArgs'
+import { UserBanGlobal } from '@/entity/UserBanGlobal'
 
 const tagGenerator = customAlphabet('0123456789', 4)
 
@@ -102,30 +102,13 @@ export class UserMutations {
     if (!user) throw new Error('Invalid Login')
     const match = await argon2.verify(user.passwordHash, password)
     if (!match) throw new Error('Invalid Login')
-    if (user.banned) throw new Error('Banned: ' + user.banReason)
+    const ban = await em.findOne(UserBanGlobal, { user })
+    if (ban) throw new Error(`Banned${ban.reason ? `: ${ban.reason}` : '.'}`)
     user.lastLogin = new Date()
     await em.persistAndFlush(user)
     const accessToken = createAccessToken(user)
     return {
       accessToken,
-      user
-    } as LoginResponse
-  }
-
-  @Authorized()
-  @Mutation(() => LoginResponse)
-  async changePassword(
-    @Arg('currentPassword') currentPassword: string,
-    @Arg('newPassword') newPassword: string,
-    @Ctx() { user, em }: Context
-  ) {
-    const match = await argon2.verify(user.passwordHash, currentPassword)
-    if (!match) throw new Error('Current password incorrect!')
-
-    user.passwordHash = await argon2.hash(newPassword)
-    await em.persistAndFlush(user)
-    return {
-      accessToken: createAccessToken(user),
       user
     } as LoginResponse
   }
@@ -164,7 +147,7 @@ export class UserMutations {
     } as LoginResponse
   }
 
-  @Authorized('ADMIN')
+  @Authorized(Auth.Admin)
   @Mutation(() => Boolean)
   async banUserGlobal(
     @Ctx() { em }: Context,
@@ -184,7 +167,7 @@ export class UserMutations {
     return true
   }
 
-  @Authorized('ADMIN')
+  @Authorized(Auth.Admin)
   @Mutation(() => Boolean)
   async unbanUserGlobal(
     @Arg('bannedId', () => ID) bannedId: string,
@@ -201,7 +184,7 @@ export class UserMutations {
     return true
   }
 
-  @Authorized('ADMIN')
+  @Authorized(Auth.Admin)
   @Mutation(() => Boolean)
   async banPurgeUserGlobal(
     @Arg('bannedId', () => ID) bannedId: string,
