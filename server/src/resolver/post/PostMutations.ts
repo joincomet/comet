@@ -22,7 +22,7 @@ import {
 
 @Resolver()
 export class PostMutations {
-  @UseMiddleware(CheckServerPermission(ServerPermission.CreatePost))
+  @CheckServerPermission(ServerPermission.CreatePost)
   @Mutation(() => Post, {
     description:
       'Create a post in a server (requires ServerPermission.CreatePost)'
@@ -66,7 +66,7 @@ export class PostMutations {
     return post
   }
 
-  @UseMiddleware(CheckPostAuthor)
+  @CheckPostAuthor()
   @Mutation(() => Boolean, {
     description: 'Edit a post (must be author)'
   })
@@ -89,7 +89,7 @@ export class PostMutations {
     return true
   }
 
-  @UseMiddleware(CheckPostAuthor)
+  @CheckPostAuthor()
   @Mutation(() => Boolean, {
     description: 'Delete a post (must be author)'
   })
@@ -104,7 +104,7 @@ export class PostMutations {
     return true
   }
 
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.VotePost))
+  @CheckPostServerPermission(ServerPermission.VotePost)
   @Mutation(() => Boolean, { description: 'Add vote to post' })
   async createPostVote(
     @Arg('postId', () => ID, {
@@ -122,7 +122,7 @@ export class PostMutations {
     return true
   }
 
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.VotePost))
+  @CheckPostServerPermission(ServerPermission.VotePost)
   @Mutation(() => Boolean, { description: 'Remove vote from post' })
   async removePostVote(
     @Arg('postId', () => ID, {
@@ -139,7 +139,7 @@ export class PostMutations {
     return true
   }
 
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.ManagePosts))
+  @CheckPostServerPermission(ServerPermission.ManagePosts)
   @Mutation(() => Boolean, {
     description: 'Remove a post (requires ServerPermission.ManagePosts)'
   })
@@ -160,7 +160,7 @@ export class PostMutations {
     return true
   }
 
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.PinPosts))
+  @CheckPostServerPermission(ServerPermission.PinPosts)
   @Mutation(() => Boolean, {
     description: 'Pin a post (requires ServerPermission.PinPosts)'
   })
@@ -176,7 +176,7 @@ export class PostMutations {
     return true
   }
 
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.PinPosts))
+  @CheckPostServerPermission(ServerPermission.PinPosts)
   @Mutation(() => Boolean, {
     description: 'Unpin a post (requires ServerPermission.PinPosts)'
   })

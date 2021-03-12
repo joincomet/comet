@@ -35,14 +35,12 @@ import { SendMessageArgs } from '@/resolver/message/types/SendMessageArgs'
 
 @Resolver()
 export class MessageMutations {
-  @UseMiddleware(
-    CheckChannelPermission(
-      ChannelPermission.SendMessages,
-      ServerPermission.SendMessages
-    ),
-    CheckGroupMember,
-    CheckBlock
+  @CheckChannelPermission(
+    ChannelPermission.SendMessages,
+    ServerPermission.SendMessages
   )
+  @CheckGroupMember()
+  @CheckBlock()
   @Mutation(() => Boolean, { description: 'Create a chat message' })
   async sendMessage(
     @Args() { text, channelId, groupId, userId }: SendMessageArgs,
@@ -81,7 +79,7 @@ export class MessageMutations {
     return true
   }
 
-  @UseMiddleware(CheckMessageAuthor)
+  @CheckMessageAuthor()
   @Mutation(() => Boolean)
   async editMessage(
     @Arg('text', { description: 'New message text' }) text: string,
@@ -102,7 +100,7 @@ export class MessageMutations {
     return true
   }
 
-  @UseMiddleware(CheckMessageAuthor)
+  @CheckMessageAuthor()
   @Mutation(() => Boolean, { description: 'Delete a message' })
   async deleteMessage(
     @Arg('messageId', () => ID, { description: 'ID of message to delete' })
@@ -118,11 +116,9 @@ export class MessageMutations {
     return true
   }
 
-  @UseMiddleware(
-    CheckMessageChannelPermission(
-      ChannelPermission.ManageMessages,
-      ServerPermission.ManageMessages
-    )
+  @CheckMessageChannelPermission(
+    ChannelPermission.ManageMessages,
+    ServerPermission.ManageMessages
   )
   @Mutation(() => Boolean, {
     description:

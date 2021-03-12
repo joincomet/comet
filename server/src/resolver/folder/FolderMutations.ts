@@ -15,7 +15,7 @@ import { CheckPostServerPermission } from '@/util'
 
 @Resolver()
 export class FolderMutations {
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.AddPostsToFolder))
+  @CheckPostServerPermission(ServerPermission.AddPostsToFolder)
   @Mutation(() => Boolean)
   async addPostToFolder(
     @Arg('postId', () => ID) postId: string,
@@ -33,7 +33,7 @@ export class FolderMutations {
     return true
   }
 
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.AddPostsToFolder))
+  @CheckPostServerPermission(ServerPermission.AddPostsToFolder)
   @Mutation(() => Boolean)
   async removePostFromFolder(
     @Arg('postId', () => ID) postId: string,

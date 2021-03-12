@@ -20,7 +20,7 @@ import {
 
 @Resolver(() => Comment)
 export class CommentMutations {
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.CreateComment))
+  @CheckPostServerPermission(ServerPermission.CreateComment)
   @Mutation(() => Comment, { description: 'Create a comment on a post' })
   async createComment(
     @Args() { text, postId, parentCommentId }: CreateCommentArgs,
@@ -72,7 +72,7 @@ export class CommentMutations {
     return savedComment
   }
 
-  @UseMiddleware(CheckCommentAuthor)
+  @CheckCommentAuthor()
   @Mutation(() => Boolean, { description: 'Delete a comment' })
   async deleteComment(
     @Arg('commentId', () => ID) commentId: string,
@@ -92,7 +92,7 @@ export class CommentMutations {
     return true
   }
 
-  @UseMiddleware(CheckCommentAuthor)
+  @CheckCommentAuthor()
   @Mutation(() => Boolean, { description: 'Update a comment' })
   async updateComment(
     @Arg('commentId', () => ID) commentId: string,
@@ -109,7 +109,7 @@ export class CommentMutations {
     return true
   }
 
-  @UseMiddleware(CheckCommentServerPermission(ServerPermission.VoteComment))
+  @CheckCommentServerPermission(ServerPermission.VoteComment)
   @Mutation(() => Boolean, { description: 'Add vote to a comment' })
   async createCommentVote(
     @Arg('commentId', () => ID, { description: 'ID of comment to vote' })
@@ -125,7 +125,7 @@ export class CommentMutations {
     return true
   }
 
-  @UseMiddleware(CheckCommentServerPermission(ServerPermission.VoteComment))
+  @CheckCommentServerPermission(ServerPermission.VoteComment)
   @Mutation(() => Boolean, { description: 'Remove vote from a comment' })
   async removeCommentVote(
     @Arg('commentId', () => ID, { description: 'ID of comment to remove vote' })
@@ -139,7 +139,7 @@ export class CommentMutations {
     return true
   }
 
-  @UseMiddleware(CheckCommentServerPermission(ServerPermission.ManageComments))
+  @CheckCommentServerPermission(ServerPermission.ManageComments)
   @Mutation(() => Boolean, {
     description: 'Remove a comment (Requires ServerPermission.ManageComments)'
   })

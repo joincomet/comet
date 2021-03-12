@@ -21,7 +21,7 @@ export class FolderQueries {
     return user.folders.getItems().map(userFolder => userFolder.folder)
   }
 
-  @UseMiddleware(CheckServerPermission(ServerPermission.ViewFolders))
+  @CheckServerPermission(ServerPermission.ViewFolders)
   @Query(() => Folder)
   async getServerFolders(
     @Ctx() { user, em }: Context,

@@ -8,7 +8,7 @@ import { CheckPostServerPermission } from '@/util'
 
 @Resolver(() => Comment)
 export class CommentQueries {
-  @UseMiddleware(CheckPostServerPermission(ServerPermission.ViewComments))
+  @CheckPostServerPermission(ServerPermission.ViewComments)
   @Query(() => [Comment], { description: 'Get comments on a post' })
   async getComments(
     @Args() { postId, sort }: GetCommentsArgs,

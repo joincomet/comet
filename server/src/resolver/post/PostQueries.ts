@@ -22,7 +22,7 @@ import { ServerPermission } from '@/types'
 
 @Resolver(() => Post)
 export class PostQueries {
-  @UseMiddleware(CheckServerPermission(ServerPermission.ViewPosts))
+  @CheckServerPermission(ServerPermission.ViewPosts)
   @Query(() => GetPostsResponse, {
     description:
       'Get posts (requires ServerPermission.ViewPosts if serverId is provided)'
@@ -83,7 +83,7 @@ export class PostQueries {
     } as GetPostsResponse
   }
 
-  @UseMiddleware(CheckServerPermission(ServerPermission.ViewPosts))
+  @CheckServerPermission(ServerPermission.ViewPosts)
   @Query(() => Post, {
     description: 'Get a specific post (requires ServerPermission.ViewPosts)'
   })

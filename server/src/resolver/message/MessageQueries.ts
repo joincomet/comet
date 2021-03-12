@@ -22,13 +22,11 @@ import { CheckChannelPermission, CheckGroupMember } from '@/util'
 
 @Resolver(() => ChatMessage)
 export class MessageQueries {
-  @UseMiddleware(
-    CheckChannelPermission(
-      ChannelPermission.ViewChannel,
-      ServerPermission.ViewChannels
-    ),
-    CheckGroupMember
+  @CheckChannelPermission(
+    ChannelPermission.ViewChannel,
+    ServerPermission.ViewChannels
   )
+  @CheckGroupMember()
   @Query(() => GetMessagesResponse, {
     description:
       'Get messages in a DM, group, or channel (requires ChannelPermission.ViewChannel or' +

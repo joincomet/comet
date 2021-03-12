@@ -75,11 +75,9 @@ export class ServerQueries {
     return joins.getItems().map(join => join.server)
   }
 
-  @UseMiddleware(
-    CheckChannelPermission(
-      ChannelPermission.ViewChannel,
-      ServerPermission.ViewChannels
-    )
+  @CheckChannelPermission(
+    ChannelPermission.ViewChannel,
+    ServerPermission.ViewChannels
   )
   @Query(() => [ChannelUsersResponse])
   async getChannelUsers(

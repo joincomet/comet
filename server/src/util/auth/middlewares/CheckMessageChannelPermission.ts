@@ -1,5 +1,5 @@
 import { ChannelPermission, Context, ServerPermission } from '@/types'
-import { MiddlewareFn } from 'type-graphql'
+import { createMethodDecorator } from 'type-graphql'
 import { ChatMessage } from '@/entity'
 
 /**
@@ -8,27 +8,30 @@ import { ChatMessage } from '@/entity'
  * @param channelPermission Required ChannelPermission
  * @param serverPermission Fallback ServerPermission (if ChannelPermission is neither accepted or denied)
  */
-export function CheckMessageChannelPermission(
+export const CheckMessageChannelPermission = (
   channelPermission: ChannelPermission,
   serverPermission: ServerPermission
-): MiddlewareFn<Context> {
-  return async ({ args: { messageId }, context: { em, user } }, next) => {
-    if (!user) throw new Error('Not logged in')
+) =>
+  createMethodDecorator<Context>(
+    async ({ args: { messageId }, context: { em, user } }, next) => {
+      if (!user) throw new Error('Not logged in')
 
-    // if (!messageId) throw new Error('Args must include messageId')
-    if (!messageId) return next()
+      // if (!messageId) throw new Error('Args must include messageId')
+      if (!messageId) return next()
 
-    const message = await em.findOneOrFail(ChatMessage, messageId, ['channel'])
+      const message = await em.findOneOrFail(ChatMessage, messageId, [
+        'channel'
+      ])
 
-    if (!message.channel) throw new Error('Message was not sent in a Channel')
+      if (!message.channel) throw new Error('Message was not sent in a Channel')
 
-    await user.checkChannelPermission(
-      em,
-      message.channel,
-      channelPermission,
-      serverPermission
-    )
+      await user.checkChannelPermission(
+        em,
+        message.channel,
+        channelPermission,
+        serverPermission
+      )
 
-    return next()
-  }
-}
+      return next()
+    }
+  )

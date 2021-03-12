@@ -61,7 +61,7 @@ export class ServerMutations {
     return server
   }
 
-  @UseMiddleware(CheckServerPermission(ServerPermission.ManageChannels))
+  @CheckServerPermission(ServerPermission.ManageChannels)
   @Mutation(() => ChatChannel)
   async createChannel(
     @Ctx() { em }: Context,
@@ -113,7 +113,7 @@ export class ServerMutations {
     return true
   }
 
-  @UseMiddleware(CheckServerMember)
+  @CheckServerMember()
   @Mutation(() => Boolean)
   async leaveServer(
     @Arg('serverId', () => ID, { description: 'ID of server to leave' })
@@ -127,7 +127,7 @@ export class ServerMutations {
     return true
   }
 
-  @UseMiddleware(CheckServerPermission(ServerPermission.BanUser))
+  @CheckServerPermission(ServerPermission.BanUser)
   @Mutation(() => Boolean, {
     description: 'Ban a user from a server (requires ServerPermission.BanUser)'
   })
@@ -162,7 +162,7 @@ export class ServerMutations {
     return true
   }
 
-  @UseMiddleware(CheckServerPermission(ServerPermission.BanUser))
+  @CheckServerPermission(ServerPermission.BanUser)
   @Mutation(() => Boolean)
   async unbanUserFromServer(
     @Arg('serverId', () => ID) serverId: string,
@@ -175,7 +175,7 @@ export class ServerMutations {
     return true
   }
 
-  @UseMiddleware(CheckServerPermission(ServerPermission.ManageServer))
+  @CheckServerPermission(ServerPermission.ManageServer)
   @Mutation(() => Boolean)
   async updateServer(
     @Ctx() { em }: Context,

@@ -42,7 +42,7 @@ export class GroupMutations {
     return true
   }
 
-  @UseMiddleware(CheckGroupMember)
+  @CheckGroupMember()
   @Mutation(() => Boolean, { description: 'Leave a group' })
   async leaveGroup(
     @Ctx() { user, em }: Context,
@@ -62,7 +62,7 @@ export class GroupMutations {
     return true
   }
 
-  @UseMiddleware(CheckGroupMember)
+  @CheckGroupMember()
   @Mutation(() => Boolean, { description: 'Rename a group' })
   async renameGroup(
     @Ctx() { em, user }: Context,
@@ -84,7 +84,7 @@ export class GroupMutations {
     return true
   }
 
-  @UseMiddleware(CheckGroupMember)
+  @CheckGroupMember()
   @Mutation(() => Boolean, { description: 'Change avatar image of group' })
   async changeGroupAvatar(
     @Ctx() { em, user }: Context,
