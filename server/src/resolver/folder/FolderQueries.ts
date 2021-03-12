@@ -1,7 +1,16 @@
-import { Arg, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  ID,
+  Query,
+  Resolver,
+  UseMiddleware
+} from 'type-graphql'
 import { Folder, Server } from '@/entity'
 import { Context } from '@/types'
 import { ServerPermission } from '@/types/ServerPermission'
+import { CheckServerPermission } from '@/util'
 
 @Resolver(() => Folder)
 export class FolderQueries {
@@ -12,7 +21,7 @@ export class FolderQueries {
     return user.folders.getItems().map(userFolder => userFolder.folder)
   }
 
-  @Authorized(ServerPermission.ViewFolders)
+  @UseMiddleware(CheckServerPermission(ServerPermission.ViewFolders))
   @Query(() => Folder)
   async getServerFolders(
     @Ctx() { user, em }: Context,

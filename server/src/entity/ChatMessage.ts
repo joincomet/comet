@@ -1,6 +1,19 @@
 import { Field, ObjectType } from 'type-graphql'
-import { User, ChatChannel, BaseEntity, LinkMetadata } from '@/entity'
-import { Embedded, Entity, ManyToOne, Property } from '@mikro-orm/core'
+import {
+  User,
+  ChatChannel,
+  BaseEntity,
+  LinkMetadata,
+  ChatGroup,
+  DirectMessage
+} from '@/entity'
+import {
+  Embedded,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  Property
+} from '@mikro-orm/core'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -9,8 +22,22 @@ export class ChatMessage extends BaseEntity {
   @ManyToOne(() => User)
   author: User
 
-  @ManyToOne(() => ChatChannel)
-  channel: ChatChannel
+  @ManyToOne(() => ChatChannel, { nullable: true })
+  channel?: ChatChannel
+
+  @ManyToOne({
+    entity: () => ChatGroup,
+    nullable: true,
+    inversedBy: 'messages'
+  })
+  group?: ChatGroup
+
+  @ManyToOne({
+    entity: () => DirectMessage,
+    nullable: true,
+    inversedBy: 'messages'
+  })
+  directMessage?: DirectMessage
 
   @Field()
   @Property()

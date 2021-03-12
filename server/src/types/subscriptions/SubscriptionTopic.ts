@@ -1,5 +1,5 @@
 export enum SubscriptionTopic {
-  MessageSent = 'MESSAGE_SENT', // payload: Message
+  MessageReceived = 'MESSAGE_RECEIVED', // payload: Message
   MessageUpdated = 'MESSAGE_UPDATED', // payload: Message
   MessageRemoved = 'MESSAGE_REMOVED', // payload: messageId
 

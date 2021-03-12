@@ -7,7 +7,8 @@ export enum ChannelPermission {
   SendMessages = 'SEND_MESSAGES',
   EmbedLinks = 'EMBED_LINKS',
   AttachFiles = 'ATTACH_FILES',
-  ManageMessages = 'MANAGE_MESSAGES'
+  ManageMessages = 'MANAGE_MESSAGES',
+  PinMessages = 'PIN_MESSAGES'
 }
 
 registerEnumType(ChannelPermission, { name: 'ChannelPermission' })

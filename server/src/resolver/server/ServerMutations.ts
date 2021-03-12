@@ -7,7 +7,8 @@ import {
   Mutation,
   Publisher,
   PubSub,
-  Resolver
+  Resolver,
+  UseMiddleware
 } from 'type-graphql'
 import { ChatChannel, Server, ServerInvite, User } from '@/entity'
 import { uploadImage } from '@/util/s3'
@@ -17,6 +18,8 @@ import { ServerUserJoin } from '@/entity/ServerUserJoin'
 import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
 import { CreateServerArgs } from '@/resolver/server/types/CreateServerArgs'
 import { ServerPermission } from '@/types/ServerPermission'
+import { CheckServerPermission } from '@/util'
+import { CheckServerMember } from '@/util/auth/middlewares/CheckServerMember'
 
 @Resolver()
 export class ServerMutations {
@@ -54,11 +57,11 @@ export class ServerMutations {
       isSearchable: searchable
     })
     await em.persistAndFlush([server])
-    await user.joinServer(em, refetchUsers, server.id)
+    await user.joinServer(em, refetchUsers, server)
     return server
   }
 
-  @Authorized(ServerPermission.ManageChannels)
+  @UseMiddleware(CheckServerPermission(ServerPermission.ManageChannels))
   @Mutation(() => ChatChannel)
   async createChannel(
     @Ctx() { em }: Context,
@@ -89,8 +92,8 @@ export class ServerMutations {
     const server = await em.findOneOrFail(Server, serverId)
     if (!server.isSearchable)
       throw new Error('Invite required to join this server')
-    await user.checkBannedFromServer(em, server.id)
-    await user.joinServer(em, refetchUsers, server.id)
+    await user.checkBannedFromServer(em, server)
+    await user.joinServer(em, refetchUsers, server)
     return true
   }
 
@@ -105,12 +108,12 @@ export class ServerMutations {
     const invite = await em.findOneOrFail(ServerInvite, inviteId, ['server'])
     if (invite.expired) throw new Error('This invite has expired.')
     const server = invite.server
-    await user.checkBannedFromServer(em, server.id)
-    await user.joinServer(em, refetchUsers, server.id)
+    await user.checkBannedFromServer(em, server)
+    await user.joinServer(em, refetchUsers, server)
     return true
   }
 
-  @Authorized()
+  @UseMiddleware(CheckServerMember)
   @Mutation(() => Boolean)
   async leaveServer(
     @Arg('serverId', () => ID, { description: 'ID of server to leave' })
@@ -119,11 +122,12 @@ export class ServerMutations {
     @PubSub(SubscriptionTopic.RefetchUsers)
     refetchUsers: Publisher<string>
   ) {
-    await user.leaveServer(em, refetchUsers, serverId)
+    const server = await em.findOneOrFail(Server, serverId)
+    await user.leaveServer(em, refetchUsers, server)
     return true
   }
 
-  @Authorized(ServerPermission.BanUser)
+  @UseMiddleware(CheckServerPermission(ServerPermission.BanUser))
   @Mutation(() => Boolean, {
     description: 'Ban a user from a server (requires ServerPermission.BanUser)'
   })
@@ -151,14 +155,14 @@ export class ServerMutations {
     await bannedUser.banFromServer(
       em,
       refetchUsers,
-      server.id,
+      server,
       reason,
-      currentUser.id
+      currentUser
     )
     return true
   }
 
-  @Authorized(ServerPermission.BanUser)
+  @UseMiddleware(CheckServerPermission(ServerPermission.BanUser))
   @Mutation(() => Boolean)
   async unbanUserFromServer(
     @Arg('serverId', () => ID) serverId: string,
@@ -171,7 +175,7 @@ export class ServerMutations {
     return true
   }
 
-  @Authorized(ServerPermission.ManageServer)
+  @UseMiddleware(CheckServerPermission(ServerPermission.ManageServer))
   @Mutation(() => Boolean)
   async updateServer(
     @Ctx() { em }: Context,

@@ -3,7 +3,7 @@ import { SubscriptionTopic } from '@/types'
 
 @Resolver()
 export class ChannelSubscriptions {
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchChannels,
     filter: ({ payload: serverId, context: { user, em } }) =>
       user.hasJoinedServer(em, serverId)

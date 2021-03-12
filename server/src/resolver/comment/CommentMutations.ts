@@ -5,22 +5,22 @@ import {
   Ctx,
   ID,
   Mutation,
-  Resolver
+  Resolver,
+  UseMiddleware
 } from 'type-graphql'
 import { Context, ServerPermission } from '@/types'
-import {
-  Comment,
-  Notification,
-  Post,
-  CommentVote,
-  ServerUserBan
-} from '@/entity'
+import { Comment, Notification, Post, CommentVote } from '@/entity'
 import { CreateCommentArgs } from '@/resolver/comment'
-import { handleText } from '@/util'
+import {
+  CheckCommentAuthor,
+  CheckCommentServerPermission,
+  CheckPostServerPermission,
+  handleText
+} from '@/util'
 
 @Resolver(() => Comment)
 export class CommentMutations {
-  @Authorized(ServerPermission.CreateComment)
+  @UseMiddleware(CheckPostServerPermission(ServerPermission.CreateComment))
   @Mutation(() => Comment, { description: 'Create a comment on a post' })
   async createComment(
     @Args() { text, postId, parentCommentId }: CreateCommentArgs,
@@ -72,7 +72,7 @@ export class CommentMutations {
     return savedComment
   }
 
-  @Authorized(ServerPermission.CreateComment)
+  @UseMiddleware(CheckCommentAuthor)
   @Mutation(() => Boolean, { description: 'Delete a comment' })
   async deleteComment(
     @Arg('commentId', () => ID) commentId: string,
@@ -92,7 +92,7 @@ export class CommentMutations {
     return true
   }
 
-  @Authorized(ServerPermission.CreateComment)
+  @UseMiddleware(CheckCommentAuthor)
   @Mutation(() => Boolean, { description: 'Update a comment' })
   async updateComment(
     @Arg('commentId', () => ID) commentId: string,
@@ -109,9 +109,9 @@ export class CommentMutations {
     return true
   }
 
-  @Authorized(ServerPermission.VoteComment)
-  @Mutation(() => Boolean, { description: 'Add a vote to a comment' })
-  async voteComment(
+  @UseMiddleware(CheckCommentServerPermission(ServerPermission.VoteComment))
+  @Mutation(() => Boolean, { description: 'Add vote to a comment' })
+  async createCommentVote(
     @Arg('commentId', () => ID, { description: 'ID of comment to vote' })
     commentId: string,
     @Ctx() { user, em }: Context
@@ -125,9 +125,9 @@ export class CommentMutations {
     return true
   }
 
-  @Authorized(ServerPermission.VoteComment)
+  @UseMiddleware(CheckCommentServerPermission(ServerPermission.VoteComment))
   @Mutation(() => Boolean, { description: 'Remove vote from a comment' })
-  async unvoteComment(
+  async removeCommentVote(
     @Arg('commentId', () => ID, { description: 'ID of comment to remove vote' })
     commentId: string,
     @Ctx() { user, em }: Context
@@ -139,7 +139,7 @@ export class CommentMutations {
     return true
   }
 
-  @Authorized(ServerPermission.ManageComments)
+  @UseMiddleware(CheckCommentServerPermission(ServerPermission.ManageComments))
   @Mutation(() => Boolean, {
     description: 'Remove a comment (Requires ServerPermission.ManageComments)'
   })

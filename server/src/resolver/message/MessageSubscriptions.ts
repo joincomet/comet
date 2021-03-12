@@ -13,28 +13,37 @@ const filter = async ({
 }: SubscriptionFilter<ChatMessage>) => {
   const channel = await em.findOneOrFail(ChatChannel, channelId, [
     'server',
-    'group.users'
+    'group.users',
+    'directMessage.user1',
+    'directMessage.user2'
   ])
-  return channel.server
-    ? user.hasChannelPermission(
-        em,
-        ChannelPermission.ViewChannel,
-        ServerPermission.ViewChannels,
-        channel.id
-      )
-    : channel.group.users.contains(user)
+
+  if (channel.server)
+    return user.hasChannelPermission(
+      em,
+      ChannelPermission.ViewChannel,
+      ServerPermission.ViewChannels,
+      channel.id
+    )
+  else if (channel.group) return channel.group.users.contains(user)
+  else if (channel.directMessage)
+    return (
+      channel.directMessage.user1 === user ||
+      channel.directMessage.user2 === user
+    )
+  else return false
 }
 
 @Resolver()
 export class MessageSubscriptions {
   @Authorized()
   @Subscription(() => ChatMessage, {
-    topics: SubscriptionTopic.MessageSent,
+    topics: SubscriptionTopic.MessageReceived,
     filter,
     description:
       'Published to all users with permission to view message when a message is sent'
   })
-  messageSent(@Root() message: ChatMessage) {
+  messageReceived(@Root() message: ChatMessage) {
     return message
   }
 
@@ -45,7 +54,7 @@ export class MessageSubscriptions {
     description:
       'Published to all users with permission to view message when a message is updated (edited or embeds fetched)'
   })
-  messageEdited(@Root() message: ChatMessage) {
+  messageUpdated(@Root() message: ChatMessage) {
     return message
   }
 
@@ -56,7 +65,7 @@ export class MessageSubscriptions {
     description:
       'Published to all users with permission to view message when a message is deleted or removed'
   })
-  messageDeleted(@Root() message: ChatMessage) {
+  messageRemoved(@Root() message: ChatMessage) {
     return message.id
   }
 }

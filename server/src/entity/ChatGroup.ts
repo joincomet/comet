@@ -1,10 +1,11 @@
-import { ChatChannel, User, BaseEntity } from '@/entity'
+import { ChatChannel, User, BaseEntity, ChatMessage } from '@/entity'
 import { Field, ObjectType } from 'type-graphql'
 import {
   Collection,
   Entity,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
   Property
 } from '@mikro-orm/core'
@@ -28,10 +29,10 @@ export class ChatGroup extends BaseEntity {
   @Property()
   updatedAt: Date = new Date()
 
-  @OneToOne(() => ChatChannel, 'group')
-  channel: ChatChannel
-
   @Field(() => [User])
   @ManyToMany(() => User, 'groups', { owner: true })
   users = new Collection<User>(this)
+
+  @OneToMany(() => ChatMessage, 'group')
+  messages = new Collection<ChatMessage>(this)
 }

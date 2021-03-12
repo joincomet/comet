@@ -5,16 +5,24 @@ import {
   Ctx,
   ID,
   Mutation,
-  Resolver
+  Resolver,
+  UseMiddleware
 } from 'type-graphql'
 import { Post, Server, PostVote } from '@/entity'
 import { CreatePostArgs } from '@/resolver/post'
 import { Context, ServerPermission } from '@/types'
-import { uploadImage, scrapeMetadata, handleText, Auth } from '@/util'
+import {
+  uploadImage,
+  scrapeMetadata,
+  handleText,
+  CheckPostAuthor,
+  CheckServerPermission,
+  CheckPostServerPermission
+} from '@/util'
 
 @Resolver()
 export class PostMutations {
-  @Authorized(ServerPermission.CreatePost)
+  @UseMiddleware(CheckServerPermission(ServerPermission.CreatePost))
   @Mutation(() => Post, {
     description:
       'Create a post in a server (requires ServerPermission.CreatePost)'
@@ -58,9 +66,9 @@ export class PostMutations {
     return post
   }
 
-  @Authorized(Auth.Author)
+  @UseMiddleware(CheckPostAuthor)
   @Mutation(() => Boolean, {
-    description: 'Edit a post (requires Auth.Author)'
+    description: 'Edit a post (must be author)'
   })
   async editPost(
     @Arg('postId', () => ID, { description: 'ID of post to edit' })
@@ -81,9 +89,9 @@ export class PostMutations {
     return true
   }
 
-  @Authorized(Auth.Author)
+  @UseMiddleware(CheckPostAuthor)
   @Mutation(() => Boolean, {
-    description: 'Delete a post (requires Auth.Author)'
+    description: 'Delete a post (must be author)'
   })
   async deletePost(
     @Arg('postId', () => ID) postId: string,
@@ -96,9 +104,9 @@ export class PostMutations {
     return true
   }
 
-  @Authorized(ServerPermission.VotePost)
+  @UseMiddleware(CheckPostServerPermission(ServerPermission.VotePost))
   @Mutation(() => Boolean, { description: 'Add vote to post' })
-  async votePost(
+  async createPostVote(
     @Arg('postId', () => ID, {
       description: 'ID of post to vote (requires ServerPermission.VotePost)'
     })
@@ -114,9 +122,9 @@ export class PostMutations {
     return true
   }
 
-  @Authorized(ServerPermission.VotePost)
+  @UseMiddleware(CheckPostServerPermission(ServerPermission.VotePost))
   @Mutation(() => Boolean, { description: 'Remove vote from post' })
-  async unvotePost(
+  async removePostVote(
     @Arg('postId', () => ID, {
       description:
         'ID of post to remove vote (requires ServerPermission.VotePost)'
@@ -131,7 +139,7 @@ export class PostMutations {
     return true
   }
 
-  @Authorized(ServerPermission.ManagePosts)
+  @UseMiddleware(CheckPostServerPermission(ServerPermission.ManagePosts))
   @Mutation(() => Boolean, {
     description: 'Remove a post (requires ServerPermission.ManagePosts)'
   })
@@ -152,9 +160,9 @@ export class PostMutations {
     return true
   }
 
-  @Authorized(ServerPermission.ManagePosts)
+  @UseMiddleware(CheckPostServerPermission(ServerPermission.PinPosts))
   @Mutation(() => Boolean, {
-    description: 'Pin a post (requires ServerPermission.ManagePosts)'
+    description: 'Pin a post (requires ServerPermission.PinPosts)'
   })
   async pinPost(
     @Arg('postId', () => ID, { description: 'ID of post to pin' })
@@ -168,9 +176,9 @@ export class PostMutations {
     return true
   }
 
-  @Authorized(ServerPermission.ManagePosts)
+  @UseMiddleware(CheckPostServerPermission(ServerPermission.PinPosts))
   @Mutation(() => Boolean, {
-    description: 'Unpin a post (requires ServerPermission.ManagePosts)'
+    description: 'Unpin a post (requires ServerPermission.PinPosts)'
   })
   async unpinPost(
     @Arg('postId', () => ID, { description: 'ID of post to unpin' })

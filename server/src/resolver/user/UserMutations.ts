@@ -5,11 +5,9 @@ import {
   Ctx,
   ID,
   Mutation,
-  Publisher,
-  Resolver,
-  PubSub
+  Resolver
 } from 'type-graphql'
-import { Context, SubscriptionTopic } from '@/types'
+import { Context } from '@/types'
 import {
   User,
   Folder,
@@ -19,17 +17,15 @@ import {
   ServerUserJoin,
   ChatMessage
 } from '@/entity'
-import { uploadImage, handleUnderscore, Auth, createAccessToken } from '@/util'
+import { uploadImage, handleUnderscore, createAccessToken } from '@/util'
 import isEmail from 'validator/lib/isEmail'
 import * as argon2 from 'argon2'
 import { customAlphabet } from 'nanoid'
 import {
   LoginResponse,
   UpdateUserArgs,
-  UserGroupPayload
+  ChangePasswordArgs
 } from '@/resolver/user'
-import { UserServerPayload } from '@/resolver/server'
-import { ChangePasswordArgs } from '@/resolver/user/types/ChangePasswordArgs'
 
 const tagGenerator = customAlphabet('0123456789', 4)
 
@@ -165,10 +161,10 @@ export class UserMutations {
     return user
   }
 
-  @Authorized(Auth.Admin)
+  @Authorized('ADMIN')
   @Mutation(() => Boolean, {
     description:
-      'Ban user globally and optionally purge all posts, comments, and messages (Requires Auth.Admin)'
+      'Ban user globally and optionally purge all posts, comments, and messages (requires admin)'
   })
   async banUserGlobal(
     @Ctx() { em }: Context,
@@ -222,9 +218,9 @@ export class UserMutations {
     return true
   }
 
-  @Authorized(Auth.Admin)
+  @Authorized('ADMIN')
   @Mutation(() => Boolean, {
-    description: 'Unban a user globally (requires Auth.Admin)'
+    description: 'Unban a user globally (requires admin)'
   })
   async unbanUserGlobal(
     @Arg('userId', () => ID, { description: 'ID of user to unban' })

@@ -19,11 +19,13 @@ export enum ServerPermission {
   SendMessages = 'SEND_MESSAGES',
   EmbedLinks = 'EMBED_LINKS',
   AttachFiles = 'ATTACH_FILES',
+  PinMessages = 'PIN_MESSAGES',
   ManageMessages = 'MANAGE_MESSAGES',
 
   CreatePost = 'CREATE_POST',
   VotePost = 'VOTE_POST',
   ManagePosts = 'MANAGE_POSTS',
+  PinPosts = 'PIN_POSTS',
   ViewPosts = 'VIEW_POSTS',
 
   AddPostsToFolder = 'ADD_POSTS_TO_FOLDER',
@@ -33,6 +35,7 @@ export enum ServerPermission {
   CreateComment = 'CREATE_COMMENT',
   VoteComment = 'VOTE_COMMENT',
   ManageComments = 'MANAGE_COMMENTS',
+  PinComments = 'PIN_COMMENTS',
   ViewComments = 'VIEW_COMMENTS',
 
   DisplayRoleSeparately = 'DISPLAY_ROLE_SEPARATELY'

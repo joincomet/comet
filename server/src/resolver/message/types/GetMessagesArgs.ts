@@ -3,8 +3,17 @@ import { Max, Min } from 'class-validator'
 
 @ArgsType()
 export class GetMessagesArgs {
-  @Field(() => ID)
-  channelId: string
+  @Field(() => ID, { nullable: true })
+  channelId?: string
+
+  @Field(() => ID, { nullable: true })
+  groupId?: string
+
+  @Field(() => ID, { nullable: true })
+  userId?: string
+
+  @Field({ defaultValue: false })
+  pinned: boolean
 
   @Field(() => Int, { defaultValue: 0 })
   @Min(0)
