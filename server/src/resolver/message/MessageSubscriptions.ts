@@ -1,20 +1,26 @@
 import { Authorized, ID, Resolver, Root, Subscription } from 'type-graphql'
-import { ChatMessage } from '@/entity'
-import { SubscriptionFilter, SubscriptionTopic } from '@/types'
-import { ChannelPermission } from '@/types/ChannelPermission'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ChatChannel, ChatMessage } from '@/entity'
+import {
+  SubscriptionFilter,
+  SubscriptionTopic,
+  ChannelPermission,
+  ServerPermission
+} from '@/types'
 
 const filter = async ({
-  payload: { channel },
+  payload: channelId,
   context: { user, em }
 }: SubscriptionFilter<ChatMessage>) => {
-  await em.populate(channel, ['group.users'])
+  const channel = await em.findOneOrFail(ChatChannel, channelId, [
+    'server',
+    'group.users'
+  ])
   return channel.server
     ? user.hasChannelPermission(
         em,
         ChannelPermission.ViewChannel,
         ServerPermission.ViewChannels,
-        channel
+        channel.id
       )
     : channel.group.users.contains(user)
 }

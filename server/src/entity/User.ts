@@ -115,100 +115,99 @@ export class User extends BaseEntity {
   banReason?: string
 
   async isBannedFromServer(
-    server: Server,
+    serverId: string,
     em: EntityManager
   ): Promise<boolean> {
     return Boolean(
-      await em.count(ServerUserBan, { server, user: this, isActive: true })
+      await em.count(ServerUserBan, { server: serverId, user: this })
     )
   }
 
-  async hasJoinedServer(em: EntityManager, server: Server): Promise<boolean> {
+  async hasJoinedServer(em: EntityManager, serverId: string): Promise<boolean> {
     return Boolean(
-      await em.count(ServerUserJoin, { server, user: this, isActive: true })
+      await em.count(ServerUserJoin, { server: serverId, user: this })
     )
   }
 
-  async checkJoinedServer(em: EntityManager, server: Server) {
-    if (!(await this.hasJoinedServer(em, server)))
+  async checkJoinedServer(em: EntityManager, serverId: string) {
+    if (!(await this.hasJoinedServer(em, serverId)))
       throw new Error('You have not joined this server')
   }
 
-  async checkBannedFromServer(em: EntityManager, server: Server) {
-    if (await this.isBannedFromServer(server, em))
+  async checkBannedFromServer(em: EntityManager, serverId: string) {
+    if (await this.isBannedFromServer(serverId, em))
       throw new Error('You are banned from this server')
   }
 
   async banFromServer(
     em: EntityManager,
-    server: Server,
-    userLeftServer: Publisher<UserServerPayload>,
+    refetchUsers: Publisher<string>,
+    serverId: string,
     reason?: string,
-    bannedBy?: User
+    bannedById?: string
   ) {
     const ban = em.create(ServerUserBan, {
       user: this,
-      server,
+      server: serverId,
       reason,
-      bannedBy
+      bannedBy: bannedById
     })
-    await this.leaveServer(em, server, userLeftServer)
+    await this.leaveServer(em, refetchUsers, serverId)
     await em.persistAndFlush(ban)
-    await userLeftServer({ server, user: this })
+    await refetchUsers(this.id)
   }
 
   async unbanFromServer(em: EntityManager, server: Server) {
     const ban = await em.findOneOrFail(ServerUserBan, {
       user: this,
-      server,
-      isActive: true
+      server
     })
-    ban.isActive = false
-    await em.persistAndFlush(ban)
+    await em.remove(ban).flush()
   }
 
   async joinServer(
     em: EntityManager,
-    server: Server,
-    userJoinedServer: Publisher<UserServerPayload>
+    refetchUsers: Publisher<string>,
+    serverId: string
   ) {
     const user = this
-    await user.checkBannedFromServer(em, server)
+    const server = await em.findOneOrFail(Server, serverId)
+    await user.checkBannedFromServer(em, serverId)
     if ((await em.count(ServerUserJoin, { user })) >= 100)
       throw new Error('Cannot join more than 100 servers')
 
     let serverJoin = await em.findOne(ServerUserJoin, {
       server,
-      user,
-      isActive: true
+      user
     })
     if (serverJoin) throw new Error('You have already joined this server')
     serverJoin = em.create(ServerUserJoin, { server, user })
     server.userCount++
     await em.persistAndFlush([server, serverJoin])
-    await userJoinedServer({ server, user })
+    await refetchUsers(this.id)
   }
 
   async leaveServer(
     em: EntityManager,
-    server: Server,
-    userLeftServer: Publisher<UserServerPayload>
+    refetchUsers: Publisher<string>,
+    serverId: string
   ) {
     const user = this
+    const server = await em.findOneOrFail(Server, serverId)
     const join = await em.findOneOrFail(ServerUserJoin, { server, user })
     server.userCount--
-    join.isActive = false
-    await em.persistAndFlush([server, join])
-    await userLeftServer({ server, user })
+    await em.remove(join).persistAndFlush([server, join])
+    await refetchUsers(this.id)
   }
 
   async hasServerPermission(
     em: EntityManager,
     permission: ServerPermission,
-    server: Server
+    serverId: string
   ): Promise<boolean> {
     if (this.isAdmin) return true
-    if (!(await this.hasJoinedServer(em, server))) return false
+    if (!(await this.hasJoinedServer(em, serverId))) return false
+    const server = await em.findOneOrFail(Server, serverId)
     await em.populate(server, ['owner', 'roles'])
     if (server.owner === this) return true
     const serverRoles = server.roles.getItems()
@@ -225,10 +224,10 @@ export class User extends BaseEntity {
   async checkServerPermission(
     em: EntityManager,
     permission: ServerPermission,
-    server: Server
+    serverId: string
   ) {
-    await this.checkJoinedServer(em, server)
-    if (!(await this.hasServerPermission(em, permission, server)))
+    await this.checkJoinedServer(em, serverId)
+    if (!(await this.hasServerPermission(em, permission, serverId)))
       throw new Error(`Missing server permission ${permission}`)
   }
 
@@ -236,13 +235,15 @@ export class User extends BaseEntity {
     em: EntityManager,
     channelPermission: ChannelPermission,
     serverPermission: ServerPermission | null,
-    channel: ChatChannel
+    channelId: string
   ): Promise<boolean> {
     const user = this
     if (user.isAdmin) return true
-    await em.populate(channel, ['server.owner'])
+    const channel = await em.findOneOrFail(ChatChannel, channelId, [
+      'server.owner'
+    ])
     if (channel.server.owner === user) return true
-    if (!(await this.hasJoinedServer(em, channel.server))) return false
+    if (!(await this.hasJoinedServer(em, channel.server.id))) return false
     const roles = await user.roles.matching({
       where: { server: channel.server }
     })
@@ -276,23 +277,24 @@ export class User extends BaseEntity {
     channel: ChatChannel
   ) {
     await em.populate(channel, ['server'])
-    await this.checkJoinedServer(em, channel.server)
+    await this.checkJoinedServer(em, channel.server.id)
     const hasChannelPermission = await this.hasChannelPermission(
       em,
       channelPermission,
       serverPermission,
-      channel
+      channel.id
     )
     if (!hasChannelPermission)
       throw new Error(`Missing channel permission ${channelPermission}`)
   }
 
-  async isInGroup(em: EntityManager, group: ChatGroup) {
+  async isInGroup(em: EntityManager, groupId: string) {
+    const group = await em.findOneOrFail(ChatGroup, groupId)
     return group.users.contains(this)
   }
 
-  async checkInGroup(em: EntityManager, group: ChatGroup) {
-    if (!(await this.isInGroup(em, group)))
+  async checkInGroup(em: EntityManager, groupId: string) {
+    if (!(await this.isInGroup(em, groupId)))
       throw new Error('You are not in this group')
   }
 

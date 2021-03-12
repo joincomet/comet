@@ -10,7 +10,15 @@ import {
   PubSub
 } from 'type-graphql'
 import { Context, SubscriptionTopic } from '@/types'
-import { User, Folder, Post, Comment, UserBlock } from '@/entity'
+import {
+  User,
+  Folder,
+  Post,
+  Comment,
+  UserBlock,
+  ServerUserJoin,
+  ChatMessage
+} from '@/entity'
 import { uploadImage, handleUnderscore, Auth, createAccessToken } from '@/util'
 import isEmail from 'validator/lib/isEmail'
 import * as argon2 from 'argon2'
@@ -21,6 +29,7 @@ import {
   UserGroupPayload
 } from '@/resolver/user'
 import { UserServerPayload } from '@/resolver/server'
+import { ChangePasswordArgs } from '@/resolver/user/types/ChangePasswordArgs'
 
 const tagGenerator = customAlphabet('0123456789', 4)
 
@@ -119,20 +128,28 @@ export class UserMutations {
   }
 
   @Authorized()
-  @Mutation(() => LoginResponse, { description: 'Update user properties' })
+  @Mutation(() => LoginResponse, { description: 'Change password' })
+  async changePassword(
+    @Ctx() { em, user }: Context,
+    @Args() { password, currentPassword }: ChangePasswordArgs
+  ) {
+    const match = await argon2.verify(user.passwordHash, currentPassword)
+    if (!match) throw new Error('Incorrect password')
+    user.passwordHash = await argon2.hash(password)
+    await em.persistAndFlush(user)
+    return {
+      accessToken: createAccessToken(user),
+      user
+    } as LoginResponse
+  }
+
+  @Authorized()
+  @Mutation(() => User, { description: 'Update user properties' })
   async updateUser(
     @Args()
-    { name, email, avatarFile, password, currentPassword }: UpdateUserArgs,
+    { name, email, avatarFile }: UpdateUserArgs,
     @Ctx() { user, em }: Context
   ) {
-    let passwordHash = user.passwordHash
-    if (password) {
-      if (!currentPassword) throw new Error('Must provide current password')
-      const match = await argon2.verify(user.passwordHash, currentPassword)
-      if (!match) throw new Error('Incorrect password')
-      passwordHash = await argon2.hash(password)
-    }
-
     const avatarUrl = avatarFile
       ? await uploadImage(avatarFile, {
           width: 256,
@@ -142,14 +159,10 @@ export class UserMutations {
     em.assign(user, {
       name: name ? name : user.name,
       email: email ? email : user.email,
-      avatarUrl,
-      passwordHash
+      avatarUrl
     })
     await em.persistAndFlush(user)
-    return {
-      accessToken: createAccessToken(user),
-      user
-    } as LoginResponse
+    return user
   }
 
   @Authorized(Auth.Admin)
@@ -169,15 +182,43 @@ export class UserMutations {
     @Arg('reason', { nullable: true, description: 'Reason for ban' })
     reason?: string
   ) {
+    const user = await em.findOneOrFail(User, userId)
     await em
       .createQueryBuilder(User)
       .update({
         isBanned: true,
-        banReason: reason,
-        servers: []
+        banReason: reason
       })
       .where({ id: userId })
       .execute()
+    await em.nativeDelete(ServerUserJoin, { user })
+    if (purge) {
+      await em
+        .createQueryBuilder(Post)
+        .update({
+          isRemoved: true,
+          removedReason: reason
+        })
+        .where({ author: user })
+        .execute()
+
+      await em
+        .createQueryBuilder(Comment)
+        .update({
+          isRemoved: true,
+          removedReason: reason
+        })
+        .where({ author: user })
+        .execute()
+
+      await em
+        .createQueryBuilder(ChatMessage)
+        .update({
+          isRemoved: true
+        })
+        .where({ author: user })
+        .execute()
+    }
     return true
   }
 
@@ -201,81 +242,37 @@ export class UserMutations {
     return true
   }
 
-  @Authorized(Auth.Admin)
-  @Mutation(() => Boolean)
-  async banPurgeUserGlobal(
-    @Arg('bannedId', () => ID) bannedId: string,
-    @Arg('reason') reason: string,
-    @Ctx() { em }: Context,
-    @PubSub(SubscriptionTopic.UserLeftServer)
-    userLeftServer: Publisher<UserServerPayload>,
-    @PubSub(SubscriptionTopic.UserLeftGroup)
-    userLeftGroup: Publisher<UserGroupPayload>
-  ) {
-    const bannedUser = await em.findOne(User, bannedId, ['groups'])
-    em.assign(bannedUser, {
-      banned: true,
-      banReason: reason
-    })
-
-    for (const group of bannedUser.groups) {
-      await userLeftGroup({ group, user: bannedUser })
-    }
-    bannedUser.groups.removeAll()
-
-    const serverJoins = await bannedUser.serverJoins.matching({
-      populate: ['server']
-    })
-    const servers = serverJoins.map(join => join.server)
-    for (const server of servers) {
-      await userLeftServer({ server, user: bannedUser })
-    }
-    bannedUser.serverJoins.removeAll()
-
-    await em.persistAndFlush([bannedUser])
-
-    await em
-      .createQueryBuilder(Post)
-      .update({
-        isRemoved: true,
-        removedReason: reason,
-        isPinned: false,
-        pinPosition: null
-      })
-      .where({ author: bannedUser })
-      .execute()
-
-    await em
-      .createQueryBuilder(Comment)
-      .update({
-        isRemoved: true,
-        removedReason: reason,
-        isPinned: false,
-        pinPosition: null
-      })
-      .where({ author: bannedUser })
-      .execute()
-
-    return true
-  }
-
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: 'Block a user' })
   async blockUser(
     @Ctx() { user, em }: Context,
-    @Arg('userId', () => ID) userId: string
+    @Arg('userId', () => ID, { description: 'ID of user to block' })
+    userId: string
   ) {
     const blockedUser = await em.findOneOrFail(User, userId)
     let block = await em.findOne(UserBlock, {
       user,
-      blockedUser,
-      isActive: false
+      blockedUser
     })
-    if (block) {
-      block.isActive = true
-    } else {
-      block = em.create(UserBlock, { user, blockedUser })
-    }
+    if (block) throw new Error('Already blocking this user')
+    else block = em.create(UserBlock, { user, blockedUser })
     await em.persistAndFlush(block)
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean, { description: 'Unblock a user' })
+  async unblockUser(
+    @Ctx() { user, em }: Context,
+    @Arg('userId', () => ID, { description: 'ID of user to unblock' })
+    userId: string
+  ) {
+    const blockedUser = await em.findOneOrFail(User, userId)
+    const block = await em.findOneOrFail(UserBlock, {
+      user,
+      blockedUser
+    })
+    await em.remove(block).flush()
+    return true
   }
 }

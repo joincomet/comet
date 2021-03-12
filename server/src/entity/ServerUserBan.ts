@@ -1,13 +1,15 @@
-import { Entity, ManyToOne, Property } from '@mikro-orm/core'
-import { BaseEntity, Server, User } from '@/entity'
+import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
+import { Server, User } from '@/entity'
 
 @Entity()
-export class ServerUserBan extends BaseEntity {
-  @ManyToOne({ entity: () => User })
+export class ServerUserBan {
+  @ManyToOne({ entity: () => User, primary: true })
   user: User
 
-  @ManyToOne({ entity: () => Server })
-  server: Server
+  @ManyToOne({ entity: () => Server, primary: true })
+  server: Server;
+
+  [PrimaryKeyType]: [string, string]
 
   @ManyToOne({ entity: () => User })
   bannedBy: User
@@ -15,6 +17,6 @@ export class ServerUserBan extends BaseEntity {
   @Property({ nullable: true })
   reason?: string
 
-  @Property({ default: true })
-  isActive: boolean
+  @Property()
+  createdAt: Date = new Date()
 }

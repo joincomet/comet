@@ -21,12 +21,12 @@ import { ServerPermission } from '@/types/ServerPermission'
 @Resolver()
 export class ServerMutations {
   @Authorized()
-  @Mutation(() => Server)
+  @Mutation(() => Server, { description: 'Create a server' })
   async createServer(
     @Ctx() { user, em }: Context,
     @Args() { name, avatarFile, searchable, category }: CreateServerArgs,
-    @PubSub(SubscriptionTopic.UserJoinedServer)
-    userJoinedServer: Publisher<UserServerPayload>
+    @PubSub(SubscriptionTopic.RefetchUsers)
+    refetchUsers: Publisher<string>
   ): Promise<Server> {
     if ((await em.count(ServerUserJoin, { user })) >= 100)
       throw new Error('Cannot join more than 100 servers')
@@ -54,7 +54,7 @@ export class ServerMutations {
       isSearchable: searchable
     })
     await em.persistAndFlush([server])
-    await user.joinServer(em, server, userJoinedServer)
+    await user.joinServer(em, refetchUsers, server.id)
     return server
   }
 
@@ -64,7 +64,7 @@ export class ServerMutations {
     @Ctx() { em }: Context,
     @Arg('serverId', () => ID) serverId: string,
     @Arg('name') name: string,
-    @PubSub(SubscriptionTopic.ServerUpdated) serverUpdated: Publisher<Server>
+    @PubSub(SubscriptionTopic.RefetchServers) refetchServers: Publisher<Server>
   ) {
     const server = await em.findOne(Server, serverId, ['channels'])
 
@@ -74,7 +74,7 @@ export class ServerMutations {
     })
 
     await em.persistAndFlush([channel, server])
-    await serverUpdated(server)
+    await refetchServers(server)
     return channel
   }
 
@@ -83,14 +83,14 @@ export class ServerMutations {
   async joinPublicServer(
     @Arg('serverId', () => ID) serverId: string,
     @Ctx() { user, em }: Context,
-    @PubSub(SubscriptionTopic.UserJoinedServer)
-    userJoinedServer: Publisher<UserServerPayload>
+    @PubSub(SubscriptionTopic.RefetchUsers)
+    refetchUsers: Publisher<string>
   ) {
     const server = await em.findOneOrFail(Server, serverId)
     if (!server.isSearchable)
       throw new Error('Invite required to join this server')
-    await user.checkBannedFromServer(em, server)
-    await user.joinServer(em, server, userJoinedServer)
+    await user.checkBannedFromServer(em, server.id)
+    await user.joinServer(em, refetchUsers, server.id)
     return true
   }
 
@@ -99,43 +99,62 @@ export class ServerMutations {
   async joinServerWithInvite(
     @Arg('inviteId', () => ID) inviteId: string,
     @Ctx() { user, em }: Context,
-    @PubSub(SubscriptionTopic.UserJoinedServer)
-    userJoinedServer: Publisher<UserServerPayload>
+    @PubSub(SubscriptionTopic.RefetchUsers)
+    refetchUsers: Publisher<string>
   ) {
     const invite = await em.findOneOrFail(ServerInvite, inviteId, ['server'])
     if (invite.expired) throw new Error('This invite has expired.')
     const server = invite.server
-    await user.checkBannedFromServer(em, server)
-    await user.joinServer(em, server, userJoinedServer)
+    await user.checkBannedFromServer(em, server.id)
+    await user.joinServer(em, refetchUsers, server.id)
     return true
   }
 
   @Authorized()
   @Mutation(() => Boolean)
   async leaveServer(
-    @Arg('serverId', () => ID) serverId: string,
+    @Arg('serverId', () => ID, { description: 'ID of server to leave' })
+    serverId: string,
     @Ctx() { user, em }: Context,
-    @PubSub(SubscriptionTopic.UserLeftServer)
-    userLeftServer: Publisher<UserServerPayload>
+    @PubSub(SubscriptionTopic.RefetchUsers)
+    refetchUsers: Publisher<string>
   ) {
-    const server = await em.findOneOrFail(Server, serverId)
-    await user.leaveServer(em, server, userLeftServer)
+    await user.leaveServer(em, refetchUsers, serverId)
     return true
   }
 
   @Authorized(ServerPermission.BanUser)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: 'Ban a user from a server (requires ServerPermission.BanUser)'
+  })
   async banUserFromServer(
     @Ctx() { em, user: currentUser }: Context,
-    @PubSub(SubscriptionTopic.UserLeftServer)
-    userLeftServer: Publisher<UserServerPayload>,
-    @Arg('serverId', () => ID) serverId: string,
-    @Arg('userId', () => ID) userId: string,
+    @PubSub(SubscriptionTopic.RefetchUsers)
+    refetchUsers: Publisher<string>,
+    @Arg('serverId', () => ID, {
+      description: 'ID of server user is being banned from'
+    })
+    serverId: string,
+    @Arg('userId', () => ID, { description: 'ID of user to ban' })
+    userId: string,
+    @Arg('purge', {
+      defaultValue: false,
+      description: 'Remove all posts, comments and messages'
+    })
+    purge: boolean,
     @Arg('reason', { nullable: true }) reason?: string
   ) {
     const server = await em.findOneOrFail(Server, serverId)
-    const user = await em.findOneOrFail(User, userId)
-    await user.banFromServer(em, server, userLeftServer, reason, currentUser)
+    const bannedUser = await em.findOneOrFail(User, userId, [
+      'serverJoins.server'
+    ])
+    await bannedUser.banFromServer(
+      em,
+      refetchUsers,
+      server.id,
+      reason,
+      currentUser.id
+    )
     return true
   }
 

@@ -12,13 +12,6 @@ export class UpdateUserArgs {
   @IsEmail()
   email?: string
 
-  @Field({ nullable: true })
-  @Length(6)
-  password?: string
-
-  @Field({ nullable: true })
-  currentPassword?: string
-
   @Field(() => GraphQLUpload, { nullable: true })
   avatarFile?: FileUpload
 }

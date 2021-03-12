@@ -12,9 +12,6 @@ export class UserFolder {
 
   [PrimaryKeyType]: [string, string]
 
-  @Property({ default: true })
-  isActive: boolean
-
   @Property({ default: Lexico.FIRST_POSITION })
   position: string
 

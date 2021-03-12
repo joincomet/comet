@@ -1,31 +1,17 @@
 export enum SubscriptionTopic {
-  MessageSent = 'MESSAGE_SENT',
-  MessageUpdated = 'MESSAGE_UPDATED',
-  MessageRemoved = 'MESSAGE_REMOVED',
+  MessageSent = 'MESSAGE_SENT', // payload: Message
+  MessageUpdated = 'MESSAGE_UPDATED', // payload: Message
+  MessageRemoved = 'MESSAGE_REMOVED', // payload: messageId
 
-  GroupAdded = 'GROUP_ADDED',
-  GroupUpdated = 'GROUP_UPDATED',
-  UserLeftGroup = 'USER_LEFT_GROUP',
-  UserAddedToGroup = 'USER_ADDED_TO_GROUP',
-
-  ServerUpdated = 'SERVER_UPDATED',
-  ServerDeleted = 'SERVER_DELETED',
-
-  UserJoinedServer = 'USER_JOINED_SERVER',
-  UserLeftServer = 'USER_LEFT_SERVER',
-  UserUpdated = 'USER_UPDATED',
-
-  FriendRequestReceived = 'FRIEND_REQUEST_RECEIVED',
-  FriendRequestSent = 'FRIEND_REQUEST_SENT',
-  FriendRequestRemoved = 'FRIEND_REQUEST_REMOVED',
-  FriendAdded = 'FRIEND_ADDED',
-  FriendRemoved = 'FRIEND_REMOVED',
-
-  NotificationReceived = 'NOTIFICATION_RECEIVED',
-  NotificationRemoved = 'NOTIFICATION_REMOVED',
-  NotificationRead = 'NOTIFICATION_READ',
-  NotificationReadAll = 'NOTIFICATION_READ_ALL',
-
-  FolderUpdated = 'FOLDER_UPDATED',
-  FolderDeleted = 'FOLDER_DELETED'
+  RefetchGroupsAndDms = 'REFETCH_GROUPS_DMS', // payload: userId
+  RefetchUsers = 'REFETCH_USERS', // payload: userId
+  RefetchServers = 'REFETCH_SERVERS', // payload: userId
+  RefetchServersServerRemoved = 'REFETCH_SERVERS_SERVER_REMOVED', // payload: userId
+  RefetchChannels = 'REFETCH_CHANNELS', // payload: serverId
+  RefetchBlocks = 'REFETCH_BLOCKS', // payload: userId
+  RefetchFriends = 'REFETCH_FRIENDS', // payload: userId
+  RefetchFriendRequests = 'REFETCH_FRIEND_REQUESTS', // payload: userId
+  RefetchNotifications = 'REFETCH_NOTIFICATIONS', // payload: userId
+  RefetchUserFolders = 'REFETCH_USER_FOLDERS', // payload: userId
+  RefetchServerFolders = 'REFETCH_SERVER_FOLDERS' // payload: serverId
 }

@@ -1,56 +1,21 @@
-import { ID, Resolver, Root, Subscription } from 'type-graphql'
-import { User } from '@/entity'
-import { SubscriptionTopic, SubscriberPayload } from '@/types'
-import { subscriberFilter as filter } from '@/util'
+import { Resolver, Subscription } from 'type-graphql'
+import { SubscriptionTopic } from '@/types'
 
 @Resolver()
 export class FriendSubscriptions {
-  @Subscription(() => User, {
-    topics: SubscriptionTopic.FriendRequestSent,
-    filter,
-    description: 'Published to current user when a friend request is sent'
+  @Subscription({
+    topics: SubscriptionTopic.RefetchFriends,
+    filter: ({ payload: userId, context: { user } }) => userId === user.id
   })
-  friendRequestSent(@Root() { payload: user }: SubscriberPayload<User>) {
-    return user
+  refetchFriends() {
+    return true
   }
 
-  @Subscription(() => User, {
-    topics: SubscriptionTopic.FriendRequestReceived,
-    filter,
-    description:
-      'Published to requested friend when a friend request is received'
+  @Subscription({
+    topics: SubscriptionTopic.RefetchFriendRequests,
+    filter: ({ payload: userId, context: { user } }) => userId === user.id
   })
-  friendRequestReceived(@Root() { payload: user }: SubscriberPayload<User>) {
-    return user
-  }
-
-  @Subscription(() => ID, {
-    topics: SubscriptionTopic.FriendRequestRemoved,
-    filter,
-    description:
-      'Published to current user and requested friend when a friend request is ignored, accepted, or revoked'
-  })
-  friendRequestRemoved(@Root() { payload: userId }: SubscriberPayload<string>) {
-    return userId
-  }
-
-  @Subscription(() => User, {
-    topics: SubscriptionTopic.FriendAdded,
-    filter,
-    description:
-      'Published to current user and friend when a friend request is accepted'
-  })
-  friendAdded(@Root() { payload: friend }: SubscriberPayload<User>) {
-    return friend
-  }
-
-  @Subscription(() => ID, {
-    topics: SubscriptionTopic.FriendRemoved,
-    filter,
-    description:
-      'Published to current user and ex-friend when a friend is removed'
-  })
-  friendRemoved(@Root() { payload: friendId }: SubscriberPayload<string>) {
-    return friendId
+  refetchFriendRequests() {
+    return true
   }
 }

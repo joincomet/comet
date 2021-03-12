@@ -25,16 +25,14 @@ export class FriendMutations {
       description: 'ID of user who will receive friend request'
     })
     toUserId: string,
-    @PubSub(SubscriptionTopic.FriendRequestReceived)
-    friendRequestReceived: Publisher<SubscriberPayload<User>>,
-    @PubSub(SubscriptionTopic.FriendRequestSent)
-    friendRequestSent: Publisher<SubscriberPayload<User>>
+    @PubSub(SubscriptionTopic.RefetchFriendRequests)
+    refetchFriendRequests: Publisher<string>
   ) {
     const toUser = await em.findOneOrFail(User, toUserId)
     const fr = em.create(FriendRequest, { fromUser: user, toUser })
     await em.persistAndFlush(fr)
-    await friendRequestReceived({ subscriberId: toUser.id, payload: user })
-    await friendRequestSent({ subscriberId: user.id, payload: toUser })
+    await refetchFriendRequests(user.id)
+    await refetchFriendRequests(toUser.id)
   }
 
   @Authorized()
@@ -47,21 +45,15 @@ export class FriendMutations {
       description: 'ID of user whose friend request will be revoked'
     })
     toUserId: string,
-    @PubSub(SubscriptionTopic.FriendRequestRemoved)
-    friendRequestRemoved: Publisher<SubscriberPayload<string>>
+    @PubSub(SubscriptionTopic.RefetchFriendRequests)
+    refetchFriendRequests: Publisher<string>
   ) {
     const toUser = await em.findOneOrFail(User, toUserId)
     const fr = await em.findOneOrFail(FriendRequest, { fromUser: user, toUser })
     fr.status = FriendRequestStatus.Revoked
     await em.persistAndFlush(fr)
-    await friendRequestRemoved({
-      subscriberId: user.id,
-      payload: toUser.id
-    })
-    await friendRequestRemoved({
-      subscriberId: toUser.id,
-      payload: user.id
-    })
+    await refetchFriendRequests(user.id)
+    await refetchFriendRequests(toUser.id)
   }
 
   @Authorized()
@@ -72,8 +64,8 @@ export class FriendMutations {
       description: 'ID of user whose friend request will be ignored'
     })
     fromUserId: string,
-    @PubSub(SubscriptionTopic.FriendRequestRemoved)
-    friendRequestRemoved: Publisher<SubscriberPayload<string>>
+    @PubSub(SubscriptionTopic.RefetchFriendRequests)
+    refetchFriendRequests: Publisher<string>
   ) {
     const fromUser = await em.findOneOrFail(User, fromUserId)
     const fr = await em.findOneOrFail(FriendRequest, {
@@ -82,14 +74,8 @@ export class FriendMutations {
     })
     fr.status = FriendRequestStatus.Ignored
     await em.persistAndFlush(fr)
-    await friendRequestRemoved({
-      subscriberId: currentUser.id,
-      payload: fromUser.id
-    })
-    await friendRequestRemoved({
-      subscriberId: fromUser.id,
-      payload: currentUser.id
-    })
+    await refetchFriendRequests(currentUser.id)
+    await refetchFriendRequests(fromUser.id)
   }
 
   @Authorized()
@@ -100,10 +86,10 @@ export class FriendMutations {
       description: 'ID of user whose friend request will be accepted'
     })
     fromUserId: string,
-    @PubSub(SubscriptionTopic.FriendAdded)
-    friendAdded: Publisher<SubscriberPayload<User>>,
-    @PubSub(SubscriptionTopic.FriendRequestRemoved)
-    friendRequestRemoved: Publisher<SubscriberPayload<string>>
+    @PubSub(SubscriptionTopic.RefetchFriendRequests)
+    refetchFriendRequests: Publisher<string>,
+    @PubSub(SubscriptionTopic.RefetchFriends)
+    refetchFriends: Publisher<string>
   ) {
     const fromUser = await em.findOneOrFail(User, fromUserId)
     const fr = await em.findOneOrFail(FriendRequest, {
@@ -112,24 +98,20 @@ export class FriendMutations {
     })
     fr.status = FriendRequestStatus.Accepted
 
-    await friendRequestRemoved({
-      subscriberId: fromUserId,
-      payload: user.id
-    })
-    await friendRequestRemoved({
-      subscriberId: user.id,
-      payload: fromUser.id
-    })
-
     const friendRel = em.create(FriendRelationship, {
       user1: fromUser,
       user2: user
     })
 
-    await friendAdded({ subscriberId: user.id, payload: fromUser })
-    await friendAdded({ subscriberId: fromUser.id, payload: user })
-
     await em.persistAndFlush([fr, friendRel])
+
+    await refetchFriendRequests(fromUser.id)
+    await refetchFriendRequests(user.id)
+
+    await refetchFriends(fromUser.id)
+    await refetchFriends(user.id)
+
+    return true
   }
 
   @Authorized()
@@ -138,8 +120,8 @@ export class FriendMutations {
     @Ctx() { user, em }: Context,
     @Arg('friendId', () => ID, { description: 'ID of friend to remove' })
     friendId: string,
-    @PubSub(SubscriptionTopic.FriendRemoved)
-    friendRemoved: Publisher<SubscriberPayload<string>>
+    @PubSub(SubscriptionTopic.RefetchFriends)
+    refetchFriends: Publisher<string>
   ) {
     const friend = await em.findOneOrFail(User, friendId)
     const friendRel = await em.findOneOrFail(FriendRelationship, {
@@ -151,7 +133,7 @@ export class FriendMutations {
     em.remove(friendRel)
     await em.flush()
 
-    await friendRemoved({ subscriberId: user.id, payload: friend.id })
-    await friendRemoved({ subscriberId: friend.id, payload: user.id })
+    await refetchFriends(user.id)
+    await refetchFriends(friend.id)
   }
 }

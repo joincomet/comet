@@ -21,7 +21,8 @@ export class GroupMutations {
   async createGroup(
     @Ctx() { user, em }: Context,
     @Arg('usernames', () => [String]) usernames: string[],
-    @PubSub(SubscriptionTopic.GroupAdded) groupAdded: Publisher<ChatGroup>
+    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
+    refetchGroupsAndDms: Publisher<string>
   ) {
     if (usernames.length > 9) throw new Error('Max group size is 10 users')
     const users = [user]
@@ -36,7 +37,7 @@ export class GroupMutations {
       group
     })
     await em.persistAndFlush([group, channel])
-    await groupAdded(group)
+    for (const u of users) await refetchGroupsAndDms(u.id)
     return true
   }
 
@@ -46,23 +47,26 @@ export class GroupMutations {
     @Ctx() { user, em }: Context,
     @Arg('groupId', () => ID, { description: 'ID of group to leave' })
     groupId: string,
-    @PubSub(SubscriptionTopic.UserLeftGroup)
-    userLeftGroup: Publisher<{ userId: string; groupId: string }>
+    @PubSub(SubscriptionTopic.RefetchUsers)
+    refetchUsers: Publisher<string>,
+    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
+    refetchGroupsAndDms: Publisher<string>
   ) {
     const group = await em.findOneOrFail(ChatGroup, groupId, ['users'])
     group.users.remove(user)
     if (group.owner === user) group.owner = group.users.getItems()[0]
     await em.persistAndFlush(group)
-    await userLeftGroup({ userId: user.id, groupId: group.id })
+    await refetchUsers(user.id)
+    await refetchGroupsAndDms(user.id)
     return true
   }
 
   @Authorized(Auth.GroupOwner)
   @Mutation(() => Boolean, { description: 'Rename a group' })
   async renameGroup(
-    @Ctx() { user, em }: Context,
-    @PubSub(SubscriptionTopic.UserLeftGroup)
-    groupUpdated: Publisher<ChatGroup>,
+    @Ctx() { em, user }: Context,
+    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
+    refetchGroupsAndDms: Publisher<string>,
     @Arg('groupId', () => ID, { description: 'ID of group to rename' })
     groupId: string,
     @Arg('name', {
@@ -75,16 +79,16 @@ export class GroupMutations {
     const group = await em.findOneOrFail(ChatGroup, groupId, ['users'])
     group.name = name
     await em.persistAndFlush(group)
-    await groupUpdated(group)
+    await refetchGroupsAndDms(user.id)
     return true
   }
 
   @Authorized(Auth.GroupOwner)
   @Mutation(() => Boolean, { description: 'Change avatar image of group' })
   async changeGroupAvatar(
-    @Ctx() { em }: Context,
-    @PubSub(SubscriptionTopic.UserLeftGroup)
-    groupUpdated: Publisher<ChatGroup>,
+    @Ctx() { em, user }: Context,
+    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
+    refetchGroupsAndDms: Publisher<string>,
     @Arg('groupId', () => ID, { description: 'ID of group to update' })
     groupId: string,
     @Arg('avatarFile', () => GraphQLUpload, {
@@ -101,7 +105,7 @@ export class GroupMutations {
         })
       : null
     await em.persistAndFlush(group)
-    await groupUpdated(group)
+    await refetchGroupsAndDms(user.id)
     return true
   }
 }

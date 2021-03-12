@@ -8,16 +8,15 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { ChatMessage, ChatChannel, User, ChatGroup } from '@/entity'
+import { ChatMessage, ChatChannel } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { scrapeMetadata } from '@/util/metascraper'
-import { SubscriptionTopic, Context, ChannelPermission } from '@/types'
-import { ServerUserJoin } from '@/entity/ServerUserJoin'
-import { ServerPermission } from '@/types/ServerPermission'
-import { Auth } from '@/util/auth'
-import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { uploadImage } from '@/util/s3'
-import { DirectMessage } from '@/entity/DirectMessage'
+import {
+  SubscriptionTopic,
+  Context,
+  ChannelPermission,
+  ServerPermission
+} from '@/types'
 
 @Resolver()
 export class MessageMutations {
@@ -40,8 +39,8 @@ export class MessageMutations {
       'dm',
       'server'
     ])
-    if (channel.group) await user.checkInGroup(em, channel.group)
-    else if (channel.server) await user.checkJoinedServer(em, channel.server)
+    if (channel.group) await user.checkInGroup(em, channel.group.id)
+    else if (channel.server) await user.checkJoinedServer(em, channel.server.id)
     else if (channel.directMessage)
       await user.checkInDM(em, channel.directMessage)
     else throw new Error('Channel does not have a group, server, nor DM')

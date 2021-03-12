@@ -11,9 +11,6 @@ export class CommentVote {
 
   [PrimaryKeyType]: [string, string]
 
-  @Property({ default: true })
-  isActive: boolean
-
   @Property()
   createdAt: Date = new Date()
 }

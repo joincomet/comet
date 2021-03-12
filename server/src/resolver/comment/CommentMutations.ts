@@ -134,9 +134,8 @@ export class CommentMutations {
   ) {
     const comment = await em.findOneOrFail(Comment, commentId)
     const vote = await em.findOneOrFail(CommentVote, { user, comment })
-    vote.isActive = false
     comment.voteCount--
-    await em.persistAndFlush([comment, vote])
+    await em.remove(vote).persistAndFlush([comment, vote])
     return true
   }
 

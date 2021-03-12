@@ -1,13 +1,9 @@
 import { SubscriptionFilter } from '@/types'
 import { SubscriberPayload } from '@/types/subscriptions/SubscriberPayload'
 
-type funcType<TPayload = any> = (
-  filter: SubscriptionFilter<TPayload>
-) => Promise<boolean> | boolean
-
 export function createFilter<TPayload = any>(
-  func: funcType<TPayload>
-): funcType<TPayload> {
+  func: (filter: SubscriptionFilter<TPayload>) => Promise<boolean> | boolean
+): (filter: SubscriptionFilter<TPayload>) => Promise<boolean> | boolean {
   return func
 }
 

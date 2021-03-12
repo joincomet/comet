@@ -1,5 +1,5 @@
 import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { BaseEntity, Post, User } from '@/entity'
+import { User } from '@/entity'
 
 @Entity()
 export class UserBlock {
@@ -18,9 +18,6 @@ export class UserBlock {
   blockedUser: User;
 
   [PrimaryKeyType]: [string, string]
-
-  @Property({ default: true })
-  isActive: boolean
 
   @Property()
   createdAt: Date = new Date()

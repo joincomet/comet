@@ -126,9 +126,8 @@ export class PostMutations {
   ) {
     const post = await em.findOneOrFail(Post, postId)
     const vote = await em.findOneOrFail(PostVote, { user, post })
-    vote.isActive = false
     post.voteCount--
-    await em.persistAndFlush([post, vote])
+    await em.remove(vote).persistAndFlush([post, vote])
     return true
   }
 

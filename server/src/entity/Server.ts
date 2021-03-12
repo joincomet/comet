@@ -2,7 +2,6 @@ import { Field, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
   ChatChannel,
-  Folder,
   Post,
   ServerFolder,
   ServerInvite,
