@@ -1,4 +1,13 @@
-import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Args,
+  Authorized,
+  Ctx,
+  ID,
+  Query,
+  Resolver,
+  UseMiddleware
+} from 'type-graphql'
 import { Post, LinkMetadata, ServerUserJoin } from '@/entity'
 import {
   GetPostsArgs,
@@ -7,13 +16,13 @@ import {
   GetPostsResponse
 } from '@/resolver/post'
 import { Context } from '@/types'
-import { scrapeMetadata, Auth } from '@/util'
+import { scrapeMetadata, CheckServerPermission } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 import { ServerPermission } from '@/types'
 
 @Resolver(() => Post)
 export class PostQueries {
-  @Authorized(ServerPermission.ViewPosts)
+  @UseMiddleware(CheckServerPermission(ServerPermission.ViewPosts))
   @Query(() => GetPostsResponse, {
     description:
       'Get posts (requires ServerPermission.ViewPosts if serverId is provided)'
@@ -74,26 +83,16 @@ export class PostQueries {
     } as GetPostsResponse
   }
 
-  @Authorized(ServerPermission.ViewPosts)
+  @UseMiddleware(CheckServerPermission(ServerPermission.ViewPosts))
   @Query(() => Post, {
     description: 'Get a specific post (requires ServerPermission.ViewPosts)'
   })
   async getPost(
     @Arg('postId', () => ID, { description: 'ID of post to retrieve' })
     postId: string,
-    @Ctx() { user, em }: Context
+    @Ctx() { em }: Context
   ) {
     const post = await em.findOneOrFail(Post, postId, ['server', 'author'])
-
-    if (!post) return null
-
-    if (
-      !post.server.isSearchable &&
-      !(await user.hasJoinedServer(em, post.server))
-    )
-      throw new Error(
-        'This post is in a private server that you have not joined!'
-      )
 
     if (post.isDeleted) {
       post.author = null
@@ -108,9 +107,9 @@ export class PostQueries {
     return post
   }
 
-  @Authorized(Auth.Admin)
+  @Authorized('ADMIN')
   @Query(() => LinkMetadata, {
-    description: 'Get LinkMetadata for a URL (requires Auth.Admin)',
+    description: 'Get LinkMetadata for a URL (requires admin)',
     deprecationReason: 'For testing only'
   })
   async getUrlEmbed(@Arg('url') url: string) {

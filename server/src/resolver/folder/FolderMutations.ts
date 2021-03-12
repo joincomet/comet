@@ -1,12 +1,21 @@
-import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  ID,
+  Mutation,
+  Resolver,
+  UseMiddleware
+} from 'type-graphql'
 import { Context } from '@/types'
 import { Folder, Post } from '@/entity'
 import { handleUnderscore } from '@/util/text'
 import { ServerPermission } from '@/types/ServerPermission'
+import { CheckPostServerPermission } from '@/util'
 
 @Resolver()
 export class FolderMutations {
-  @Authorized(ServerPermission.ManagePosts)
+  @UseMiddleware(CheckPostServerPermission(ServerPermission.AddPostsToFolder))
   @Mutation(() => Boolean)
   async addPostToFolder(
     @Arg('postId', () => ID) postId: string,
@@ -24,7 +33,7 @@ export class FolderMutations {
     return true
   }
 
-  @Authorized(ServerPermission.ManagePosts)
+  @UseMiddleware(CheckPostServerPermission(ServerPermission.AddPostsToFolder))
   @Mutation(() => Boolean)
   async removePostFromFolder(
     @Arg('postId', () => ID) postId: string,

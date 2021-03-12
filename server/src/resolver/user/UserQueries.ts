@@ -21,9 +21,12 @@ export class UserQueries {
     if (!user) {
       return null
     }
+
+    if (user.isBanned)
+      throw new Error(`Banned${user.banReason ? `: ${user.banReason}` : ''}`)
+
     user.lastLogin = new Date()
     await em.persistAndFlush(user)
-
     return user
   }
 

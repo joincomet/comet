@@ -1,4 +1,4 @@
-export * from './Auth'
-export * from './authChecker'
+export * from './middlewares'
+
 export * from './createAccessToken'
 export * from './getUserId'

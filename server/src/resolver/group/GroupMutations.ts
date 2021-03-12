@@ -6,13 +6,14 @@ import {
   Mutation,
   Publisher,
   PubSub,
-  Resolver
+  Resolver,
+  UseMiddleware
 } from 'type-graphql'
 import { Context, SubscriptionTopic } from '@/types'
 import { ChatChannel, ChatGroup, User } from '@/entity'
-import { Auth } from '@/util/auth/Auth'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { uploadImage } from '@/util/s3'
+import { CheckGroupMember } from '@/util'
 
 @Resolver()
 export class GroupMutations {
@@ -41,7 +42,7 @@ export class GroupMutations {
     return true
   }
 
-  @Authorized(Auth.Group)
+  @UseMiddleware(CheckGroupMember)
   @Mutation(() => Boolean, { description: 'Leave a group' })
   async leaveGroup(
     @Ctx() { user, em }: Context,
@@ -61,7 +62,7 @@ export class GroupMutations {
     return true
   }
 
-  @Authorized(Auth.GroupOwner)
+  @UseMiddleware(CheckGroupMember)
   @Mutation(() => Boolean, { description: 'Rename a group' })
   async renameGroup(
     @Ctx() { em, user }: Context,
@@ -83,7 +84,7 @@ export class GroupMutations {
     return true
   }
 
-  @Authorized(Auth.GroupOwner)
+  @UseMiddleware(CheckGroupMember)
   @Mutation(() => Boolean, { description: 'Change avatar image of group' })
   async changeGroupAvatar(
     @Ctx() { em, user }: Context,

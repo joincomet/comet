@@ -5,7 +5,7 @@ import { SubscriptionTopic } from '@/types'
 @Resolver(() => Server)
 export class ServerSubscriptions {
   @Authorized()
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchServers,
     filter: ({ payload: userId, context: { user } }) => userId === user.id
   })
@@ -14,7 +14,7 @@ export class ServerSubscriptions {
   }
 
   @Authorized()
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchServersServerRemoved,
     filter: ({ payload: serverId, context: { user, em } }) =>
       user.hasJoinedServer(em, serverId)

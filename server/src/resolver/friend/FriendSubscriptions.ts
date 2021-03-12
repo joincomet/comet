@@ -3,7 +3,7 @@ import { SubscriptionTopic } from '@/types'
 
 @Resolver()
 export class FriendSubscriptions {
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchFriends,
     filter: ({ payload: userId, context: { user } }) => userId === user.id
   })
@@ -11,7 +11,7 @@ export class FriendSubscriptions {
     return true
   }
 
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchFriendRequests,
     filter: ({ payload: userId, context: { user } }) => userId === user.id
   })

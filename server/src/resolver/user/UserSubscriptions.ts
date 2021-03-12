@@ -4,7 +4,7 @@ import { SubscriptionFilter, SubscriptionTopic } from '@/types'
 
 @Resolver()
 export class UserSubscriptions {
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchBlocks,
     filter: ({ payload: userId, context: { user } }) => userId === user.id
   })
@@ -12,7 +12,7 @@ export class UserSubscriptions {
     return true
   }
 
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchGroupsAndDms,
     filter: ({ payload: userId, context: { user } }) => userId === user.id
   })
@@ -20,7 +20,7 @@ export class UserSubscriptions {
     return true
   }
 
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchUsers,
     filter: async ({
       payload: userId,

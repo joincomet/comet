@@ -1,53 +1,75 @@
 import {
   Arg,
-  Authorized,
+  Args,
   Ctx,
   ID,
   Mutation,
   Publisher,
   PubSub,
-  Resolver
+  Resolver,
+  UseMiddleware
 } from 'type-graphql'
-import { ChatMessage, ChatChannel } from '@/entity'
+import {
+  ChatChannel,
+  ChatGroup,
+  ChatMessage,
+  DirectMessage,
+  User
+} from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { scrapeMetadata } from '@/util/metascraper'
 import {
-  SubscriptionTopic,
-  Context,
   ChannelPermission,
-  ServerPermission
+  Context,
+  ServerPermission,
+  SubscriptionTopic
 } from '@/types'
+import {
+  CheckChannelPermission,
+  CheckGroupMember,
+  CheckMessageAuthor,
+  CheckMessageChannelPermission,
+  CheckBlock
+} from '@/util'
+import { SendMessageArgs } from '@/resolver/message/types/SendMessageArgs'
 
 @Resolver()
 export class MessageMutations {
-  @Authorized(ServerPermission.SendMessages)
+  @UseMiddleware(
+    CheckChannelPermission(
+      ChannelPermission.SendMessages,
+      ServerPermission.SendMessages
+    ),
+    CheckGroupMember,
+    CheckBlock
+  )
   @Mutation(() => Boolean, { description: 'Create a chat message' })
   async sendMessage(
-    @Arg('text', { description: 'Message text' }) text: string,
-    @Arg('channelId', () => ID, {
-      description: 'ID of channel to send message'
-    })
-    channelId: string,
-    @PubSub(SubscriptionTopic.MessageSent)
+    @Args() { text, channelId, groupId, userId }: SendMessageArgs,
+    @PubSub(SubscriptionTopic.MessageReceived)
     messageCreated: Publisher<ChatMessage>,
     @PubSub(SubscriptionTopic.MessageUpdated)
     messageUpdated: Publisher<ChatMessage>,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
-    const channel = await em.findOneOrFail(ChatChannel, channelId, [
-      'group',
-      'dm',
-      'server'
-    ])
-    if (channel.group) await user.checkInGroup(em, channel.group.id)
-    else if (channel.server) await user.checkJoinedServer(em, channel.server.id)
-    else if (channel.directMessage)
-      await user.checkInDM(em, channel.directMessage)
-    else throw new Error('Channel does not have a group, server, nor DM')
-
+    const channel = channelId
+      ? await em.findOneOrFail(ChatChannel, channelId)
+      : null
+    const group = groupId ? await em.findOneOrFail(ChatGroup, groupId) : null
+    const user2 = userId ? await em.findOneOrFail(User, userId) : null
+    const directMessage = user2
+      ? await em.findOneOrFail(DirectMessage, {
+          $or: [
+            { user1: user, user2 },
+            { user1: user2, user2: user }
+          ]
+        })
+      : null
     const message = em.create(ChatMessage, {
       text,
       channel,
+      group,
+      directMessage,
       author: user
     })
 
@@ -59,7 +81,7 @@ export class MessageMutations {
     return true
   }
 
-  @Authorized(ServerPermission.SendMessages)
+  @UseMiddleware(CheckMessageAuthor)
   @Mutation(() => Boolean)
   async editMessage(
     @Arg('text', { description: 'New message text' }) text: string,
@@ -71,9 +93,6 @@ export class MessageMutations {
   ): Promise<boolean> {
     if (!text) throw new Error('Text cannot be empty')
     const message = await em.findOneOrFail(ChatMessage, messageId)
-    if (message.author !== user)
-      throw new Error('You are not the author of this message')
-
     message.text = text
     await em.persistAndFlush(message)
     await messageUpdated(message)
@@ -83,7 +102,7 @@ export class MessageMutations {
     return true
   }
 
-  @Authorized(ServerPermission.SendMessages)
+  @UseMiddleware(CheckMessageAuthor)
   @Mutation(() => Boolean, { description: 'Delete a message' })
   async deleteMessage(
     @Arg('messageId', () => ID, { description: 'ID of message to delete' })
@@ -93,19 +112,18 @@ export class MessageMutations {
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
     const message = await em.findOneOrFail(ChatMessage, messageId, ['author'])
-    if (message.author.id !== user.id)
-      throw new Error('You are not the author of this message')
-
     message.isDeleted = true
     await em.persistAndFlush(message)
     await messageRemoved(message)
     return true
   }
 
-  @Authorized([
-    ChannelPermission.ManageMessages,
-    ServerPermission.ManageMessages
-  ])
+  @UseMiddleware(
+    CheckMessageChannelPermission(
+      ChannelPermission.ManageMessages,
+      ServerPermission.ManageMessages
+    )
+  )
   @Mutation(() => Boolean, {
     description:
       'Remove a message (requires ChannelPermission.ManageMessages or ServerPermission.ManageMessages)'
@@ -117,7 +135,7 @@ export class MessageMutations {
     messageRemoved: Publisher<ChatMessage>,
     @Ctx() { em }: Context
   ): Promise<boolean> {
-    const message = await em.findOneOrFail(ChatMessage, messageId, ['author'])
+    const message = await em.findOneOrFail(ChatMessage, messageId)
     message.isDeleted = true
     await em.persistAndFlush(message)
     await messageRemoved(message)

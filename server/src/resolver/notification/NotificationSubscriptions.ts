@@ -3,7 +3,7 @@ import { SubscriptionTopic } from '@/types'
 
 @Resolver()
 export class NotificationSubscriptions {
-  @Subscription({
+  @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchNotifications,
     filter: ({ payload: userId, context: { user } }) => userId === user.id
   })

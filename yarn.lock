@@ -3275,10 +3275,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.33":
-  version: 14.14.33
-  resolution: "@types/node@npm:14.14.33"
-  checksum: f269fc728f6547345e000a0d86e1be802b475bb6759493208d7bc1cf8d49e838d3952ae54b8c7cd2ce168f9ef50c30e0d7084064a5f98db87efc833a38d955af
+"@types/node@npm:^14.14.34":
+  version: 14.14.34
+  resolution: "@types/node@npm:14.14.34"
+  checksum: 74db0d80ad997c3ca2597abe1c63c85e87c32e06b4e8c8392a24a11ad00a4567b293a72bbdf49ace201150b420a943609181771cab034cef10fe65272d452718
   languageName: node
   linkType: hard
 
@@ -4683,9 +4683,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.862.0":
-  version: 2.862.0
-  resolution: "aws-sdk@npm:2.862.0"
+"aws-sdk@npm:^2.863.0":
+  version: 2.863.0
+  resolution: "aws-sdk@npm:2.863.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4696,7 +4696,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: bdc96bbcd4ece04cc13703499849d0899945e6039ca274c8dc2d898893cf7d96d69f9f8a73d70ae2138d957f822eded3393fa1f9b4049ddd95202465cef464a1
+  checksum: 7182af2450035d513ffab3acd74506a16e9557894d7e145c28d58c775ec9efeee8a59125a377aff939069e2a230ec2ba577efc5ff7522e3236c3404393d58696
   languageName: node
   linkType: hard
 
@@ -7754,9 +7754,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^3.10.2":
-  version: 3.10.2
-  resolution: "framer-motion@npm:3.10.2"
+"framer-motion@npm:^3.10.3":
+  version: 3.10.3
+  resolution: "framer-motion@npm:3.10.3"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     framesync: 5.2.0
@@ -7770,7 +7770,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: e555d15a4eb9f29b82a5774eeb59aa20d46cfd989c64f93c2be64b07fbc0b28fedfa52843bbdce5bf8719a0f9b53460a82825abde655ff0949b0f9c1e077fce8
+  checksum: 4b71f5c42879d8e901792245c31739bf3fc9ec08b12d450266e25c417651dac3c619a5ad4111381064ba6048aa6f8a4591e19f33c29f40234a013bbe0c6570a9
   languageName: node
   linkType: hard
 
@@ -13895,13 +13895,13 @@ fsevents@~2.3.1:
     "@types/graphql-upload": ^8.0.4
     "@types/jsonwebtoken": ^8.5.0
     "@types/mime": ^2.0.3
-    "@types/node": ^14.14.33
+    "@types/node": ^14.14.34
     "@types/sharp": ^0.27.1
     "@typescript-eslint/eslint-plugin": ^4.17.0
     "@typescript-eslint/parser": ^4.17.0
     apollo-server-express: ^2.21.1
     argon2: ^0.27.1
-    aws-sdk: ^2.862.0
+    aws-sdk: ^2.863.0
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
@@ -15942,7 +15942,7 @@ typescript@^4.2.3:
     "@tailwindcss/line-clamp": ^0.2.0
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.4
-    "@types/node": ^14.14.33
+    "@types/node": ^14.14.34
     "@types/react": ^17.0.3
     "@types/react-dom": ^17.0.2
     "@types/react-router-dom": ^5.1.7
@@ -15967,7 +15967,7 @@ typescript@^4.2.3:
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
     eslint-plugin-react: ^7.22.0
-    framer-motion: ^3.10.2
+    framer-motion: ^3.10.3
     fuse.js: ^6.4.6
     graphql: ^15.5.0
     graphql-tag: ^2.11.0

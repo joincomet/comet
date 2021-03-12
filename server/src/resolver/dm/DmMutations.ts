@@ -22,9 +22,7 @@ export class DmMutations {
       user1: user,
       user2
     })
-    const channel = em.create(ChatChannel, { directMessage: dm })
-    dm.channel = channel
-    await em.persistAndFlush([dm, channel])
+    await em.persistAndFlush(dm)
     return true
   }
 
@@ -41,7 +39,7 @@ export class DmMutations {
         { user1: user2, user2: user }
       ]
     })
-    if (!dm) return true
+    if (!dm) throw new Error('You do not have a DM with that user')
 
     if (dm.user1 === user) dm.isHiddenByUser1 = true
     else if (dm.user2 === user) dm.isHiddenByUser2 = true

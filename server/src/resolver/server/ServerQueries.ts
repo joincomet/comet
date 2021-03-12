@@ -1,4 +1,13 @@
-import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Args,
+  Authorized,
+  Ctx,
+  ID,
+  Query,
+  Resolver,
+  UseMiddleware
+} from 'type-graphql'
 import { ChatChannel, Server } from '@/entity'
 import {
   ChannelUsersResponse,
@@ -10,6 +19,7 @@ import { QueryOrder } from '@mikro-orm/core'
 import { Context } from '@/types'
 import { ServerPermission } from '@/types/ServerPermission'
 import { ChannelPermission } from '@/types/ChannelPermission'
+import { CheckChannelPermission } from '@/util'
 
 @Resolver(() => Server)
 export class ServerQueries {
@@ -65,10 +75,15 @@ export class ServerQueries {
     return joins.getItems().map(join => join.server)
   }
 
-  @Authorized([ChannelPermission.ViewChannel, ServerPermission.ViewChannels])
+  @UseMiddleware(
+    CheckChannelPermission(
+      ChannelPermission.ViewChannel,
+      ServerPermission.ViewChannels
+    )
+  )
   @Query(() => [ChannelUsersResponse])
   async getChannelUsers(
-    @Ctx() { user, em }: Context,
+    @Ctx() { em }: Context,
     @Arg('channelId', () => ID) channelId: string
   ) {
     const channel = await em.findOneOrFail(ChatChannel, channelId, [
