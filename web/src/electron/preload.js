@@ -1,8 +1,6 @@
-const {
-  contextBridge,
-  globalShortcut,
-  remote: { getCurrentWindow, Notification }
-} = require('electron')
+const { contextBridge } = require('electron')
+
+const { getCurrentWindow, Notification } = require('@electron/remote')
 
 contextBridge.exposeInMainWorld('electron', {
   minimize: () => getCurrentWindow().minimize(),

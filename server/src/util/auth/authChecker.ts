@@ -11,6 +11,7 @@ import {
 } from '@/entity'
 import { ServerPermission } from '@/types/ServerPermission'
 import { ChannelPermission } from '@/types/ChannelPermission'
+import { Auth } from '@/util/auth/Auth'
 
 /*
 @Authorized(): must be logged in
@@ -23,14 +24,6 @@ import { ChannelPermission } from '@/types/ChannelPermission'
 @Authorized([ChannelPermission.Perm, ServerPermission.Perm]): must have given ChannelPermission or ServerPermission
  */
 
-export enum Auth {
-  Admin = 'ADMIN',
-  User = 'USER',
-  Author = 'AUTHOR',
-  Owner = 'OWNER',
-  Group = 'GROUP'
-}
-
 export const authChecker: AuthChecker<Context> = async (
   {
     root,
@@ -42,9 +35,9 @@ export const authChecker: AuthChecker<Context> = async (
   if (!user) return false
   if (!roles || roles.length === 0) return true
 
-  if (user.admin) return true
+  if (user.isAdmin) return true
 
-  if (roles[0] === Auth.Admin) return user.admin
+  if (roles[0] === Auth.Admin) return user.isAdmin
 
   if (roles[0] === Auth.User) {
     if (!root || !(root instanceof User))
@@ -75,19 +68,22 @@ export const authChecker: AuthChecker<Context> = async (
     }
   }
 
-  if (roles[0] === Auth.Owner) {
-    if (!serverId && !groupId)
+  if (roles[0] === Auth.GroupOwner) {
+    if (!groupId)
       throw new Error(
-        `'${Auth.Owner}' authorization must be used with serverId or groupId`
+        `'${Auth.GroupOwner}' authorization must be used with groupId`
       )
+    const group = await em.findOneOrFail(ChatGroup, groupId)
+    return group.owner === user
+  }
 
-    if (serverId) {
-      const server = await em.findOneOrFail(Server, serverId)
-      return server.owner === user
-    } else if (groupId) {
-      const group = await em.findOneOrFail(ChatGroup, groupId)
-      return group.owner === user
-    } else return false
+  if (roles[0] === Auth.ServerOwner) {
+    if (!groupId)
+      throw new Error(
+        `'${Auth.ServerOwner}' authorization must be used with serverId`
+      )
+    const server = await em.findOneOrFail(Server, serverId)
+    return server.owner === user
   }
 
   if (roles[0] === Auth.Group) {
@@ -120,16 +116,32 @@ export const authChecker: AuthChecker<Context> = async (
       )
 
     let channel
-    if (channelId) channel = await em.findOneOrFail(ChatChannel, channelId)
+    if (channelId)
+      channel = await em.findOneOrFail(ChatChannel, channelId, [
+        'channel.group',
+        'channel.directMessage',
+        'channel.server'
+      ])
     else if (messageId)
-      channel = (await em.findOneOrFail(ChatMessage, messageId)).channel
+      channel = (
+        await em.findOneOrFail(ChatMessage, messageId, [
+          'channel.group',
+          'channel.directMessage',
+          'channel.server'
+        ])
+      ).channel
     else return false
-    return user.hasChannelPermission(
-      em,
-      ChannelPermission[roles[0]],
-      ServerPermission[roles[1]],
-      channel
-    )
+
+    if (channel.group) return user.isInGroup(em, channel.group)
+    else if (channel.directMessage)
+      return user.isInDM(em, channel.directMessage)
+    else if (channel.server)
+      return user.hasChannelPermission(
+        em,
+        ChannelPermission[roles[0]],
+        ServerPermission[roles[1]],
+        channel
+      )
   }
 
   return false

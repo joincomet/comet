@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql'
-import { Post, User, BaseEntity, Server } from '@/entity'
+import { Post, User, BaseEntity } from '@/entity'
 import {
   Collection,
   Entity,
@@ -7,7 +7,6 @@ import {
   ManyToOne,
   Property
 } from '@mikro-orm/core'
-import { Lexico } from '@/util/Lexico'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -24,25 +23,18 @@ export class Folder extends BaseEntity {
   @Property({ nullable: true })
   avatarUrl?: string
 
-  @Field(() => [Post])
-  @ManyToMany(() => Post, 'folders', { owner: true })
+  @ManyToMany(() => Post)
   posts = new Collection<Post>(this)
 
-  @Field(() => User, { nullable: true })
   @ManyToOne(() => User, { nullable: true })
   owner?: User
 
-  @Field(() => Server, { nullable: true })
-  @ManyToOne(() => Server, { nullable: true })
-  server?: Server
-
-  @Field()
   @Property({ default: false })
-  deleted: boolean
+  isDeleted: boolean
 
   @Property({ nullable: true })
   updatedAt?: Date
 
-  @Property({ default: Lexico.FIRST_POSITION })
-  position: string
+  @Property({ default: false })
+  isCollaborative: boolean
 }

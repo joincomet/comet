@@ -1,6 +1,7 @@
 import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
-import { ChatChannel, Server, User } from '@/entity'
+import { ChatChannel, Server } from '@/entity'
 import {
+  ChannelUsersResponse,
   GetServersArgs,
   GetServersResponse,
   GetServersSort
@@ -65,13 +66,61 @@ export class ServerQueries {
   }
 
   @Authorized([ChannelPermission.ViewChannel, ServerPermission.ViewChannels])
-  @Query(() => [User])
+  @Query(() => [ChannelUsersResponse])
   async getChannelUsers(
     @Ctx() { user, em }: Context,
     @Arg('channelId', () => ID) channelId: string
   ) {
-    // TODO
-    const channel = await em.findOneOrFail(ChatChannel, channelId)
-    return []
+    const channel = await em.findOneOrFail(ChatChannel, channelId, [
+      'server.userJoins.user',
+      'server.roles'
+    ])
+    const joins = channel.server.userJoins
+    const users = joins.getItems().map(join => join.user)
+    for (const user of users) {
+      await user.roles.matching({
+        where: { server: channel.server },
+        orderBy: { position: QueryOrder.DESC },
+        store: true
+      })
+    }
+
+    const result = []
+
+    for (const role of channel.server.roles
+      .getItems()
+      .filter(role =>
+        role.hasPermission(ServerPermission.DisplayRoleSeparately)
+      )) {
+      result.push({
+        role: role.name,
+        users: users.filter(
+          user =>
+            user.isOnline &&
+            user.roles.length > 0 &&
+            user.roles.getItems()[0] === role
+        )
+      } as ChannelUsersResponse)
+    }
+
+    result.push({
+      role: 'Online',
+      users: users.filter(
+        user =>
+          user.isOnline &&
+          user.roles
+            .getItems()
+            .filter(role =>
+              role.hasPermission(ServerPermission.DisplayRoleSeparately)
+            ).length === 0
+      )
+    } as ChannelUsersResponse)
+
+    result.push({
+      role: 'Offline',
+      users: users.filter(user => !user.isOnline)
+    } as ChannelUsersResponse)
+
+    return result
   }
 }

@@ -1,3 +1,4 @@
+export * from './ChannelUsersResponse'
 export * from './GetServersArgs'
 export * from './GetServersResponse'
 export * from './GetServersSort'

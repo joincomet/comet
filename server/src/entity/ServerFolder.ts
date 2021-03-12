@@ -1,19 +1,19 @@
 import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { Server, User } from '@/entity'
-import { Lexico } from '@/util/Lexico'
+import { Folder, Server } from '@/entity'
+import { Lexico } from '@/util'
 
 @Entity()
-export class UserJoinServer {
-  @ManyToOne({ entity: () => User, primary: true })
-  user: User
-
+export class ServerFolder {
   @ManyToOne({ entity: () => Server, primary: true })
-  server: Server;
+  server: Server
+
+  @ManyToOne({ entity: () => Folder, primary: true })
+  folder: Folder;
 
   [PrimaryKeyType]: [string, string]
 
-  @Property()
-  createdAt: Date = new Date()
+  @Property({ default: true })
+  isActive: boolean
 
   @Property({ default: Lexico.FIRST_POSITION })
   position: string

@@ -4,12 +4,10 @@ import {
   BigIntType,
   Collection,
   Entity,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { PostVote } from '@/entity/PostVote'
 import { CommentVote } from '@/entity/CommentVote'
 
 @ObjectType({ implements: BaseEntity })
@@ -43,10 +41,11 @@ export class Comment extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  pinned: boolean
+  isPinned: boolean
 
+  @Field({ nullable: true })
   @Property({ nullable: true })
-  pinRank?: number
+  pinPosition?: string
 
   @Field({ nullable: true })
   @Property({ nullable: true })
@@ -54,11 +53,11 @@ export class Comment extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  deleted: boolean
+  isDeleted: boolean
 
   @Field()
   @Property({ default: false })
-  removed: boolean
+  isRemoved: boolean
 
   @Field({ nullable: true })
   @Property({ nullable: true })

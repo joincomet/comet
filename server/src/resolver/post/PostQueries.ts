@@ -1,5 +1,5 @@
 import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
-import { Post, LinkMetadata } from '@/entity'
+import { Post, LinkMetadata, ServerUserJoin } from '@/entity'
 import {
   GetPostsArgs,
   GetPostsTime,
@@ -7,16 +7,17 @@ import {
   GetPostsResponse
 } from '@/resolver/post'
 import { Context } from '@/types'
-import { scrapeMetadata } from '@/util/metascraper'
+import { scrapeMetadata, Auth } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
-import { ServerPermission } from '@/types/ServerPermission'
-import { UserJoinServer } from '@/entity/UserJoinServer'
-import { Auth } from '@/util/auth'
+import { ServerPermission } from '@/types'
 
 @Resolver(() => Post)
 export class PostQueries {
   @Authorized(ServerPermission.ViewPosts)
-  @Query(() => GetPostsResponse)
+  @Query(() => GetPostsResponse, {
+    description:
+      'Get posts (requires ServerPermission.ViewPosts if serverId is provided)'
+  })
   async getPosts(
     @Args()
     {
@@ -38,7 +39,7 @@ export class PostQueries {
 
     let servers = []
     if (joinedOnly) {
-      const joins = await em.find(UserJoinServer, { user })
+      const joins = await em.find(ServerUserJoin, { user })
       servers = joins.map(join => join.server)
     }
 
@@ -46,8 +47,8 @@ export class PostQueries {
       Post,
       {
         $and: [
-          { removed: false },
-          { deleted: false },
+          { isRemoved: false },
+          { isDeleted: false },
           !time || time === GetPostsTime.ALL
             ? {}
             : {
@@ -74,9 +75,12 @@ export class PostQueries {
   }
 
   @Authorized(ServerPermission.ViewPosts)
-  @Query(() => Post)
+  @Query(() => Post, {
+    description: 'Get a specific post (requires ServerPermission.ViewPosts)'
+  })
   async getPost(
-    @Arg('postId', () => ID) postId: string,
+    @Arg('postId', () => ID, { description: 'ID of post to retrieve' })
+    postId: string,
     @Ctx() { user, em }: Context
   ) {
     const post = await em.findOneOrFail(Post, postId, ['server', 'author'])
@@ -84,19 +88,19 @@ export class PostQueries {
     if (!post) return null
 
     if (
-      !post.server.searchable &&
+      !post.server.isSearchable &&
       !(await user.hasJoinedServer(em, post.server))
     )
       throw new Error(
         'This post is in a private server that you have not joined!'
       )
 
-    if (post.deleted) {
+    if (post.isDeleted) {
       post.author = null
       post.text = '<p>[deleted]</p>'
     }
 
-    if (post.removed) {
+    if (post.isRemoved) {
       post.author = null
       post.text = `<p>[removed: ${post.removedReason}]</p>`
     }
@@ -105,7 +109,10 @@ export class PostQueries {
   }
 
   @Authorized(Auth.Admin)
-  @Query(() => LinkMetadata)
+  @Query(() => LinkMetadata, {
+    description: 'Get LinkMetadata for a URL (requires Auth.Admin)',
+    deprecationReason: 'For testing only'
+  })
   async getUrlEmbed(@Arg('url') url: string) {
     return scrapeMetadata(url)
   }

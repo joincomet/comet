@@ -1,12 +1,5 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import {
-  Comment,
-  User,
-  Server,
-  LinkMetadata,
-  Folder,
-  BaseEntity
-} from '@/entity'
+import { Comment, User, Server, LinkMetadata, BaseEntity } from '@/entity'
 import { URL } from 'url'
 import { isUrl } from '@/util/isUrl'
 import {
@@ -15,12 +8,10 @@ import {
   Embedded,
   Entity,
   Formula,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { CommentVote } from '@/entity/CommentVote'
 import { PostVote } from '@/entity/PostVote'
 
 @ObjectType({ implements: BaseEntity })
@@ -73,10 +64,11 @@ export class Post extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  pinned: boolean
+  isPinned: boolean
 
+  @Field({ nullable: true })
   @Property({ nullable: true })
-  pinRank?: number
+  pinPosition?: string
 
   @OneToMany(() => Comment, 'post')
   comments = new Collection<Comment>(this)
@@ -112,9 +104,6 @@ export class Post extends BaseEntity {
     return `/server/${server.id}/post/${this.id}`
   }
 
-  @ManyToMany(() => Folder, 'posts')
-  folders = new Collection<Folder>(this)
-
   @Formula(
     '(CAST(rocket_count AS float) + 1)/((CAST((CAST(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) AS int) -' +
       ' CAST(EXTRACT(EPOCH FROM created_at) AS int)+5000) AS FLOAT)/100.0)^(1.618))'
@@ -127,11 +116,11 @@ export class Post extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  deleted: boolean
+  isDeleted: boolean
 
   @Field()
   @Property({ default: false })
-  removed: boolean
+  isRemoved: boolean
 
   @Field({ nullable: true })
   @Property({ nullable: true })

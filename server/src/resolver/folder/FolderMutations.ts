@@ -15,7 +15,7 @@ export class FolderMutations {
   ) {
     const folder = await em.findOne(Folder, folderId, ['creator', 'server'])
     if (!folder) throw new Error('Invalid folder')
-    if (folder.deleted) throw new Error('Folder has been deleted')
+    if (folder.isDeleted) throw new Error('Folder has been deleted')
     if (folder.owner !== user) throw new Error('You do not own this folder')
     const post = await em.findOne(Post, postId)
     folder.posts.add(post)
@@ -33,7 +33,7 @@ export class FolderMutations {
   ) {
     const folder = await em.findOne(Folder, folderId, ['creator'])
     if (!folder) throw new Error('Invalid folder')
-    if (folder.deleted) throw new Error('Folder has been deleted')
+    if (folder.isDeleted) throw new Error('Folder has been deleted')
     if (folder.owner !== user) throw new Error('You do not own this folder')
     const post = await em.findOne(Post, postId)
     folder.posts.remove(post)

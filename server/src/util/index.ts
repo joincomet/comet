@@ -1,4 +1,11 @@
+export * from './auth'
+export * from './metascraper'
+export * from './s3'
+export * from './subscriptions'
+export * from './text'
+
 export * from './checkEnv'
+export * from './createFilter'
 export * from './isUrl'
 export * from './Lexico'
 export * from './randomEnum'

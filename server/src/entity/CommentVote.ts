@@ -1,5 +1,5 @@
 import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { Comment, User } from '@/entity'
+import { BaseEntity, Comment, User } from '@/entity'
 
 @Entity()
 export class CommentVote {
@@ -10,6 +10,9 @@ export class CommentVote {
   comment: Comment;
 
   [PrimaryKeyType]: [string, string]
+
+  @Property({ default: true })
+  isActive: boolean
 
   @Property()
   createdAt: Date = new Date()

@@ -9,16 +9,20 @@ export class ChatMessage extends BaseEntity {
   @ManyToOne(() => User)
   author: User
 
-  @Field()
-  @Property()
-  text: string
-
   @ManyToOne(() => ChatChannel)
   channel: ChatChannel
 
   @Field()
+  @Property()
+  text: string
+
+  @Field(() => [LinkMetadata])
+  @Embedded(() => LinkMetadata, { object: true, array: true })
+  linkMetadatas: LinkMetadata[] = []
+
+  @Field()
   @Property({ default: false })
-  pinned: boolean
+  isPinned: boolean
 
   @Field({ nullable: true })
   @Property({ nullable: true })
@@ -26,17 +30,9 @@ export class ChatMessage extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  deleted: boolean
+  isDeleted: boolean
 
   @Field()
   @Property({ default: false })
-  removed: boolean
-
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  removedReason?: string
-
-  @Field(() => [LinkMetadata])
-  @Embedded(() => LinkMetadata, { object: true, array: true })
-  linkMetadatas: LinkMetadata[] = []
+  isRemoved: boolean
 }

@@ -4,36 +4,33 @@ import {
   Enum,
   ManyToMany,
   ManyToOne,
-  PrimaryKey,
-  PrimaryKeyType,
   Property
 } from '@mikro-orm/core'
-import { Server, User } from '@/entity'
+import { BaseEntity, Server, User } from '@/entity'
 import {
   defaultServerPermissions,
   ServerPermission
 } from '@/types/ServerPermission'
 import { Lexico } from '@/util/Lexico'
+import { Field, ObjectType } from 'type-graphql'
 
+@ObjectType({ implements: BaseEntity })
 @Entity()
-export class ServerRole {
-  @ManyToOne({ entity: () => Server, primary: true, inversedBy: 'roles' })
-  server: Server
-
-  @PrimaryKey()
+export class ServerRole extends BaseEntity {
+  @Field()
+  @Property()
   name: string
 
+  @ManyToOne({ entity: () => Server, inversedBy: 'roles' })
+  server: Server
+
   @ManyToMany(() => User, 'roles', { owner: true })
-  users = new Collection<User>(this);
-
-  [PrimaryKeyType]: [string, string]
-
-  @Property()
-  createdAt: Date = new Date()
+  users = new Collection<User>(this)
 
   @Property({ default: Lexico.FIRST_POSITION })
   position: string
 
+  @Field()
   @Property({ nullable: true })
   color?: string
 
@@ -43,4 +40,8 @@ export class ServerRole {
     default: defaultServerPermissions
   })
   permissions: ServerPermission[] = defaultServerPermissions
+
+  hasPermission(permission: ServerPermission) {
+    return this.permissions.includes(permission)
+  }
 }

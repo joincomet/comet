@@ -20,29 +20,35 @@ const filter = async ({
 }
 
 @Resolver()
-export class ChatSubscriptions {
+export class MessageSubscriptions {
   @Authorized()
   @Subscription(() => ChatMessage, {
-    topics: SubscriptionTopic.MessageCreated,
-    filter
+    topics: SubscriptionTopic.MessageSent,
+    filter,
+    description:
+      'Published to all users with permission to view message when a message is sent'
   })
-  messageCreated(@Root() message: ChatMessage) {
+  messageSent(@Root() message: ChatMessage) {
     return message
   }
 
   @Authorized()
   @Subscription(() => ChatMessage, {
     topics: SubscriptionTopic.MessageUpdated,
-    filter
+    filter,
+    description:
+      'Published to all users with permission to view message when a message is updated (edited or embeds fetched)'
   })
-  messageUpdated(@Root() message: ChatMessage) {
+  messageEdited(@Root() message: ChatMessage) {
     return message
   }
 
   @Authorized()
   @Subscription(() => ID, {
-    topics: SubscriptionTopic.MessageDeleted,
-    filter
+    topics: SubscriptionTopic.MessageRemoved,
+    filter,
+    description:
+      'Published to all users with permission to view message when a message is deleted or removed'
   })
   messageDeleted(@Root() message: ChatMessage) {
     return message.id

@@ -25,6 +25,8 @@ export const uploadImage = async (
   } else {
     body = got.stream(url)
     const fileType = await FileType.fromStream(body)
+    if (fileType.mime !== 'image/jpeg' && fileType.mime !== 'image/png')
+      throw new Error('Image must be PNG or JPEG')
     ext = fileType.ext
   }
   const key = `${nanoid()}.${ext}`

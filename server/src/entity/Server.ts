@@ -4,6 +4,7 @@ import {
   ChatChannel,
   Folder,
   Post,
+  ServerFolder,
   ServerInvite,
   User
 } from '@/entity'
@@ -17,8 +18,8 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
-import { UserBanServer } from '@/entity/UserBanServer'
-import { UserJoinServer } from '@/entity/UserJoinServer'
+import { ServerUserBan } from '@/entity/ServerUserBan'
+import { ServerUserJoin } from '@/entity/ServerUserJoin'
 import { ServerRole } from '@/entity/ServerRole'
 import { Lexico } from '@/util/Lexico'
 
@@ -44,26 +45,26 @@ export class Server extends BaseEntity {
   })
   roles = new Collection<ServerRole>(this)
 
-  @OneToMany(() => UserJoinServer, 'server', {
+  @OneToMany(() => ServerUserJoin, 'server', {
     orderBy: { createdAt: QueryOrder.DESC }
   })
-  userJoins = new Collection<UserJoinServer>(this)
+  userJoins = new Collection<ServerUserJoin>(this)
 
-  @OneToMany(() => Folder, 'server', {
+  @OneToMany(() => ServerFolder, 'server', {
     orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
   })
-  folders = new Collection<Folder>(this)
+  folders = new Collection<ServerFolder>(this)
 
   @Field(() => ServerCategory)
   @Enum({ items: () => ServerCategory, default: ServerCategory.Uncategorized })
   category: ServerCategory
 
-  @OneToMany(() => UserBanServer, 'server')
-  bans = new Collection<UserBanServer>(this)
+  @OneToMany(() => ServerUserBan, 'server')
+  userBans = new Collection<ServerUserBan>(this)
 
   @Field()
   @Property({ default: 0 })
-  userCount: number = 0
+  userCount: number
 
   @Field({ nullable: true })
   @Property({ nullable: true })
@@ -75,7 +76,7 @@ export class Server extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  banned: boolean
+  isBanned: boolean
 
   @OneToMany(() => ChatChannel, 'server', {
     orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
@@ -84,11 +85,11 @@ export class Server extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  searchable: boolean
+  isSearchable: boolean
 
   @Field()
   @Property({ default: false })
-  featured: boolean
+  isFeatured: boolean
 
   @Property({ default: Lexico.FIRST_POSITION })
   featuredPosition: string

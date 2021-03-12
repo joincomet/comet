@@ -1,51 +1,11 @@
-import {
-  ChatMutations,
-  ChatQueries,
-  ChatSubscriptions,
-  CommentMutations,
-  CommentQueries,
-  FolderMutations,
-  FolderQueries,
-  NotificationMutations,
-  NotificationQueries,
-  PostMutations,
-  PostQueries,
-  ServerMutations,
-  ServerQueries,
-  ServerSubscriptions,
-  UserMutations,
-  UserQueries
-} from '@/resolver'
 import { authChecker } from '@/util/auth'
 import { getPubSub } from '@/util/subscriptions'
 import { BuildSchemaOptions } from 'type-graphql'
 import path from 'path'
+import * as resolvers from '@/resolver'
 
 export default {
-  resolvers: [
-    ChatMutations,
-    ChatQueries,
-    ChatSubscriptions,
-
-    CommentMutations,
-    CommentQueries,
-
-    FolderMutations,
-    FolderQueries,
-
-    NotificationMutations,
-    NotificationQueries,
-
-    PostMutations,
-    PostQueries,
-
-    ServerMutations,
-    ServerQueries,
-    ServerSubscriptions,
-
-    UserMutations,
-    UserQueries
-  ],
+  resolvers: Object.values(resolvers) as unknown,
   emitSchemaFile:
     process.env.NODE_ENV === 'production'
       ? false

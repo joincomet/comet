@@ -4,14 +4,14 @@ import { ServerRole } from '@/entity/ServerRole'
 import { ChannelPermission } from '@/types/ChannelPermission'
 
 @Entity()
-export class ChannelRolePermissions {
+export class ChatChannelRole {
   @ManyToOne({ entity: () => ChatChannel, primary: true })
   channel: ChatChannel
 
   @ManyToOne({ entity: () => ServerRole, primary: true })
   role: ServerRole;
 
-  [PrimaryKeyType]: [string, string, string]
+  [PrimaryKeyType]: [string, string]
 
   @Enum({
     items: () => ChannelPermission,

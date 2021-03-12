@@ -8,10 +8,10 @@ import { ServerPermission } from '@/types/ServerPermission'
 @Resolver(() => Comment)
 export class CommentQueries {
   @Authorized(ServerPermission.ViewComments)
-  @Query(() => [Comment])
+  @Query(() => [Comment], { description: 'Get comments on a post' })
   async getComments(
     @Args() { postId, sort }: GetCommentsArgs,
-    @Ctx() { user, em }: Context
+    @Ctx() { em }: Context
   ) {
     const post = await em.findOne(Post, postId)
     if (!post) throw new Error('Post not found')
@@ -26,11 +26,11 @@ export class CommentQueries {
     )
 
     comments.forEach(comment => {
-      if (comment.deleted) {
+      if (comment.isDeleted) {
         comment.text = `<p>[deleted]</p>`
         comment.author = null
       }
-      if (comment.removed) {
+      if (comment.isRemoved) {
         comment.text = `<p>[removed: ${comment.removedReason}]</p>`
         comment.author = null
       }

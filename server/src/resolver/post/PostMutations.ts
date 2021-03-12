@@ -5,31 +5,20 @@ import {
   Ctx,
   ID,
   Mutation,
-  Query,
   Resolver
 } from 'type-graphql'
-import { Post, LinkMetadata, Server, Comment } from '@/entity'
-import {
-  CreatePostArgs,
-  GetPostsArgs,
-  GetPostsTime,
-  GetPostsSort,
-  GetPostsResponse
-} from '@/resolver/post'
-import { Context } from '@/types'
-import { uploadImage } from '@/util/s3'
-import { scrapeMetadata } from '@/util/metascraper'
-import { QueryOrder } from '@mikro-orm/core'
-import { handleText } from '@/util/text'
-import { ServerPermission } from '@/types/ServerPermission'
-import { CommentVote } from '@/entity/CommentVote'
-import { PostVote } from '@/entity/PostVote'
-import { Auth } from '@/util/auth'
+import { Post, Server, PostVote } from '@/entity'
+import { CreatePostArgs } from '@/resolver/post'
+import { Context, ServerPermission } from '@/types'
+import { uploadImage, scrapeMetadata, handleText, Auth } from '@/util'
 
 @Resolver()
 export class PostMutations {
   @Authorized(ServerPermission.CreatePost)
-  @Mutation(() => Post)
+  @Mutation(() => Post, {
+    description:
+      'Create a post in a server (requires ServerPermission.CreatePost)'
+  })
   async createPost(
     @Args()
     { title, linkUrl, text, serverId, images }: CreatePostArgs,
@@ -46,12 +35,7 @@ export class PostMutations {
 
     if (images && images.length > 0) {
       for (const image of images) {
-        const { createReadStream, mimetype } = await image
-
-        if (mimetype !== 'image/jpeg' && mimetype !== 'image/png')
-          throw new Error('Image must be PNG or JPEG')
-
-        const imageUrl = await uploadImage(createReadStream(), mimetype)
+        const imageUrl = await uploadImage(image)
         imageUrls.push(imageUrl)
       }
     }
@@ -75,9 +59,12 @@ export class PostMutations {
   }
 
   @Authorized(Auth.Author)
-  @Mutation(() => Boolean)
-  async updatePost(
-    @Arg('postId', () => ID) postId: string,
+  @Mutation(() => Boolean, {
+    description: 'Edit a post (requires Auth.Author)'
+  })
+  async editPost(
+    @Arg('postId', () => ID, { description: 'ID of post to edit' })
+    postId: string,
     @Arg('text') text: string,
     @Ctx() { user, em }: Context
   ) {
@@ -95,22 +82,27 @@ export class PostMutations {
   }
 
   @Authorized(Auth.Author)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: 'Delete a post (requires Auth.Author)'
+  })
   async deletePost(
     @Arg('postId', () => ID) postId: string,
     @Ctx() { user, em }: Context
   ) {
     const post = await em.findOne(Post, postId)
-    post.deleted = true
-    post.pinned = false
+    post.isDeleted = true
+    post.isPinned = false
     await em.persistAndFlush(post)
     return true
   }
 
   @Authorized(ServerPermission.VotePost)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: 'Add vote to post' })
   async votePost(
-    @Arg('postId', () => ID) postId: string,
+    @Arg('postId', () => ID, {
+      description: 'ID of post to vote (requires ServerPermission.VotePost)'
+    })
+    postId: string,
     @Ctx() { user, em }: Context
   ) {
     const post = await em.findOneOrFail(Post, postId)
@@ -123,60 +115,72 @@ export class PostMutations {
   }
 
   @Authorized(ServerPermission.VotePost)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: 'Remove vote from post' })
   async unvotePost(
-    @Arg('postId', () => ID) postId: string,
+    @Arg('postId', () => ID, {
+      description:
+        'ID of post to remove vote (requires ServerPermission.VotePost)'
+    })
+    postId: string,
     @Ctx() { user, em }: Context
   ) {
     const post = await em.findOneOrFail(Post, postId)
     const vote = await em.findOneOrFail(PostVote, { user, post })
-    await em.remove(vote)
+    vote.isActive = false
     post.voteCount--
-    await em.persistAndFlush(post)
+    await em.persistAndFlush([post, vote])
     return true
   }
 
   @Authorized(ServerPermission.ManagePosts)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: 'Remove a post (requires ServerPermission.ManagePosts)'
+  })
   async removePost(
     @Arg('postId', () => ID) postId: string,
     @Arg('reason') reason: string,
-    @Ctx() { em, user }: Context
+    @Ctx() { em }: Context
   ) {
     const post = await em.findOne(Post, postId)
 
     em.assign(post, {
-      removed: true,
+      isRemoved: true,
       removedReason: reason,
-      pinned: false,
-      pinRank: null
+      isPinned: false,
+      pinPosition: null
     })
     await em.persistAndFlush(post)
     return true
   }
 
   @Authorized(ServerPermission.ManagePosts)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: 'Pin a post (requires ServerPermission.ManagePosts)'
+  })
   async pinPost(
-    @Arg('postId', () => ID) postId: string,
-    @Ctx() { em, user }: Context
+    @Arg('postId', () => ID, { description: 'ID of post to pin' })
+    postId: string,
+    @Ctx() { em }: Context
   ) {
     const post = await em.findOne(Post, postId)
-
-    post.pinned = true
+    if (post.isPinned) throw new Error('Post is already pinned')
+    post.isPinned = true
     await em.persistAndFlush(post)
     return true
   }
 
   @Authorized(ServerPermission.ManagePosts)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: 'Unpin a post (requires ServerPermission.ManagePosts)'
+  })
   async unpinPost(
-    @Arg('postId', () => ID) postId: string,
-    @Ctx() { em, user }: Context
+    @Arg('postId', () => ID, { description: 'ID of post to unpin' })
+    postId: string,
+    @Ctx() { em }: Context
   ) {
     const post = await em.findOne(Post, postId)
-
-    post.pinned = false
+    if (!post.isPinned) throw new Error('Post is not pinned')
+    post.isPinned = false
     await em.persistAndFlush(post)
     return true
   }

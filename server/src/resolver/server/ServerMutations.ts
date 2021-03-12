@@ -13,7 +13,7 @@ import { ChatChannel, Server, ServerInvite, User } from '@/entity'
 import { uploadImage } from '@/util/s3'
 import { SubscriptionTopic, Context } from '@/types'
 import { UserServerPayload } from '@/resolver/server'
-import { UserJoinServer } from '@/entity/UserJoinServer'
+import { ServerUserJoin } from '@/entity/ServerUserJoin'
 import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
 import { CreateServerArgs } from '@/resolver/server/types/CreateServerArgs'
 import { ServerPermission } from '@/types/ServerPermission'
@@ -28,7 +28,7 @@ export class ServerMutations {
     @PubSub(SubscriptionTopic.UserJoinedServer)
     userJoinedServer: Publisher<UserServerPayload>
   ): Promise<Server> {
-    if ((await em.count(UserJoinServer, { user })) >= 100)
+    if ((await em.count(ServerUserJoin, { user })) >= 100)
       throw new Error('Cannot join more than 100 servers')
 
     const channel = em.create(ChatChannel, {
@@ -51,7 +51,7 @@ export class ServerMutations {
       channels: [channel],
       avatarUrl,
       category,
-      searchable
+      isSearchable: searchable
     })
     await em.persistAndFlush([server])
     await user.joinServer(em, server, userJoinedServer)
@@ -87,7 +87,7 @@ export class ServerMutations {
     userJoinedServer: Publisher<UserServerPayload>
   ) {
     const server = await em.findOneOrFail(Server, serverId)
-    if (!server.searchable)
+    if (!server.isSearchable)
       throw new Error('Invite required to join this server')
     await user.checkBannedFromServer(em, server)
     await user.joinServer(em, server, userJoinedServer)
@@ -185,7 +185,7 @@ export class ServerMutations {
       avatarUrl,
       bannerUrl,
       category,
-      searchable
+      isSearchable: searchable
     })
   }
 }

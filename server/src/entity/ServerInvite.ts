@@ -32,8 +32,8 @@ export class ServerInvite {
   maxUses?: number
 
   @Field()
-  @Property()
-  uses: number = 0
+  @Property({ default: 0 })
+  uses: number
 
   @Field()
   get expired(): boolean {

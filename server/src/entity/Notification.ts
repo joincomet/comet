@@ -1,16 +1,28 @@
 import { Field, ObjectType } from 'type-graphql'
-import { Comment, User, BaseEntity } from '@/entity'
+import { Comment, User, BaseEntity, Post } from '@/entity'
 import { Entity, ManyToOne, Property } from '@mikro-orm/core'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
 export class Notification extends BaseEntity {
   @ManyToOne(() => User)
-  user: User
+  toUser: User
+
+  @Field(() => User)
+  @ManyToOne(() => User)
+  fromUser: User
 
   @Field(() => Comment)
   @ManyToOne(() => Comment)
   comment: Comment
+
+  @Field(() => Comment, { nullable: true })
+  @ManyToOne(() => Comment, { nullable: true })
+  parentComment?: Comment
+
+  @Field(() => Post)
+  @ManyToOne(() => Post)
+  post: Post
 
   @Field()
   @Property({ default: false })

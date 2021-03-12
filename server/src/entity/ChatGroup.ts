@@ -16,8 +16,8 @@ export class ChatGroup extends BaseEntity {
   @ManyToOne(() => User)
   owner: User
 
-  @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Field()
+  @Property()
   name: string
 
   @Field({ nullable: true })
@@ -28,7 +28,7 @@ export class ChatGroup extends BaseEntity {
   @Property()
   updatedAt: Date = new Date()
 
-  @OneToOne(() => ChatChannel)
+  @OneToOne(() => ChatChannel, 'group')
   channel: ChatChannel
 
   @Field(() => [User])

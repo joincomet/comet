@@ -1,8 +1,10 @@
+require('@electron/remote/main').initialize()
+
 // Native
 const { join } = require('path')
 
 // Packages
-const { BrowserWindow, app, shell, screen, Tray, Menu } = require('electron')
+const { app, BrowserWindow, shell, screen, Tray, Menu } = require('electron')
 const isDev = require('electron-is-dev')
 
 const contextMenu = require('electron-context-menu')
