@@ -1,6 +1,6 @@
 import { Context } from '@/types'
 import { createMethodDecorator } from 'type-graphql'
-import { ChatMessage } from '@/entity'
+import { Message } from '@/entity'
 
 /**
  * Expects groupId arg
@@ -12,7 +12,7 @@ export const CheckMessageGroupOrDmMember = () =>
       if (!user) throw new Error('Not logged in')
       // if (!messageId) throw new Error('Args must include messageId')
       if (!messageId) return next()
-      const message = await em.findOneOrFail(ChatMessage, messageId, [
+      const message = await em.findOneOrFail(Message, messageId, [
         'group.users',
         'directMessage.user1',
         'directMessage.user2'

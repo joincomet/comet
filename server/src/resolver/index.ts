@@ -1,4 +1,9 @@
 export {
+  ChannelMutations,
+  ChannelQueries,
+  ChannelSubscriptions
+} from './channel'
+export {
   CommentQueries,
   CommentMutations,
   CommentSubscriptions

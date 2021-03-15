@@ -2,7 +2,7 @@ import { HiSortAscending, HiClock, HiCheckCircle } from 'react-icons/hi'
 import { FaSortAlphaDown } from 'react-icons/fa'
 import React, { forwardRef } from 'react'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
-import { galaxyIcon } from '@/lib/galaxyIcon'
+import { categoryIcon } from '@/lib/categoryIcon'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { galaxies } from '@/lib/galaxies'
 
@@ -70,7 +70,7 @@ export default forwardRef((props, ref) => {
               query.galaxy === galaxy ? 'sidebar-item--active' : ''
             }`}
           >
-            {galaxyIcon(galaxy, 'h-5 w-5 mr-3')}
+            {categoryIcon(galaxy, 'h-5 w-5 mr-3')}
             {galaxy}
           </Link>
         ))}

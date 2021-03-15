@@ -3,16 +3,17 @@ import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import isEmail from 'validator/es/lib/isEmail'
 import { useForm } from 'react-hook-form'
-import { useSignUpMutation } from '@/graphql/oldmutations'
 import Button from '@/components/Button'
+import { useMutation } from 'urql'
+import { CREATE_ACCOUNT } from '@/graphql/mutations'
 
 export default function RegisterPage() {
-  const [{ data, fetching, error }, signUp] = useSignUpMutation()
+  const [{ data, fetching, error }, createAccount] = useMutation(CREATE_ACCOUNT)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 
   const onSubmit = variables =>
-    signUp(variables).then(
+    createAccount(variables).then(
       ({
         data: {
           signUp: { accessToken }

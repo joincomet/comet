@@ -43,8 +43,7 @@ export class PostQueries {
     let orderBy = {}
     if (sort === GetPostsSort.NEW) orderBy = { createdAt: QueryOrder.DESC }
     else if (sort === GetPostsSort.HOT) orderBy = { hotRank: QueryOrder.DESC }
-    else if (sort === GetPostsSort.TOP)
-      orderBy = { rocketCount: QueryOrder.DESC }
+    else if (sort === GetPostsSort.TOP) orderBy = { voteCount: QueryOrder.DESC }
 
     let servers = []
     if (joinedOnly) {

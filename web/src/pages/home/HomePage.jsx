@@ -4,7 +4,7 @@ import Posts from '@/components/post/Posts'
 import Header from '@/components/ui/header/Header'
 import FoldersSidebar from '@/pages/folder/FoldersSidebar'
 import { useParams } from 'react-router-dom'
-import PlanetScroller from '@/components/planet-scroller/PlanetScroller'
+import ServerList from '@/components/server-list/ServerList'
 
 export default function HomePage() {
   const query = useParams()

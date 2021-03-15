@@ -15,9 +15,14 @@ import {
   Comment,
   UserBlock,
   ServerUserJoin,
-  ChatMessage
+  Message
 } from '@/entity'
-import { uploadImage, handleUnderscore, createAccessToken } from '@/util'
+import {
+  uploadImage,
+  handleUnderscore,
+  createAccessToken,
+  tagGenerator
+} from '@/util'
 import isEmail from 'validator/lib/isEmail'
 import * as argon2 from 'argon2'
 import { customAlphabet } from 'nanoid'
@@ -26,8 +31,6 @@ import {
   UpdateUserArgs,
   ChangePasswordArgs
 } from '@/resolver/user'
-
-const tagGenerator = customAlphabet('0123456789', 4)
 
 @Resolver()
 export class UserMutations {
@@ -208,7 +211,7 @@ export class UserMutations {
         .execute()
 
       await em
-        .createQueryBuilder(ChatMessage)
+        .createQueryBuilder(Message)
         .update({
           isRemoved: true
         })

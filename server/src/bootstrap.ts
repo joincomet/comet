@@ -11,6 +11,7 @@ import { User } from '@/entity'
 import { Context } from '@/types'
 import { onConnect } from '@/config/redis'
 import http from 'http'
+import { seed } from '@/seed'
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -22,6 +23,8 @@ export async function bootstrap() {
     await generator.dropSchema()
     await generator.createSchema()
     await generator.updateSchema()
+
+    await seed(orm.em.fork())
   }
 
   console.log(`Bootstraping schema and server...`)

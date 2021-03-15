@@ -1,6 +1,6 @@
 import { ChannelPermission, Context, ServerPermission } from '@/types'
 import { createMethodDecorator } from 'type-graphql'
-import { ChatChannel } from '@/entity'
+import { Channel } from '@/entity'
 
 /**
  * Expects channelId arg
@@ -19,7 +19,7 @@ export const CheckChannelPermission = (
       //if (!channelId) throw new Error('Args must include channelId')
       if (!channelId) return next()
 
-      const channel = await em.findOneOrFail(ChatChannel, channelId)
+      const channel = await em.findOneOrFail(Channel, channelId)
 
       if (channel.server) {
         await user.checkChannelPermission(

@@ -17,8 +17,8 @@ import { DragItemTypes } from '@/lib/DragItemTypes'
 import ReactPlayer from 'react-player'
 import { TiPin } from 'react-icons/ti'
 import UserAvatar from '@/components/user/UserAvatar'
-import PlanetAvatar from '@/components/planet/PlanetAvatar'
-import PlanetPopup from '@/components/planet/PlanetPopup'
+import PlanetAvatar from '@/components/server/ServerAvatar'
+import ServerPopup from '@/components/server/ServerPopup'
 import UserPopup from '@/components/user/UserPopup'
 import { useMutation } from 'urql'
 
@@ -77,17 +77,17 @@ export default function Post({
             )}
             {planet && (
               <>
-                <PlanetPopup planet={post.planet}>
+                <ServerPopup planet={post.planet}>
                   <PlanetAvatar
                     planet={post.planet}
                     className="h-5 w-5 mr-1.5"
                   />
-                </PlanetPopup>
-                <PlanetPopup planet={post.planet}>
+                </ServerPopup>
+                <ServerPopup planet={post.planet}>
                   <span className="text-accent hover:underline cursor-pointer">
                     +{post.planet.name}
                   </span>
-                </PlanetPopup>
+                </ServerPopup>
                 &nbsp;&middot;&nbsp;
               </>
             )}
@@ -298,7 +298,7 @@ function Rocket({ post, setPost }) {
       }`}
     >
       <RiRocketFill className="w-4 h-4" />
-      <div className="ml-1.5">{post.rocketCount}</div>
+      <div className="ml-1.5">{post.voteCount}</div>
     </div>
   )
 }

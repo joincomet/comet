@@ -12,7 +12,7 @@ export class ServerUserJoin {
 
   [PrimaryKeyType]: [string, string]
 
-  @Property({ default: Lexico.FIRST_POSITION })
+  @Property({ default: Lexico.FIRST_POSITION, columnType: 'text' })
   position: string
 
   @Property()

@@ -1,6 +1,6 @@
 import { ChannelPermission, Context, ServerPermission } from '@/types'
 import { createMethodDecorator } from 'type-graphql'
-import { ChatMessage } from '@/entity'
+import { Message } from '@/entity'
 
 /**
  * Expects messageId arg
@@ -19,9 +19,7 @@ export const CheckMessageChannelPermission = (
       // if (!messageId) throw new Error('Args must include messageId')
       if (!messageId) return next()
 
-      const message = await em.findOneOrFail(ChatMessage, messageId, [
-        'channel'
-      ])
+      const message = await em.findOneOrFail(Message, messageId, ['channel'])
 
       if (!message.channel) throw new Error('Message was not sent in a Channel')
 

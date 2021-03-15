@@ -14,7 +14,7 @@ export class ServerUserBan {
   @ManyToOne({ entity: () => User })
   bannedBy: User
 
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   reason?: string
 
   @Property()

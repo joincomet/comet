@@ -1,4 +1,3 @@
-import { FiUser } from 'react-icons/fi'
 import React from 'react'
 import UserPopup from '@/components/user/UserPopup'
 import UserAvatar from '@/components/user/UserAvatar'

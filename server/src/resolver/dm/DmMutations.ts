@@ -1,6 +1,6 @@
 import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
-import { ChatChannel, DirectMessage, User } from '@/entity'
+import { Channel, DirectMessage, User } from '@/entity'
 
 @Resolver()
 export class DmMutations {

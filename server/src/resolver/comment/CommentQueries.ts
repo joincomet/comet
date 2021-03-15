@@ -22,7 +22,7 @@ export class CommentQueries {
       { post },
       ['author'],
       sort === GetCommentsSort.TOP
-        ? { rocketCount: QueryOrder.DESC }
+        ? { voteCount: QueryOrder.DESC }
         : { createdAt: QueryOrder.DESC }
     )
 

@@ -1,4 +1,6 @@
+export * from './channel'
 export * from './comment'
+export * from './folder'
 export * from './message'
 export * from './notification'
 export * from './post'

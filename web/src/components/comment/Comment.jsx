@@ -8,10 +8,6 @@ import { RiRocketFill } from 'react-icons/ri'
 import UserPopup from '@/components/user/UserPopup'
 import { commentCollapse } from './Comment.module.scss'
 import { useMutation } from 'urql'
-import {
-  ROCKET_COMMENT_MUTATION,
-  UNROCKET_COMMENT_MUTATION
-} from '@/graphql/oldmutations'
 
 export default function Comment({
   commentData,
@@ -145,13 +141,13 @@ function Rocket({ comment, setComment }) {
 
   const rocket = async () => {
     comment.isRocketed = true
-    comment.rocketCount++
+    comment.voteCount++
     await rocketCommentMutation.mutateAsync(variables)
   }
 
   const unrocket = async () => {
     comment.isRocketed = false
-    comment.rocketCount--
+    comment.voteCount--
     await unrocketCommentMutation.mutateAsync(variables)
   }
 
@@ -171,7 +167,7 @@ function Rocket({ comment, setComment }) {
       }`}
     >
       <RiRocketFill className="w-4 h-4" />
-      <div className="ml-1.5 text-xs font-medium">{comment.rocketCount}</div>
+      <div className="ml-1.5 text-xs font-medium">{comment.voteCount}</div>
     </div>
   )
 }

@@ -12,15 +12,15 @@ import {
 @Entity()
 export class Folder extends BaseEntity {
   @Field()
-  @Property()
+  @Property({ columnType: 'text' })
   name: string
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   description?: string
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
   @ManyToMany(() => Post)

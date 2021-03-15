@@ -10,7 +10,7 @@ import {
   UseMiddleware
 } from 'type-graphql'
 import { Context, SubscriptionTopic } from '@/types'
-import { ChatChannel, ChatGroup, User } from '@/entity'
+import { Channel, Group, User } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { uploadImage } from '@/util/s3'
 import { CheckGroupMember } from '@/util'
@@ -30,11 +30,11 @@ export class GroupMutations {
     for (const username of usernames) {
       users.push(await em.findOneOrFail(User, { username }))
     }
-    const group = em.create(ChatGroup, {
+    const group = em.create(Group, {
       users,
       owner: user
     })
-    const channel = em.create(ChatChannel, {
+    const channel = em.create(Channel, {
       group
     })
     await em.persistAndFlush([group, channel])
@@ -53,7 +53,7 @@ export class GroupMutations {
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
   ) {
-    const group = await em.findOneOrFail(ChatGroup, groupId, ['users'])
+    const group = await em.findOneOrFail(Group, groupId, ['users'])
     group.users.remove(user)
     if (group.owner === user) group.owner = group.users.getItems()[0]
     await em.persistAndFlush(group)
@@ -77,7 +77,7 @@ export class GroupMutations {
     })
     name?: string
   ) {
-    const group = await em.findOneOrFail(ChatGroup, groupId, ['users'])
+    const group = await em.findOneOrFail(Group, groupId, ['users'])
     group.name = name
     await em.persistAndFlush(group)
     await refetchGroupsAndDms(user.id)
@@ -98,7 +98,7 @@ export class GroupMutations {
     })
     avatarFile?: FileUpload
   ) {
-    const group = await em.findOneOrFail(ChatGroup, groupId, ['users'])
+    const group = await em.findOneOrFail(Group, groupId, ['users'])
     group.avatarUrl = avatarFile
       ? await uploadImage(avatarFile, {
           width: 256,

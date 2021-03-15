@@ -27,10 +27,10 @@ export const COMMENT_FRAGMENT = gql`
     id
     parentCommentId
     text
-    rocketCount
-    isRocketed
-    deleted
-    removed
+    voteCount
+    isVoted
+    isDeleted
+    isRemoved
     removedReason
   }
 `
@@ -39,21 +39,20 @@ export const POST_FRAGMENT = gql`
   fragment POST_FRAGMENT on Post {
     id
     title
-    pinned
+    isPinned
     text
     linkUrl
     imageUrls
     relativeUrl
     commentCount
-    rocketCount
-    isRocketed
+    voteCount
+    isVoted
     thumbnailUrl
-    logoUrl
     domain
-    deleted
-    removed
+    isDeleted
+    isRemoved
     removedReason
-    meta {
+    linkMetadata {
       title
       description
     }

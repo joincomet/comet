@@ -1,7 +1,7 @@
 import { Field, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
-  ChatChannel,
+  Channel,
   Post,
   ServerFolder,
   ServerInvite,
@@ -26,11 +26,11 @@ import { Lexico } from '@/util/Lexico'
 @Entity()
 export class Server extends BaseEntity {
   @Field()
-  @Property()
+  @Property({ columnType: 'text' })
   name: string
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   description?: string
 
   @ManyToOne(() => User)
@@ -62,25 +62,25 @@ export class Server extends BaseEntity {
   userBans = new Collection<ServerUserBan>(this)
 
   @Field()
-  @Property({ default: 0 })
+  @Property({ default: 0, unsigned: true })
   userCount: number
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   bannerUrl?: string
 
   @Field()
   @Property({ default: false })
   isBanned: boolean
 
-  @OneToMany(() => ChatChannel, 'server', {
+  @OneToMany(() => Channel, 'server', {
     orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
   })
-  channels = new Collection<ChatChannel>(this)
+  channels = new Collection<Channel>(this)
 
   @Field()
   @Property({ default: false })
@@ -90,8 +90,8 @@ export class Server extends BaseEntity {
   @Property({ default: false })
   isFeatured: boolean
 
-  @Property({ default: Lexico.FIRST_POSITION })
-  featuredPosition: string
+  @Property({ nullable: true, columnType: 'text' })
+  featuredPosition?: string
 
   @OneToMany(() => ServerInvite, 'server')
   invites = new Collection<ServerInvite>(this)

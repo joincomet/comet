@@ -10,7 +10,7 @@ import {
   Resolver,
   UseMiddleware
 } from 'type-graphql'
-import { ChatChannel, Server, ServerInvite, User } from '@/entity'
+import { Channel, Server, ServerInvite, User } from '@/entity'
 import { uploadImage } from '@/util/s3'
 import { SubscriptionTopic, Context } from '@/types'
 import { UserServerPayload } from '@/resolver/server'
@@ -19,7 +19,7 @@ import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
 import { CreateServerArgs } from '@/resolver/server/types/CreateServerArgs'
 import { ServerPermission } from '@/types/ServerPermission'
 import { CheckServerPermission } from '@/util'
-import { CheckServerMember } from '@/util/auth/middlewares/CheckServerMember'
+import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 
 @Resolver()
 export class ServerMutations {
@@ -34,7 +34,7 @@ export class ServerMutations {
     if ((await em.count(ServerUserJoin, { user })) >= 100)
       throw new Error('Cannot join more than 100 servers')
 
-    const channel = em.create(ChatChannel, {
+    const channel = em.create(Channel, {
       name: 'general'
     })
 
@@ -62,18 +62,20 @@ export class ServerMutations {
   }
 
   @CheckServerPermission(ServerPermission.ManageChannels)
-  @Mutation(() => ChatChannel)
+  @Mutation(() => Channel)
   async createChannel(
     @Ctx() { em }: Context,
+    @PubSub(SubscriptionTopic.RefetchServers) refetchServers: Publisher<Server>,
     @Arg('serverId', () => ID) serverId: string,
     @Arg('name') name: string,
-    @PubSub(SubscriptionTopic.RefetchServers) refetchServers: Publisher<Server>
+    @Arg('isPrivate') isPrivate: boolean
   ) {
     const server = await em.findOne(Server, serverId, ['channels'])
 
-    const channel = em.create(ChatChannel, {
+    const channel = em.create(Channel, {
       name,
-      server
+      server,
+      isPrivate
     })
 
     await em.persistAndFlush([channel, server])
@@ -113,7 +115,7 @@ export class ServerMutations {
     return true
   }
 
-  @CheckServerMember()
+  @CheckJoinedServer()
   @Mutation(() => Boolean)
   async leaveServer(
     @Arg('serverId', () => ID, { description: 'ID of server to leave' })

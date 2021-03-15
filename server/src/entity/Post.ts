@@ -18,15 +18,15 @@ import { PostVote } from '@/entity/PostVote'
 @Entity()
 export class Post extends BaseEntity {
   @Field()
-  @Property()
+  @Property({ columnType: 'text' })
   title: string
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   text?: string
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   linkUrl?: string
 
   @Field(() => LinkMetadata, { nullable: true })
@@ -77,7 +77,7 @@ export class Post extends BaseEntity {
   server: Server
 
   @Field(() => Int)
-  @Property({ default: 0 })
+  @Property({ default: 0, unsigned: true })
   voteCount: number
 
   @Field()
@@ -87,7 +87,7 @@ export class Post extends BaseEntity {
   votes = new Collection<PostVote>(this)
 
   @Field(() => Int)
-  @Property({ default: 0 })
+  @Property({ default: 0, unsigned: true })
   commentCount: number
 
   @Field()
@@ -105,7 +105,7 @@ export class Post extends BaseEntity {
   }
 
   @Formula(
-    '(CAST(rocket_count AS float) + 1)/((CAST((CAST(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) AS int) -' +
+    '(CAST(vote_count AS float) + 1)/((CAST((CAST(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) AS int) -' +
       ' CAST(EXTRACT(EPOCH FROM created_at) AS int)+5000) AS FLOAT)/100.0)^(1.618))'
   )
   hotRank: number

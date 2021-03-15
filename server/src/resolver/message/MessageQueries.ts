@@ -6,13 +6,7 @@ import {
   Resolver,
   UseMiddleware
 } from 'type-graphql'
-import {
-  ChatChannel,
-  ChatGroup,
-  ChatMessage,
-  DirectMessage,
-  User
-} from '@/entity'
+import { Channel, Group, Message, DirectMessage, User } from '@/entity'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
 import { GetMessagesArgs, GetMessagesResponse } from '@/resolver/message'
 import { Context } from '@/types'
@@ -20,7 +14,7 @@ import { ChannelPermission } from '@/types/ChannelPermission'
 import { ServerPermission } from '@/types/ServerPermission'
 import { CheckChannelPermission, CheckGroupMember } from '@/util'
 
-@Resolver(() => ChatMessage)
+@Resolver(() => Message)
 export class MessageQueries {
   @CheckChannelPermission(
     ChannelPermission.ViewChannel,
@@ -37,15 +31,15 @@ export class MessageQueries {
     @Args()
     { page, pageSize, pinned, channelId, groupId, userId }: GetMessagesArgs
   ) {
-    const where: FilterQuery<ChatMessage> = {
+    const where: FilterQuery<Message> = {
       isDeleted: false,
       isRemoved: false
     }
     if (pinned) where.isPinned = true
     if (channelId) {
-      where.channel = await em.findOneOrFail(ChatChannel, channelId)
+      where.channel = await em.findOneOrFail(Channel, channelId)
     } else if (groupId) {
-      where.group = await em.findOneOrFail(ChatGroup, groupId)
+      where.group = await em.findOneOrFail(Group, groupId)
     } else if (userId) {
       const user2 = await em.findOneOrFail(User, userId)
       where.directMessage = await em.findOneOrFail(DirectMessage, {
@@ -58,7 +52,7 @@ export class MessageQueries {
 
     return {
       messages: (
-        await em.find(ChatMessage, where, {
+        await em.find(Message, where, {
           limit: pageSize,
           offset: page * pageSize,
           orderBy: { createdAt: QueryOrder.DESC }

@@ -5,9 +5,7 @@ import {
   PrimaryKeyType,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity, Post, User } from '@/entity'
-import { Field } from 'type-graphql'
-import { ServerCategory } from '@/resolver/server'
+import { User } from '@/entity'
 import { FriendRequestStatus } from '@/resolver/friend'
 
 @Entity()

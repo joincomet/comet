@@ -18,7 +18,7 @@ import { Field, ObjectType } from 'type-graphql'
 @Entity()
 export class ServerRole extends BaseEntity {
   @Field()
-  @Property()
+  @Property({ columnType: 'text' })
   name: string
 
   @ManyToOne({ entity: () => Server, inversedBy: 'roles' })
@@ -27,7 +27,7 @@ export class ServerRole extends BaseEntity {
   @ManyToMany(() => User, 'roles', { owner: true })
   users = new Collection<User>(this)
 
-  @Property({ default: Lexico.FIRST_POSITION })
+  @Property({ default: Lexico.FIRST_POSITION, columnType: 'text' })
   position: string
 
   @Field()

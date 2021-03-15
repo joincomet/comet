@@ -9,13 +9,7 @@ import {
   Resolver,
   UseMiddleware
 } from 'type-graphql'
-import {
-  ChatChannel,
-  ChatGroup,
-  ChatMessage,
-  DirectMessage,
-  User
-} from '@/entity'
+import { Channel, Group, Message, DirectMessage, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { scrapeMetadata } from '@/util/metascraper'
 import {
@@ -45,15 +39,15 @@ export class MessageMutations {
   async sendMessage(
     @Args() { text, channelId, groupId, userId }: SendMessageArgs,
     @PubSub(SubscriptionTopic.MessageReceived)
-    messageCreated: Publisher<ChatMessage>,
+    messageCreated: Publisher<Message>,
     @PubSub(SubscriptionTopic.MessageUpdated)
-    messageUpdated: Publisher<ChatMessage>,
+    messageUpdated: Publisher<Message>,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
     const channel = channelId
-      ? await em.findOneOrFail(ChatChannel, channelId)
+      ? await em.findOneOrFail(Channel, channelId)
       : null
-    const group = groupId ? await em.findOneOrFail(ChatGroup, groupId) : null
+    const group = groupId ? await em.findOneOrFail(Group, groupId) : null
     const user2 = userId ? await em.findOneOrFail(User, userId) : null
     const directMessage = user2
       ? await em.findOneOrFail(DirectMessage, {
@@ -63,7 +57,7 @@ export class MessageMutations {
           ]
         })
       : null
-    const message = em.create(ChatMessage, {
+    const message = em.create(Message, {
       text,
       channel,
       group,
@@ -86,11 +80,11 @@ export class MessageMutations {
     @Arg('messageId', () => ID, { description: 'ID of message to edit' })
     messageId: string,
     @PubSub(SubscriptionTopic.MessageUpdated)
-    messageUpdated: Publisher<ChatMessage>,
+    messageUpdated: Publisher<Message>,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
     if (!text) throw new Error('Text cannot be empty')
-    const message = await em.findOneOrFail(ChatMessage, messageId)
+    const message = await em.findOneOrFail(Message, messageId)
     message.text = text
     await em.persistAndFlush(message)
     await messageUpdated(message)
@@ -106,10 +100,10 @@ export class MessageMutations {
     @Arg('messageId', () => ID, { description: 'ID of message to delete' })
     messageId: string,
     @PubSub(SubscriptionTopic.MessageRemoved)
-    messageRemoved: Publisher<ChatMessage>,
+    messageRemoved: Publisher<Message>,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
-    const message = await em.findOneOrFail(ChatMessage, messageId, ['author'])
+    const message = await em.findOneOrFail(Message, messageId, ['author'])
     message.isDeleted = true
     await em.persistAndFlush(message)
     await messageRemoved(message)
@@ -128,10 +122,10 @@ export class MessageMutations {
     @Arg('messageId', () => ID, { description: 'ID of message to remove' })
     messageId: string,
     @PubSub(SubscriptionTopic.MessageRemoved)
-    messageRemoved: Publisher<ChatMessage>,
+    messageRemoved: Publisher<Message>,
     @Ctx() { em }: Context
   ): Promise<boolean> {
-    const message = await em.findOneOrFail(ChatMessage, messageId)
+    const message = await em.findOneOrFail(Message, messageId)
     message.isDeleted = true
     await em.persistAndFlush(message)
     await messageRemoved(message)
@@ -140,8 +134,8 @@ export class MessageMutations {
 
   async getLinkMetas(
     em: EntityManager,
-    messageUpdated: Publisher<ChatMessage>,
-    message: ChatMessage
+    messageUpdated: Publisher<Message>,
+    message: Message
   ) {
     const linkRegex = /(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/gi
     const links = message.text.match(linkRegex)

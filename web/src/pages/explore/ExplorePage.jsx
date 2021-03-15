@@ -8,12 +8,12 @@ import {
   HiClock
 } from 'react-icons/hi'
 import Header from '@/components/ui/header/Header'
-import PlanetInfoCard from '@/components/planet/PlanetInfoCard'
+import ServerInfoCard from '@/components/server/ServerInfoCard'
 import { FaSortAlphaDown } from 'react-icons/fa'
-import { galaxyIcon } from '@/lib/galaxyIcon'
+import { categoryIcon } from '@/lib/categoryIcon'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
-import { PLANETS_QUERY, usePlanetsQuery } from '@/graphql/queries'
+import { GET_SERVERS } from '@/graphql/queries'
 
 export default function ExplorePage() {
   const query = useParams()
@@ -23,22 +23,22 @@ export default function ExplorePage() {
     page: query.page ? query.page - 1 : 0,
     sort: query.sort
       ? query.sort.toUpperCase()
-      : query.galaxy
+      : query.category
       ? 'AZ'
       : 'FEATURED',
-    galaxy: query.galaxy ? query.galaxy : null
+    category: query.category ? query.category : null
   }
 
   const title = () => {
-    if (query.galaxy) return query.galaxy + ' Planets'
+    if (query.category) return query.category + ' Planets'
     if (!query.sort) return 'Featured Planets'
     if (query.sort === 'new') return 'Recently Created Planets'
     if (query.sort === 'top') return 'Most Popular Planets'
     if (query.sort === 'az') return 'All Planets (A-Z)'
   }
 
-  const [{ data }] = usePlanetsQuery(variables)
-  const planets = data?.planets?.planets || []
+  const [{ data }] = useQuery({ query: GET_SERVERS, variables })
+  const servers = data?.getServers?.servers || []
 
   return (
     <>
@@ -64,7 +64,7 @@ export default function ExplorePage() {
           </div>
           <div className="py-4 text-secondary text-xl font-semibold flex items-center">
             {
-              !query.galaxy && !query.sort && (
+              !query.category && !query.sort && (
                 <HiCheckCircle className="h-6 w-6 mr-3" />
               ) // Featured
             }
@@ -75,12 +75,14 @@ export default function ExplorePage() {
             {query.sort === 'az' && (
               <FaSortAlphaDown className="h-6 w-6 mr-3" />
             )}
-            {query.galaxy && <>{galaxyIcon(query.galaxy, 'h-6 w-6 mr-3')}</>}
+            {query.category && (
+              <>{categoryIcon(query.category, 'h-6 w-6 mr-3')}</>
+            )}
             {title()}
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5">
-            {planets.map(planet => (
-              <PlanetInfoCard planet={planet} key={planet.id} />
+            {servers.map(planet => (
+              <ServerInfoCard planet={planet} key={planet.id} />
             ))}
           </div>
         </div>

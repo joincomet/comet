@@ -1,4 +1,5 @@
 export * from './CreateUserArgs'
+export * from './GetChannelPermissionsResponse'
 export * from './GroupDmUnion'
 export * from './LoginResponse'
 export * from './UpdateUserArgs'

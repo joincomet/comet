@@ -1,15 +1,27 @@
 import {
+  Arg,
   Authorized,
   Ctx,
   FieldResolver,
+  ID,
   Query,
   Resolver,
   Root
 } from 'type-graphql'
-import { Context } from '@/types'
-import { ChatGroup, DirectMessage, User } from '@/entity'
+import { ChannelPermission, Context, ServerPermission } from '@/types'
+import {
+  Group,
+  DirectMessage,
+  User,
+  Server,
+  Channel,
+  ChannelRole
+} from '@/entity'
 import { GroupDmUnion } from '@/resolver/user/types/GroupDmUnion'
 import { QueryOrder } from '@mikro-orm/core'
+import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
+import { CheckJoinedChannelServer } from '@/util/auth/middlewares/CheckJoinedChannelServer'
+import { GetChannelPermissionsResponse } from '@/resolver/user/types'
 
 @Resolver(() => User)
 export class UserQueries {
@@ -46,7 +58,7 @@ export class UserQueries {
       ['user1', 'user2', 'channel'],
       { updatedAt: QueryOrder.DESC }
     )
-    const arr: (ChatGroup | DirectMessage)[] = [].concat(groups).concat(dms)
+    const arr: (Group | DirectMessage)[] = [].concat(groups).concat(dms)
     return arr.sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
   }
 

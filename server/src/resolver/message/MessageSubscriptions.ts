@@ -1,35 +1,36 @@
-import { Authorized, ID, Resolver, Root, Subscription } from 'type-graphql'
-import { ChatChannel, ChatMessage } from '@/entity'
+import { Authorized, Ctx, ID, Resolver, Root, Subscription } from 'type-graphql'
+import { Channel, Message } from '@/entity'
 import {
   SubscriptionFilter,
   SubscriptionTopic,
   ChannelPermission,
-  ServerPermission
+  ServerPermission,
+  Context
 } from '@/types'
 
 const filter = async ({
-  payload: channelId,
+  payload: messageId,
   context: { user, em }
-}: SubscriptionFilter<ChatMessage>) => {
-  const channel = await em.findOneOrFail(ChatChannel, channelId, [
-    'server',
+}: SubscriptionFilter<string>) => {
+  const message = await em.findOneOrFail(Message, messageId, [
+    'channel.server',
     'group.users',
     'directMessage.user1',
     'directMessage.user2'
   ])
 
-  if (channel.server)
+  if (message.channel) {
     return user.hasChannelPermission(
       em,
+      message.channel,
       ChannelPermission.ViewChannel,
-      ServerPermission.ViewChannels,
-      channel.id
+      ServerPermission.ViewChannels
     )
-  else if (channel.group) return channel.group.users.contains(user)
-  else if (channel.directMessage)
+  } else if (message.group) return message.group.users.contains(user)
+  else if (message.directMessage)
     return (
-      channel.directMessage.user1 === user ||
-      channel.directMessage.user2 === user
+      message.directMessage.user1 === user ||
+      message.directMessage.user2 === user
     )
   else return false
 }
@@ -37,25 +38,25 @@ const filter = async ({
 @Resolver()
 export class MessageSubscriptions {
   @Authorized()
-  @Subscription(() => ChatMessage, {
+  @Subscription(() => Message, {
     topics: SubscriptionTopic.MessageReceived,
     filter,
     description:
       'Published to all users with permission to view message when a message is sent'
   })
-  messageReceived(@Root() message: ChatMessage) {
-    return message
+  async messageReceived(@Ctx() { em }: Context, @Root() messageId: string) {
+    return em.findOneOrFail(Message, messageId, ['author'])
   }
 
   @Authorized()
-  @Subscription(() => ChatMessage, {
+  @Subscription(() => Message, {
     topics: SubscriptionTopic.MessageUpdated,
     filter,
     description:
       'Published to all users with permission to view message when a message is updated (edited or embeds fetched)'
   })
-  messageUpdated(@Root() message: ChatMessage) {
-    return message
+  async messageUpdated(@Ctx() { em }: Context, @Root() messageId: string) {
+    return em.findOneOrFail(Message, messageId, ['author'])
   }
 
   @Authorized()
@@ -65,7 +66,7 @@ export class MessageSubscriptions {
     description:
       'Published to all users with permission to view message when a message is deleted or removed'
   })
-  messageRemoved(@Root() message: ChatMessage) {
-    return message.id
+  messageRemoved(@Root() messageId: string) {
+    return messageId
   }
 }

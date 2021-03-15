@@ -2,11 +2,12 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import { useForm } from 'react-hook-form'
-import { useLoginMutation } from '@/graphql/oldmutations'
 import Button from '@/components/Button'
+import { useMutation } from 'urql'
+import { LOGIN } from '@/graphql/mutations'
 
 export default function LoginPage() {
-  const [{ data, fetching, error }, login] = useLoginMutation()
+  const [{ data, fetching, error }, login] = useMutation(LOGIN)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 
@@ -27,13 +28,13 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div className="title mb-6">Welcome back!</div>
         <div className="mb-4">
-          <label htmlFor="name" className="label">
-            Email or Username#tag
+          <label htmlFor="email" className="label">
+            Email
           </label>
           <input
             className="textbox px-3"
-            id="name"
-            {...register('name', { required: true })}
+            id="email"
+            {...register('email', { required: true })}
           />
         </div>
 

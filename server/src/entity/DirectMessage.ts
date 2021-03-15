@@ -7,7 +7,7 @@ import {
   PrimaryKeyType,
   Property
 } from '@mikro-orm/core'
-import { ChatChannel, ChatMessage, User } from '@/entity'
+import { Channel, Message, User } from '@/entity'
 import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
@@ -29,8 +29,8 @@ export class DirectMessage {
 
   [PrimaryKeyType]: [string, string]
 
-  @OneToMany(() => ChatMessage, 'directMessage')
-  messages = new Collection<ChatMessage>(this)
+  @OneToMany(() => Message, 'directMessage')
+  messages = new Collection<Message>(this)
 
   @Field()
   @Property()

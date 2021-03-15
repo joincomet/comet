@@ -5,7 +5,7 @@ export default gql`
   query GetCurrentUser {
     getCurrentUser {
       ...USER_FRAGMENT
-      admin
+      isAdmin
     }
   }
   ${USER_FRAGMENT}

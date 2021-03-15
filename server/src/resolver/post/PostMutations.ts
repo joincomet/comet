@@ -57,7 +57,7 @@ export class PostMutations {
       imageUrls,
       text: text,
       rocketers: [user],
-      rocketCount: 1,
+      voteCount: 1,
       isRocketed: true
     })
 

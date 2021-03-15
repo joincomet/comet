@@ -1,6 +1,6 @@
 import { Context } from '@/types'
 import { createMethodDecorator, MiddlewareFn } from 'type-graphql'
-import { ChatGroup, ChatMessage, Comment, DirectMessage, Post } from '@/entity'
+import { Group, Message, Comment, DirectMessage, Post } from '@/entity'
 
 /**
  * Expects groupId arg

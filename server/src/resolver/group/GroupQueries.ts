@@ -1,5 +1,5 @@
 import { Resolver } from 'type-graphql'
-import { ChatGroup } from '@/entity'
+import { Group } from '@/entity'
 
-@Resolver(() => ChatGroup)
+@Resolver(() => Group)
 export class GroupQueries {}

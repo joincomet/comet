@@ -1,6 +1,8 @@
 import { registerEnumType } from 'type-graphql'
 
 export enum ServerPermission {
+  GlobalAdmin = 'GLOBAL_ADMIN',
+  ServerOwner = 'SERVER_OWNER',
   ServerAdmin = 'SERVER_ADMIN',
 
   ViewChannels = 'VIEW_CHANNELS',

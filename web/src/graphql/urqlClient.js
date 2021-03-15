@@ -10,7 +10,7 @@ import { makeOperation } from '@urql/core'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { cacheExchange } from '@urql/exchange-graphcache'
 import { devtoolsExchange } from '@urql/devtools'
-import { MESSAGES_QUERY } from '@/graphql/queries'
+import { GET_MESSAGES } from '@/graphql/queries'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
 import toast from 'react-hot-toast'
 
@@ -68,7 +68,6 @@ const addAuthToOperation = ({ authState, operation }) => {
 }
 
 export const urqlClient = createClient({
-  suspense: true,
   url:
     process.env.NODE_ENV === 'production'
       ? `https://${process.env.APP_DOMAIN}/${process.env.SERVER_PATH}/graphql`
@@ -94,9 +93,13 @@ export const urqlClient = createClient({
       },
       updates: {
         Subscription: {
-          newMessage: ({ newMessage }, { channelId }, cache) => {
+          messageReceived: (
+            { messageReceived: newMessage },
+            { channelId },
+            cache
+          ) => {
             cache.updateQuery(
-              { query: MESSAGES_QUERY, variables: { page: 0, channelId } },
+              { query: GET_MESSAGES, variables: { page: 0, channelId } },
               data => {
                 if (data !== null) {
                   data.messages.push(newMessage)

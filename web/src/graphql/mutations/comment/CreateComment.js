@@ -3,7 +3,7 @@ import { COMMENT_FRAGMENT } from '@/graphql/fragments'
 
 export default gql`
   mutation CreateComment($text: String!, $postId: ID!, $parentCommentId: ID) {
-    submitComment(
+    createComment(
       text: $text
       postId: $postId
       parentCommentId: $parentCommentId

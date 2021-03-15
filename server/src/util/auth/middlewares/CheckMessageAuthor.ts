@@ -1,6 +1,6 @@
 import { Context } from '@/types'
 import { createMethodDecorator } from 'type-graphql'
-import { ChatMessage } from '@/entity'
+import { Message } from '@/entity'
 
 /**
  * Expects groupId arg
@@ -12,7 +12,7 @@ export const CheckMessageAuthor = () =>
       if (!user) throw new Error('Not logged in')
       // if (!messageId) throw new Error('Args must include messageId')
       if (!messageId) return next()
-      const message = await em.findOneOrFail(ChatMessage, messageId, ['author'])
+      const message = await em.findOneOrFail(Message, messageId, ['author'])
       if (message.author !== user)
         throw new Error('You are not the author of this message')
       return next()

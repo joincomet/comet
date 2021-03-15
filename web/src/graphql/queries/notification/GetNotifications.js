@@ -9,7 +9,7 @@ export default gql`
         id
         parentCommentId
         text
-        rocketCount
+        voteCount
         author {
           ...USER_FRAGMENT
         }

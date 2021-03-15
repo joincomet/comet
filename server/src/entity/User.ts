@@ -11,14 +11,14 @@ import {
 } from '@mikro-orm/core'
 import {
   BaseEntity,
-  ChatChannel,
-  ChatGroup,
+  Channel,
+  Group,
   Server,
   UserFolder,
   ServerUserBan,
   ServerUserJoin,
   ServerRole,
-  ChatChannelRole,
+  ChannelRole,
   DirectMessage,
   FriendRequest,
   UserBlock
@@ -30,11 +30,11 @@ import { ServerPermission, ChannelPermission } from '@/types'
 @Entity()
 export class User extends BaseEntity {
   @Field()
-  @Property()
+  @Property({ columnType: 'text' })
   name: string
 
   @Field()
-  @Property()
+  @Property({ columnType: 'text' })
   tag: string
 
   @Field()
@@ -43,7 +43,7 @@ export class User extends BaseEntity {
 
   @Authorized('USER')
   @Field()
-  @Property()
+  @Property({ columnType: 'text' })
   @Unique()
   email: string
 
@@ -58,7 +58,7 @@ export class User extends BaseEntity {
     return new Date().getTime() - this.lastLogin.getTime() < timeout
   }
 
-  @Property()
+  @Property({ columnType: 'text' })
   passwordHash: string
 
   @Property({ default: false })
@@ -66,7 +66,7 @@ export class User extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  isAdmin: boolean
+  isAdmin: boolean = false
 
   @OneToMany(() => UserFolder, 'user', {
     orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
@@ -90,13 +90,13 @@ export class User extends BaseEntity {
   @OneToMany(() => FriendRequest, 'toUser')
   incomingFriendRequests = new Collection<FriendRequest>(this)
 
-  @ManyToMany(() => ChatGroup, group => group.users, {
+  @ManyToMany(() => Group, group => group.users, {
     orderBy: { updatedAt: QueryOrder.DESC }
   })
-  groups = new Collection<ChatGroup>(this)
+  groups = new Collection<Group>(this)
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
   @Field()
@@ -109,7 +109,7 @@ export class User extends BaseEntity {
   @Property({ default: false })
   isBanned: boolean
 
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   banReason?: string
 
   async isBannedFromServer(
@@ -222,7 +222,7 @@ export class User extends BaseEntity {
 
   async hasChannelPermission(
     em: EntityManager,
-    channel: ChatChannel,
+    channel: Channel,
     channelPermission: ChannelPermission,
     serverPermission: ServerPermission | null
   ): Promise<boolean> {
@@ -236,12 +236,12 @@ export class User extends BaseEntity {
     })
     if (!!roles.find(role => role.hasPermission(ServerPermission.ServerAdmin)))
       return true
-    const channelRoles = await em.find(ChatChannelRole, {
+    const channelRoles = await em.find(ChannelRole, {
       $and: [
         { channel },
         {
           role: {
-            $in: user.roles.getItems()
+            $in: roles
           }
         }
       ]
@@ -259,7 +259,7 @@ export class User extends BaseEntity {
 
   async checkChannelPermission(
     em: EntityManager,
-    channel: ChatChannel,
+    channel: Channel,
     channelPermission: ChannelPermission,
     serverPermission: ServerPermission | null
   ) {
@@ -275,12 +275,12 @@ export class User extends BaseEntity {
       throw new Error(`Missing channel permission ${channelPermission}`)
   }
 
-  async isInGroup(em: EntityManager, group: ChatGroup) {
+  async isInGroup(em: EntityManager, group: Group) {
     await em.populate(group, ['users'])
     return group.users.contains(this)
   }
 
-  async checkInGroup(em: EntityManager, group: ChatGroup) {
+  async checkInGroup(em: EntityManager, group: Group) {
     if (!(await this.isInGroup(em, group)))
       throw new Error('You are not in this group')
   }

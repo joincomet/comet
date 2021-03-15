@@ -1,5 +1,5 @@
 export { default as BAN_USER_GLOBAL } from './BanUserGlobal'
-export { default as BAN_USER_FROM_SERVER } from './BanUserServer'
-export { default as BAN_USER_FROM_SERVER } from './BanUserServer'
-export { default as LOGIN } from './Login'
 export { default as CHANGE_PASSWORD } from './ChangePassword'
+export { default as CREATE_ACCOUNT } from './CreateAccount'
+export { default as LOGIN } from './Login'
+export { default as UPDATE_USER } from './UpdateUser'

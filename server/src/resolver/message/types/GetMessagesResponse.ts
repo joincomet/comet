@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { ChatMessage } from '@/entity'
+import { Message } from '@/entity'
 
 @ObjectType()
 export class GetMessagesResponse {
@@ -9,6 +9,6 @@ export class GetMessagesResponse {
   @Field(() => Int, { nullable: true })
   nextPage?: number
 
-  @Field(() => [ChatMessage])
-  messages: ChatMessage[]
+  @Field(() => [Message])
+  messages: Message[]
 }

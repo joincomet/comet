@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import LandingPage from '@/pages/LandingPage'
 import HomePage from '@/pages/home/HomePage'
@@ -8,25 +8,20 @@ import RegisterPage from '@/pages/auth/RegisterPage'
 import AuthLayout from '@/pages/auth/AuthLayout'
 import LoadingScreen from '@/pages/LoadingScreen'
 import { BrowserRouter } from 'react-router-dom'
-import PlanetPostsPage from '@/pages/planet/PlanetPostsPage'
-import PlanetScroller from '@/components/planet-scroller/PlanetScroller'
+import ServerPostsPage from '@/pages/server/ServerPostsPage'
+import ServerList from '@/components/server-list/ServerList'
 import HomeLayout from '@/pages/home/HomeLayout'
-import PlanetLayout from '@/pages/planet/PlanetLayout'
+import ServerLayout from '@/pages/server/ServerLayout'
 import GroupPage from '@/pages/group/GroupPage'
 import FolderPage from '@/pages/folder/FolderPage'
-import PlanetChannelPage from '@/pages/channel/PlanetChannelPage'
-import PlanetPostPage from '@/pages/post/PlanetPostPage'
+import ChannelPage from '@/pages/channel/ChannelPage'
+import PlanetPostPage from '@/pages/post/PostPage'
 import PlanetFolderPage from '@/pages/folder/PlanetFolderPage'
 import NotFound from '@/pages/NotFound'
-import { useQuery } from 'urql'
-import { GET_CURRENT_USER } from '@/graphql/queries'
+import { useUser } from '@/lib/useUser'
 
 export default function Router() {
-  const [{ data }] = useQuery({
-    query: GET_CURRENT_USER,
-    context: { suspense: false }
-  })
-  const currentUser = data?.currentUser
+  const { user: currentUser } = useUser()
   return (
     <BrowserRouter>
       <Switch>
@@ -75,47 +70,45 @@ export default function Router() {
           ]}
           exact
         >
-          <Suspense fallback={<LoadingScreen />}>
-            <PlanetScroller />
-            <Switch>
-              <PrivateRoute path="/home">
-                <HomeLayout>
-                  <Switch>
-                    <PrivateRoute path="/home" exact>
-                      <HomePage />
-                    </PrivateRoute>
-                    <PrivateRoute path="/home/folder/:folderId">
-                      <FolderPage />
-                    </PrivateRoute>
-                    <PrivateRoute path="/home/chat/:groupId">
-                      <GroupPage />
-                    </PrivateRoute>
-                  </Switch>
-                </HomeLayout>
-              </PrivateRoute>
-              <PrivateRoute path="/explore">
-                <ExplorePage />
-              </PrivateRoute>
-              <PrivateRoute path="/planet/:planetId">
-                <PlanetLayout>
-                  <Switch>
-                    <PrivateRoute path="/planet/:planetId" exact>
-                      <PlanetPostsPage />
-                    </PrivateRoute>
-                    <PrivateRoute path="/planet/:planetId/channel/:channelId">
-                      <PlanetChannelPage />
-                    </PrivateRoute>
-                    <PrivateRoute path="/planet/:planetId/post/:postId">
-                      <PlanetPostPage />
-                    </PrivateRoute>
-                    <PrivateRoute path="/planet/:planetId/folder/:folderId">
-                      <PlanetFolderPage />
-                    </PrivateRoute>
-                  </Switch>
-                </PlanetLayout>
-              </PrivateRoute>
-            </Switch>
-          </Suspense>
+          <ServerList />
+          <Switch>
+            <PrivateRoute path="/home">
+              <HomeLayout>
+                <Switch>
+                  <PrivateRoute path="/home" exact>
+                    <HomePage />
+                  </PrivateRoute>
+                  <PrivateRoute path="/home/folder/:folderId">
+                    <FolderPage />
+                  </PrivateRoute>
+                  <PrivateRoute path="/home/chat/:groupId">
+                    <GroupPage />
+                  </PrivateRoute>
+                </Switch>
+              </HomeLayout>
+            </PrivateRoute>
+            <PrivateRoute path="/explore">
+              <ExplorePage />
+            </PrivateRoute>
+            <PrivateRoute path="/planet/:planetId">
+              <ServerLayout>
+                <Switch>
+                  <PrivateRoute path="/planet/:planetId" exact>
+                    <ServerPostsPage />
+                  </PrivateRoute>
+                  <PrivateRoute path="/planet/:planetId/channel/:channelId">
+                    <ChannelPage />
+                  </PrivateRoute>
+                  <PrivateRoute path="/planet/:planetId/post/:postId">
+                    <PlanetPostPage />
+                  </PrivateRoute>
+                  <PrivateRoute path="/planet/:planetId/folder/:folderId">
+                    <PlanetFolderPage />
+                  </PrivateRoute>
+                </Switch>
+              </ServerLayout>
+            </PrivateRoute>
+          </Switch>
         </Route>
 
         <Route>
@@ -127,8 +120,7 @@ export default function Router() {
 }
 
 function PrivateRoute({ children, ...rest }) {
-  const [{ data }] = useCurrentUserQuery()
-  const currentUser = data?.currentUser
+  const { user: currentUser } = useUser()
 
   return (
     <Route

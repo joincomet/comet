@@ -2,7 +2,7 @@ import Post from '@/components/post/Post'
 import React from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import { useQuery } from 'urql'
-import { POSTS_QUERY, usePostsQuery } from '@/graphql/queries'
+import { GET_POSTS } from '@/graphql/queries'
 
 export default function Posts({
   variables,
@@ -13,8 +13,8 @@ export default function Posts({
   draggable = false,
   expandable = false
 }) {
-  const { data } = usePostsQuery(variables)
-  const posts = data?.posts?.posts || []
+  const [{ data }] = useQuery({ query: GET_POSTS })
+  const posts = data?.getPosts?.posts || []
 
   return (
     <Virtuoso

@@ -1,13 +1,13 @@
 import React from 'react'
 import LoginModal from '@/components/modals/login/LoginModal'
-import PlanetScroller from '@/components/planet-scroller/PlanetScroller'
+import ServerList from '@/components/server-list/ServerList'
 
 export default function Layout({ children }) {
   return (
     <>
       <LoginModal />
 
-      <PlanetScroller />
+      <ServerList />
 
       {children}
       <div id="popup" />

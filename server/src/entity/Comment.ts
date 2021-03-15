@@ -22,7 +22,7 @@ export class Comment extends BaseEntity {
   post: Post
 
   @Field()
-  @Property()
+  @Property({ columnType: 'text' })
   text: string
 
   @Field(() => ID, { nullable: true })
@@ -30,7 +30,7 @@ export class Comment extends BaseEntity {
   parentCommentId: string
 
   @Field(() => Int)
-  @Property({ default: 0 })
+  @Property({ default: 0, unsigned: true })
   voteCount: number
 
   @Field()
@@ -60,6 +60,6 @@ export class Comment extends BaseEntity {
   isRemoved: boolean
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
   removedReason?: string
 }

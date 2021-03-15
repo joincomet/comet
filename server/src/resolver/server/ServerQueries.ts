@@ -8,7 +8,7 @@ import {
   Resolver,
   UseMiddleware
 } from 'type-graphql'
-import { ChatChannel, Server } from '@/entity'
+import { Channel, Server } from '@/entity'
 import {
   ChannelUsersResponse,
   GetServersArgs,
@@ -20,6 +20,7 @@ import { Context } from '@/types'
 import { ServerPermission } from '@/types/ServerPermission'
 import { ChannelPermission } from '@/types/ChannelPermission'
 import { CheckChannelPermission } from '@/util'
+import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 
 @Resolver(() => Server)
 export class ServerQueries {
@@ -84,7 +85,7 @@ export class ServerQueries {
     @Ctx() { em }: Context,
     @Arg('channelId', () => ID) channelId: string
   ) {
-    const channel = await em.findOneOrFail(ChatChannel, channelId, [
+    const channel = await em.findOneOrFail(Channel, channelId, [
       'server.userJoins.user',
       'server.roles'
     ])
@@ -135,5 +136,27 @@ export class ServerQueries {
     } as ChannelUsersResponse)
 
     return result
+  }
+
+  @CheckJoinedServer()
+  @Query(() => [ServerPermission])
+  async getServerPermissions(
+    @Ctx() { user, em }: Context,
+    @Arg('serverId', () => ID) serverId: string
+  ) {
+    const server = await em.findOneOrFail(Server, serverId, ['owner', 'roles'])
+    const perms = new Set<ServerPermission>()
+    if (user.isAdmin) perms.add(ServerPermission.GlobalAdmin)
+    if (server.owner === user) {
+      perms.add(ServerPermission.ServerOwner)
+      perms.add(ServerPermission.ServerAdmin)
+    }
+    const serverRoles = server.roles.getItems()
+    await em.populate(user, ['roles'])
+    const userRoles = user.roles
+      .getItems()
+      .filter(role => serverRoles.includes(role))
+    userRoles.forEach(role => role.permissions.forEach(perm => perms.add(perm)))
+    return [...perms]
   }
 }
