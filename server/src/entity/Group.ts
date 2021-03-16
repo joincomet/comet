@@ -34,4 +34,15 @@ export class Group extends BaseEntity {
 
   @OneToMany(() => Message, 'group')
   messages = new Collection<Message>(this)
+
+  @Field()
+  get displayName(): string {
+    if (this.name) return this.name
+    if (this.users.isInitialized())
+      return this.users
+        .getItems()
+        .map(u => u.name)
+        .join(', ')
+    return this.id
+  }
 }

@@ -6,9 +6,10 @@ import { DragItemTypes } from '@/lib/DragItemTypes'
 import toast from 'react-hot-toast'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import { useLocation, useParams } from 'react-router-dom'
+import { useUserFolders } from '@/components/DataProvider'
 
 export default forwardRef((props, ref) => {
-  const folders = []
+  const folders = useUserFolders()
   return (
     <Sidebar right ref={ref} header>
       <div className="px-2">

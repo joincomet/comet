@@ -8,10 +8,10 @@ import { useQueryParams } from '@/lib/useQueryParams'
 import { capitalize } from '@/lib/capitalize'
 
 export default function SidebarSortButtons() {
-  const { planetId } = useParams()
+  const { serverId } = useParams()
   const { sort } = useQueryParams()
 
-  const pathname = planetId ? `/planet/${planetId}` : '/home'
+  const pathname = serverId ? `/server/${serverId}/posts` : '/posts'
   const toHot = { pathname }
   const toNew = { pathname, search: '?sort=new' }
   const toTop = { pathname, search: '?sort=top' }

@@ -8,6 +8,7 @@ export const USER_FRAGMENT = gql`
     tag
     avatarUrl
     isCurrentUser
+    isOnline
   }
 `
 
@@ -52,6 +53,8 @@ export const POST_FRAGMENT = gql`
     isDeleted
     isRemoved
     removedReason
+    createdAt
+    editedAt
     linkMetadata {
       title
       description

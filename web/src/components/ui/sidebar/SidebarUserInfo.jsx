@@ -1,23 +1,20 @@
 import { HiCog, HiUser } from 'react-icons/hi'
 import React from 'react'
 import Tippy from '@tippyjs/react'
-import { useUser } from '@/lib/useUser'
+import { useUser } from '@/components/DataProvider'
+import UserAvatar from '@/components/user/UserAvatar'
 
 export function SidebarUserInfo() {
-  const { user: currentUser } = useUser()
+  const currentUser = useUser()
 
   return (
     <div className="fixed bottom-0 left-16 right-0 w-60 h-12 px-3 dark:bg-gray-850 flex items-center">
-      <div className="h-8 w-8 relative rounded-full dark:bg-gray-800 inline-flex items-center justify-center">
-        {currentUser.avatarUrl ? (
-          <img
-            src={currentUser.avatarUrl}
-            className="w-full h-full rounded-full object-cover"
-          />
-        ) : (
-          <HiUser className="w-5 h-5 text-mid" />
-        )}
-      </div>
+      <UserAvatar
+        user={currentUser}
+        size={9}
+        showOnline
+        dotClassName="w-2.5 h-2.5 ring-3 dark:ring-gray-850"
+      />
 
       <div className="ml-3">
         <div className="text-sm text-primary font-medium">

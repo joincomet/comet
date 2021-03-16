@@ -17,20 +17,17 @@ import { DragItemTypes } from '@/lib/DragItemTypes'
 import ReactPlayer from 'react-player'
 import { TiPin } from 'react-icons/ti'
 import UserAvatar from '@/components/user/UserAvatar'
-import PlanetAvatar from '@/components/server/ServerAvatar'
+import ServerAvatar from '@/components/server/ServerAvatar'
 import ServerPopup from '@/components/server/ServerPopup'
 import UserPopup from '@/components/user/UserPopup'
 import { useMutation } from 'urql'
+import { CREATE_POST_VOTE, REMOVE_POST_VOTE } from '@/graphql/mutations'
+import { fullDate, shortDate } from '@/lib/timeUtils'
 
 export default function Post({
   postData,
-  planet = false,
-  embed = false,
-  thumbnail = false,
-  link = false,
-  draggable = false,
-  expandable = false,
-  actionsLast = false,
+  showServerName = true,
+  forceExpand = false,
   className = ''
 }) {
   const [editing, setEditing] = useState(false)
@@ -42,7 +39,8 @@ export default function Post({
     (post.imageUrls && post.imageUrls.length > 0)
 
   const [{ opacity }, dragRef] = useDrag({
-    item: { id: post.id, type: DragItemTypes.POST },
+    type: DragItemTypes.POST,
+    item: post,
     collect: monitor => ({
       opacity: monitor.isDragging() ? 0.4 : 1
     })
@@ -50,42 +48,35 @@ export default function Post({
 
   const [expanded, setExpanded] = useState(false)
 
-  const { push } = useHistory()
-
   return (
     <article
-      ref={draggable ? dragRef : null}
+      ref={dragRef}
       style={{ opacity }}
-      onClick={() => {
-        // if (link) push(post.relativeUrl)
-      }}
-      className={`${className} ${
-        link ? 'cursor-pointer' : ''
-      } relative transition dark:hover:bg-gray-775 pt-3 px-4 pb-1.5`}
+      className={`${className} cursor-pointer relative transition dark:hover:bg-gray-775 pt-3 px-4 pb-1.5 dark:border-gray-700 border-b`}
     >
       <div className="flex flex-row-reverse lg:flex-row w-full">
-        {thumbnail && <Thumbnail post={post} />}
+        <Thumbnail post={post} />
 
         <div className="flex-grow">
           <div className="flex flex-wrap items-center text-13 font-medium text-tertiary pb-1">
             {post.pinned && (
-              <Tippy content={`Pinned to +${post.planet.name}`}>
+              <Tippy content={`Pinned to +${post.server.name}`}>
                 <div className="mr-1.5">
                   <TiPin className="h-5 w-5 text-accent" />
                 </div>
               </Tippy>
             )}
-            {planet && (
+            {showServerName && (
               <>
-                <ServerPopup planet={post.planet}>
-                  <PlanetAvatar
-                    planet={post.planet}
+                <ServerPopup server={post.server}>
+                  <ServerAvatar
+                    server={post.server}
                     className="h-5 w-5 mr-1.5"
                   />
                 </ServerPopup>
-                <ServerPopup planet={post.planet}>
+                <ServerPopup server={post.server}>
                   <span className="text-accent hover:underline cursor-pointer">
-                    +{post.planet.name}
+                    +{post.server.name}
                   </span>
                 </ServerPopup>
                 &nbsp;&middot;&nbsp;
@@ -94,17 +85,18 @@ export default function Post({
             <UserPopup user={post.author}>
               <UserAvatar
                 user={post.author}
-                className="rounded-full h-5 w-5 mr-1.5 cursor-pointer"
+                className="rounded-full mr-1.5 cursor-pointer"
+                size={5}
               />
             </UserPopup>
             <UserPopup user={post.author}>
               <span className="hover:underline cursor-pointer">
-                {post.author.username}
+                {post.author.name}
               </span>
             </UserPopup>
             &nbsp;&middot;&nbsp;
-            <Tippy content={post.timeSinceFull}>
-              <span>{post.timeSince}</span>
+            <Tippy content={fullDate(post.createdAt)}>
+              <span>{shortDate(post.createdAt)}</span>
             </Tippy>
             &nbsp;&middot; ({post.linkUrl && post.domain}
             {!post.linkUrl &&
@@ -120,7 +112,7 @@ export default function Post({
             {post.title || post?.meta?.title || '(untitled)'}
           </Link>
 
-          {!actionsLast && (
+          {!forceExpand && (
             <div className="hidden lg:block pt-0.5 -ml-2">
               <Actions
                 {...{
@@ -128,8 +120,7 @@ export default function Post({
                   setPost,
                   expanded,
                   setExpanded,
-                  hasEmbed,
-                  expandable
+                  hasEmbed
                 }}
               />
             </div>
@@ -137,23 +128,13 @@ export default function Post({
         </div>
       </div>
 
-      {!actionsLast && (
+      {!forceExpand && (
         <div className="block lg:hidden pt-2 -mr-2">
-          <Actions
-            {...{ post, setPost, expanded, setExpanded, hasEmbed, expandable }}
-          />
+          <Actions {...{ post, setPost, expanded, setExpanded, hasEmbed }} />
         </div>
       )}
 
-      {hasEmbed && (embed || expanded) && <Embed post={post} />}
-
-      {actionsLast && (
-        <div className="-mr-2 lg:-ml-2">
-          <Actions
-            {...{ post, setPost, expanded, setExpanded, hasEmbed, expandable }}
-          />
-        </div>
-      )}
+      {hasEmbed && (forceExpand || expanded) && <Embed post={post} />}
     </article>
   )
 }
@@ -176,7 +157,7 @@ function Embed({ post }) {
             <>
               {post.meta && post.meta.title ? (
                 <a
-                  to={post.linkUrl}
+                  href={post.linkUrl}
                   target="_blank"
                   rel="noreferrer noopener nofollow"
                   className="mt-2 block rounded-md border dark:border-gray-700 transition"
@@ -259,42 +240,35 @@ function Embed({ post }) {
   )
 }
 
-function Actions({
-  post,
-  setPost,
-  expanded,
-  setExpanded,
-  hasEmbed,
-  expandable
-}) {
+function Actions({ post, setPost, expanded, setExpanded, hasEmbed }) {
   return (
     <div className="space-x-1 flex items-center justify-items-end lg:justify-start flex-row-reverse lg:flex-row">
-      <Rocket post={post} setPost={setPost} />
+      <VoteButton post={post} setPost={setPost} />
       <CommentCount post={post} />
-      {expandable && hasEmbed && <Expand {...{ expanded, setExpanded }} />}
+      {hasEmbed && <Expand {...{ expanded, setExpanded }} />}
       <Options post={post} />
     </div>
   )
 }
 
-function Rocket({ post, setPost }) {
-  const [rocket] = useMutation(ROCKET_POST_MUTATION)
-  const [unrocket] = useMutation(UNROCKET_POST_MUTATION)
+function VoteButton({ post, setPost }) {
+  const [createVoteRes, createVote] = useMutation(CREATE_POST_VOTE)
+  const [removeVoteRes, removeVote] = useMutation(REMOVE_POST_VOTE)
 
-  const rocketVariables = { postId: post.id }
-  const toggleRocket = () => {
-    if (post.isRocketed) unrocket.mutate(rocketVariables)
-    else rocket.mutate(rocketVariables)
+  const variables = { postId: post.id }
+  const toggleVote = () => {
+    if (post.isVoted) createVote(variables)
+    else removeVote(variables)
   }
 
   return (
     <div
       onClick={e => {
         e.stopPropagation()
-        toggleRocket()
+        toggleVote()
       }}
       className={`action-chip ${
-        post.isRocketed ? 'text-red-400' : 'text-tertiary'
+        post.isVoted ? 'text-red-400' : 'text-tertiary'
       }`}
     >
       <RiRocketFill className="w-4 h-4" />

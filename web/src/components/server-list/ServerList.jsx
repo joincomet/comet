@@ -6,15 +6,16 @@ import PlanetAvatar from '@/components/server/ServerAvatar'
 import CreateServerDialog from '@/components/server-list/CreateServerDialog'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
-  planetScrollerItem,
-  planetScrollerItemActive,
-  planetScrollerItemDot
+  serverListItem,
+  serverListItemActive,
+  serverListItemDot
 } from './ServerList.module.scss'
+import { useJoinedServers } from '@/components/DataProvider'
 
 export default function ServerList() {
   const { pathname } = useLocation()
 
-  const planets = []
+  const servers = useJoinedServers()
 
   return (
     <>
@@ -23,9 +24,9 @@ export default function ServerList() {
       >
         <div className="h-full flex flex-col w-full">
           <Tippy content="Home" placement="right">
-            <NavLink to="/home" className={planetScrollerItem}>
+            <NavLink to="/posts" className={serverListItem}>
               <div
-                className={`${planetScrollerItemDot} hover:bg-blue-500 dark:hover:bg-blue-500 ${
+                className={`${serverListItemDot} hover:bg-blue-500 dark:hover:bg-blue-500 ${
                   pathname === '/'
                     ? 'bg-blue-500'
                     : 'dark:bg-gray-800 bg-gray-200'
@@ -43,11 +44,11 @@ export default function ServerList() {
           <Tippy content="Explore" placement="right">
             <NavLink
               to="/explore"
-              className={planetScrollerItem}
-              activeClassName={planetScrollerItemActive}
+              className={serverListItem}
+              activeClassName={serverListItemActive}
             >
               <div
-                className={`${planetScrollerItemDot} hover:bg-green-500 dark:hover:bg-green-500 ${
+                className={`${serverListItemDot} hover:bg-green-500 dark:hover:bg-green-500 ${
                   pathname === '/explore'
                     ? 'bg-green-500'
                     : 'dark:bg-gray-800 bg-gray-200'
@@ -64,19 +65,19 @@ export default function ServerList() {
 
           <CreateServerDialog />
 
-          {planets.length > 0 && (
+          {servers.length > 0 && (
             <>
               <div className="border-b-2 border-gray-200 dark:border-gray-800 h-2 mx-3 box-content" />
 
-              {planets.map(planet => (
+              {servers.map(planet => (
                 <Tippy key={planet.id} placement="right" content={planet.name}>
                   <NavLink
-                    to={`/planet/${planet.id}`}
-                    className={planetScrollerItem}
-                    activeClassName={planetScrollerItemActive}
+                    to={`/server/${planet.id}`}
+                    className={serverListItem}
+                    activeClassName={serverListItemActive}
                   >
                     <div
-                      className={`${planetScrollerItemDot} dark:bg-gray-800 bg-gray-200`}
+                      className={`${serverListItemDot} dark:bg-gray-800 bg-gray-200`}
                     >
                       <PlanetAvatar planet={planet} className="w-12 h-12" />
                     </div>

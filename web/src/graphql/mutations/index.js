@@ -1,4 +1,6 @@
+export * from './channel'
 export * from './comment'
+export * from './dm'
 export * from './message'
 export * from './post'
 export * from './server'

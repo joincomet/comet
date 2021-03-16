@@ -46,7 +46,7 @@ export class Post extends BaseEntity {
 
   @Field(() => [String])
   @Property({ type: ArrayType, default: [] })
-  imageUrls: string[]
+  imageUrls: string[] = []
 
   @Field({ nullable: true })
   get domain(): string | null {
@@ -73,6 +73,7 @@ export class Post extends BaseEntity {
   @OneToMany(() => Comment, 'post')
   comments = new Collection<Comment>(this)
 
+  @Field(() => Server)
   @ManyToOne({ entity: () => Server })
   server: Server
 
@@ -101,7 +102,7 @@ export class Post extends BaseEntity {
       .replace(/[^a-z0-9-]+/gi, '')
       .replace(/[-](.)\1+/g, '$1')*/
     const server = this.server as Server
-    return `/server/${server.id}/post/${this.id}`
+    return `/server/${server.id}/posts/${this.id}`
   }
 
   @Formula(

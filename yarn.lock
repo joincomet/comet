@@ -2872,6 +2872,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tailwindcss/jit@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@tailwindcss/jit@npm:0.1.1"
+  dependencies:
+    chokidar: ^3.5.1
+    dlv: ^1.1.3
+    fast-glob: ^3.2.5
+    lodash.topath: ^4.5.2
+    object-hash: ^2.1.1
+    postcss-selector-parser: ^6.0.4
+    quick-lru: ^5.1.1
+  peerDependencies:
+    postcss: ^8.2.6
+    tailwindcss: ^2.0.3
+  checksum: 0a70e4b311c8e34c6c24a319c5eee5670b93f309b03d73d87dbb6df2c6c8897fc913d649d57d9ae02df4ab3d4b2ed4e826e7a3c3d205da2a63cdaa5806f46ee1
+  languageName: node
+  linkType: hard
+
 "@tailwindcss/line-clamp@npm:^0.2.0":
   version: 0.2.0
   resolution: "@tailwindcss/line-clamp@npm:0.2.0"
@@ -6435,6 +6453,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dlv@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "dlv@npm:1.1.3"
+  checksum: 3ed2cd5054ed51e3778b5939ec58b16a970ee7447c3fc02b9b75ccd0788cf596b705d0f3060f2f1593432c10809d4289a17166a5723282ab2ead5c37d7c45cf0
+  languageName: node
+  linkType: hard
+
 "dmg-builder@npm:22.10.5":
   version: 22.10.5
   resolution: "dmg-builder@npm:22.10.5"
@@ -7420,7 +7445,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.1.1":
+"fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.5":
   version: 3.2.5
   resolution: "fast-glob@npm:3.2.5"
   dependencies:
@@ -10209,6 +10234,13 @@ fsevents@~2.3.1:
   version: 4.4.0
   resolution: "lodash.toarray@npm:4.4.0"
   checksum: f2b8de1812789321335dd5f4cb60625c4b8874cb3b300367d8a22990072459b76eb893feacd243686493393cccd035115cc149563f7aa5123d06d9a3b2825bf1
+  languageName: node
+  linkType: hard
+
+"lodash.topath@npm:^4.5.2":
+  version: 4.5.2
+  resolution: "lodash.topath@npm:4.5.2"
+  checksum: c635ffd3586817e6beeff174d0e39015a1df88b885d9ba742587a2bd047af13cd9662870e0cce90ef706f6468127105488a96a8778d5d7c4af0358d025782c6b
   languageName: node
   linkType: hard
 
@@ -15974,6 +16006,7 @@ typescript@^4.2.3:
     "@remirror/react": pr706
     "@tailwindcss/aspect-ratio": ^0.2.0
     "@tailwindcss/forms": ^0.2.1
+    "@tailwindcss/jit": ^0.1.1
     "@tailwindcss/line-clamp": ^0.2.0
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.4

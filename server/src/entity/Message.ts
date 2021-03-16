@@ -5,9 +5,16 @@ import {
   BaseEntity,
   LinkMetadata,
   Group,
-  DirectMessage
+  ServerInvite
 } from '@/entity'
-import { Embedded, Entity, ManyToOne, Property } from '@mikro-orm/core'
+import {
+  Collection,
+  Embedded,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  Property
+} from '@mikro-orm/core'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -19,6 +26,9 @@ export class Message extends BaseEntity {
   @ManyToOne(() => Channel, { nullable: true })
   channel?: Channel
 
+  @ManyToMany(() => ServerInvite)
+  invites = new Collection<ServerInvite>(this)
+
   @ManyToOne({
     entity: () => Group,
     nullable: true,
@@ -27,11 +37,10 @@ export class Message extends BaseEntity {
   group?: Group
 
   @ManyToOne({
-    entity: () => DirectMessage,
-    nullable: true,
-    inversedBy: 'messages'
+    entity: () => User,
+    nullable: true
   })
-  directMessage?: DirectMessage
+  toUser?: User
 
   @Field()
   @Property({ columnType: 'text' })

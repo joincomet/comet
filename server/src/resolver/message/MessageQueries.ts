@@ -1,12 +1,5 @@
-import {
-  Args,
-  Authorized,
-  Ctx,
-  Query,
-  Resolver,
-  UseMiddleware
-} from 'type-graphql'
-import { Channel, Group, Message, DirectMessage, User } from '@/entity'
+import { Args, Ctx, Query, Resolver } from 'type-graphql'
+import { Channel, Group, Message, User } from '@/entity'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
 import { GetMessagesArgs, GetMessagesResponse } from '@/resolver/message'
 import { Context } from '@/types'
@@ -41,22 +34,23 @@ export class MessageQueries {
     } else if (groupId) {
       where.group = await em.findOneOrFail(Group, groupId)
     } else if (userId) {
-      const user2 = await em.findOneOrFail(User, userId)
-      where.directMessage = await em.findOneOrFail(DirectMessage, {
-        $or: [
-          { user1: user, user2 },
-          { user1: user2, user2: user }
-        ]
-      })
+      const toUser = await em.findOneOrFail(User, userId)
+      where['$or'] = [
+        { author: user, toUser },
+        { author: toUser, toUser: user }
+      ]
     }
 
     return {
       messages: (
-        await em.find(Message, where, {
-          limit: pageSize,
-          offset: page * pageSize,
-          orderBy: { createdAt: QueryOrder.DESC }
-        })
+        await em.find(
+          Message,
+          where,
+          ['author'],
+          { createdAt: QueryOrder.DESC },
+          pageSize,
+          page * pageSize
+        )
       ).reverse(),
       page,
       nextPage: page + 1

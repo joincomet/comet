@@ -17,6 +17,7 @@ module.exports = {
       colors: {
         gray: {
           650: '#494951',
+          725: '#39393F',
           750: '#333338',
           775: '#2D2D31',
           850: '#202023',
@@ -50,6 +51,9 @@ module.exports = {
       },
       opacity: {
         33: '0.333'
+      },
+      ringWidth: {
+        3: '3px'
       },
       typography: theme => ({
         DEFAULT: {
@@ -176,12 +180,6 @@ module.exports = {
   variants: {
     extend: {
       typography: ['dark'],
-      translate: ['focus-within', 'group-hover'],
-      scale: ['focus-within', 'group-hover'],
-      opacity: ['disabled'],
-      borderRadius: ['hover', 'focus', 'first', 'last'],
-      borderWidth: ['first', 'last'],
-      backgroundOpacity: ['dark'],
       inset: ['electron'],
       padding: ['electron'],
       margin: ['electron']

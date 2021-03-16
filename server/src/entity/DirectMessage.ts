@@ -1,48 +1,26 @@
-import {
-  Collection,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryKeyType,
-  Property
-} from '@mikro-orm/core'
-import { Channel, Message, User } from '@/entity'
-import { Field, ObjectType } from 'type-graphql'
+import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
+import { BaseEntity, Post, User } from '@/entity'
 
-@ObjectType()
 @Entity()
 export class DirectMessage {
-  @Field(() => User)
   @ManyToOne({
     entity: () => User,
-    primary: true
+    primary: true,
+    inversedBy: 'dms'
   })
-  user1: User
+  user: User
 
-  @Field(() => User)
-  @ManyToOne({
-    entity: () => User,
-    primary: true
-  })
-  user2: User;
+  @ManyToOne({ entity: () => User, primary: true })
+  toUser: User;
 
   [PrimaryKeyType]: [string, string]
 
-  @OneToMany(() => Message, 'directMessage')
-  messages = new Collection<Message>(this)
-
-  @Field()
   @Property()
   createdAt: Date = new Date()
 
-  @Field()
   @Property()
   updatedAt: Date = new Date()
 
   @Property({ default: false })
-  isHiddenByUser1: boolean
-
-  @Property({ default: false })
-  isHiddenByUser2: boolean
+  isHidden: boolean = false
 }

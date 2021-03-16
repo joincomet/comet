@@ -20,7 +20,7 @@ export default function RegisterPage() {
         }
       }) => {
         localStorage.setItem('token', accessToken)
-        push('/home')
+        push('/me')
       }
     )
 

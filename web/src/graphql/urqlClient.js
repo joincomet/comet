@@ -76,7 +76,11 @@ export const urqlClient = createClient({
     devtoolsExchange,
     dedupExchange,
     cacheExchange({
-      keys: { PostsResponse: () => null },
+      keys: {
+        GetPostsResponse: () => null,
+        LinkMetadata: () => null,
+        GetMessagesResponse: () => null
+      },
       resolvers: {
         Query: {
           messages: simplePagination({

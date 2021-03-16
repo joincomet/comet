@@ -6,24 +6,22 @@ import { GET_POSTS } from '@/graphql/queries'
 
 export default function Posts({
   variables,
-  planet = false,
-  embed = false,
-  thumbnail = false,
-  link = false,
-  draggable = false,
-  expandable = false
+  showServerName = false,
+  forceExpand = false
 }) {
-  const [{ data }] = useQuery({ query: GET_POSTS })
+  const [{ data }] = useQuery({ query: GET_POSTS, variables })
   const posts = data?.getPosts?.posts || []
 
   return (
     <Virtuoso
       overscan={500}
       data={posts}
+      className="scrollbar-thin scrollbar-thumb-gray-850 scrollbar-track-gray-775 scrollbar-thumb-rounded-md mr-1"
       itemContent={(index, post) => (
         <Post
           postData={post}
-          {...{ planet, embed, thumbnail, link, draggable, expandable }}
+          showServerName={showServerName}
+          forceExpand={forceExpand}
         />
       )}
     />

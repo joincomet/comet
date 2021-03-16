@@ -5,14 +5,14 @@ import FoldersSidebar from '@/pages/folder/FoldersSidebar'
 import { useParams } from 'react-router-dom'
 
 export default function ServerPostsPage() {
-  const { planetId } = useParams()
+  const { serverId } = useParams()
 
   return (
     <>
       <Header></Header>
       <FoldersSidebar />
       <main>
-        <Posts variables={{ planetId }} draggable link thumbnail expandable />
+        <Posts variables={{ serverId }} draggable link thumbnail expandable />
       </main>
     </>
   )

@@ -10,12 +10,20 @@ import StyledDialog from '@/components/StyledDialog'
 import { useMutation, useQuery } from 'urql'
 import { GET_SERVER_PERMISSIONS } from '@/graphql/queries'
 import { CREATE_CHANNEL } from '@/graphql/mutations/channel'
+import {
+  useChannels,
+  useServer,
+  useServerPermissions
+} from '@/components/ServerDataProvider'
 
-export default forwardRef(({ planet }, ref) => {
+export default forwardRef((props, ref) => {
+  const server = useServer()
+  const channels = useChannels()
+  if (!server) return null
   return (
     <Sidebar ref={ref}>
       <div className="h-12 border-b dark:border-gray-850 flex items-center justify-between px-5 text-base font-medium">
-        {planet.name}
+        {server.name}
         <HiChevronDown className="w-5 h-5" />
       </div>
 
@@ -24,11 +32,11 @@ export default forwardRef(({ planet }, ref) => {
 
         <SidebarSortButtons />
 
-        <CreateChannel planet={planet} />
+        <CreateChannel server={server} />
 
         <div className="space-y-0.5">
-          {planet.channels.map(channel => (
-            <ChatChannel key={channel.id} channel={channel} planet={planet} />
+          {channels.map(channel => (
+            <ChatChannel key={channel.id} channel={channel} server={server} />
           ))}
         </div>
       </div>
@@ -36,10 +44,10 @@ export default forwardRef(({ planet }, ref) => {
   )
 })
 
-function ChatChannel({ channel, planet }) {
+function ChatChannel({ channel, server }) {
   return (
     <NavLink
-      to={`/planet/${planet.id}/channel/${channel.id}`}
+      to={`/server/${server.id}/channel/${channel.id}`}
       className="sidebar-item"
       activeClassName="sidebar-item--active"
     >
@@ -50,14 +58,7 @@ function ChatChannel({ channel, planet }) {
 }
 
 function CreateChannel({ server }) {
-  const [
-    {
-      data: { getServerPermissions: permissions }
-    }
-  ] = useQuery({
-    query: GET_SERVER_PERMISSIONS,
-    variables: { serverId: server.id }
-  })
+  const permissions = useServerPermissions()
 
   if (!permissions.includes('MANAGE_CHANNELS'))
     return <div className="sidebar-label">CHANNELS</div>

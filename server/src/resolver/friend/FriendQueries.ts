@@ -29,9 +29,13 @@ export class FriendQueries {
   @Authorized()
   @Query(() => [User], { description: 'Returns list of friends' })
   async getFriends(@Ctx() { em, user }: Context) {
-    const relations = await em.find(FriendRelationship, {
-      $or: [{ user1: user }, { user2: user }]
-    })
+    const relations = await em.find(
+      FriendRelationship,
+      {
+        $or: [{ user1: user }, { user2: user }]
+      },
+      ['user1', 'user2']
+    )
     return relations
       .map(friendRel =>
         friendRel.user1 === user ? friendRel.user2 : friendRel.user1

@@ -55,13 +55,14 @@ export class PostMutations {
       server,
       linkMetadata: linkUrl ? await scrapeMetadata(linkUrl) : null,
       imageUrls,
-      text: text,
-      rocketers: [user],
-      voteCount: 1,
-      isRocketed: true
+      text: text
     })
 
     await em.persistAndFlush(post)
+
+    await this.createPostVote({ user, em }, post.id)
+    post.isVoted = true
+    post.voteCount = 1
 
     return post
   }
@@ -107,11 +108,11 @@ export class PostMutations {
   @CheckPostServerPermission(ServerPermission.VotePost)
   @Mutation(() => Boolean, { description: 'Add vote to post' })
   async createPostVote(
+    @Ctx() { user, em }: Context,
     @Arg('postId', () => ID, {
       description: 'ID of post to vote (requires ServerPermission.VotePost)'
     })
-    postId: string,
-    @Ctx() { user, em }: Context
+    postId: string
   ) {
     const post = await em.findOneOrFail(Post, postId)
     let vote = await em.findOne(PostVote, { user, post })
@@ -125,12 +126,12 @@ export class PostMutations {
   @CheckPostServerPermission(ServerPermission.VotePost)
   @Mutation(() => Boolean, { description: 'Remove vote from post' })
   async removePostVote(
+    @Ctx() { user, em }: Context,
     @Arg('postId', () => ID, {
       description:
         'ID of post to remove vote (requires ServerPermission.VotePost)'
     })
-    postId: string,
-    @Ctx() { user, em }: Context
+    postId: string
   ) {
     const post = await em.findOneOrFail(Post, postId)
     const vote = await em.findOneOrFail(PostVote, { user, post })

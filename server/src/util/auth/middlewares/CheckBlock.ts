@@ -13,7 +13,7 @@ export const CheckBlock = () =>
       // if (!userId) throw new Error('Args must include userId')
       if (!userId) return next()
       const blockedUser = await em.findOneOrFail(User, userId)
-      const block = await em.findOneOrFail(UserBlock, {
+      const block = await em.findOne(UserBlock, {
         $or: [
           { user, blockedUser },
           { user: blockedUser, blockedUser: user }

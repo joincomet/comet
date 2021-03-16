@@ -3,10 +3,7 @@ import { useForm } from 'react-hook-form'
 import IconPlanetCreate from '@/components/ui/icons/IconPlanetCreate'
 import { useHistory } from 'react-router-dom'
 import Tippy from '@tippyjs/react'
-import {
-  planetScrollerItem,
-  planetScrollerItemDot
-} from './ServerList.module.scss'
+import { serverListItem, serverListItemDot } from './ServerList.module.scss'
 import StyledDialog from '@/components/StyledDialog'
 import { HiOutlinePencil, HiOutlinePhotograph } from 'react-icons/hi'
 import Button from '@/components/Button'
@@ -16,7 +13,7 @@ import { useMutation } from 'urql'
 import { CREATE_SERVER } from '@/graphql/mutations'
 
 export default function CreateServerDialog() {
-  const [createServer, { data, loading, error }] = useMutation(CREATE_SERVER)
+  const [{ data, loading, error }, createServer] = useMutation(CREATE_SERVER)
   const [isOpen, setIsOpen] = useState(false)
   const [privatePlanet, setPrivate] = useState(true)
 
@@ -43,17 +40,17 @@ export default function CreateServerDialog() {
   const onSubmit = variables => {
     createServer({
       variables: { ...variables, avatarFile: avatarFile ? avatarFile[0] : null }
-    }).then(({ data: { createPlanet } }) => {
-      push(createPlanet.id)
+    }).then(({ data: { createServer } }) => {
+      push(`/server/${createServer.id}`)
     })
   }
 
   return (
     <>
       <Tippy content="Create Planet" placement="right">
-        <div className={planetScrollerItem} onClick={() => setIsOpen(true)}>
+        <div className={serverListItem} onClick={() => setIsOpen(true)}>
           <div
-            className={`${planetScrollerItemDot} dark:bg-gray-800 bg-gray-200 hover:bg-purple-500 dark:hover:bg-purple-500`}
+            className={`${serverListItemDot} dark:bg-gray-800 bg-gray-200 hover:bg-purple-500 dark:hover:bg-purple-500`}
           >
             <IconPlanetCreate
               className={`w-5 h-5 text-purple-500 group-hover:text-white transition`}

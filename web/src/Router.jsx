@@ -1,27 +1,25 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import LandingPage from '@/pages/LandingPage'
-import HomePage from '@/pages/home/HomePage'
+import PostsPage from '@/pages/posts/PostsPage'
 import ExplorePage from '@/pages/explore/ExplorePage'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
 import AuthLayout from '@/pages/auth/AuthLayout'
-import LoadingScreen from '@/pages/LoadingScreen'
 import { BrowserRouter } from 'react-router-dom'
-import ServerPostsPage from '@/pages/server/ServerPostsPage'
 import ServerList from '@/components/server-list/ServerList'
-import HomeLayout from '@/pages/home/HomeLayout'
+import MainLayout from '@/pages/MainLayout'
 import ServerLayout from '@/pages/server/ServerLayout'
 import GroupPage from '@/pages/group/GroupPage'
 import FolderPage from '@/pages/folder/FolderPage'
-import ChannelPage from '@/pages/channel/ChannelPage'
-import PlanetPostPage from '@/pages/post/PostPage'
-import PlanetFolderPage from '@/pages/folder/PlanetFolderPage'
 import NotFound from '@/pages/NotFound'
-import { useUser } from '@/lib/useUser'
+import { useUser } from '@/components/DataProvider'
+import DmPage from '@/pages/dm/DmPage'
+import FriendsPage from '@/pages/friends/FriendsPage'
+import { ServerDataProvider } from '@/components/ServerDataProvider'
 
 export default function Router() {
-  const { user: currentUser } = useUser()
+  const currentUser = useUser()
   return (
     <BrowserRouter>
       <Switch>
@@ -30,7 +28,7 @@ export default function Router() {
           exact
           render={() => {
             if (window.electron) {
-              if (currentUser) return <Redirect to="/home" />
+              if (currentUser) return <Redirect to="/posts" />
               return <Redirect to="/login" />
             } else {
               return <LandingPage currentUser={currentUser} />
@@ -44,72 +42,71 @@ export default function Router() {
               <Route
                 path="/login"
                 render={() =>
-                  currentUser ? <Redirect to="/home" /> : <LoginPage />
+                  currentUser ? <Redirect to="/posts" /> : <LoginPage />
                 }
               />
               <Route
                 path="/register"
                 render={() =>
-                  currentUser ? <Redirect to="/home" /> : <RegisterPage />
+                  currentUser ? <Redirect to="/posts" /> : <RegisterPage />
                 }
               />
             </Switch>
           </AuthLayout>
         </Route>
 
-        <Route
+        <PrivateRoute
           path={[
-            '/home',
-            '/home/folder/:folderId',
-            '/home/chat/:groupId',
+            '/posts',
+            '/friends',
+            '/folder/:folderId',
+            '/group/:groupId',
+            '/dm/:userId',
             '/explore',
-            '/planet/:planetId',
-            '/planet/:planetId/channel/:channelId',
-            '/planet/:planetId/post/:postId',
-            '/planet/:planetId/folder/:folderId'
+            '/server/:serverId'
           ]}
-          exact
         >
           <ServerList />
           <Switch>
-            <PrivateRoute path="/home">
-              <HomeLayout>
+            <Route
+              path={[
+                '/posts',
+                '/friends',
+                '/folder/:folderId',
+                '/group/:groupId',
+                '/dm/:userId'
+              ]}
+            >
+              <MainLayout>
                 <Switch>
-                  <PrivateRoute path="/home" exact>
-                    <HomePage />
-                  </PrivateRoute>
-                  <PrivateRoute path="/home/folder/:folderId">
+                  <Route path="/posts" exact>
+                    <PostsPage />
+                  </Route>
+                  <Route path="/friends" exact>
+                    <FriendsPage />
+                  </Route>
+                  <Route path="/folder/:folderId">
                     <FolderPage />
-                  </PrivateRoute>
-                  <PrivateRoute path="/home/chat/:groupId">
+                  </Route>
+                  <Route path="/group/:groupId">
                     <GroupPage />
-                  </PrivateRoute>
+                  </Route>
+                  <Route path="/dm/:userId">
+                    <DmPage />
+                  </Route>
                 </Switch>
-              </HomeLayout>
-            </PrivateRoute>
-            <PrivateRoute path="/explore">
+              </MainLayout>
+            </Route>
+            <Route path="/explore">
               <ExplorePage />
-            </PrivateRoute>
-            <PrivateRoute path="/planet/:planetId">
-              <ServerLayout>
-                <Switch>
-                  <PrivateRoute path="/planet/:planetId" exact>
-                    <ServerPostsPage />
-                  </PrivateRoute>
-                  <PrivateRoute path="/planet/:planetId/channel/:channelId">
-                    <ChannelPage />
-                  </PrivateRoute>
-                  <PrivateRoute path="/planet/:planetId/post/:postId">
-                    <PlanetPostPage />
-                  </PrivateRoute>
-                  <PrivateRoute path="/planet/:planetId/folder/:folderId">
-                    <PlanetFolderPage />
-                  </PrivateRoute>
-                </Switch>
-              </ServerLayout>
-            </PrivateRoute>
+            </Route>
+            <Route path="/server/:serverId">
+              <ServerDataProvider>
+                <ServerLayout />
+              </ServerDataProvider>
+            </Route>
           </Switch>
-        </Route>
+        </PrivateRoute>
 
         <Route>
           <NotFound />
@@ -120,7 +117,7 @@ export default function Router() {
 }
 
 function PrivateRoute({ children, ...rest }) {
-  const { user: currentUser } = useUser()
+  const currentUser = useUser()
 
   return (
     <Route

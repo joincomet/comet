@@ -31,8 +31,6 @@ export class ServerQueries {
     { sort, category, page, pageSize }: GetServersArgs,
     @Ctx() { user, em }: Context
   ) {
-    await em.populate(user, ['servers'])
-
     let where = {}
     let orderBy = {}
 
@@ -62,7 +60,7 @@ export class ServerQueries {
     )
 
     return {
-      servers: servers,
+      servers,
       page,
       nextPage: page >= 0 && servers.length >= pageSize ? page + 1 : null
     } as GetServersResponse

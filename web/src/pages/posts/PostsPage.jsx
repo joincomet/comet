@@ -1,12 +1,10 @@
 import React from 'react'
-import HomeSidebar from '@/pages/home/HomeSidebar'
 import Posts from '@/components/post/Posts'
 import Header from '@/components/ui/header/Header'
 import FoldersSidebar from '@/pages/folder/FoldersSidebar'
 import { useParams } from 'react-router-dom'
-import ServerList from '@/components/server-list/ServerList'
 
-export default function HomePage() {
+export default function PostsPage() {
   const query = useParams()
 
   const variables = {
@@ -24,7 +22,7 @@ export default function HomePage() {
 
       <div className="h-full pl-76 pr-60 pt-12">
         <div className="h-full dark:bg-gray-750">
-          <Posts />
+          <Posts variables={variables} />
         </div>
       </div>
     </>

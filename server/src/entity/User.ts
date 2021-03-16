@@ -95,6 +95,9 @@ export class User extends BaseEntity {
   })
   groups = new Collection<Group>(this)
 
+  @OneToMany(() => DirectMessage, 'user')
+  dms = new Collection<DirectMessage>(this)
+
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
@@ -283,14 +286,5 @@ export class User extends BaseEntity {
   async checkInGroup(em: EntityManager, group: Group) {
     if (!(await this.isInGroup(em, group)))
       throw new Error('You are not in this group')
-  }
-
-  async isInDM(em: EntityManager, dm: DirectMessage) {
-    return dm.user1 === this || dm.user2 === this
-  }
-
-  async checkInDM(em: EntityManager, dm: DirectMessage) {
-    if (!(await this.isInDM(em, dm)))
-      throw new Error('You are not in this direct message')
   }
 }

@@ -19,7 +19,7 @@ export default function LoginPage() {
         }
       }) => {
         localStorage.setItem('token', accessToken)
-        push('/home')
+        push('/me')
       }
     )
 

@@ -4,6 +4,7 @@ import {
   Folder,
   FriendRelationship,
   Message,
+  Post,
   Server,
   ServerFolder,
   ServerUserJoin,
@@ -17,18 +18,24 @@ import faker from 'faker'
 const NUM_USERS = 1000
 const MAX_MESSAGES_PER_USER = 5
 
+const rand = (min: number, max: number) => {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
 export const seed = async (em: EntityManager) => {
-  const createFolder = (name: string, description?: string) =>
-    em.create(Folder, { name, description })
+  const createFolder = (name: string, owner: User, description?: string) =>
+    em.create(Folder, { name, description, owner })
 
   const createUserFolders = (user: User) => [
     em.create(UserFolder, {
       user,
-      folder: createFolder('Favorites')
+      folder: createFolder('Favorites', user)
     }),
     em.create(UserFolder, {
       user,
-      folder: createFolder('Read Later')
+      folder: createFolder('Read Later', user)
     })
   ]
 
@@ -63,7 +70,9 @@ export const seed = async (em: EntityManager) => {
     description: 'Official comet server',
     isFeatured: true,
     featuredPosition: Lexico.FIRST_POSITION,
-    owner: userDan
+    owner: userDan,
+    avatarUrl:
+      'https://pbs.twimg.com/profile_images/1316960164008751104/lBuM-qHc_400x400.jpg'
   })
 
   const channelGeneral = em.create(Channel, {
@@ -73,28 +82,27 @@ export const seed = async (em: EntityManager) => {
   })
 
   entities.push(
-    ...[
-      userAdmin,
-      userDan,
-      userMichael,
-      serverComet,
-      channelGeneral,
-      ...createUserFolders(userDan),
-      ...createUserFolders(userMichael),
-      em.create(ServerUserJoin, { user: userAdmin, server: serverComet }),
-      em.create(ServerUserJoin, { user: userDan, server: serverComet }),
-      em.create(ServerFolder, {
-        server: serverComet,
-        folder: createFolder(
-          'Announcements',
-          'All official Comet announcements'
-        )
-      }),
-      em.create(FriendRelationship, {
-        user1: userDan,
-        user2: userMichael
-      })
-    ]
+    userAdmin,
+    userDan,
+    userMichael,
+    serverComet,
+    channelGeneral,
+    ...createUserFolders(userDan),
+    ...createUserFolders(userMichael),
+    em.create(ServerUserJoin, { user: userAdmin, server: serverComet }),
+    em.create(ServerUserJoin, { user: userDan, server: serverComet }),
+    em.create(ServerFolder, {
+      server: serverComet,
+      folder: createFolder(
+        'Announcements',
+        userDan,
+        'All official Comet announcements'
+      )
+    }),
+    em.create(FriendRelationship, {
+      user1: userDan,
+      user2: userMichael
+    })
   )
 
   const users: User[] = []
@@ -103,7 +111,11 @@ export const seed = async (em: EntityManager) => {
       name: faker.name.firstName(),
       tag: tagGenerator(),
       passwordHash,
-      email: faker.internet.email()
+      email: faker.internet.email(),
+      avatarUrl:
+        rand(1, 2) === 1
+          ? faker.image.imageUrl(256, 256, undefined, true, true)
+          : null
     })
     if (
       users.filter(
@@ -114,9 +126,7 @@ export const seed = async (em: EntityManager) => {
       continue
     users.push(user)
     entities.push(em.create(ServerUserJoin, { user, server: serverComet }))
-    const numMessages = Math.floor(
-      Math.random() * Math.floor(MAX_MESSAGES_PER_USER)
-    )
+    const numMessages = rand(1, MAX_MESSAGES_PER_USER)
     for (let j = 0; j < numMessages; j++) {
       const message = em.create(Message, {
         author: user,
@@ -126,6 +136,53 @@ export const seed = async (em: EntityManager) => {
       })
       entities.push(message)
     }
+
+    const n = rand(1, 3)
+    let post
+    const postData = {
+      createdAt: faker.date.recent(),
+      title: faker.hacker.phrase(),
+      author: user,
+      server: serverComet,
+      voteCount: rand(1, 100)
+    }
+    if (n === 1) {
+      // Text
+      post = em.create(Post, {
+        ...postData,
+        text: faker.lorem.paragraphs()
+      })
+    } else if (n === 2) {
+      // Link
+      const url = faker.internet.url()
+      post = em.create(Post, {
+        ...postData,
+        linkUrl: url,
+        linkMetadata: {
+          title: faker.hacker.phrase(),
+          description: faker.lorem.sentence(),
+          data: faker.date.recent(),
+          author: faker.name.findName(),
+          publisher: faker.company.companyName(),
+          image: faker.image.imageUrl(1920, 1080, undefined, true, true),
+          logo: faker.image.imageUrl(16, 16, undefined, true, true),
+          url,
+          twitterCard: 'summary_large_image'
+        }
+      })
+    } else if (n === 3) {
+      // Image
+      const numImages = rand(1, 5)
+      const imageUrls = []
+      for (let j = 0; j < numImages; j++) {
+        imageUrls.push(faker.image.imageUrl(1920, 1080, undefined, true, true))
+      }
+      post = em.create(Post, {
+        ...postData,
+        imageUrls
+      })
+    }
+    entities.push(post)
   }
 
   entities.push(...users)

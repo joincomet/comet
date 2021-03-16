@@ -69,11 +69,18 @@ export class PostQueries {
           serverId ? { server: { id: serverId } } : {}
         ]
       },
-      ['author', 'server'],
+      ['author', 'server', 'votes.user'],
       orderBy,
       pageSize,
       page * pageSize
     )
+
+    posts.forEach(post => {
+      post.isVoted = post.votes
+        .getItems()
+        .map(vote => vote.user)
+        .includes(user)
+    })
 
     return {
       page: page,

@@ -1,7 +1,7 @@
 import { createUnionType } from 'type-graphql'
-import { Group, DirectMessage } from '@/entity'
+import { Group, User } from '@/entity'
 
 export const GroupDmUnion = createUnionType({
   name: 'GroupDmUnion',
-  types: () => [Group, DirectMessage] as const
+  types: () => [Group, User] as const
 })

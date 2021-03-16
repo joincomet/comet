@@ -1,5 +1,5 @@
 import { Authorized, Ctx, ID, Resolver, Root, Subscription } from 'type-graphql'
-import { Channel, Message } from '@/entity'
+import { Message } from '@/entity'
 import {
   SubscriptionFilter,
   SubscriptionTopic,
@@ -15,8 +15,8 @@ const filter = async ({
   const message = await em.findOneOrFail(Message, messageId, [
     'channel.server',
     'group.users',
-    'directMessage.user1',
-    'directMessage.user2'
+    'toUser',
+    'author'
   ])
 
   if (message.channel) {
@@ -27,11 +27,8 @@ const filter = async ({
       ServerPermission.ViewChannels
     )
   } else if (message.group) return message.group.users.contains(user)
-  else if (message.directMessage)
-    return (
-      message.directMessage.user1 === user ||
-      message.directMessage.user2 === user
-    )
+  else if (message.toUser)
+    return message.toUser === user || message.author === user
   else return false
 }
 

@@ -81,8 +81,8 @@ export default function ExplorePage() {
             {title()}
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5">
-            {servers.map(planet => (
-              <ServerInfoCard planet={planet} key={planet.id} />
+            {servers.map(server => (
+              <ServerInfoCard planet={server} key={server.id} />
             ))}
           </div>
         </div>

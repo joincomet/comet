@@ -49,16 +49,16 @@ export default function ServerSelect() {
               static
               className="py-1 overflow-auto text-base rounded-md shadow-md max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             >
-              {servers.map(planet => (
+              {servers.map(server => (
                 <Listbox.Option
-                  key={planet.id}
-                  value={planet}
+                  key={server.id}
+                  value={server}
                   className={`relative py-2 pl-6 text-primary dark:hover:bg-gray-775 dark:bg-gray-700 flex items-center transition cursor-pointer focus:outline-none select-none`}
                 >
-                  {selectedServer.id === planet.id ? (
+                  {selectedServer.id === server.id ? (
                     <>{selectedServer.name}</>
                   ) : (
-                    planet.name
+                    server.name
                   )}
                 </Listbox.Option>
               ))}

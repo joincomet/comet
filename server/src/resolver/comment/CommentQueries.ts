@@ -12,7 +12,7 @@ export class CommentQueries {
   @Query(() => [Comment], { description: 'Get comments on a post' })
   async getComments(
     @Args() { postId, sort }: GetCommentsArgs,
-    @Ctx() { em }: Context
+    @Ctx() { em, user }: Context
   ) {
     const post = await em.findOne(Post, postId)
     if (!post) throw new Error('Post not found')
@@ -20,13 +20,18 @@ export class CommentQueries {
     const comments = await em.find(
       Comment,
       { post },
-      ['author'],
+      ['author', 'votes.user'],
       sort === GetCommentsSort.TOP
         ? { voteCount: QueryOrder.DESC }
         : { createdAt: QueryOrder.DESC }
     )
 
     comments.forEach(comment => {
+      comment.isVoted = comment.votes
+        .getItems()
+        .map(vote => vote.user)
+        .includes(user)
+
       if (comment.isDeleted) {
         comment.text = `<p>[deleted]</p>`
         comment.author = null
@@ -35,9 +40,6 @@ export class CommentQueries {
         comment.text = `<p>[removed: ${comment.removedReason}]</p>`
         comment.author = null
       }
-
-      /*if (userId)
-        comment.isRocketed = comment.rocketers.getItems(false).includes(userId)*/
     })
 
     return comments

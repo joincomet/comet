@@ -6,10 +6,9 @@ import {
   Mutation,
   Publisher,
   PubSub,
-  Resolver,
-  UseMiddleware
+  Resolver
 } from 'type-graphql'
-import { Channel, Group, Message, DirectMessage, User } from '@/entity'
+import { Channel, DirectMessage, Group, Message, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { scrapeMetadata } from '@/util/metascraper'
 import {
@@ -37,40 +36,76 @@ export class MessageMutations {
   @CheckBlock()
   @Mutation(() => Boolean, { description: 'Create a chat message' })
   async sendMessage(
+    @Ctx() { user, em }: Context,
     @Args() { text, channelId, groupId, userId }: SendMessageArgs,
     @PubSub(SubscriptionTopic.MessageReceived)
-    messageCreated: Publisher<Message>,
+    messageReceived: Publisher<Message>,
     @PubSub(SubscriptionTopic.MessageUpdated)
     messageUpdated: Publisher<Message>,
-    @Ctx() { user, em }: Context
+    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
+    refetchGroupsAndDms: Publisher<string>
   ): Promise<boolean> {
     const channel = channelId
       ? await em.findOneOrFail(Channel, channelId)
       : null
     const group = groupId ? await em.findOneOrFail(Group, groupId) : null
-    const user2 = userId ? await em.findOneOrFail(User, userId) : null
-    const directMessage = user2
-      ? await em.findOneOrFail(DirectMessage, {
-          $or: [
-            { user1: user, user2 },
-            { user1: user2, user2: user }
-          ]
-        })
-      : null
+    const toUser = userId ? await em.findOneOrFail(User, userId) : null
+
     const message = em.create(Message, {
       text,
       channel,
       group,
-      directMessage,
+      toUser,
       author: user
     })
 
+    message.linkMetadatas = await this.getLinkMetas(message)
     await em.persistAndFlush(message)
-    await messageCreated(message)
+    await messageReceived(message)
 
-    this.getLinkMetas(em, messageUpdated, message)
+    if (toUser) {
+      const [myDm, theirDm] = await this.saveDm({ user, em }, userId)
+      myDm.isHidden = false
+      theirDm.isHidden = false
+      await em.persistAndFlush([myDm, theirDm])
+      await refetchGroupsAndDms(user.id)
+      await refetchGroupsAndDms(toUser.id)
+    }
 
     return true
+  }
+
+  @Mutation(() => Boolean)
+  async createDm(
+    @Ctx() { user, em }: Context,
+    @Arg('userId', () => ID) userId
+  ) {
+    const [myDm, theirDm] = await this.saveDm({ user, em }, userId)
+    await em.persistAndFlush([myDm, theirDm])
+    return true
+  }
+
+  async saveDm({ user, em }: Context, userId: string) {
+    const toUser = await em.findOneOrFail(User, userId)
+    let myDm = await em.findOne(DirectMessage, { user, toUser })
+    let theirDm = await em.findOne(DirectMessage, {
+      user: toUser,
+      toUser: user
+    })
+
+    if (!myDm)
+      myDm = em.create(DirectMessage, { user, toUser, isHidden: false })
+    if (!theirDm)
+      theirDm = em.create(DirectMessage, {
+        user: toUser,
+        toUser: user,
+        isHidden: true
+      })
+
+    myDm.updatedAt = new Date()
+    theirDm.updatedAt = new Date()
+
+    return [myDm, theirDm]
   }
 
   @CheckMessageAuthor()
@@ -86,11 +121,9 @@ export class MessageMutations {
     if (!text) throw new Error('Text cannot be empty')
     const message = await em.findOneOrFail(Message, messageId)
     message.text = text
+    message.linkMetadatas = await this.getLinkMetas(message)
     await em.persistAndFlush(message)
     await messageUpdated(message)
-
-    this.getLinkMetas(em, messageUpdated, message)
-
     return true
   }
 
@@ -132,19 +165,14 @@ export class MessageMutations {
     return true
   }
 
-  async getLinkMetas(
-    em: EntityManager,
-    messageUpdated: Publisher<Message>,
-    message: Message
-  ) {
+  async getLinkMetas(message: Message) {
     const linkRegex = /(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/gi
-    const links = message.text.match(linkRegex)
-    message.linkMetadatas = []
+    const links = message.text.match(linkRegex) || []
+    const linkMetadatas = []
     for (const link of links) {
       const meta = await scrapeMetadata(link)
-      if (meta) message.linkMetadatas.push(meta)
+      if (meta) linkMetadatas.push(meta)
     }
-    await em.persistAndFlush(message)
-    await messageUpdated(message)
+    return linkMetadatas
   }
 }

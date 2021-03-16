@@ -5,10 +5,11 @@ export default gql`
   query GetGroupsAndDms {
     getGroupsAndDms {
       ... on Group {
+        __typename
+        id
         name
         avatarUrl
         updatedAt
-        id
         owner {
           id
         }
@@ -16,14 +17,9 @@ export default gql`
           ...USER_FRAGMENT
         }
       }
-      ... on DirectMessage {
-        updatedAt
-        user1 {
-          ...USER_FRAGMENT
-        }
-        user2 {
-          ...USER_FRAGMENT
-        }
+      ... on User {
+        __typename
+        ...USER_FRAGMENT
       }
     }
   }

@@ -3,7 +3,17 @@ import { HiUser } from 'react-icons/hi'
 import Avatar from '@/components/ui/Avatar'
 
 export default forwardRef(
-  ({ user, loading = 'eager', className = 'w-10 h-10' }, ref) => {
+  (
+    {
+      user,
+      loading = 'eager',
+      size = 12,
+      showOnline = false,
+      className = 'dark:bg-gray-700',
+      dotClassName = ''
+    },
+    ref
+  ) => {
     if (!user) return null
     return (
       <Avatar
@@ -11,9 +21,17 @@ export default forwardRef(
         name={user.username}
         avatarUrl={user.avatarUrl}
         loading={loading}
-        className={className}
+        className={`relative ${className}`}
+        size={size}
       >
-        <HiUser className="text-gray-500 w-1/2 h-1/2" />
+        {showOnline && (
+          <div
+            className={`absolute bottom-0 right-0 rounded-full z-10 ${dotClassName} ${
+              user.isOnline ? 'bg-green-500' : 'bg-gray-600'
+            }`}
+          />
+        )}
+        <HiUser className="text-mid w-1/2 h-1/2" />
       </Avatar>
     )
   }

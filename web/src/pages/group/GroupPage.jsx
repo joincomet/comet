@@ -1,5 +1,5 @@
 import Header from '@/components/ui/header/Header'
-import HomeSidebar from '@/pages/home/HomeSidebar'
+import HomeSidebar from '@/pages/MainSidebar'
 import React from 'react'
 import GroupUsersSidebar from '@/pages/group/GroupSidebar'
 

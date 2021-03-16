@@ -92,7 +92,7 @@ export default function LandingPage({ currentUser }) {
               </a>
 
               <Link
-                to={currentUser ? '/home' : '/login'}
+                to={currentUser ? '/posts' : '/login'}
                 className="border border-gray-700 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
               >
                 Open in Browser

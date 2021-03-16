@@ -8,6 +8,7 @@ import { RiRocketFill } from 'react-icons/ri'
 import UserPopup from '@/components/user/UserPopup'
 import { commentCollapse } from './Comment.module.scss'
 import { useMutation } from 'urql'
+import { CREATE_COMMENT_VOTE, REMOVE_COMMENT_VOTE } from '@/graphql/mutations'
 
 export default function Comment({
   commentData,
@@ -86,7 +87,7 @@ export default function Comment({
                   </Twemoji>
 
                   <div className="flex items-center space-x-1 pt-1.5 -ml-2">
-                    <Rocket comment={comment} setComment={setComment} />
+                    <VoteButton comment={comment} setComment={setComment} />
 
                     {!comment.deleted && (
                       <div
@@ -134,36 +135,24 @@ function Options({ comment }) {
   )
 }
 
-function Rocket({ comment, setComment }) {
+function VoteButton({ comment, setComment }) {
   const variables = { commentId: comment.id }
-  const [rocketCommentMutation] = useMutation(ROCKET_COMMENT_MUTATION)
-  const [unrocketCommentMutation] = useMutation(UNROCKET_COMMENT_MUTATION)
+  const [createVoteRes, createVote] = useMutation(CREATE_COMMENT_VOTE)
+  const [removeVoteRes, removeVote] = useMutation(REMOVE_COMMENT_VOTE)
 
-  const rocket = async () => {
-    comment.isRocketed = true
-    comment.voteCount++
-    await rocketCommentMutation.mutateAsync(variables)
-  }
-
-  const unrocket = async () => {
-    comment.isRocketed = false
-    comment.voteCount--
-    await unrocketCommentMutation.mutateAsync(variables)
-  }
-
-  const toggleRocket = () => {
-    if (comment.isRocketed) unrocket()
-    else rocket()
+  const toggleVote = () => {
+    if (comment.isVoted) createVote(variables)
+    else removeVote(variables)
   }
 
   return (
     <div
       onClick={e => {
         e.stopPropagation()
-        toggleRocket()
+        toggleVote()
       }}
       className={`action-chip ${
-        comment.isRocketed ? 'text-red-400' : 'text-tertiary'
+        comment.isVoted ? 'text-red-400' : 'text-tertiary'
       }`}
     >
       <RiRocketFill className="w-4 h-4" />

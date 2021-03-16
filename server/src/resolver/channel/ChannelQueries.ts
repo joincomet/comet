@@ -50,14 +50,14 @@ export class ChannelQueries {
   }
 
   @CheckJoinedServer()
+  @Query(() => [Channel])
   async getServerChannels(
-    @Ctx() { user, em }: Context,
+    @Ctx() { em }: Context,
     @Arg('serverId', () => ID) serverId: string
   ) {
     const server = await em.findOneOrFail(Server, serverId)
-    const channels = await server.channels.matching({
+    return server.channels.matching({
       orderBy: { position: QueryOrder.DESC }
     })
-    return channels
   }
 }

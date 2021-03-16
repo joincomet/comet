@@ -33,7 +33,7 @@ export class CommentMutations {
 
     text = handleText(text)
 
-    const savedComment = em.create(Comment, {
+    const comment = em.create(Comment, {
       text: text,
       parentCommentId,
       post,
@@ -41,7 +41,7 @@ export class CommentMutations {
     })
     post.commentCount++
 
-    em.persist([savedComment, post])
+    em.persist([comment, post])
 
     if (parentCommentId) {
       const parentComment = await em.findOneOrFail(Comment, parentCommentId, [
@@ -50,7 +50,7 @@ export class CommentMutations {
       if (parentComment.author !== user) {
         em.persist(
           em.create(Notification, {
-            comment: savedComment,
+            comment,
             toUser: parentComment.author
           })
         )
@@ -60,7 +60,7 @@ export class CommentMutations {
       if (post.author !== user) {
         em.persist(
           em.create(Notification, {
-            comment: savedComment,
+            comment,
             toUser: post.author
           })
         )
@@ -69,7 +69,11 @@ export class CommentMutations {
 
     await em.flush()
 
-    return savedComment
+    await this.createCommentVote({ user, em }, comment.id)
+    comment.isVoted = true
+    comment.voteCount = 1
+
+    return comment
   }
 
   @CheckCommentAuthor()
@@ -112,9 +116,9 @@ export class CommentMutations {
   @CheckCommentServerPermission(ServerPermission.VoteComment)
   @Mutation(() => Boolean, { description: 'Add vote to a comment' })
   async createCommentVote(
+    @Ctx() { user, em }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to vote' })
-    commentId: string,
-    @Ctx() { user, em }: Context
+    commentId: string
   ) {
     const comment = await em.findOneOrFail(Comment, commentId)
     let vote = await em.findOne(CommentVote, { user, comment })
@@ -128,9 +132,9 @@ export class CommentMutations {
   @CheckCommentServerPermission(ServerPermission.VoteComment)
   @Mutation(() => Boolean, { description: 'Remove vote from a comment' })
   async removeCommentVote(
+    @Ctx() { user, em }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to remove vote' })
-    commentId: string,
-    @Ctx() { user, em }: Context
+    commentId: string
   ) {
     const comment = await em.findOneOrFail(Comment, commentId)
     const vote = await em.findOneOrFail(CommentVote, { user, comment })

@@ -1,8 +1,8 @@
-.planet-scroller-item {
-    @apply group flex-shrink-0 relative inline-flex items-end justify-center w-full h-14 rounded-full cursor-pointer;
+.server-list-item {
+    @apply flex-shrink-0 relative inline-flex items-end justify-center w-full h-14 rounded-full cursor-pointer;
 
     &__dot {
-        @apply w-12 h-12 object-cover inline-flex items-center justify-center rounded-full transform transition hover:scale-105 hover:shadow-lg group;
+        @apply w-12 h-12 object-cover inline-flex items-center justify-center rounded-full transform transition hover:scale-105 hover:shadow-lg;
     }
 
     &--active::before {
