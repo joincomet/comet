@@ -9,7 +9,6 @@ export default gql`
         id
         name
         avatarUrl
-        updatedAt
         owner {
           id
         }

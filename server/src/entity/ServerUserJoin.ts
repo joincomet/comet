@@ -1,6 +1,14 @@
-import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { Server, User } from '@/entity'
+import {
+  Collection,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryKeyType,
+  Property
+} from '@mikro-orm/core'
+import { Server, ServerRole, User } from '@/entity'
 import { Lexico } from '@/util/Lexico'
+import { Field } from 'type-graphql'
 
 @Entity()
 export class ServerUserJoin {
@@ -17,4 +25,8 @@ export class ServerUserJoin {
 
   @Property()
   createdAt: Date = new Date()
+
+  @Field(() => [ServerRole])
+  @ManyToMany(() => ServerRole)
+  roles = new Collection<ServerRole>(this)
 }

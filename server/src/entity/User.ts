@@ -19,9 +19,7 @@ import {
   ServerUserJoin,
   ServerRole,
   ChannelRole,
-  DirectMessage,
-  FriendRequest,
-  UserBlock
+  FriendData
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { ServerPermission, ChannelPermission } from '@/types'
@@ -78,25 +76,13 @@ export class User extends BaseEntity {
   })
   serverJoins = new Collection<ServerUserJoin>(this)
 
-  @OneToMany(() => UserBlock, 'user')
-  outgoingBlocks = new Collection<UserBlock>(this)
-
-  @OneToMany(() => UserBlock, 'blockedUser')
-  incomingBlocks = new Collection<UserBlock>(this)
-
-  @OneToMany(() => FriendRequest, 'fromUser')
-  outgoingFriendRequests = new Collection<FriendRequest>(this)
-
-  @OneToMany(() => FriendRequest, 'toUser')
-  incomingFriendRequests = new Collection<FriendRequest>(this)
-
   @ManyToMany(() => Group, group => group.users, {
-    orderBy: { updatedAt: QueryOrder.DESC }
+    orderBy: { lastMessageAt: QueryOrder.DESC }
   })
   groups = new Collection<Group>(this)
 
-  @OneToMany(() => DirectMessage, 'user')
-  dms = new Collection<DirectMessage>(this)
+  @OneToMany(() => FriendData, 'user')
+  friendData = new Collection<FriendData>(this)
 
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
@@ -104,10 +90,6 @@ export class User extends BaseEntity {
 
   @Field()
   isCurrentUser: boolean
-
-  @Field(() => [ServerRole])
-  @ManyToMany(() => ServerRole, 'users')
-  roles = new Collection<ServerRole>(this)
 
   @Property({ default: false })
   isBanned: boolean
@@ -199,14 +181,14 @@ export class User extends BaseEntity {
     permission: ServerPermission
   ): Promise<boolean> {
     if (this.isAdmin) return true
-    if (!(await this.hasJoinedServer(em, server))) return false
-    await em.populate(server, ['owner', 'roles'])
+    const join = await em.findOne(ServerUserJoin, { server, user: this }, [
+      'roles'
+    ])
+    if (!join) return false
+    await em.populate(server, ['owner'])
     if (server.owner === this) return true
-    const serverRoles = server.roles.getItems()
-    const userRoles = this.roles
-      .getItems()
-      .filter(role => serverRoles.includes(role))
-    return !!userRoles.find(
+    const roles = join.roles.getItems()
+    return !!roles.find(
       role =>
         role.hasPermission(ServerPermission.ServerAdmin) ||
         role.hasPermission(permission)
@@ -229,14 +211,16 @@ export class User extends BaseEntity {
     channelPermission: ChannelPermission,
     serverPermission: ServerPermission | null
   ): Promise<boolean> {
-    const user = this
-    if (user.isAdmin) return true
+    if (this.isAdmin) return true
     await em.populate(channel, ['server.owner'])
-    if (channel.server.owner === user) return true
-    if (!(await this.hasJoinedServer(em, channel.server))) return false
-    const roles = await user.roles.matching({
-      where: { server: channel.server }
-    })
+    if (channel.server.owner === this) return true
+    const join = await em.findOne(
+      ServerUserJoin,
+      { server: channel.server, user: this },
+      ['roles']
+    )
+    if (!join) return false
+    const roles = join.roles.getItems()
     if (!!roles.find(role => role.hasPermission(ServerPermission.ServerAdmin)))
       return true
     const channelRoles = await em.find(ChannelRole, {
@@ -286,5 +270,31 @@ export class User extends BaseEntity {
   async checkInGroup(em: EntityManager, group: Group) {
     if (!(await this.isInGroup(em, group)))
       throw new Error('You are not in this group')
+  }
+
+  async getFriendData(em: EntityManager, userId: string) {
+    const toUser = await em.findOneOrFail(User, userId)
+    let myData = await em.findOne(FriendData, { user: this, toUser })
+    let theirData = await em.findOne(FriendData, {
+      user: toUser,
+      toUser: this
+    })
+
+    if (!myData) {
+      myData = em.create(FriendData, {
+        user: this,
+        toUser
+      })
+      em.persist(myData)
+    }
+    if (!theirData) {
+      theirData = em.create(FriendData, {
+        user: toUser,
+        toUser: this
+      })
+      em.persist(theirData)
+    }
+
+    return [myData, theirData]
   }
 }

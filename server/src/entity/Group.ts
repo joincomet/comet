@@ -26,7 +26,7 @@ export class Group extends BaseEntity {
 
   @Field()
   @Property()
-  updatedAt: Date = new Date()
+  lastMessageAt: Date = new Date()
 
   @Field(() => [User])
   @ManyToMany(() => User, 'groups', { owner: true })

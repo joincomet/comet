@@ -53,7 +53,8 @@ module.exports = {
         33: '0.333'
       },
       ringWidth: {
-        3: '3px'
+        3: '3px',
+        6: '6px'
       },
       typography: theme => ({
         DEFAULT: {

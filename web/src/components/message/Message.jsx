@@ -10,13 +10,16 @@ export default function Message({ showUser, message }) {
   return (
     <div
       key={message.id}
-      className="flex py-1 px-4 dark:hover:bg-gray-775 group"
+      className={`flex py-1 px-4 dark:hover:bg-gray-775 group ${
+        showUser ? 'mt-4' : ''
+      }`}
     >
       {showUser ? (
         <UserPopup user={message.author}>
           <UserAvatar
             user={message.author}
-            className="w-10 h-10 dark:bg-gray-700 cursor-pointer"
+            size={10}
+            className="dark:bg-gray-700 cursor-pointer"
           />
         </UserPopup>
       ) : (
@@ -27,10 +30,10 @@ export default function Message({ showUser, message }) {
 
       <div className="pl-4">
         {showUser && (
-          <div className="flex items-end pb-1">
+          <div className="flex items-end pb-1.5">
             <UserPopup user={message.author}>
               <div className="text-sm font-medium cursor-pointer hover:underline leading-none">
-                {message.author.username}
+                {message.author.name}
               </div>
             </UserPopup>
             <div className="text-11 text-mid pl-2 leading-none cursor-default select-none">

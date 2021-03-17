@@ -11,14 +11,14 @@ import { useMutation, useQuery } from 'urql'
 import { GET_SERVER_PERMISSIONS } from '@/graphql/queries'
 import { CREATE_CHANNEL } from '@/graphql/mutations/channel'
 import {
-  useChannels,
+  useServerChannels,
   useServer,
   useServerPermissions
 } from '@/components/ServerDataProvider'
 
 export default forwardRef((props, ref) => {
   const server = useServer()
-  const channels = useChannels()
+  const channels = useServerChannels()
   if (!server) return null
   return (
     <Sidebar ref={ref}>

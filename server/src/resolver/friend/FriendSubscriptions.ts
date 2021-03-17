@@ -10,12 +10,4 @@ export class FriendSubscriptions {
   refetchFriends() {
     return true
   }
-
-  @Subscription(() => Boolean, {
-    topics: SubscriptionTopic.RefetchFriendRequests,
-    filter: ({ payload: userId, context: { user } }) => userId === user.id
-  })
-  refetchFriendRequests() {
-    return true
-  }
 }

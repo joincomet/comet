@@ -1,34 +1,38 @@
 import Header from '@/components/ui/header/Header'
 import MainSidebar from '@/pages/MainSidebar'
-import React, { useEffect } from 'react'
-import { useMutation, useQuery } from 'urql'
-import { CREATE_DM } from '@/graphql/mutations'
-import { Redirect, useParams } from 'react-router-dom'
-import { useGroupsAndDms } from '@/components/DataProvider'
+import React from 'react'
+import { useMutation, useQuery, useSubscription } from 'urql'
+import { useParams } from 'react-router-dom'
 import { HiAtSymbol } from 'react-icons/hi'
 import SendMessageBar from '@/components/message/SendMessageBar'
 import Message from '@/components/message/Message'
 import { Virtuoso } from 'react-virtuoso'
-import { GET_MESSAGES } from '@/graphql/queries'
+import { GET_MESSAGES, GET_USER } from '@/graphql/queries'
 import LoadingScreen from '@/pages/LoadingScreen'
+import {
+  MESSAGE_REMOVED,
+  MESSAGE_SENT,
+  MESSAGE_UPDATED
+} from '@/graphql/subscriptions'
 
 export default function DmPage() {
   const { userId } = useParams()
-  const [createDmRes, createDm] = useMutation(CREATE_DM)
-  const [groupsAndDms, refetchGroupsAndDms] = useGroupsAndDms()
-  useEffect(() => {
-    createDm({ userId }).then(() => refetchGroupsAndDms)
-  }, [])
-  const user = groupsAndDms.find(
-    u => u.__typename === 'User' && u.id === userId
-  )
+  const [{ data: userData }] = useQuery({
+    query: GET_USER,
+    variables: { userId }
+  })
+  const user = userData?.getUser
 
   const [{ data: messagesData }] = useQuery({
     query: GET_MESSAGES,
-    variables: { userId }
+    variables: { page: 0, userId }
   })
 
   const messages = messagesData?.getMessages?.messages || []
+
+  useSubscription({ query: MESSAGE_SENT })
+  useSubscription({ query: MESSAGE_UPDATED })
+  useSubscription({ query: MESSAGE_REMOVED })
 
   if (!user) return <LoadingScreen />
 
@@ -60,8 +64,7 @@ export default function DmPage() {
                 message={message}
                 showUser={
                   index === 0 ||
-                  messagesData.messages[index - 1].author.id !==
-                    message.author.id
+                  messages[index - 1].author.id !== message.author.id
                 }
               />
             )}

@@ -1,1 +1,1 @@
-export { default as CREATE_DM } from './CreateDm'
+export { default as HIDE_DM } from './HideDm'

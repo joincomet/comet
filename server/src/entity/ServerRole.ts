@@ -24,9 +24,6 @@ export class ServerRole extends BaseEntity {
   @ManyToOne({ entity: () => Server, inversedBy: 'roles' })
   server: Server
 
-  @ManyToMany(() => User, 'roles', { owner: true })
-  users = new Collection<User>(this)
-
   @Property({ default: Lexico.FIRST_POSITION, columnType: 'text' })
   position: string
 

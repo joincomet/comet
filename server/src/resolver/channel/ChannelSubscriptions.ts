@@ -4,11 +4,11 @@ import { SubscriptionTopic } from '@/types'
 @Resolver()
 export class ChannelSubscriptions {
   @Subscription(() => Boolean, {
-    topics: SubscriptionTopic.RefetchChannels,
+    topics: SubscriptionTopic.RefetchServerChannels,
     filter: ({ payload: serverId, context: { user, em } }) =>
       user.hasJoinedServer(em, serverId)
   })
-  refetchChannels() {
+  refetchServerChannels() {
     return true
   }
 }

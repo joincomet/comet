@@ -1,6 +1,7 @@
 import {
   Arg,
   Args,
+  Authorized,
   Ctx,
   ID,
   Mutation,
@@ -8,8 +9,7 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { Channel, DirectMessage, Group, Message, User } from '@/entity'
-import { EntityManager } from '@mikro-orm/postgresql'
+import { Channel, FriendData, Group, Message, User } from '@/entity'
 import { scrapeMetadata } from '@/util/metascraper'
 import {
   ChannelPermission,
@@ -21,10 +21,10 @@ import {
   CheckChannelPermission,
   CheckGroupMember,
   CheckMessageAuthor,
-  CheckMessageChannelPermission,
-  CheckBlock
+  CheckMessageChannelPermission
 } from '@/util'
-import { SendMessageArgs } from '@/resolver/message/types/SendMessageArgs'
+import { SendMessageArgs, MessageSentPayload } from '@/resolver/message'
+import { FriendStatus } from '@/resolver/friend'
 
 @Resolver()
 export class MessageMutations {
@@ -33,15 +33,12 @@ export class MessageMutations {
     ServerPermission.SendMessages
   )
   @CheckGroupMember()
-  @CheckBlock()
   @Mutation(() => Boolean, { description: 'Create a chat message' })
   async sendMessage(
     @Ctx() { user, em }: Context,
     @Args() { text, channelId, groupId, userId }: SendMessageArgs,
-    @PubSub(SubscriptionTopic.MessageReceived)
-    messageReceived: Publisher<Message>,
-    @PubSub(SubscriptionTopic.MessageUpdated)
-    messageUpdated: Publisher<Message>,
+    @PubSub(SubscriptionTopic.MessageSent)
+    messageSent: Publisher<MessageSentPayload>,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
   ): Promise<boolean> {
@@ -50,6 +47,14 @@ export class MessageMutations {
       : null
     const group = groupId ? await em.findOneOrFail(Group, groupId) : null
     const toUser = userId ? await em.findOneOrFail(User, userId) : null
+
+    if (toUser) {
+      const [myData, theirData] = await user.getFriendData(em, userId)
+      if (myData.status === FriendStatus.Blocked)
+        throw new Error('This user has blocked you')
+      if (myData.status === FriendStatus.Blocking)
+        throw new Error('You are blocking this user')
+    }
 
     const message = em.create(Message, {
       text,
@@ -61,51 +66,35 @@ export class MessageMutations {
 
     message.linkMetadatas = await this.getLinkMetas(message)
     await em.persistAndFlush(message)
-    await messageReceived(message)
 
     if (toUser) {
-      const [myDm, theirDm] = await this.saveDm({ user, em }, userId)
-      myDm.isHidden = false
-      theirDm.isHidden = false
-      await em.persistAndFlush([myDm, theirDm])
+      const [myData, theirData] = await user.getFriendData(em, userId)
+      myData.showChat = true
+      myData.lastMessageAt = new Date()
+      theirData.showChat = true
+      theirData.lastMessageAt = new Date()
+      await em.persistAndFlush([myData, theirData])
       await refetchGroupsAndDms(user.id)
       await refetchGroupsAndDms(toUser.id)
     }
 
-    return true
-  }
+    if (group) {
+      group.lastMessageAt = new Date()
+    }
 
-  @Mutation(() => Boolean)
-  async createDm(
-    @Ctx() { user, em }: Context,
-    @Arg('userId', () => ID) userId
-  ) {
-    const [myDm, theirDm] = await this.saveDm({ user, em }, userId)
-    await em.persistAndFlush([myDm, theirDm])
-    return true
-  }
+    if (channel) {
+      channel.lastMessageAt = new Date()
+    }
 
-  async saveDm({ user, em }: Context, userId: string) {
-    const toUser = await em.findOneOrFail(User, userId)
-    let myDm = await em.findOne(DirectMessage, { user, toUser })
-    let theirDm = await em.findOne(DirectMessage, {
-      user: toUser,
-      toUser: user
+    await messageSent({
+      messageId: message.id,
+      fromUserId: user.id,
+      toUserId: toUser?.id,
+      groupId: group?.id,
+      channelId: channel?.id
     })
 
-    if (!myDm)
-      myDm = em.create(DirectMessage, { user, toUser, isHidden: false })
-    if (!theirDm)
-      theirDm = em.create(DirectMessage, {
-        user: toUser,
-        toUser: user,
-        isHidden: true
-      })
-
-    myDm.updatedAt = new Date()
-    theirDm.updatedAt = new Date()
-
-    return [myDm, theirDm]
+    return true
   }
 
   @CheckMessageAuthor()
@@ -115,15 +104,26 @@ export class MessageMutations {
     @Arg('messageId', () => ID, { description: 'ID of message to edit' })
     messageId: string,
     @PubSub(SubscriptionTopic.MessageUpdated)
-    messageUpdated: Publisher<Message>,
+    messageUpdated: Publisher<MessageSentPayload>,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
     if (!text) throw new Error('Text cannot be empty')
-    const message = await em.findOneOrFail(Message, messageId)
+    const message = await em.findOneOrFail(Message, messageId, [
+      'author',
+      'toUser',
+      'group',
+      'channel'
+    ])
     message.text = text
     message.linkMetadatas = await this.getLinkMetas(message)
     await em.persistAndFlush(message)
-    await messageUpdated(message)
+    await messageUpdated({
+      messageId: message.id,
+      fromUserId: user.id,
+      toUserId: message.toUser?.id,
+      groupId: message.group?.id,
+      channelId: message.channel?.id
+    })
     return true
   }
 
@@ -133,13 +133,24 @@ export class MessageMutations {
     @Arg('messageId', () => ID, { description: 'ID of message to delete' })
     messageId: string,
     @PubSub(SubscriptionTopic.MessageRemoved)
-    messageRemoved: Publisher<Message>,
+    messageRemoved: Publisher<MessageSentPayload>,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
-    const message = await em.findOneOrFail(Message, messageId, ['author'])
+    const message = await em.findOneOrFail(Message, messageId, [
+      'author',
+      'toUser',
+      'group',
+      'channel'
+    ])
     message.isDeleted = true
     await em.persistAndFlush(message)
-    await messageRemoved(message)
+    await messageRemoved({
+      messageId: message.id,
+      fromUserId: user.id,
+      toUserId: message.toUser?.id,
+      groupId: message.group?.id,
+      channelId: message.channel?.id
+    })
     return true
   }
 
@@ -162,6 +173,23 @@ export class MessageMutations {
     message.isDeleted = true
     await em.persistAndFlush(message)
     await messageRemoved(message)
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async hideDm(
+    @Ctx() { em, user }: Context,
+    @Arg('userId', () => ID) userId: string,
+    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
+    refetchGroupsAndDms: Publisher<string>
+  ) {
+    const toUser = await em.findOneOrFail(User, userId)
+    const dm = await em.findOne(FriendData, { user, toUser })
+    if (!dm) return true
+    dm.showChat = false
+    await em.persistAndFlush(dm)
+    await refetchGroupsAndDms(user.id)
     return true
   }
 

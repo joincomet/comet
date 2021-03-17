@@ -16,8 +16,7 @@
 		"dev:web": "yarn workspace web run dev:vite",
 		"dev:electron": "yarn workspace web run dev:electron",
 		"dev:server": "yarn workspace server run dev",
-		"prod:server": "yarn workspace server run start",
-		"upgrade": "yarn workspace web run upgrade && yarn workspace server run upgrade"
+		"prod:server": "yarn workspace server run start"
 	},
 	"devDependencies": {
 		"rimraf": "^3.0.2"

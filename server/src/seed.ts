@@ -2,7 +2,7 @@ import { EntityManager } from '@mikro-orm/postgresql'
 import {
   Channel,
   Folder,
-  FriendRelationship,
+  FriendData,
   Message,
   Post,
   Server,
@@ -14,6 +14,7 @@ import {
 import { Lexico, tagGenerator } from '@/util'
 import * as argon2 from 'argon2'
 import faker from 'faker'
+import { FriendStatus } from '@/resolver/friend'
 
 const NUM_USERS = 1000
 const MAX_MESSAGES_PER_USER = 5
@@ -44,6 +45,7 @@ export const seed = async (em: EntityManager) => {
   const passwordHash = await argon2.hash('password')
 
   const userAdmin = em.create(User, {
+    id: '1',
     name: 'Admin',
     tag: '0001',
     email: 'admin@joincomet.app',
@@ -52,15 +54,17 @@ export const seed = async (em: EntityManager) => {
   })
 
   const userDan = em.create(User, {
+    id: '2',
     name: 'Dan',
-    tag: tagGenerator(),
+    tag: '0001',
     email: 'dan@joincomet.app',
     passwordHash
   })
 
   const userMichael = em.create(User, {
+    id: '3',
     name: 'Michael',
-    tag: tagGenerator(),
+    tag: '0001',
     email: 'michael@joincomet.app',
     passwordHash
   })
@@ -99,15 +103,24 @@ export const seed = async (em: EntityManager) => {
         'All official Comet announcements'
       )
     }),
-    em.create(FriendRelationship, {
-      user1: userDan,
-      user2: userMichael
+    em.create(FriendData, {
+      user: userDan,
+      toUser: userMichael,
+      status: FriendStatus.Friends,
+      showChat: true
+    }),
+    em.create(FriendData, {
+      user: userMichael,
+      toUser: userDan,
+      status: FriendStatus.Friends,
+      showChat: true
     })
   )
 
   const users: User[] = []
   for (let i = 0; i < NUM_USERS; i++) {
     const user = em.create(User, {
+      id: `${i + 4}`,
       name: faker.name.firstName(),
       tag: tagGenerator(),
       passwordHash,

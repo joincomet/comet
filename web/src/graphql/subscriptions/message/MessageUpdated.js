@@ -4,9 +4,14 @@ import { MESSAGE_FRAGMENT, USER_FRAGMENT } from '@/graphql/fragments'
 export const MESSAGE_UPDATED = gql`
   subscription MessageUpdated {
     messageUpdated {
-      ...MESSAGE_FRAGMENT
-      author {
-        ...USER_FRAGMENT
+      userId
+      groupId
+      channelId
+      message {
+        ...MESSAGE_FRAGMENT
+        author {
+          ...USER_FRAGMENT
+        }
       }
     }
   }

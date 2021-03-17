@@ -1,4 +1,4 @@
-import { FriendRelationship, FriendRequest, User } from '@/entity'
+import { User, FriendData } from '@/entity'
 import {
   Arg,
   Authorized,
@@ -10,8 +10,7 @@ import {
   Resolver
 } from 'type-graphql'
 import { Context, SubscriptionTopic } from '@/types'
-import { FriendRequestStatus } from '@/resolver/friend'
-import { SubscriberPayload } from '@/types/subscriptions/SubscriberPayload'
+import { FriendStatus } from '@/resolver/friend'
 
 @Resolver()
 export class FriendMutations {
@@ -21,18 +20,39 @@ export class FriendMutations {
   })
   async createFriendRequest(
     @Ctx() { em, user }: Context,
-    @Arg('toUserId', () => ID, {
+    @Arg('userId', () => ID, {
       description: 'ID of user who will receive friend request'
     })
-    toUserId: string,
-    @PubSub(SubscriptionTopic.RefetchFriendRequests)
-    refetchFriendRequests: Publisher<string>
+    userId: string,
+    @Arg('status', () => FriendStatus) status: FriendStatus,
+    @PubSub(SubscriptionTopic.RefetchFriends)
+    refetchFriends: Publisher<string>
   ) {
-    const toUser = await em.findOneOrFail(User, toUserId)
-    const fr = em.create(FriendRequest, { fromUser: user, toUser })
-    await em.persistAndFlush(fr)
-    await refetchFriendRequests(user.id)
-    await refetchFriendRequests(toUser.id)
+    const toUser = await em.findOneOrFail(User, userId)
+    let myData = await em.findOne(FriendData, { user, toUser })
+    if (!myData) myData = em.create(FriendData, { user, toUser })
+
+    let theirData = await em.findOne(FriendData, {
+      user: toUser,
+      toUser: user
+    })
+    if (!theirData)
+      theirData = em.create(FriendData, { user: toUser, toUser: user })
+
+    if (myData.status === FriendStatus.Blocking)
+      throw new Error('You are blocking this user')
+    if (myData.status === FriendStatus.Blocked)
+      throw new Error('This user has blocked you')
+
+    myData.status = FriendStatus.FriendRequestOutgoing
+    theirData.status = FriendStatus.FriendRequestIncoming
+    const date = new Date()
+    myData.updatedAt = date
+    theirData.updatedAt = date
+
+    await em.persistAndFlush([myData, theirData])
+    await refetchFriends(user.id)
+    await refetchFriends(toUser.id)
   }
 
   @Authorized()
@@ -41,75 +61,100 @@ export class FriendMutations {
   })
   async revokeFriendRequest(
     @Ctx() { em, user }: Context,
-    @Arg('toUserId', () => ID, {
+    @Arg('userId', () => ID, {
       description: 'ID of user whose friend request will be revoked'
     })
-    toUserId: string,
-    @PubSub(SubscriptionTopic.RefetchFriendRequests)
-    refetchFriendRequests: Publisher<string>
+    userId: string,
+    @PubSub(SubscriptionTopic.RefetchFriends)
+    refetchFriends: Publisher<string>
   ) {
-    const toUser = await em.findOneOrFail(User, toUserId)
-    const fr = await em.findOneOrFail(FriendRequest, { fromUser: user, toUser })
-    fr.status = FriendRequestStatus.Revoked
-    await em.persistAndFlush(fr)
-    await refetchFriendRequests(user.id)
-    await refetchFriendRequests(toUser.id)
+    const toUser = await em.findOneOrFail(User, userId)
+    const myData = await em.findOne(FriendData, { user, toUser })
+
+    const theirData = await em.findOne(FriendData, {
+      user: toUser,
+      toUser: user
+    })
+
+    if (myData.status !== FriendStatus.FriendRequestOutgoing)
+      throw new Error('You have not sent a friend request to this user')
+
+    myData.status = FriendStatus.None
+    theirData.status = FriendStatus.None
+    const date = new Date()
+    myData.updatedAt = date
+    theirData.updatedAt = date
+
+    await em.persistAndFlush([myData, theirData])
+    await refetchFriends(user.id)
+    await refetchFriends(toUser.id)
   }
 
   @Authorized()
   @Mutation(() => Boolean, { description: 'Ignore (reject) a friend request' })
   async ignoreFriendRequest(
-    @Ctx() { em, user: currentUser }: Context,
-    @Arg('fromUserId', () => ID, {
+    @Ctx() { em, user }: Context,
+    @Arg('userId', () => ID, {
       description: 'ID of user whose friend request will be ignored'
     })
-    fromUserId: string,
-    @PubSub(SubscriptionTopic.RefetchFriendRequests)
-    refetchFriendRequests: Publisher<string>
+    userId: string,
+    @PubSub(SubscriptionTopic.RefetchFriends)
+    refetchFriends: Publisher<string>
   ) {
-    const fromUser = await em.findOneOrFail(User, fromUserId)
-    const fr = await em.findOneOrFail(FriendRequest, {
-      fromUser,
-      toUser: currentUser
+    const toUser = await em.findOneOrFail(User, userId)
+    const myData = await em.findOneOrFail(FriendData, { user, toUser })
+
+    const theirData = await em.findOneOrFail(FriendData, {
+      user: toUser,
+      toUser: user
     })
-    fr.status = FriendRequestStatus.Ignored
-    await em.persistAndFlush(fr)
-    await refetchFriendRequests(currentUser.id)
-    await refetchFriendRequests(fromUser.id)
+
+    if (myData.status !== FriendStatus.FriendRequestIncoming)
+      throw new Error('You have not received a friend request from this user')
+
+    myData.status = FriendStatus.None
+    theirData.status = FriendStatus.None
+    const date = new Date()
+    myData.updatedAt = date
+    theirData.updatedAt = date
+
+    await em.persistAndFlush([myData, theirData])
+    await refetchFriends(user.id)
+    await refetchFriends(toUser.id)
   }
 
   @Authorized()
   @Mutation(() => Boolean, { description: 'Accept a friend request' })
   async acceptFriendRequest(
     @Ctx() { em, user }: Context,
-    @Arg('fromUserId', () => ID, {
+    @Arg('userId', () => ID, {
       description: 'ID of user whose friend request will be accepted'
     })
-    fromUserId: string,
-    @PubSub(SubscriptionTopic.RefetchFriendRequests)
-    refetchFriendRequests: Publisher<string>,
+    userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
   ) {
-    const fromUser = await em.findOneOrFail(User, fromUserId)
-    const fr = await em.findOneOrFail(FriendRequest, {
-      fromUser,
+    const toUser = await em.findOneOrFail(User, userId)
+    const myData = await em.findOneOrFail(FriendData, { user, toUser })
+
+    const theirData = await em.findOneOrFail(FriendData, {
+      user: toUser,
       toUser: user
     })
-    fr.status = FriendRequestStatus.Accepted
 
-    const friendRel = em.create(FriendRelationship, {
-      user1: fromUser,
-      user2: user
-    })
+    if (myData.status !== FriendStatus.FriendRequestIncoming)
+      throw new Error('You have not received a friend request from this user')
 
-    await em.persistAndFlush([fr, friendRel])
+    myData.status = FriendStatus.Friends
+    theirData.status = FriendStatus.Friends
+    const date = new Date()
+    myData.updatedAt = date
+    theirData.updatedAt = date
 
-    await refetchFriendRequests(fromUser.id)
-    await refetchFriendRequests(user.id)
+    await em.persistAndFlush([myData, theirData])
 
-    await refetchFriends(fromUser.id)
     await refetchFriends(user.id)
+    await refetchFriends(toUser.id)
 
     return true
   }
@@ -118,22 +163,105 @@ export class FriendMutations {
   @Mutation(() => Boolean, { description: 'Remove a friend' })
   async removeFriend(
     @Ctx() { user, em }: Context,
-    @Arg('friendId', () => ID, { description: 'ID of friend to remove' })
-    friendId: string,
+    @Arg('userId', () => ID, { description: 'ID of friend to remove' })
+    userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
   ) {
-    const friend = await em.findOneOrFail(User, friendId)
-    const friendRel = await em.findOneOrFail(FriendRelationship, {
-      $or: [
-        { user1: user, user2: friend },
-        { user1: friend, user2: user }
-      ]
+    const toUser = await em.findOneOrFail(User, userId)
+    const myData = await em.findOneOrFail(FriendData, { user, toUser })
+
+    const theirData = await em.findOneOrFail(FriendData, {
+      user: toUser,
+      toUser: user
     })
-    em.remove(friendRel)
-    await em.flush()
+
+    if (myData.status !== FriendStatus.Friends)
+      throw new Error('You are not friends with this user')
+
+    myData.status = FriendStatus.None
+    theirData.status = FriendStatus.None
+    const date = new Date()
+    myData.updatedAt = date
+    theirData.updatedAt = date
+
+    await em.persistAndFlush([myData, theirData])
 
     await refetchFriends(user.id)
-    await refetchFriends(friend.id)
+    await refetchFriends(toUser.id)
+
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean, { description: 'Block a user' })
+  async blockUser(
+    @Ctx() { user, em }: Context,
+    @Arg('userId', () => ID, { description: 'ID of user to block' })
+    userId: string,
+    @PubSub(SubscriptionTopic.RefetchFriends)
+    refetchFriends: Publisher<string>
+  ) {
+    const toUser = await em.findOneOrFail(User, userId)
+    const myData = await em.findOneOrFail(FriendData, { user, toUser })
+
+    const theirData = await em.findOneOrFail(FriendData, {
+      user: toUser,
+      toUser: user
+    })
+
+    if (myData.status === FriendStatus.Blocking)
+      throw new Error('You are already blocking this user')
+
+    myData.status = FriendStatus.Blocking
+    if (theirData.status !== FriendStatus.Blocking)
+      theirData.status = FriendStatus.Blocked
+
+    const date = new Date()
+    myData.updatedAt = date
+    theirData.updatedAt = date
+
+    await em.persistAndFlush([myData, theirData])
+
+    await refetchFriends(user.id)
+    await refetchFriends(toUser.id)
+
+    return true
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean, { description: 'Unblock a user' })
+  async unblockUser(
+    @Ctx() { user, em }: Context,
+    @Arg('userId', () => ID, { description: 'ID of user to unblock' })
+    userId: string,
+    @PubSub(SubscriptionTopic.RefetchFriends)
+    refetchFriends: Publisher<string>
+  ) {
+    const toUser = await em.findOneOrFail(User, userId)
+    const myData = await em.findOneOrFail(FriendData, { user, toUser })
+
+    const theirData = await em.findOneOrFail(FriendData, {
+      user: toUser,
+      toUser: user
+    })
+
+    if (myData.status !== FriendStatus.Blocking)
+      throw new Error('You are not blocking this user')
+
+    myData.status = FriendStatus.None
+    if (theirData.status === FriendStatus.Blocked)
+      theirData.status = FriendStatus.None
+
+    const date = new Date()
+    myData.updatedAt = date
+    theirData.updatedAt = date
+
+    await em.persistAndFlush([myData, theirData])
+
+    await refetchFriends(user.id)
+    await refetchFriends(toUser.id)
+
+    return true
   }
 }

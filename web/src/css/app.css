@@ -84,7 +84,7 @@ body {
 }
 
 .sidebar-item--active {
-  @apply text-gray-800 dark:text-gray-200 dark:bg-gray-750;
+  @apply text-gray-800 dark:text-gray-200 dark:bg-gray-750 dark:hover:bg-gray-750;
 }
 
 .sidebar-label {

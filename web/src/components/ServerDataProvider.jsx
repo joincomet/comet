@@ -1,19 +1,17 @@
 import React, { createContext, useContext } from 'react'
-import { useQuery } from 'urql'
+import { useQuery, useSubscription } from 'urql'
 import {
-  GET_CURRENT_USER,
-  GET_JOINED_SERVERS,
   GET_SERVER_CHANNELS,
   GET_SERVER_FOLDERS,
-  GET_SERVER_PERMISSIONS,
-  GET_USER_FOLDERS
+  GET_SERVER_PERMISSIONS
 } from '@/graphql/queries'
-import { GET_FRIEND_REQUESTS, GET_FRIENDS } from '@/graphql/queries/friend'
 import { useParams } from 'react-router-dom'
 import { useJoinedServers } from '@/components/DataProvider'
+import { REFETCH_SERVER_CHANNELS } from '@/graphql/subscriptions/channel'
+import { REFETCH_SERVER_FOLDERS } from '@/graphql/subscriptions/folder'
 
 export const ServerDataContext = createContext({
-  channels: [],
+  serverChannels: [],
   serverPermissions: [],
   serverFolders: []
 })
@@ -24,9 +22,9 @@ export const useServer = () => {
   return joinedServers.find(s => s.id === serverId)
 }
 
-export const useChannels = () => {
-  const { channels } = useContext(ServerDataContext)
-  return channels
+export const useServerChannels = () => {
+  const { serverChannels } = useContext(ServerDataContext)
+  return serverChannels
 }
 
 export const useServerPermissions = () => {
@@ -41,32 +39,38 @@ export const useServerFolders = () => {
 
 export const useChannel = () => {
   const { channelId } = useParams()
-  const channels = useChannels()
+  const channels = useServerChannels()
   return channels.find(c => c.id === channelId)
 }
 
 export function ServerDataProvider({ children }) {
   const { serverId } = useParams()
 
-  const [{ data: channelsData }] = useQuery({
+  const [{ data: serverChannelsData }, refetchServerChannels] = useQuery({
     query: GET_SERVER_CHANNELS,
     variables: { serverId }
   })
+  useSubscription({ query: REFETCH_SERVER_CHANNELS }, () =>
+    refetchServerChannels()
+  )
 
   const [{ data: serverPermsData }] = useQuery({
     query: GET_SERVER_PERMISSIONS,
     variables: { serverId }
   })
 
-  const [{ data: serverFoldersData }] = useQuery({
+  const [{ data: serverFoldersData }, refetchServerFolders] = useQuery({
     query: GET_SERVER_FOLDERS,
     variables: { serverId }
   })
+  useSubscription({ query: REFETCH_SERVER_FOLDERS }, () =>
+    refetchServerFolders()
+  )
 
   return (
     <ServerDataContext.Provider
       value={{
-        channels: channelsData?.getServerChannels || [],
+        serverChannels: serverChannelsData?.getServerChannels || [],
         serverPermissions: serverPermsData?.getServerPermissions || [],
         serverFolders: serverFoldersData?.getServerFolders || []
       }}

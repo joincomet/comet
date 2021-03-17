@@ -1,27 +1,33 @@
-import { FriendRelationship, FriendRequest, User } from '@/entity'
+import { FriendData, User } from '@/entity'
 import { Authorized, Ctx, Query, Resolver } from 'type-graphql'
 import { Context } from '@/types'
-import {
-  FriendRequestStatus,
-  GetFriendRequestsResponse
-} from '@/resolver/friend'
+import { FriendStatus, GetFriendRequestsResponse } from '@/resolver/friend'
+import { QueryOrder } from '@mikro-orm/core'
 
-@Resolver(() => FriendRequest)
+@Resolver(() => FriendData)
 export class FriendQueries {
   @Authorized()
   @Query(() => [GetFriendRequestsResponse], {
     description: 'Returns list of friend requests'
   })
   async getFriendRequests(@Ctx() { em, user }: Context) {
-    const frs = await em.find(FriendRequest, {
-      status: FriendRequestStatus.Pending,
-      $or: [{ fromUser: user }, { toUser: user }]
-    })
-    return frs.map(
-      fr =>
+    const data = await em.find(
+      FriendData,
+      {
+        user,
+        $or: [
+          { status: FriendStatus.FriendRequestIncoming },
+          { status: FriendStatus.FriendRequestOutgoing }
+        ]
+      },
+      ['toUser'],
+      { updatedAt: QueryOrder.DESC }
+    )
+    return data.map(
+      friend =>
         ({
-          user: fr.fromUser === user ? fr.toUser : fr.fromUser,
-          isOutgoing: fr.fromUser === user
+          user: friend.toUser,
+          isOutgoing: friend.status === FriendStatus.FriendRequestOutgoing
         } as GetFriendRequestsResponse)
     )
   }
@@ -29,17 +35,34 @@ export class FriendQueries {
   @Authorized()
   @Query(() => [User], { description: 'Returns list of friends' })
   async getFriends(@Ctx() { em, user }: Context) {
-    const relations = await em.find(
-      FriendRelationship,
+    const data = await em.find(
+      FriendData,
       {
-        $or: [{ user1: user }, { user2: user }]
+        user,
+        status: FriendStatus.Friends
       },
-      ['user1', 'user2']
+      ['toUser']
     )
-    return relations
-      .map(friendRel =>
-        friendRel.user1 === user ? friendRel.user2 : friendRel.user1
-      )
-      .sort((a, b) => a.name.localeCompare(b.name))
+    return data
+      .map(friend => friend.toUser)
+      .sort((a, b) => b.name.localeCompare(a.name))
+  }
+
+  @Authorized()
+  @Query(() => [User])
+  async getBlockedUsers(@Ctx() { em, user }: Context) {
+    const data = await em.find(
+      FriendData,
+      {
+        user,
+        $or: [
+          { status: FriendStatus.Blocking },
+          { status: FriendStatus.Blocked }
+        ]
+      },
+      ['toUser'],
+      { updatedAt: QueryOrder.DESC }
+    )
+    return data.map(friend => friend.toUser)
   }
 }

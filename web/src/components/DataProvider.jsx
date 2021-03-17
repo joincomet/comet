@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react'
-import { useQuery } from 'urql'
+import { useQuery, useSubscription } from 'urql'
 import {
   GET_BLOCKED_USERS,
   GET_CURRENT_USER,
@@ -9,9 +9,15 @@ import {
 } from '@/graphql/queries'
 import { GET_FRIEND_REQUESTS, GET_FRIENDS } from '@/graphql/queries/friend'
 import LoadingScreen from '@/pages/LoadingScreen'
+import {
+  MESSAGE_SENT,
+  REFETCH_GROUPS_AND_DMS,
+  REFETCH_JOINED_SERVERS
+} from '@/graphql/subscriptions'
+import { REFETCH_FRIENDS } from '@/graphql/subscriptions/friend'
+import { REFETCH_USER_FOLDERS } from '@/graphql/subscriptions/folder'
 
 export const DataContext = createContext({
-  currentUser: null,
   joinedServers: [],
   userFolders: [],
   friends: [],
@@ -20,11 +26,6 @@ export const DataContext = createContext({
   groupsAndDms: [],
   refetchGroupsAndDms: null
 })
-
-export const useUser = () => {
-  const { currentUser } = useContext(DataContext)
-  return currentUser
-}
 
 export const useJoinedServers = () => {
   const { joinedServers } = useContext(DataContext)
@@ -52,38 +53,49 @@ export const useBlockedUsers = () => {
 }
 
 export const useGroupsAndDms = () => {
-  const { groupsAndDms, refetchGroupsAndDms } = useContext(DataContext)
-  return [groupsAndDms, refetchGroupsAndDms]
+  const { groupsAndDms } = useContext(DataContext)
+  return groupsAndDms
 }
 
 export function DataProvider({ children }) {
-  const [{ data: currentUserData }] = useQuery({
-    query: GET_CURRENT_USER
-  })
-
-  const [{ data: joinedServersData }] = useQuery({
+  const [{ data: joinedServersData }, refetchJoinedServers] = useQuery({
     query: GET_JOINED_SERVERS
   })
+  useSubscription({ query: REFETCH_JOINED_SERVERS }, () =>
+    refetchJoinedServers()
+  )
 
-  const [{ data: userFoldersData }] = useQuery({
+  const [{ data: userFoldersData }, refetchUserFolders] = useQuery({
     query: GET_USER_FOLDERS
   })
+  useSubscription({ query: REFETCH_USER_FOLDERS }, () => refetchUserFolders())
 
-  const [{ data: friendsData }] = useQuery({
+  const [{ data: friendsData }, refetchFriends] = useQuery({
     query: GET_FRIENDS
   })
 
-  const [{ data: friendRequestsData }] = useQuery({
+  const [{ data: friendRequestsData }, refetchFriendRequests] = useQuery({
     query: GET_FRIEND_REQUESTS
   })
 
-  const [{ data: blockedUsersData }] = useQuery({
+  const [{ data: blockedUsersData }, refetchBlockedUsers] = useQuery({
     query: GET_BLOCKED_USERS
+  })
+
+  useSubscription({ query: REFETCH_FRIENDS }, () => {
+    refetchFriends()
+    refetchFriendRequests()
+    refetchBlockedUsers()
   })
 
   const [{ data: groupsAndDmsData }, refetchGroupsAndDms] = useQuery({
     query: GET_GROUPS_AND_DMS
   })
+  useSubscription({ query: REFETCH_GROUPS_AND_DMS }, () =>
+    refetchGroupsAndDms()
+  )
+
+  useSubscription({ query: MESSAGE_SENT })
 
   if (
     !joinedServersData ||
@@ -98,7 +110,6 @@ export function DataProvider({ children }) {
   return (
     <DataContext.Provider
       value={{
-        currentUser: currentUserData?.getCurrentUser,
         joinedServers: joinedServersData?.getJoinedServers || [],
         userFolders: userFoldersData?.getUserFolders || [],
         friends: friendsData?.getFriends || [],

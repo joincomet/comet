@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Tippy from '@tippyjs/react'
 import { HiHome } from 'react-icons/hi'
 import { IoTelescope } from 'react-icons/io5'
-import PlanetAvatar from '@/components/server/ServerAvatar'
+import ServerAvatar from '@/components/server/ServerAvatar'
 import CreateServerDialog from '@/components/server-list/CreateServerDialog'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
@@ -69,17 +69,17 @@ export default function ServerList() {
             <>
               <div className="border-b-2 border-gray-200 dark:border-gray-800 h-2 mx-3 box-content" />
 
-              {servers.map(planet => (
-                <Tippy key={planet.id} placement="right" content={planet.name}>
+              {servers.map(server => (
+                <Tippy key={server.id} placement="right" content={server.name}>
                   <NavLink
-                    to={`/server/${planet.id}`}
+                    to={`/server/${server.id}`}
                     className={serverListItem}
                     activeClassName={serverListItemActive}
                   >
                     <div
                       className={`${serverListItemDot} dark:bg-gray-800 bg-gray-200`}
                     >
-                      <PlanetAvatar planet={planet} className="w-12 h-12" />
+                      <ServerAvatar server={server} className="w-12 h-12" />
                     </div>
                   </NavLink>
                 </Tippy>

@@ -1,11 +1,11 @@
 import { HiCog, HiUser } from 'react-icons/hi'
 import React from 'react'
 import Tippy from '@tippyjs/react'
-import { useUser } from '@/components/DataProvider'
+import { useUser } from '@/components/UserProvider'
 import UserAvatar from '@/components/user/UserAvatar'
 
 export function SidebarUserInfo() {
-  const currentUser = useUser()
+  const [currentUser] = useUser()
 
   return (
     <div className="fixed bottom-0 left-16 right-0 w-60 h-12 px-3 dark:bg-gray-850 flex items-center">

@@ -1,5 +1,4 @@
 export * from './authChecker'
-export * from './CheckBlock'
 export * from './CheckChannelPermission'
 export * from './CheckCommentAuthor'
 export * from './CheckCommentServerPermission'

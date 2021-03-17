@@ -1,3 +1,3 @@
-export * from './MessageReceived'
+export * from './MessageSent'
 export * from './MessageUpdated'
 export * from './MessageRemoved'

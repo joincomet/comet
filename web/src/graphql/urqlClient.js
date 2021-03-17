@@ -72,6 +72,7 @@ export const urqlClient = createClient({
     process.env.NODE_ENV === 'production'
       ? `https://${process.env.APP_DOMAIN}/${process.env.SERVER_PATH}/graphql`
       : 'http://localhost:4000/graphql',
+  requestPolicy: 'cache-and-network',
   exchanges: [
     devtoolsExchange,
     dedupExchange,
@@ -79,40 +80,78 @@ export const urqlClient = createClient({
       keys: {
         GetPostsResponse: () => null,
         LinkMetadata: () => null,
-        GetMessagesResponse: () => null
+        GetMessagesResponse: () => null,
+        MessageSentResponse: () => null,
+        MessageRemovedResponse: () => null
       },
-      resolvers: {
+      /*resolvers: {
         Query: {
-          messages: simplePagination({
+          getMessages: simplePagination({
             offsetArgument: 'page',
             limitArgument: 'pageSize',
             mergeMode: 'before'
           }),
-          posts: simplePagination({
+          getPosts: simplePagination({
             offsetArgument: 'page',
             limitArgument: 'pageSize',
             mergeMode: 'after'
           })
         }
-      },
+      },*/
       updates: {
         Subscription: {
-          messageReceived: (
-            { messageReceived: newMessage },
-            { channelId },
+          messageSent: (
+            { messageSent: { userId, groupId, channelId, message } },
+            _variables,
             cache
           ) => {
-            cache.updateQuery(
-              { query: GET_MESSAGES, variables: { page: 0, channelId } },
-              data => {
-                if (data !== null) {
-                  data.messages.push(newMessage)
-                  return data
-                } else {
-                  return null
-                }
+            let variables
+            if (userId) variables = { page: 0, userId }
+            if (groupId) variables = { page: 0, groupId }
+            if (channelId) variables = { page: 0, channelId }
+            cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
+              if (data !== null) {
+                data.getMessages.messages.push(message)
+                return data
+              } else {
+                return null
               }
-            )
+            })
+          },
+          messageUpdated: (
+            { messageUpdated: { userId, groupId, channelId, message } },
+            _variables,
+            cache
+          ) => {
+            let variables = { page: 0, userId, groupId, channelId }
+            cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
+              if (data !== null) {
+                const i = data.getMessages.messages.findIndex(
+                  m => m.id === message.id
+                )
+                data.getMessages.messages[i] = message
+                return data
+              } else {
+                return null
+              }
+            })
+          },
+          messageRemoved: (
+            { messageRemoved: { userId, groupId, channelId, messageId } },
+            _variables,
+            cache
+          ) => {
+            let variables = { page: 0, userId, groupId, channelId }
+            cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
+              if (data !== null) {
+                data.getMessages.messages = data.getMessages.messages.filter(
+                  m => m.id !== messageId
+                )
+                return data
+              } else {
+                return null
+              }
+            })
           }
         }
       }

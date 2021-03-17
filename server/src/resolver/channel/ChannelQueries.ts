@@ -1,5 +1,5 @@
 import { Arg, Ctx, ID, Query, Resolver } from 'type-graphql'
-import { Channel, ChannelRole, Server } from '@/entity'
+import { Channel, ChannelRole, Server, ServerUserJoin } from '@/entity'
 import { CheckJoinedChannelServer } from '@/util/auth/middlewares/CheckJoinedChannelServer'
 import { GetChannelPermissionsResponse } from '@/resolver/user'
 import { ChannelPermission, Context } from '@/types'
@@ -16,11 +16,15 @@ export class ChannelQueries {
   ) {
     const channel = await em.findOneOrFail(Channel, channelId, [
       'owner',
-      'roles'
+      'roles',
+      'server'
     ])
-    const roles = await user.roles.matching({
-      where: { server: channel.server }
-    })
+    const join = await em.findOne(
+      ServerUserJoin,
+      { server: channel.server, user },
+      ['roles']
+    )
+    const roles = join.roles.getItems()
 
     const channelRoles = await em.find(ChannelRole, {
       $and: [

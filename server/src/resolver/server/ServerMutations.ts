@@ -65,12 +65,13 @@ export class ServerMutations {
   @Mutation(() => Channel)
   async createChannel(
     @Ctx() { em }: Context,
-    @PubSub(SubscriptionTopic.RefetchServers) refetchServers: Publisher<Server>,
+    @PubSub(SubscriptionTopic.RefetchJoinedServers)
+    refetchServerChannels: Publisher<string>,
     @Arg('serverId', () => ID) serverId: string,
     @Arg('name') name: string,
-    @Arg('isPrivate') isPrivate: boolean
+    @Arg('isPrivate', { nullable: true }) isPrivate?: boolean
   ) {
-    const server = await em.findOne(Server, serverId, ['channels'])
+    const server = await em.findOne(Server, serverId)
 
     const channel = em.create(Channel, {
       name,
@@ -78,8 +79,8 @@ export class ServerMutations {
       isPrivate
     })
 
-    await em.persistAndFlush([channel, server])
-    await refetchServers(server)
+    await em.persistAndFlush(channel)
+    await refetchServerChannels(server.id)
     return channel
   }
 

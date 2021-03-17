@@ -13,13 +13,14 @@ import ServerLayout from '@/pages/server/ServerLayout'
 import GroupPage from '@/pages/group/GroupPage'
 import FolderPage from '@/pages/folder/FolderPage'
 import NotFound from '@/pages/NotFound'
-import { useUser } from '@/components/DataProvider'
+import { useUser } from '@/components/UserProvider'
 import DmPage from '@/pages/dm/DmPage'
 import FriendsPage from '@/pages/friends/FriendsPage'
 import { ServerDataProvider } from '@/components/ServerDataProvider'
+import { DataProvider } from '@/components/DataProvider'
 
 export default function Router() {
-  const currentUser = useUser()
+  const [currentUser] = useUser()
   return (
     <BrowserRouter>
       <Switch>
@@ -66,46 +67,48 @@ export default function Router() {
             '/server/:serverId'
           ]}
         >
-          <ServerList />
-          <Switch>
-            <Route
-              path={[
-                '/posts',
-                '/friends',
-                '/folder/:folderId',
-                '/group/:groupId',
-                '/dm/:userId'
-              ]}
-            >
-              <MainLayout>
-                <Switch>
-                  <Route path="/posts" exact>
-                    <PostsPage />
-                  </Route>
-                  <Route path="/friends" exact>
-                    <FriendsPage />
-                  </Route>
-                  <Route path="/folder/:folderId">
-                    <FolderPage />
-                  </Route>
-                  <Route path="/group/:groupId">
-                    <GroupPage />
-                  </Route>
-                  <Route path="/dm/:userId">
-                    <DmPage />
-                  </Route>
-                </Switch>
-              </MainLayout>
-            </Route>
-            <Route path="/explore">
-              <ExplorePage />
-            </Route>
-            <Route path="/server/:serverId">
-              <ServerDataProvider>
-                <ServerLayout />
-              </ServerDataProvider>
-            </Route>
-          </Switch>
+          <DataProvider>
+            <ServerList />
+            <Switch>
+              <Route
+                path={[
+                  '/posts',
+                  '/friends',
+                  '/folder/:folderId',
+                  '/group/:groupId',
+                  '/dm/:userId'
+                ]}
+              >
+                <MainLayout>
+                  <Switch>
+                    <Route path="/posts" exact>
+                      <PostsPage />
+                    </Route>
+                    <Route path="/friends" exact>
+                      <FriendsPage />
+                    </Route>
+                    <Route path="/folder/:folderId">
+                      <FolderPage />
+                    </Route>
+                    <Route path="/group/:groupId">
+                      <GroupPage />
+                    </Route>
+                    <Route path="/dm/:userId">
+                      <DmPage />
+                    </Route>
+                  </Switch>
+                </MainLayout>
+              </Route>
+              <Route path="/explore">
+                <ExplorePage />
+              </Route>
+              <Route path="/server/:serverId">
+                <ServerDataProvider>
+                  <ServerLayout />
+                </ServerDataProvider>
+              </Route>
+            </Switch>
+          </DataProvider>
         </PrivateRoute>
 
         <Route>
@@ -117,7 +120,7 @@ export default function Router() {
 }
 
 function PrivateRoute({ children, ...rest }) {
-  const currentUser = useUser()
+  const [currentUser] = useUser()
 
   return (
     <Route

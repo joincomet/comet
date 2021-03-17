@@ -8,15 +8,7 @@ import {
   Resolver
 } from 'type-graphql'
 import { Context } from '@/types'
-import {
-  User,
-  Folder,
-  Post,
-  Comment,
-  UserBlock,
-  ServerUserJoin,
-  Message
-} from '@/entity'
+import { User, Folder, Post, Comment, ServerUserJoin, Message } from '@/entity'
 import {
   uploadImage,
   handleUnderscore,
@@ -25,7 +17,6 @@ import {
 } from '@/util'
 import isEmail from 'validator/lib/isEmail'
 import * as argon2 from 'argon2'
-import { customAlphabet } from 'nanoid'
 import {
   LoginResponse,
   UpdateUserArgs,
@@ -238,40 +229,6 @@ export class UserMutations {
       })
       .where({ id: userId })
       .execute()
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean, { description: 'Block a user' })
-  async blockUser(
-    @Ctx() { user, em }: Context,
-    @Arg('userId', () => ID, { description: 'ID of user to block' })
-    userId: string
-  ) {
-    const blockedUser = await em.findOneOrFail(User, userId)
-    let block = await em.findOne(UserBlock, {
-      user,
-      blockedUser
-    })
-    if (block) throw new Error('Already blocking this user')
-    else block = em.create(UserBlock, { user, blockedUser })
-    await em.persistAndFlush(block)
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean, { description: 'Unblock a user' })
-  async unblockUser(
-    @Ctx() { user, em }: Context,
-    @Arg('userId', () => ID, { description: 'ID of user to unblock' })
-    userId: string
-  ) {
-    const blockedUser = await em.findOneOrFail(User, userId)
-    const block = await em.findOneOrFail(UserBlock, {
-      user,
-      blockedUser
-    })
-    await em.remove(block).flush()
     return true
   }
 }

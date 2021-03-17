@@ -8,7 +8,7 @@ import {
   Resolver,
   UseMiddleware
 } from 'type-graphql'
-import { Channel, Server } from '@/entity'
+import { Channel, Server, ServerUserJoin } from '@/entity'
 import {
   ChannelUsersResponse,
   GetServersArgs,
@@ -83,19 +83,11 @@ export class ServerQueries {
     @Ctx() { em }: Context,
     @Arg('channelId', () => ID) channelId: string
   ) {
-    const channel = await em.findOneOrFail(Channel, channelId, [
-      'server.userJoins.user',
-      'server.roles'
+    const channel = await em.findOneOrFail(Channel, channelId, ['server.roles'])
+    const joins = await em.find(ServerUserJoin, { server: channel.server }, [
+      'user',
+      'roles'
     ])
-    const joins = channel.server.userJoins
-    const users = joins.getItems().map(join => join.user)
-    for (const user of users) {
-      await user.roles.matching({
-        where: { server: channel.server },
-        orderBy: { position: QueryOrder.DESC },
-        store: true
-      })
-    }
 
     const result = []
 
@@ -106,31 +98,30 @@ export class ServerQueries {
       )) {
       result.push({
         role: role.name,
-        users: users.filter(
-          user =>
-            user.isOnline &&
-            user.roles.length > 0 &&
-            user.roles.getItems()[0] === role
-        )
+        users: joins
+          .filter(join => join.roles.getItems()[0] === role)
+          .map(join => join.user)
       } as ChannelUsersResponse)
     }
 
     result.push({
       role: 'Online',
-      users: users.filter(
-        user =>
-          user.isOnline &&
-          user.roles
-            .getItems()
-            .filter(role =>
-              role.hasPermission(ServerPermission.DisplayRoleSeparately)
-            ).length === 0
-      )
+      users: joins
+        .filter(
+          join =>
+            join.user.isOnline &&
+            join.roles
+              .getItems()
+              .filter(role =>
+                role.hasPermission(ServerPermission.DisplayRoleSeparately)
+              ).length === 0
+        )
+        .map(join => join.user)
     } as ChannelUsersResponse)
 
     result.push({
       role: 'Offline',
-      users: users.filter(user => !user.isOnline)
+      users: joins.filter(join => !join.user.isOnline).map(join => join.user)
     } as ChannelUsersResponse)
 
     return result
@@ -142,18 +133,17 @@ export class ServerQueries {
     @Ctx() { user, em }: Context,
     @Arg('serverId', () => ID) serverId: string
   ) {
-    const server = await em.findOneOrFail(Server, serverId, ['owner', 'roles'])
+    const server = await em.findOneOrFail(Server, serverId, ['owner'])
     const perms = new Set<ServerPermission>()
     if (user.isAdmin) perms.add(ServerPermission.GlobalAdmin)
     if (server.owner === user) {
       perms.add(ServerPermission.ServerOwner)
       perms.add(ServerPermission.ServerAdmin)
     }
-    const serverRoles = server.roles.getItems()
-    await em.populate(user, ['roles'])
-    const userRoles = user.roles
-      .getItems()
-      .filter(role => serverRoles.includes(role))
+    const join = await em.findOneOrFail(ServerUserJoin, { user, server }, [
+      'roles'
+    ])
+    const userRoles = join.roles.getItems()
     userRoles.forEach(role => role.permissions.forEach(perm => perms.add(perm)))
     return [...perms]
   }

@@ -1,2 +1,2 @@
-export * from './FriendRequestStatus'
+export * from './FriendStatus'
 export * from './GetFriendRequestsResponse'

@@ -21,7 +21,7 @@ export default forwardRef(
         name={user.username}
         avatarUrl={user.avatarUrl}
         loading={loading}
-        className={`relative ${className}`}
+        className={`${className}`}
         size={size}
       >
         {showOnline && (

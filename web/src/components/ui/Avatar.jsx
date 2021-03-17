@@ -8,21 +8,14 @@ export default forwardRef(
     return (
       <div
         ref={ref}
-        className={`rounded-full inline-flex items-center justify-center ${className}`}
-        style={{ width: `${size / 4}rem`, height: `${size / 4}rem` }}
+        className={`relative rounded-full inline-flex items-center justify-center bg-cover bg-center ${className}`}
+        style={{
+          width: `${size / 4}rem`,
+          height: `${size / 4}rem`,
+          backgroundImage: `url(${avatarUrl})`
+        }}
       >
-        {avatarUrl ? (
-          <img
-            alt={name}
-            src={avatarUrl}
-            loading={loading}
-            className="rounded-full object-cover object-center"
-          />
-        ) : (
-          <div className="w-full h-full inline-flex items-center justify-center">
-            {children}
-          </div>
-        )}
+        {children}
       </div>
     )
   }

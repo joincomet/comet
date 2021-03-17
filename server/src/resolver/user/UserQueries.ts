@@ -1,13 +1,15 @@
 import {
+  Arg,
   Authorized,
   Ctx,
   FieldResolver,
+  ID,
   Query,
   Resolver,
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import { DirectMessage, Group, User, UserBlock } from '@/entity'
+import { FriendData, Group, User } from '@/entity'
 import { GroupDmUnion } from '@/resolver/user/types/GroupDmUnion'
 import { QueryOrder } from '@mikro-orm/core'
 
@@ -39,20 +41,20 @@ export class UserQueries {
     @Ctx() { user, em }: Context
   ): Promise<Array<typeof GroupDmUnion>> {
     const dms = await em.find(
-      DirectMessage,
-      { user, isHidden: false },
+      FriendData,
+      { user, showChat: true },
       ['toUser'],
-      { updatedAt: QueryOrder.DESC }
+      { lastMessageAt: QueryOrder.DESC }
     )
 
     await em.populate(user, ['groups'])
     const groups = user.groups.getItems()
-    const arr: (Group | DirectMessage)[] = [].concat(groups).concat(dms)
+    const arr: (Group | FriendData)[] = [].concat(groups).concat(dms)
     return arr
-      .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
+      .sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime())
       .map(i => {
         if (i instanceof Group) return i
-        else if (i instanceof DirectMessage) return i.toUser
+        else if (i instanceof FriendData) return i.toUser
       })
   }
 
@@ -65,9 +67,11 @@ export class UserQueries {
   }
 
   @Authorized()
-  @Query(() => [User])
-  async getBlockedUsers(@Ctx() { em, user }: Context) {
-    const blocks = await em.find(UserBlock, { user }, ['blockedUser'])
-    return blocks.map(b => b.blockedUser)
+  @Query(() => User)
+  async getUser(
+    @Ctx() { em }: Context,
+    @Arg('userId', () => ID) userId: string
+  ) {
+    return em.findOneOrFail(User, userId)
   }
 }

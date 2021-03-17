@@ -7,11 +7,16 @@ import {
   ServerPermission,
   Context
 } from '@/types'
+import {
+  MessageRemovedResponse,
+  MessageSentPayload
+} from '@/resolver/message/types'
+import { MessageSentResponse } from '@/resolver/message/types/MessageSentResponse'
 
 const filter = async ({
-  payload: messageId,
+  payload: { messageId },
   context: { user, em }
-}: SubscriptionFilter<string>) => {
+}: SubscriptionFilter<MessageSentPayload>) => {
   const message = await em.findOneOrFail(Message, messageId, [
     'channel.server',
     'group.users',
@@ -35,35 +40,77 @@ const filter = async ({
 @Resolver()
 export class MessageSubscriptions {
   @Authorized()
-  @Subscription(() => Message, {
-    topics: SubscriptionTopic.MessageReceived,
+  @Subscription(() => MessageSentResponse, {
+    topics: SubscriptionTopic.MessageSent,
     filter,
     description:
       'Published to all users with permission to view message when a message is sent'
   })
-  async messageReceived(@Ctx() { em }: Context, @Root() messageId: string) {
-    return em.findOneOrFail(Message, messageId, ['author'])
+  async messageSent(
+    @Ctx() { em, user }: Context,
+    @Root()
+    { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
+  ) {
+    const userId = toUserId
+      ? toUserId === user.id
+        ? fromUserId
+        : toUserId
+      : null
+    return {
+      userId,
+      groupId,
+      channelId,
+      message: await em.findOneOrFail(Message, messageId, ['author'])
+    } as MessageSentResponse
   }
 
   @Authorized()
-  @Subscription(() => Message, {
+  @Subscription(() => MessageSentResponse, {
     topics: SubscriptionTopic.MessageUpdated,
     filter,
     description:
       'Published to all users with permission to view message when a message is updated (edited or embeds fetched)'
   })
-  async messageUpdated(@Ctx() { em }: Context, @Root() messageId: string) {
-    return em.findOneOrFail(Message, messageId, ['author'])
+  async messageUpdated(
+    @Ctx() { em, user }: Context,
+    @Root()
+    { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
+  ) {
+    const userId = toUserId
+      ? toUserId === user.id
+        ? fromUserId
+        : toUserId
+      : null
+    return {
+      userId,
+      groupId,
+      channelId,
+      message: await em.findOneOrFail(Message, messageId, ['author'])
+    } as MessageSentResponse
   }
 
   @Authorized()
-  @Subscription(() => ID, {
+  @Subscription(() => MessageRemovedResponse, {
     topics: SubscriptionTopic.MessageRemoved,
     filter,
     description:
       'Published to all users with permission to view message when a message is deleted or removed'
   })
-  messageRemoved(@Root() messageId: string) {
-    return messageId
+  messageRemoved(
+    @Ctx() { em, user }: Context,
+    @Root()
+    { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
+  ) {
+    const userId = toUserId
+      ? toUserId === user.id
+        ? fromUserId
+        : toUserId
+      : null
+    return {
+      userId,
+      groupId,
+      channelId,
+      messageId
+    } as MessageRemovedResponse
   }
 }
