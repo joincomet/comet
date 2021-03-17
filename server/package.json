@@ -54,6 +54,7 @@
     "@types/express": "^4.17.11",
     "@types/faker": "^5.1.7",
     "@types/graphql-upload": "^8.0.4",
+    "@types/ioredis": "^4.22.0",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/mime": "^2.0.3",
     "@types/node": "^14.14.35",
