@@ -67,38 +67,6 @@ body {
   display: none;  /* Safari and Chrome */
 }
 
-.item {
-  @apply flex-shrink-0 inline-flex items-center justify-center w-full h-full rounded-full cursor-pointer hover:shadow-lg;
-}
-
-.sidebar {
-  @apply w-64 top-14 bottom-0 fixed z-50 flex flex-col overflow-y-auto bg-white dark:bg-gray-850 transform duration-300 transition;
-}
-
-.sidebar-item {
-  @apply rounded cursor-pointer flex items-center text-base font-medium px-4 w-full h-9 dark:hover:bg-gray-775 text-gray-600 dark:text-gray-400;
-}
-
-.sidebar-item--large {
-  @apply h-11;
-}
-
-.sidebar-item--active {
-  @apply text-gray-800 dark:text-gray-200 dark:bg-gray-750 dark:hover:bg-gray-750;
-}
-
-.sidebar-label {
-  @apply px-3 pt-4 pb-1.5 text-gray-500 dark:text-gray-500 uppercase text-11 font-semibold tracking-widest flex items-center justify-between;
-}
-
-.sidebar-label--plus {
-  @apply hover:text-gray-800 dark:hover:text-gray-200 cursor-pointer select-none transition;
-}
-
-.pagebutton {
-  @apply flex items-center justify-center flex-grow transition dark:hover:bg-gray-800 h-full cursor-pointer;
-}
-
 .action-chip {
   @apply text-xs font-medium inline-flex items-center cursor-pointer h-7 px-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition;
 }
@@ -117,21 +85,6 @@ body {
   margin-bottom: 0 !important;
 }
 
-.animate-online {
-  animation: online 5s cubic-bezier(0, 0, 0.2, 1) 5s infinite;
-}
-
-@keyframes online {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  20%, 100% {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
-
 .textbox {
   @apply rounded dark:bg-gray-775 border dark:border-gray-850 duration-300 dark:focus:border-blue-500 h-10 placeholder-gray-600 dark:placeholder-gray-400 block focus:outline-none transition w-full text-base;
 }
@@ -141,7 +94,7 @@ body {
 }
 
 .card {
-  @apply  rounded shadow-lg dark:bg-gray-750 max-w-md w-full p-4 z-20;
+  @apply rounded shadow-lg dark:bg-gray-750 max-w-md w-full p-4 z-20;
 }
 
 .title {

@@ -1,9 +1,7 @@
-import Header from '@/components/ui/header/Header'
-import MainSidebar from '@/pages/MainSidebar'
+import MainSidebar from '@/components/sidebars/HomeSidebar'
 import React from 'react'
-import { useMutation, useQuery, useSubscription } from 'urql'
+import { useQuery, useSubscription } from 'urql'
 import { useParams } from 'react-router-dom'
-import { HiAtSymbol } from 'react-icons/hi'
 import SendMessageBar from '@/components/message/SendMessageBar'
 import Message from '@/components/message/Message'
 import { Virtuoso } from 'react-virtuoso'
@@ -14,6 +12,7 @@ import {
   MESSAGE_SENT,
   MESSAGE_UPDATED
 } from '@/graphql/subscriptions'
+import DmHeader from '@/components/headers/DmHeader'
 
 export default function DmPage() {
   const { userId } = useParams()
@@ -34,16 +33,9 @@ export default function DmPage() {
   useSubscription({ query: MESSAGE_UPDATED })
   useSubscription({ query: MESSAGE_REMOVED })
 
-  if (!user) return <LoadingScreen />
-
   return (
     <>
-      <Header>
-        <div className="flex items-center pl-6 text-secondary font-medium text-base">
-          <HiAtSymbol className="w-5 h-5 mr-3 text-tertiary" />
-          {user.name}
-        </div>
-      </Header>
+      <DmHeader user={user} />
       <MainSidebar />
 
       <main className="pl-76 pt-12 h-full">

@@ -1,28 +1,28 @@
 import React, { useState } from 'react'
-import { RiRocketFill } from 'react-icons/ri'
-import {
-  HiLink,
-  HiMenuAlt2,
-  HiChatAlt2,
-  HiDotsHorizontal,
-  HiGlobe,
-  HiGlobeAlt,
-  HiChevronDown,
-  HiChevronUp
-} from 'react-icons/hi'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Tippy from '@tippyjs/react'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
 import ReactPlayer from 'react-player'
-import { TiPin } from 'react-icons/ti'
-import UserAvatar from '@/components/user/UserAvatar'
-import ServerAvatar from '@/components/server/ServerAvatar'
-import ServerPopup from '@/components/server/ServerPopup'
-import UserPopup from '@/components/user/UserPopup'
+import UserAvatar from '@/components/avatars/UserAvatar'
+import ServerAvatar from '@/components/avatars/ServerAvatar'
+import ServerPopup from '@/components/popups/ServerPopup'
+import UserPopup from '@/components/popups/UserPopup'
 import { useMutation } from 'urql'
 import { CREATE_POST_VOTE, REMOVE_POST_VOTE } from '@/graphql/mutations'
 import { fullDate, shortDate } from '@/lib/timeUtils'
+import {
+  IconChat,
+  IconChevronDown,
+  IconChevrownUp,
+  IconDotsHorizontal,
+  IconLinkChain,
+  IconLinkWeb,
+  IconPin,
+  IconUserToServerArrow,
+  IconText,
+  IconVote
+} from '@/lib/Icons'
 
 export default function Post({
   postData,
@@ -54,7 +54,7 @@ export default function Post({
       style={{ opacity }}
       className={`${className} cursor-pointer relative transition dark:hover:bg-gray-775 pt-3 px-4 pb-1.5 dark:border-gray-700 border-b`}
     >
-      <div className="flex flex-row-reverse lg:flex-row w-full">
+      <div className="flex lg:flex-row w-full">
         <Thumbnail post={post} />
 
         <div className="flex-grow">
@@ -62,38 +62,39 @@ export default function Post({
             {post.pinned && (
               <Tippy content={`Pinned to +${post.server.name}`}>
                 <div className="mr-1.5">
-                  <TiPin className="h-5 w-5 text-accent" />
+                  <IconPin className="h-5 w-5 text-accent" />
                 </div>
               </Tippy>
-            )}
-            {showServerName && (
-              <>
-                <ServerPopup server={post.server}>
-                  <ServerAvatar
-                    server={post.server}
-                    className="h-5 w-5 mr-1.5"
-                  />
-                </ServerPopup>
-                <ServerPopup server={post.server}>
-                  <span className="text-accent hover:underline cursor-pointer">
-                    +{post.server.name}
-                  </span>
-                </ServerPopup>
-                &nbsp;&middot;&nbsp;
-              </>
             )}
             <UserPopup user={post.author}>
               <UserAvatar
                 user={post.author}
-                className="rounded-full mr-1.5 cursor-pointer"
+                className="mr-1.5 cursor-pointer"
                 size={5}
               />
             </UserPopup>
             <UserPopup user={post.author}>
-              <span className="hover:underline cursor-pointer">
+              <span className="hover:underline cursor-pointer text-accent">
                 {post.author.name}
               </span>
             </UserPopup>
+            {showServerName && (
+              <>
+                <IconUserToServerArrow className="w-4 h-4 text-tertiary mx-1" />
+                <ServerPopup server={post.server}>
+                  <ServerAvatar
+                    server={post.server}
+                    size={5}
+                    className="mr-1.5"
+                  />
+                </ServerPopup>
+                <ServerPopup server={post.server}>
+                  <span className="hover:underline cursor-pointer">
+                    {post.server.name}
+                  </span>
+                </ServerPopup>
+              </>
+            )}
             &nbsp;&middot;&nbsp;
             <Tippy content={fullDate(post.createdAt)}>
               <span>{shortDate(post.createdAt)}</span>
@@ -172,7 +173,7 @@ function Embed({ post }) {
                         />
                       ) : (
                         <div className="flex w-24 h-24 rounded-l-md border-r border-gray-200 dark:border-gray-800">
-                          <HiLink className="w-8 h-8 m-auto text-tertiary" />
+                          <IconLinkChain className="w-8 h-8 m-auto text-tertiary" />
                         </div>
                       )}
                     </div>
@@ -242,7 +243,7 @@ function Embed({ post }) {
 
 function Actions({ post, setPost, expanded, setExpanded, hasEmbed }) {
   return (
-    <div className="space-x-1 flex items-center justify-items-end lg:justify-start flex-row-reverse lg:flex-row">
+    <div className="space-x-1 flex items-center">
       <VoteButton post={post} setPost={setPost} />
       <CommentCount post={post} />
       {hasEmbed && <Expand {...{ expanded, setExpanded }} />}
@@ -252,8 +253,8 @@ function Actions({ post, setPost, expanded, setExpanded, hasEmbed }) {
 }
 
 function VoteButton({ post, setPost }) {
-  const [createVoteRes, createVote] = useMutation(CREATE_POST_VOTE)
-  const [removeVoteRes, removeVote] = useMutation(REMOVE_POST_VOTE)
+  const [_, createVote] = useMutation(CREATE_POST_VOTE)
+  const [__, removeVote] = useMutation(REMOVE_POST_VOTE)
 
   const variables = { postId: post.id }
   const toggleVote = () => {
@@ -271,7 +272,7 @@ function VoteButton({ post, setPost }) {
         post.isVoted ? 'text-red-400' : 'text-tertiary'
       }`}
     >
-      <RiRocketFill className="w-4 h-4" />
+      <IconVote className="w-4 h-4" />
       <div className="ml-1.5">{post.voteCount}</div>
     </div>
   )
@@ -280,7 +281,7 @@ function VoteButton({ post, setPost }) {
 function CommentCount({ post }) {
   return (
     <Link to={post.relativeUrl} className={`action-chip text-tertiary`}>
-      <HiChatAlt2 className="w-5 h-5 mr-1.5" />
+      <IconChat className="w-5 h-5 mr-1.5" />
       {post.commentCount}
     </Link>
   )
@@ -301,9 +302,9 @@ function Expand({ expanded, setExpanded }) {
         }}
       >
         {expanded ? (
-          <HiChevronUp className="w-5 h-5" />
+          <IconChevrownUp className="w-5 h-5" />
         ) : (
-          <HiChevronDown className="w-5 h-5" />
+          <IconChevronDown className="w-5 h-5" />
         )}
       </div>
     </Tippy>
@@ -313,15 +314,15 @@ function Expand({ expanded, setExpanded }) {
 function Options({ post }) {
   return (
     <div className="inline-flex items-center cursor-pointer text-mid p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-      <HiDotsHorizontal className="w-5 h-5" />
+      <IconDotsHorizontal className="w-5 h-5" />
     </div>
   )
 }
 
 function Thumbnail({ post }) {
   return (
-    <div className="pl-4 lg:pl-0 lg:pr-4">
-      <div className={`relative w-14 h-14 lg:w-24 lg:h-16 flex-shrink-0`}>
+    <div className="pr-4">
+      <div className={`relative w-24 h-16 flex-shrink-0`}>
         <div
           className="h-full w-full rounded dark:bg-gray-650 bg-gray-200 inline-flex items-center justify-center text-tertiary bg-cover bg-center bg-no-repeat"
           style={
@@ -334,9 +335,9 @@ function Thumbnail({ post }) {
         >
           {!(post.thumbnailUrl || post.logoUrl) &&
             (post.linkUrl ? (
-              <HiGlobeAlt className="w-8 h-8" />
+              <IconLinkWeb className="w-8 h-8" />
             ) : (
-              <HiMenuAlt2 className="w-8 h-8" />
+              <IconText className="w-8 h-8" />
             ))}
         </div>
       </div>

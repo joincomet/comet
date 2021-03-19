@@ -7,17 +7,18 @@ import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
 import AuthLayout from '@/pages/auth/AuthLayout'
 import { BrowserRouter } from 'react-router-dom'
-import ServerList from '@/components/server-list/ServerList'
+import ServerList from '@/components/serverlist/ServerList'
 import MainLayout from '@/pages/MainLayout'
 import ServerLayout from '@/pages/server/ServerLayout'
 import GroupPage from '@/pages/group/GroupPage'
-import FolderPage from '@/pages/folder/FolderPage'
+import UserFolderPage from '@/pages/folder/UserFolderPage'
 import NotFound from '@/pages/NotFound'
-import { useUser } from '@/components/UserProvider'
+import { useUser } from '@/components/providers/UserProvider'
 import DmPage from '@/pages/dm/DmPage'
 import FriendsPage from '@/pages/friends/FriendsPage'
-import { ServerDataProvider } from '@/components/ServerDataProvider'
-import { DataProvider } from '@/components/DataProvider'
+import { ServerDataProvider } from '@/components/providers/ServerDataProvider'
+import { DataProvider } from '@/components/providers/DataProvider'
+import InboxPage from '@/pages/inbox/InboxPage'
 
 export default function Router() {
   const [currentUser] = useUser()
@@ -60,6 +61,7 @@ export default function Router() {
           path={[
             '/posts',
             '/friends',
+            '/inbox',
             '/folder/:folderId',
             '/group/:groupId',
             '/dm/:userId',
@@ -74,6 +76,7 @@ export default function Router() {
                 path={[
                   '/posts',
                   '/friends',
+                  '/inbox',
                   '/folder/:folderId',
                   '/group/:groupId',
                   '/dm/:userId'
@@ -87,8 +90,11 @@ export default function Router() {
                     <Route path="/friends" exact>
                       <FriendsPage />
                     </Route>
+                    <Route path="/inbox" exact>
+                      <InboxPage />
+                    </Route>
                     <Route path="/folder/:folderId">
-                      <FolderPage />
+                      <UserFolderPage />
                     </Route>
                     <Route path="/group/:groupId">
                       <GroupPage />

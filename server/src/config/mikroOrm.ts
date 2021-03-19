@@ -1,8 +1,10 @@
 import { Options, ReflectMetadataProvider } from '@mikro-orm/core'
-import * as entities from '@/entity'
 import { PostgreSqlDriver } from '@mikro-orm/postgresql'
+import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
+import * as entities from '@/entity'
 
 export default {
+  highlighter: new SqlHighlighter(),
   metadataProvider: ReflectMetadataProvider,
   cache: { enabled: false },
   entities: Object.values(entities),

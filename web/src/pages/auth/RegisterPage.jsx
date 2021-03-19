@@ -3,12 +3,12 @@ import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import isEmail from 'validator/es/lib/isEmail'
 import { useForm } from 'react-hook-form'
-import Button from '@/components/Button'
+import Button from '@/components/ui/Button'
 import { useMutation } from 'urql'
 import { CREATE_ACCOUNT } from '@/graphql/mutations'
 
 export default function RegisterPage() {
-  const [{ data, fetching, error }, createAccount] = useMutation(CREATE_ACCOUNT)
+  const [{ fetching }, createAccount] = useMutation(CREATE_ACCOUNT)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 

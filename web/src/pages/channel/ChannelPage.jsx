@@ -1,14 +1,14 @@
 import React from 'react'
-import ServerSidebar from '@/pages/server/ServerSidebar'
+import ServerSidebar from '@/components/sidebars/ServerSidebar'
 import SendMessageBar from '@/components/message/SendMessageBar'
-import Header from '@/components/ui/header/Header'
-import { useParams } from 'react-router-dom'
-import ChannelSidebar from '@/pages/channel/ChannelSidebar'
-import Message from '@/components/message/Message'
-import { Virtuoso } from 'react-virtuoso'
+import Header from '@/components/headers/base/Header'
+import ChannelSidebar from '@/components/sidebars/ChannelUsersSidebar'
 import { useQuery } from 'urql'
 import { GET_MESSAGES } from '@/graphql/queries'
-import { useChannel, useServer } from '@/components/ServerDataProvider'
+import {
+  useChannel,
+  useServer
+} from '@/components/providers/ServerDataProvider'
 
 export default function ChannelPage() {
   const server = useServer()

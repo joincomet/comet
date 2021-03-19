@@ -21,7 +21,7 @@ export class CommentQueries {
       Comment,
       { post },
       ['author', 'votes.user'],
-      sort === GetCommentsSort.TOP
+      sort === GetCommentsSort.Top
         ? { voteCount: QueryOrder.DESC }
         : { createdAt: QueryOrder.DESC }
     )

@@ -4,7 +4,7 @@ import { Max, Min } from 'class-validator'
 
 @ArgsType()
 export class GetServersArgs {
-  @Field(() => GetServersSort, { defaultValue: 2 })
+  @Field(() => GetServersSort, { defaultValue: 'AZ' })
   sort: GetServersSort = GetServersSort.AZ
 
   @Field(() => ServerCategory, { nullable: true })

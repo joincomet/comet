@@ -5,16 +5,16 @@ import { GetPostsSort, GetPostsTime } from '@/resolver/post'
 @ArgsType()
 export class GetPostsArgs extends PaginationArgs {
   @Field(() => GetPostsSort, {
-    defaultValue: 2,
+    defaultValue: 'HOT',
     description: 'Sort by new, hot, top, most comments'
   })
-  sort: GetPostsSort = GetPostsSort.HOT
+  sort: GetPostsSort = GetPostsSort.Hot
 
   @Field(() => GetPostsTime, {
-    defaultValue: 5,
+    defaultValue: 'ALL',
     description: 'Filter by all, hour, day, week, month, year'
   })
-  time: GetPostsTime = GetPostsTime.ALL
+  time: GetPostsTime = GetPostsTime.All
 
   @Field(() => Boolean, {
     defaultValue: false,

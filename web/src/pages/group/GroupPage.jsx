@@ -1,7 +1,7 @@
-import Header from '@/components/ui/header/Header'
-import HomeSidebar from '@/pages/MainSidebar'
+import Header from '@/components/headers/base/Header'
+import HomeSidebar from '@/components/sidebars/HomeSidebar'
 import React from 'react'
-import GroupUsersSidebar from '@/pages/group/GroupSidebar'
+import GroupUsersSidebar from '@/components/sidebars/GroupUsersSidebar'
 
 export default function GroupPage() {
   return (

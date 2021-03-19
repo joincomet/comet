@@ -3,7 +3,7 @@ import { useMutation } from 'urql'
 import { SEND_MESSAGE } from '@/graphql/mutations'
 
 export default function SendMessageBar({ channel, group, user }) {
-  const [{ data, fetching, error }, sendMessage] = useMutation(SEND_MESSAGE)
+  const [_, sendMessage] = useMutation(SEND_MESSAGE)
   let placeholder
   if (channel) placeholder = `Message #${channel.name}`
   else if (group) placeholder = `Message ${group.name}`

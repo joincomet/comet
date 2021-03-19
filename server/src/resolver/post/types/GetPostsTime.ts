@@ -1,12 +1,12 @@
 import { registerEnumType } from 'type-graphql'
 
 export enum GetPostsTime {
-  HOUR,
-  DAY,
-  WEEK,
-  MONTH,
-  YEAR,
-  ALL
+  Hour = 'HOUR',
+  Day = 'DAY',
+  Week = 'WEEK',
+  Month = 'MONTH',
+  Year = 'YEAR',
+  All = 'ALL'
 }
 
 registerEnumType(GetPostsTime, {

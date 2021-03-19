@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   closeButton,
   windowButtonIcon,
@@ -6,7 +6,7 @@ import {
   windowControls,
   titlebar
 } from './TitleBar.module.css'
-import Logo from '@/components/ui/icons/Logo'
+import { GraphicLogo } from '@/lib/Icons'
 
 export default function TitleBar() {
   const { close, minimize, maximize, unmaximize, isMaximized } = window.electron
@@ -14,7 +14,7 @@ export default function TitleBar() {
   const updateMaximized = () => setMaximized(isMaximized())
   return (
     <header className={titlebar}>
-      <Logo className="h-3 text-tertiary" />
+      <GraphicLogo className="h-3 text-tertiary" />
 
       <div className={windowControls}>
         <div

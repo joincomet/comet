@@ -23,7 +23,7 @@ export class ServerInvite {
   @Field(() => ServerInviteDuration)
   @Enum({
     items: () => ServerInviteDuration,
-    default: ServerInviteDuration.DAY
+    default: ServerInviteDuration.Day
   })
   duration: ServerInviteDuration
 
@@ -38,7 +38,7 @@ export class ServerInvite {
   @Field()
   get expired(): boolean {
     if (this.maxUses && this.uses >= this.maxUses) return true
-    if (this.duration === ServerInviteDuration.NEVER) return false
+    if (this.duration === ServerInviteDuration.Never) return false
     return new Date().getTime() > this.createdAt.getTime() + this.duration
   }
 

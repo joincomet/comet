@@ -1,55 +1,53 @@
 import React from 'react'
-import { MdTv } from 'react-icons/md'
 import {
-  RiBasketballFill,
-  RiFootprintFill,
-  RiPaletteFill
-} from 'react-icons/ri'
-import { FaGamepad } from 'react-icons/fa'
-import {
-  HiChatAlt2,
-  HiCode,
-  HiEmojiHappy,
-  HiHeart,
-  HiLibrary,
-  HiNewspaper,
-  HiOfficeBuilding,
-  HiPuzzle,
-  HiQuestionMarkCircle,
-  HiSpeakerphone,
-  HiUserGroup
-} from 'react-icons/hi'
+  IconCategoryArts,
+  IconCategoryBusiness,
+  IconCategoryCulture,
+  IconCategoryDiscussion,
+  IconCategoryEntertainment,
+  IconCategoryGaming,
+  IconCategoryHealth,
+  IconCategoryHobbies,
+  IconCategoryLifestyle,
+  IconCategoryMemes,
+  IconCategoryMeta,
+  IconCategoryNews,
+  IconCategoryNone,
+  IconCategoryPolitics,
+  IconCategoryProgramming,
+  IconCategorySports
+} from '@/lib/Icons'
 
 export const categoryIcon = (galaxy, className) => {
   switch (galaxy) {
     case 'Arts':
-      return <RiPaletteFill className={className} />
+      return <IconCategoryArts className={className} />
     case 'Business':
-      return <HiOfficeBuilding className={className} />
+      return <IconCategoryBusiness className={className} />
     case 'Culture':
-      return <HiUserGroup className={className} />
+      return <IconCategoryCulture className={className} />
     case 'Discussion':
-      return <HiChatAlt2 className={className} />
+      return <IconCategoryDiscussion className={className} />
     case 'Entertainment':
-      return <MdTv className={className} />
+      return <IconCategoryEntertainment className={className} />
     case 'Gaming':
-      return <FaGamepad className={className} />
+      return <IconCategoryGaming className={className} />
     case 'Health':
-      return <HiHeart className={className} />
+      return <IconCategoryHealth className={className} />
     case 'Hobbies':
-      return <HiPuzzle className={className} />
+      return <IconCategoryHobbies className={className} />
     case 'Lifestyle':
-      return <RiFootprintFill className={className} />
+      return <IconCategoryLifestyle className={className} />
     case 'Memes':
-      return <HiEmojiHappy className={className} />
+      return <IconCategoryMemes className={className} />
     case 'Meta':
-      return <HiSpeakerphone className={className} />
+      return <IconCategoryMeta className={className} />
     case 'News':
-      return <HiNewspaper className={className} />
+      return <IconCategoryNews className={className} />
     case 'Politics':
-      return <HiLibrary className={className} />
+      return <IconCategoryPolitics className={className} />
     case 'Programming':
-      return <HiCode className={className} />
+      return <IconCategoryProgramming className={className} />
     case 'Science': // HiBeaker
       return (
         <svg
@@ -66,7 +64,7 @@ export const categoryIcon = (galaxy, className) => {
         </svg>
       )
     case 'Sports':
-      return <RiBasketballFill className={className} />
+      return <IconCategorySports className={className} />
     case 'Technology': // HiChip
       return (
         <svg
@@ -84,6 +82,6 @@ export const categoryIcon = (galaxy, className) => {
         </svg>
       )
     case 'Uncategorized':
-      return <HiQuestionMarkCircle className={className} />
+      return <IconCategoryNone className={className} />
   }
 }

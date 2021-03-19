@@ -11,7 +11,7 @@ export class GetCommentsArgs {
 
   @Field(() => GetCommentsSort, {
     description: 'Sort comments by new or top',
-    defaultValue: 1
+    defaultValue: 'TOP'
   })
-  sort: GetCommentsSort = GetCommentsSort.TOP
+  sort: GetCommentsSort = GetCommentsSort.Top
 }

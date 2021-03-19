@@ -1,5 +1,5 @@
 import React from 'react'
-import MainSidebar from '@/pages/MainSidebar'
+import MainSidebar from '@/components/sidebars/HomeSidebar'
 
 export default function MainLayout({ children }) {
   return (

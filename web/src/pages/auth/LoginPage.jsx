@@ -2,17 +2,17 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import { useForm } from 'react-hook-form'
-import Button from '@/components/Button'
+import Button from '@/components/ui/Button'
 import { useMutation } from 'urql'
 import { LOGIN } from '@/graphql/mutations'
-import { useUser } from '@/components/UserProvider'
+import { useUser } from '@/components/providers/UserProvider'
 
 export default function LoginPage() {
-  const [{ data, fetching, error }, login] = useMutation(LOGIN)
+  const [{ fetching }, login] = useMutation(LOGIN)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 
-  const [currentUser, refetchCurrentUser] = useUser()
+  const [_, refetchCurrentUser] = useUser()
 
   const onSubmit = variables =>
     login(variables).then(

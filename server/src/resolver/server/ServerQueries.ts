@@ -34,7 +34,7 @@ export class ServerQueries {
     let where = {}
     let orderBy = {}
 
-    if (sort === GetServersSort.FEATURED) {
+    if (sort === GetServersSort.Featured) {
       where = { featured: true }
       orderBy = { featuredPosition: QueryOrder.ASC }
     } else if (category) {
@@ -42,9 +42,9 @@ export class ServerQueries {
       orderBy = { name: QueryOrder.ASC }
     }
 
-    if (sort === GetServersSort.NEW) {
+    if (sort === GetServersSort.New) {
       orderBy = { createdAt: QueryOrder.DESC }
-    } else if (sort === GetServersSort.TOP) {
+    } else if (sort === GetServersSort.Top) {
       orderBy = { userCount: QueryOrder.DESC }
     } else if (sort === GetServersSort.AZ) {
       orderBy = { name: QueryOrder.ASC }
@@ -135,9 +135,8 @@ export class ServerQueries {
   ) {
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
     const perms = new Set<ServerPermission>()
-    if (user.isAdmin) perms.add(ServerPermission.GlobalAdmin)
+    if (user.isAdmin) perms.add(ServerPermission.ServerAdmin)
     if (server.owner === user) {
-      perms.add(ServerPermission.ServerOwner)
       perms.add(ServerPermission.ServerAdmin)
     }
     const join = await em.findOneOrFail(ServerUserJoin, { user, server }, [

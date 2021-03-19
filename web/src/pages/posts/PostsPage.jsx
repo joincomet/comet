@@ -1,28 +1,26 @@
 import React from 'react'
 import Posts from '@/components/post/Posts'
-import Header from '@/components/ui/header/Header'
-import FoldersSidebar from '@/pages/folder/FoldersSidebar'
+import FoldersSidebar from '@/components/sidebars/FoldersSidebar'
 import { useParams } from 'react-router-dom'
+import PostsHeader from '@/components/headers/PostsHeader'
+import { useStore } from '@/lib/stores/useStore'
 
 export default function PostsPage() {
-  const query = useParams()
-
-  const variables = {
-    joinedOnly: true,
-    pageSize: 20,
-    page: query.page ? query.page - 1 : 0,
-    sort: query.sort ? query.sort.toUpperCase() : 'HOT',
-    time: query.time ? query.time.toUpperCase() : 'ALL'
-  }
+  const { showFolders } = useStore()
 
   return (
     <>
-      <FoldersSidebar />
-      <Header />
+      <PostsHeader showFolders={showFolders} />
+      <FoldersSidebar show={showFolders} />
 
-      <div className="h-full pl-76 pr-60 pt-12">
+      <div className={`h-full pl-76 pt-12 ${showFolders ? 'pr-60' : 'pr-0'}`}>
         <div className="h-full dark:bg-gray-750">
-          <Posts variables={variables} />
+          <Posts
+            variables={{
+              joinedOnly: true
+            }}
+            showServerName
+          />
         </div>
       </div>
     </>

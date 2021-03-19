@@ -1,15 +1,15 @@
 import React from 'react'
-import ExploreSidebar from '@/pages/explore/ExploreSidebar'
+import ExploreSidebar from '@/components/sidebars/ExploreSidebar'
 import PageNavigator from '@/components/ui/PageNavigator'
 import {
-  HiSearch,
-  HiCheckCircle,
-  HiSortAscending,
-  HiClock
-} from 'react-icons/hi'
-import Header from '@/components/ui/header/Header'
+  IconSearch,
+  IconFeatured,
+  IconTop,
+  IconNew,
+  IconAll
+} from '@/lib/Icons'
+import Header from '@/components/headers/base/Header'
 import ServerInfoCard from '@/components/server/ServerInfoCard'
-import { FaSortAlphaDown } from 'react-icons/fa'
 import { categoryIcon } from '@/lib/categoryIcon'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
@@ -58,23 +58,19 @@ export default function ExplorePage() {
                 type="button"
                 className="rounded-r-md inline-flex justify-center items-center h-10 w-10 cursor-pointer"
               >
-                <HiSearch className="w-5 h-5" />
+                <IconSearch className="w-5 h-5" />
               </button>
             </div>
           </div>
           <div className="py-4 text-secondary text-xl font-semibold flex items-center">
             {
               !query.category && !query.sort && (
-                <HiCheckCircle className="h-6 w-6 mr-3" />
+                <IconFeatured className="h-6 w-6 mr-3" />
               ) // Featured
             }
-            {query.sort === 'top' && (
-              <HiSortAscending className="h-6 w-6 mr-3" />
-            )}
-            {query.sort === 'new' && <HiClock className="h-6 w-6 mr-3" />}
-            {query.sort === 'az' && (
-              <FaSortAlphaDown className="h-6 w-6 mr-3" />
-            )}
+            {query.sort === 'top' && <IconTop className="h-6 w-6 mr-3" />}
+            {query.sort === 'new' && <IconNew className="h-6 w-6 mr-3" />}
+            {query.sort === 'az' && <IconAll className="h-6 w-6 mr-3" />}
             {query.category && (
               <>{categoryIcon(query.category, 'h-6 w-6 mr-3')}</>
             )}

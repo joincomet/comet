@@ -1,4 +1,4 @@
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi'
+import { IconChevrownLeft, IconChevrownRight } from '@/lib/Icons'
 import React from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
 
@@ -7,6 +7,9 @@ export default function PageNavigator({ nextEnabled = true }) {
   const { pathname } = useLocation()
 
   const backEnabled = params.page && params.page > 1
+
+  const className =
+    'flex items-center justify-center flex-grow transition dark:hover:bg-gray-800 h-full cursor-pointer'
 
   return (
     <>
@@ -22,9 +25,9 @@ export default function PageNavigator({ nextEnabled = true }) {
                   return q
                 })()
               }}
-              className={`pagebutton`}
+              className={className}
             >
-              <HiChevronLeft className="h-5 w-5" />
+              <IconChevrownLeft className="h-5 w-5" />
             </Link>
           ) : (
             <div className={`flex-grow`} />
@@ -43,9 +46,9 @@ export default function PageNavigator({ nextEnabled = true }) {
                   page: params.page ? parseInt(params.page) + 1 : 2
                 }
               }}
-              className={`pagebutton`}
+              className={className}
             >
-              <HiChevronRight className="h-5 w-5" />
+              <IconChevrownRight className="h-5 w-5" />
             </Link>
           ) : (
             <div className={`flex-grow`}></div>

@@ -1,10 +1,10 @@
 import React from 'react'
-import ServerSidebar from '@/pages/server/ServerSidebar'
+import ServerSidebar from '@/components/sidebars/ServerSidebar'
 import { Redirect, Route, Switch, useParams } from 'react-router-dom'
 import ServerPostsPage from '@/pages/server/ServerPostsPage'
 import PlanetPostPage from '@/pages/post/PostPage'
 import ChannelPage from '@/pages/channel/ChannelPage'
-import PlanetFolderPage from '@/pages/folder/PlanetFolderPage'
+import ServerFolderPage from '@/pages/folder/ServerFolderPage'
 
 export default function ServerLayout() {
   const { serverId } = useParams()
@@ -26,7 +26,7 @@ export default function ServerLayout() {
           <ChannelPage />
         </Route>
         <Route path="/server/:serverId/folder/:folderId">
-          <PlanetFolderPage />
+          <ServerFolderPage />
         </Route>
       </Switch>
     </>

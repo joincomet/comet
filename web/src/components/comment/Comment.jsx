@@ -1,11 +1,10 @@
-import { HiAnnotation, HiDotsHorizontal } from 'react-icons/hi'
+import { IconReply, IconDotsHorizontal, IconVote } from '@/lib/Icons'
 import React, { useState } from 'react'
-import UserAvatar from '@/components/user/UserAvatar'
+import UserAvatar from '@/components/avatars/UserAvatar'
 import Twemoji from 'react-twemoji'
 import Tippy from '@tippyjs/react'
 import { useCommentStore } from '@/lib/stores/useCommentStore'
-import { RiRocketFill } from 'react-icons/ri'
-import UserPopup from '@/components/user/UserPopup'
+import UserPopup from '@/components/popups/UserPopup'
 import { commentCollapse } from './Comment.module.scss'
 import { useMutation } from 'urql'
 import { CREATE_COMMENT_VOTE, REMOVE_COMMENT_VOTE } from '@/graphql/mutations'
@@ -97,7 +96,7 @@ export default function Comment({
                         }}
                         className="action-chip text-tertiary"
                       >
-                        <HiAnnotation className="w-5 h-5 mr-1.5" />
+                        <IconReply className="w-5 h-5 mr-1.5" />
                         <div className="text-xs font-medium">Reply</div>
                       </div>
                     )}
@@ -130,15 +129,15 @@ export default function Comment({
 function Options({ comment }) {
   return (
     <div className="inline-flex cursor-pointer items-center text-mid p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-      <HiDotsHorizontal className="w-5 h-5" />
+      <IconDotsHorizontal className="w-5 h-5" />
     </div>
   )
 }
 
 function VoteButton({ comment, setComment }) {
   const variables = { commentId: comment.id }
-  const [createVoteRes, createVote] = useMutation(CREATE_COMMENT_VOTE)
-  const [removeVoteRes, removeVote] = useMutation(REMOVE_COMMENT_VOTE)
+  const [_, createVote] = useMutation(CREATE_COMMENT_VOTE)
+  const [__, removeVote] = useMutation(REMOVE_COMMENT_VOTE)
 
   const toggleVote = () => {
     if (comment.isVoted) createVote(variables)
@@ -155,7 +154,7 @@ function VoteButton({ comment, setComment }) {
         comment.isVoted ? 'text-red-400' : 'text-tertiary'
       }`}
     >
-      <RiRocketFill className="w-4 h-4" />
+      <IconVote className="w-4 h-4" />
       <div className="ml-1.5 text-xs font-medium">{comment.voteCount}</div>
     </div>
   )

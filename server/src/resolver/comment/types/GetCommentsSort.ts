@@ -1,8 +1,8 @@
 import { registerEnumType } from 'type-graphql'
 
 export enum GetCommentsSort {
-  NEW,
-  TOP
+  New = 'NEW',
+  Top = 'TOP'
 }
 
 registerEnumType(GetCommentsSort, {

@@ -1,13 +1,4 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  ID,
-  Query,
-  Resolver,
-  UseMiddleware
-} from 'type-graphql'
+import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { Post, LinkMetadata, ServerUserJoin } from '@/entity'
 import {
   GetPostsArgs,
@@ -19,6 +10,7 @@ import { Context } from '@/types'
 import { scrapeMetadata, CheckServerPermission } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 import { ServerPermission } from '@/types'
+import dayjs from 'dayjs'
 
 @Resolver(() => Post)
 export class PostQueries {
@@ -41,9 +33,9 @@ export class PostQueries {
     @Ctx() { user, em }: Context
   ) {
     let orderBy = {}
-    if (sort === GetPostsSort.NEW) orderBy = { createdAt: QueryOrder.DESC }
-    else if (sort === GetPostsSort.HOT) orderBy = { hotRank: QueryOrder.DESC }
-    else if (sort === GetPostsSort.TOP) orderBy = { voteCount: QueryOrder.DESC }
+    if (sort === GetPostsSort.New) orderBy = { createdAt: QueryOrder.DESC }
+    else if (sort === GetPostsSort.Hot) orderBy = { hotRank: QueryOrder.DESC }
+    else if (sort === GetPostsSort.Top) orderBy = { voteCount: QueryOrder.DESC }
 
     let servers = []
     if (joinedOnly) {
@@ -57,11 +49,12 @@ export class PostQueries {
         $and: [
           { isRemoved: false },
           { isDeleted: false },
-          !time || time === GetPostsTime.ALL
+          !time || time === GetPostsTime.All
             ? {}
             : {
                 createdAt: {
-                  $gt: 'NOW() - INTERVAL 1 ' + time.toString().toLowerCase()
+                  // @ts-ignore
+                  $gt: dayjs().subtract(1, time.toLowerCase()).toDate()
                 }
               },
           { server: { $ne: null } },
