@@ -8,11 +8,9 @@ import { authExchange } from '@urql/exchange-auth'
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch'
 import { makeOperation } from '@urql/core'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
-import { cacheExchange } from '@urql/exchange-graphcache'
 import { devtoolsExchange } from '@urql/devtools'
-import { GET_MESSAGES } from '@/graphql/queries'
-import { simplePagination } from '@urql/exchange-graphcache/extras'
 import toast from 'react-hot-toast'
+import { cacheExchange } from '@/graphql/cacheExchange'
 
 const subscriptionClient = new SubscriptionClient(
   process.env.NODE_ENV === 'production'
@@ -76,86 +74,7 @@ export const urqlClient = createClient({
   exchanges: [
     devtoolsExchange,
     dedupExchange,
-    cacheExchange({
-      keys: {
-        GetPostsResponse: () => null,
-        LinkMetadata: () => null,
-        GetMessagesResponse: () => null,
-        MessageSentResponse: () => null,
-        MessageRemovedResponse: () => null
-      },
-      /*resolvers: {
-        Query: {
-          getMessages: simplePagination({
-            offsetArgument: 'page',
-            limitArgument: 'pageSize',
-            mergeMode: 'before'
-          }),
-          getPosts: simplePagination({
-            offsetArgument: 'page',
-            limitArgument: 'pageSize',
-            mergeMode: 'after'
-          })
-        }
-      },*/
-      updates: {
-        Subscription: {
-          messageSent: (
-            { messageSent: { userId, groupId, channelId, message } },
-            _variables,
-            cache
-          ) => {
-            let variables
-            if (userId) variables = { page: 0, userId }
-            if (groupId) variables = { page: 0, groupId }
-            if (channelId) variables = { page: 0, channelId }
-            cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
-              if (data !== null) {
-                data.getMessages.messages.push(message)
-                return data
-              } else {
-                return null
-              }
-            })
-          },
-          messageUpdated: (
-            { messageUpdated: { userId, groupId, channelId, message } },
-            _variables,
-            cache
-          ) => {
-            let variables = { page: 0, userId, groupId, channelId }
-            cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
-              if (data !== null) {
-                const i = data.getMessages.messages.findIndex(
-                  m => m.id === message.id
-                )
-                data.getMessages.messages[i] = message
-                return data
-              } else {
-                return null
-              }
-            })
-          },
-          messageRemoved: (
-            { messageRemoved: { userId, groupId, channelId, messageId } },
-            _variables,
-            cache
-          ) => {
-            let variables = { page: 0, userId, groupId, channelId }
-            cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
-              if (data !== null) {
-                data.getMessages.messages = data.getMessages.messages.filter(
-                  m => m.id !== messageId
-                )
-                return data
-              } else {
-                return null
-              }
-            })
-          }
-        }
-      }
-    }),
+    cacheExchange,
     authExchange({
       getAuth,
       addAuthToOperation

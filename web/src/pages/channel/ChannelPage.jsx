@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import ServerSidebar from '@/components/sidebars/ServerSidebar'
 import SendMessageBar from '@/components/message/SendMessageBar'
 import Header from '@/components/headers/base/Header'
@@ -9,6 +9,10 @@ import {
   useChannel,
   useServer
 } from '@/components/providers/ServerDataProvider'
+import MainContainer from '@/components/MainContainer'
+import MainView from '@/components/MainView'
+import { IconChannel } from '@/lib/Icons'
+import Message from '@/components/message/Message'
 
 export default function ChannelPage() {
   const server = useServer()
@@ -19,14 +23,46 @@ export default function ChannelPage() {
     variables: { channelId: channel.id }
   })
 
+  const messages = messagesData?.getMessages?.messages || []
+
+  const ref = useRef(null)
+
+  useEffect(() => {
+    setTimeout(() => (ref.current.scrollTop = ref.current.scrollHeight))
+  }, [])
+
+  useEffect(() => {
+    if (
+      ref &&
+      !!messages.length &&
+      messages[messages.length - 1].author.isCurrentUser
+    )
+      setTimeout(() => (ref.current.scrollTop = ref.current.scrollHeight))
+  }, [messages.length])
+
   return (
     <>
-      <Header title={`${channel.name}`} />
+      <Header
+        icon={<IconChannel className="w-5 h-5" />}
+        title={`${channel.name}`}
+      />
       <ServerSidebar server={server} />
       <ChannelSidebar server={server} />
-      <main className="ml-76 mr-60 pt-12 dark:bg-gray-750 h-full">
+      <MainContainer rightSidebar>
+        <MainView chatBar ref={ref}>
+          {messages.map((message, index) => (
+            <Message
+              key={message.id}
+              message={message}
+              showUser={
+                index === 0 ||
+                messages[index - 1].author.id !== message.author.id
+              }
+            />
+          ))}
+        </MainView>
         <SendMessageBar channel={channel} />
-      </main>
+      </MainContainer>
     </>
   )
 }

@@ -1,12 +1,12 @@
 import React from 'react'
 import Header from '@/components/headers/base/Header'
-import { IconFolder, IconHot, IconNew, IconTop } from '@/lib/Icons'
+import { IconFolder, IconHot, IconNew, IconRefresh, IconTop } from '@/lib/Icons'
 import { useStore } from '@/lib/stores/useStore'
 import Tippy from '@tippyjs/react'
 import { Switch } from '@headlessui/react'
 import toast from 'react-hot-toast'
 
-export default function PostsHeader() {
+export default function PostsHeader({ refreshPosts }) {
   const {
     postsSort,
     showFolders,
@@ -83,13 +83,19 @@ export default function PostsHeader() {
         </Tippy>
       )}
 
-      <div className="ml-auto pr-6">
-        <Tippy content={`${showFolders ? 'Hide' : 'Show'} folders`}>
+      <div className="ml-auto pr-6 space-x-5 flex items-center">
+        <Tippy content="Refresh Posts">
+          <div className="highlightable" onClick={refreshPosts}>
+            <IconRefresh className="w-5 h-5" />
+          </div>
+        </Tippy>
+
+        <Tippy content={`${showFolders ? 'Hide' : 'Show'} Folders`}>
           <div
-            className="cursor-pointer"
+            className="highlightable"
             onClick={() => setShowFolders(!showFolders)}
           >
-            <IconFolder className="w-5 h-5 text-tertiary" />
+            <IconFolder className="w-5 h-5" />
           </div>
         </Tippy>
       </div>

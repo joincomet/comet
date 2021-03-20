@@ -1,6 +1,7 @@
 import React from 'react'
 import Header from '@/components/headers/base/Header'
 import { IconAt, IconPin } from '@/lib/Icons'
+import Tippy from '@tippyjs/react'
 
 export default function DmHeader({ user }) {
   return (
@@ -18,8 +19,12 @@ export default function DmHeader({ user }) {
           </>
         )}
       </div>
-      <div className="ml-auto">
-        <IconPin className="text-tertiary w-5 h-5" />
+      <div className="ml-auto pr-6">
+        <Tippy content="Pinned Messages">
+          <div className="highlightable">
+            <IconPin className="w-5 h-5" />
+          </div>
+        </Tippy>
       </div>
     </Header>
   )

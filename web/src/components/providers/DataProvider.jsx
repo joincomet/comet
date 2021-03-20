@@ -10,7 +10,9 @@ import {
 import { GET_FRIEND_REQUESTS, GET_FRIENDS } from '@/graphql/queries/friend'
 import LoadingScreen from '@/pages/LoadingScreen'
 import {
+  MESSAGE_REMOVED,
   MESSAGE_SENT,
+  MESSAGE_UPDATED,
   REFETCH_GROUPS_AND_DMS,
   REFETCH_JOINED_SERVERS
 } from '@/graphql/subscriptions'
@@ -58,6 +60,10 @@ export const useGroupsAndDms = () => {
 }
 
 export function DataProvider({ children }) {
+  useSubscription({ query: MESSAGE_SENT })
+  useSubscription({ query: MESSAGE_UPDATED })
+  useSubscription({ query: MESSAGE_REMOVED })
+
   const [{ data: joinedServersData }, refetchJoinedServers] = useQuery({
     query: GET_JOINED_SERVERS
   })

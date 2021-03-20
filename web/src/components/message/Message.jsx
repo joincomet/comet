@@ -10,7 +10,7 @@ export default function Message({ showUser, message }) {
   return (
     <div
       key={message.id}
-      className={`flex py-1 px-4 dark:hover:bg-gray-775 group ${
+      className={`content-visibility-auto flex py-1 px-4 dark:hover:bg-gray-775 group ${
         showUser ? 'mt-4' : ''
       }`}
     >
@@ -42,7 +42,10 @@ export default function Message({ showUser, message }) {
           </div>
         )}
 
-        <div className="text-sm text-secondary">{message.text}</div>
+        <div
+          className="text-base text-gray-700 dark:text-gray-300"
+          dangerouslySetInnerHTML={{ __html: message.text }}
+        />
       </div>
     </div>
   )

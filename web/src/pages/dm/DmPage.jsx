@@ -13,6 +13,8 @@ import {
   MESSAGE_UPDATED
 } from '@/graphql/subscriptions'
 import DmHeader from '@/components/headers/DmHeader'
+import MainContainer from '@/components/MainContainer'
+import MainView from '@/components/MainView'
 
 export default function DmPage() {
   const { userId } = useParams()
@@ -29,42 +31,26 @@ export default function DmPage() {
 
   const messages = messagesData?.getMessages?.messages || []
 
-  useSubscription({ query: MESSAGE_SENT })
-  useSubscription({ query: MESSAGE_UPDATED })
-  useSubscription({ query: MESSAGE_REMOVED })
-
   return (
     <>
       <DmHeader user={user} />
       <MainSidebar />
 
-      <main className="pl-76 pt-12 h-full">
-        <div className="h-full dark:bg-gray-750">
-          <Virtuoso
-            followOutput={isAtBottom =>
-              isAtBottom ||
-              messages.length === 0 ||
-              messages[messages.length - 1].author.isCurrentUser
-            }
-            alignToBottom
-            data={messages}
-            overscan={200}
-            className="scrollbar-thin scrollbar-thumb-gray-850 scrollbar-track-gray-775 scrollbar-thumb-rounded-md mr-1"
-            style={{ height: 'calc(100% - 5.875rem)' }}
-            itemContent={(index, message) => (
-              <Message
-                message={message}
-                showUser={
-                  index === 0 ||
-                  messages[index - 1].author.id !== message.author.id
-                }
-              />
-            )}
-          />
-
-          <SendMessageBar user={user} />
-        </div>
-      </main>
+      <MainContainer>
+        <MainView chatBar>
+          {messages.map((message, index) => (
+            <Message
+              key={message.id}
+              message={message}
+              showUser={
+                index === 0 ||
+                messages[index - 1].author.id !== message.author.id
+              }
+            />
+          ))}
+        </MainView>
+        <SendMessageBar user={user} />
+      </MainContainer>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Tippy from '@tippyjs/react'
 import { useDrag } from 'react-dnd'
@@ -23,20 +23,19 @@ import {
   IconText,
   IconVote
 } from '@/lib/Icons'
+import { useContextMenuTrigger } from 'react-context-menu-wrapper'
+import { mergeRefs } from '@/lib/mergeRefs'
 
 export default function Post({
-  postData,
+  post,
   showServerName = true,
   forceExpand = false,
   className = ''
 }) {
   const [editing, setEditing] = useState(false)
-  const [post, setPost] = useState(postData)
 
   const hasEmbed =
-    post.textContent ||
-    post.linkUrl ||
-    (post.imageUrls && post.imageUrls.length > 0)
+    post.text || post.linkUrl || (post.imageUrls && post.imageUrls.length > 0)
 
   const [{ opacity }, dragRef] = useDrag({
     type: DragItemTypes.POST,
@@ -48,19 +47,21 @@ export default function Post({
 
   const [expanded, setExpanded] = useState(false)
 
+  const contextMenuRef = useContextMenuTrigger({ menuId: 'post', data: post })
+
   return (
     <article
-      ref={dragRef}
+      ref={mergeRefs(contextMenuRef, dragRef)}
       style={{ opacity }}
-      className={`${className} cursor-pointer relative transition dark:hover:bg-gray-775 pt-3 px-4 pb-1.5 dark:border-gray-700 border-b`}
+      className={`${className} cursor-pointer relative transition dark:hover:bg-gray-775 pt-3 px-4 pb-1.5 dark:border-gray-700 border-b content-visibility-auto`}
     >
       <div className="flex lg:flex-row w-full">
         <Thumbnail post={post} />
 
         <div className="flex-grow">
           <div className="flex flex-wrap items-center text-13 font-medium text-tertiary pb-1">
-            {post.pinned && (
-              <Tippy content={`Pinned to +${post.server.name}`}>
+            {post.isPinned && (
+              <Tippy content={`Pinned to ${post.server.name}`}>
                 <div className="mr-1.5">
                   <IconPin className="h-5 w-5 text-accent" />
                 </div>
@@ -118,7 +119,6 @@ export default function Post({
               <Actions
                 {...{
                   post,
-                  setPost,
                   expanded,
                   setExpanded,
                   hasEmbed
@@ -131,7 +131,7 @@ export default function Post({
 
       {!forceExpand && (
         <div className="block lg:hidden pt-2 -mr-2">
-          <Actions {...{ post, setPost, expanded, setExpanded, hasEmbed }} />
+          <Actions {...{ post, expanded, setExpanded, hasEmbed }} />
         </div>
       )}
 
@@ -231,9 +231,9 @@ function Embed({ post }) {
         </div>
       )}
 
-      {post.textContent && (
+      {post.text && (
         <div
-          dangerouslySetInnerHTML={{ __html: post.textContent }}
+          dangerouslySetInnerHTML={{ __html: post.text }}
           className="prose prose-sm dark:prose-dark max-w-none border dark:border-gray-700 p-2.5 rounded-md"
         />
       )}

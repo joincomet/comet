@@ -10,7 +10,7 @@ import { useMutation } from 'urql'
 import { CREATE_COMMENT_VOTE, REMOVE_COMMENT_VOTE } from '@/graphql/mutations'
 
 export default function Comment({
-  commentData,
+  comment,
   post,
   level = 0,
   setParentComment
@@ -18,8 +18,6 @@ export default function Comment({
   const { setCreateComment } = useCommentStore()
   const [collapse, setCollapse] = useState(false)
   const [editing, setEditing] = useState(false)
-  const [comment, setComment] = useState(commentData)
-  const [textContent, setTextContent] = useState(comment.textContent)
 
   return (
     <div className={`relative`}>
@@ -81,12 +79,12 @@ export default function Comment({
                   <Twemoji options={{ className: 'twemoji' }}>
                     <div
                       className="prose prose-sm dark:prose-dark max-w-none"
-                      dangerouslySetInnerHTML={{ __html: textContent }}
+                      dangerouslySetInnerHTML={{ __html: comment.text }}
                     />
                   </Twemoji>
 
                   <div className="flex items-center space-x-1 pt-1.5 -ml-2">
-                    <VoteButton comment={comment} setComment={setComment} />
+                    <VoteButton comment={comment} />
 
                     {!comment.deleted && (
                       <div

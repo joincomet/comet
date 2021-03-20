@@ -145,9 +145,9 @@ export class PostMutations {
     description: 'Remove a post (requires ServerPermission.ManagePosts)'
   })
   async removePost(
+    @Ctx() { em }: Context,
     @Arg('postId', () => ID) postId: string,
-    @Arg('reason') reason: string,
-    @Ctx() { em }: Context
+    @Arg('reason', { nullable: true }) reason?: string
   ) {
     const post = await em.findOne(Post, postId)
 

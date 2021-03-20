@@ -8,7 +8,7 @@ export default forwardRef(
     return (
       <div
         ref={ref}
-        className={`relative rounded-full inline-flex items-center justify-center bg-cover bg-center ${className}`}
+        className={`relative rounded-full flex-shrink-0 flex items-center justify-center bg-cover bg-center ${className}`}
         style={{
           width: `${size / 4}rem`,
           height: `${size / 4}rem`,

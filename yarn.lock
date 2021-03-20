@@ -3053,6 +3053,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/events@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/events@npm:3.0.0"
+  checksum: 1407d79d6d5291caa89f27ef0f180eb133bc5a12f11886bd68f9ef9cffb962a575571d1b4d02d30a7329fe9b85d29b7c10543ed6dc516ad20f9a1e89c1e9c9b8
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:*, @types/express-serve-static-core@npm:4.17.18, @types/express-serve-static-core@npm:^4.17.18":
   version: 4.17.18
   resolution: "@types/express-serve-static-core@npm:4.17.18"
@@ -3526,6 +3533,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 3dafa726c9a12ef7dfd37f3122c7ed4c866f8a9f98a2254bf813b5bc54e74bce440bc772030bbba40fda07da7840dad9dbea832fc1e6656dc03521a1182ae764
+  languageName: node
+  linkType: hard
+
+"@types/shortid@npm:0.0.29":
+  version: 0.0.29
+  resolution: "@types/shortid@npm:0.0.29"
+  checksum: 4c96e2e820bc431502d3ce45628a1c0354cdd02fa588b31efa461faa7762988effc4b6a769c8bcbebdb5727e616ac7fc7216b8fe6e980aac0d4e8328652a6d6e
   languageName: node
   linkType: hard
 
@@ -11003,6 +11017,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^2.1.0":
+  version: 2.1.11
+  resolution: "nanoid@npm:2.1.11"
+  checksum: 41453e344e3abb189cd3baa3ab52685601d7220f86ce73f6a1d9594ebae286c2acf47a20b5aa9cf11933b587b69c6007e88f190ca266450c2fbe20be6db43a29
+  languageName: node
+  linkType: hard
+
 "nanoid@npm:^3.1.20":
   version: 3.1.20
   resolution: "nanoid@npm:3.1.20"
@@ -12686,6 +12707,21 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"react-context-menu-wrapper@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "react-context-menu-wrapper@npm:3.0.0"
+  dependencies:
+    "@types/events": ^3.0.0
+    "@types/shortid": 0.0.29
+    prop-types: ^15.7.2
+    shortid: ^2.2.15
+  peerDependencies:
+    react: ^16.8.0
+    react-dom: ^16.8.0
+  checksum: 7376204c01f95fe0094011130762e59ce8af88ffd1bea5ff6a41f512a56f2c2f05d6e50aa11b41f92f80a5de35eef0e58ae751dae7f661fb049183887c50a8bc
+  languageName: node
+  linkType: hard
+
 "react-dnd-html5-backend@npm:^14.0.0":
   version: 14.0.0
   resolution: "react-dnd-html5-backend@npm:14.0.0"
@@ -14136,6 +14172,15 @@ resolve@^1.20.0:
   version: 3.0.0
   resolution: "shebang-regex@npm:3.0.0"
   checksum: ea18044ffaf18129ced5a246660a9171a7dff98999aaa9de8abb237d8a7711d8a1f76e16881399994ee429156717ce1c6a50c665bb18a4d55a7f80b9125b1f7d
+  languageName: node
+  linkType: hard
+
+"shortid@npm:^2.2.15":
+  version: 2.2.16
+  resolution: "shortid@npm:2.2.16"
+  dependencies:
+    nanoid: ^2.1.0
+  checksum: 4944a69c6d5528311b45db12eb0f1eff64a326f91ff4c730704b00a2d096d1c6e319ff859ae6832afaa77df65ef86d4175c3b447713cc7d6253ffef7863f0f8f
   languageName: node
   linkType: hard
 
@@ -16093,6 +16138,7 @@ typescript@^4.2.3:
     postcss: ^8.2.8
     prettier: ^2.2.1
     react: ^17.0.1
+    react-context-menu-wrapper: ^3.0.0
     react-dnd: ^14.0.1
     react-dnd-html5-backend: ^14.0.0
     react-dnd-touch-backend: ^14.0.0

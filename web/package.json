@@ -40,6 +40,7 @@
     "fuse.js": "^6.4.6",
     "graphql": "^15.5.0",
     "react": "^17.0.1",
+    "react-context-menu-wrapper": "^3.0.0",
     "react-dnd": "^14.0.1",
     "react-dnd-html5-backend": "^14.0.0",
     "react-dnd-touch-backend": "^14.0.0",

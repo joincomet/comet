@@ -17,6 +17,7 @@ import {
 import SidebarLabelPlus from '@/components/sidebars/base/SidebarLabelPlus'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
+import { ServerPermission, useHasServerPermissions } from '@/lib/hasPermission'
 
 export default forwardRef((props, ref) => {
   const server = useServer()
@@ -56,13 +57,11 @@ function Channel({ channel, server }) {
 }
 
 function CreateChannel({ server }) {
-  const permissions = useServerPermissions()
+  const [canManageChannels] = useHasServerPermissions([
+    ServerPermission.ManageChannels
+  ])
 
-  if (
-    !permissions.includes('ManageChannels') &&
-    !permissions.includes('ServerAdmin')
-  )
-    return <SidebarLabel>CHANNELS</SidebarLabel>
+  if (!canManageChannels) return <SidebarLabel>CHANNELS</SidebarLabel>
 
   const [isOpen, setIsOpen] = useState(false)
   const [isPrivate, setIsPrivate] = useState(false)

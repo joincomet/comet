@@ -14,10 +14,14 @@ export class FriendQueries {
     const data = await em.find(
       FriendData,
       {
-        user,
-        $or: [
-          { status: FriendStatus.FriendRequestIncoming },
-          { status: FriendStatus.FriendRequestOutgoing }
+        $and: [
+          { user },
+          {
+            $or: [
+              { status: FriendStatus.FriendRequestIncoming },
+              { status: FriendStatus.FriendRequestOutgoing }
+            ]
+          }
         ]
       },
       ['toUser'],
@@ -38,8 +42,7 @@ export class FriendQueries {
     const data = await em.find(
       FriendData,
       {
-        user,
-        status: FriendStatus.Friends
+        $and: [{ user }, { status: FriendStatus.Friends }]
       },
       ['toUser']
     )
@@ -54,10 +57,14 @@ export class FriendQueries {
     const data = await em.find(
       FriendData,
       {
-        user,
-        $or: [
-          { status: FriendStatus.Blocking },
-          { status: FriendStatus.Blocked }
+        $and: [
+          { user },
+          {
+            $or: [
+              { status: FriendStatus.Blocking },
+              { status: FriendStatus.Blocked }
+            ]
+          }
         ]
       },
       ['toUser'],

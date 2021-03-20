@@ -40,6 +40,8 @@ export {
   HiX as IconX,
   HiOutlinePencil as IconEditAvatar,
   HiOutlinePhotograph as IconUploadPhoto,
+  HiRefresh as IconRefresh,
+  HiUpload as IconUpload,
   // CATEGORIES
   HiChatAlt2 as IconCategoryDiscussion,
   HiCode as IconCategoryProgramming,

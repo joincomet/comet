@@ -27,7 +27,7 @@ export default forwardRef((props, ref) => {
 
       <div className="px-1.5 pt-3">
         <div className="space-y-0.5">
-          <SidebarItem to="friends">
+          <SidebarItem to="/friends">
             <IconFriends className="mr-3 h-5 w-5" />
             Friends
           </SidebarItem>

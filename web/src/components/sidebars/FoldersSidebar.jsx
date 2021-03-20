@@ -12,16 +12,46 @@ import {
   IconReadLaterFolder
 } from '@/lib/Icons'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
+import { useServerFolders } from '@/components/providers/ServerDataProvider'
+import { ServerPermission, useHasServerPermissions } from '@/lib/hasPermission'
+import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 
 export default forwardRef(({ show }, ref) => {
-  const folders = useUserFolders()
+  const { serverId } = useParams()
+  const userFolders = useUserFolders()
+  const serverFolders = useServerFolders()
+
+  const [canManageFolders] = useHasServerPermissions([
+    ServerPermission.ManageFolders
+  ])
+
   return (
     <Sidebar right show={show} ref={ref}>
       <div className="px-1.5">
-        <SidebarLabelPlus plusLabel="Create a Folder">Folders</SidebarLabelPlus>
+        {serverId && !!serverFolders.length && (
+          <>
+            {canManageFolders ? (
+              <SidebarLabelPlus plusLabel="Create a Folder">
+                Server Folders
+              </SidebarLabelPlus>
+            ) : (
+              <SidebarLabel>Server Folders</SidebarLabel>
+            )}
+
+            <div className="space-y-0.5">
+              {serverFolders.map(folder => (
+                <Folder key={folder.id} folder={folder} />
+              ))}
+            </div>
+          </>
+        )}
+
+        <SidebarLabelPlus plusLabel="Create a Folder">
+          Your Folders
+        </SidebarLabelPlus>
 
         <div className="space-y-0.5">
-          {folders.map(folder => (
+          {userFolders.map(folder => (
             <Folder key={folder.id} folder={folder} />
           ))}
         </div>
@@ -31,13 +61,10 @@ export default forwardRef(({ show }, ref) => {
 })
 
 function Folder({ folder }) {
-  const query = useParams()
-  const { pathname } = useLocation()
-
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.POST,
     drop: (item, monitor) => {
-      toast.success(`Added to ${folder.name}`)
+      toast.success(`Added to ${folder.name}!`)
     },
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -46,12 +73,7 @@ function Folder({ folder }) {
   })
   const isActive = isOver && canDrop
   return (
-    <SidebarItem
-      active={isActive}
-      large
-      to={`/folder/${folder.id}`}
-      ref={dropRef}
-    >
+    <SidebarItem active={isActive} to={`/folder/${folder.id}`} ref={dropRef}>
       {folder.name === 'Favorites' && (
         <IconFavoritesFolder className="w-5 h-5 mr-3 text-yellow-500" />
       )}
@@ -61,7 +83,7 @@ function Folder({ folder }) {
       {folder.name !== 'Favorites' && folder.name !== 'Read Later' && (
         <IconFolder className="w-5 h-5 mr-3" />
       )}
-      {folder.name}
+      <span className="truncate">{folder.name}</span>
     </SidebarItem>
   )
 }

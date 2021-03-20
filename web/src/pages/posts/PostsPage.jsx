@@ -1,28 +1,52 @@
-import React from 'react'
-import Posts from '@/components/post/Posts'
+import React, { useEffect, useState } from 'react'
 import FoldersSidebar from '@/components/sidebars/FoldersSidebar'
-import { useParams } from 'react-router-dom'
 import PostsHeader from '@/components/headers/PostsHeader'
 import { useStore } from '@/lib/stores/useStore'
+import { useQuery } from 'urql'
+import { GET_POSTS } from '@/graphql/queries'
+import Post from '@/components/post/Post'
+import MainContainer from '@/components/MainContainer'
+import MainView from '@/components/MainView'
+import { useParams } from 'react-router-dom'
 
 export default function PostsPage() {
-  const { showFolders } = useStore()
+  const { serverId } = useParams()
+  const { showFolders, postsSort, postsTime } = useStore()
+
+  const [{ data }, reexcutePostsQuery] = useQuery({
+    query: GET_POSTS,
+    variables: {
+      joinedOnly: true,
+      serverId,
+      sort: postsSort,
+      time: postsTime
+    }
+  })
+  const posts = data?.getPosts?.posts ?? []
+
+  const [key, setKey] = useState(1)
+
+  const incrementKey = () => setKey(key + 1)
+
+  const refreshPosts = () => {
+    reexcutePostsQuery()
+    incrementKey()
+  }
+
+  useEffect(incrementKey, [postsSort, postsTime])
 
   return (
     <>
-      <PostsHeader showFolders={showFolders} />
+      <PostsHeader refreshPosts={refreshPosts} />
       <FoldersSidebar show={showFolders} />
 
-      <div className={`h-full pl-76 pt-12 ${showFolders ? 'pr-60' : 'pr-0'}`}>
-        <div className="h-full dark:bg-gray-750">
-          <Posts
-            variables={{
-              joinedOnly: true
-            }}
-            showServerName
-          />
-        </div>
-      </div>
+      <MainContainer rightSidebar={showFolders}>
+        <MainView>
+          {posts.map(post => (
+            <Post key={post.id} post={post} showServerName />
+          ))}
+        </MainView>
+      </MainContainer>
     </>
   )
 }

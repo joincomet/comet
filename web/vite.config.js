@@ -1,8 +1,9 @@
+import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import { resolve } from 'path'
 import stringHash from 'string-hash'
 
-export default ({ command }) => ({
+export default defineConfig(({ command }) => ({
   base: command === 'serve' ? '/' : '/dist/',
   plugins: [reactRefresh()],
   resolve: {
@@ -29,4 +30,4 @@ export default ({ command }) => ({
       }
     }
   }
-})
+}))

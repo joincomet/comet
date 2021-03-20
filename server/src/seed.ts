@@ -58,7 +58,8 @@ export const seed = async (em: EntityManager) => {
     name: 'Dan',
     tag: '0001',
     email: 'dan@joincomet.app',
-    passwordHash
+    passwordHash,
+    isAdmin: true
   })
 
   const userMichael = em.create(User, {

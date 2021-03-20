@@ -20,11 +20,11 @@ body {
 }
 
 .text-secondary {
-  @apply text-gray-800 dark:text-gray-200;
+  @apply text-gray-700 dark:text-gray-300;
 }
 
 .text-primary {
-  @apply text-black dark:text-white;
+  @apply text-gray-900 dark:text-gray-100;
 }
 
 .text-mid {
@@ -99,4 +99,33 @@ body {
 
 .title {
   @apply text-2xl font-bold text-center;
+}
+
+.highlightable {
+  @apply cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300;
+}
+
+.content-visibility-auto {
+  content-visibility: auto;
+}
+
+.main-view {
+  height: 100%;
+}
+
+.messages-view {
+  height: calc(100% - 5.875rem);
+}
+
+.scrollbar {
+  @apply scrollbar-thin dark:scrollbar-thumb-gray-850 dark:scrollbar-track-gray-775 scrollbar-thumb-rounded-md;
+}
+
+.scrollbar-light {
+  @apply scrollbar-thin dark:scrollbar-thumb-gray-800 dark:scrollbar-track-gray-725 scrollbar-thumb-rounded-md;
+}
+
+[contentEditable=true]:empty:before{
+  content: attr(data-placeholder);
+  @apply text-gray-500 dark:text-gray-500;
 }
