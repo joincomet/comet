@@ -1,7 +1,6 @@
 .titlebar {
-    @apply pl-2 h-5.5 top-0 left-0 right-0 fixed bg-white dark:bg-gray-900 flex items-center;
+    @apply pl-2 h-5.5 z-10 top-0 left-0 right-0 fixed bg-white dark:bg-gray-900 flex items-center;
     -webkit-app-region: drag;
-    z-index: 10000;
 }
 
 .window-controls {

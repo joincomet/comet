@@ -24,16 +24,9 @@ export default function PostsPage() {
   })
   const posts = data?.getPosts?.posts ?? []
 
-  const [key, setKey] = useState(1)
-
-  const incrementKey = () => setKey(key + 1)
-
   const refreshPosts = () => {
     reexcutePostsQuery()
-    incrementKey()
   }
-
-  useEffect(incrementKey, [postsSort, postsTime])
 
   return (
     <>

@@ -18,6 +18,7 @@ import {
 } from '@/graphql/subscriptions'
 import { REFETCH_FRIENDS } from '@/graphql/subscriptions/friend'
 import { REFETCH_USER_FOLDERS } from '@/graphql/subscriptions/folder'
+import { useUser } from '@/components/providers/UserProvider'
 
 export const DataContext = createContext({
   joinedServers: [],
@@ -26,8 +27,14 @@ export const DataContext = createContext({
   friendRequests: [],
   blockedUsers: [],
   groupsAndDms: [],
-  refetchGroupsAndDms: null
+  refetchGroupsAndDms: null,
+  fetching: false
 })
+
+export const useIsDataFetching = () => {
+  const { fetching } = useContext(DataContext)
+  return fetching
+}
 
 export const useJoinedServers = () => {
   const { joinedServers } = useContext(DataContext)
@@ -103,15 +110,21 @@ export function DataProvider({ children }) {
 
   useSubscription({ query: MESSAGE_SENT })
 
-  if (
+  const fetching =
     !joinedServersData ||
     !userFoldersData ||
     !friendsData ||
     !friendRequestsData ||
     !blockedUsersData ||
     !groupsAndDmsData
-  )
-    return <LoadingScreen />
+
+  const hasData =
+    joinedServersData &&
+    userFoldersData &&
+    friendsData &&
+    friendRequestsData &&
+    blockedUsersData &&
+    groupsAndDmsData
 
   return (
     <DataContext.Provider
@@ -122,10 +135,11 @@ export function DataProvider({ children }) {
         friendRequests: friendRequestsData?.getFriendRequests || [],
         blockedUsers: blockedUsersData?.getBlockedUsers || [],
         groupsAndDms: groupsAndDmsData?.getGroupsAndDms || [],
-        refetchGroupsAndDms
+        refetchGroupsAndDms,
+        fetching: fetching && !hasData
       }}
     >
-      {children}
+      {children(fetching && !hasData)}
     </DataContext.Provider>
   )
 }

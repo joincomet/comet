@@ -12,7 +12,7 @@ export default function LoginPage() {
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
 
-  const [_, refetchCurrentUser] = useUser()
+  const [_, __, refetchCurrentUser] = useUser()
 
   const onSubmit = variables =>
     login(variables).then(

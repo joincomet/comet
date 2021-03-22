@@ -680,6 +680,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.13.6, @babel/runtime@npm:^7.5.5":
+  version: 7.13.10
+  resolution: "@babel/runtime@npm:7.13.10"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: 22014226b96a8c8e8d4e8bcdb011f317d1b32881aef424a669dc6ceaee14993d3609172967853cbf9c25c724c25145d45885b6c9df56ba241c12820776607f1f
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.13.7":
   version: 7.13.8
   resolution: "@babel/runtime@npm:7.13.8"
@@ -1310,9 +1319,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/core@npm:next":
-  version: 4.4.5-dev.65
-  resolution: "@mikro-orm/core@npm:4.4.5-dev.65"
+"@mikro-orm/core@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "@mikro-orm/core@npm:4.5.0"
   dependencies:
     ansi-colors: 4.1.1
     clone: 2.1.2
@@ -1345,13 +1354,13 @@ __metadata:
       optional: true
     "@mikro-orm/sqlite":
       optional: true
-  checksum: 00cfec0d9ec0f95ef704e8fcb8e5db6dcdcf53a46c4e0f8a876d36aac61f9ec2d478757b8d4a785454ed1419a2dcbd91d554c83fbc7c94c99f361b0cdc819c73
+  checksum: 5168c4d263b40bfff39762735698446fc330828306b243b193a15d44f2f653003a8966d5d0555ba79c87dc6a39de1d2994be968a562ad9f58e9ef92848744585
   languageName: node
   linkType: hard
 
-"@mikro-orm/knex@npm:^4.4.5-dev.65+be2b8c7a4a":
-  version: 4.4.5-dev.65
-  resolution: "@mikro-orm/knex@npm:4.4.5-dev.65"
+"@mikro-orm/knex@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "@mikro-orm/knex@npm:4.5.0"
   dependencies:
     fs-extra: 9.1.0
     knex: 0.21.19
@@ -1374,19 +1383,19 @@ __metadata:
       optional: true
     sqlite3:
       optional: true
-  checksum: c5582d949d77ef2bd87fd4b806e03105c8870865baa37fb63e85da11e67213f57401bdc6a2dde4774d3b284fd51f376c90aa6d177c4ae9ae7fa1948eabc23f27
+  checksum: 8adc95ad80e47bcc5b614a8d2f8b6880d3a59ab2f1c922f80ca8285b9ba80052d2a6fde4a223f87298b02dd372b0c0b7c81a1a9c773a4213f39374d648a034c0
   languageName: node
   linkType: hard
 
-"@mikro-orm/postgresql@npm:next":
-  version: 4.4.5-dev.65
-  resolution: "@mikro-orm/postgresql@npm:4.4.5-dev.65"
+"@mikro-orm/postgresql@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "@mikro-orm/postgresql@npm:4.5.0"
   dependencies:
-    "@mikro-orm/knex": ^4.4.5-dev.65+be2b8c7a4a
+    "@mikro-orm/knex": ^4.5.0
     pg: 8.5.1
   peerDependencies:
     "@mikro-orm/core": ^4.0.0
-  checksum: ca141dc2dbaf770f1f814827551dc5e91f86ffe129e62ff94b2e4008b847f5a35046ed0df720c97c1a84e567bf8611d32c5a7645097b91238707d32aa8881555
+  checksum: 71d1bb9985aa783ba42d65ba21ff476c6f0ef150a1c5013f5799b0cd1a64b7b28c5edd11862e37ec6463ea850e763309513e9b4758e216db73794e16b579972a
   languageName: node
   linkType: hard
 
@@ -2881,21 +2890,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/jit@npm:^0.1.3":
-  version: 0.1.3
-  resolution: "@tailwindcss/jit@npm:0.1.3"
+"@tailwindcss/jit@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "@tailwindcss/jit@npm:0.1.5"
   dependencies:
     chokidar: ^3.5.1
     dlv: ^1.1.3
     fast-glob: ^3.2.5
     lodash.topath: ^4.5.2
+    normalize-path: ^3.0.0
     object-hash: ^2.1.1
     postcss-selector-parser: ^6.0.4
     quick-lru: ^5.1.1
   peerDependencies:
     postcss: ^8.2.6
     tailwindcss: ^2.0.3
-  checksum: 36a5bdad405072d6300317665632296f949dd5825102d0ef56efb221498230d5e51522ceb02d31883ba38198c944ba3af76bb37b038cc1e7e0d78dd6ae825d0a
+  checksum: ff1001e1092114c92da0448ad7efb42ada8527e21c7756b4d490be24075ae272664c35c17956fc28d1428fbdd98b80db882e96a377dbf6c120aea539e9ce2a84
   languageName: node
   linkType: hard
 
@@ -3060,7 +3070,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express-serve-static-core@npm:*, @types/express-serve-static-core@npm:4.17.18, @types/express-serve-static-core@npm:^4.17.18":
+"@types/express-serve-static-core@npm:4.17.18, @types/express-serve-static-core@npm:^4.17.18":
   version: 4.17.18
   resolution: "@types/express-serve-static-core@npm:4.17.18"
   dependencies:
@@ -3071,7 +3081,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:^4.17.11":
+"@types/express@npm:*, @types/express@npm:4.17.11, @types/express@npm:^4.17.11":
   version: 4.17.11
   resolution: "@types/express@npm:4.17.11"
   dependencies:
@@ -3080,18 +3090,6 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 2818120a0fd8b7982215864929cdc6cd14942dd44849f93054fe2a90b4233dff67aadc34c73b5937922a02c688b0263d00a4807aa2e59307ac859a1458d73669
-  languageName: node
-  linkType: hard
-
-"@types/express@npm:4.17.7":
-  version: 4.17.7
-  resolution: "@types/express@npm:4.17.7"
-  dependencies:
-    "@types/body-parser": "*"
-    "@types/express-serve-static-core": "*"
-    "@types/qs": "*"
-    "@types/serve-static": "*"
-  checksum: 99b795c60e7368b575794574c35d0ffd0d119c52bc681af6beda2fee70aada78e8aef07fc0db3b88f594d5d935847de4187561d2456760eeb4fde5d10dbb3780
   languageName: node
   linkType: hard
 
@@ -3179,12 +3177,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ioredis@npm:^4.22.0":
-  version: 4.22.0
-  resolution: "@types/ioredis@npm:4.22.0"
+"@types/ioredis@npm:^4.22.1":
+  version: 4.22.1
+  resolution: "@types/ioredis@npm:4.22.1"
   dependencies:
     "@types/node": "*"
-  checksum: 367ddb76f1f96bfb3f3978bb0fef07de688452bc370b2af1f5036daf16f0b11a74864f3d7f9ceefc19ce5b5496a0b533428e9034ab91c40642db6d75e5ebdee1
+  checksum: 3d139b348161955a10e9588192544979de1533aa96199e3c68add4cc0e71e196cfa83cb453fc22af6b0316a79647041aeac14698e519d056490b327086e807d1
   languageName: node
   linkType: hard
 
@@ -4255,9 +4253,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-core@npm:^2.21.1":
-  version: 2.21.1
-  resolution: "apollo-server-core@npm:2.21.1"
+"apollo-server-core@npm:^2.21.2":
+  version: 2.21.2
+  resolution: "apollo-server-core@npm:2.21.2"
   dependencies:
     "@apollographql/apollo-tools": ^0.4.3
     "@apollographql/graphql-playground-html": 1.6.27
@@ -4286,7 +4284,7 @@ __metadata:
     ws: ^6.0.0
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 44e62ee0d42421416378abdb97092ea4d106394d381f98677d5df03fcd33ed61beb053fc5a4c3c5b4c47ab300b74834fdccae3c0ce45429a853b634abe373d62
+  checksum: b7be2fd9e8b2ab31a4fa7024b98ea741ebb6cf514ef10d6ad47c0690aff8d6c2729384485ac129a9672d7f2abe83c229edf8cb520cb217e903a97f614771e5dd
   languageName: node
   linkType: hard
 
@@ -4309,18 +4307,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-express@npm:^2.21.1":
-  version: 2.21.1
-  resolution: "apollo-server-express@npm:2.21.1"
+"apollo-server-express@npm:^2.21.2":
+  version: 2.21.2
+  resolution: "apollo-server-express@npm:2.21.2"
   dependencies:
     "@apollographql/graphql-playground-html": 1.6.27
     "@types/accepts": ^1.3.5
     "@types/body-parser": 1.19.0
     "@types/cors": 2.8.8
-    "@types/express": 4.17.7
+    "@types/express": 4.17.11
     "@types/express-serve-static-core": 4.17.18
     accepts: ^1.3.5
-    apollo-server-core: ^2.21.1
+    apollo-server-core: ^2.21.2
     apollo-server-types: ^0.6.3
     body-parser: ^1.18.3
     cors: ^2.8.4
@@ -4332,7 +4330,7 @@ __metadata:
     type-is: ^1.6.16
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 40807b034e8f09592fcf9591baa19c0cafa2c7fa4b6d63686f152a9a6827a6c49e0206a3fc8624e32b4efb0655ffbb66ca3122d6e592a5d2960d09a20dd75f4c
+  checksum: fa07969288a2881980b3f492560a7af33944e37ce98867e75125e059658fd70b3267de07c750dd7ba501d5b06dd78ac86fe255c4663170df71871cb7f06ed0b2
   languageName: node
   linkType: hard
 
@@ -4740,9 +4738,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.867.0":
-  version: 2.867.0
-  resolution: "aws-sdk@npm:2.867.0"
+"aws-sdk@npm:^2.868.0":
+  version: 2.868.0
+  resolution: "aws-sdk@npm:2.868.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4753,7 +4751,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: b1334f20296a2fe5cfa2f2ad8e4935475523a69bc4a7b00c013bfb17bfafd525bc69b70746978954ab73dc0e82c238772281218b4df5825daf17c12673f0df69
+  checksum: ce7fd59a7dfe94c44ecabc02341a8097d554e407d1326775f6ff224aaf7716bea0b0b046cfd94d040ae6e892fe9c161f8808ade9ce3a67eb753aacc35daed781
   languageName: node
   linkType: hard
 
@@ -8684,6 +8682,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"html-parse-stringify2@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "html-parse-stringify2@npm:2.0.1"
+  dependencies:
+    void-elements: ^2.0.1
+  checksum: 71159c76d54e7e8c1dad808b7ed3f3410e7846b496e3910f0c14f78ade875477b3f6b320ee1259ba5a7689a7ba61bee0b23f9f50ae1d33189de73bf436fb2a52
+  languageName: node
+  linkType: hard
+
 "html-tags@npm:^3.1.0":
   version: 3.1.0
   resolution: "html-tags@npm:3.1.0"
@@ -8774,6 +8781,33 @@ fsevents@~2.3.1:
   version: 1.0.4
   resolution: "hyphenate-style-name@npm:1.0.4"
   checksum: 4cfeb47e98eab9c25e6dece20da772cc914a9f8e5ee794cf8db105b0649dd64a61d8ee8ff32acf23ae0ac181db8fcbe4a6abb2f7de48ae52b42a85bbf1aacb86
+  languageName: node
+  linkType: hard
+
+"i18next-browser-languagedetector@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "i18next-browser-languagedetector@npm:6.0.1"
+  dependencies:
+    "@babel/runtime": ^7.5.5
+  checksum: 760bc83f3bfdf18622a55d732c295130fb9d496e5a1ce389820dd253a3b53f4179826da9cb1b915167ff33c25fc33b5bd93bae8157135c026cd91d0e3a1df4fc
+  languageName: node
+  linkType: hard
+
+"i18next-http-backend@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "i18next-http-backend@npm:1.1.1"
+  dependencies:
+    node-fetch: 2.6.1
+  checksum: 812bed6a8c7968234cb02966de2659f2c44a5d9065a8699a0b9d6e99255e9fea04cc7c777c1638895d8115b4b16b1bcf8e22550f53691baffacc8811cc82b5c3
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^19.9.2":
+  version: 19.9.2
+  resolution: "i18next@npm:19.9.2"
+  dependencies:
+    "@babel/runtime": ^7.12.0
+  checksum: 2570489cf92fdbc6c9c6e937deb23725afa1e2af3376f3c1d4880c4cacfc7b79e6136c62527dbc23052a206781f056a5800cda1f7379199a721623cd45e8dd6d
   languageName: node
   linkType: hard
 
@@ -12800,12 +12834,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:next":
-  version: 7.0.0-rc.5
-  resolution: "react-hook-form@npm:7.0.0-rc.5"
+"react-hook-form@npm:^7.0.0-rc.6":
+  version: 7.0.0-rc.6
+  resolution: "react-hook-form@npm:7.0.0-rc.6"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 33fb6012b8cc200410adc2b328e228fb59efbaac7bd5268ccce6177a013bebd97334dcee5262f92062a6e10e481cf49c9899b885827e583ba261d71808ace8a5
+  checksum: ba36cff70ef90e40db937c59e64a922c4ef6286180ea6f3afe9fb4d61730b9de8d166bb9371e7811ed0c057afebf7525f75f57cb21d688f63332f3bcce891780
   languageName: node
   linkType: hard
 
@@ -12818,6 +12852,19 @@ fsevents@~2.3.1:
     react: ">=16"
     react-dom: ">=16"
   checksum: 47a3b6bd97e1e5ca59b3bc94c0480180e472c602a27287809c1e36867c79e90703da0b544a4c16b44cb25fd9d3d6fd3ebcb67da1512a3104aedfa7a696414588
+  languageName: node
+  linkType: hard
+
+"react-i18next@npm:^11.8.10":
+  version: 11.8.10
+  resolution: "react-i18next@npm:11.8.10"
+  dependencies:
+    "@babel/runtime": ^7.13.6
+    html-parse-stringify2: ^2.0.1
+  peerDependencies:
+    i18next: ">= 19.0.0"
+    react: ">= 16.8.0"
+  checksum: d87fd2429bfe7ce222b6637da0fe8e85e54d9778eae25f0397149e77ef87d1250348df01210266b6ee05b1d6d79dc100548b25c357ba043b5c626bdff2ce2889
   languageName: node
   linkType: hard
 
@@ -14018,24 +14065,24 @@ resolve@^1.20.0:
   version: 0.0.0-use.local
   resolution: "server@workspace:server"
   dependencies:
-    "@mikro-orm/core": next
-    "@mikro-orm/postgresql": next
+    "@mikro-orm/core": ^4.5.0
+    "@mikro-orm/postgresql": ^4.5.0
     "@mikro-orm/sql-highlighter": ^1.0.1
     "@types/async": ^3.2.5
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.11
     "@types/faker": ^5.1.7
     "@types/graphql-upload": ^8.0.4
-    "@types/ioredis": ^4.22.0
+    "@types/ioredis": ^4.22.1
     "@types/jsonwebtoken": ^8.5.1
     "@types/mime": ^2.0.3
     "@types/node": ^14.14.35
     "@types/sharp": ^0.27.1
     "@typescript-eslint/eslint-plugin": ^4.18.0
     "@typescript-eslint/parser": ^4.18.0
-    apollo-server-express: ^2.21.1
+    apollo-server-express: ^2.21.2
     argon2: ^0.27.1
-    aws-sdk: ^2.867.0
+    aws-sdk: ^2.868.0
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
@@ -16059,6 +16106,13 @@ typescript@^4.2.3:
   languageName: node
   linkType: hard
 
+"void-elements@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "void-elements@npm:2.0.1"
+  checksum: 768d7e08534922455d0e87c66426123920f4d26d88e9c3dc430469e4ce1c11920ca8e2aea7794e52916524d55c3c7820efc20d3f5ce6b749036d989adef1cdd9
+  languageName: node
+  linkType: hard
+
 "w3c-hr-time@npm:^1.0.2":
   version: 1.0.2
   resolution: "w3c-hr-time@npm:1.0.2"
@@ -16103,7 +16157,7 @@ typescript@^4.2.3:
     "@remirror/react": pr706
     "@tailwindcss/aspect-ratio": ^0.2.0
     "@tailwindcss/forms": ^0.2.1
-    "@tailwindcss/jit": ^0.1.3
+    "@tailwindcss/jit": ^0.1.5
     "@tailwindcss/line-clamp": ^0.2.0
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.4
@@ -16135,6 +16189,9 @@ typescript@^4.2.3:
     framer-motion: ^4.0.0
     fuse.js: ^6.4.6
     graphql: ^15.5.0
+    i18next: ^19.9.2
+    i18next-browser-languagedetector: ^6.0.1
+    i18next-http-backend: ^1.1.1
     postcss: ^8.2.8
     prettier: ^2.2.1
     react: ^17.0.1
@@ -16144,8 +16201,9 @@ typescript@^4.2.3:
     react-dnd-touch-backend: ^14.0.0
     react-dom: ^17.0.1
     react-helmet: ^6.1.0
-    react-hook-form: next
+    react-hook-form: ^7.0.0-rc.6
     react-hot-toast: ^1.0.2
+    react-i18next: ^11.8.10
     react-icons: ^4.2.0
     react-intersection-observer: ^8.31.0
     react-player: ^2.9.0

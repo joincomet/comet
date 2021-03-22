@@ -5,6 +5,7 @@ import { useStore } from '@/lib/stores/useStore'
 import Tippy from '@tippyjs/react'
 import { Switch } from '@headlessui/react'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 export default function PostsHeader({ refreshPosts }) {
   const {
@@ -17,6 +18,8 @@ export default function PostsHeader({ refreshPosts }) {
   const className =
     'flex items-center font-semibold text-base text-secondary pr-4 border-r dark:border-gray-700 mr-4'
   const iconClassName = 'w-5 h-5 mr-3 text-tertiary'
+
+  const { t } = useTranslation()
 
   let icon
   switch (postsSort) {
@@ -50,20 +53,20 @@ export default function PostsHeader({ refreshPosts }) {
       )}
 
       {postsSort === 'New' && (
-        <Tippy content="Automatically add new posts to feed" placement="right">
+        <Tippy content={t('feed.liveMode.description')} placement="right">
           <div>
             <Switch.Group
               as="div"
               className="w-full flex items-center space-x-3"
             >
               <Switch.Label className="uppercase text-11 font-semibold tracking-widest text-tertiary select-none">
-                Live Mode
+                {t('feed.liveMode.title')}
               </Switch.Label>
 
               <Switch
                 as="button"
                 checked={liveMode}
-                onChange={() => toast.error('Live Mode is coming soon!')}
+                onChange={() => toast.error(t('feed.liveMode.comingSoon'))}
                 className={`${
                   liveMode ? 'bg-green-600' : 'dark:bg-gray-800'
                 } relative inline-flex flex-shrink-0 h-6 transition-colors duration-200 ease-in-out border-2 border-transparent rounded-full cursor-pointer w-11 focus:outline-none focus:shadow-outline`}
@@ -84,13 +87,13 @@ export default function PostsHeader({ refreshPosts }) {
       )}
 
       <div className="ml-auto pr-6 space-x-5 flex items-center">
-        <Tippy content="Refresh Posts">
+        <Tippy content={t('feed.refresh')}>
           <div className="highlightable" onClick={refreshPosts}>
             <IconRefresh className="w-5 h-5" />
           </div>
         </Tippy>
 
-        <Tippy content={`${showFolders ? 'Hide' : 'Show'} Folders`}>
+        <Tippy content={showFolders ? t('folders.hide') : t('folders.show')}>
           <div
             className="highlightable"
             onClick={() => setShowFolders(!showFolders)}
@@ -104,6 +107,7 @@ export default function PostsHeader({ refreshPosts }) {
 }
 
 function TimeTab({ time }) {
+  const { t } = useTranslation()
   const { postsTime, setPostsTime } = useStore()
   return (
     <button
@@ -112,7 +116,7 @@ function TimeTab({ time }) {
         time === postsTime ? 'text-secondary dark:bg-gray-700' : 'text-tertiary'
       }`}
     >
-      {time}
+      {t(`feed.time.${time.toLowerCase()}`)}
     </button>
   )
 }

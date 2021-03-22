@@ -10,6 +10,7 @@ import { HIDE_DM } from '@/graphql/mutations'
 import SidebarLabelPlus from '@/components/sidebars/base/SidebarLabelPlus'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
+import { useTranslation } from 'react-i18next'
 
 export default forwardRef((props, ref) => {
   const groupsAndDms = useGroupsAndDms()
@@ -18,6 +19,8 @@ export default forwardRef((props, ref) => {
 
   const { push } = useHistory()
   const { pathname } = useLocation()
+
+  const { t } = useTranslation()
 
   return (
     <Sidebar ref={ref}>
@@ -29,12 +32,12 @@ export default forwardRef((props, ref) => {
         <div className="space-y-0.5">
           <SidebarItem to="/friends">
             <IconFriends className="mr-3 h-5 w-5" />
-            Friends
+            {t('friends.title')}
           </SidebarItem>
 
           <SidebarItem to="/inbox">
             <IconInbox className="mr-3 h-5 w-5" />
-            Inbox
+            {t('inbox.title')}
           </SidebarItem>
         </div>
 
@@ -43,7 +46,7 @@ export default forwardRef((props, ref) => {
         <SidebarSortButtons />
 
         <SidebarLabelPlus plusLabel="Create DM">
-          Direct Messages
+          {t('dms.title')}
         </SidebarLabelPlus>
 
         <div className="space-y-0.5">

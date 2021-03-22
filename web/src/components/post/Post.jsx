@@ -25,6 +25,7 @@ import {
 } from '@/lib/Icons'
 import { useContextMenuTrigger } from 'react-context-menu-wrapper'
 import { mergeRefs } from '@/lib/mergeRefs'
+import { useTranslation } from 'react-i18next'
 
 export default function Post({
   post,
@@ -49,6 +50,8 @@ export default function Post({
 
   const contextMenuRef = useContextMenuTrigger({ menuId: 'post', data: post })
 
+  const { t } = useTranslation()
+
   return (
     <article
       ref={mergeRefs(contextMenuRef, dragRef)}
@@ -61,7 +64,7 @@ export default function Post({
         <div className="flex-grow">
           <div className="flex flex-wrap items-center text-13 font-medium text-tertiary pb-1">
             {post.isPinned && (
-              <Tippy content={`Pinned to ${post.server.name}`}>
+              <Tippy content={t('post.pinnedTo', { server: post.server })}>
                 <div className="mr-1.5">
                   <IconPin className="h-5 w-5 text-accent" />
                 </div>
@@ -100,18 +103,21 @@ export default function Post({
             <Tippy content={fullDate(post.createdAt)}>
               <span>{shortDate(post.createdAt)}</span>
             </Tippy>
-            &nbsp;&middot; ({post.linkUrl && post.domain}
-            {!post.linkUrl &&
-              post.imageUrls &&
-              post.imageUrls.length > 0 &&
-              'image post'}
-            {!post.linkUrl &&
-              (!post.imageUrls || post.imageUrls.length === 0) &&
-              'text post'}
-            )
+            &nbsp;&middot;&nbsp;
+            <span className="lowercase">
+              ({post.linkUrl && post.domain}
+              {!post.linkUrl &&
+                post.imageUrls &&
+                post.imageUrls.length > 0 &&
+                t('post.type.image')}
+              {!post.linkUrl &&
+                (!post.imageUrls || post.imageUrls.length === 0) &&
+                t('post.type.link')}
+              )
+            </span>
           </div>
           <Link to={post.relativeUrl} className="text-secondary text-base">
-            {post.title || post?.meta?.title || '(untitled)'}
+            {post.title}
           </Link>
 
           {!forceExpand && (
@@ -168,6 +174,7 @@ function Embed({ post }) {
                     <div className="w-24 h-24 relative flex-shrink-0 rounded-l-md">
                       {post.thumbnailUrl || post.logoUrl ? (
                         <img
+                          alt=""
                           src={post.thumbnailUrl || post.logoUrl}
                           className="rounded-l-md object-cover h-full w-full"
                         />
@@ -227,7 +234,11 @@ function Embed({ post }) {
 
       {post.imageUrls.length > 0 && (
         <div className="relative max-w-screen-sm">
-          <img src={post.imageUrls[0]} className="object-cover w-full h-full" />
+          <img
+            alt=""
+            src={post.imageUrls[0]}
+            className="object-cover w-full h-full"
+          />
         </div>
       )}
 
@@ -288,10 +299,11 @@ function CommentCount({ post }) {
 }
 
 function Expand({ expanded, setExpanded }) {
+  const { t } = useTranslation()
   return (
     <Tippy
       placement="right"
-      content={expanded ? 'Hide Details' : 'Show Details'}
+      content={expanded ? t('post.collapse') : t('post.expand')}
     >
       <div
         className={`mr-1.5 p-1 inline-block items-center cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition text-tertiary`}

@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+import './i18n/i18n'
+
 import './css/index.css'
 import './css/app.css'
 import './css/tippy.css'

@@ -10,11 +10,11 @@ export default function InboxPage() {
   const { inboxPage } = useStore()
   return (
     <>
-      <Header>
-        <div className="flex items-center font-semibold text-base text-secondary pr-4 border-r dark:border-gray-700 mr-4">
-          <IconInbox className="h-5 w-5 mr-3 text-tertiary" />
-          Inbox
-        </div>
+      <Header
+        icon={<IconInbox className="h-5 w-5" />}
+        title="Inbox"
+        showDivider
+      >
         <div className="flex items-center space-x-4">
           <InboxTab page="Unread" />
           <InboxTab page="All" />

@@ -15,6 +15,7 @@ import SidebarItem from '@/components/sidebars/base/SidebarItem'
 import { useServerFolders } from '@/components/providers/ServerDataProvider'
 import { ServerPermission, useHasServerPermissions } from '@/lib/hasPermission'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
+import { useTranslation } from 'react-i18next'
 
 export default forwardRef(({ show }, ref) => {
   const { serverId } = useParams()
@@ -25,13 +26,15 @@ export default forwardRef(({ show }, ref) => {
     ServerPermission.ManageFolders
   ])
 
+  const { t } = useTranslation()
+
   return (
     <Sidebar right show={show} ref={ref}>
       <div className="px-1.5">
         {serverId && !!serverFolders.length && (
           <>
             {canManageFolders ? (
-              <SidebarLabelPlus plusLabel="Create a Folder">
+              <SidebarLabelPlus plusLabel={t('folders.server.create')}>
                 Server Folders
               </SidebarLabelPlus>
             ) : (
@@ -46,7 +49,7 @@ export default forwardRef(({ show }, ref) => {
           </>
         )}
 
-        <SidebarLabelPlus plusLabel="Create a Folder">
+        <SidebarLabelPlus plusLabel={t('folders.user.create')}>
           Your Folders
         </SidebarLabelPlus>
 
@@ -64,7 +67,7 @@ function Folder({ folder }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.POST,
     drop: (item, monitor) => {
-      toast.success(`Added to ${folder.name}!`)
+      toast.success(t('folders.added', { folder }))
     },
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -72,18 +75,32 @@ function Folder({ folder }) {
     })
   })
   const isActive = isOver && canDrop
+
+  const { t } = useTranslation()
+
+  const favorites = t('folders.favorites')
+  const readLater = t('folders.readLater')
+
   return (
     <SidebarItem active={isActive} to={`/folder/${folder.id}`} ref={dropRef}>
-      {folder.name === 'Favorites' && (
-        <IconFavoritesFolder className="w-5 h-5 mr-3 text-yellow-500" />
+      {folder.name === favorites && (
+        <>
+          <IconFavoritesFolder className="w-5 h-5 mr-3 text-yellow-500" />
+          <span className="truncate">{favorites}</span>
+        </>
       )}
-      {folder.name === 'Read Later' && (
-        <IconReadLaterFolder className="w-5 h-5 mr-3 text-blue-500" />
+      {folder.name === readLater && (
+        <>
+          <IconReadLaterFolder className="w-5 h-5 mr-3 text-blue-500" />
+          <span className="truncate">{readLater}</span>
+        </>
       )}
-      {folder.name !== 'Favorites' && folder.name !== 'Read Later' && (
-        <IconFolder className="w-5 h-5 mr-3" />
+      {folder.name !== favorites && folder.name !== readLater && (
+        <>
+          <IconFolder className="w-5 h-5 mr-3" />
+          <span className="truncate">{folder.name}</span>
+        </>
       )}
-      <span className="truncate">{folder.name}</span>
     </SidebarItem>
   )
 }

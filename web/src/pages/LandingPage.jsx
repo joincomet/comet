@@ -13,12 +13,15 @@ import Tippy from '@tippyjs/react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { getOS } from '@/lib/getOS'
+import { useUser } from '@/components/providers/UserProvider'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
   'p-3 hover:bg-gray-700 transition rounded-full cursor-pointer'
 
-export default function LandingPage({ currentUser }) {
+export default function LandingPage() {
+  const [currentUser] = useUser()
+
   return (
     <div className="relative flex flex-col items-center">
       <div className={`fixed top-0 left-0 right-0 z-50 bg-gray-900 transition`}>

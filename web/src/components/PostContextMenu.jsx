@@ -9,6 +9,7 @@ import { useCopyToClipboard } from 'react-use'
 import { REMOVE_POST, PIN_POST, UNPIN_POST } from '@/graphql/mutations'
 import toast from 'react-hot-toast'
 import { ServerPermission, useHasServerPermissions } from '@/lib/hasPermission'
+import { useTranslation } from 'react-i18next'
 
 export default function PostContextMenu() {
   const menuEvent = useContextMenuEvent()
@@ -30,6 +31,8 @@ export default function PostContextMenu() {
   const [_pinPostRes, pinPost] = useMutation(PIN_POST)
   const [_unpinPostRes, unpinPost] = useMutation(UNPIN_POST)
 
+  const { t } = useTranslation()
+
   return (
     <Menu>
       {({ open }) => (
@@ -42,28 +45,32 @@ export default function PostContextMenu() {
               <PostContextMenuItem
                 onClick={() => {
                   copyToClipboard(`${post.relativeUrl}`)
-                  toast.success('Copied link to clipboard!')
+                  toast.success(t('post.copiedLink'))
                 }}
-                label="Copy Post Link"
+                label={t('post.copyLink')}
               />
-              <PostContextMenuItem label="Add to Folder" arrow />
-              <PostContextMenuItem label="Send to Friend" arrow />
+              <PostContextMenuItem label={t('post.addToUserFolder')} arrow />
+              <PostContextMenuItem label={t('post.sendToFriend')} arrow />
             </div>
             {!post.author.isCurrentUser ? (
               <>
                 <MenuDivider />
                 <PostContextMenuItem
-                  label="Report"
+                  label={t('post.report')}
                   red
-                  onClick={() => toast.error('Report is coming soon!')}
+                  onClick={() => toast.error(t('post.reported'))}
                 />
               </>
             ) : (
               <>
                 <MenuDivider />
                 <div className="space-y-0.5">
-                  <PostContextMenuItem label="Edit Post" />
-                  <PostContextMenuItem label="Delete Post" red />
+                  <PostContextMenuItem label={t('post.edit')} />
+                  <PostContextMenuItem
+                    red
+                    label={t('post.delete')}
+                    onClick={() => toast.error(t('post.deleted'))}
+                  />
                 </div>
               </>
             )}
@@ -73,47 +80,33 @@ export default function PostContextMenu() {
                 <div className="space-y-0.5">
                   {canPinPost && (
                     <PostContextMenuItem
-                      label={`${post.isPinned ? 'Unpin' : 'Pin'} Post`}
+                      label={post.isPinned ? t('post.unpin') : t('post.pin')}
                       onClick={() => {
                         if (post.isPinned) {
                           unpinPost({ postId: post.id })
-                          toast.success('Unpinned post!')
+                          toast.success(t('post.unpinned'))
                         } else {
                           pinPost({ postId: post.id })
-                          toast.success('Pinned post!')
-                        }
-                      }}
-                    />
-                  )}
-                  {canAddToFolder && (
-                    <PostContextMenuItem
-                      arrow
-                      label={`Add to Server Folder`}
-                      onClick={() => {
-                        if (post.isPinned) {
-                          unpinPost({ postId: post.id })
-                          toast.success('Unpinned post!')
-                        } else {
-                          pinPost({ postId: post.id })
-                          toast.success('Pinned post!')
+                          toast.success(t('post.pinned'))
                         }
                       }}
                     />
                   )}
                   <PostContextMenuItem
-                    label="Remove Post"
+                    label={t('post.remove')}
                     red
                     onClick={() => {
-                      const reason = window.prompt(
-                        '(Optional) Reason for removal:'
-                      )
+                      const reason = window.prompt(t('post.removePrompt'))
                       if (reason === null) return
                       removePost({ postId: post.id, reason })
-                      toast.success('Removed post!')
+                      toast.success(t('post.removed'))
                     }}
                   />
                 </div>
               </>
+            )}
+            {canAddToFolder && (
+              <PostContextMenuItem arrow label={t('post.addToServerFolder')} />
             )}
           </Menu.Items>
         </>

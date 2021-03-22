@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors')
 const plugin = require('tailwindcss/plugin')
 
 module.exports = {
-  purge: ['./src/index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  purge: ['./src/index.html', './src/**/*.{js,jsx,html}'],
   theme: {
     extend: {
       spacing: {

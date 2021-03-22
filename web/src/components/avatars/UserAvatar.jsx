@@ -30,7 +30,7 @@ export default forwardRef(
             }`}
           />
         )}
-        <IconUser className="text-mid w-2/3 h-2/3" />
+        {!user.avatarUrl && <IconUser className="text-mid w-2/3 h-2/3" />}
       </Avatar>
     )
   }

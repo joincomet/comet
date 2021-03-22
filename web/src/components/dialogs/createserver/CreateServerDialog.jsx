@@ -13,6 +13,7 @@ import { Switch, Dialog as HDialog } from '@headlessui/react'
 import { readURL } from '@/lib/readURL'
 import { useMutation } from 'urql'
 import { CREATE_SERVER } from '@/graphql/mutations'
+import { useTranslation } from 'react-i18next'
 
 export default function CreateServerDialog() {
   const [{ fetching }, createServer] = useMutation(CREATE_SERVER)
@@ -47,9 +48,11 @@ export default function CreateServerDialog() {
     })
   }
 
+  const { t } = useTranslation()
+
   return (
     <>
-      <Tippy content="Create Planet" placement="right">
+      <Tippy content={t('server.create.title')} placement="right">
         <div className={serverListItem} onClick={() => setIsOpen(true)}>
           <div
             className={`${serverListItemDot} dark:bg-gray-800 bg-gray-200 hover:bg-purple-500 dark:hover:bg-purple-500`}
@@ -62,7 +65,9 @@ export default function CreateServerDialog() {
       </Tippy>
 
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-        <HDialog.Title className="title mb-4">Create a Planet</HDialog.Title>
+        <HDialog.Title className="title mb-4">
+          {t('server.create.title')}
+        </HDialog.Title>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col items-center"
@@ -81,7 +86,7 @@ export default function CreateServerDialog() {
               className="transition dark:hover:bg-gray-700 rounded-full h-24 w-24 border-2 text-tertiary border-dashed border-gray-600 dark:border-gray-400 flex flex-col items-center justify-center mb-4 cursor-pointer select-none"
             >
               <IconUploadPhoto className="w-6 h-6" />
-              <div className="text-sm pt-1">Upload</div>
+              <div className="text-sm pt-1">{t('upload')}</div>
             </label>
           ) : (
             <label
@@ -92,14 +97,14 @@ export default function CreateServerDialog() {
               <img
                 src={avatarSrc}
                 className="w-full h-full object-cover rounded-full transition group-hover:opacity-25"
-                alt="Planet image"
+                alt=""
               />
             </label>
           )}
 
           <div className="mb-4 w-full">
             <label className="label text-left" htmlFor="name">
-              Planet Name
+              {t('server.create.name')}
             </label>
 
             <input
@@ -113,14 +118,14 @@ export default function CreateServerDialog() {
             />
           </div>
 
-          <Button loading={fetching}>Continue</Button>
+          <Button loading={fetching}>{t('continue')}</Button>
 
           <Switch.Group
             as="div"
             className="w-full flex items-center space-x-3 mt-4"
           >
             <Switch.Label className="uppercase text-11 font-semibold tracking-widest text-tertiary select-none">
-              Require Invite to Join
+              {t('server.create.requireInvite')}
             </Switch.Label>
             <Switch
               as="button"

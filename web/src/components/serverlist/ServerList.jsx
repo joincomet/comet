@@ -10,11 +10,14 @@ import {
   serverListItemDot
 } from './ServerList.module.scss'
 import { useJoinedServers } from '@/components/providers/DataProvider'
+import { useTranslation } from 'react-i18next'
 
 export default function ServerList() {
   const { pathname } = useLocation()
 
   const servers = useJoinedServers()
+
+  const { t } = useTranslation()
 
   return (
     <>
@@ -22,7 +25,7 @@ export default function ServerList() {
         className={`top-0 electron:top-5.5 fixed left-0 bottom-0 flex flex-col items-center w-16 bg-white dark:bg-gray-900`}
       >
         <div className="h-full flex flex-col w-full">
-          <Tippy content="Home" placement="right">
+          <Tippy content={t('home')} placement="right">
             <NavLink
               to="/posts"
               className={serverListItem}
@@ -44,7 +47,7 @@ export default function ServerList() {
             </NavLink>
           </Tippy>
 
-          <Tippy content="Explore" placement="right">
+          <Tippy content={t('explore.title')} placement="right">
             <NavLink
               to="/explore"
               className={serverListItem}

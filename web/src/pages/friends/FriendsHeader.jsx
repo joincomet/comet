@@ -5,11 +5,11 @@ import { useStore } from '@/lib/stores/useStore'
 
 export default function FriendsHeader({ pendingCount = 0 }) {
   return (
-    <Header>
-      <div className="flex items-center font-medium text-base text-secondary pr-4 border-r dark:border-gray-700 mr-4">
-        <IconFriends className="h-5 w-5 mr-3 text-tertiary" />
-        Friends
-      </div>
+    <Header
+      icon={<IconFriends className="h-5 w-5" />}
+      title="Friends"
+      showDivider
+    >
       <div className="flex items-center space-x-4">
         <FriendTab page="Online" />
         <FriendTab page="All" />

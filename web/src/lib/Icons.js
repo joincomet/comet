@@ -41,7 +41,7 @@ export {
   HiOutlinePencil as IconEditAvatar,
   HiOutlinePhotograph as IconUploadPhoto,
   HiRefresh as IconRefresh,
-  HiUpload as IconUpload,
+  HiPlusCircle as IconUpload,
   // CATEGORIES
   HiChatAlt2 as IconCategoryDiscussion,
   HiCode as IconCategoryProgramming,

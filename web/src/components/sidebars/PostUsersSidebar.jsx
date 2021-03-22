@@ -4,12 +4,12 @@ import SidebarUser from '@/components/sidebars/base/SidebarUser'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import SidebarLabelPlus from '@/components/sidebars/base/SidebarLabelPlus'
 
-export default forwardRef(({ post, users }, ref) => {
+export default forwardRef(({ post, users = [] }, ref) => {
   return (
     <Sidebar right ref={ref}>
       <div className="px-1">
         <SidebarLabel>CREATOR</SidebarLabel>
-        <SidebarUser user={post.author} />
+        {post && <SidebarUser user={post.author} />}
 
         {users && users.length > 0 && (
           <>
