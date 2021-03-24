@@ -86,7 +86,7 @@ export default function CreateServerDialog() {
               className="transition dark:hover:bg-gray-700 rounded-full h-24 w-24 border-2 text-tertiary border-dashed border-gray-600 dark:border-gray-400 flex flex-col items-center justify-center mb-4 cursor-pointer select-none"
             >
               <IconUploadPhoto className="w-6 h-6" />
-              <div className="text-sm pt-1">{t('upload')}</div>
+              <div className="text-sm pt-1">{t('server.create.upload')}</div>
             </label>
           ) : (
             <label

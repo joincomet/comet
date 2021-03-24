@@ -4,7 +4,6 @@ import { GET_SERVER_PERMISSIONS } from '@/graphql/queries'
 import { useParams } from 'react-router-dom'
 
 export const useHasServerPermissions = (permissions, serverId) => {
-  if (!serverId) serverId = useParams().serverId
   if (!serverId) return permissions.map(_ => false)
   const [user] = useUser()
   const [{ data }] = useQuery({
@@ -20,42 +19,31 @@ export const useHasServerPermissions = (permissions, serverId) => {
 }
 
 export const ServerPermission = {
-  ServerAdmin: 'SERVER_ADMIN',
+  ManageChannels: 'ManageChannels',
 
-  ViewChannels: 'VIEW_CHANNELS',
-  ManageChannels: 'MANAGE_CHANNELS',
+  ManageRoles: 'ManageRoles',
+  ManageServer: 'ManageServer',
+  CreateInvite: 'CreateInvite',
 
-  ManageRoles: 'MANAGE_ROLES',
-  ManageServer: 'MANAGE_SERVER',
-  CreateInvite: 'CREATE_INVITE',
+  ChangeNickname: 'ChangeNickname',
+  ManageNicknames: 'ManageNicknames',
 
-  ChangeNickname: 'CHANGE_NICKNAME',
-  ManageNicknames: 'MANAGE_NICKNAMES',
+  KickUser: 'KickUser',
+  BanUser: 'BanUser',
 
-  KickUser: 'KICK_USER',
-  BanUser: 'BAN_USER',
+  SendMessages: 'SendMessages',
+  EmbedLinks: 'EmbedLinks',
+  AttachFiles: 'AttachFiles',
+  ManageMessages: 'ManageMessages',
 
-  SendMessages: 'SEND_MESSAGES',
-  EmbedLinks: 'EMBED_LINKS',
-  AttachFiles: 'ATTACH_FILES',
-  PinMessages: 'PIN_MESSAGES',
-  ManageMessages: 'MANAGE_MESSAGES',
+  CreatePost: 'CreatePost',
+  VotePost: 'VotePost',
+  ManagePosts: 'ManagePosts',
 
-  CreatePost: 'CREATE_POST',
-  VotePost: 'VOTE_POST',
-  ManagePosts: 'MANAGE_POSTS',
-  PinPosts: 'PIN_POSTS',
-  ViewPosts: 'VIEW_POSTS',
+  CreateComment: 'CreateComment',
+  VoteComment: 'VoteComment',
+  ManageComments: 'ManageComments',
+  ViewComments: 'ViewComments',
 
-  AddPostsToFolder: 'ADD_POSTS_TO_FOLDER',
-  ManageFolders: 'MANAGE_FOLDERS',
-  ViewFolders: 'VIEW_FOLDERS',
-
-  CreateComment: 'CREATE_COMMENT',
-  VoteComment: 'VOTE_COMMENT',
-  ManageComments: 'MANAGE_COMMENTS',
-  PinComments: 'PIN_COMMENTS',
-  ViewComments: 'VIEW_COMMENTS',
-
-  DisplayRoleSeparately: 'DISPLAY_ROLE_SEPARATELY'
+  DisplayRoleSeparately: 'DisplayRoleSeparately'
 }

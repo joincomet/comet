@@ -24,7 +24,6 @@ export class FriendMutations {
       description: 'ID of user who will receive friend request'
     })
     userId: string,
-    @Arg('status', () => FriendStatus) status: FriendStatus,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
   ) {

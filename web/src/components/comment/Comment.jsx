@@ -1,5 +1,5 @@
 import { IconReply, IconDotsHorizontal, IconVote } from '@/lib/Icons'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import Twemoji from 'react-twemoji'
 import Tippy from '@tippyjs/react'
@@ -8,6 +8,7 @@ import UserPopup from '@/components/popups/UserPopup'
 import { commentCollapse } from './Comment.module.scss'
 import { useMutation } from 'urql'
 import { CREATE_COMMENT_VOTE, REMOVE_COMMENT_VOTE } from '@/graphql/mutations'
+import { fullDate, shortDate } from '@/lib/timeUtils'
 
 export default function Comment({
   comment,
@@ -15,6 +16,7 @@ export default function Comment({
   level = 0,
   setParentComment
 }) {
+  useEffect(() => console.log(comment))
   const { setCreateComment } = useCommentStore()
   const [collapse, setCollapse] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -52,14 +54,15 @@ export default function Comment({
                   <>
                     <UserPopup user={comment.author}>
                       <UserAvatar
-                        className="w-5 h-5 mr-1.5 cursor-pointer transition hover:opacity-90"
+                        size={5}
+                        className="mr-1.5 cursor-pointer transition hover:opacity-90"
                         user={comment.author}
                         loading="lazy"
                       />
                     </UserPopup>
                     <UserPopup user={comment.author}>
                       <span className="hover:underline cursor-pointer">
-                        {comment.author.username}
+                        {comment.author.name}
                       </span>
                     </UserPopup>
                   </>
@@ -69,8 +72,8 @@ export default function Comment({
                   </span>
                 )}
                 &nbsp;&middot;&nbsp;
-                <Tippy content={comment.timeSinceFull}>
-                  <span>{comment.timeSince}</span>
+                <Tippy content={fullDate(comment.createdAt)}>
+                  <span>{shortDate(comment.createdAt)}</span>
                 </Tippy>
               </div>
 
@@ -114,7 +117,7 @@ export default function Comment({
         comment.childComments.map(childComment => (
           <Comment
             key={childComment.id}
-            commentData={childComment}
+            comment={childComment}
             level={level + 1}
             setParentComment={setParentComment}
             post={post}

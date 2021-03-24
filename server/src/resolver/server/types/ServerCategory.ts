@@ -18,7 +18,7 @@ export enum ServerCategory {
   Science = 'Science',
   Sports = 'Sports',
   Technology = 'Technology',
-  Uncategorized = 'Uncategorized'
+  Other = 'Other'
 }
 
 registerEnumType(ServerCategory, { name: 'ServerCategory' })

@@ -1,6 +1,6 @@
 import { gql } from '@urql/core'
 
-export default gql`
+export const DELETE_SERVER = gql`
   mutation DeleteServer($serverId: ID!) {
     deleteServer(serverId: $serverId)
   }

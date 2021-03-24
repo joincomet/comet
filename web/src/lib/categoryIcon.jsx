@@ -18,8 +18,8 @@ import {
   IconCategorySports
 } from '@/lib/Icons'
 
-export const categoryIcon = (galaxy, className) => {
-  switch (galaxy) {
+export const categoryIcon = (category, className = 'w-5 h-5') => {
+  switch (category) {
     case 'Arts':
       return <IconCategoryArts className={className} />
     case 'Business':

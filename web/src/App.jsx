@@ -9,8 +9,9 @@ import { urqlClient } from '@/graphql/urqlClient'
 import ResponsiveToaster from '@/components/ResponsiveToaster'
 import { UserProvider } from '@/components/providers/UserProvider'
 import { ContextMenuWrapper } from 'react-context-menu-wrapper'
-import PostContextMenu from '@/components/PostContextMenu'
+import PostContextMenu from '@/components/context-menus/PostContextMenu'
 import CustomDragLayer from '@/components/CustomDragLayer'
+import ContextMenus from '@/components/context-menus/ContextMenus'
 
 export default function App() {
   return (
@@ -23,11 +24,8 @@ export default function App() {
             options={{ enableTouchEvents: false, enableMouseEvents: true }}
           >
             <CustomDragLayer />
-            <ContextMenuWrapper id="post">
-              <PostContextMenu />
-            </ContextMenuWrapper>
+            <ContextMenus />
             {window.electron && <TitleBar />}
-            <div id="popup" />
             <div className={`h-full max-h-full electron:pt-5.5`}>
               <Router />
             </div>

@@ -9,10 +9,7 @@ import { CheckChannelPermission, CheckGroupMember } from '@/util'
 
 @Resolver(() => Message)
 export class MessageQueries {
-  @CheckChannelPermission(
-    ChannelPermission.ViewChannel,
-    ServerPermission.ViewChannels
-  )
+  @CheckChannelPermission(ChannelPermission.ViewChannel)
   @CheckGroupMember()
   @Query(() => GetMessagesResponse, {
     description:

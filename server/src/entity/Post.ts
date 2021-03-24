@@ -101,8 +101,7 @@ export class Post extends BaseEntity {
       .join('-')
       .replace(/[^a-z0-9-]+/gi, '')
       .replace(/[-](.)\1+/g, '$1')*/
-    const server = this.server as Server
-    return `/server/${server.id}/posts/${this.id}`
+    return `/server/${this.server.id}/posts/${this.id}`
   }
 
   @Formula(

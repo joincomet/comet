@@ -1,5 +1,4 @@
 import React from 'react'
-import Header from '@/components/headers/base/Header'
 import {
   useBlockedUsers,
   useFriendRequests,
@@ -7,7 +6,7 @@ import {
 } from '@/components/providers/DataProvider'
 import { useStore } from '@/lib/stores/useStore'
 import FriendListItem from '@/pages/friends/FriendListItem'
-import FriendsHeader from '@/pages/friends/FriendsHeader'
+import FriendsHeader from '@/components/headers/FriendsHeader'
 
 const label =
   'px-2 pb-2 text-11 text-tertiary uppercase tracking-widest font-semibold'

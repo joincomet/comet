@@ -181,18 +181,14 @@ export class User extends BaseEntity {
     permission: ServerPermission
   ): Promise<boolean> {
     if (this.isAdmin) return true
+    await em.populate(server, ['owner'])
+    if (server.owner === this) return true
     const join = await em.findOne(ServerUserJoin, { server, user: this }, [
       'roles'
     ])
     if (!join) return false
-    await em.populate(server, ['owner'])
-    if (server.owner === this) return true
     const roles = join.roles.getItems()
-    return !!roles.find(
-      role =>
-        role.hasPermission(ServerPermission.ServerAdmin) ||
-        role.hasPermission(permission)
-    )
+    return !!roles.find(role => role.hasPermission(permission))
   }
 
   async checkServerPermission(
@@ -209,7 +205,7 @@ export class User extends BaseEntity {
     em: EntityManager,
     channel: Channel,
     channelPermission: ChannelPermission,
-    serverPermission: ServerPermission | null
+    serverPermission: ServerPermission = null
   ): Promise<boolean> {
     if (this.isAdmin) return true
     await em.populate(channel, ['server.owner'])
@@ -221,8 +217,6 @@ export class User extends BaseEntity {
     )
     if (!join) return false
     const roles = join.roles.getItems()
-    if (!!roles.find(role => role.hasPermission(ServerPermission.ServerAdmin)))
-      return true
     const channelRoles = await em.find(ChannelRole, {
       $and: [
         { channel },

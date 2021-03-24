@@ -11,10 +11,11 @@ import { scrapeMetadata, CheckServerPermission } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 import { ServerPermission } from '@/types'
 import dayjs from 'dayjs'
+import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 
 @Resolver(() => Post)
 export class PostQueries {
-  @CheckServerPermission(ServerPermission.ViewPosts)
+  @CheckJoinedServer()
   @Query(() => GetPostsResponse, {
     description:
       'Get posts (requires ServerPermission.ViewPosts if serverId is provided)'
@@ -39,8 +40,10 @@ export class PostQueries {
 
     let servers = []
     if (joinedOnly) {
-      const joins = await em.find(ServerUserJoin, { user })
-      servers = joins.map(join => join.server)
+      const joins = await em.find(ServerUserJoin, { user }, ['server'])
+      servers = joins
+        .map(join => join.server)
+        .filter(server => server.isPostsEnabled)
     }
 
     const posts = await em.find(
@@ -62,7 +65,7 @@ export class PostQueries {
           serverId ? { server: { id: serverId } } : {}
         ]
       },
-      ['author', 'server', 'votes.user'],
+      ['author', 'server', 'votes'],
       orderBy,
       pageSize,
       page * pageSize
@@ -82,16 +85,20 @@ export class PostQueries {
     } as GetPostsResponse
   }
 
-  @CheckServerPermission(ServerPermission.ViewPosts)
+  @CheckJoinedServer()
   @Query(() => Post, {
     description: 'Get a specific post (requires ServerPermission.ViewPosts)'
   })
   async getPost(
     @Arg('postId', () => ID, { description: 'ID of post to retrieve' })
     postId: string,
-    @Ctx() { em }: Context
+    @Ctx() { em, user }: Context
   ) {
-    const post = await em.findOneOrFail(Post, postId, ['server', 'author'])
+    const post = await em.findOneOrFail(Post, postId, [
+      'server',
+      'author',
+      'votes'
+    ])
 
     if (post.isDeleted) {
       post.author = null
@@ -102,6 +109,11 @@ export class PostQueries {
       post.author = null
       post.text = `<p>[removed: ${post.removedReason}]</p>`
     }
+
+    post.isVoted = post.votes
+      .getItems()
+      .map(vote => vote.user)
+      .includes(user)
 
     return post
   }

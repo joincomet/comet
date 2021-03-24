@@ -54,7 +54,7 @@ export class ServerMutations {
       channels: [channel],
       avatarUrl,
       category,
-      isSearchable: searchable
+      isPublic: searchable
     })
     await em.persistAndFlush([server])
     await user.joinServer(em, refetchUsers, server)
@@ -93,8 +93,7 @@ export class ServerMutations {
     refetchUsers: Publisher<string>
   ) {
     const server = await em.findOneOrFail(Server, serverId)
-    if (!server.isSearchable)
-      throw new Error('Invite required to join this server')
+    if (!server.isPublic) throw new Error('Invite required to join this server')
     await user.checkBannedFromServer(em, server)
     await user.joinServer(em, refetchUsers, server)
     return true
@@ -211,7 +210,7 @@ export class ServerMutations {
       avatarUrl,
       bannerUrl,
       category,
-      isSearchable: searchable
+      isPublic: searchable
     })
   }
 }

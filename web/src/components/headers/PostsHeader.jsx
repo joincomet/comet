@@ -6,6 +6,7 @@ import Tippy from '@tippyjs/react'
 import { Switch } from '@headlessui/react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
+import HeaderTab from '@/components/headers/base/HeaderTab'
 
 export default function PostsHeader({ refreshPosts }) {
   const {
@@ -110,13 +111,12 @@ function TimeTab({ time }) {
   const { t } = useTranslation()
   const { postsTime, setPostsTime } = useStore()
   return (
-    <button
-      onClick={() => setPostsTime(time)}
-      className={`text-base rounded px-1.5 py-0.5 cursor-pointer select-none focus:outline-none ${
-        time === postsTime ? 'text-secondary dark:bg-gray-700' : 'text-tertiary'
-      }`}
+    <HeaderTab
+      page={time}
+      setCurrentPage={setPostsTime}
+      currentPage={postsTime}
     >
       {t(`feed.time.${time.toLowerCase()}`)}
-    </button>
+    </HeaderTab>
   )
 }

@@ -25,9 +25,9 @@ export class Comment extends BaseEntity {
   @Property({ columnType: 'text' })
   text: string
 
-  @Field(() => ID, { nullable: true })
-  @Property({ nullable: true, type: BigIntType })
-  parentCommentId: string
+  @Field(() => Comment, { nullable: true })
+  @ManyToOne({ entity: () => Comment, nullable: true })
+  parentComment?: Comment
 
   @Field(() => Int)
   @Property({ default: 0, unsigned: true })

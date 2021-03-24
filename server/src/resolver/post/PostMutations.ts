@@ -161,7 +161,7 @@ export class PostMutations {
     return true
   }
 
-  @CheckPostServerPermission(ServerPermission.PinPosts)
+  @CheckPostServerPermission(ServerPermission.ManagePosts)
   @Mutation(() => Boolean, {
     description: 'Pin a post (requires ServerPermission.PinPosts)'
   })
@@ -177,7 +177,7 @@ export class PostMutations {
     return true
   }
 
-  @CheckPostServerPermission(ServerPermission.PinPosts)
+  @CheckPostServerPermission(ServerPermission.ManagePosts)
   @Mutation(() => Boolean, {
     description: 'Unpin a post (requires ServerPermission.PinPosts)'
   })

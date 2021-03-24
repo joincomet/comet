@@ -1,9 +1,9 @@
-import React, { forwardRef } from 'react'
+import React from 'react'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
 import toast from 'react-hot-toast'
 import Sidebar from '@/components/sidebars/base/Sidebar'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useUserFolders } from '@/components/providers/DataProvider'
 import SidebarLabelPlus from '@/components/sidebars/base/SidebarLabelPlus'
 import {
@@ -17,19 +17,20 @@ import { ServerPermission, useHasServerPermissions } from '@/lib/hasPermission'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import { useTranslation } from 'react-i18next'
 
-export default forwardRef(({ show }, ref) => {
+export default function FoldersSidebar({ show, server }) {
   const { serverId } = useParams()
   const userFolders = useUserFolders()
   const serverFolders = useServerFolders()
 
-  const [canManageFolders] = useHasServerPermissions([
-    ServerPermission.ManageFolders
-  ])
+  const [canManageFolders] = useHasServerPermissions(
+    [ServerPermission.ManageFolders],
+    server?.id
+  )
 
   const { t } = useTranslation()
 
   return (
-    <Sidebar right show={show} ref={ref}>
+    <Sidebar right show={show}>
       <div className="px-1.5">
         {serverId && !!serverFolders.length && (
           <>
@@ -61,7 +62,7 @@ export default forwardRef(({ show }, ref) => {
       </div>
     </Sidebar>
   )
-})
+}
 
 function Folder({ folder }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({

@@ -10,7 +10,7 @@ import { Channel } from '@/entity'
  */
 export const CheckChannelPermission = (
   channelPermission: ChannelPermission,
-  serverPermission: ServerPermission
+  serverPermission: ServerPermission = null
 ) =>
   createMethodDecorator<Context>(
     async ({ args: { channelId }, context: { em, user } }, next) => {

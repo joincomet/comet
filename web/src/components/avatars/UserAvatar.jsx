@@ -1,11 +1,15 @@
 import React, { forwardRef } from 'react'
 import { IconUser } from '@/lib/Icons'
 import Avatar from '@/components/avatars/base/Avatar'
+import { useContextMenuTrigger } from 'react-context-menu-wrapper'
+import { mergeRefs } from '@/lib/mergeRefs'
+import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
 
 export default forwardRef(
   (
     {
       user,
+      server,
       loading = 'eager',
       size = 12,
       showOnline = false,
@@ -14,10 +18,15 @@ export default forwardRef(
     },
     ref
   ) => {
+    const contextMenuRef = useContextMenuTrigger({
+      menuId: ContextMenuType.User,
+      data: { user, server }
+    })
+
     if (!user) return null
     return (
       <Avatar
-        ref={ref}
+        ref={mergeRefs(ref, contextMenuRef)}
         avatarUrl={user.avatarUrl}
         loading={loading}
         className={`${className} bg-gray-200 dark:bg-gray-700 cursor-pointer`}

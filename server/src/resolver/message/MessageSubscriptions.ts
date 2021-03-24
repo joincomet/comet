@@ -28,8 +28,7 @@ const filter = async ({
     return user.hasChannelPermission(
       em,
       message.channel,
-      ChannelPermission.ViewChannel,
-      ServerPermission.ViewChannels
+      ChannelPermission.ViewChannel
     )
   } else if (message.group) return message.group.users.contains(user)
   else if (message.toUser)

@@ -26,7 +26,7 @@ export default function DmPage() {
 
   const [{ data: messagesData }] = useQuery({
     query: GET_MESSAGES,
-    variables: { page: 0, userId }
+    variables: { userId }
   })
 
   const messages = messagesData?.getMessages?.messages || []

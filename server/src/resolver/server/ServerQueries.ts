@@ -74,10 +74,7 @@ export class ServerQueries {
     return joins.getItems().map(join => join.server)
   }
 
-  @CheckChannelPermission(
-    ChannelPermission.ViewChannel,
-    ServerPermission.ViewChannels
-  )
+  @CheckChannelPermission(ChannelPermission.ViewChannel)
   @Query(() => [ChannelUsersResponse])
   async getChannelUsers(
     @Ctx() { em }: Context,
@@ -93,9 +90,7 @@ export class ServerQueries {
 
     for (const role of channel.server.roles
       .getItems()
-      .filter(role =>
-        role.hasPermission(ServerPermission.DisplayRoleSeparately)
-      )) {
+      .filter(role => role.isDisplaySeparately)) {
       result.push({
         role: role.name,
         users: joins
@@ -110,11 +105,8 @@ export class ServerQueries {
         .filter(
           join =>
             join.user.isOnline &&
-            join.roles
-              .getItems()
-              .filter(role =>
-                role.hasPermission(ServerPermission.DisplayRoleSeparately)
-              ).length === 0
+            join.roles.getItems().filter(role => role.isDisplaySeparately)
+              .length === 0
         )
         .map(join => join.user)
     } as ChannelUsersResponse)
@@ -134,11 +126,10 @@ export class ServerQueries {
     @Arg('serverId', () => ID) serverId: string
   ) {
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
-    const perms = new Set<ServerPermission>()
-    if (user.isAdmin) perms.add(ServerPermission.ServerAdmin)
-    if (server.owner === user) {
-      perms.add(ServerPermission.ServerAdmin)
+    if (user.isAdmin || server.owner === user) {
+      return [...new Set<ServerPermission>(Object.values(ServerPermission))]
     }
+    const perms = new Set<ServerPermission>()
     const join = await em.findOneOrFail(ServerUserJoin, { user, server }, [
       'roles'
     ])

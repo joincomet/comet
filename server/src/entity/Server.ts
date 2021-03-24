@@ -55,7 +55,7 @@ export class Server extends BaseEntity {
   folders = new Collection<ServerFolder>(this)
 
   @Field(() => ServerCategory)
-  @Enum({ items: () => ServerCategory, default: ServerCategory.Uncategorized })
+  @Enum({ items: () => ServerCategory, default: ServerCategory.Other })
   category: ServerCategory
 
   @OneToMany(() => ServerUserBan, 'server')
@@ -84,7 +84,15 @@ export class Server extends BaseEntity {
 
   @Field()
   @Property({ default: false })
-  isSearchable: boolean
+  isPublic: boolean
+
+  @Field()
+  @Property({ default: true })
+  isPostsEnabled: boolean = true
+
+  @Field()
+  @Property({ default: true })
+  isChatEnabled: boolean = true
 
   @Field()
   @Property({ default: false })

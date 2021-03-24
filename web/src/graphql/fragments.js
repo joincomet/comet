@@ -20,13 +20,16 @@ export const SERVER_FRAGMENT = gql`
     avatarUrl
     bannerUrl
     userCount
+    isPublic
   }
 `
 
 export const COMMENT_FRAGMENT = gql`
   fragment COMMENT_FRAGMENT on Comment {
     id
-    parentCommentId
+    parentComment {
+      id
+    }
     text
     voteCount
     isVoted

@@ -26,6 +26,7 @@ import {
 import { useContextMenuTrigger } from 'react-context-menu-wrapper'
 import { mergeRefs } from '@/lib/mergeRefs'
 import { useTranslation } from 'react-i18next'
+import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
 
 export default function Post({
   post,
@@ -48,7 +49,10 @@ export default function Post({
 
   const [expanded, setExpanded] = useState(false)
 
-  const contextMenuRef = useContextMenuTrigger({ menuId: 'post', data: post })
+  const contextMenuRef = useContextMenuTrigger({
+    menuId: ContextMenuType.Post,
+    data: { post }
+  })
 
   const { t } = useTranslation()
 
@@ -148,7 +152,7 @@ export default function Post({
 
 function Embed({ post }) {
   return (
-    <div className="py-2 space-y-2 flex flex-col lg:max-w-screen-sm">
+    <div className="py-2 space-y-2 flex flex-col">
       {post.linkUrl && (
         <>
           {ReactPlayer.canPlay(post.linkUrl) ? (

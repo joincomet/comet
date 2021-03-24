@@ -1,6 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import {
   Channel,
+  Comment,
   Folder,
   FriendData,
   Message,
@@ -15,6 +16,7 @@ import { Lexico, tagGenerator } from '@/util'
 import * as argon2 from 'argon2'
 import faker from 'faker'
 import { FriendStatus } from '@/resolver/friend'
+import { ServerCategory } from '@/resolver/server'
 
 const NUM_USERS = 1000
 const MAX_MESSAGES_PER_USER = 5
@@ -72,10 +74,12 @@ export const seed = async (em: EntityManager) => {
 
   const serverComet = em.create(Server, {
     name: 'Comet',
-    description: 'Official comet server',
+    description: 'Official announcements and discussion relating to Comet.',
     isFeatured: true,
+    isPublic: true,
     featuredPosition: Lexico.FIRST_POSITION,
     owner: userDan,
+    category: ServerCategory.Meta,
     avatarUrl:
       'https://pbs.twimg.com/profile_images/1316960164008751104/lBuM-qHc_400x400.jpg'
   })
@@ -158,8 +162,9 @@ export const seed = async (em: EntityManager) => {
       title: faker.hacker.phrase(),
       author: user,
       server: serverComet,
-      voteCount: rand(1, 100)
-    }
+      voteCount: rand(1, 100),
+      commentCount: 2
+    } as Post
     if (n === 1) {
       // Text
       post = em.create(Post, {
@@ -196,7 +201,20 @@ export const seed = async (em: EntityManager) => {
         imageUrls
       })
     }
-    entities.push(post)
+
+    const comment1 = em.create(Comment, {
+      post,
+      author: user,
+      text: faker.lorem.sentences()
+    })
+    const comment2 = em.create(Comment, {
+      post,
+      author: user,
+      text: faker.lorem.sentences(),
+      parentComment: comment1
+    })
+
+    entities.push(post, comment1, comment2)
   }
 
   entities.push(...users)

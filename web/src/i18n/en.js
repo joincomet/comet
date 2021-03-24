@@ -25,7 +25,8 @@ export const en = {
     receivedFriendRequest: 'Accept Request',
     mutualServers: 'Mutual Servers',
     mutualFriends: 'Mutual Friends',
-    sendMessage: 'Send Message'
+    sendMessage: 'Send Message',
+    message: 'Message'
   },
   feed: {
     title: 'Your Feed',
@@ -52,7 +53,8 @@ export const en = {
   dms: {
     title: 'Direct Messages',
     create: 'Create DM',
-    markRead: 'Mark Read'
+    markRead: 'Mark Read',
+    shared: 'Shared with {{user.name}}!'
   },
   folders: {
     hide: 'Hide Folders',
@@ -111,6 +113,10 @@ export const en = {
     title: 'Settings'
   },
   server: {
+    changeNickname: 'Change Nickname',
+    kickUser: 'Kick {{user.name}}',
+    banUser: 'Ban {{user.name}}',
+    banPrompt: 'Reason (Optional)',
     create: {
       title: 'Create Server',
       name: 'Server Name',

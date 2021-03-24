@@ -5,8 +5,8 @@ const unflatten = comments => {
   )
   const commentTree = []
   comments.forEach(comment => {
-    if (comment.parentCommentId)
-      hashTable[comment.parentCommentId].childComments.push(
+    if (comment.parentComment)
+      hashTable[comment.parentComment.id].childComments.push(
         hashTable[comment.id]
       )
     else commentTree.push(hashTable[comment.id])

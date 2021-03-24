@@ -57,9 +57,10 @@ function Channel({ channel, server }) {
 }
 
 function CreateChannel({ server }) {
-  const [canManageChannels] = useHasServerPermissions([
-    ServerPermission.ManageChannels
-  ])
+  const [canManageChannels] = useHasServerPermissions(
+    [ServerPermission.ManageChannels],
+    server.id
+  )
 
   if (!canManageChannels) return <SidebarLabel>CHANNELS</SidebarLabel>
 

@@ -14,10 +14,7 @@ import { useUser } from '@/components/providers/UserProvider'
 import DmPage from '@/pages/dm/DmPage'
 import FriendsPage from '@/pages/friends/FriendsPage'
 import { ServerDataProvider } from '@/components/providers/ServerDataProvider'
-import {
-  DataProvider,
-  useIsDataFetching
-} from '@/components/providers/DataProvider'
+import { DataProvider } from '@/components/providers/DataProvider'
 import InboxPage from '@/pages/inbox/InboxPage'
 import LoadingScreen from '@/pages/LoadingScreen'
 import { AnimatePresence } from 'framer-motion'

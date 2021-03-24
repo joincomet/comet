@@ -1,6 +1,4 @@
 import React, { forwardRef } from 'react'
-import { IconSearch } from '@/lib/Icons'
-import toast from 'react-hot-toast'
 import SearchBar from '@/components/SearchBar'
 
 export default forwardRef(
@@ -19,8 +17,10 @@ export default forwardRef(
           <div className="text-tertiary mr-3">{icon}</div>
           {title}
         </div>
-        <div className="flex-grow flex items-center">{children}</div>
-        <div className="flex w-60 pr-6">
+        <div className="flex-grow flex items-center min-w-0 pr-4">
+          {children}
+        </div>
+        <div className="flex w-60 min-w-[15rem] pr-4">
           <SearchBar />
         </div>
       </header>

@@ -38,6 +38,14 @@ export class ServerRole extends BaseEntity {
   })
   permissions: ServerPermission[] = defaultServerPermissions
 
+  @Field()
+  @Property({ default: false })
+  isDisplaySeparately: boolean = false
+
+  @Field()
+  @Property({ default: false })
+  isMentionable: boolean = false
+
   hasPermission(permission: ServerPermission) {
     return this.permissions.includes(permission)
   }

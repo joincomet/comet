@@ -2,6 +2,7 @@ import React from 'react'
 import { IconFriends } from '@/lib/Icons'
 import Header from '@/components/headers/base/Header'
 import { useStore } from '@/lib/stores/useStore'
+import HeaderTab from '@/components/headers/base/HeaderTab'
 
 export default function FriendsHeader({ pendingCount = 0 }) {
   return (
@@ -24,17 +25,11 @@ export default function FriendsHeader({ pendingCount = 0 }) {
 function FriendTab({ page, green = false, pendingCount = 0 }) {
   const { friendsPage, setFriendsPage } = useStore()
   return (
-    <button
-      onClick={() => setFriendsPage(page)}
-      className={`text-base rounded px-1.5 py-0.5 cursor-pointer select-none flex flex-shrink-0 items-center focus:outline-none ${
-        page === friendsPage
-          ? !green
-            ? 'text-secondary dark:bg-gray-700'
-            : 'text-green-600 bg-green-900'
-          : !green
-          ? 'text-tertiary'
-          : 'text-secondary bg-green-600'
-      }`}
+    <HeaderTab
+      page={page}
+      green={green}
+      currentPage={friendsPage}
+      setCurrentPage={setFriendsPage}
     >
       {page}
       {!!pendingCount && (
@@ -42,6 +37,6 @@ function FriendTab({ page, green = false, pendingCount = 0 }) {
           {pendingCount}
         </div>
       )}
-    </button>
+    </HeaderTab>
   )
 }

@@ -31,7 +31,8 @@ module.exports = {
         base: '.9375rem',
         13: '.8125rem',
         11: '0.6875rem',
-        10: '0.625rem'
+        10: '0.625rem',
+        9: '0.5625rem'
       },
       transitionDelay: {
         400: '400ms',
@@ -54,7 +55,11 @@ module.exports = {
       },
       ringWidth: {
         3: '3px',
-        6: '6px'
+        5: '5px',
+        6: '6px',
+        7: '7px',
+        9: '9px',
+        10: '10px'
       },
       typography: theme => ({
         DEFAULT: {
