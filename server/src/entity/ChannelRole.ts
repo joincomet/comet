@@ -15,15 +15,13 @@ export class ChannelRole {
 
   @Enum({
     items: () => ChannelPermission,
-    array: true,
-    default: []
+    array: true
   })
   allowedPermissions: ChannelPermission[] = []
 
   @Enum({
     items: () => ChannelPermission,
-    array: true,
-    default: []
+    array: true
   })
   deniedPermissions: ChannelPermission[] = []
 }

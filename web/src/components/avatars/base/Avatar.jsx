@@ -2,7 +2,14 @@ import React, { forwardRef } from 'react'
 
 export default forwardRef(
   (
-    { avatarUrl, children, loading = 'eager', className = '', size = 12 },
+    {
+      avatarUrl,
+      children,
+      loading = 'eager',
+      className = '',
+      size = 12,
+      style = {}
+    },
     ref
   ) => {
     return (
@@ -12,7 +19,8 @@ export default forwardRef(
         style={{
           width: `${size / 4}rem`,
           height: `${size / 4}rem`,
-          backgroundImage: avatarUrl ? `url(${avatarUrl})` : undefined
+          backgroundImage: avatarUrl ? `url(${avatarUrl})` : undefined,
+          ...style
         }}
       >
         {children}

@@ -4,13 +4,14 @@ import Tippy from '@tippyjs/react'
 import { useUser } from '@/components/providers/UserProvider'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
 export function SidebarUserInfo() {
   const [currentUser] = useUser()
   const { t } = useTranslation()
 
   return (
-    <div className="fixed bottom-0 left-16 right-0 w-60 h-12 px-3 dark:bg-gray-850 flex items-center">
+    <div className="fixed bottom-0 left-18 right-0 w-60 h-12 px-3 dark:bg-gray-850 flex items-center">
       <UserAvatar
         user={currentUser}
         size={9}
@@ -28,9 +29,12 @@ export function SidebarUserInfo() {
       </div>
 
       <Tippy content={t('settings.title')}>
-        <div className="p-1.5 rounded dark:hover:bg-gray-750 transition cursor-pointer ml-auto">
+        <Link
+          to="/settings"
+          className="p-1.5 rounded dark:hover:bg-gray-750 transition cursor-pointer ml-auto"
+        >
           <IconSettings className="w-5 h-5 text-tertiary" />
-        </div>
+        </Link>
       </Tippy>
     </div>
   )

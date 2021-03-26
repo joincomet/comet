@@ -4,6 +4,8 @@ import { IconInbox } from '@/lib/Icons'
 import { useStore } from '@/lib/stores/useStore'
 import HeaderTab from '@/components/headers/base/HeaderTab'
 import InboxHeader from '@/components/headers/InboxHeader'
+import Container from '@/components/Container'
+import View from '@/components/View'
 
 const label =
   'px-2 pb-2 text-11 text-tertiary uppercase tracking-widest font-semibold'
@@ -14,8 +16,8 @@ export default function InboxPage() {
     <>
       <InboxHeader />
 
-      <div className="h-full pl-76 pt-12">
-        <div className="h-full dark:bg-gray-750 px-6 py-4">
+      <Container>
+        <View className="px-6 py-4">
           {inboxPage === 'Unread' && (
             <>
               <div className={label}>Unread - {0}</div>
@@ -26,8 +28,8 @@ export default function InboxPage() {
               <div className={label}>All - {0}</div>
             </>
           )}
-        </div>
-      </div>
+        </View>
+      </Container>
     </>
   )
 }

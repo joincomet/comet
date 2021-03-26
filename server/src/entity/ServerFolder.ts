@@ -12,6 +12,6 @@ export class ServerFolder {
 
   [PrimaryKeyType]: [string, string]
 
-  @Property({ default: Lexico.FIRST_POSITION, columnType: 'text' })
-  position: string
+  @Property({ columnType: 'text' })
+  position: string = Lexico.FIRST_POSITION
 }

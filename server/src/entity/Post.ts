@@ -45,7 +45,7 @@ export class Post extends BaseEntity {
   }
 
   @Field(() => [String])
-  @Property({ type: ArrayType, default: [] })
+  @Property({ type: ArrayType })
   imageUrls: string[] = []
 
   @Field({ nullable: true })
@@ -63,8 +63,8 @@ export class Post extends BaseEntity {
   author: User
 
   @Field()
-  @Property({ default: false })
-  isPinned: boolean
+  @Property()
+  isPinned: boolean = false
 
   @Field({ nullable: true })
   @Property({ nullable: true })
@@ -78,8 +78,8 @@ export class Post extends BaseEntity {
   server: Server
 
   @Field(() => Int)
-  @Property({ default: 0, unsigned: true })
-  voteCount: number
+  @Property({ unsigned: true })
+  voteCount: number = 0
 
   @Field()
   isVoted: boolean
@@ -88,8 +88,8 @@ export class Post extends BaseEntity {
   votes = new Collection<PostVote>(this)
 
   @Field(() => Int)
-  @Property({ default: 0, unsigned: true })
-  commentCount: number
+  @Property({ unsigned: true })
+  commentCount: number = 0
 
   @Field()
   get relativeUrl(): string {
@@ -115,12 +115,12 @@ export class Post extends BaseEntity {
   editedAt?: Date
 
   @Field()
-  @Property({ default: false })
-  isDeleted: boolean
+  @Property()
+  isDeleted: boolean = false
 
   @Field()
-  @Property({ default: false })
-  isRemoved: boolean
+  @Property()
+  isRemoved: boolean = false
 
   @Field({ nullable: true })
   @Property({ nullable: true })

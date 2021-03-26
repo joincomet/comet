@@ -29,12 +29,12 @@ export class Folder extends BaseEntity {
   @ManyToOne(() => User, { nullable: true })
   owner?: User
 
-  @Property({ default: false })
-  isDeleted: boolean
+  @Property()
+  isDeleted: boolean = false
 
   @Property({ nullable: true })
   updatedAt?: Date
 
-  @Property({ default: false })
-  isCollaborative: boolean
+  @Property()
+  isCollaborative: boolean = false
 }

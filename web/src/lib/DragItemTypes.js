@@ -1,3 +1,6 @@
 export const DragItemTypes = {
-  POST: 'post'
+  Post: 'Post',
+  Server: 'Server',
+  Folder: 'Folder',
+  Comment: 'Comment'
 }

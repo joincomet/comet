@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import FoldersSidebar from '@/components/sidebars/FoldersSidebar'
 import PostsHeader from '@/components/headers/PostsHeader'
 import { useStore } from '@/lib/stores/useStore'
 import { useQuery } from 'urql'
 import { GET_POSTS } from '@/graphql/queries'
 import Post from '@/components/post/Post'
-import MainContainer from '@/components/MainContainer'
-import MainView from '@/components/MainView'
+import Container from '@/components/Container'
+import View from '@/components/View'
 import { useParams } from 'react-router-dom'
 
 export default function PostsPage() {
@@ -33,13 +33,13 @@ export default function PostsPage() {
       <PostsHeader refreshPosts={refreshPosts} />
       <FoldersSidebar show={showFolders} />
 
-      <MainContainer rightSidebar={showFolders}>
-        <MainView>
+      <Container rightSidebar={showFolders}>
+        <View>
           {posts.map(post => (
             <Post key={post.id} post={post} showServerName />
           ))}
-        </MainView>
-      </MainContainer>
+        </View>
+      </Container>
     </>
   )
 }

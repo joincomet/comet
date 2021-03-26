@@ -25,6 +25,6 @@ export class Notification extends BaseEntity {
   post: Post
 
   @Field()
-  @Property({ default: false })
-  read: boolean
+  @Property()
+  isRead: boolean = false
 }

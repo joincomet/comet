@@ -31,12 +31,11 @@ export class FriendData {
   @Property({ nullable: true })
   updatedAt?: Date
 
-  @Property({ default: false })
+  @Property()
   showChat: boolean = false
 
   @Enum({
-    items: () => FriendStatus,
-    default: FriendStatus.None
+    items: () => FriendStatus
   })
-  status: FriendStatus
+  status: FriendStatus = FriendStatus.None
 }

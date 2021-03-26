@@ -30,8 +30,8 @@ export class Comment extends BaseEntity {
   parentComment?: Comment
 
   @Field(() => Int)
-  @Property({ default: 0, unsigned: true })
-  voteCount: number
+  @Property({ unsigned: true })
+  voteCount: number = 0
 
   @Field()
   isVoted: boolean
@@ -40,8 +40,8 @@ export class Comment extends BaseEntity {
   votes = new Collection<CommentVote>(this)
 
   @Field()
-  @Property({ default: false })
-  isPinned: boolean
+  @Property()
+  isPinned: boolean = false
 
   @Field({ nullable: true })
   @Property({ nullable: true })
@@ -52,12 +52,12 @@ export class Comment extends BaseEntity {
   editedAt?: Date
 
   @Field()
-  @Property({ default: false })
-  isDeleted: boolean
+  @Property()
+  isDeleted: boolean = false
 
   @Field()
-  @Property({ default: false })
-  isRemoved: boolean
+  @Property()
+  isRemoved: boolean = false
 
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })

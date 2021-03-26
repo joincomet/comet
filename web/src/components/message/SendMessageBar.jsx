@@ -3,6 +3,7 @@ import { useMutation } from 'urql'
 import { SEND_MESSAGE } from '@/graphql/mutations'
 import { IconUpload } from '@/lib/Icons'
 import Tippy from '@tippyjs/react'
+import { useTranslation } from 'react-i18next'
 
 export default function SendMessageBar({ channel, group, user }) {
   const [_, sendMessage] = useMutation(SEND_MESSAGE)
@@ -17,10 +18,12 @@ export default function SendMessageBar({ channel, group, user }) {
     if (inputRef.current) inputRef.current.focus()
   }, [inputRef])
 
+  const { t } = useTranslation()
+
   return (
     <div className="pt-5.5 pb-6 px-4 dark:bg-gray-750">
       <div className="relative">
-        <Tippy content="Upload a File">
+        <Tippy content={t('messages.upload')}>
           <div className="block absolute left-4.5 top-1/2 transform -translate-y-1/2">
             <input
               className="hidden"

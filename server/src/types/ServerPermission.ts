@@ -2,6 +2,7 @@ import { registerEnumType } from 'type-graphql'
 
 export enum ServerPermission {
   ManageChannels = 'ManageChannels',
+  Mention = 'Mention',
 
   ManageRoles = 'ManageRoles',
   ManageServer = 'ManageServer',
@@ -25,7 +26,11 @@ export enum ServerPermission {
   CreateComment = 'CreateComment',
   VoteComment = 'VoteComment',
   ManageComments = 'ManageComments',
-  ViewComments = 'ViewComments'
+  ViewComments = 'ViewComments',
+
+  DisplayRoleSeparately = 'DisplayRoleSeparately',
+  Mentionable = 'Mentionable',
+  Admin = 'Admin'
 }
 
 registerEnumType(ServerPermission, { name: 'ServerPermission' })

@@ -52,6 +52,8 @@ export class FriendMutations {
     await em.persistAndFlush([myData, theirData])
     await refetchFriends(user.id)
     await refetchFriends(toUser.id)
+
+    return true
   }
 
   @Authorized()
@@ -87,6 +89,8 @@ export class FriendMutations {
     await em.persistAndFlush([myData, theirData])
     await refetchFriends(user.id)
     await refetchFriends(toUser.id)
+
+    return true
   }
 
   @Authorized()
@@ -120,6 +124,8 @@ export class FriendMutations {
     await em.persistAndFlush([myData, theirData])
     await refetchFriends(user.id)
     await refetchFriends(toUser.id)
+
+    return true
   }
 
   @Authorized()

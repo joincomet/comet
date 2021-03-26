@@ -16,7 +16,6 @@ export default function Comment({
   level = 0,
   setParentComment
 }) {
-  useEffect(() => console.log(comment))
   const { setCreateComment } = useCommentStore()
   const [collapse, setCollapse] = useState(false)
   const [editing, setEditing] = useState(false)

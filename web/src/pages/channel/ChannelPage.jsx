@@ -9,8 +9,8 @@ import {
   useChannel,
   useServer
 } from '@/components/providers/ServerDataProvider'
-import MainContainer from '@/components/MainContainer'
-import MainView from '@/components/MainView'
+import Container from '@/components/Container'
+import View from '@/components/View'
 import { IconChannel } from '@/lib/Icons'
 import Message from '@/components/message/Message'
 
@@ -48,8 +48,8 @@ export default function ChannelPage() {
       />
       <ServerSidebar server={server} />
       <ChannelSidebar server={server} />
-      <MainContainer rightSidebar>
-        <MainView chatBar ref={ref}>
+      <Container rightSidebar>
+        <View chatBar ref={ref}>
           {messages.map((message, index) => (
             <Message
               key={message.id}
@@ -60,9 +60,9 @@ export default function ChannelPage() {
               }
             />
           ))}
-        </MainView>
+        </View>
         <SendMessageBar channel={channel} />
-      </MainContainer>
+      </Container>
     </>
   )
 }

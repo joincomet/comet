@@ -51,18 +51,18 @@ export class Message extends BaseEntity {
   linkMetadatas: LinkMetadata[] = []
 
   @Field()
-  @Property({ default: false })
-  isPinned: boolean
+  @Property()
+  isPinned: boolean = false
 
   @Field({ nullable: true })
   @Property({ nullable: true })
   editedAt?: Date
 
   @Field()
-  @Property({ default: false })
-  isDeleted: boolean
+  @Property()
+  isDeleted: boolean = false
 
   @Field()
-  @Property({ default: false })
-  isRemoved: boolean
+  @Property()
+  isRemoved: boolean = false
 }

@@ -1,18 +1,40 @@
 import React from 'react'
-import { Menu } from '@headlessui/react'
+import { Menu, Portal } from '@headlessui/react'
+import { usePopper } from '@/lib/usePopper'
+import ctl from '@netlify/classnames-template-literals'
 
-export default function ContextMenu({ children }) {
+const className = ctl(`
+  p-2
+  absolute
+  right-0
+  w-48
+  origin-top-right
+  dark:bg-gray-950
+  rounded
+  shadow-lg
+  outline-none
+`)
+
+export default function ContextMenu({ children, button }) {
+  let [trigger, container] = usePopper({
+    placement: 'bottom-end',
+    strategy: 'fixed'
+  })
   return (
     <Menu>
-      {({ open }) => (
+      {button ? (
         <>
-          <Menu.Items
-            static
-            className="p-2 absolute right-0 w-48 mt-4 origin-top-right dark:bg-gray-900 rounded shadow-lg outline-none transform translate-x-full"
-          >
-            {children}
-          </Menu.Items>
+          {button && button(trigger)}
+          <Portal>
+            <Menu.Items ref={container} static={!button} className={className}>
+              {children}
+            </Menu.Items>
+          </Portal>
         </>
+      ) : (
+        <Menu.Items ref={container} static={!button} className={`${className}`}>
+          {children}
+        </Menu.Items>
       )}
     </Menu>
   )

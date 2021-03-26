@@ -20,7 +20,7 @@ export class NotificationQueries {
     return em.find(
       Notification,
       unreadOnly
-        ? { $and: [{ toUser: user }, { read: false }] }
+        ? { $and: [{ toUser: user }, { isRead: false }] }
         : { toUser: user },
       ['user', 'comment.author', 'comment.post.author'],
       { createdAt: QueryOrder.DESC }

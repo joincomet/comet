@@ -24,6 +24,10 @@ import ServerSidebar from '@/components/sidebars/ServerSidebar'
 import PostPage from '@/pages/post/PostPage'
 import ChannelPage from '@/pages/channel/ChannelPage'
 import ServerFolderPage from '@/pages/folder/ServerFolderPage'
+import CustomDragLayer from '@/components/CustomDragLayer'
+import ContextMenus from '@/components/context-menus/ContextMenus'
+import { DndProvider } from 'react-dnd'
+import SettingsPage from '@/pages/settings/SettingsPage'
 
 export default function Router() {
   const [currentUser, userFetching] = useUser()
@@ -55,7 +59,8 @@ export default function Router() {
             '/group/:groupId',
             '/dm/:userId',
             '/explore',
-            '/server/:serverId'
+            '/server/:serverId',
+            '/settings'
           ]}
         >
           <AnimatePresence>{userFetching && <LoadingScreen />}</AnimatePresence>
@@ -98,7 +103,8 @@ export default function Router() {
               '/group/:groupId',
               '/dm/:userId',
               '/explore',
-              '/server/:serverId'
+              '/server/:serverId',
+              '/settings'
             ]}
           >
             {userFetching ? (
@@ -126,9 +132,18 @@ export default function Router() {
 
 function PrivateRoutes({ userFetching = true, dataFetching = true }) {
   const { serverId } = useParams()
+  const fetching = userFetching || dataFetching
   return (
     <>
-      {!userFetching && !dataFetching && <ServerList />}
+      {!fetching && (
+        <>
+          <CustomDragLayer />
+          <ContextMenus />
+        </>
+      )}
+      <Route path="/settings">
+        <SettingsPage />
+      </Route>
       <Route
         path={[
           '/posts',
@@ -136,55 +151,63 @@ function PrivateRoutes({ userFetching = true, dataFetching = true }) {
           '/inbox',
           '/folder/:folderId',
           '/group/:groupId',
-          '/dm/:userId'
+          '/dm/:userId',
+          '/explore',
+          '/server/:serverId'
         ]}
       >
-        {!userFetching && !dataFetching && <MainSidebar />}
-        <Switch>
-          <Route path="/posts" exact>
-            {!userFetching && !dataFetching && <PostsPage />}
-          </Route>
-          <Route path="/friends" exact>
-            {!userFetching && !dataFetching && <FriendsPage />}
-          </Route>
-          <Route path="/inbox" exact>
-            {!userFetching && !dataFetching && <InboxPage />}
-          </Route>
-          <Route path="/folder/:folderId">
-            {!userFetching && !dataFetching && <UserFolderPage />}
-          </Route>
-          <Route path="/group/:groupId">
-            {!userFetching && !dataFetching && <GroupPage />}
-          </Route>
-          <Route path="/dm/:userId">
-            {!userFetching && !dataFetching && <DmPage />}
-          </Route>
-        </Switch>
-      </Route>
-      <Route path="/explore">
-        {!userFetching && !dataFetching && <ExplorePage />}
-      </Route>
-      <Route path="/server/:serverId">
-        <ServerDataProvider>
-          {!userFetching && !dataFetching && <ServerSidebar />}
+        {!fetching && <ServerList />}
+        <Route
+          path={[
+            '/posts',
+            '/friends',
+            '/inbox',
+            '/folder/:folderId',
+            '/group/:groupId',
+            '/dm/:userId'
+          ]}
+        >
+          {!fetching && <MainSidebar />}
           <Switch>
-            <Route path="/server/:serverId" exact>
-              <Redirect to={`/server/${serverId}/posts`} />
+            <Route path="/posts" exact>
+              {!fetching && <PostsPage />}
             </Route>
-            <Route path="/server/:serverId/posts" exact>
-              {!userFetching && !dataFetching && <PostsPage />}
+            <Route path="/friends" exact>
+              {!fetching && <FriendsPage />}
             </Route>
-            <Route path="/server/:serverId/posts/:postId">
-              {!userFetching && !dataFetching && <PostPage />}
+            <Route path="/inbox" exact>
+              {!fetching && <InboxPage />}
             </Route>
-            <Route path="/server/:serverId/channel/:channelId">
-              {!userFetching && !dataFetching && <ChannelPage />}
+            <Route path="/folder/:folderId">
+              {!fetching && <UserFolderPage />}
             </Route>
-            <Route path="/server/:serverId/folder/:folderId">
-              {!userFetching && !dataFetching && <ServerFolderPage />}
-            </Route>
+            <Route path="/group/:groupId">{!fetching && <GroupPage />}</Route>
+            <Route path="/dm/:userId">{!fetching && <DmPage />}</Route>
           </Switch>
-        </ServerDataProvider>
+        </Route>
+        <Route path="/explore">{!fetching && <ExplorePage />}</Route>
+        <Route path="/server/:serverId">
+          <ServerDataProvider>
+            {!fetching && <ServerSidebar />}
+            <Switch>
+              <Route path="/server/:serverId" exact>
+                <Redirect to={`/server/${serverId}/posts`} />
+              </Route>
+              <Route path="/server/:serverId/posts" exact>
+                {!fetching && <PostsPage />}
+              </Route>
+              <Route path="/server/:serverId/posts/:postId">
+                {!fetching && <PostPage />}
+              </Route>
+              <Route path="/server/:serverId/channel/:channelId">
+                {!fetching && <ChannelPage />}
+              </Route>
+              <Route path="/server/:serverId/folder/:folderId">
+                {!fetching && <ServerFolderPage />}
+              </Route>
+            </Switch>
+          </ServerDataProvider>
+        </Route>
       </Route>
     </>
   )

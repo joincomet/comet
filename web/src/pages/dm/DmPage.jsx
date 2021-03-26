@@ -13,8 +13,8 @@ import {
   MESSAGE_UPDATED
 } from '@/graphql/subscriptions'
 import DmHeader from '@/components/headers/DmHeader'
-import MainContainer from '@/components/MainContainer'
-import MainView from '@/components/MainView'
+import Container from '@/components/Container'
+import View from '@/components/View'
 
 export default function DmPage() {
   const { userId } = useParams()
@@ -36,8 +36,8 @@ export default function DmPage() {
       <DmHeader user={user} />
       <MainSidebar />
 
-      <MainContainer>
-        <MainView chatBar>
+      <Container>
+        <View chatBar>
           {messages.map((message, index) => (
             <Message
               key={message.id}
@@ -48,9 +48,9 @@ export default function DmPage() {
               }
             />
           ))}
-        </MainView>
+        </View>
         <SendMessageBar user={user} />
-      </MainContainer>
+      </Container>
     </>
   )
 }

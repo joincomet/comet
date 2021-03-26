@@ -90,7 +90,9 @@ export class ServerQueries {
 
     for (const role of channel.server.roles
       .getItems()
-      .filter(role => role.isDisplaySeparately)) {
+      .filter(role =>
+        role.permissions.includes(ServerPermission.DisplayRoleSeparately)
+      )) {
       result.push({
         role: role.name,
         users: joins
@@ -105,8 +107,13 @@ export class ServerQueries {
         .filter(
           join =>
             join.user.isOnline &&
-            join.roles.getItems().filter(role => role.isDisplaySeparately)
-              .length === 0
+            join.roles
+              .getItems()
+              .filter(role =>
+                role.permissions.includes(
+                  ServerPermission.DisplayRoleSeparately
+                )
+              ).length === 0
         )
         .map(join => join.user)
     } as ChannelUsersResponse)

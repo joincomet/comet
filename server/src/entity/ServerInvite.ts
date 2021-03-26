@@ -22,18 +22,21 @@ export class ServerInvite {
 
   @Field(() => ServerInviteDuration)
   @Enum({
-    items: () => ServerInviteDuration,
-    default: ServerInviteDuration.Day
+    items: () => ServerInviteDuration
   })
-  duration: ServerInviteDuration
+  duration: ServerInviteDuration = ServerInviteDuration.Day
 
   @Field({ nullable: true })
   @Property({ nullable: true })
   maxUses?: number
 
   @Field()
-  @Property({ default: 0 })
-  uses: number
+  @Property()
+  uses: number = 0
+
+  @Field()
+  @Property()
+  isRevoked: boolean = false
 
   @Field()
   get expired(): boolean {

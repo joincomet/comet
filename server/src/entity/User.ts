@@ -59,11 +59,11 @@ export class User extends BaseEntity {
   @Property({ columnType: 'text' })
   passwordHash: string
 
-  @Property({ default: false })
-  isDeleted: boolean
+  @Property()
+  isDeleted: boolean = false
 
   @Field()
-  @Property({ default: false })
+  @Property()
   isAdmin: boolean = false
 
   @OneToMany(() => UserFolder, 'user', {
@@ -91,8 +91,8 @@ export class User extends BaseEntity {
   @Field()
   isCurrentUser: boolean
 
-  @Property({ default: false })
-  isBanned: boolean
+  @Property()
+  isBanned: boolean = false
 
   @Property({ nullable: true, columnType: 'text' })
   banReason?: string

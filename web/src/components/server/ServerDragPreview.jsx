@@ -1,12 +1,8 @@
 import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import ServerAvatar from '@/components/avatars/ServerAvatar'
 
-export default function PostDragPreview({ post, show }) {
-  const split = post ? post.title.split(' ') : []
-  const title = `${split.slice(0, 9).join(' ')}${
-    split.length >= 9 ? '...' : ''
-  }`
-
+export default function ServerDragPreview({ server, show }) {
   return (
     <div>
       <AnimatePresence>
@@ -25,9 +21,8 @@ export default function PostDragPreview({ post, show }) {
               opacity: 0
             }}
             transition={{ duration: 0.15, ease: 'easeInOut' }}
-            className="bg-blue-500 bg-opacity-75 truncate w-64 rounded-md shadow-lg text-white text-sm font-medium h-10 px-2 flex items-center"
           >
-            <div className="truncate">{title}</div>
+            <ServerAvatar server={server} size={12} />
           </motion.div>
         )}
       </AnimatePresence>

@@ -26,11 +26,11 @@ export class Channel extends BaseEntity {
   @ManyToOne({ entity: () => Server, inversedBy: 'channels' })
   server: Server
 
-  @Property({ default: Lexico.FIRST_POSITION, columnType: 'text' })
-  position: string
+  @Property({ columnType: 'text' })
+  position: string = Lexico.FIRST_POSITION
 
-  @Property({ default: false })
-  isPrivate: boolean
+  @Property()
+  isPrivate: boolean = false
 
   @Property({ nullable: true })
   lastMessageAt?: Date

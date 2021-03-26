@@ -1,12 +1,5 @@
-import {
-  Collection,
-  Entity,
-  Enum,
-  ManyToMany,
-  ManyToOne,
-  Property
-} from '@mikro-orm/core'
-import { BaseEntity, Server, User } from '@/entity'
+import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core'
+import { BaseEntity, Server } from '@/entity'
 import {
   defaultServerPermissions,
   ServerPermission
@@ -24,8 +17,8 @@ export class ServerRole extends BaseEntity {
   @ManyToOne({ entity: () => Server, inversedBy: 'roles' })
   server: Server
 
-  @Property({ default: Lexico.FIRST_POSITION, columnType: 'text' })
-  position: string
+  @Property({ columnType: 'text' })
+  position: string = Lexico.FIRST_POSITION
 
   @Field()
   @Property({ nullable: true })
@@ -33,18 +26,9 @@ export class ServerRole extends BaseEntity {
 
   @Enum({
     items: () => ServerPermission,
-    array: true,
-    default: defaultServerPermissions
+    array: true
   })
   permissions: ServerPermission[] = defaultServerPermissions
-
-  @Field()
-  @Property({ default: false })
-  isDisplaySeparately: boolean = false
-
-  @Field()
-  @Property({ default: false })
-  isMentionable: boolean = false
 
   hasPermission(permission: ServerPermission) {
     return this.permissions.includes(permission)

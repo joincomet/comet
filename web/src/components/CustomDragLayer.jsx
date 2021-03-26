@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDragLayer } from 'react-dnd'
 import PostDragPreview from '@/components/post/PostDragPreview'
+import { DragItemTypes } from '@/lib/DragItemTypes'
+import ServerDragPreview from '@/components/server/ServerDragPreview'
 const layerStyles = {
   position: 'fixed',
   pointerEvents: 'none',
@@ -73,7 +75,12 @@ function CustomDragLayer() {
           mouseUpPosition
         )}
       >
-        <PostDragPreview post={item} show={isDragging} />
+        {itemType === DragItemTypes.Post && (
+          <PostDragPreview post={item} show={isDragging} />
+        )}
+        {itemType === DragItemTypes.Server && (
+          <ServerDragPreview server={item} show={isDragging} />
+        )}
       </div>
     </div>
   )

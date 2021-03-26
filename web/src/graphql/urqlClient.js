@@ -40,11 +40,6 @@ const getAuth = async ({ authState }) => {
 }
 
 const addAuthToOperation = ({ authState, operation }) => {
-  /*if (operation.kind === 'subscription') {
-    console.log(operation)
-    return operation
-  }*/
-
   if (!authState || !authState.token) {
     return operation
   }

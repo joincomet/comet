@@ -5,7 +5,6 @@ import toast from 'react-hot-toast'
 import Sidebar from '@/components/sidebars/base/Sidebar'
 import { useParams } from 'react-router-dom'
 import { useUserFolders } from '@/components/providers/DataProvider'
-import SidebarLabelPlus from '@/components/sidebars/base/SidebarLabelPlus'
 import {
   IconFavoritesFolder,
   IconFolder,
@@ -13,9 +12,10 @@ import {
 } from '@/lib/Icons'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
 import { useServerFolders } from '@/components/providers/ServerDataProvider'
-import { ServerPermission, useHasServerPermissions } from '@/lib/hasPermission'
+import { useHasServerPermissions } from '@/lib/hasPermission'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import { useTranslation } from 'react-i18next'
+import { ServerPermission } from '@/lib/ServerPermission'
 
 export default function FoldersSidebar({ show, server }) {
   const { serverId } = useParams()
@@ -23,7 +23,7 @@ export default function FoldersSidebar({ show, server }) {
   const serverFolders = useServerFolders()
 
   const [canManageFolders] = useHasServerPermissions(
-    [ServerPermission.ManageFolders],
+    [ServerPermission.ManagePosts],
     server?.id
   )
 
@@ -35,9 +35,12 @@ export default function FoldersSidebar({ show, server }) {
         {serverId && !!serverFolders.length && (
           <>
             {canManageFolders ? (
-              <SidebarLabelPlus plusLabel={t('folders.server.create')}>
+              <SidebarLabel
+                plusLabel={t('folders.server.create')}
+                onClick={true}
+              >
                 Server Folders
-              </SidebarLabelPlus>
+              </SidebarLabel>
             ) : (
               <SidebarLabel>Server Folders</SidebarLabel>
             )}
@@ -50,9 +53,9 @@ export default function FoldersSidebar({ show, server }) {
           </>
         )}
 
-        <SidebarLabelPlus plusLabel={t('folders.user.create')}>
+        <SidebarLabel plusLabel={t('folders.user.create')} onClick={true}>
           Your Folders
-        </SidebarLabelPlus>
+        </SidebarLabel>
 
         <div className="space-y-0.5">
           {userFolders.map(folder => (
@@ -66,7 +69,7 @@ export default function FoldersSidebar({ show, server }) {
 
 function Folder({ folder }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
-    accept: DragItemTypes.POST,
+    accept: DragItemTypes.Post,
     drop: (item, monitor) => {
       toast.success(t('folders.added', { folder }))
     },

@@ -55,15 +55,15 @@ export class Server extends BaseEntity {
   folders = new Collection<ServerFolder>(this)
 
   @Field(() => ServerCategory)
-  @Enum({ items: () => ServerCategory, default: ServerCategory.Other })
-  category: ServerCategory
+  @Enum({ items: () => ServerCategory })
+  category: ServerCategory = ServerCategory.Other
 
   @OneToMany(() => ServerUserBan, 'server')
   userBans = new Collection<ServerUserBan>(this)
 
   @Field()
-  @Property({ default: 0, unsigned: true })
-  userCount: number
+  @Property({ unsigned: true })
+  userCount: number = 0
 
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
@@ -74,8 +74,8 @@ export class Server extends BaseEntity {
   bannerUrl?: string
 
   @Field()
-  @Property({ default: false })
-  isBanned: boolean
+  @Property()
+  isBanned: boolean = false
 
   @OneToMany(() => Channel, 'server', {
     orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
@@ -83,20 +83,20 @@ export class Server extends BaseEntity {
   channels = new Collection<Channel>(this)
 
   @Field()
-  @Property({ default: false })
-  isPublic: boolean
+  @Property()
+  isPublic: boolean = false
 
   @Field()
-  @Property({ default: true })
+  @Property()
   isPostsEnabled: boolean = true
 
   @Field()
-  @Property({ default: true })
+  @Property()
   isChatEnabled: boolean = true
 
   @Field()
-  @Property({ default: false })
-  isFeatured: boolean
+  @Property()
+  isFeatured: boolean = false
 
   @Property({ nullable: true, columnType: 'text' })
   featuredPosition?: string

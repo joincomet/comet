@@ -17,33 +17,3 @@ export const useHasServerPermissions = (permissions, serverId) => {
   }
   return res
 }
-
-export const ServerPermission = {
-  ManageChannels: 'ManageChannels',
-
-  ManageRoles: 'ManageRoles',
-  ManageServer: 'ManageServer',
-  CreateInvite: 'CreateInvite',
-
-  ChangeNickname: 'ChangeNickname',
-  ManageNicknames: 'ManageNicknames',
-
-  KickUser: 'KickUser',
-  BanUser: 'BanUser',
-
-  SendMessages: 'SendMessages',
-  EmbedLinks: 'EmbedLinks',
-  AttachFiles: 'AttachFiles',
-  ManageMessages: 'ManageMessages',
-
-  CreatePost: 'CreatePost',
-  VotePost: 'VotePost',
-  ManagePosts: 'ManagePosts',
-
-  CreateComment: 'CreateComment',
-  VoteComment: 'VoteComment',
-  ManageComments: 'ManageComments',
-  ViewComments: 'ViewComments',
-
-  DisplayRoleSeparately: 'DisplayRoleSeparately'
-}

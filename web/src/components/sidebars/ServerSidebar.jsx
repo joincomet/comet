@@ -11,13 +11,12 @@ import { useMutation } from 'urql'
 import { CREATE_CHANNEL } from '@/graphql/mutations/channel'
 import {
   useServerChannels,
-  useServer,
-  useServerPermissions
+  useServer
 } from '@/components/providers/ServerDataProvider'
-import SidebarLabelPlus from '@/components/sidebars/base/SidebarLabelPlus'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
-import { ServerPermission, useHasServerPermissions } from '@/lib/hasPermission'
+import { useHasServerPermissions } from '@/lib/hasPermission'
+import { ServerPermission } from '@/lib/ServerPermission'
 
 export default forwardRef((props, ref) => {
   const server = useServer()
@@ -31,7 +30,7 @@ export default forwardRef((props, ref) => {
       </div>
 
       <div className="px-1.5">
-        <SidebarLabelPlus plusLabel="Create Post">Feed</SidebarLabelPlus>
+        <SidebarLabel plusLabel="Create Post">Feed</SidebarLabel>
 
         <SidebarSortButtons />
 
@@ -90,12 +89,9 @@ function CreateChannel({ server }) {
 
   return (
     <>
-      <SidebarLabelPlus
-        onClick={() => setIsOpen(true)}
-        plusLabel="Create Channel"
-      >
+      <SidebarLabel onClick={() => setIsOpen(true)} plusLabel="Create Channel">
         Channels
-      </SidebarLabelPlus>
+      </SidebarLabel>
 
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
         <HDialog.Title className="title mb-4">Create Channel</HDialog.Title>

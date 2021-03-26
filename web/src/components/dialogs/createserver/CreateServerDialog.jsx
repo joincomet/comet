@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
-import Tippy from '@tippyjs/react'
-import {
-  serverListItem,
-  serverListItemDot
-} from '@/components/serverlist/ServerList.module.scss'
 import Dialog from '@/components/dialogs/base/Dialog'
 import { IconEditAvatar, IconUploadPhoto, IconCreateServer } from '@/lib/Icons'
 import Button from '@/components/ui/Button'
@@ -14,6 +9,7 @@ import { readURL } from '@/lib/readURL'
 import { useMutation } from 'urql'
 import { CREATE_SERVER } from '@/graphql/mutations'
 import { useTranslation } from 'react-i18next'
+import ServerListItem from '@/components/serverlist/ServerListItem'
 
 export default function CreateServerDialog() {
   const [{ fetching }, createServer] = useMutation(CREATE_SERVER)
@@ -52,17 +48,14 @@ export default function CreateServerDialog() {
 
   return (
     <>
-      <Tippy content={t('server.create.title')} placement="right">
-        <div className={serverListItem} onClick={() => setIsOpen(true)}>
-          <div
-            className={`${serverListItemDot} dark:bg-gray-800 bg-gray-200 hover:bg-purple-500 dark:hover:bg-purple-500`}
-          >
-            <IconCreateServer
-              className={`w-5 h-5 text-purple-500 group-hover:text-white transition`}
-            />
-          </div>
-        </div>
-      </Tippy>
+      <ServerListItem
+        name={t('server.create.title')}
+        onClick={() => setIsOpen(true)}
+      >
+        <IconCreateServer
+          className={`w-5 h-5 text-purple-500 group-hover:text-white transition`}
+        />
+      </ServerListItem>
 
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
         <HDialog.Title className="title mb-4">

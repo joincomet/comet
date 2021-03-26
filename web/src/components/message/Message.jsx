@@ -10,7 +10,7 @@ export default function Message({ showUser, message }) {
   return (
     <div
       key={message.id}
-      className={`content-visibility-auto flex py-1 px-4 dark:hover:bg-gray-775 group ${
+      className={`flex py-1 px-4 dark:hover:bg-gray-775 group ${
         showUser ? 'mt-4' : ''
       }`}
     >

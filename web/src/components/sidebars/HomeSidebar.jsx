@@ -7,13 +7,11 @@ import { useGroupsAndDms } from '@/components/providers/DataProvider'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import { useMutation } from 'urql'
 import { HIDE_DM, SEND_MESSAGE } from '@/graphql/mutations'
-import SidebarLabelPlus from '@/components/sidebars/base/SidebarLabelPlus'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
 import { useTranslation } from 'react-i18next'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
-import toast from 'react-hot-toast'
 import { useContextMenuTrigger } from 'react-context-menu-wrapper'
 import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
 import { mergeRefs } from '@/lib/mergeRefs'
@@ -46,9 +44,7 @@ export default forwardRef((props, ref) => {
 
         <SidebarSortButtons />
 
-        <SidebarLabelPlus plusLabel="Create DM">
-          {t('dms.title')}
-        </SidebarLabelPlus>
+        <SidebarLabel plusLabel="Create DM">{t('dms.title')}</SidebarLabel>
 
         <div className="space-y-0.5">
           {groupsAndDms.map(groupOrDm => {
@@ -82,7 +78,7 @@ function DirectMessage({ user }) {
   const [_sendMessageRes, sendMessage] = useMutation(SEND_MESSAGE)
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
-    accept: DragItemTypes.POST,
+    accept: DragItemTypes.Post,
     drop: (post, monitor) => {
       push(`/dm/${user.id}`)
       sendMessage({

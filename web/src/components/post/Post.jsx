@@ -40,7 +40,7 @@ export default function Post({
     post.text || post.linkUrl || (post.imageUrls && post.imageUrls.length > 0)
 
   const [{ opacity }, dragRef] = useDrag({
-    type: DragItemTypes.POST,
+    type: DragItemTypes.Post,
     item: post,
     collect: monitor => ({
       opacity: monitor.isDragging() ? 0.4 : 1

@@ -15,7 +15,7 @@ export class NotificationMutations {
     const notif = await em.findOne(Notification, notifId)
     if (!notif) throw new Error('Notification not found')
     if (notif.toUser !== user) throw new Error('This is not your notification')
-    notif.read = true
+    notif.isRead = true
     await em.persistAndFlush(notif)
     return true
   }
@@ -25,7 +25,7 @@ export class NotificationMutations {
   async markAllNotificationsRead(@Ctx() { user, em }: Context) {
     await em
       .createQueryBuilder(Notification)
-      .update({ read: true })
+      .update({ isRead: true })
       .where({ toUser: user })
       .execute()
     return true

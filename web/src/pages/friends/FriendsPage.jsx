@@ -7,9 +7,20 @@ import {
 import { useStore } from '@/lib/stores/useStore'
 import FriendListItem from '@/pages/friends/FriendListItem'
 import FriendsHeader from '@/components/headers/FriendsHeader'
+import Container from '@/components/Container'
+import View from '@/components/View'
+import ctl from '@netlify/classnames-template-literals'
 
-const label =
-  'px-2 pb-2 text-11 text-tertiary uppercase tracking-widest font-semibold'
+const label = ctl(`
+  px-2
+  pb-2
+  text-11
+  text-tertiary
+  uppercase
+  tracking-wide
+  font-semibold
+  select-none
+`)
 
 export default function FriendsPage() {
   const friends = useFriends()
@@ -23,8 +34,8 @@ export default function FriendsPage() {
         pendingCount={friendRequests.filter(r => !r.isOutgoing).length}
       />
 
-      <div className="h-full pl-76 pt-12">
-        <div className="h-full dark:bg-gray-750 px-6 py-4">
+      <Container>
+        <View className="px-6 py-4">
           {friendsPage === 'Online' && (
             <>
               <div className={label}>Online - {onlineFriends.length}</div>
@@ -53,8 +64,8 @@ export default function FriendsPage() {
               <div className={label}>Blocked Users - {blockedUsers.length}</div>
             </>
           )}
-        </div>
-      </div>
+        </View>
+      </Container>
     </>
   )
 }

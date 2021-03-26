@@ -7,6 +7,9 @@ import { Switch } from '@headlessui/react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import HeaderTab from '@/components/headers/base/HeaderTab'
+import { HiNewspaper } from 'react-icons/hi'
+
+const iconClassName = 'w-5 h-5'
 
 export default function PostsHeader({ refreshPosts }) {
   const {
@@ -16,9 +19,6 @@ export default function PostsHeader({ refreshPosts }) {
     liveMode,
     setLiveMode
   } = useStore()
-  const className =
-    'flex items-center font-semibold text-base text-secondary pr-4 border-r dark:border-gray-700 mr-4'
-  const iconClassName = 'w-5 h-5 mr-3 text-tertiary'
 
   const { t } = useTranslation()
 
@@ -87,7 +87,13 @@ export default function PostsHeader({ refreshPosts }) {
         </Tippy>
       )}
 
-      <div className="ml-auto pr-6 space-x-5 flex items-center">
+      <div className="ml-auto space-x-5 flex items-center">
+        <Tippy content={t('feed.showSubscriptions')}>
+          <div className="highlightable" onClick={refreshPosts}>
+            <HiNewspaper className="w-5 h-5" />
+          </div>
+        </Tippy>
+
         <Tippy content={t('feed.refresh')}>
           <div className="highlightable" onClick={refreshPosts}>
             <IconRefresh className="w-5 h-5" />
