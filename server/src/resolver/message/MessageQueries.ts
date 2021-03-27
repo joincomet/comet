@@ -11,7 +11,7 @@ import { CheckChannelPermission, CheckGroupMember } from '@/util'
 export class MessageQueries {
   @CheckChannelPermission(ChannelPermission.ViewChannel)
   @CheckGroupMember()
-  @Query(() => GetMessagesResponse, {
+  @Query(() => [Message], {
     description:
       'Get messages in a DM, group, or channel (requires ChannelPermission.ViewChannel or' +
       ' ServerPermission.ViewChannels)'
@@ -19,10 +19,21 @@ export class MessageQueries {
   async getMessages(
     @Ctx() { em, user }: Context,
     @Args()
-    { page, pageSize, pinned, channelId, groupId, userId }: GetMessagesArgs,
+    {
+      lastMessageId,
+      limit,
+      pinned,
+      channelId,
+      groupId,
+      userId
+    }: GetMessagesArgs,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
   ) {
+    const lastMessage = lastMessageId
+      ? await em.findOneOrFail(Message, lastMessageId)
+      : null
+
     const channel = channelId
       ? await em.findOneOrFail(Channel, channelId)
       : null
@@ -50,19 +61,19 @@ export class MessageQueries {
       ]
     }
 
-    return {
-      messages: (
-        await em.find(
-          Message,
-          where,
-          ['author'],
-          { createdAt: QueryOrder.DESC },
-          pageSize,
-          page * pageSize
-        )
-      ).reverse(),
-      page,
-      nextPage: page + 1
-    }
+    if (lastMessage)
+      where.id = {
+        $lt: lastMessage.id
+      }
+
+    return (
+      await em.find(
+        Message,
+        where,
+        ['author'],
+        { createdAt: QueryOrder.DESC },
+        limit
+      )
+    ).reverse()
   }
 }

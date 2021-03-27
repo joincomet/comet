@@ -63,6 +63,8 @@ export async function bootstrap() {
     }
   } as ApolloServerExpressConfig)
 
+  await server.start()
+
   server.applyMiddleware({
     app,
     cors: {

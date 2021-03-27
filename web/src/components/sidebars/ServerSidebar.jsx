@@ -78,13 +78,13 @@ function CreateChannel({ server }) {
 
   const [{ fetching }, createChannel] = useMutation(CREATE_CHANNEL)
 
-  const onSubmit = variables => {
-    createChannel({
-      variables: { ...variables, serverId: server.id }
-    }).then(({ data: { createChannel } }) => {
-      setIsOpen(false)
-      push(createChannel.id)
-    })
+  const onSubmit = ({ name }) => {
+    createChannel({ name, serverId: server.id, isPrivate }).then(
+      ({ data: { createChannel } }) => {
+        setIsOpen(false)
+        push(createChannel.id)
+      }
+    )
   }
 
   return (

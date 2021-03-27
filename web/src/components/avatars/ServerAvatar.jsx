@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, memo } from 'react'
 import Avatar from '@/components/avatars/base/Avatar'
 
 export default forwardRef(

@@ -16,7 +16,7 @@ import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 @Resolver(() => Post)
 export class PostQueries {
   @CheckJoinedServer()
-  @Query(() => GetPostsResponse, {
+  @Query(() => [Post], {
     description:
       'Get posts (requires ServerPermission.ViewPosts if serverId is provided)'
   })
@@ -78,11 +78,7 @@ export class PostQueries {
         .includes(user)
     })
 
-    return {
-      page: page,
-      nextPage: posts.length >= pageSize ? page + 1 : null,
-      posts
-    } as GetPostsResponse
+    return posts
   }
 
   @CheckJoinedServer()

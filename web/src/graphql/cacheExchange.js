@@ -1,6 +1,7 @@
 import { POST_FRAGMENT } from '@/graphql/fragments'
 import { GET_MESSAGES, GET_POSTS } from '@/graphql/queries'
 import { cacheExchange as ce } from '@urql/exchange-graphcache'
+import { simplePagination } from '@urql/exchange-graphcache/extras'
 
 const removePostFromGetPosts = (postId, cache) => {
   cache
@@ -82,13 +83,14 @@ export const cacheExchange = ce({
     LinkMetadata: () => null,
     GetMessagesResponse: () => null,
     MessageSentResponse: () => null,
-    MessageRemovedResponse: () => null
+    MessageRemovedResponse: () => null,
+    GetFriendRequestsResponse: () => null
   },
-  /*resolvers: {
+  resolvers: {
     Query: {
       getMessages: simplePagination({
-        offsetArgument: 'page',
-        limitArgument: 'pageSize',
+        offsetArgument: 'lastMessageId',
+        limitArgument: 'limit',
         mergeMode: 'before'
       }),
       getPosts: simplePagination({
@@ -97,7 +99,7 @@ export const cacheExchange = ce({
         mergeMode: 'after'
       })
     }
-  },*/
+  },
   optimistic: {
     pinPost,
     unpinPost,
@@ -123,7 +125,7 @@ export const cacheExchange = ce({
         if (channelId) variables = { channelId }
         cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
           if (data !== null) {
-            data.getMessages.messages.push(message)
+            data.getMessages.push(message)
             return data
           } else {
             return null
@@ -138,10 +140,8 @@ export const cacheExchange = ce({
         let variables = { page: 0, userId, groupId, channelId }
         cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
           if (data !== null) {
-            const i = data.getMessages.messages.findIndex(
-              m => m.id === message.id
-            )
-            data.getMessages.messages[i] = message
+            const i = data.getMessages.findIndex(m => m.id === message.id)
+            data.getMessages[i] = message
             return data
           } else {
             return null
@@ -156,9 +156,7 @@ export const cacheExchange = ce({
         let variables = { page: 0, userId, groupId, channelId }
         cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
           if (data !== null) {
-            data.getMessages.messages = data.getMessages.messages.filter(
-              m => m.id !== messageId
-            )
+            data.getMessages = data.getMessages.filter(m => m.id !== messageId)
             return data
           } else {
             return null

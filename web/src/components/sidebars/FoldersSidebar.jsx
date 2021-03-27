@@ -37,7 +37,7 @@ export default function FoldersSidebar({ show, server }) {
             {canManageFolders ? (
               <SidebarLabel
                 plusLabel={t('folders.server.create')}
-                onClick={true}
+                onClick={() => {}}
               >
                 Server Folders
               </SidebarLabel>
@@ -53,7 +53,7 @@ export default function FoldersSidebar({ show, server }) {
           </>
         )}
 
-        <SidebarLabel plusLabel={t('folders.user.create')} onClick={true}>
+        <SidebarLabel plusLabel={t('folders.user.create')} onClick={() => {}}>
           Your Folders
         </SidebarLabel>
 

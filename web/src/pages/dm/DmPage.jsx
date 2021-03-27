@@ -1,20 +1,14 @@
 import MainSidebar from '@/components/sidebars/HomeSidebar'
 import React from 'react'
-import { useQuery, useSubscription } from 'urql'
+import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import SendMessageBar from '@/components/message/SendMessageBar'
 import Message from '@/components/message/Message'
-import { Virtuoso } from 'react-virtuoso'
 import { GET_MESSAGES, GET_USER } from '@/graphql/queries'
-import LoadingScreen from '@/pages/LoadingScreen'
-import {
-  MESSAGE_REMOVED,
-  MESSAGE_SENT,
-  MESSAGE_UPDATED
-} from '@/graphql/subscriptions'
 import DmHeader from '@/components/headers/DmHeader'
 import Container from '@/components/Container'
 import View from '@/components/View'
+import Scroller from '@/components/Scroller'
 
 export default function DmPage() {
   const { userId } = useParams()
@@ -38,16 +32,18 @@ export default function DmPage() {
 
       <Container>
         <View chatBar>
-          {messages.map((message, index) => (
-            <Message
-              key={message.id}
-              message={message}
-              showUser={
-                index === 0 ||
-                messages[index - 1].author.id !== message.author.id
-              }
-            />
-          ))}
+          <Scroller>
+            {messages.map((message, index) => (
+              <Message
+                key={message.id}
+                message={message}
+                showUser={
+                  index === 0 ||
+                  messages[index - 1].author.id !== message.author.id
+                }
+              />
+            ))}
+          </Scroller>
         </View>
         <SendMessageBar user={user} />
       </Container>

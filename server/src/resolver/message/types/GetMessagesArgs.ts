@@ -15,12 +15,11 @@ export class GetMessagesArgs {
   @Field({ defaultValue: false })
   pinned: boolean
 
-  @Field(() => Int, { defaultValue: 0 })
-  @Min(0)
-  page = 0
+  @Field(() => ID, { nullable: true })
+  lastMessageId: string
 
   @Field(() => Int, { defaultValue: 100 })
   @Min(1)
   @Max(100)
-  pageSize = 100
+  limit = 100
 }

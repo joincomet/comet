@@ -26,16 +26,12 @@ export default gql`
       username: $username
       q: $q
     ) {
-      page
-      nextPage
-      posts {
-        ...POST_FRAGMENT
-        author {
-          ...USER_FRAGMENT
-        }
-        server {
-          ...SERVER_FRAGMENT
-        }
+      ...POST_FRAGMENT
+      author {
+        ...USER_FRAGMENT
+      }
+      server {
+        ...SERVER_FRAGMENT
       }
     }
   }

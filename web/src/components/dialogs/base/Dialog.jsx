@@ -16,7 +16,7 @@ export default function Dialog({ isOpen, setIsOpen, children }) {
               leaveTo="opacity-0"
             >
               <HDialog.Overlay className="fixed inset-0 transition-opacity">
-                <div className="absolute inset-0 bg-gray-500 opacity-75" />
+                <div className="absolute inset-0 bg-gray-500 dark:bg-black opacity-75" />
               </HDialog.Overlay>
             </Transition.Child>
 

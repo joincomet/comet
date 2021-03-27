@@ -10,6 +10,9 @@ export const en = {
   friends: {
     title: 'Friends',
     sendMessage: 'Message',
+    revokeRequest: 'Cancel',
+    acceptRequest: 'Accept',
+    rejectRequest: 'Ignore',
     tab: {
       online: 'Online',
       all: 'All',
@@ -44,8 +47,11 @@ export const en = {
   feed: {
     title: 'Your Feed',
     refresh: 'Refresh Posts',
-    showSubscriptions: 'Show Subscriptions',
-    hideSubscriptions: 'Hide Subscriptions',
+    subscriptions: {
+      show: 'Show Subscriptions',
+      hide: 'Hide Subscriptions',
+      comingSoon: 'Server subscriptions are coming soon!'
+    },
     sort: {
       hot: 'Hot',
       top: 'Top',

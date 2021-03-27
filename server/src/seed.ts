@@ -132,7 +132,7 @@ export const seed = async (em: EntityManager) => {
       email: faker.internet.email(),
       avatarUrl:
         rand(1, 2) === 1
-          ? faker.image.imageUrl(256, 256, undefined, true, true)
+          ? faker.image.imageUrl(80, 80, undefined, false, true)
           : null
     })
     if (
@@ -183,8 +183,8 @@ export const seed = async (em: EntityManager) => {
           data: faker.date.recent(),
           author: faker.name.findName(),
           publisher: faker.company.companyName(),
-          image: faker.image.imageUrl(1920, 1080, undefined, true, true),
-          logo: faker.image.imageUrl(16, 16, undefined, true, true),
+          image: faker.image.imageUrl(96, 64, undefined, false, true),
+          logo: faker.image.imageUrl(16, 16, undefined, false, true),
           url,
           twitterCard: 'summary_large_image'
         }
@@ -194,7 +194,7 @@ export const seed = async (em: EntityManager) => {
       const numImages = rand(1, 5)
       const imageUrls = []
       for (let j = 0; j < numImages; j++) {
-        imageUrls.push(faker.image.imageUrl(1920, 1080, undefined, true, true))
+        imageUrls.push(faker.image.imageUrl(96, 64, undefined, false, true))
       }
       post = em.create(Post, {
         ...postData,
