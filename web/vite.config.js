@@ -30,6 +30,6 @@ export default defineConfig(({ command }) => ({
     }
   },
   esbuild: {
-    jsxInject: ``
+    jsxInject: `import React from 'react'`
   }
 }))
