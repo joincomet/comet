@@ -1,5 +1,5 @@
 import React from 'react'
-import { useContextMenuEvent } from 'react-context-menu-wrapper'
+// import { useContextMenuEvent } from 'react-context-menu-wrapper'
 import { useMutation } from 'urql'
 import { useCopyToClipboard } from 'react-use'
 import { REMOVE_POST, PIN_POST, UNPIN_POST } from '@/graphql/mutations'
@@ -12,15 +12,14 @@ import ContextMenu from '@/components/context-menus/ContextMenu'
 import { ServerPermission } from '@/lib/ServerPermission'
 
 export default function PostContextMenu() {
-  const menuEvent = useContextMenuEvent()
+  // const menuEvent = useContextMenuEvent()
+  const menuEvent = null // TODO
   if (!menuEvent || !menuEvent.data) return null
   const { post } = menuEvent.data
 
-  const [canPinPost, canManagePosts, canAddToFolder] = useHasServerPermissions(
+  const [canManagePosts] = useHasServerPermissions(
     [
-      ServerPermission.PinPosts,
       ServerPermission.ManagePosts,
-      ServerPermission.AddPostsToFolder
     ],
     post.server.id
   )

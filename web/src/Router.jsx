@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Redirect, Route, Switch, useParams } from 'react-router-dom'
 import LandingPage from '@/pages/LandingPage'
 import PostsPage from '@/pages/posts/PostsPage'
@@ -25,9 +25,8 @@ import PostPage from '@/pages/post/PostPage'
 import ChannelPage from '@/pages/channel/ChannelPage'
 import ServerFolderPage from '@/pages/folder/ServerFolderPage'
 import CustomDragLayer from '@/components/CustomDragLayer'
-import ContextMenus from '@/components/context-menus/ContextMenus'
-import { DndProvider } from 'react-dnd'
 import SettingsPage from '@/pages/settings/SettingsPage'
+import ContextMenus from "@/components/context-menus/ContextMenus";
 
 export default function Router() {
   const [currentUser, userFetching] = useUser()

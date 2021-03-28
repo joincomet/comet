@@ -9,20 +9,17 @@
 		"url": "https://github.com/joincomet/comet"
 	},
 	"engines": {
-		"node": "15.x.x",
-		"yarn": "2.x.x"
+		"node": "15.x.x"
 	},
 	"workspaces": [
 		"server",
 		"web"
 	],
 	"scripts": {
+		"build": "yarn workspace web run build:vite",
+		"start": "yarn workspace server start",
 		"dev:web": "yarn workspace web run dev:vite",
 		"dev:electron": "yarn workspace web run dev:electron",
-		"dev:server": "yarn workspace server run dev",
-		"prod:server": "yarn workspace server run start"
-	},
-	"devDependencies": {
-		"rimraf": "^3.0.2"
+		"dev:server": "yarn workspace server run dev"
 	}
 }

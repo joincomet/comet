@@ -2,10 +2,6 @@
   "name": "server",
   "version": "1.0.0",
   "private": true,
-  "engines": {
-    "node": "15.x.x",
-    "yarn": "2.x.x"
-  },
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
     "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts"
@@ -47,6 +43,7 @@
     "nanoid": "^3.1.22",
     "reflect-metadata": "^0.1.13",
     "sharp": "^0.27.2",
+    "src": "link:./src",
     "type-graphql": "^1.1.1",
     "validator": "^13.5.2",
     "xss": "^1.0.8"

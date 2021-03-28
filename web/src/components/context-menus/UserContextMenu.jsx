@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useContextMenuEvent } from 'react-context-menu-wrapper'
+// import { useContextMenuEvent } from 'react-context-menu-wrapper'
 import { useMutation } from 'urql'
 import {
   BAN_USER_FROM_SERVER,
@@ -22,7 +22,8 @@ import {
 } from '@/components/providers/DataProvider'
 
 export default function UserContextMenu({ user, server, show = true, button }) {
-  const menuEvent = useContextMenuEvent()
+  // TODO
+  const menuEvent = null // useContextMenuEvent()
   if (menuEvent && menuEvent.data) {
     user = menuEvent.data.user
     server = menuEvent.data.server

@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react'
 import { IconUser } from '@/lib/Icons'
 import Avatar from '@/components/avatars/base/Avatar'
-import { useContextMenuTrigger } from 'react-context-menu-wrapper'
+// import { useContextMenuTrigger } from 'react-context-menu-wrapper'
 import { mergeRefs } from '@/lib/mergeRefs'
 import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
 
@@ -18,10 +18,11 @@ export default forwardRef(
     },
     ref
   ) => {
-    const contextMenuRef = useContextMenuTrigger({
+    // TODO
+    const contextMenuRef = null /*useContextMenuTrigger({
       menuId: ContextMenuType.User,
       data: { user, server }
-    })
+    })*/
 
     if (!user) return null
     return (

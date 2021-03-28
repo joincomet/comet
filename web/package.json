@@ -2,10 +2,6 @@
   "name": "web",
   "version": "1.0.0",
   "private": true,
-  "engines": {
-    "node": "15.x.x",
-    "yarn": "2.x.x"
-  },
   "description": "All-in-one chat and forums for communities.",
   "author": "Comet",
   "main": "src/electron/index.js",
@@ -50,7 +46,6 @@
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-http-backend": "^1.2.1",
     "react": "^17.0.2",
-    "react-context-menu-wrapper": "^3.0.0",
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
     "react-dnd-touch-backend": "^14.0.0",
@@ -70,7 +65,9 @@
     "react-use": "^17.2.1",
     "react-virtual": "^2.6.1",
     "remirror": "pr706",
+    "shortid": "^2.2.16",
     "subscriptions-transport-ws": "^0.9.18",
+    "tippy.js": "^6.3.1",
     "twemoji": "^13.0.2",
     "urql": "^2.0.1",
     "use-dark-mode": "^2.3.1",

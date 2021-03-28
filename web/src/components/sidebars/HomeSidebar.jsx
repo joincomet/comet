@@ -12,7 +12,7 @@ import SidebarItem from '@/components/sidebars/base/SidebarItem'
 import { useTranslation } from 'react-i18next'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
-import { useContextMenuTrigger } from 'react-context-menu-wrapper'
+// import { useContextMenuTrigger } from 'react-context-menu-wrapper'
 import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
 import { mergeRefs } from '@/lib/mergeRefs'
 
@@ -70,10 +70,11 @@ function DirectMessage({ user }) {
   const { push } = useHistory()
   const { pathname } = useLocation()
 
-  const contextMenuRef = useContextMenuTrigger({
+  // TODO
+  const contextMenuRef = null /*useContextMenuTrigger({
     menuId: ContextMenuType.User,
     data: { user, showCloseDm: true }
-  })
+  })*/
 
   const [_sendMessageRes, sendMessage] = useMutation(SEND_MESSAGE)
 

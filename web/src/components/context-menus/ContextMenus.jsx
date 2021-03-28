@@ -1,9 +1,13 @@
 import React from 'react'
-import { ContextMenuWrapper } from 'react-context-menu-wrapper'
+// import { ContextMenuWrapper } from 'react-context-menu-wrapper'
 import PostContextMenu from '@/components/context-menus/PostContextMenu'
 import UserContextMenu from '@/components/context-menus/UserContextMenu'
 import ServerContextMenu from '@/components/context-menus/ServerContextMenu'
 import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
+
+function ContextMenuWrapper({ children }) {
+  return null
+}
 
 export default function ContextMenus() {
   return (

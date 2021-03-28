@@ -1,6 +1,2 @@
-node_modules
 dist
 dist-electron
-
-yarn-debug.log*
-yarn-error.log*
