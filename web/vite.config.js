@@ -32,8 +32,5 @@ export default defineConfig(({ command }) => ({
   },
   esbuild: {
     jsxInject: ``
-  },
-  build: {
-    outDir: '../dist'
   }
 }))

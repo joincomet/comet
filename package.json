@@ -16,7 +16,7 @@
 		"web"
 	],
 	"scripts": {
-		"build": "yarn workspace web run build:vite",
+		"build": "if test \"$PROCFILE\" = \"web/Procfile\" ; then yarn workspace web run build:vite ; fi ",
 		"start": "yarn workspace server start",
 		"dev:web": "yarn workspace web run dev:vite",
 		"dev:electron": "yarn workspace web run dev:electron",
