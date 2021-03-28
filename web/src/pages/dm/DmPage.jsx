@@ -1,5 +1,5 @@
 import MainSidebar from '@/components/sidebars/HomeSidebar'
-import React from 'react'
+
 import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import SendMessageBar from '@/components/message/SendMessageBar'

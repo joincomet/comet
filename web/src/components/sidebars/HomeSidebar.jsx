@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import Sidebar from '@/components/sidebars/base/Sidebar'
 import SidebarSortButtons from '@/components/sidebars/base/SidebarSortButtons'
 import { IconInbox, GraphicLogo, IconFriends, IconX } from '@/lib/Icons'

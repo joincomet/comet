@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDragLayer } from 'react-dnd'
 import PostDragPreview from '@/components/post/PostDragPreview'
 import { DragItemTypes } from '@/lib/DragItemTypes'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 export default function PostDragPreview({ post, show }) {

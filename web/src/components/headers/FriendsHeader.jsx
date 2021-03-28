@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconFriends } from '@/lib/Icons'
 import Header from '@/components/headers/base/Header'
 import { useStore } from '@/lib/stores/useStore'

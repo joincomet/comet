@@ -1,4 +1,3 @@
-import React from 'react'
 import FriendListItemBase from '@/pages/friends/FriendListItemBase'
 import Tippy from '@tippyjs/react'
 import { IconChat, IconDotsVertical } from '@/lib/Icons'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Menu, Portal } from '@headlessui/react'
 import { usePopper } from '@/lib/usePopper'
 import ctl from '@netlify/classnames-template-literals'

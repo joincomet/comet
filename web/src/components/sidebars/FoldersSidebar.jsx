@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
 import toast from 'react-hot-toast'

@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react'
+import { createContext, useContext } from 'react'
 import { useQuery, useSubscription } from 'urql'
 import {
   GET_SERVER_CHANNELS,

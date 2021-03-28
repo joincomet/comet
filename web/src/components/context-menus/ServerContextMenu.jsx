@@ -1,4 +1,3 @@
-import React from 'react'
 import { useContextMenuEvent } from 'react-context-menu-wrapper'
 import { useTranslation } from 'react-i18next'
 import ContextMenuItem from '@/components/context-menus/ContextMenuItem'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconHome, IconExplore } from '@/lib/Icons'
 import ServerAvatar from '@/components/avatars/ServerAvatar'
 import CreateServerDialog from '@/components/dialogs/createserver/CreateServerDialog'

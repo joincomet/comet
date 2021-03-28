@@ -1,4 +1,3 @@
-import React from 'react'
 import c from './Meteors.module.scss'
 
 export default function Meteors() {

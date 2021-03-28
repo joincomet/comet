@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import Sidebar from '@/components/sidebars/base/Sidebar'
 import SidebarUser from '@/components/sidebars/base/SidebarUser'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'

@@ -1,5 +1,5 @@
 import { IconChevrownLeft, IconChevrownRight } from '@/lib/Icons'
-import React from 'react'
+
 import { useParams, useLocation, Link } from 'react-router-dom'
 
 export default function PageNavigator({ nextEnabled = true }) {

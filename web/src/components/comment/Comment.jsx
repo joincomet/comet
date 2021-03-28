@@ -1,5 +1,5 @@
 import { IconReply, IconDotsHorizontal, IconVote } from '@/lib/Icons'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import Twemoji from 'react-twemoji'
 import Tippy from '@tippyjs/react'

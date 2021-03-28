@@ -1,4 +1,3 @@
-import React from 'react'
 import Header from '@/components/headers/base/Header'
 import { IconAt, IconPin } from '@/lib/Icons'
 import Tippy from '@tippyjs/react'

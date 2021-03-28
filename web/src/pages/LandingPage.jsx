@@ -10,7 +10,7 @@ import {
   GraphicMeteors
 } from '@/lib/Icons'
 import Tippy from '@tippyjs/react'
-import React from 'react'
+
 import { Link } from 'react-router-dom'
 import { getOS } from '@/lib/getOS'
 import { useUser } from '@/components/providers/UserProvider'

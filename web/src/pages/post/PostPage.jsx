@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useQuery } from 'urql'
 import { GET_COMMENTS, GET_POST } from '@/graphql/queries'
 import Post from '@/components/post/Post'

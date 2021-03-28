@@ -1,4 +1,3 @@
-import React from 'react'
 import { useContextMenuEvent } from 'react-context-menu-wrapper'
 import { useMutation } from 'urql'
 import { useCopyToClipboard } from 'react-use'
@@ -17,9 +16,7 @@ export default function PostContextMenu() {
   const { post } = menuEvent.data
 
   const [canManagePosts] = useHasServerPermissions(
-    [
-      ServerPermission.ManagePosts,
-    ],
+    [ServerPermission.ManagePosts],
     post.server.id
   )
 

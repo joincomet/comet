@@ -1,4 +1,3 @@
-import React from 'react'
 import FriendListItemBase from '@/pages/friends/FriendListItemBase'
 import { IconX, IconCheck } from '@/lib/Icons'
 import FriendListItemButton from '@/pages/friends/FriendListItemButton'

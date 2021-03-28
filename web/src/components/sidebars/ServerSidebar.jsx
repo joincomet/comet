@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import Sidebar from '@/components/sidebars/base/Sidebar'
 import SidebarSortButtons from '@/components/sidebars/base/SidebarSortButtons'
 import { useHistory } from 'react-router-dom'

@@ -1,6 +1,6 @@
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { IconHot, IconNew, IconTop } from '@/lib/Icons'
-import React from 'react'
+
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
 import { useStore } from '@/lib/stores/useStore'
 import { useTranslation } from 'react-i18next'

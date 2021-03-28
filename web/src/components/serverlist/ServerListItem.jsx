@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import Tippy from '@tippyjs/react'
 import { NavLink } from 'react-router-dom'
 import ctl from '@netlify/classnames-template-literals'

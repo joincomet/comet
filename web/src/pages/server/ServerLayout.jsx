@@ -1,4 +1,3 @@
-import React from 'react'
 import ServerSidebar from '@/components/sidebars/ServerSidebar'
 import { Redirect, Route, Switch, useParams } from 'react-router-dom'
 import PostPage from '@/pages/post/PostPage'

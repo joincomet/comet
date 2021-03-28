@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import FoldersSidebar from '@/components/sidebars/FoldersSidebar'
 import PostsHeader from '@/components/headers/PostsHeader'
 import { useStore } from '@/lib/stores/useStore'

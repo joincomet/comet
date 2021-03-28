@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function IconSpinner({ className = 'h-5 w-5 text-white' }) {
   return (
     <svg

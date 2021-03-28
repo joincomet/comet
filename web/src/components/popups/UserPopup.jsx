@@ -1,4 +1,3 @@
-import React from 'react'
 import Popup from '@/components/popups/base/Popup'
 import UserAvatar from '@/components/avatars/UserAvatar'
 

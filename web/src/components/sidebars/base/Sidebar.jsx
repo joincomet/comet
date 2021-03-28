@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { SidebarUserInfo } from '@/components/sidebars/base/SidebarUserInfo'
 
 export default forwardRef(({ children, right = false, show = true }, ref) => {

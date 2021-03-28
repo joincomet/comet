@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconSpinner, GraphicLogo } from '@/lib/Icons'
 import { motion } from 'framer-motion'
 

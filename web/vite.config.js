@@ -29,5 +29,11 @@ export default defineConfig(({ command }) => ({
         return `_${name}_${hash}_${lineNumber}`
       }
     }
+  },
+  esbuild: {
+    jsxInject: ``
+  },
+  build: {
+    outDir: '../dist'
   }
 }))

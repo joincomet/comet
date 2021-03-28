@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconSpinner } from '@/lib/Icons'
 
 export default function Button({

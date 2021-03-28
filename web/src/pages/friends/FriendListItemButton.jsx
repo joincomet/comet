@@ -1,4 +1,3 @@
-import React from 'react'
 import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 import ctl from '@netlify/classnames-template-literals'

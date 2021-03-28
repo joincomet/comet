@@ -1,5 +1,5 @@
 import { IconNew, IconTop, IconAll, IconFeatured } from '@/lib/Icons'
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import Sidebar from '@/components/sidebars/base/Sidebar'
 import { categoryIcon } from '@/lib/categoryIcon'
 import { Link, useHistory, useParams } from 'react-router-dom'

@@ -1,4 +1,3 @@
-import React from 'react'
 import ServerSidebar from '@/components/sidebars/ServerSidebar'
 import Header from '@/components/headers/base/Header'
 import ChannelSidebar from '@/components/sidebars/ChannelUsersSidebar'

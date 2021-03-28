@@ -1,4 +1,3 @@
-import React from 'react'
 import { useHistory } from 'react-router-dom'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import { useTranslation } from 'react-i18next'

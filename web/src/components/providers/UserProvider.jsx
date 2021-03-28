@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 import { useQuery } from 'urql'
 import { GET_CURRENT_USER } from '@/graphql/queries'
 

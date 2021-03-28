@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react'
+import { forwardRef, memo } from 'react'
 import { IconUser } from '@/lib/Icons'
 import Avatar from '@/components/avatars/base/Avatar'
 import { useContextMenuTrigger } from 'react-context-menu-wrapper'

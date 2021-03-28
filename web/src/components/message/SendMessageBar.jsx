@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMutation } from 'urql'
 import { SEND_MESSAGE } from '@/graphql/mutations'
 import { IconUpload } from '@/lib/Icons'

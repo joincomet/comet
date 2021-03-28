@@ -1,4 +1,3 @@
-import React from 'react'
 import UserPopup from '@/components/popups/UserPopup'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import dayjs from 'dayjs'

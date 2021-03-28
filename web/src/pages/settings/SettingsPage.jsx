@@ -1,4 +1,3 @@
-import React from 'react'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import { useUser } from '@/components/providers/UserProvider'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Menu } from '@headlessui/react'
 import { IconChevrownRight } from '@/lib/Icons'
 

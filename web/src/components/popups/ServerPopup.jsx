@@ -1,5 +1,5 @@
 import ServerInfoCard from '@/components/server/ServerInfoCard'
-import React from 'react'
+
 import Popup from '@/components/popups/base/Popup'
 
 export default function ServerPopup({ server, children }) {

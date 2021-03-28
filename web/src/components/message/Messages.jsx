@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Message from '@/components/message/Message'
 import { useQuery } from 'urql'
 import { GET_MESSAGES } from '@/graphql/queries'

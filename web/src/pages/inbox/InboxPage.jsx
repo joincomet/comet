@@ -1,4 +1,3 @@
-import React from 'react'
 import Header from '@/components/headers/base/Header'
 import { IconInbox } from '@/lib/Icons'
 import { useStore } from '@/lib/stores/useStore'

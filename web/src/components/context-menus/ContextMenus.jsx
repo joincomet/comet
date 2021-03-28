@@ -1,4 +1,3 @@
-import React from 'react'
 import { ContextMenuWrapper } from 'react-context-menu-wrapper'
 import PostContextMenu from '@/components/context-menus/PostContextMenu'
 import UserContextMenu from '@/components/context-menus/UserContextMenu'

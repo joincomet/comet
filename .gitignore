@@ -1,13 +1,8 @@
 .idea
 .vscode
 .env
-latest.dump
 .graphqlconfig
 schema.graphql
-dump.sql
-.do/cometx.yaml
-.do/staging.yaml
-commands.txt
 
 .yarn/*
 !.yarn/patches
@@ -18,3 +13,5 @@ commands.txt
 .pnp.*
 
 node_modules
+
+dist

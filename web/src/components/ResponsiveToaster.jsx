@@ -1,6 +1,5 @@
 import { useMedia } from 'react-use'
 import { Toaster } from 'react-hot-toast'
-import React from 'react'
 
 export default function ResponsiveToaster() {
   const desktop = useMedia('(min-width: 1024px)')

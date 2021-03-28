@@ -1,4 +1,3 @@
-import React from 'react'
 import TitleBar from '@/electron/titlebar/TitleBar'
 import { DndProvider } from 'react-dnd'
 import { TouchBackend } from 'react-dnd-touch-backend'

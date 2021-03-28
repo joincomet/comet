@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { useQuery } from 'urql'
 import { GET_JOINED_SERVERS } from '@/graphql/queries'

@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function IconCreateServer({ className }) {
   return (
     <svg className={className} viewBox="0 0 24 24">

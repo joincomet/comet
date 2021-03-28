@@ -1,5 +1,5 @@
 import { IconSettings } from '@/lib/Icons'
-import React from 'react'
+
 import Tippy from '@tippyjs/react'
 import { useUser } from '@/components/providers/UserProvider'
 import UserAvatar from '@/components/avatars/UserAvatar'

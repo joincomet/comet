@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Tippy from '@tippyjs/react'
 import { useDrag } from 'react-dnd'

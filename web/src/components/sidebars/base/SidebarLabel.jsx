@@ -1,4 +1,3 @@
-import React from 'react'
 import Tippy from '@tippyjs/react'
 import { IconPlus } from '@/lib/Icons'
 import ctl from '@netlify/classnames-template-literals'

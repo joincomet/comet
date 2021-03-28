@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useContextMenuEvent } from 'react-context-menu-wrapper'
 import { useMutation } from 'urql'
 import {
