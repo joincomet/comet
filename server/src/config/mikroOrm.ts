@@ -19,5 +19,8 @@ export default {
   },
   driverOptions: {
     connection: { ssl: { rejectUnauthorized: false } }
+  },
+  migrations: {
+    disableForeignKeys: false
   }
 } as Options<PostgreSqlDriver>

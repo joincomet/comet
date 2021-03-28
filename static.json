@@ -3,5 +3,11 @@
   "routes": {
     "/assets/*": "/assets/",
     "/**": "index.html"
+  },
+  "https_only": true,
+  "proxies": {
+    "/api/": {
+      "origin": "https://${VITE_SERVER_DOMAIN}/"
+    }
   }
 }
