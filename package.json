@@ -16,7 +16,7 @@
 		"web"
 	],
 	"scripts": {
-		"build": "if-env PROCFILE=web/Procfile && yarn workspace web run build:vite",
+		"build": "if-env PROCFILE=web/Procfile && yarn workspace web run build:vite || node -e \"process.exit(0)\"",
 		"start": "yarn workspace server start",
 		"dev:web": "yarn workspace web run dev:vite",
 		"dev:electron": "yarn workspace web run dev:electron",
