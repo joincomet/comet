@@ -16,10 +16,13 @@
 		"web"
 	],
 	"scripts": {
-		"build": "if test \"$PROCFILE\" = \"web/Procfile\" ; then yarn workspace web run build:vite ; fi ",
+		"build": "if-env PROCFILE=web/Procfile && yarn workspace web run build:vite",
 		"start": "yarn workspace server start",
 		"dev:web": "yarn workspace web run dev:vite",
 		"dev:electron": "yarn workspace web run dev:electron",
 		"dev:server": "yarn workspace server run dev"
+	},
+	"dependencies": {
+		"if-env": "^1.0.4"
 	}
 }
