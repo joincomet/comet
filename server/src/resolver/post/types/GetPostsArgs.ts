@@ -16,12 +16,6 @@ export class GetPostsArgs extends PaginationArgs {
   })
   time: GetPostsTime = GetPostsTime.All
 
-  @Field(() => Boolean, {
-    defaultValue: false,
-    description: 'Show posts from only joined servers'
-  })
-  joinedOnly = false
-
   @Field(() => ID, {
     nullable: true,
     description: 'If provided, only posts from given server ID will be returned'
@@ -36,14 +30,8 @@ export class GetPostsArgs extends PaginationArgs {
 
   @Field({
     nullable: true,
-    description: 'If provided, only posts from given username will be returned'
-  })
-  username?: string
-
-  @Field({
-    nullable: true,
     description:
       'If provided, only posts matching given search term will be returned'
   })
-  q?: string
+  search?: string
 }

@@ -20,7 +20,6 @@ import {
 import { ServerUserBan } from '@/entity/ServerUserBan'
 import { ServerUserJoin } from '@/entity/ServerUserJoin'
 import { ServerRole } from '@/entity/ServerRole'
-import { Lexico } from '@/util/Lexico'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

@@ -22,21 +22,15 @@ export class PostQueries {
   })
   async getPosts(
     @Args()
-    {
-      page,
-      pageSize,
-      sort,
-      time,
-      joinedOnly,
-      folderId,
-      serverId
-    }: GetPostsArgs,
+    { page, pageSize, sort, time, folderId, serverId }: GetPostsArgs,
     @Ctx() { user, em }: Context
   ) {
     let orderBy = {}
     if (sort === GetPostsSort.New) orderBy = { createdAt: QueryOrder.DESC }
     else if (sort === GetPostsSort.Hot) orderBy = { hotRank: QueryOrder.DESC }
     else if (sort === GetPostsSort.Top) orderBy = { voteCount: QueryOrder.DESC }
+
+    const joinedOnly = !folderId && !serverId
 
     let servers = []
     if (joinedOnly) {

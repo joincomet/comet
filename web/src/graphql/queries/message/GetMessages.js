@@ -6,15 +6,17 @@ export default gql`
     $channelId: ID
     $userId: ID
     $groupId: ID
-    $limit: Int
-    $lastMessageId: ID
+    $pageSize: Int
+    $page: Int
+    $initialTime: DateTime
   ) {
     getMessages(
       channelId: $channelId
       userId: $userId
       groupId: $groupId
-      limit: $limit
-      lastMessageId: $lastMessageId
+      pageSize: $pageSize
+      page: $page
+      initialTime: $initialTime
     ) {
       ...MESSAGE_FRAGMENT
       author {

@@ -20,8 +20,9 @@ export class MessageQueries {
     @Ctx() { em, user }: Context,
     @Args()
     {
-      lastMessageId,
-      limit,
+      initialTime,
+      page,
+      pageSize,
       pinned,
       channelId,
       groupId,
@@ -30,15 +31,14 @@ export class MessageQueries {
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
   ) {
-    const lastMessage = lastMessageId
-      ? await em.findOneOrFail(Message, lastMessageId)
-      : null
-
     const channel = channelId
       ? await em.findOneOrFail(Channel, channelId)
       : null
     const group = groupId ? await em.findOneOrFail(Group, groupId) : null
     const toUser = userId ? await em.findOneOrFail(User, userId) : null
+
+    if (!channel && !group && !toUser)
+      throw new Error('Must provide channelId, groupId, or userId')
 
     const where: FilterQuery<Message> = {
       isDeleted: false,
@@ -61,19 +61,23 @@ export class MessageQueries {
       ]
     }
 
-    if (lastMessage)
-      where.id = {
-        $lt: lastMessage.id
+    if (initialTime) {
+      where.createdAt = {
+        $lte: initialTime
       }
+    }
 
-    return (
+    const messages = (
       await em.find(
         Message,
         where,
         ['author'],
         { createdAt: QueryOrder.DESC },
-        limit
+        pageSize,
+        page * pageSize
       )
     ).reverse()
+
+    return messages
   }
 }

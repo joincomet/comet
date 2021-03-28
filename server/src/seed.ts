@@ -145,11 +145,12 @@ export const seed = async (em: EntityManager) => {
     users.push(user)
     entities.push(em.create(ServerUserJoin, { user, server: serverComet }))
     const numMessages = rand(1, MAX_MESSAGES_PER_USER)
+    const createdAt = faker.date.recent()
     for (let j = 0; j < numMessages; j++) {
       const message = em.create(Message, {
         author: user,
         channel: channelGeneral,
-        createdAt: faker.date.recent(),
+        createdAt: new Date(createdAt.getTime() + j),
         text: faker.lorem.paragraph()
       })
       entities.push(message)

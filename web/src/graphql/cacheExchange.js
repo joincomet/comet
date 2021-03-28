@@ -89,8 +89,8 @@ export const cacheExchange = ce({
   resolvers: {
     Query: {
       getMessages: simplePagination({
-        offsetArgument: 'lastMessageId',
-        limitArgument: 'limit',
+        offsetArgument: 'page',
+        limitArgument: 'pageSize',
         mergeMode: 'before'
       }),
       getPosts: simplePagination({
@@ -123,45 +123,45 @@ export const cacheExchange = ce({
         if (userId) variables = { userId }
         if (groupId) variables = { groupId }
         if (channelId) variables = { channelId }
-        cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
-          if (data !== null) {
-            data.getMessages.push(message)
-            return data
-          } else {
-            return null
-          }
-        })
+
+        cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName === 'getMessages')
+          .forEach(field => {
+            cache.updateQuery(
+              {
+                query: GET_MESSAGES,
+                variables: {
+                  ...variables,
+                  pageSize: 50,
+                  page: 0,
+                  initialTime: field.arguments.initialTime
+                }
+              },
+              data => {
+                if (data !== null) {
+                  data.getMessages.push(message)
+                  return data
+                } else {
+                  return null
+                }
+              }
+            )
+          })
       },
       messageUpdated: (
         { messageUpdated: { userId, groupId, channelId, message } },
         _variables,
         cache
       ) => {
-        let variables = { page: 0, userId, groupId, channelId }
-        cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
-          if (data !== null) {
-            const i = data.getMessages.findIndex(m => m.id === message.id)
-            data.getMessages[i] = message
-            return data
-          } else {
-            return null
-          }
-        })
+        // TODO
       },
       messageRemoved: (
         { messageRemoved: { userId, groupId, channelId, messageId } },
         _variables,
         cache
       ) => {
-        let variables = { page: 0, userId, groupId, channelId }
-        cache.updateQuery({ query: GET_MESSAGES, variables }, data => {
-          if (data !== null) {
-            data.getMessages = data.getMessages.filter(m => m.id !== messageId)
-            return data
-          } else {
-            return null
-          }
-        })
+        // TODO
       }
     }
   }

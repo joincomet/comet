@@ -25,17 +25,7 @@ export default function PostsPage() {
       <FoldersSidebar show={showFolders} />
 
       <Container rightSidebar={showFolders}>
-        {/*<View>
-          <Posts
-            ref={ref}
-            variables={{
-              joinedOnly: true,
-              serverId
-            }}
-          />
-        </View>*/}
         <Posts
-          ref={ref}
           variables={{
             joinedOnly: true,
             serverId

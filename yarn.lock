@@ -1326,16 +1326,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/core@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "@mikro-orm/core@npm:4.5.0"
+"@mikro-orm/core@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "@mikro-orm/core@npm:4.5.1"
   dependencies:
     ansi-colors: 4.1.1
     clone: 2.1.2
     dotenv: 8.2.0
     escaya: 0.0.61
     fs-extra: 9.1.0
-    globby: 11.0.2
+    globby: 11.0.3
     reflect-metadata: 0.1.13
     strip-json-comments: 3.1.1
   peerDependencies:
@@ -1361,13 +1361,13 @@ __metadata:
       optional: true
     "@mikro-orm/sqlite":
       optional: true
-  checksum: 5168c4d263b40bfff39762735698446fc330828306b243b193a15d44f2f653003a8966d5d0555ba79c87dc6a39de1d2994be968a562ad9f58e9ef92848744585
+  checksum: 3da1a0c65e84c2186ba984f6212569bab944c3af42add579ad0ee1041ee74b164780bf80667f18cd5809af081930fda59683b1d52e457fff709fef2707119e5e
   languageName: node
   linkType: hard
 
-"@mikro-orm/knex@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "@mikro-orm/knex@npm:4.5.0"
+"@mikro-orm/knex@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "@mikro-orm/knex@npm:4.5.1"
   dependencies:
     fs-extra: 9.1.0
     knex: 0.21.19
@@ -1390,19 +1390,19 @@ __metadata:
       optional: true
     sqlite3:
       optional: true
-  checksum: 8adc95ad80e47bcc5b614a8d2f8b6880d3a59ab2f1c922f80ca8285b9ba80052d2a6fde4a223f87298b02dd372b0c0b7c81a1a9c773a4213f39374d648a034c0
+  checksum: 9afc7eaef8861b1f25126c777279bdd4d6b48a88616cfb8f90b789c28fd0c9cc1f87a5282def284ba921f50684d254297f6559fce055481bf4d71c386158ac5c
   languageName: node
   linkType: hard
 
-"@mikro-orm/postgresql@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "@mikro-orm/postgresql@npm:4.5.0"
+"@mikro-orm/postgresql@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "@mikro-orm/postgresql@npm:4.5.1"
   dependencies:
-    "@mikro-orm/knex": ^4.5.0
+    "@mikro-orm/knex": ^4.5.1
     pg: 8.5.1
   peerDependencies:
     "@mikro-orm/core": ^4.0.0
-  checksum: 71d1bb9985aa783ba42d65ba21ff476c6f0ef150a1c5013f5799b0cd1a64b7b28c5edd11862e37ec6463ea850e763309513e9b4758e216db73794e16b579972a
+  checksum: 6013ded4c8d98bba9cd5086a3b61aa22457d09a0d7980a80d7963bb99f92bfaf01121c617326d222a94f2a7d6c9df87a26539733b55c9414e39a8ea861b84a59
   languageName: node
   linkType: hard
 
@@ -1563,7 +1563,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reach/observe-rect@npm:^1.1.0":
+"@reach/observe-rect@npm:^1.1.0, @reach/observe-rect@npm:^1.2.0":
   version: 1.2.0
   resolution: "@reach/observe-rect@npm:1.2.0"
   checksum: 4aa32fa1ab410527cecf62e3143664e4b7823212bb7b79b5fd84d0d390fa086fcdba27fceebc0e24e2958f2a0649d5b88ec8b0ed907c72730964ac33eb3089af
@@ -2913,9 +2913,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/jit@npm:^0.1.10":
-  version: 0.1.10
-  resolution: "@tailwindcss/jit@npm:0.1.10"
+"@tailwindcss/jit@npm:^0.1.14":
+  version: 0.1.14
+  resolution: "@tailwindcss/jit@npm:0.1.14"
   dependencies:
     chokidar: ^3.5.1
     dlv: ^1.1.3
@@ -2923,12 +2923,13 @@ __metadata:
     lodash.topath: ^4.5.2
     normalize-path: ^3.0.0
     object-hash: ^2.1.1
+    parse-glob: ^3.0.4
     postcss-selector-parser: ^6.0.4
     quick-lru: ^5.1.1
   peerDependencies:
     postcss: ^8.2.6
     tailwindcss: ^2.0.3
-  checksum: 24349157ba664a893f6eaba880f65110bfa7dc983b8cad86013611db77b02705c8d9e6ce3046db7c4d4eef800db13c7f8289898300d481328c207d16233a1106
+  checksum: c5035b46ca8ae96e58818c2d3e867974379b6a1e9a9b1895196e6fa3a9cfd33b444c1ef2ecf0c1a6c267759213657ee00752f4055521629ceb7f4d6a83f5c5ce
   languageName: node
   linkType: hard
 
@@ -3357,10 +3358,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.36":
-  version: 14.14.36
-  resolution: "@types/node@npm:14.14.36"
-  checksum: 9eff5863af3ddf3dfd0964ce7da85e663df2c05d091412b8c97d069e61b00760fa4ce788442733bdf07ad69ce408088c0bef2fa81b5cfdca54d31117618385f3
+"@types/node@npm:^14.14.37":
+  version: 14.14.37
+  resolution: "@types/node@npm:14.14.37"
+  checksum: 5e2d9baf7594ebacaf016716515f30de0765169412787f981481c2fb8b468923149bb9e2e3219ee672399811672ceddc339a7372a61cf15bc656836a5494d991
   languageName: node
   linkType: hard
 
@@ -4768,9 +4769,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.873.0":
-  version: 2.873.0
-  resolution: "aws-sdk@npm:2.873.0"
+"aws-sdk@npm:^2.874.0":
+  version: 2.874.0
+  resolution: "aws-sdk@npm:2.874.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4781,7 +4782,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 2e0e20dea207e903a29af313d7ecd8abb7610cdb8d75ee8fd80258ddc89d37d5291cfdc069197c12c7f64692e1d3d0f847a345c55b6857355b7351b0b5c03de9
+  checksum: 19098292afd503a18e04b15e7c04b1a36336348479d43b1ab4d97693897ddf475735b4dcb154ebd37654c1ce4c5250b0b88bdfe6fc815152bbad22189ce4ba78
   languageName: node
   linkType: hard
 
@@ -7197,9 +7198,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.22.0":
-  version: 7.22.0
-  resolution: "eslint@npm:7.22.0"
+"eslint@npm:^7.23.0":
+  version: 7.23.0
+  resolution: "eslint@npm:7.23.0"
   dependencies:
     "@babel/code-frame": 7.12.11
     "@eslint/eslintrc": ^0.4.0
@@ -7240,7 +7241,7 @@ __metadata:
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: 9be0a215b6b1e2941318b3e0c11ada8ba9a4adacf5960ab916d07f1d619828af40cba00e8ed7d151b8c715ba8ea81f4c2a56e46a2558d9795788b4f410a95ec4
+  checksum: f444869506eb0b53fdc6f6f6508b9f5daed51034af0289e6b201f996e7f2d06134f765ef598568269d2a0575dc9da5d3308bd2716f795b789d92e7febb654aab
   languageName: node
   linkType: hard
 
@@ -7520,10 +7521,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"faker@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "faker@npm:5.5.0"
-  checksum: e52abd84e29c04bc0889f07dabd4969183b567d8cdb34f1a834265f7a11e2e6644ccfd7aca0c0ec9296b37c063fc329de2d18fa988f98cbb41c06c7ac7a3021e
+"faker@npm:^5.5.1":
+  version: 5.5.1
+  resolution: "faker@npm:5.5.1"
+  checksum: 6bd19c37a0d086091869d086b509249b596fd83eff0eb0c48d9fac9b20d6e917baf6e6433fe38e0e9585f7c12deb925b0c1c6b8f31488e2f28b146aceb0cf34c
   languageName: node
   linkType: hard
 
@@ -8165,6 +8166,25 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"glob-base@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "glob-base@npm:0.3.0"
+  dependencies:
+    glob-parent: ^2.0.0
+    is-glob: ^2.0.0
+  checksum: 9a464f8b5a97ee2a524f7534a2ef42b731a22b37849925d831052ed7afc5b50827e524da5cc1f1961e574bcf9ffcde99b9161fc75e44c7bf397aad1f93fe5d6c
+  languageName: node
+  linkType: hard
+
+"glob-parent@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "glob-parent@npm:2.0.0"
+  dependencies:
+    is-glob: ^2.0.0
+  checksum: d3d0bc909b973b361ccd20cf82907a19ade72554c1caffee982fad3ac4d0cbfeabe9609fe7188aab6c4dfdf68af96f35623fe1453195baf5414e2a1834b44c59
+  languageName: node
+  linkType: hard
+
 "glob-parent@npm:^5.0.0, glob-parent@npm:^5.1.0, glob-parent@npm:~5.1.0":
   version: 5.1.1
   resolution: "glob-parent@npm:5.1.1"
@@ -8296,7 +8316,21 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"globby@npm:11.0.2, globby@npm:^11.0.1":
+"globby@npm:11.0.3":
+  version: 11.0.3
+  resolution: "globby@npm:11.0.3"
+  dependencies:
+    array-union: ^2.1.0
+    dir-glob: ^3.0.1
+    fast-glob: ^3.1.1
+    ignore: ^5.1.4
+    merge2: ^1.3.0
+    slash: ^3.0.0
+  checksum: f17da0f869918656ec8c16c15ad100f025fbd13e4c157286cf340811eb1355a7d06dde77be1685a7a051970ec6abeff96a9b2a1a97525f84bc94fbd518c1d1db
+  languageName: node
+  linkType: hard
+
+"globby@npm:^11.0.1":
   version: 11.0.2
   resolution: "globby@npm:11.0.2"
   dependencies:
@@ -9162,9 +9196,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"ioredis@npm:^4.24.4":
-  version: 4.24.4
-  resolution: "ioredis@npm:4.24.4"
+"ioredis@npm:^4.24.5":
+  version: 4.24.5
+  resolution: "ioredis@npm:4.24.5"
   dependencies:
     cluster-key-slot: ^1.1.0
     debug: ^4.3.1
@@ -9176,7 +9210,7 @@ fsevents@~2.3.1:
     redis-errors: ^1.2.0
     redis-parser: ^3.0.0
     standard-as-callback: ^2.1.0
-  checksum: 7565d603cfe58881afc329a34c36a73cb3997bcdd3bd3cd48f9ea3f7018b0118f10dc2b2702da6689a58f2ab8165d72062c321e85c0fce58b226d9ed518c29e5
+  checksum: fcaed1dab255b675609016cce2257ddb2c30df4cc16428ac30392f0291de5dba9b8abde7674c1ed24f5b06e759e5f5f36bfbb409f6fdefdae73e79c0a2247367
   languageName: node
   linkType: hard
 
@@ -9373,6 +9407,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"is-dotfile@npm:^1.0.0":
+  version: 1.0.3
+  resolution: "is-dotfile@npm:1.0.3"
+  checksum: 82be54d6d57710d393c2275a63f4c60b33bfe5e21080899073b4ef315f13c9017891aed3477c2c1ecfc43b2a1c2180151fad8fab02aba930473e88b00393501f
+  languageName: node
+  linkType: hard
+
 "is-extendable@npm:^0.1.0, is-extendable@npm:^0.1.1":
   version: 0.1.1
   resolution: "is-extendable@npm:0.1.1"
@@ -9386,6 +9427,13 @@ fsevents@~2.3.1:
   dependencies:
     is-plain-object: ^2.0.4
   checksum: 2bf711afe60cc99f46699015c444db8f06c9c5553dd2b26fd8cb663fcec4bf00df1c11d02e28a8cc97b8efb49315c3c3fcf6ce1ceb09341af8e4fcccde516dd7
+  languageName: node
+  linkType: hard
+
+"is-extglob@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "is-extglob@npm:1.0.0"
+  checksum: 77073b0ebe962261395f4f72e594ca53157cdb14e41070fd856aca1422f0c1c49a26a55dabdf3c66559c98ca1a6a1ac8b9342034c5577714008b21fd314595a4
   languageName: node
   linkType: hard
 
@@ -9441,6 +9489,15 @@ fsevents@~2.3.1:
   dependencies:
     is-extglob: ^2.1.1
   checksum: 98cd4f715f0fb81da34aa6c8be4a5ef02d8cfac3ebc885153012abc2a0410df5a572f9d0393134fcba9192c7a845da96142c5f74a3c02787efe178ed798615e6
+  languageName: node
+  linkType: hard
+
+"is-glob@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "is-glob@npm:2.0.1"
+  dependencies:
+    is-extglob: ^1.0.0
+  checksum: b3190fc9ca6ad047f6e1856bb80b5b7de740c727025300b078a5557a27c5d1d25594baf8bd582529963eda61cc73c5d8cb546dba8e8afeaeef58012343c52600
   languageName: node
   linkType: hard
 
@@ -11991,6 +12048,18 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"parse-glob@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "parse-glob@npm:3.0.4"
+  dependencies:
+    glob-base: ^0.3.0
+    is-dotfile: ^1.0.0
+    is-extglob: ^1.0.0
+    is-glob: ^2.0.0
+  checksum: bc9f7a8ed61b8005cce9b6f63130f9080e7034472b3e0c48cc28bfbad8c1290cca25b4fefddc7cd96d6f44e5bc2bace9e0c1f26e665cb2f693a13c2c7fcd5ff2
+  languageName: node
+  linkType: hard
+
 "parse-json@npm:^2.2.0":
   version: 2.2.0
   resolution: "parse-json@npm:2.2.0"
@@ -12941,12 +13010,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.0.0-rc.7":
-  version: 7.0.0-rc.7
-  resolution: "react-hook-form@npm:7.0.0-rc.7"
+"react-hook-form@npm:^7.0.0-rc.8":
+  version: 7.0.0-rc.8
+  resolution: "react-hook-form@npm:7.0.0-rc.8"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: a46b138d78a962f1f78e0e43208940db3a32354c23a6e49bcb1ba21464b18c7c51bf64c83040f2c217042eb9f015a72703b5467b7dd1b331c8e9b50856f208e8
+  checksum: c3ea1a24a1b9fff2cc4ae11a31782fad3e985fdebedb739fcca415758d5ed2fa403da9fa3e8e0b8b706cc7c6357ae038c8dd77f7824729000607060d669054a6
   languageName: node
   linkType: hard
 
@@ -14178,8 +14247,8 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "server@workspace:server"
   dependencies:
-    "@mikro-orm/core": ^4.5.0
-    "@mikro-orm/postgresql": ^4.5.0
+    "@mikro-orm/core": ^4.5.1
+    "@mikro-orm/postgresql": ^4.5.1
     "@mikro-orm/sql-highlighter": ^1.0.1
     "@types/async": ^3.2.5
     "@types/cookie-parser": ^1.4.2
@@ -14189,23 +14258,23 @@ resolve@^2.0.0-next.3:
     "@types/ioredis": ^4.22.1
     "@types/jsonwebtoken": ^8.5.1
     "@types/mime": ^2.0.3
-    "@types/node": ^14.14.36
+    "@types/node": ^14.14.37
     "@types/sharp": ^0.27.2
     "@typescript-eslint/eslint-plugin": ^4.19.0
     "@typescript-eslint/parser": ^4.19.0
     apollo-server-express: ^2.22.1
     argon2: ^0.27.1
-    aws-sdk: ^2.873.0
+    aws-sdk: ^2.874.0
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
     dataloader: ^2.0.0
     dayjs: ^1.10.4
-    eslint: ^7.22.0
+    eslint: ^7.23.0
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
     express: ^4.17.1
-    faker: ^5.5.0
+    faker: ^5.5.1
     file-type: ^16.3.0
     got: ^11.8.2
     graphql: ^15.5.0
@@ -14213,7 +14282,7 @@ resolve@^2.0.0-next.3:
     graphql-tools: ^7.0.4
     graphql-type-json: ^0.3.2
     graphql-upload: ^11.0.0
-    ioredis: ^4.24.4
+    ioredis: ^4.24.5
     jsonwebtoken: ^8.5.1
     metascraper: ^5.21.3
     metascraper-author: ^5.21.3
@@ -16314,14 +16383,15 @@ typescript@^4.2.3:
     "@headlessui/react": dev
     "@netlify/classnames-template-literals": ^1.0.0
     "@popperjs/core": ^2.9.1
+    "@reach/observe-rect": ^1.2.0
     "@remirror/react": pr706
     "@tailwindcss/aspect-ratio": ^0.2.0
     "@tailwindcss/forms": ^0.3.2
-    "@tailwindcss/jit": ^0.1.10
+    "@tailwindcss/jit": ^0.1.14
     "@tailwindcss/line-clamp": ^0.2.0
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.5
-    "@types/node": ^14.14.36
+    "@types/node": ^14.14.37
     "@types/react": ^17.0.3
     "@types/react-dom": ^17.0.3
     "@types/react-router-dom": ^5.1.7
@@ -16343,7 +16413,7 @@ typescript@^4.2.3:
     electron-context-menu: ^2.5.0
     electron-is-dev: ^2.0.0
     electron-store: ^7.0.2
-    eslint: ^7.22.0
+    eslint: ^7.23.0
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
     eslint-plugin-react: ^7.23.1
@@ -16362,7 +16432,7 @@ typescript@^4.2.3:
     react-dnd-touch-backend: ^14.0.0
     react-dom: ^17.0.2
     react-helmet: ^6.1.0
-    react-hook-form: ^7.0.0-rc.7
+    react-hook-form: ^7.0.0-rc.8
     react-hot-toast: ^1.0.2
     react-i18next: ^11.8.12
     react-icons: ^4.2.0

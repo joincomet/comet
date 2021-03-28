@@ -14,7 +14,7 @@ import { useStore } from '@/lib/stores/useStore'
 import { IconSpinner } from '@/lib/Icons'
 import { useVirtual } from 'react-virtual'
 
-export default forwardRef(({ variables, showServerName }, ref) => {
+export default function Posts({ variables, showServerName }) {
   const { postsSort, postsTime } = useStore()
 
   const [page, setPage] = useState(0)
@@ -104,4 +104,4 @@ export default forwardRef(({ variables, showServerName }, ref) => {
       </div>
     </div>
   )
-})
+}

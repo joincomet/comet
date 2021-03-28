@@ -11,20 +11,18 @@ export default gql`
     $page: Int
     $pageSize: Int
     $time: GetPostsTime
-    $joinedOnly: Boolean
+    $folderId: ID
     $serverId: ID
-    $username: String
-    $q: String
+    $search: String
   ) {
     getPosts(
       sort: $sort
       page: $page
       pageSize: $pageSize
       time: $time
-      joinedOnly: $joinedOnly
+      folderId: $folderId
       serverId: $serverId
-      username: $username
-      q: $q
+      search: $search
     ) {
       ...POST_FRAGMENT
       author {
