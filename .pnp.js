@@ -105,7 +105,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["@apollo/protobufjs", [
         ["npm:1.0.5", {
-          "packageLocation": "./.yarn/unplugged/@apollo-protobufjs-npm-1.0.5-a95d547915/node_modules/@apollo/protobufjs/",
+          "packageLocation": "./.yarn/cache/@apollo-protobufjs-npm-1.0.5-a95d547915-593f898542.zip/node_modules/@apollo/protobufjs/",
           "packageDependencies": [
             ["@apollo/protobufjs", "npm:1.0.5"],
             ["@protobufjs/aspromise", "npm:1.1.2"],
@@ -8469,7 +8469,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js", [
         ["npm:3.8.3", {
-          "packageLocation": "./.yarn/unplugged/core-js-npm-3.8.3-f6bf459c9f/node_modules/core-js/",
+          "packageLocation": "./.yarn/cache/core-js-npm-3.8.3-f6bf459c9f-3c67d1732d.zip/node_modules/core-js/",
           "packageDependencies": [
             ["core-js", "npm:3.8.3"]
           ],
@@ -9445,7 +9445,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["electron", [
         ["npm:12.0.2", {
-          "packageLocation": "./.yarn/unplugged/electron-npm-12.0.2-5cc8c900ff/node_modules/electron/",
+          "packageLocation": "./.yarn/cache/electron-npm-12.0.2-5cc8c900ff-77f69f6513.zip/node_modules/electron/",
           "packageDependencies": [
             ["electron", "npm:12.0.2"],
             ["@electron/get", "npm:1.12.3"],
@@ -9772,7 +9772,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["esbuild", [
         ["npm:0.9.3", {
-          "packageLocation": "./.yarn/unplugged/esbuild-npm-0.9.3-0d6b295e1f/node_modules/esbuild/",
+          "packageLocation": "./.yarn/cache/esbuild-npm-0.9.3-0d6b295e1f-df44126d95.zip/node_modules/esbuild/",
           "packageDependencies": [
             ["esbuild", "npm:0.9.3"]
           ],
@@ -20192,14 +20192,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["type-graphql", [
         ["npm:1.1.1", {
-          "packageLocation": "./.yarn/unplugged/type-graphql-virtual-6dc4bcccf0/node_modules/type-graphql/",
+          "packageLocation": "./.yarn/cache/type-graphql-npm-1.1.1-82668f6e3f-03da2350d6.zip/node_modules/type-graphql/",
           "packageDependencies": [
             ["type-graphql", "npm:1.1.1"]
           ],
           "linkType": "SOFT",
         }],
         ["virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:1.1.1", {
-          "packageLocation": "./.yarn/unplugged/type-graphql-virtual-6dc4bcccf0/node_modules/type-graphql/",
+          "packageLocation": "./.yarn/$$virtual/type-graphql-virtual-6dc4bcccf0/0/cache/type-graphql-npm-1.1.1-82668f6e3f-03da2350d6.zip/node_modules/type-graphql/",
           "packageDependencies": [
             ["type-graphql", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:1.1.1"],
             ["@types/class-validator", null],
@@ -21437,7 +21437,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["yjs", [
         ["npm:13.5.1", {
-          "packageLocation": "./.yarn/unplugged/yjs-npm-13.5.1-880c1e3a85/node_modules/yjs/",
+          "packageLocation": "./.yarn/cache/yjs-npm-13.5.1-880c1e3a85-705fd8daab.zip/node_modules/yjs/",
           "packageDependencies": [
             ["yjs", "npm:13.5.1"],
             ["lib0", "npm:0.2.40"]
