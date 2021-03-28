@@ -2913,9 +2913,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/jit@npm:^0.1.14":
-  version: 0.1.14
-  resolution: "@tailwindcss/jit@npm:0.1.14"
+"@tailwindcss/jit@npm:^0.1.15":
+  version: 0.1.15
+  resolution: "@tailwindcss/jit@npm:0.1.15"
   dependencies:
     chokidar: ^3.5.1
     dlv: ^1.1.3
@@ -2929,7 +2929,7 @@ __metadata:
   peerDependencies:
     postcss: ^8.2.6
     tailwindcss: ^2.0.3
-  checksum: c5035b46ca8ae96e58818c2d3e867974379b6a1e9a9b1895196e6fa3a9cfd33b444c1ef2ecf0c1a6c267759213657ee00752f4055521629ceb7f4d6a83f5c5ce
+  checksum: 39cc4c5e6b7ff62f351c3d39b1f078a33d21ae747bb9f5aa5be131b2e39aeb0c13323d387e76e4b88346b6ddf5ae0c03bac46167132630ae55a18dc8d28d6d1f
   languageName: node
   linkType: hard
 
@@ -16387,7 +16387,7 @@ typescript@^4.2.3:
     "@remirror/react": pr706
     "@tailwindcss/aspect-ratio": ^0.2.0
     "@tailwindcss/forms": ^0.3.2
-    "@tailwindcss/jit": ^0.1.14
+    "@tailwindcss/jit": ^0.1.15
     "@tailwindcss/line-clamp": ^0.2.0
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.5

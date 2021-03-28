@@ -6,6 +6,6 @@ export default new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   },
   endpoint: `https://${
-    process.env.AWS_ENDPOINT || 'nyc3.digitaloceanspaces.com'
+    process.env.AWS_ENDPOINT ?? 'nyc3.digitaloceanspaces.com'
   }`
 })

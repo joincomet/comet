@@ -6,7 +6,7 @@ import { FileUpload } from 'graphql-upload'
 import got from 'got'
 import FileType from 'file-type'
 
-const Bucket = process.env.BUCKET || 'cometx'
+const Bucket = process.env.BUCKET
 
 export const uploadImage = async (
   file: FileUpload | string,
@@ -51,9 +51,7 @@ export const uploadImage = async (
           reject(err)
         }
 
-        resolve(
-          `https://${process.env.MEDIA_DOMAIN || 'media.cometx.io'}/${key}`
-        )
+        resolve(`https://${process.env.MEDIA_DOMAIN}/${key}`)
       })
     })
   } catch (e) {
