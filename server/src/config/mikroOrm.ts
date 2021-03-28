@@ -16,5 +16,8 @@ export default {
   forceUtcTimezone: true,
   findOneOrFailHandler: (entityName: string) => {
     return new Error(`${entityName} not found!`)
+  },
+  driverOptions: {
+    connection: { ssl: { rejectUnauthorized: false } }
   }
 } as Options<PostgreSqlDriver>
