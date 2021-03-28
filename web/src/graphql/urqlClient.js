@@ -14,7 +14,7 @@ import { cacheExchange } from '@/graphql/cacheExchange'
 
 const subscriptionClient = new SubscriptionClient(
   process.env.NODE_ENV === 'production'
-    ? `wss://${process.env.APP_DOMAIN}/${process.env.SERVER_PATH}/graphql`
+    ? `wss://${process.env.SERVER_DOMAIN}/graphql`
     : 'ws://localhost:4000/graphql',
   {
     reconnect: true,
@@ -63,7 +63,7 @@ const addAuthToOperation = ({ authState, operation }) => {
 export const urqlClient = createClient({
   url:
     process.env.NODE_ENV === 'production'
-      ? `https://${process.env.APP_DOMAIN}/${process.env.SERVER_PATH}/graphql`
+      ? `https://${process.env.SERVER_DOMAIN}/graphql`
       : 'http://localhost:4000/graphql',
   requestPolicy: 'cache-and-network',
   exchanges: [
