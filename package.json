@@ -8,6 +8,10 @@
 	"repository": {
 		"url": "https://github.com/joincomet/comet"
 	},
+	"engines": {
+		"node": "15.x.x",
+		"yarn": "2.x.x"
+	},
 	"workspaces": [
 		"server",
 		"web"

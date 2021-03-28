@@ -5,9 +5,8 @@ services:
     repo: joincomet/comet
     branch: main
     deploy_on_push: true
-  source_dir: server
   environment_slug: node-js
-  run_command: yarn start
+  run_command: yarn workspace server run start
   http_port: 4000
   routes:
     - path: /api
@@ -37,9 +36,9 @@ services:
     repo: joincomet/comet
     branch: main
     deploy_on_push: true
-  source_dir: web
   environment_slug: node-js
-  build_command: yarn run build:vite
+  build_command: yarn workspace web run build:vite
+  output_dir: web/dist
   http_port: 3000
   routes:
     - path: /
