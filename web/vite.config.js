@@ -4,7 +4,6 @@ import { resolve } from 'path'
 import stringHash from 'string-hash'
 
 export default defineConfig(({ command }) => ({
-  base: command === 'serve' ? '/' : '/dist/',
   plugins: [reactRefresh()],
   resolve: {
     alias: {
@@ -32,8 +31,5 @@ export default defineConfig(({ command }) => ({
   },
   esbuild: {
     jsxInject: ``
-  },
-  build: {
-    outDir: '../dist'
   }
 }))
