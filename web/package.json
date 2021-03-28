@@ -2,6 +2,10 @@
   "name": "web",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "15.x.x",
+    "yarn": "2.x.x"
+  },
   "description": "All-in-one chat and forums for communities.",
   "author": "Comet",
   "main": "src/electron/index.js",
