@@ -7,8 +7,7 @@ Create a file in the root folder called `.env` with the following contents:
 ACCESS_TOKEN_SECRET=<secret used to encrypt login tokens>
 
 # Defaults to 
-DATABASE_URL=<postgres connection URL, default = `postgresql://postgres:password@localhost:5432`>
-DATABASE_NAME=<postgres database name, default = `postgres`>
+DATABASE_URL=<postgres connection URL, default = `postgresql://postgres:password@localhost:5432/postgres`>
 
 REDIS_HOST=<redis host, default = `127.0.0.1`>
 REDIS_PORT=<redis port, default = 6379>
