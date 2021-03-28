@@ -13,8 +13,8 @@ import toast from 'react-hot-toast'
 import { cacheExchange } from '@/graphql/cacheExchange'
 
 const subscriptionClient = new SubscriptionClient(
-  process.env.NODE_ENV === 'production'
-    ? `wss://${process.env.VITE_SERVER_DOMAIN}/graphql`
+  import.meta.env.PROD
+    ? `wss://${import.meta.env.VITE_SERVER_DOMAIN}/graphql`
     : 'ws://localhost:4000/graphql',
   {
     reconnect: true,
@@ -61,10 +61,9 @@ const addAuthToOperation = ({ authState, operation }) => {
 }
 
 export const urqlClient = createClient({
-  url:
-    process.env.NODE_ENV === 'production'
-      ? `https://${process.env.VITE_SERVER_DOMAIN}/graphql`
-      : 'http://localhost:4000/graphql',
+  url: import.meta.env.PROD
+    ? `https://${import.meta.env.VITE_SERVER_DOMAIN}/graphql`
+    : 'http://localhost:4000/graphql',
   requestPolicy: 'cache-and-network',
   exchanges: [
     devtoolsExchange,
@@ -77,7 +76,7 @@ export const urqlClient = createClient({
     errorExchange({
       onError(error) {
         toast.error(error.message.substring(10))
-        if (process.env.NODE_ENV !== 'production') console.error(error)
+        if (import.meta.env.DEV) console.error(error)
       }
     }),
     multipartFetchExchange,
