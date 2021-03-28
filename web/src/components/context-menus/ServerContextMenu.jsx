@@ -1,12 +1,11 @@
 import React from 'react'
-// import { useContextMenuEvent } from 'react-context-menu-wrapper'
+import { useContextMenuEvent } from 'react-context-menu-wrapper'
 import { useTranslation } from 'react-i18next'
 import ContextMenuItem from '@/components/context-menus/ContextMenuItem'
 import ContextMenu from '@/components/context-menus/ContextMenu'
 
 export default function ServerContextMenu({ server }) {
-  // TODO
-  const menuEvent = null // useContextMenuEvent()
+  const menuEvent = useContextMenuEvent()
   if (menuEvent && menuEvent.data) {
     server = menuEvent.data.server
   }

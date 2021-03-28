@@ -6,7 +6,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import { useJoinedServers } from '@/components/providers/DataProvider'
 import { useTranslation } from 'react-i18next'
 import ServerListItem from '@/components/serverlist/ServerListItem'
-// import { useContextMenuTrigger } from 'react-context-menu-wrapper'
+import { useContextMenuTrigger } from 'react-context-menu-wrapper'
 import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
@@ -59,11 +59,10 @@ export default function ServerList() {
 }
 
 function ServerListServer({ server }) {
-  // TODO
-  const contextMenuRef = null /*useContextMenuTrigger({
+  const contextMenuRef = useContextMenuTrigger({
     menuId: ContextMenuType.Server,
     data: { server }
-  })*/
+  })
 
   const [{ opacity }, dragRef] = useDrag({
     type: DragItemTypes.Server,

@@ -3087,6 +3087,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/events@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/events@npm:3.0.0"
+  checksum: 1407d79d6d5291caa89f27ef0f180eb133bc5a12f11886bd68f9ef9cffb962a575571d1b4d02d30a7329fe9b85d29b7c10543ed6dc516ad20f9a1e89c1e9c9b8
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:4.17.19":
   version: 4.17.19
   resolution: "@types/express-serve-static-core@npm:4.17.19"
@@ -3559,6 +3566,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e73d083c5a06bc03d176ee134ad514d7f4646254866aa7e680f7b867c3d1a9e7126e4ab15c558996d8cd5734376d0d9cc133c160c1aa9bbf3475ea2245b6ff83
+  languageName: node
+  linkType: hard
+
+"@types/shortid@npm:0.0.29":
+  version: 0.0.29
+  resolution: "@types/shortid@npm:0.0.29"
+  checksum: 4c96e2e820bc431502d3ce45628a1c0354cdd02fa588b31efa461faa7762988effc4b6a769c8bcbebdb5727e616ac7fc7216b8fe6e980aac0d4e8328652a6d6e
   languageName: node
   linkType: hard
 
@@ -12890,6 +12904,21 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"react-context-menu-wrapper@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "react-context-menu-wrapper@npm:3.0.0"
+  dependencies:
+    "@types/events": ^3.0.0
+    "@types/shortid": 0.0.29
+    prop-types: ^15.7.2
+    shortid: ^2.2.15
+  peerDependencies:
+    react: ^16.8.0
+    react-dom: ^16.8.0
+  checksum: 7376204c01f95fe0094011130762e59ce8af88ffd1bea5ff6a41f512a56f2c2f05d6e50aa11b41f92f80a5de35eef0e58ae751dae7f661fb049183887c50a8bc
+  languageName: node
+  linkType: hard
+
 "react-dnd-html5-backend@npm:^14.0.0":
   version: 14.0.0
   resolution: "react-dnd-html5-backend@npm:14.0.0"
@@ -14363,7 +14392,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"shortid@npm:^2.2.16":
+"shortid@npm:^2.2.15, shortid@npm:^2.2.16":
   version: 2.2.16
   resolution: "shortid@npm:2.2.16"
   dependencies:
@@ -15170,7 +15199,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:*, tailwindcss@npm:^2.0.4":
+"tailwindcss@npm:^2.0.4":
   version: 2.0.4
   resolution: "tailwindcss@npm:2.0.4"
   dependencies:
@@ -16357,6 +16386,7 @@ typescript@^4.2.3:
     postcss: ^8.2.8
     prettier: ^2.2.1
     react: ^17.0.2
+    react-context-menu-wrapper: ^3.0.0
     react-dnd: ^14.0.2
     react-dnd-html5-backend: ^14.0.0
     react-dnd-touch-backend: ^14.0.0
