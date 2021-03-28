@@ -17,15 +17,16 @@ export async function bootstrap() {
   console.log(`Initializing database connection...`)
   const orm = await MikroORM.init(mikroOrmConf)
 
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`Setting up the database...`)
-    const generator = orm.getSchemaGenerator()
-    await generator.dropSchema()
-    await generator.createSchema()
-    await generator.updateSchema()
+  // TODO don't seed in production
+  // if (process.env.NODE_ENV !== 'production') {
+  console.log(`Setting up the database...`)
+  const generator = orm.getSchemaGenerator()
+  await generator.dropSchema()
+  await generator.createSchema()
+  await generator.updateSchema()
 
-    await seed(orm.em.fork())
-  }
+  await seed(orm.em.fork())
+  // }
 
   console.log(`Bootstraping schema and server...`)
   const schema = await buildSchema(typeGraphQLConf)
