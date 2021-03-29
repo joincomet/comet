@@ -1,10 +1,8 @@
-import { forwardRef } from 'react'
 import { SidebarUserInfo } from '@/components/sidebars/base/SidebarUserInfo'
 
-export default forwardRef(({ children, right = false, show = true }, ref) => {
+export default function Sidebar({ children, right = false, show = true }) {
   return (
     <div
-      ref={ref}
       className={`${
         show ? 'flex' : 'hidden'
       } fixed bottom-0 w-60 bg-gray-200 dark:bg-gray-800 ${
@@ -17,4 +15,4 @@ export default forwardRef(({ children, right = false, show = true }, ref) => {
       {!right && <SidebarUserInfo />}
     </div>
   )
-})
+}

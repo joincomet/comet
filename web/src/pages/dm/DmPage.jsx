@@ -1,5 +1,4 @@
 import MainSidebar from '@/components/sidebars/HomeSidebar'
-
 import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import SendMessageBar from '@/components/message/SendMessageBar'
@@ -9,6 +8,7 @@ import DmHeader from '@/components/headers/DmHeader'
 import Container from '@/components/Container'
 import View from '@/components/View'
 import Scroller from '@/components/Scroller'
+import Messages from '@/components/message/Messages'
 
 export default function DmPage() {
   const { userId } = useParams()
@@ -18,34 +18,13 @@ export default function DmPage() {
   })
   const user = userData?.getUser
 
-  const [{ data: messagesData }] = useQuery({
-    query: GET_MESSAGES,
-    variables: { userId }
-  })
-
-  const messages = messagesData?.getMessages?.messages || []
-
   return (
     <>
       <DmHeader user={user} />
       <MainSidebar />
 
       <Container>
-        <View chatBar>
-          <Scroller>
-            {messages.map((message, index) => (
-              <Message
-                key={message.id}
-                message={message}
-                showUser={
-                  index === 0 ||
-                  messages[index - 1].author.id !== message.author.id
-                }
-              />
-            ))}
-          </Scroller>
-        </View>
-        <SendMessageBar user={user} />
+        <Messages user={user} />
       </Container>
     </>
   )

@@ -3,7 +3,7 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql'
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
 import * as entities from '@/entity'
 
-export default {
+export const mikroOrmConf = {
   highlighter: new SqlHighlighter(),
   metadataProvider: ReflectMetadataProvider,
   cache: { enabled: false },
@@ -17,9 +17,12 @@ export default {
   findOneOrFailHandler: (entityName: string) => {
     return new Error(`${entityName} not found!`)
   },
-  driverOptions: {
-    connection: { ssl: { rejectUnauthorized: false } }
-  },
+  driverOptions:
+    process.env.NODE_ENV === 'production'
+      ? {
+          connection: { ssl: { rejectUnauthorized: false } }
+        }
+      : {},
   migrations: {
     disableForeignKeys: false
   }

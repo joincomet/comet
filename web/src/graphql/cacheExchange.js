@@ -84,7 +84,8 @@ export const cacheExchange = ce({
     GetMessagesResponse: () => null,
     MessageSentResponse: () => null,
     MessageRemovedResponse: () => null,
-    GetFriendRequestsResponse: () => null
+    GetFriendRequestsResponse: () => null,
+    ChannelUsersResponse: () => null
   },
   resolvers: {
     Query: {
@@ -119,6 +120,7 @@ export const cacheExchange = ce({
         _variables,
         cache
       ) => {
+        // console.log({ userId, groupId, channelId, message })
         let variables
         if (userId) variables = { userId }
         if (groupId) variables = { groupId }

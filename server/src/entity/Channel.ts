@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, Int, ObjectType } from 'type-graphql'
 import { Message, Server, BaseEntity } from '@/entity'
 import {
   Collection,
@@ -32,6 +32,13 @@ export class Channel extends BaseEntity {
   @Property()
   isPrivate: boolean = false
 
+  @Field({ nullable: true })
   @Property({ nullable: true })
   lastMessageAt?: Date
+
+  @Field()
+  isUnread: boolean = false
+
+  @Field(() => Int)
+  mentionCount: number = 0
 }

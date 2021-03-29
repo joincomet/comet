@@ -100,6 +100,7 @@ export const seed = async (em: EntityManager) => {
     ...createUserFolders(userMichael),
     em.create(ServerUserJoin, { user: userAdmin, server: serverComet }),
     em.create(ServerUserJoin, { user: userDan, server: serverComet }),
+    em.create(ServerUserJoin, { user: userMichael, server: serverComet }),
     em.create(ServerFolder, {
       server: serverComet,
       folder: createFolder(

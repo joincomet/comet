@@ -1,6 +1,6 @@
 import { gql } from '@urql/core'
 
-export default gql`
+export const GET_SERVER_CHANNELS = gql`
   query GetServerChannels($serverId: ID!) {
     getServerChannels(serverId: $serverId) {
       id

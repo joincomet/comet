@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useQuery } from 'urql'
 import { GET_COMMENTS, GET_POST } from '@/graphql/queries'
 import Post from '@/components/post/Post'
@@ -12,6 +11,8 @@ import Tippy from '@tippyjs/react'
 import { createCommentTree, getParticipants } from '@/lib/commentUtils'
 import Comment from '@/components/comment/Comment'
 import { useTranslation } from 'react-i18next'
+import UserAvatar from '@/components/avatars/UserAvatar'
+import { useUser } from '@/components/providers/UserProvider'
 
 export default function PostPage() {
   const { postId } = useParams()
@@ -35,6 +36,8 @@ export default function PostPage() {
 
   const { t } = useTranslation()
 
+  const [currentUser] = useUser()
+
   return (
     <>
       <Header icon={<IconText className="w-5 h-5" />} title="Post" showDivider>
@@ -51,7 +54,21 @@ export default function PostPage() {
 
       <Container rightSidebar>
         <View>
-          {!!post && <Post post={post} forceExpand />}
+          <div className="pt-4 pl-4 pr-3">
+            <div className="rounded-md dark:bg-gray-800">
+              {!!post && <Post post={post} forceExpand />}
+            </div>
+          </div>
+
+          <div className="py-4 pl-4 pr-3">
+            <div className="dark:bg-gray-700 h-13 flex items-center rounded transition dark:hover:bg-gray-650 cursor-pointer">
+              <div className="px-3 border-r dark:border-gray-650 h-7">
+                <UserAvatar user={currentUser} size={7} />
+              </div>
+              <div className="text-sm text-secondary px-3">Write a reply</div>
+            </div>
+          </div>
+
           {comments.map(comment => (
             <Comment comment={comment} post={post} key={comment.id} />
           ))}

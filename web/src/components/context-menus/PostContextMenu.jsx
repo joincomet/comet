@@ -63,34 +63,10 @@ export default function PostContextMenu() {
           </div>
         </>
       )}
-      {(canManagePosts || canPinPost || canAddToFolder) && (
+      {canManagePosts && (
         <>
           <ContextMenuDivider />
           <div className="space-y-0.5">
-            {canAddToFolder && (
-              <ContextMenuItem
-                arrow
-                label={t('post.context.addToServerFolder')}
-              />
-            )}
-            {canPinPost && (
-              <ContextMenuItem
-                label={
-                  post.isPinned
-                    ? t('post.context.unpin')
-                    : t('post.context.pin')
-                }
-                onClick={() => {
-                  if (post.isPinned) {
-                    unpinPost({ postId: post.id })
-                    toast.success(t('post.context.unpinned'))
-                  } else {
-                    pinPost({ postId: post.id })
-                    toast.success(t('post.context.pinned'))
-                  }
-                }}
-              />
-            )}
             {canManagePosts && (
               <ContextMenuItem
                 label={t('post.context.remove')}

@@ -8,7 +8,7 @@ import {
   Resolver,
   UseMiddleware
 } from 'type-graphql'
-import { Channel, Server, ServerUserJoin } from '@/entity'
+import { Channel, Server, ServerUserJoin, User } from '@/entity'
 import {
   ChannelUsersResponse,
   GetServersArgs,
@@ -88,6 +88,8 @@ export class ServerQueries {
 
     const result = []
 
+    const compareFn = (a: User, b: User) => a.username.localeCompare(b.username)
+
     for (const role of channel.server.roles
       .getItems()
       .filter(role =>
@@ -98,6 +100,7 @@ export class ServerQueries {
         users: joins
           .filter(join => join.roles.getItems()[0] === role)
           .map(join => join.user)
+          .sort(compareFn)
       } as ChannelUsersResponse)
     }
 
@@ -116,11 +119,15 @@ export class ServerQueries {
               ).length === 0
         )
         .map(join => join.user)
+        .sort(compareFn)
     } as ChannelUsersResponse)
 
     result.push({
       role: 'Offline',
-      users: joins.filter(join => !join.user.isOnline).map(join => join.user)
+      users: joins
+        .filter(join => !join.user.isOnline)
+        .map(join => join.user)
+        .sort(compareFn)
     } as ChannelUsersResponse)
 
     return result

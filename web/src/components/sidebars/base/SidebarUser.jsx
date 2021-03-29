@@ -6,7 +6,12 @@ export default function SidebarUser({ user }) {
   return (
     <UserPopup user={user} placement="left">
       <SidebarItem large>
-        <UserAvatar className="w-8 h-8" user={user} size={9} />
+        <UserAvatar
+          user={user}
+          size={8}
+          showOnline
+          dotClassName="w-2.5 h-2.5 ring-3 dark:ring-gray-800"
+        />
         <div className="ml-3 font-medium text-tertiary">{user.name}</div>
       </SidebarItem>
     </UserPopup>

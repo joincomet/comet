@@ -39,6 +39,7 @@ export default function Messages({ channel, group, user }) {
       index => (index !== 0 ? messages[index - 1].id : 'loader'),
       [messages]
     ),
+    // Must be pageSize + 1 so that all newly loaded messages instantly get measured, otherwise jank occurs
     overscan: pageSize + 1
   })
 
@@ -59,6 +60,7 @@ export default function Messages({ channel, group, user }) {
 
   const [viewRef, inView, entry] = useInView()
 
+  // Load more messages when spinner enters view
   useEffect(() => {
     if (inView && messages.length > 0 && !fetching) {
       setPage(page + 1)
@@ -74,13 +76,13 @@ export default function Messages({ channel, group, user }) {
           width: `100%`,
           overflow: 'auto'
         }}
-        className="scrollbar dark:bg-gray-750"
+        className="scrollbar dark:bg-gray-750 flex flex-col"
       >
         <div
           style={{
             height: `${rowVirtualizer.totalSize}px`
           }}
-          className="relative w-full"
+          className="relative w-full mt-auto"
         >
           {rowVirtualizer.virtualItems.map(virtualRow => {
             const isLoaderRow = virtualRow.index === 0
@@ -97,7 +99,7 @@ export default function Messages({ channel, group, user }) {
               >
                 {isLoaderRow ? (
                   <div
-                    className="flex items-center justify-center h-20"
+                    className="flex items-center justify-center h-8"
                     ref={viewRef}
                   >
                     <IconSpinner />

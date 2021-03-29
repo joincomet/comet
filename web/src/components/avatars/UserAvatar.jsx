@@ -29,7 +29,7 @@ export default forwardRef(
         ref={mergeRefs(ref, contextMenuRef)}
         avatarUrl={user.avatarUrl}
         loading={loading}
-        className={`${className} bg-gray-200 dark:bg-gray-700 cursor-pointer`}
+        className={`${className} bg-gray-200 dark:bg-gray-650 cursor-pointer`}
         size={size}
       >
         {showOnline && (

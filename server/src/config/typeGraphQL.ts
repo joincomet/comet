@@ -4,7 +4,7 @@ import { BuildSchemaOptions } from 'type-graphql'
 import path from 'path'
 import * as resolvers from '@/resolver'
 
-export default {
+export const typeGraphQLConf = {
   resolvers: Object.values(resolvers) as unknown,
   emitSchemaFile:
     process.env.NODE_ENV === 'production'

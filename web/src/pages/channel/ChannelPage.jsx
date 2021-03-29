@@ -1,6 +1,6 @@
 import ServerSidebar from '@/components/sidebars/ServerSidebar'
 import Header from '@/components/headers/base/Header'
-import ChannelSidebar from '@/components/sidebars/ChannelUsersSidebar'
+import ChannelUsersSidebar from '@/components/sidebars/ChannelUsersSidebar'
 import {
   useChannel,
   useServer
@@ -20,7 +20,7 @@ export default function ChannelPage() {
         title={`${channel.name}`}
       />
       <ServerSidebar server={server} />
-      <ChannelSidebar server={server} />
+      <ChannelUsersSidebar channel={channel} />
       <Container rightSidebar>
         <Messages channel={channel} />
       </Container>

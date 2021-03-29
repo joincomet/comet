@@ -1,18 +1,12 @@
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState
-} from 'react'
-import Scroller from '@/components/Scroller'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Post from '@/components/post/Post'
 import { useQuery } from 'urql'
 import { GET_POSTS } from '@/graphql/queries'
 import { useStore } from '@/lib/stores/useStore'
 import { IconSpinner } from '@/lib/Icons'
 import { useVirtual } from 'react-virtual'
+import UserAvatar from '@/components/avatars/UserAvatar'
+import { useUser } from '@/components/providers/UserProvider'
 
 export default function Posts({ variables, showServerName }) {
   const { postsSort, postsTime } = useStore()
@@ -58,6 +52,8 @@ export default function Posts({ variables, showServerName }) {
     }
   }, [canFetchMore, posts.length, fetching, rowVirtualizer.virtualItems])
 
+  const [currentUser] = useUser()
+
   return (
     <div
       ref={parentRef}
@@ -68,6 +64,15 @@ export default function Posts({ variables, showServerName }) {
       }}
       className="scrollbar dark:bg-gray-750"
     >
+      <div className="py-4 pl-4 pr-3">
+        <div className="dark:bg-gray-700 h-13 flex items-center rounded transition dark:hover:bg-gray-650 cursor-pointer">
+          <div className="px-3 border-r dark:border-gray-650 h-7">
+            <UserAvatar user={currentUser} size={7} />
+          </div>
+          <div className="text-sm text-secondary px-3">Create a post</div>
+        </div>
+      </div>
+
       <div
         style={{
           height: `${rowVirtualizer.totalSize}px`

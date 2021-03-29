@@ -125,6 +125,10 @@ body {
   @apply scrollbar-thin dark:scrollbar-thumb-gray-800 dark:scrollbar-track-gray-725 scrollbar-thumb-rounded-md;
 }
 
+.scrollbar-dark {
+  @apply scrollbar-thin dark:scrollbar-thumb-gray-850 dark:scrollbar-track-gray-800 scrollbar-thumb-rounded-md;
+}
+
 [contentEditable=true]:empty:before{
   content: attr(data-placeholder);
   @apply text-gray-500 dark:text-gray-500;
