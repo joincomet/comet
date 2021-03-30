@@ -1,7 +1,7 @@
 import { gql } from '@urql/core'
 import { USER_FRAGMENT } from '@/graphql/fragments'
 
-export default gql`
+export const GET_BLOCKED_USERS = gql`
   query GetBlockedUsers {
     getBlockedUsers {
       ...USER_FRAGMENT

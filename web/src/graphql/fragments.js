@@ -36,6 +36,8 @@ export const COMMENT_FRAGMENT = gql`
     isDeleted
     isRemoved
     removedReason
+    createdAt
+    editedAt
   }
 `
 
@@ -79,6 +81,14 @@ export const FOLDER_FRAGMENT = gql`
     id
     name
     avatarUrl
+    description
+  }
+`
+
+export const CHANNEL_FRAGMENT = gql`
+  fragment CHANNEL_FRAGMENT on Channel {
+    id
+    name
     description
   }
 `

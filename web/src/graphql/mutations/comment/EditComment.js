@@ -1,9 +1,9 @@
 import { gql } from '@urql/core'
 import { COMMENT_FRAGMENT } from '@/graphql/fragments'
 
-export const REMOVE_COMMENT_VOTE = gql`
-  mutation RemoveCommentVote($commentId: ID!) {
-    removeCommentVote(commentId: $commentId) {
+export const EDIT_COMMENT = gql`
+  mutation EditComment($text: String!, $commentId: ID!) {
+    editComment(text: $text, commentId: $commentId) {
       ...COMMENT_FRAGMENT
     }
   }

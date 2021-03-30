@@ -1,1 +1,1 @@
-export { default as HIDE_DM } from './HideDm'
+export * from './HideDm'

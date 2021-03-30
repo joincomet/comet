@@ -1,7 +1,8 @@
 export {
   RiPushpinFill as IconPin,
-  RiRocketFill as IconVote,
+  // RiRocketFill as IconVote,
   RiFireFill as IconHot,
+  RiCodeBoxFill as IconFormatCodeBlock,
   // CATEGORIES
   RiBasketballFill as IconCategorySports,
   RiFootprintFill as IconCategoryLifestyle,
@@ -44,6 +45,12 @@ export {
   HiRefresh as IconRefresh,
   HiPlusCircle as IconUpload,
   HiUsers as IconUsers,
+  // EDITOR
+  HiCode as IconFormatCodeInline,
+  HiEmojiHappy as IconFormatEmoji,
+  HiPhotograph as IconFormatImage,
+  HiMinus as IconFormatDivider,
+  HiLink as IconFormatLink,
   // CATEGORIES
   HiChatAlt2 as IconCategoryDiscussion,
   HiCode as IconCategoryProgramming,
@@ -59,6 +66,19 @@ export {
 } from 'react-icons/hi'
 
 export {
+  BiBold as IconFormatBold,
+  BiItalic as IconFormatItalic,
+  BiUnderline as IconFormatUnderline,
+  BiHeading as IconFormatHeading,
+  BiStrikethrough as IconFormatStrikethrough,
+  BiHide as IconFormatSpoiler
+} from 'react-icons/bi'
+
+export {
+  // EDITOR
+  MdFormatQuote as IconFormatQuote,
+  MdFormatListNumbered as IconFormatListNumbered,
+  MdFormatListBulleted as IconFormatListBulleted,
   // CATEGORIES
   MdTv as IconCategoryEntertainment
 } from 'react-icons/md'
@@ -69,7 +89,10 @@ export {
   FaGamepad as IconCategoryGaming
 } from 'react-icons/fa'
 
-export { IoTelescope as IconExplore } from 'react-icons/io5'
+export {
+  IoTelescope as IconExplore,
+  IoRocketSharp as IconVote
+} from 'react-icons/io5'
 
 export {
   SiDiscord as IconDiscord,

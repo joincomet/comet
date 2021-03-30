@@ -1,5 +1,10 @@
-import { POST_FRAGMENT } from '@/graphql/fragments'
-import { GET_MESSAGES, GET_POSTS } from '@/graphql/queries'
+import { COMMENT_FRAGMENT, POST_FRAGMENT } from '@/graphql/fragments'
+import {
+  GET_COMMENTS,
+  GET_CURRENT_USER,
+  GET_MESSAGES,
+  GET_POSTS
+} from '@/graphql/queries'
 import { cacheExchange as ce } from '@urql/exchange-graphcache'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
 
@@ -44,37 +49,81 @@ const removeMessageFromGetMessages = (messageId, cache) => {
 }
 
 const pinPost = ({ postId: id }, cache) => {
-  cache.writeFragment(POST_FRAGMENT, {
+  return {
+    __typename: 'Post',
     id,
     isPinned: true
-  })
+  }
 }
 
 const unpinPost = ({ postId: id }, cache) => {
-  cache.writeFragment(POST_FRAGMENT, {
+  return {
+    __typename: 'Post',
     id,
     isPinned: false
-  })
+  }
 }
 
 const removePost = ({ postId: id, reason }, cache) => {
-  cache.writeFragment(POST_FRAGMENT, {
+  removePostFromGetPosts(id, cache)
+  return {
+    __typename: 'Post',
     id,
     isPinned: false,
     isRemoved: true,
     text: `[removed${reason ? `: ${reason}` : ''}]`
-  })
-  removePostFromGetPosts(id, cache)
+  }
 }
 
 const deletePost = ({ postId: id }, cache) => {
-  cache.writeFragment(POST_FRAGMENT, {
+  removePostFromGetPosts(id, cache)
+  return {
+    __typename: 'Post',
     id,
     isPinned: false,
     isDeleted: true,
     text: '[deleted]'
-  })
-  removePostFromGetPosts(id, cache)
+  }
+}
+
+const createPostVote = ({ postId: id }, cache) => {
+  const post = cache.readFragment(POST_FRAGMENT, { id })
+  return {
+    __typename: 'Post',
+    id,
+    isVoted: true,
+    voteCount: post.voteCount + 1
+  }
+}
+
+const removePostVote = ({ postId: id }, cache) => {
+  const post = cache.readFragment(POST_FRAGMENT, { id })
+  return {
+    __typename: 'Post',
+    id,
+    isVoted: false,
+    voteCount: post.voteCount - 1
+  }
+}
+
+const createCommentVote = ({ commentId: id }, cache) => {
+  const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
+  return {
+    __typename: 'Comment',
+    id,
+    isVoted: true,
+    voteCount: comment.voteCount + 1
+  }
+}
+
+const removeCommentVote = ({ commentId: id }, cache) => {
+  const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
+  return {
+    __typename: 'Post',
+    id,
+    isVoted: false,
+    voteCount: comment.voteCount - 1
+  }
 }
 
 export const cacheExchange = ce({
@@ -105,22 +154,45 @@ export const cacheExchange = ce({
     pinPost,
     unpinPost,
     removePost,
-    deletePost
+    deletePost,
+    createPostVote,
+    removePostVote,
+    createCommentVote,
+    removeCommentVote
   },
   updates: {
     Mutation: {
-      pinPost: (data, variables, cache) => pinPost(variables, cache),
-      unpinPost: (data, variables, cache) => unpinPost(variables, cache),
-      removePost: (data, variables, cache) => removePost(variables, cache),
-      deletePost: (data, variables, cache) => deletePost(variables, cache)
+      createComment({ createComment: comment }, { postId }, cache) {
+        cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName === 'getComments')
+          .forEach(field => {
+            cache.updateQuery(
+              {
+                query: GET_COMMENTS,
+                variables: {
+                  postId,
+                  sort: field.arguments.sort
+                }
+              },
+              data => {
+                if (data !== null) {
+                  data.getComments.unshift(comment)
+                  return data
+                } else {
+                  return null
+                }
+              }
+            )
+          })
+      }
     },
     Subscription: {
-      messageSent: (
+      messageSent(
         { messageSent: { userId, groupId, channelId, message } },
         _variables,
         cache
-      ) => {
-        // console.log({ userId, groupId, channelId, message })
+      ) {
         let variables
         if (userId) variables = { userId }
         if (groupId) variables = { groupId }
@@ -151,18 +223,18 @@ export const cacheExchange = ce({
             )
           })
       },
-      messageUpdated: (
+      messageUpdated(
         { messageUpdated: { userId, groupId, channelId, message } },
         _variables,
         cache
-      ) => {
+      ) {
         // TODO
       },
-      messageRemoved: (
+      messageRemoved(
         { messageRemoved: { userId, groupId, channelId, messageId } },
         _variables,
         cache
-      ) => {
+      ) {
         // TODO
       }
     }

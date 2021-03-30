@@ -1,146 +1,141 @@
-import { IconReply, IconDotsHorizontal, IconVote } from '@/lib/Icons'
-import { useEffect, useState } from 'react'
+import { IconDotsHorizontal, IconVote } from '@/lib/Icons'
+import { useState } from 'react'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import Twemoji from 'react-twemoji'
-import Tippy from '@tippyjs/react'
-import { useCommentStore } from '@/lib/stores/useCommentStore'
 import UserPopup from '@/components/popups/UserPopup'
-import { commentCollapse } from './Comment.module.scss'
 import { useMutation } from 'urql'
 import { CREATE_COMMENT_VOTE, REMOVE_COMMENT_VOTE } from '@/graphql/mutations'
-import { fullDate, shortDate } from '@/lib/timeUtils'
+import { calendarDate } from '@/lib/timeUtils'
+import ctl from '@netlify/classnames-template-literals'
+import CommentEditor from '@/components/comment/CommentEditor'
+import { useTranslation } from 'react-i18next'
+
+const replyBtnClass = ctl(`
+  ml-4
+  text-xs
+  text-gray-500
+  hover:text-gray-700
+  dark:hover:text-gray-300
+  font-medium
+  leading-none
+  select-none
+  cursor-pointer
+`)
 
 export default function Comment({
   comment,
   post,
   level = 0,
-  setParentComment
+  setParentComment,
+  isLast
 }) {
-  const { setCreateComment } = useCommentStore()
   const [collapse, setCollapse] = useState(false)
-  const [editing, setEditing] = useState(false)
+  const [replying, setReplying] = useState(false)
+  const { t } = useTranslation()
 
   return (
-    <div className={`relative`}>
+    <div
+      className={`relative rounded dark:bg-gray-800`}
+      style={{ paddingLeft: level + 'rem' }}
+    >
       <div id={comment.id} />
 
-      <div
-        className={commentCollapse}
-        style={{ marginLeft: 1 * level + 'rem' }}
-        onClick={() => setCollapse(!collapse)}
-      />
+      <div className="flex px-3 pt-3">
+        <UserPopup user={comment.author}>
+          <UserAvatar
+            size={7}
+            className="cursor-pointer transition hover:opacity-90"
+            user={comment.author}
+          />
+        </UserPopup>
 
-      <div
-        className="relative transition dark:hover:bg-gray-775"
-        style={{ paddingLeft: 1 * level + 'rem' }}
-      >
-        <div className="pl-4">
-          <div className="pl-4 pr-8 pt-3 pb-1.5 transition dark:hover:bg-gray-775">
-            <div
-              onClick={
-                collapse
-                  ? () => {
-                      setCollapse(false)
-                    }
-                  : () => {}
-              }
-              className={`transition w-full ${
-                collapse ? 'opacity-50 hover:opacity-100 cursor-pointer' : ''
-              } ${collapse || comment.deleted ? 'h-10' : ''}`}
-            >
-              <div className="flex items-center text-13 font-medium text-tertiary pb-1.5">
-                {comment.author ? (
-                  <>
-                    <UserPopup user={comment.author}>
-                      <UserAvatar
-                        size={5}
-                        className="mr-1.5 cursor-pointer transition hover:opacity-90"
-                        user={comment.author}
-                        loading="lazy"
-                      />
-                    </UserPopup>
-                    <UserPopup user={comment.author}>
-                      <span className="hover:underline cursor-pointer">
-                        {comment.author.name}
-                      </span>
-                    </UserPopup>
-                  </>
-                ) : (
-                  <span className="hover:underline cursor-pointer">
-                    [deleted]
-                  </span>
-                )}
-                &nbsp;&middot;&nbsp;
-                <Tippy content={fullDate(comment.createdAt)}>
-                  <span>{shortDate(comment.createdAt)}</span>
-                </Tippy>
+        <div
+          className={`pl-3 pb-3 w-full ${
+            (!!comment.childComments.length || isLast) && !collapse
+              ? 'border-b dark:border-gray-750'
+              : ''
+          }`}
+        >
+          <div className="flex items-end pb-1.5">
+            <UserPopup user={comment.author}>
+              <div className="text-sm font-medium cursor-pointer hover:underline leading-none text-accent">
+                {comment.author.name}
               </div>
-
-              {!collapse && !comment.deleted && (
-                <>
-                  <Twemoji options={{ className: 'twemoji' }}>
-                    <div
-                      className="prose prose-sm dark:prose-dark max-w-none"
-                      dangerouslySetInnerHTML={{ __html: comment.text }}
-                    />
-                  </Twemoji>
-
-                  <div className="flex items-center space-x-1 pt-1.5 -ml-2">
-                    <VoteButton comment={comment} />
-
-                    {!comment.deleted && (
-                      <div
-                        onClick={() => {
-                          setParentComment(comment)
-                          setCreateComment(true)
-                        }}
-                        className="action-chip text-tertiary"
-                      >
-                        <IconReply className="w-5 h-5 mr-1.5" />
-                        <div className="text-xs font-medium">Reply</div>
-                      </div>
-                    )}
-
-                    <Options comment={comment} />
-                  </div>
-                </>
-              )}
+            </UserPopup>
+            <div className="text-11 text-mid font-medium pl-2 leading-none">
+              {calendarDate(comment.createdAt)}
             </div>
           </div>
+
+          <Twemoji options={{ className: 'twemoji' }}>
+            <div
+              className="prose prose-sm dark:prose-dark max-w-none"
+              dangerouslySetInnerHTML={{ __html: comment.text }}
+            />
+          </Twemoji>
+
+          <div className="flex items-center pt-2">
+            <VoteButton comment={comment} />
+            <div
+              className={replyBtnClass}
+              onClick={() => setReplying(!replying)}
+            >
+              {replying ? t('comment.cancelReply') : t('comment.reply')}
+            </div>
+            {!!comment.childCount && (
+              <div
+                className={replyBtnClass}
+                onClick={() => setCollapse(!collapse)}
+              >
+                {collapse
+                  ? `${t('comment.showReplies')} (${comment.childCount})`
+                  : t('comment.hideReplies')}
+              </div>
+            )}
+
+            <div
+              className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+            >
+              <IconDotsHorizontal className="w-5 h-5" />
+            </div>
+          </div>
+
+          {replying && (
+            <div className="pt-3 max-w-screen-md w-full">
+              <CommentEditor
+                postId={post.id}
+                parentCommentId={comment.id}
+                setOpen={setReplying}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {!collapse &&
-        comment.childComments &&
-        comment.childComments.length > 0 &&
-        comment.childComments.map(childComment => (
-          <Comment
-            key={childComment.id}
-            comment={childComment}
-            level={level + 1}
-            setParentComment={setParentComment}
-            post={post}
-          />
-        ))}
+      <div className="pl-3">
+        {!collapse &&
+          comment.childComments.map((childComment, index) => (
+            <Comment
+              key={childComment.id}
+              comment={childComment}
+              level={level + 1}
+              setParentComment={setParentComment}
+              post={post}
+              isLast={index < comment.childComments.length - 1}
+            />
+          ))}
+      </div>
     </div>
   )
 }
 
-function Options({ comment }) {
-  return (
-    <div className="inline-flex cursor-pointer items-center text-mid p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-      <IconDotsHorizontal className="w-5 h-5" />
-    </div>
-  )
-}
-
-function VoteButton({ comment, setComment }) {
+function VoteButton({ comment }) {
   const variables = { commentId: comment.id }
   const [_, createVote] = useMutation(CREATE_COMMENT_VOTE)
   const [__, removeVote] = useMutation(REMOVE_COMMENT_VOTE)
 
   const toggleVote = () => {
-    if (comment.isVoted) createVote(variables)
+    if (!comment.isVoted) createVote(variables)
     else removeVote(variables)
   }
 
@@ -150,12 +145,14 @@ function VoteButton({ comment, setComment }) {
         e.stopPropagation()
         toggleVote()
       }}
-      className={`action-chip ${
-        comment.isVoted ? 'text-red-400' : 'text-tertiary'
-      }`}
+      className={`${
+        comment.isVoted
+          ? 'text-red-400'
+          : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+      } flex items-center cursor-pointer`}
     >
       <IconVote className="w-4 h-4" />
-      <div className="ml-1.5 text-xs font-medium">{comment.voteCount}</div>
+      <div className="ml-2 text-xs font-medium">{comment.voteCount}</div>
     </div>
   )
 }

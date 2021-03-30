@@ -39,16 +39,20 @@ body {
   @apply text-blue-500;
 }
 
+.placeholder-mid {
+  @apply placeholder-gray-500 dark:placeholder-gray-500;
+}
+
 .placeholder-tertiary {
   @apply placeholder-gray-600 dark:placeholder-gray-400;
 }
 
 .placeholder-secondary {
-  @apply placeholder-gray-800 dark:placeholder-gray-200;
+  @apply placeholder-gray-700 dark:placeholder-gray-300;
 }
 
 .placeholder-primary {
-  @apply placeholder-black dark:placeholder-white;
+  @apply placeholder-gray-900 dark:placeholder-gray-100;
 }
 
 .menu-items {

@@ -1,6 +1,6 @@
 import { gql } from '@urql/core'
 
-export default gql`
+export const REMOVE_MESSAGE = gql`
   mutation RemoveMessage($messageId: ID!) {
     removeMessage(messageId: $messageId)
   }

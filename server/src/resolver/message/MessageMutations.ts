@@ -33,7 +33,7 @@ export class MessageMutations {
     ServerPermission.SendMessages
   )
   @CheckGroupMember()
-  @Mutation(() => Boolean, { description: 'Create a chat message' })
+  @Mutation(() => Message, { description: 'Create a chat message' })
   async sendMessage(
     @Ctx() { user, em }: Context,
     @Args() { text, channelId, groupId, userId }: SendMessageArgs,
@@ -41,7 +41,7 @@ export class MessageMutations {
     messageSent: Publisher<MessageSentPayload>,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
-  ): Promise<boolean> {
+  ) {
     const channel = channelId
       ? await em.findOneOrFail(Channel, channelId)
       : null
@@ -94,11 +94,11 @@ export class MessageMutations {
       channelId: channel?.id
     })
 
-    return true
+    return message
   }
 
   @CheckMessageAuthor()
-  @Mutation(() => Boolean)
+  @Mutation(() => Message)
   async editMessage(
     @Arg('text', { description: 'New message text' }) text: string,
     @Arg('messageId', () => ID, { description: 'ID of message to edit' })
@@ -106,7 +106,7 @@ export class MessageMutations {
     @PubSub(SubscriptionTopic.MessageUpdated)
     messageUpdated: Publisher<MessageSentPayload>,
     @Ctx() { user, em }: Context
-  ): Promise<boolean> {
+  ) {
     if (!text) throw new Error('Text cannot be empty')
     const message = await em.findOneOrFail(Message, messageId, [
       'author',
@@ -124,7 +124,7 @@ export class MessageMutations {
       groupId: message.group?.id,
       channelId: message.channel?.id
     })
-    return true
+    return message
   }
 
   @CheckMessageAuthor()

@@ -1,1 +1,1 @@
-export { default as GET_NOTIFICATIONS } from './GetNotifications'
+export * from './GetNotifications'

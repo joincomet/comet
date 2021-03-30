@@ -1,7 +1,7 @@
 import { gql } from '@urql/core'
 import { USER_FRAGMENT } from '@/graphql/fragments'
 
-export default gql`
+export const GET_CURRENT_USER = gql`
   query GetCurrentUser {
     getCurrentUser {
       ...USER_FRAGMENT

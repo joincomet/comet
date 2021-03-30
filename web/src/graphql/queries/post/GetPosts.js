@@ -5,7 +5,7 @@ import {
   USER_FRAGMENT
 } from '@/graphql/fragments'
 
-export default gql`
+export const GET_POSTS = gql`
   query GetPosts(
     $sort: GetPostsSort
     $page: Int

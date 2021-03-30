@@ -1,7 +1,7 @@
 import { gql } from '@urql/core'
 import { MESSAGE_FRAGMENT, USER_FRAGMENT } from '@/graphql/fragments'
 
-export default gql`
+export const GET_MESSAGES = gql`
   query GetMessages(
     $channelId: ID
     $userId: ID

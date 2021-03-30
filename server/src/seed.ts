@@ -69,7 +69,8 @@ export const seed = async (em: EntityManager) => {
     name: 'Michael',
     tag: '0001',
     email: 'michael@joincomet.app',
-    passwordHash
+    passwordHash,
+    isAdmin: true
   })
 
   const serverComet = em.create(Server, {

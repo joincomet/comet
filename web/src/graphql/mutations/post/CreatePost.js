@@ -1,8 +1,8 @@
 import { gql } from '@urql/core'
 
-export default gql`
+export const CREATE_POST = gql`
   mutation CreatePost(
-    $title: String
+    $title: String!
     $linkUrl: String
     $text: String
     $serverId: ID!

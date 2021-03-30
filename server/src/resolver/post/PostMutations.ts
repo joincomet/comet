@@ -68,7 +68,7 @@ export class PostMutations {
   }
 
   @CheckPostAuthor()
-  @Mutation(() => Boolean, {
+  @Mutation(() => Post, {
     description: 'Edit a post (must be author)'
   })
   async editPost(
@@ -87,7 +87,7 @@ export class PostMutations {
 
     await em.persistAndFlush(post)
 
-    return true
+    return post
   }
 
   @CheckPostAuthor()
@@ -106,7 +106,7 @@ export class PostMutations {
   }
 
   @CheckPostServerPermission(ServerPermission.VotePost)
-  @Mutation(() => Boolean, { description: 'Add vote to post' })
+  @Mutation(() => Post, { description: 'Add vote to post' })
   async createPostVote(
     @Ctx() { user, em }: Context,
     @Arg('postId', () => ID, {
@@ -119,12 +119,13 @@ export class PostMutations {
     if (vote) throw new Error('You have already voted this post')
     vote = em.create(PostVote, { user, post })
     post.voteCount++
+    post.isVoted = true
     await em.persistAndFlush([post, vote])
-    return true
+    return post
   }
 
   @CheckPostServerPermission(ServerPermission.VotePost)
-  @Mutation(() => Boolean, { description: 'Remove vote from post' })
+  @Mutation(() => Post, { description: 'Remove vote from post' })
   async removePostVote(
     @Ctx() { user, em }: Context,
     @Arg('postId', () => ID, {
@@ -136,8 +137,9 @@ export class PostMutations {
     const post = await em.findOneOrFail(Post, postId)
     const vote = await em.findOneOrFail(PostVote, { user, post })
     post.voteCount--
-    await em.remove(vote).persistAndFlush([post, vote])
-    return true
+    post.isVoted = false
+    await em.remove(vote).persistAndFlush([post])
+    return post
   }
 
   @CheckPostServerPermission(ServerPermission.ManagePosts)
@@ -162,7 +164,7 @@ export class PostMutations {
   }
 
   @CheckPostServerPermission(ServerPermission.ManagePosts)
-  @Mutation(() => Boolean, {
+  @Mutation(() => Post, {
     description: 'Pin a post (requires ServerPermission.PinPosts)'
   })
   async pinPost(
@@ -174,11 +176,11 @@ export class PostMutations {
     if (post.isPinned) throw new Error('Post is already pinned')
     post.isPinned = true
     await em.persistAndFlush(post)
-    return true
+    return post
   }
 
   @CheckPostServerPermission(ServerPermission.ManagePosts)
-  @Mutation(() => Boolean, {
+  @Mutation(() => Post, {
     description: 'Unpin a post (requires ServerPermission.PinPosts)'
   })
   async unpinPost(
@@ -190,6 +192,6 @@ export class PostMutations {
     if (!post.isPinned) throw new Error('Post is not pinned')
     post.isPinned = false
     await em.persistAndFlush(post)
-    return true
+    return post
   }
 }

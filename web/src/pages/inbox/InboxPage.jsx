@@ -1,7 +1,4 @@
-import Header from '@/components/headers/base/Header'
-import { IconInbox } from '@/lib/Icons'
 import { useStore } from '@/lib/stores/useStore'
-import HeaderTab from '@/components/headers/base/HeaderTab'
 import InboxHeader from '@/components/headers/InboxHeader'
 import Container from '@/components/Container'
 import View from '@/components/View'

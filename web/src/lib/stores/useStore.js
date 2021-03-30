@@ -13,8 +13,12 @@ export const useStore = create(set => ({
   setPostsTime: postsTime => set({ postsTime }),
   commentsSort: 'Top',
   setCommentsSort: commentsSort => set({ commentsSort }),
+  liveMode: false,
+  setLiveMode: liveMode => set({ liveMode }),
+
+  // Right Sidebar Toggles
   showFolders: true,
   setShowFolders: showFolders => set({ showFolders }),
-  liveMode: false,
-  setLiveMode: liveMode => set({ liveMode })
+  showUsers: true,
+  setShowUsers: showUsers => set({ showUsers })
 }))

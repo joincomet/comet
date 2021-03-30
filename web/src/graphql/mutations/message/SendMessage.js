@@ -1,6 +1,7 @@
 import { gql } from '@urql/core'
+import { MESSAGE_FRAGMENT } from '@/graphql/fragments'
 
-export default gql`
+export const SEND_MESSAGE = gql`
   mutation SendMessage(
     $text: String!
     $channelId: ID
@@ -12,6 +13,9 @@ export default gql`
       channelId: $channelId
       groupId: $groupId
       userId: $userId
-    )
+    ) {
+      ...MESSAGE_FRAGMENT
+    }
   }
+  ${MESSAGE_FRAGMENT}
 `

@@ -1,10 +1,10 @@
 import { ArgsType, Field, ID } from 'type-graphql'
-import { ArrayMaxSize, IsOptional, Length, Matches } from 'class-validator'
+import { ArrayMaxSize, IsOptional, Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 @ArgsType()
 export class CreatePostArgs {
-  @Field({ nullable: true })
+  @Field()
   @Length(1, 300, { message: 'Title must be no longer than 300 characters.' })
   title: string
 

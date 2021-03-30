@@ -1,6 +1,6 @@
 import { gql } from '@urql/core'
 
-export default gql`
+export const GET_SERVER_PERMISSIONS = gql`
   query GetServerPermissions($serverId: ID!) {
     getServerPermissions(serverId: $serverId)
   }

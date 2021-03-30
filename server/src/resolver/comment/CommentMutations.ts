@@ -30,12 +30,15 @@ export class CommentMutations {
     if (!text) throw new Error('Comment cannot be empty')
 
     const post = await em.findOneOrFail(Post, postId)
+    const parentComment = parentCommentId
+      ? await em.findOneOrFail(Comment, parentCommentId, ['author'])
+      : null
 
     text = handleText(text)
 
     const comment = em.create(Comment, {
       text: text,
-      parentCommentId,
+      parentComment,
       post,
       author: user
     })
@@ -43,15 +46,15 @@ export class CommentMutations {
 
     em.persist([comment, post])
 
-    if (parentCommentId) {
-      const parentComment = await em.findOneOrFail(Comment, parentCommentId, [
-        'author'
-      ])
+    if (parentComment) {
       if (parentComment.author !== user) {
         em.persist(
           em.create(Notification, {
+            post,
             comment,
-            toUser: parentComment.author
+            parentComment,
+            toUser: parentComment.author,
+            fromUser: user
           })
         )
       }
@@ -60,8 +63,10 @@ export class CommentMutations {
       if (post.author !== user) {
         em.persist(
           em.create(Notification, {
+            post,
             comment,
-            toUser: post.author
+            toUser: post.author,
+            fromUser: user
           })
         )
       }
@@ -97,8 +102,8 @@ export class CommentMutations {
   }
 
   @CheckCommentAuthor()
-  @Mutation(() => Boolean, { description: 'Update a comment' })
-  async updateComment(
+  @Mutation(() => Comment, { description: 'Update a comment' })
+  async editComment(
     @Arg('commentId', () => ID) commentId: string,
     @Arg('text', { description: 'New comment text' }) text: string,
     @Ctx() { user, em }: Context
@@ -110,11 +115,11 @@ export class CommentMutations {
     comment.editedAt = new Date()
     comment.text = text
     await em.persistAndFlush(comment)
-    return true
+    return comment
   }
 
   @CheckCommentServerPermission(ServerPermission.VoteComment)
-  @Mutation(() => Boolean, { description: 'Add vote to a comment' })
+  @Mutation(() => Comment, { description: 'Add vote to a comment' })
   async createCommentVote(
     @Ctx() { user, em }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to vote' })
@@ -125,12 +130,13 @@ export class CommentMutations {
     if (vote) throw new Error('You have already voted this comment')
     vote = em.create(CommentVote, { user, comment })
     comment.voteCount++
+    comment.isVoted = true
     await em.persistAndFlush([comment, vote])
-    return true
+    return comment
   }
 
   @CheckCommentServerPermission(ServerPermission.VoteComment)
-  @Mutation(() => Boolean, { description: 'Remove vote from a comment' })
+  @Mutation(() => Comment, { description: 'Remove vote from a comment' })
   async removeCommentVote(
     @Ctx() { user, em }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to remove vote' })
@@ -139,8 +145,9 @@ export class CommentMutations {
     const comment = await em.findOneOrFail(Comment, commentId)
     const vote = await em.findOneOrFail(CommentVote, { user, comment })
     comment.voteCount--
-    await em.remove(vote).persistAndFlush([comment, vote])
-    return true
+    comment.isVoted = false
+    await em.remove(vote).persistAndFlush([comment])
+    return comment
   }
 
   @CheckCommentServerPermission(ServerPermission.ManageComments)
@@ -148,11 +155,14 @@ export class CommentMutations {
     description: 'Remove a comment (Requires ServerPermission.ManageComments)'
   })
   async removeComment(
+    @Ctx() { em, user }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to remove' })
     commentId: string,
-    @Arg('reason', { description: 'Reason for comment removal' })
-    reason: string,
-    @Ctx() { em, user }: Context
+    @Arg('reason', {
+      description: 'Reason for comment removal',
+      nullable: true
+    })
+    reason?: string
   ) {
     const comment = await em.findOneOrFail(Comment, commentId)
 

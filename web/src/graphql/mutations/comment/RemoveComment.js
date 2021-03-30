@@ -1,6 +1,6 @@
 import { gql } from '@urql/core'
 
-export default gql`
+export const REMOVE_COMMENT = gql`
   mutation RemoveComment($commentId: ID!, $reason: String) {
     removeComment(commentId: $commentId, reason: $reason)
   }

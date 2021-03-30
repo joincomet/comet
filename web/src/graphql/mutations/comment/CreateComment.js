@@ -1,7 +1,7 @@
 import { gql } from '@urql/core'
-import { COMMENT_FRAGMENT } from '@/graphql/fragments'
+import { COMMENT_FRAGMENT, USER_FRAGMENT } from '@/graphql/fragments'
 
-export default gql`
+export const CREATE_COMMENT = gql`
   mutation CreateComment($text: String!, $postId: ID!, $parentCommentId: ID) {
     createComment(
       text: $text
@@ -9,7 +9,11 @@ export default gql`
       parentCommentId: $parentCommentId
     ) {
       ...COMMENT_FRAGMENT
+      author {
+        ...USER_FRAGMENT
+      }
     }
   }
   ${COMMENT_FRAGMENT}
+  ${USER_FRAGMENT}
 `

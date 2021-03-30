@@ -5,7 +5,7 @@ import {
   USER_FRAGMENT
 } from '@/graphql/fragments'
 
-export default gql`
+export const GET_POST = gql`
   query GetPost($postId: ID!) {
     getPost(postId: $postId) {
       ...POST_FRAGMENT

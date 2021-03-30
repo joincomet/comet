@@ -1,1 +1,1 @@
-export { default as GET_COMMENTS } from './GetComments'
+export * from './GetComments'

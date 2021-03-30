@@ -4,11 +4,11 @@ import SidebarUser from '@/components/sidebars/base/SidebarUser'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import { useTranslation } from 'react-i18next'
 
-export default forwardRef(({ post, users = [] }, ref) => {
+export default forwardRef(({ post, users = [], show }, ref) => {
   const { t } = useTranslation()
 
   return (
-    <Sidebar right ref={ref}>
+    <Sidebar right ref={ref} show={show}>
       <div className="px-1">
         <SidebarLabel>{t('post.creator')}</SidebarLabel>
         {post && <SidebarUser user={post.author} />}

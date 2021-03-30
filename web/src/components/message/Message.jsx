@@ -1,9 +1,6 @@
 import UserPopup from '@/components/popups/UserPopup'
 import UserAvatar from '@/components/avatars/UserAvatar'
-import dayjs from 'dayjs'
-import calendar from 'dayjs/plugin/calendar'
-
-dayjs.extend(calendar)
+import { calendarDate, shortTime } from '@/lib/timeUtils'
 
 export default function Message({ showUser, message, measure }) {
   return (
@@ -19,7 +16,7 @@ export default function Message({ showUser, message, measure }) {
           </UserPopup>
         ) : (
           <div className="w-10 text-11 whitespace-nowrap text-mid group-hover:opacity-100 opacity-0 cursor-default leading-5 select-none">
-            {dayjs(message.createdAt).format('h:mm A')}
+            {shortTime(message.createdAt)}
           </div>
         )}
 
@@ -32,7 +29,7 @@ export default function Message({ showUser, message, measure }) {
                 </div>
               </UserPopup>
               <div className="text-11 text-mid pl-2 leading-none cursor-default select-none">
-                {dayjs(message.createdAt).calendar()}
+                {calendarDate(message.createdAt)}
               </div>
             </div>
           )}

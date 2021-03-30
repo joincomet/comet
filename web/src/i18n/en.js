@@ -100,12 +100,18 @@ export const en = {
     }
   },
   post: {
+    createPost: 'Create a post',
+    create: {
+      submit: 'Post',
+      cancel: 'Cancel'
+    },
     type: {
       text: 'Text Post',
       link: 'Link Post',
       image: 'Image Post',
       album: 'Image Album'
     },
+    createComment: 'Write a comment',
     commentCount: '{{count}} Comment',
     commentCount_plural: '{{count}} Comments',
     participantCount: '{{count}} Participant',
@@ -131,6 +137,7 @@ export const en = {
       reported: 'Post reported!'
     },
     hideParticipants: 'Hide Participants',
+    showParticipants: 'Show Participants',
     pinnedTo: 'Pinned to {{server.name}}',
     expand: 'Show Details',
     collapse: 'Hide Details'
@@ -268,6 +275,8 @@ export const en = {
     }
   },
   channel: {
+    hideUsers: 'Hide Users',
+    showUsers: 'Show Users',
     create: 'Create Channel',
     permission: {
       [ChannelPermission.ViewChannel]: {
@@ -333,6 +342,14 @@ export const en = {
     upload: 'Upload a File'
   },
   comment: {
+    reply: 'Reply',
+    cancelReply: 'Cancel Reply',
+    hideReplies: 'Hide Replies',
+    showReplies: 'Show Replies',
+    create: {
+      submit: 'Comment',
+      cancel: 'Cancel'
+    },
     context: {
       remove: 'Remove Comment',
       delete: 'Delete Comment',

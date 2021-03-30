@@ -1,13 +1,15 @@
 import { gql } from '@urql/core'
 import { USER_FRAGMENT } from '@/graphql/fragments'
 
-export default gql`
+export const GET_NOTIFICATIONS = gql`
   query GetNotifications($unreadOnly: Boolean) {
     getNotifications(unreadOnly: $unreadOnly) {
       id
       comment {
         id
-        parentCommentId
+        parentComment {
+          id
+        }
         text
         voteCount
         author {

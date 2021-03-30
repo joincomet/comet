@@ -7,17 +7,12 @@ import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import HeaderTab from '@/components/headers/base/HeaderTab'
 import { HiNewspaper } from 'react-icons/hi'
+import ShowFoldersButton from '@/components/headers/base/ShowFoldersButton'
 
 const iconClassName = 'w-5 h-5'
 
 export default function PostsHeader({ refreshPosts }) {
-  const {
-    postsSort,
-    showFolders,
-    setShowFolders,
-    liveMode,
-    setLiveMode
-  } = useStore()
+  const { postsSort, showFolders, liveMode, setLiveMode } = useStore()
 
   const { t } = useTranslation()
 
@@ -102,14 +97,7 @@ export default function PostsHeader({ refreshPosts }) {
           </div>
         </Tippy>
 
-        <Tippy content={showFolders ? t('folders.hide') : t('folders.show')}>
-          <div
-            className="highlightable"
-            onClick={() => setShowFolders(!showFolders)}
-          >
-            <IconFolder className="w-5 h-5" />
-          </div>
-        </Tippy>
+        <ShowFoldersButton />
       </div>
     </Header>
   )

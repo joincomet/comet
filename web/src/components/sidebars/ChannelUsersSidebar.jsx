@@ -4,7 +4,7 @@ import { useQuery } from 'urql'
 import { GET_CHANNEL_USERS } from '@/graphql/queries'
 import SidebarUser from '@/components/sidebars/base/SidebarUser'
 import { useVirtual } from 'react-virtual'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
 export default function ChannelUsersSidebar({ channel }) {
   const [{ data }] = useQuery({

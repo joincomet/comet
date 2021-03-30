@@ -1,7 +1,7 @@
 import { gql } from '@urql/core'
 import { SERVER_FRAGMENT } from '@/graphql/fragments'
 
-export default gql`
+export const GET_SERVERS = gql`
   query GetServers(
     $sort: GetServersSort
     $category: ServerCategory
