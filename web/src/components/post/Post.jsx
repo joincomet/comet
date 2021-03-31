@@ -18,7 +18,7 @@ import {
   IconText,
   IconVote
 } from '@/lib/Icons'
-import { useContextMenuTrigger } from 'react-context-menu-wrapper'
+import { useContextMenuTrigger } from '@/context-menu'
 import { mergeRefs } from '@/lib/mergeRefs'
 import { useTranslation } from 'react-i18next'
 import { ContextMenuType } from '@/components/context-menus/ContextMenuType'

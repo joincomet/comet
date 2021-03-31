@@ -361,6 +361,7 @@ export const en = {
     entityNotFound: '{{replace}} not found!',
     invalidUserAuth: `'USER' authorization can only be used on User entity`,
     notLoggedIn: 'Not logged in',
+    fileSize: 'File size must be less than {{replace}}MB',
     folder: {
       deleted: 'Folder has been deleted',
       notOwner: 'You do not own this folder',

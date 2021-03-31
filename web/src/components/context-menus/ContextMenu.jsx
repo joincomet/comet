@@ -3,6 +3,7 @@ import { usePopper } from '@/lib/usePopper'
 import ctl from '@netlify/classnames-template-literals'
 
 const className = ctl(`
+  block
   p-2
   absolute
   right-0
@@ -23,15 +24,15 @@ export default function ContextMenu({ children, button }) {
     <Menu>
       {button ? (
         <>
-          {button && button(trigger)}
+          {button(trigger)}
           <Portal>
-            <Menu.Items ref={container} static={!button} className={className}>
+            <Menu.Items ref={container} static={false} className={className}>
               {children}
             </Menu.Items>
           </Portal>
         </>
       ) : (
-        <Menu.Items ref={container} static={!button} className={`${className}`}>
+        <Menu.Items static className={`${className}`}>
           {children}
         </Menu.Items>
       )}

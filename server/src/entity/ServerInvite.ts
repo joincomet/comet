@@ -39,7 +39,7 @@ export class ServerInvite {
   isRevoked: boolean = false
 
   @Field()
-  get expired(): boolean {
+  get isExpired(): boolean {
     if (this.maxUses && this.uses >= this.maxUses) return true
     if (this.duration === ServerInviteDuration.Never) return false
     return new Date().getTime() > this.createdAt.getTime() + this.duration

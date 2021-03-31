@@ -31,7 +31,7 @@ export class UserQueries {
         user.banReason ? `: ${user.banReason}` : ''
       )
 
-    user.lastLogin = new Date()
+    user.lastLoginAt = new Date()
     await em.persistAndFlush(user)
     return user
   }

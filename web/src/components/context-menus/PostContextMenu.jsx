@@ -1,4 +1,4 @@
-import { useContextMenuEvent } from 'react-context-menu-wrapper'
+import { useContextMenuEvent } from '@/context-menu'
 import { useMutation } from 'urql'
 import { useCopyToClipboard } from 'react-use'
 import { REMOVE_POST, PIN_POST, UNPIN_POST } from '@/graphql/mutations'

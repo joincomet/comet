@@ -48,13 +48,13 @@ export class User extends BaseEntity {
 
   @Field({ nullable: true })
   @Property({ nullable: true })
-  lastLogin?: Date
+  lastLoginAt?: Date
 
   @Field()
   get isOnline(): boolean {
-    if (!this.lastLogin) return false
+    if (!this.lastLoginAt) return false
     const timeout = 5 * 60 * 1000 // five minutes
-    return new Date().getTime() - this.lastLogin.getTime() < timeout
+    return new Date().getTime() - this.lastLoginAt.getTime() < timeout
   }
 
   @Property({ columnType: 'text' })
@@ -94,6 +94,16 @@ export class User extends BaseEntity {
 
   @Property({ nullable: true, columnType: 'text' })
   banReason?: string
+
+  @Property({ nullable: true })
+  purchasedPremiumAt?: Date
+
+  @Field()
+  get isPremium(): boolean {
+    if (!this.purchasedPremiumAt) return false
+    const millis = 30 * 24 * 60 * 60 * 1000 // 30 days
+    return new Date().getTime() - this.purchasedPremiumAt.getTime() < millis
+  }
 
   async isBannedFromServer(
     em: EntityManager,

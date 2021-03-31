@@ -1,4 +1,4 @@
-import { ContextMenuWrapper } from 'react-context-menu-wrapper'
+import { ContextMenuWrapper } from '@/context-menu'
 import PostContextMenu from '@/components/context-menus/PostContextMenu'
 import UserContextMenu from '@/components/context-menus/UserContextMenu'
 import ServerContextMenu from '@/components/context-menus/ServerContextMenu'

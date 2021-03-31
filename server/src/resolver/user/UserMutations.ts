@@ -70,7 +70,7 @@ export class UserMutations {
       name,
       tag,
       passwordHash,
-      lastLogin: new Date(),
+      lastLoginAt: new Date(),
       email
     })
 
@@ -112,7 +112,7 @@ export class UserMutations {
         'error.login.banned',
         user.banReason ? `: ${user.banReason}` : ''
       )
-    user.lastLogin = new Date()
+    user.lastLoginAt = new Date()
     await em.persistAndFlush(user)
     return {
       accessToken: createAccessToken(user),

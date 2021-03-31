@@ -36,7 +36,7 @@ export class MessageMutations {
   @Mutation(() => Message, { description: 'Create a chat message' })
   async sendMessage(
     @Ctx() { user, em }: Context,
-    @Args() { text, channelId, groupId, userId }: SendMessageArgs,
+    @Args() { text, file, channelId, groupId, userId }: SendMessageArgs,
     @PubSub(SubscriptionTopic.MessageSent)
     messageSent: Publisher<MessageSentPayload>,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)

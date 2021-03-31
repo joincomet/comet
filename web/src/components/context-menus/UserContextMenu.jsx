@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useContextMenuEvent } from 'react-context-menu-wrapper'
+import { useContextMenuEvent } from '@/context-menu'
 import { useMutation } from 'urql'
 import {
   BAN_USER_FROM_SERVER,

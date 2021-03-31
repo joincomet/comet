@@ -106,7 +106,7 @@ export class ServerMutations {
     refetchUsers: Publisher<string>
   ): Promise<boolean> {
     const invite = await em.findOneOrFail(ServerInvite, inviteId, ['server'])
-    if (invite.expired) throw new Error('error.server.inviteExpired')
+    if (invite.isExpired) throw new Error('error.server.inviteExpired')
     const server = invite.server
     await user.checkBannedFromServer(em, server)
     await user.joinServer(em, refetchUsers, server)

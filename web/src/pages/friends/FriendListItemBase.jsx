@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import { useTranslation } from 'react-i18next'
-import { useContextMenuTrigger } from 'react-context-menu-wrapper'
+import { useContextMenuTrigger } from '@/context-menu'
 import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
 
 export default function FriendListItemBase({ friend, children }) {

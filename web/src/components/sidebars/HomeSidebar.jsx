@@ -12,7 +12,7 @@ import SidebarItem from '@/components/sidebars/base/SidebarItem'
 import { useTranslation } from 'react-i18next'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/lib/DragItemTypes'
-import { useContextMenuTrigger } from 'react-context-menu-wrapper'
+import { useContextMenuTrigger } from '@/context-menu'
 import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
 import { mergeRefs } from '@/lib/mergeRefs'
 
