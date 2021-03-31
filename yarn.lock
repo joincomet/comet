@@ -7423,6 +7423,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"events@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "events@npm:3.3.0"
+  checksum: 56fa12567013e85b98782a1d971442ea29df057129d8a94432711fd68303357594ea37bfbe234860e28581a7768f943a8bea88c16b48aa01b96acf804bc01d52
+  languageName: node
+  linkType: hard
+
 "eventsource@npm:1.0.7":
   version: 1.0.7
   resolution: "eventsource@npm:1.0.7"
@@ -15315,7 +15322,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^2.0.4":
+"tailwindcss@npm:*, tailwindcss@npm:^2.0.4":
   version: 2.0.4
   resolution: "tailwindcss@npm:2.0.4"
   dependencies:
@@ -16486,6 +16493,7 @@ typescript@^4.2.3:
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
     eslint-plugin-react: ^7.23.1
+    events: ^3.3.0
     framer-motion: ^4.1.0
     fuse.js: ^6.4.6
     graphql: ^15.5.0

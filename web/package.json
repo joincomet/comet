@@ -39,6 +39,7 @@
     "electron-context-menu": "^2.5.0",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^7.0.2",
+    "events": "^3.3.0",
     "framer-motion": "^4.1.0",
     "fuse.js": "^6.4.6",
     "graphql": "^15.5.0",

@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events'
-import { nanoid } from 'nanoid'
 import { GlobalHandlers } from './handlers'
 import { warn } from './util'
 
@@ -87,7 +86,7 @@ export const clearLongPressTimeout = () => {
   clearTimeout(timeoutId)
 }
 
-export const generateHandlerDataId = () => nanoid()
+export const generateHandlerDataId = () => `${new Date().getTime()}`
 export const saveHandlerData = (dataId, data) => {
   if (data === undefined) return
   state.handlerDataMap[dataId] = data
