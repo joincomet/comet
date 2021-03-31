@@ -1,133 +1,87 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Virtuoso } from 'react-virtuoso'
+import { useCallback, useRef } from 'react'
+import { useNewMessageNotification } from '@/components/message/useNewMessageNotification'
+import { usePrependedMessagesCount } from '@/components/message/usePrependedMessagesCount'
+import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import Message from '@/components/message/Message'
-import { useQuery } from 'urql'
-import { GET_MESSAGES } from '@/graphql/queries'
+import { useMessages } from '@/components/message/useMessages'
 import SendMessageBar from '@/components/message/SendMessageBar'
-import { useVirtual } from 'react-virtual'
-import { IconSpinner } from '@/lib/Icons'
-import { useInView } from 'react-intersection-observer'
-import { useUser } from '@/components/providers/DataProvider'
+import MessagesHeader from '@/components/message/MessagesHeader'
 
-export default function Messages({ channel, group, user }) {
-  const [page, setPage] = useState(0)
-  const [hasScrolled, setHasScrolled] = useState(false)
-  const [initialTime, setInitialTime] = useState(() => new Date().toString())
-  const currentUser = useUser()
+const PREPEND_OFFSET = 10 ** 7
 
-  const canFetchMore = true
-  const pageSize = 50
+export default function Messages({ channel, user, group }) {
+  const [messages, fetching, fetchMore] = useMessages({ channel, user, group })
+  const virtuoso = useRef(null)
 
-  const [{ data, fetching }] = useQuery({
-    query: GET_MESSAGES,
-    variables: {
-      channelId: channel?.id,
-      groupId: group?.id,
-      userId: user?.id,
-      initialTime,
-      pageSize,
-      page
+  const {
+    atBottom,
+    newMessagesNotification,
+    setNewMessagesNotification
+  } = useNewMessageNotification(messages)
+
+  const numItemsPrepended = usePrependedMessagesCount(messages)
+
+  const shouldForceScrollToBottom = useShouldForceScrollToBottom(messages)
+
+  const messageRenderer = useCallback(
+    (messageList, virtuosoIndex) => {
+      const streamMessageIndex =
+        virtuosoIndex + numItemsPrepended - PREPEND_OFFSET
+
+      const message = messageList[streamMessageIndex]
+      const prevMessage =
+        streamMessageIndex > 0 ? messageList[streamMessageIndex - 1] : null
+
+      if (!message) return <div style={{ height: '1px' }} /> // returning null or zero height breaks the virtuoso
+
+      return (
+        <Message
+          message={message}
+          showUser={
+            streamMessageIndex === 0 ||
+            (prevMessage && prevMessage.author.id !== message.author.id)
+          }
+        />
+      )
     },
-    pause: !channel && !group && !user
-  })
-
-  const messages = data?.getMessages ?? []
-
-  const parentRef = useRef()
-
-  const rowVirtualizer = useVirtual({
-    size: canFetchMore ? messages.length + 1 : messages.length,
-    parentRef,
-    estimateSize: useCallback(() => 100, []),
-    keyExtractor: useCallback(
-      index => (index !== 0 ? messages[index - 1].id : 'loader'),
-      [messages]
-    ),
-    // Must be pageSize + 1 so that all newly loaded messages instantly get measured, otherwise jank occurs
-    overscan: pageSize + 1
-  })
-
-  // Scroll to bottom on first load, and when current user sends a message
-  useEffect(() => {
-    if (messages.length === 0) return
-    if (
-      !hasScrolled ||
-      messages[messages.length - 1].author.id === currentUser.id
-    ) {
-      rowVirtualizer.scrollToIndex(messages.length)
-      setHasScrolled(true)
-    }
-  }, [messages.length])
-
-  // Maintain position after loading another batch of messages
-  useEffect(() => {
-    if (fetching || messages.length < pageSize * 2) return
-    rowVirtualizer.scrollToIndex(pageSize + 1)
-  }, [fetching])
-
-  const [viewRef, inView, entry] = useInView()
-
-  // Load more messages when spinner enters view
-  useEffect(() => {
-    if (inView && messages.length > 0 && !fetching) {
-      setPage(page + 1)
-    }
-  }, [inView])
+    [numItemsPrepended]
+  )
 
   return (
     <>
-      <div
-        ref={parentRef}
-        style={{
-          height: `100%`,
-          width: `100%`,
-          overflow: 'auto'
-        }}
-        className="scrollbar dark:bg-gray-750 flex flex-col"
-      >
-        <div
-          style={{
-            height: `${rowVirtualizer.totalSize}px`
+      <div className="relative flex-1 overflow-x-hidden overflow-y-auto dark:bg-gray-750 w-full h-full">
+        <Virtuoso
+          className="scrollbar"
+          alignToBottom
+          atBottomStateChange={isAtBottom => {
+            atBottom.current = isAtBottom
+            if (isAtBottom && newMessagesNotification) {
+              setNewMessagesNotification(false)
+            }
           }}
-          className="relative w-full mt-auto"
-        >
-          {rowVirtualizer.virtualItems.map(virtualRow => {
-            const isLoaderRow = virtualRow.index === 0
-            const message = messages[virtualRow.index - 1]
-
-            return (
-              <div
-                key={virtualRow.index}
-                ref={el => virtualRow.measureRef(el)}
-                className="absolute top-0 left-0 w-full h-auto"
-                style={{
-                  transform: `translateY(${virtualRow.start}px)`
-                }}
-              >
-                {isLoaderRow ? (
-                  <div
-                    className="flex items-center justify-center h-8"
-                    ref={viewRef}
-                  >
-                    <IconSpinner />
-                  </div>
-                ) : (
-                  <Message
-                    message={message}
-                    measure={rowVirtualizer.measure}
-                    showUser={
-                      virtualRow.index === 1 ||
-                      messages[virtualRow.index - 2].author.id !==
-                        message.author.id
-                    }
-                  />
-                )}
-              </div>
-            )
-          })}
-        </div>
+          firstItemIndex={PREPEND_OFFSET - numItemsPrepended}
+          followOutput={isAtBottom => {
+            if (shouldForceScrollToBottom()) {
+              return isAtBottom ? 'smooth' : 'auto'
+            }
+            // a message from another user has been received - don't scroll to bottom unless already there
+            return isAtBottom ? 'smooth' : false
+          }}
+          initialTopMostItemIndex={
+            messages && messages.length > 0 ? messages.length - 1 : 0
+          }
+          itemContent={i => messageRenderer(messages, i)}
+          overscan={0}
+          ref={virtuoso}
+          startReached={() => {
+            if (!fetching) fetchMore()
+          }}
+          style={{ overflowX: 'hidden' }}
+          totalCount={messages?.length || 0}
+        />
       </div>
-
-      <SendMessageBar channel={channel} group={group} user={user} />
+      <SendMessageBar channel={channel} user={user} group={group} />
     </>
   )
 }

@@ -151,7 +151,7 @@ export const seed = async (em: EntityManager) => {
       const message = em.create(Message, {
         author: user,
         channel: channelGeneral,
-        createdAt: new Date(createdAt.getTime() + j),
+        createdAt: new Date(createdAt.getTime() + j * 1000),
         text: faker.lorem.paragraph()
       })
       entities.push(message)

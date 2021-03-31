@@ -62,10 +62,15 @@ export default memo(function Post({
   else if (post.imageUrls.length === 1) type = 'Image'
   else if (post.imageUrls.length > 1) type = 'Image Album'
 
+  const onClick = e => {
+    e.stopPropagation()
+    e.preventDefault()
+  }
+
   return (
-    <article
+    <Link
+      to={post.relativeUrl}
       ref={mergeRefs(contextMenuRef, dragRef)}
-      onClick={() => push(post.relativeUrl)}
       style={{ opacity }}
       className={`${className} cursor-pointer relative transition dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
     >
@@ -85,17 +90,22 @@ export default memo(function Post({
         </div>
       )}
 
-      <UserPopup user={post.author}>
-        <UserAvatar user={post.author} size={7} />
-      </UserPopup>
+      <div onClick={onClick}>
+        <UserPopup user={post.author}>
+          <UserAvatar user={post.author} size={7} />
+        </UserPopup>
+      </div>
 
       <div className="pl-3 flex-grow">
         <div className="flex items-end pb-2">
-          <UserPopup user={post.author}>
-            <div className="hover:underline cursor-pointer text-sm font-medium text-accent leading-none">
-              {post.author.name}
-            </div>
-          </UserPopup>
+          <div onClick={onClick}>
+            <UserPopup user={post.author}>
+              <div className="hover:underline cursor-pointer text-sm font-medium text-accent leading-none">
+                {post.author.name}
+              </div>
+            </UserPopup>
+          </div>
+
           <div className="text-11 text-mid font-medium pl-2 leading-none">
             {calendarDate(post.createdAt)} &middot; {type}
           </div>
@@ -160,6 +170,6 @@ export default memo(function Post({
           )}
         </div>
       </div>
-    </article>
+    </Link>
   )
 })

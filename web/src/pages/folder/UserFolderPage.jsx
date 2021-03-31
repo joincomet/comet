@@ -25,7 +25,7 @@ export default function UserFolderPage() {
       </Header>
 
       <Container rightSidebar={showFolders}>
-        <Posts variables={{ folderId }} />
+        <Posts showServerName variables={{ folderId }} />
       </Container>
     </>
   )

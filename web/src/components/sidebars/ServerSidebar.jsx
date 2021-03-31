@@ -82,7 +82,7 @@ function CreateChannel({ server }) {
     createChannel({ name, serverId: server.id, isPrivate }).then(
       ({ data: { createChannel } }) => {
         setIsOpen(false)
-        push(createChannel.id)
+        push(`/server/${server.id}/channel/${createChannel.id}`)
       }
     )
   }

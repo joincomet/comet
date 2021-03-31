@@ -6,10 +6,11 @@ import SidebarUser from '@/components/sidebars/base/SidebarUser'
 import { useVirtual } from 'react-virtual'
 import { useCallback, useRef } from 'react'
 
-export default function ChannelUsersSidebar({ channel }) {
+export default function ChannelUsersSidebar({ channel, show }) {
   const [{ data }] = useQuery({
     query: GET_CHANNEL_USERS,
-    variables: { channelId: channel.id }
+    variables: { channelId: channel?.id },
+    pause: !channel
   })
 
   const roles = data?.getChannelUsers ?? []
@@ -39,7 +40,7 @@ export default function ChannelUsersSidebar({ channel }) {
   )
 
   return (
-    <Sidebar right>
+    <Sidebar right show={show}>
       <div
         className="px-1.5 scrollbar-dark"
         ref={parentRef}

@@ -13,8 +13,7 @@ export class MessageQueries {
   @CheckGroupMember()
   @Query(() => [Message], {
     description:
-      'Get messages in a DM, group, or channel (requires ChannelPermission.ViewChannel or' +
-      ' ServerPermission.ViewChannels)'
+      'Get messages in a DM, group, or channel (requires ChannelPermission.ViewChannel or ServerPermission.ViewChannels)'
   })
   async getMessages(
     @Ctx() { em, user }: Context,

@@ -1,8 +1,9 @@
 import UserPopup from '@/components/popups/UserPopup'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import { calendarDate, shortTime } from '@/lib/timeUtils'
+import { memo } from 'react'
 
-export default function Message({ showUser, message, measure }) {
+export default memo(function Message({ showUser, message, measure }) {
   return (
     <div className={`${showUser ? 'pt-4' : ''}`}>
       <div className={`flex py-1 px-4 dark:hover:bg-gray-775 group`}>
@@ -42,4 +43,4 @@ export default function Message({ showUser, message, measure }) {
       </div>
     </div>
   )
-}
+})

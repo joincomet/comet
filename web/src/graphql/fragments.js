@@ -91,3 +91,12 @@ export const CHANNEL_FRAGMENT = gql`
     description
   }
 `
+
+export const GROUP_FRAGMENT = gql`
+  fragment GROUP_FRAGMENT on Group {
+    id
+    name
+    displayName
+    avatarUrl
+  }
+`

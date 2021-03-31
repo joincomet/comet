@@ -6,8 +6,10 @@ export class ChannelSubscriptions {
   @Authorized()
   @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchServerChannels,
-    filter: ({ payload: serverId, context: { user, em } }) =>
-      user.hasJoinedServer(em, serverId)
+    filter: ({ payload: serverId, context: { user, em } }) => {
+      console.log(user, serverId)
+      return user.hasJoinedServer(em, serverId)
+    }
   })
   refetchServerChannels(): boolean {
     return true

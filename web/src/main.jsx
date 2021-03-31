@@ -1,3 +1,4 @@
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 
 import './i18n/i18n'
@@ -12,8 +13,8 @@ import App from './App'
 if (window.electron) document.documentElement.classList.add('electron')
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StrictMode>
     <App />
-  </React.StrictMode>,
+  </StrictMode>,
   document.getElementById('root')
 )

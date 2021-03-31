@@ -3,7 +3,8 @@ import {
   GET_COMMENTS,
   GET_CURRENT_USER,
   GET_MESSAGES,
-  GET_POSTS
+  GET_POSTS,
+  GET_SERVER_CHANNELS
 } from '@/graphql/queries'
 import { cacheExchange as ce } from '@urql/exchange-graphcache'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
@@ -206,6 +207,24 @@ export const cacheExchange = ce({
               }
             )
           })
+      },
+      createChannel({ createChannel: channel }, { serverId }, cache) {
+        cache.updateQuery(
+          {
+            query: GET_SERVER_CHANNELS,
+            variables: {
+              serverId
+            }
+          },
+          data => {
+            if (data) {
+              data.getServerChannels.unshift(channel)
+              return data
+            } else {
+              return null
+            }
+          }
+        )
       }
     },
     Subscription: {
@@ -228,7 +247,7 @@ export const cacheExchange = ce({
                 query: GET_MESSAGES,
                 variables: {
                   ...variables,
-                  pageSize: 50,
+                  pageSize: 100,
                   page: 0,
                   initialTime: field.arguments.initialTime
                 }

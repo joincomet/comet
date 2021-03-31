@@ -1,4 +1,3 @@
-import MainSidebar from '@/components/sidebars/HomeSidebar'
 import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import { GET_USER } from '@/graphql/queries'

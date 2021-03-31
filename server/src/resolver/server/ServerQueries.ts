@@ -86,40 +86,49 @@ export class ServerQueries {
       .filter(role =>
         role.permissions.includes(ServerPermission.DisplayRoleSeparately)
       )) {
+      const roleUsers = joins
+        .filter(join => join.roles.getItems()[0] === role)
+        .map(join => join.user)
+        .sort(compareFn)
+      if (roleUsers.length > 0) {
+        result.push({
+          role: role.name,
+          users: roleUsers
+        } as ChannelUsersResponse)
+      }
+    }
+
+    const onlineUsers = joins
+      .filter(
+        join =>
+          join.user.isOnline &&
+          join.roles
+            .getItems()
+            .filter(role =>
+              role.permissions.includes(ServerPermission.DisplayRoleSeparately)
+            ).length === 0
+      )
+      .map(join => join.user)
+      .sort(compareFn)
+
+    if (onlineUsers.length > 0) {
       result.push({
-        role: role.name,
-        users: joins
-          .filter(join => join.roles.getItems()[0] === role)
-          .map(join => join.user)
-          .sort(compareFn)
+        role: 'Online',
+        users: onlineUsers
       } as ChannelUsersResponse)
     }
 
-    result.push({
-      role: 'Online',
-      users: joins
-        .filter(
-          join =>
-            join.user.isOnline &&
-            join.roles
-              .getItems()
-              .filter(role =>
-                role.permissions.includes(
-                  ServerPermission.DisplayRoleSeparately
-                )
-              ).length === 0
-        )
-        .map(join => join.user)
-        .sort(compareFn)
-    } as ChannelUsersResponse)
+    const offlineUsers = joins
+      .filter(join => !join.user.isOnline)
+      .map(join => join.user)
+      .sort(compareFn)
 
-    result.push({
-      role: 'Offline',
-      users: joins
-        .filter(join => !join.user.isOnline)
-        .map(join => join.user)
-        .sort(compareFn)
-    } as ChannelUsersResponse)
+    if (offlineUsers.length > 0) {
+      result.push({
+        role: 'Offline',
+        users: offlineUsers
+      } as ChannelUsersResponse)
+    }
 
     return result
   }
