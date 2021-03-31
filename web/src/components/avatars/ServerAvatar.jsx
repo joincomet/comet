@@ -12,7 +12,7 @@ export default forwardRef(
         ref={ref}
         avatarUrl={server.avatarUrl}
         loading={loading}
-        className={`${className} bg-gray-200 dark:bg-gray-700 cursor-pointer`}
+        className={`${className} cursor-pointer`}
         size={size}
         style={style}
       >

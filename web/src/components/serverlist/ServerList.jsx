@@ -80,7 +80,12 @@ function ServerListServer({ server }) {
       ref={mergeRefs(contextMenuRef, dragRef)}
       active={serverId === server.id}
     >
-      <ServerAvatar server={server} size={12} style={{ opacity }} />
+      <ServerAvatar
+        server={server}
+        size={12}
+        style={{ opacity }}
+        className="bg-gray-200 dark:bg-gray-800"
+      />
     </ServerListItem>
   )
 }
