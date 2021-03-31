@@ -1,13 +1,4 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  ID,
-  Mutation,
-  Resolver,
-  UseMiddleware
-} from 'type-graphql'
+import { Arg, Args, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Post, Server, PostVote } from '@/entity'
 import { CreatePostArgs } from '@/resolver/post'
 import { Context, ServerPermission } from '@/types'
@@ -31,7 +22,7 @@ export class PostMutations {
     @Args()
     { title, linkUrl, text, serverId, images }: CreatePostArgs,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<Post> {
     if (text) {
       text = handleText(text)
       if (!text) text = null
@@ -76,7 +67,7 @@ export class PostMutations {
     postId: string,
     @Arg('text') text: string,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<Post> {
     const post = await em.findOne(Post, postId)
 
     text = handleText(text)
@@ -97,7 +88,7 @@ export class PostMutations {
   async deletePost(
     @Arg('postId', () => ID) postId: string,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<boolean> {
     const post = await em.findOne(Post, postId)
     post.isDeleted = true
     post.isPinned = false
@@ -113,10 +104,10 @@ export class PostMutations {
       description: 'ID of post to vote (requires ServerPermission.VotePost)'
     })
     postId: string
-  ) {
+  ): Promise<Post> {
     const post = await em.findOneOrFail(Post, postId)
     let vote = await em.findOne(PostVote, { user, post })
-    if (vote) throw new Error('You have already voted this post')
+    if (vote) throw new Error('error.post.alreadyVoted')
     vote = em.create(PostVote, { user, post })
     post.voteCount++
     post.isVoted = true
@@ -133,7 +124,7 @@ export class PostMutations {
         'ID of post to remove vote (requires ServerPermission.VotePost)'
     })
     postId: string
-  ) {
+  ): Promise<Post> {
     const post = await em.findOneOrFail(Post, postId)
     const vote = await em.findOneOrFail(PostVote, { user, post })
     post.voteCount--
@@ -150,7 +141,7 @@ export class PostMutations {
     @Ctx() { em }: Context,
     @Arg('postId', () => ID) postId: string,
     @Arg('reason', { nullable: true }) reason?: string
-  ) {
+  ): Promise<boolean> {
     const post = await em.findOne(Post, postId)
 
     em.assign(post, {
@@ -171,9 +162,9 @@ export class PostMutations {
     @Arg('postId', () => ID, { description: 'ID of post to pin' })
     postId: string,
     @Ctx() { em }: Context
-  ) {
+  ): Promise<Post> {
     const post = await em.findOne(Post, postId)
-    if (post.isPinned) throw new Error('Post is already pinned')
+    if (post.isPinned) throw new Error('error.post.alreadyPinned')
     post.isPinned = true
     await em.persistAndFlush(post)
     return post
@@ -187,9 +178,9 @@ export class PostMutations {
     @Arg('postId', () => ID, { description: 'ID of post to unpin' })
     postId: string,
     @Ctx() { em }: Context
-  ) {
+  ): Promise<Post> {
     const post = await em.findOne(Post, postId)
-    if (!post.isPinned) throw new Error('Post is not pinned')
+    if (!post.isPinned) throw new Error('error.post.notPinned')
     post.isPinned = false
     await em.persistAndFlush(post)
     return post

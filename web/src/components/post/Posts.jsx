@@ -6,7 +6,7 @@ import { useStore } from '@/lib/stores/useStore'
 import { IconSpinner } from '@/lib/Icons'
 import { useVirtual } from 'react-virtual'
 import UserAvatar from '@/components/avatars/UserAvatar'
-import { useUser } from '@/components/providers/UserProvider'
+import { useUser } from '@/components/providers/DataProvider'
 import CreatePostCard from '@/components/post/CreatePostCard'
 
 export default function Posts({ variables, showServerName }) {
@@ -53,7 +53,7 @@ export default function Posts({ variables, showServerName }) {
     }
   }, [canFetchMore, posts.length, fetching, rowVirtualizer.virtualItems])
 
-  const [currentUser] = useUser()
+  const currentUser = useUser()
 
   return (
     <div

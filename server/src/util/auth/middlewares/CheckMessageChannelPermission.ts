@@ -14,14 +14,14 @@ export const CheckMessageChannelPermission = (
 ) =>
   createMethodDecorator<Context>(
     async ({ args: { messageId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
 
       // if (!messageId) throw new Error('Args must include messageId')
       if (!messageId) return next()
 
       const message = await em.findOneOrFail(Message, messageId, ['channel'])
 
-      if (!message.channel) throw new Error('Message was not sent in a Channel')
+      if (!message.channel) throw new Error('error.message.notSentInChannel')
 
       await user.checkChannelPermission(
         em,

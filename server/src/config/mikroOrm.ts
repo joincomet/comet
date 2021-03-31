@@ -2,6 +2,7 @@ import { Options, ReflectMetadataProvider } from '@mikro-orm/core'
 import { PostgreSqlDriver } from '@mikro-orm/postgresql'
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
 import * as entities from '@/entity'
+import { CustomError } from '@/types/CustomError'
 
 export const mikroOrmConf = {
   highlighter: new SqlHighlighter(),
@@ -15,7 +16,7 @@ export const mikroOrmConf = {
   debug: process.env.NODE_ENV !== 'production',
   forceUtcTimezone: true,
   findOneOrFailHandler: (entityName: string) => {
-    return new Error(`${entityName} not found!`)
+    return new CustomError('error.entityNotFound', entityName)
   },
   driverOptions:
     process.env.NODE_ENV === 'production'

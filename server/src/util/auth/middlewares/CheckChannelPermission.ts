@@ -14,7 +14,7 @@ export const CheckChannelPermission = (
 ) =>
   createMethodDecorator<Context>(
     async ({ args: { channelId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
 
       //if (!channelId) throw new Error('Args must include channelId')
       if (!channelId) return next()

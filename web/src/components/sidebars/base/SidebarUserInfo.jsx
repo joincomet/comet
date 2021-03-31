@@ -1,13 +1,13 @@
 import { IconSettings } from '@/lib/Icons'
 
 import Tippy from '@tippyjs/react'
-import { useUser } from '@/components/providers/UserProvider'
+import { useUser } from '@/components/providers/DataProvider'
 import UserAvatar from '@/components/avatars/UserAvatar'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 export function SidebarUserInfo() {
-  const [currentUser] = useUser()
+  const currentUser = useUser()
   const { t } = useTranslation()
 
   return (

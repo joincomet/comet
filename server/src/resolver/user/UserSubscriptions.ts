@@ -1,17 +1,18 @@
-import { Resolver, Subscription } from 'type-graphql'
-import { Notification } from '@/entity'
+import { Authorized, Resolver, Subscription } from 'type-graphql'
 import { SubscriptionFilter, SubscriptionTopic } from '@/types'
 
 @Resolver()
 export class UserSubscriptions {
+  @Authorized()
   @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchGroupsAndDms,
     filter: ({ payload: userId, context: { user } }) => userId === user.id
   })
-  refetchGroupsAndDms() {
+  refetchGroupsAndDms(): boolean {
     return true
   }
 
+  @Authorized()
   @Subscription(() => Boolean, {
     topics: SubscriptionTopic.RefetchUsers,
     filter: async ({
@@ -33,7 +34,7 @@ export class UserSubscriptions {
       return users.includes(userId)
     }
   })
-  refetchUsers() {
+  refetchUsers(): boolean {
     return true
   }
 }

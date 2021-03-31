@@ -50,7 +50,7 @@ export async function bootstrap() {
       const em = orm.em.fork()
       const userId = connection
         ? connection.context.userId
-        : getUserId(req.headers.authorization)
+        : getUserId(req.headers.token as string)
       const user = userId ? await em.findOne(User, userId) : null
       return {
         em,

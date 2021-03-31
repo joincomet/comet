@@ -9,7 +9,7 @@ import { Group } from '@/entity'
 export const CheckGroupMember = () =>
   createMethodDecorator<Context>(
     async ({ args: { groupId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
       // if (!groupId) throw new Error('Args must include groupId')
       if (!groupId) return next()
       const group = await em.findOneOrFail(Group, groupId, ['users'])

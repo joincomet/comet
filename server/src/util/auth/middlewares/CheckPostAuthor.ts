@@ -9,12 +9,11 @@ import { Post } from '@/entity'
 export const CheckPostAuthor = () =>
   createMethodDecorator<Context>(
     async ({ args: { postId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
       // if (!postId) throw new Error('Args must include postId')
       if (!postId) return next()
       const message = await em.findOneOrFail(Post, postId, ['author'])
-      if (message.author !== user)
-        throw new Error('You are not the author of this post')
+      if (message.author !== user) throw new Error('error.post.notAuthor')
       return next()
     }
   )

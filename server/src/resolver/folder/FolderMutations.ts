@@ -1,12 +1,4 @@
-import {
-  Arg,
-  Authorized,
-  Ctx,
-  ID,
-  Mutation,
-  Resolver,
-  UseMiddleware
-} from 'type-graphql'
+import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
 import { Folder, Post } from '@/entity'
 import { handleUnderscore } from '@/util/text'
@@ -21,11 +13,13 @@ export class FolderMutations {
     @Arg('postId', () => ID) postId: string,
     @Arg('folderId', () => ID) folderId: string,
     @Ctx() { user, em }: Context
-  ) {
-    const folder = await em.findOne(Folder, folderId, ['creator', 'server'])
-    if (!folder) throw new Error('Invalid folder')
-    if (folder.isDeleted) throw new Error('Folder has been deleted')
-    if (folder.owner !== user) throw new Error('You do not own this folder')
+  ): Promise<boolean> {
+    const folder = await em.findOneOrFail(Folder, folderId, [
+      'creator',
+      'server'
+    ])
+    if (folder.isDeleted) throw new Error('error.folder.deleted')
+    if (folder.owner !== user) throw new Error('error.folder.notOwner')
     const post = await em.findOne(Post, postId)
     folder.posts.add(post)
     folder.updatedAt = new Date()
@@ -39,11 +33,10 @@ export class FolderMutations {
     @Arg('postId', () => ID) postId: string,
     @Arg('folderId', () => ID) folderId: string,
     @Ctx() { user, em }: Context
-  ) {
-    const folder = await em.findOne(Folder, folderId, ['creator'])
-    if (!folder) throw new Error('Invalid folder')
-    if (folder.isDeleted) throw new Error('Folder has been deleted')
-    if (folder.owner !== user) throw new Error('You do not own this folder')
+  ): Promise<boolean> {
+    const folder = await em.findOneOrFail(Folder, folderId, ['creator'])
+    if (folder.isDeleted) throw new Error('error.folder.deleted')
+    if (folder.owner !== user) throw new Error('error.folder.notOwner')
     const post = await em.findOne(Post, postId)
     folder.posts.remove(post)
     folder.updatedAt = new Date()
@@ -56,15 +49,14 @@ export class FolderMutations {
   async createUserFolder(
     @Arg('name') name: string,
     @Ctx() { user, em }: Context
-  ) {
-    if (name.length > 300)
-      throw new Error('Name cannot be longer than 300 characters')
+  ): Promise<boolean> {
+    if (name.length > 300) throw new Error('error.folder.nameTooLong')
     if (
       await em.findOne(Folder, {
         $and: [{ name: { $ilike: handleUnderscore(name) } }, { owner: user }]
       })
     )
-      throw new Error('You already have a folder with that name')
+      throw new Error('error.folder.alreadyExists')
     const folder = em.create(Folder, {
       owner: user,
       name

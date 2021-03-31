@@ -10,7 +10,7 @@ import { Post } from '@/entity'
 export const CheckPostServerPermission = (permission: ServerPermission) =>
   createMethodDecorator<Context>(
     async ({ args: { postId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
       // if (!postId) throw new Error('Args must include postId')
       if (!postId) return next()
       const post = await em.findOneOrFail(Post, postId, ['server'])

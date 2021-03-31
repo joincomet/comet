@@ -9,7 +9,7 @@ export class ServerSubscriptions {
     topics: SubscriptionTopic.RefetchJoinedServers,
     filter: ({ payload: userId, context: { user } }) => userId === user.id
   })
-  refetchJoinedServers() {
+  refetchJoinedServers(): boolean {
     return true
   }
 }

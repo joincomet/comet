@@ -10,7 +10,9 @@ export class FriendQueries {
   @Query(() => [GetFriendRequestsResponse], {
     description: 'Returns list of friend requests'
   })
-  async getFriendRequests(@Ctx() { em, user }: Context) {
+  async getFriendRequests(
+    @Ctx() { em, user }: Context
+  ): Promise<GetFriendRequestsResponse[]> {
     const data = await em.find(
       FriendData,
       {
@@ -38,7 +40,7 @@ export class FriendQueries {
 
   @Authorized()
   @Query(() => [User], { description: 'Returns list of friends' })
-  async getFriends(@Ctx() { em, user }: Context) {
+  async getFriends(@Ctx() { em, user }: Context): Promise<User[]> {
     const data = await em.find(
       FriendData,
       {
@@ -53,7 +55,7 @@ export class FriendQueries {
 
   @Authorized()
   @Query(() => [User])
-  async getBlockedUsers(@Ctx() { em, user }: Context) {
+  async getBlockedUsers(@Ctx() { em, user }: Context): Promise<User[]> {
     const data = await em.find(
       FriendData,
       {

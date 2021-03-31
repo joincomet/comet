@@ -6,11 +6,13 @@ import SendMessageBar from '@/components/message/SendMessageBar'
 import { useVirtual } from 'react-virtual'
 import { IconSpinner } from '@/lib/Icons'
 import { useInView } from 'react-intersection-observer'
+import { useUser } from '@/components/providers/DataProvider'
 
 export default function Messages({ channel, group, user }) {
   const [page, setPage] = useState(0)
   const [hasScrolled, setHasScrolled] = useState(false)
-  const [initialTime, setInitialTime] = useState(new Date().toString())
+  const [initialTime, setInitialTime] = useState(() => new Date().toString())
+  const currentUser = useUser()
 
   const canFetchMore = true
   const pageSize = 50
@@ -24,7 +26,8 @@ export default function Messages({ channel, group, user }) {
       initialTime,
       pageSize,
       page
-    }
+    },
+    pause: !channel && !group && !user
   })
 
   const messages = data?.getMessages ?? []
@@ -46,7 +49,10 @@ export default function Messages({ channel, group, user }) {
   // Scroll to bottom on first load, and when current user sends a message
   useEffect(() => {
     if (messages.length === 0) return
-    if (!hasScrolled || messages[messages.length - 1].author.isCurrentUser) {
+    if (
+      !hasScrolled ||
+      messages[messages.length - 1].author.id === currentUser.id
+    ) {
       rowVirtualizer.scrollToIndex(messages.length)
       setHasScrolled(true)
     }

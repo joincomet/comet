@@ -26,7 +26,7 @@ export class FriendMutations {
     userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const toUser = await em.findOneOrFail(User, userId)
     let myData = await em.findOne(FriendData, { user, toUser })
     if (!myData) myData = em.create(FriendData, { user, toUser })
@@ -39,9 +39,9 @@ export class FriendMutations {
       theirData = em.create(FriendData, { user: toUser, toUser: user })
 
     if (myData.status === FriendStatus.Blocking)
-      throw new Error('You are blocking this user')
+      throw new Error('error.user.blocking')
     if (myData.status === FriendStatus.Blocked)
-      throw new Error('This user has blocked you')
+      throw new Error('error.user.blocked')
 
     myData.status = FriendStatus.FriendRequestOutgoing
     theirData.status = FriendStatus.FriendRequestIncoming
@@ -68,7 +68,7 @@ export class FriendMutations {
     userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const toUser = await em.findOneOrFail(User, userId)
     const myData = await em.findOne(FriendData, { user, toUser })
 
@@ -78,7 +78,7 @@ export class FriendMutations {
     })
 
     if (myData.status !== FriendStatus.FriendRequestOutgoing)
-      throw new Error('You have not sent a friend request to this user')
+      throw new Error('error.user.friendRequestNotSent')
 
     myData.status = FriendStatus.None
     theirData.status = FriendStatus.None
@@ -103,7 +103,7 @@ export class FriendMutations {
     userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const toUser = await em.findOneOrFail(User, userId)
     const myData = await em.findOneOrFail(FriendData, { user, toUser })
 
@@ -113,7 +113,7 @@ export class FriendMutations {
     })
 
     if (myData.status !== FriendStatus.FriendRequestIncoming)
-      throw new Error('You have not received a friend request from this user')
+      throw new Error('error.user.friendRequestNotReceived')
 
     myData.status = FriendStatus.None
     theirData.status = FriendStatus.None
@@ -138,7 +138,7 @@ export class FriendMutations {
     userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const toUser = await em.findOneOrFail(User, userId)
     const myData = await em.findOneOrFail(FriendData, { user, toUser })
 
@@ -148,7 +148,7 @@ export class FriendMutations {
     })
 
     if (myData.status !== FriendStatus.FriendRequestIncoming)
-      throw new Error('You have not received a friend request from this user')
+      throw new Error('error.user.friendRequestNotReceived')
 
     myData.status = FriendStatus.Friends
     theirData.status = FriendStatus.Friends
@@ -172,7 +172,7 @@ export class FriendMutations {
     userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const toUser = await em.findOneOrFail(User, userId)
     const myData = await em.findOneOrFail(FriendData, { user, toUser })
 
@@ -182,7 +182,7 @@ export class FriendMutations {
     })
 
     if (myData.status !== FriendStatus.Friends)
-      throw new Error('You are not friends with this user')
+      throw new Error('error.user.notFriends')
 
     myData.status = FriendStatus.None
     theirData.status = FriendStatus.None
@@ -206,7 +206,7 @@ export class FriendMutations {
     userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const toUser = await em.findOneOrFail(User, userId)
     const myData = await em.findOneOrFail(FriendData, { user, toUser })
 
@@ -216,7 +216,7 @@ export class FriendMutations {
     })
 
     if (myData.status === FriendStatus.Blocking)
-      throw new Error('You are already blocking this user')
+      throw new Error('error.user.alreadyBlocking')
 
     myData.status = FriendStatus.Blocking
     if (theirData.status !== FriendStatus.Blocking)
@@ -242,7 +242,7 @@ export class FriendMutations {
     userId: string,
     @PubSub(SubscriptionTopic.RefetchFriends)
     refetchFriends: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const toUser = await em.findOneOrFail(User, userId)
     const myData = await em.findOneOrFail(FriendData, { user, toUser })
 
@@ -252,7 +252,7 @@ export class FriendMutations {
     })
 
     if (myData.status !== FriendStatus.Blocking)
-      throw new Error('You are not blocking this user')
+      throw new Error('error.user.notBlocking')
 
     myData.status = FriendStatus.None
     if (theirData.status === FriendStatus.Blocked)

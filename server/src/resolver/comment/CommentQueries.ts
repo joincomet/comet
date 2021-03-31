@@ -13,9 +13,8 @@ export class CommentQueries {
   async getComments(
     @Args() { postId, sort }: GetCommentsArgs,
     @Ctx() { em, user }: Context
-  ) {
-    const post = await em.findOne(Post, postId)
-    if (!post) throw new Error('Post not found')
+  ): Promise<Comment[]> {
+    const post = await em.findOneOrFail(Post, postId)
 
     const comments = await em.find(
       Comment,

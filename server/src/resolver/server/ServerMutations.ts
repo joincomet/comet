@@ -7,13 +7,11 @@ import {
   Mutation,
   Publisher,
   PubSub,
-  Resolver,
-  UseMiddleware
+  Resolver
 } from 'type-graphql'
 import { Channel, Server, ServerInvite, User } from '@/entity'
 import { uploadImage } from '@/util/s3'
 import { SubscriptionTopic, Context } from '@/types'
-import { UserServerPayload } from '@/resolver/server'
 import { ServerUserJoin } from '@/entity/ServerUserJoin'
 import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
 import { CreateServerArgs } from '@/resolver/server/types/CreateServerArgs'
@@ -32,7 +30,7 @@ export class ServerMutations {
     refetchUsers: Publisher<string>
   ): Promise<Server> {
     if ((await em.count(ServerUserJoin, { user })) >= 100)
-      throw new Error('Cannot join more than 100 servers')
+      throw new Error('error.server.joinLimit')
 
     const channel = em.create(Channel, {
       name: 'general'
@@ -70,7 +68,7 @@ export class ServerMutations {
     @Arg('serverId', () => ID) serverId: string,
     @Arg('name') name: string,
     @Arg('isPrivate', { nullable: true }) isPrivate?: boolean
-  ) {
+  ): Promise<Channel> {
     const server = await em.findOne(Server, serverId)
 
     const channel = em.create(Channel, {
@@ -91,9 +89,9 @@ export class ServerMutations {
     @Ctx() { user, em }: Context,
     @PubSub(SubscriptionTopic.RefetchUsers)
     refetchUsers: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const server = await em.findOneOrFail(Server, serverId)
-    if (!server.isPublic) throw new Error('Invite required to join this server')
+    if (!server.isPublic) throw new Error('error.server.inviteRequired')
     await user.checkBannedFromServer(em, server)
     await user.joinServer(em, refetchUsers, server)
     return true
@@ -106,9 +104,9 @@ export class ServerMutations {
     @Ctx() { user, em }: Context,
     @PubSub(SubscriptionTopic.RefetchUsers)
     refetchUsers: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const invite = await em.findOneOrFail(ServerInvite, inviteId, ['server'])
-    if (invite.expired) throw new Error('This invite has expired.')
+    if (invite.expired) throw new Error('error.server.inviteExpired')
     const server = invite.server
     await user.checkBannedFromServer(em, server)
     await user.joinServer(em, refetchUsers, server)
@@ -123,7 +121,7 @@ export class ServerMutations {
     @Ctx() { user, em }: Context,
     @PubSub(SubscriptionTopic.RefetchUsers)
     refetchUsers: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const server = await em.findOneOrFail(Server, serverId)
     await user.leaveServer(em, refetchUsers, server)
     return true
@@ -149,7 +147,7 @@ export class ServerMutations {
     })
     purge: boolean,
     @Arg('reason', { nullable: true }) reason?: string
-  ) {
+  ): Promise<boolean> {
     const server = await em.findOneOrFail(Server, serverId)
     const bannedUser = await em.findOneOrFail(User, userId, [
       'serverJoins.server'
@@ -170,7 +168,7 @@ export class ServerMutations {
     @Arg('serverId', () => ID) serverId: string,
     @Arg('userId', () => ID) userId: string,
     @Ctx() { em }: Context
-  ) {
+  ): Promise<boolean> {
     const server = await em.findOneOrFail(Server, serverId)
     const user = await em.findOneOrFail(User, userId)
     await user.unbanFromServer(em, server)
@@ -178,7 +176,7 @@ export class ServerMutations {
   }
 
   @CheckServerPermission(ServerPermission.ManageServer)
-  @Mutation(() => Boolean)
+  @Mutation(() => Server)
   async updateServer(
     @Ctx() { em }: Context,
     @Args()
@@ -191,7 +189,7 @@ export class ServerMutations {
       category,
       searchable
     }: UpdateServerArgs
-  ) {
+  ): Promise<Server> {
     const server = await em.findOneOrFail(Server, serverId)
 
     const avatarUrl = await uploadImage(avatarFile, {
@@ -212,5 +210,9 @@ export class ServerMutations {
       category,
       isPublic: searchable
     })
+
+    await em.persistAndFlush(server)
+
+    return server
   }
 }

@@ -13,14 +13,14 @@ import Tippy from '@tippyjs/react'
 
 import { Link } from 'react-router-dom'
 import { getOS } from '@/lib/getOS'
-import { useUser } from '@/components/providers/UserProvider'
+import { useUser } from '@/components/providers/DataProvider'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
   'p-3 hover:bg-gray-700 transition rounded-full cursor-pointer'
 
 export default function LandingPage() {
-  const [currentUser] = useUser()
+  const currentUser = useUser()
 
   return (
     <div className="relative flex flex-col items-center">

@@ -1,15 +1,9 @@
 import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { Post, LinkMetadata, ServerUserJoin } from '@/entity'
-import {
-  GetPostsArgs,
-  GetPostsTime,
-  GetPostsSort,
-  GetPostsResponse
-} from '@/resolver/post'
+import { GetPostsArgs, GetPostsTime, GetPostsSort } from '@/resolver/post'
 import { Context } from '@/types'
-import { scrapeMetadata, CheckServerPermission } from '@/util'
+import { scrapeMetadata } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
-import { ServerPermission } from '@/types'
 import dayjs from 'dayjs'
 import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 
@@ -24,7 +18,7 @@ export class PostQueries {
     @Args()
     { page, pageSize, sort, time, folderId, serverId }: GetPostsArgs,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<Post[]> {
     let orderBy = {}
     if (sort === GetPostsSort.New) orderBy = { createdAt: QueryOrder.DESC }
     else if (sort === GetPostsSort.Hot) orderBy = { hotRank: QueryOrder.DESC }
@@ -83,7 +77,7 @@ export class PostQueries {
     @Arg('postId', () => ID, { description: 'ID of post to retrieve' })
     postId: string,
     @Ctx() { em, user }: Context
-  ) {
+  ): Promise<Post> {
     const post = await em.findOneOrFail(Post, postId, [
       'server',
       'author',
@@ -113,7 +107,7 @@ export class PostQueries {
     description: 'Get LinkMetadata for a URL (requires admin)',
     deprecationReason: 'For testing only'
   })
-  async getUrlEmbed(@Arg('url') url: string) {
+  async getUrlEmbed(@Arg('url') url: string): Promise<LinkMetadata> {
     return scrapeMetadata(url)
   }
 }

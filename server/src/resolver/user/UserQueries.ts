@@ -12,6 +12,7 @@ import { Context } from '@/types'
 import { FriendData, Group, User } from '@/entity'
 import { GroupDmUnion } from '@/resolver/user/types/GroupDmUnion'
 import { QueryOrder } from '@mikro-orm/core'
+import { CustomError } from '@/types/CustomError'
 
 @Resolver(() => User)
 export class UserQueries {
@@ -19,13 +20,16 @@ export class UserQueries {
     nullable: true,
     description: 'Returns the currently logged in user, or null'
   })
-  async getCurrentUser(@Ctx() { user, em }: Context) {
+  async getCurrentUser(@Ctx() { user, em }: Context): Promise<User> {
     if (!user) {
       return null
     }
 
     if (user.isBanned)
-      throw new Error(`Banned${user.banReason ? `: ${user.banReason}` : ''}`)
+      throw new CustomError(
+        'error.login.banned',
+        user.banReason ? `: ${user.banReason}` : ''
+      )
 
     user.lastLogin = new Date()
     await em.persistAndFlush(user)
@@ -58,20 +62,20 @@ export class UserQueries {
       })
   }
 
-  @FieldResolver(() => Boolean)
-  async isCurrentUser(
+  /*@FieldResolver(() => Boolean)
+  isCurrentUser(
     @Root() user: User,
     @Ctx() { user: currentUser }: Context
-  ) {
+  ): boolean {
     return currentUser && user.id === currentUser.id
-  }
+  }*/
 
   @Authorized()
   @Query(() => User)
   async getUser(
     @Ctx() { em }: Context,
     @Arg('userId', () => ID) userId: string
-  ) {
+  ): Promise<User> {
     return em.findOneOrFail(User, userId)
   }
 }

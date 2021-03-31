@@ -10,7 +10,7 @@ import { Comment } from '@/entity'
 export const CheckCommentServerPermission = (permission: ServerPermission) =>
   createMethodDecorator<Context>(
     async ({ args: { commentId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
       // if (!commentId) throw new Error('Args must include commentId')
       if (!commentId) return next()
       const comment = await em.findOneOrFail(Comment, commentId, [

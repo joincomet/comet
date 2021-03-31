@@ -5,23 +5,20 @@ import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
 import { useMutation } from 'urql'
 import { CREATE_ACCOUNT } from '@/graphql/mutations'
+import { useUser } from '@/components/providers/DataProvider'
+import { useEffect } from 'react'
 
 export default function RegisterPage() {
   const [{ fetching }, createAccount] = useMutation(CREATE_ACCOUNT)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
+  const user = useUser()
 
-  const onSubmit = variables =>
-    createAccount(variables).then(
-      ({
-        data: {
-          signUp: { accessToken }
-        }
-      }) => {
-        localStorage.setItem('token', accessToken)
-        push('/me')
-      }
-    )
+  useEffect(() => {
+    if (user) push('/posts')
+  }, [user])
+
+  const onSubmit = variables => createAccount(variables)
 
   return (
     <AuthCard>

@@ -6,8 +6,7 @@ import {
   Mutation,
   Publisher,
   PubSub,
-  Resolver,
-  UseMiddleware
+  Resolver
 } from 'type-graphql'
 import { Context, SubscriptionTopic } from '@/types'
 import { Channel, Group, User } from '@/entity'
@@ -18,14 +17,14 @@ import { CheckGroupMember } from '@/util'
 @Resolver()
 export class GroupMutations {
   @Authorized()
-  @Mutation(() => Boolean, { description: 'Create group with users' })
+  @Mutation(() => Group, { description: 'Create group with users' })
   async createGroup(
     @Ctx() { user, em }: Context,
     @Arg('usernames', () => [String]) usernames: string[],
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
-  ) {
-    if (usernames.length > 9) throw new Error('Max group size is 10 users')
+  ): Promise<Group> {
+    if (usernames.length > 9) throw new Error('error.group.maxSize')
     const users = [user]
     for (const username of usernames) {
       users.push(await em.findOneOrFail(User, { username }))
@@ -39,7 +38,7 @@ export class GroupMutations {
     })
     await em.persistAndFlush([group, channel])
     for (const u of users) await refetchGroupsAndDms(u.id)
-    return true
+    return group
   }
 
   @CheckGroupMember()
@@ -52,7 +51,7 @@ export class GroupMutations {
     refetchUsers: Publisher<string>,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const group = await em.findOneOrFail(Group, groupId, ['users'])
     group.users.remove(user)
     if (group.owner === user) group.owner = group.users.getItems()[0]
@@ -63,7 +62,7 @@ export class GroupMutations {
   }
 
   @CheckGroupMember()
-  @Mutation(() => Boolean, { description: 'Rename a group' })
+  @Mutation(() => Group, { description: 'Rename a group' })
   async renameGroup(
     @Ctx() { em, user }: Context,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
@@ -76,16 +75,16 @@ export class GroupMutations {
         'New name of group, or null to use default name (list of users)'
     })
     name?: string
-  ) {
+  ): Promise<Group> {
     const group = await em.findOneOrFail(Group, groupId, ['users'])
     group.name = name
     await em.persistAndFlush(group)
     await refetchGroupsAndDms(user.id)
-    return true
+    return group
   }
 
   @CheckGroupMember()
-  @Mutation(() => Boolean, { description: 'Change avatar image of group' })
+  @Mutation(() => Group, { description: 'Change avatar image of group' })
   async changeGroupAvatar(
     @Ctx() { em, user }: Context,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
@@ -97,7 +96,7 @@ export class GroupMutations {
       description: 'Avatar file upload for group, or null to remove avatar'
     })
     avatarFile?: FileUpload
-  ) {
+  ): Promise<Group> {
     const group = await em.findOneOrFail(Group, groupId, ['users'])
     group.avatarUrl = avatarFile
       ? await uploadImage(avatarFile, {
@@ -107,6 +106,6 @@ export class GroupMutations {
       : null
     await em.persistAndFlush(group)
     await refetchGroupsAndDms(user.id)
-    return true
+    return group
   }
 }

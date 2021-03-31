@@ -30,7 +30,7 @@ export class MessageQueries {
     }: GetMessagesArgs,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
-  ) {
+  ): Promise<Message[]> {
     const channel = channelId
       ? await em.findOneOrFail(Channel, channelId)
       : null
@@ -38,7 +38,7 @@ export class MessageQueries {
     const toUser = userId ? await em.findOneOrFail(User, userId) : null
 
     if (!channel && !group && !toUser)
-      throw new Error('Must provide channelId, groupId, or userId')
+      throw new Error('error.message.missingArgs')
 
     const where: FilterQuery<Message> = {
       isDeleted: false,

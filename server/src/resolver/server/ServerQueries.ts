@@ -1,13 +1,4 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  ID,
-  Query,
-  Resolver,
-  UseMiddleware
-} from 'type-graphql'
+import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { Channel, Server, ServerUserJoin, User } from '@/entity'
 import {
   ChannelUsersResponse,
@@ -30,7 +21,7 @@ export class ServerQueries {
     @Args()
     { sort, category, page, pageSize }: GetServersArgs,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<GetServersResponse> {
     let where = {}
     let orderBy = {}
 
@@ -68,7 +59,7 @@ export class ServerQueries {
 
   @Authorized()
   @Query(() => [Server])
-  async getJoinedServers(@Ctx() { user, em }: Context) {
+  async getJoinedServers(@Ctx() { user, em }: Context): Promise<Server[]> {
     await em.populate(user, ['serverJoins.server'])
     const joins = user.serverJoins
     return joins.getItems().map(join => join.server)
@@ -79,7 +70,7 @@ export class ServerQueries {
   async getChannelUsers(
     @Ctx() { em }: Context,
     @Arg('channelId', () => ID) channelId: string
-  ) {
+  ): Promise<ChannelUsersResponse[]> {
     const channel = await em.findOneOrFail(Channel, channelId, ['server.roles'])
     const joins = await em.find(ServerUserJoin, { server: channel.server }, [
       'user',
@@ -138,7 +129,7 @@ export class ServerQueries {
   async getServerPermissions(
     @Ctx() { user, em }: Context,
     @Arg('serverId', () => ID) serverId: string
-  ) {
+  ): Promise<ServerPermission[]> {
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
     if (user.isAdmin || server.owner === user) {
       return [...new Set<ServerPermission>(Object.values(ServerPermission))]

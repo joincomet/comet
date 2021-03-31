@@ -16,7 +16,7 @@ export class NotificationQueries {
     })
     unreadOnly: boolean,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<Notification[]> {
     return em.find(
       Notification,
       unreadOnly

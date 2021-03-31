@@ -22,6 +22,7 @@ import {
   UpdateUserArgs,
   ChangePasswordArgs
 } from '@/resolver/user'
+import { CustomError } from '@/types/CustomError'
 
 @Resolver()
 export class UserMutations {
@@ -31,27 +32,27 @@ export class UserMutations {
     @Arg('name') name: string,
     @Arg('password') password: string,
     @Arg('email') email: string
-  ) {
+  ): Promise<LoginResponse> {
     email = email.toLowerCase()
-    if (!isEmail(email)) throw new Error('Invalid email address')
+    if (!isEmail(email)) throw new Error('error.login.invalidEmail')
 
     name = name
       .replace(/ +(?= )/g, '') // remove repeated spaces
       .replace(/[\u200B-\u200D\uFEFF]/g, '') // remove zero-width characters
       .trim() // remove leading and trailing whitespace
     if (name.length < 2 || name.length > 32)
-      throw new Error('Username must be 2-32 characters')
+      throw new Error('error.login.nameLength')
 
     const bannedSubstrings = ['@', '#', ':', '```']
 
     for (const s of bannedSubstrings) {
-      if (name.includes(s)) throw new Error(`Username cannot contain '${s}'`)
+      if (name.includes(s)) throw new CustomError('user.login.illegalName', s)
     }
 
     const foundUser = await em.findOne(User, {
       email: handleUnderscore(email)
     })
-    if (foundUser) throw new Error('Email already in use')
+    if (foundUser) throw new Error('error.login.emailInUse')
 
     const passwordHash = await argon2.hash(password)
 
@@ -99,20 +100,22 @@ export class UserMutations {
     @Ctx() { em }: Context,
     @Arg('email') email: string,
     @Arg('password') password: string
-  ) {
+  ): Promise<LoginResponse> {
     email = email.toLowerCase()
-    if (!isEmail(email)) throw new Error('Invalid email')
+    if (!isEmail(email)) throw new Error('error.login.invalidEmail')
     const user = await em.findOne(User, { email })
-    if (!user) throw new Error('Invalid Login')
+    if (!user) throw new Error('error.login.invalid')
     const match = await argon2.verify(user.passwordHash, password)
-    if (!match) throw new Error('Invalid Login')
+    if (!match) throw new Error('error.login.invalid')
     if (user.isBanned)
-      throw new Error(`Banned${user.banReason ? `: ${user.banReason}` : ''}`)
+      throw new CustomError(
+        'error.login.banned',
+        user.banReason ? `: ${user.banReason}` : ''
+      )
     user.lastLogin = new Date()
     await em.persistAndFlush(user)
-    const accessToken = createAccessToken(user)
     return {
-      accessToken,
+      accessToken: createAccessToken(user),
       user
     } as LoginResponse
   }
@@ -122,9 +125,9 @@ export class UserMutations {
   async changePassword(
     @Ctx() { em, user }: Context,
     @Args() { password, currentPassword }: ChangePasswordArgs
-  ) {
+  ): Promise<LoginResponse> {
     const match = await argon2.verify(user.passwordHash, currentPassword)
-    if (!match) throw new Error('Incorrect password')
+    if (!match) throw new Error('error.login.wrongPassword')
     user.passwordHash = await argon2.hash(password)
     await em.persistAndFlush(user)
     return {
@@ -139,7 +142,7 @@ export class UserMutations {
     @Args()
     { name, email, avatarFile }: UpdateUserArgs,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<User> {
     const avatarUrl = avatarFile
       ? await uploadImage(avatarFile, {
           width: 256,
@@ -171,7 +174,7 @@ export class UserMutations {
     purge: boolean,
     @Arg('reason', { nullable: true, description: 'Reason for ban' })
     reason?: string
-  ) {
+  ): Promise<boolean> {
     const user = await em.findOneOrFail(User, userId)
     await em
       .createQueryBuilder(User)
@@ -220,7 +223,7 @@ export class UserMutations {
     @Arg('userId', () => ID, { description: 'ID of user to unban' })
     userId: string,
     @Ctx() { em }: Context
-  ) {
+  ): Promise<boolean> {
     await em
       .createQueryBuilder(User)
       .update({

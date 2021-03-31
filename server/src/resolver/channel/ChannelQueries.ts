@@ -13,7 +13,7 @@ export class ChannelQueries {
   async getChannelPermissions(
     @Ctx() { user, em }: Context,
     @Arg('channelId', () => ID) channelId: string
-  ) {
+  ): Promise<GetChannelPermissionsResponse> {
     const channel = await em.findOneOrFail(Channel, channelId, [
       'owner',
       'roles',
@@ -58,7 +58,7 @@ export class ChannelQueries {
   async getServerChannels(
     @Ctx() { em }: Context,
     @Arg('serverId', () => ID) serverId: string
-  ) {
+  ): Promise<Channel[]> {
     const server = await em.findOneOrFail(Server, serverId)
     return server.channels.matching({
       orderBy: { position: QueryOrder.DESC }

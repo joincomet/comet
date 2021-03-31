@@ -1,12 +1,12 @@
 import UserAvatar from '@/components/avatars/UserAvatar'
-import { useUser } from '@/components/providers/UserProvider'
+import { useUser } from '@/components/providers/DataProvider'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import { IconX } from '@/lib/Icons'
 import { Link } from 'react-router-dom'
 
 export default function SettingsPage() {
-  const [user] = useUser()
+  const user = useUser()
   return (
     <>
       <div className="h-full flex relative">

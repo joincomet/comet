@@ -4,15 +4,14 @@ import {
   subscriptionExchange,
   errorExchange
 } from 'urql'
-import { authExchange } from '@urql/exchange-auth'
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch'
-import { makeOperation } from '@urql/core'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { devtoolsExchange } from '@urql/devtools'
 import toast from 'react-hot-toast'
 import { cacheExchange } from '@/graphql/cacheExchange'
+import i18n from '@/i18n/i18n'
 
-const subscriptionClient = new SubscriptionClient(
+export const subscriptionClient = new SubscriptionClient(
   import.meta.env.PROD
     ? `wss://${import.meta.env.VITE_SERVER_DOMAIN}/graphql`
     : 'ws://localhost:4000/graphql',
@@ -21,62 +20,38 @@ const subscriptionClient = new SubscriptionClient(
     connectionParams: () => {
       const token = localStorage.getItem('token')
       return {
-        authorization: token ? `Bearer ${token}` : ''
+        token
       }
     }
   }
 )
-
-const getAuth = async ({ authState }) => {
-  if (!authState) {
-    const token = localStorage.getItem('token')
-    if (token) {
-      return { token }
-    }
-    return null
-  }
-  localStorage.removeItem('token')
-  return null
-}
-
-const addAuthToOperation = ({ authState, operation }) => {
-  if (!authState || !authState.token) {
-    return operation
-  }
-
-  const fetchOptions =
-    typeof operation.context.fetchOptions === 'function'
-      ? operation.context.fetchOptions()
-      : operation.context.fetchOptions || {}
-  return makeOperation(operation.kind, operation, {
-    ...operation.context,
-    fetchOptions: {
-      ...fetchOptions,
-      headers: {
-        ...fetchOptions.headers,
-        authorization: `Bearer ${authState.token}`
-      }
-    }
-  })
-}
 
 export const urqlClient = createClient({
   url: import.meta.env.PROD
     ? `https://${import.meta.env.VITE_SERVER_DOMAIN}/graphql`
     : 'http://localhost:4000/graphql',
   requestPolicy: 'cache-and-network',
+  fetchOptions: () => {
+    const token = localStorage.getItem('token')
+    return {
+      headers: {
+        token
+      }
+    }
+  },
   exchanges: [
     devtoolsExchange,
     dedupExchange,
     cacheExchange,
-    authExchange({
-      getAuth,
-      addAuthToOperation
-    }),
     errorExchange({
-      onError(error) {
-        toast.error(error.message.substring(10))
-        if (import.meta.env.DEV) console.error(error)
+      onError(error, operation) {
+        if (import.meta.env.DEV) console.error({ error, operation })
+        const message = error.message.substring(10)
+        if (error.replace) {
+          toast.error(i18n.t(message, { replace: error.replace }))
+        } else {
+          toast.error(i18n.t(message))
+        }
       }
     }),
     multipartFetchExchange,

@@ -5,24 +5,25 @@ import { Context } from '@/types'
 @Resolver()
 export class NotificationMutations {
   @Authorized()
-  @Mutation(() => Boolean, {
+  @Mutation(() => Notification, {
     description: 'Mark a single notification as read'
   })
   async markNotificationRead(
     @Arg('notifId', () => ID) notifId: string,
     @Ctx() { user, em }: Context
-  ) {
-    const notif = await em.findOne(Notification, notifId)
-    if (!notif) throw new Error('Notification not found')
-    if (notif.toUser !== user) throw new Error('This is not your notification')
+  ): Promise<Notification> {
+    const notif = await em.findOneOrFail(Notification, notifId)
+    if (notif.toUser !== user) throw new Error('error.notif.notYours')
     notif.isRead = true
     await em.persistAndFlush(notif)
-    return true
+    return notif
   }
 
   @Authorized()
   @Mutation(() => Boolean, { description: 'Mark all notifications as read' })
-  async markAllNotificationsRead(@Ctx() { user, em }: Context) {
+  async markAllNotificationsRead(
+    @Ctx() { user, em }: Context
+  ): Promise<boolean> {
     await em
       .createQueryBuilder(Notification)
       .update({ isRead: true })

@@ -17,7 +17,6 @@ export default function DmPage() {
   return (
     <>
       <DmHeader user={user} />
-      <MainSidebar />
 
       <Container>
         <Messages user={user} />

@@ -12,7 +12,7 @@ import { CREATE_CHANNEL } from '@/graphql/mutations/channel'
 import {
   useServerChannels,
   useServer
-} from '@/components/providers/ServerDataProvider'
+} from '@/components/providers/DataProvider'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
 import { useHasServerPermissions } from '@/lib/hasPermission'

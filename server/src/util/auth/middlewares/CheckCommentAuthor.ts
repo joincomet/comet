@@ -9,12 +9,11 @@ import { Group, Message, Comment, FriendData, Post } from '@/entity'
 export const CheckCommentAuthor = () =>
   createMethodDecorator<Context>(
     async ({ args: { commentId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
       // if (!commentId) throw new Error('Args must include commentId')
       if (!commentId) return next()
       const message = await em.findOneOrFail(Comment, commentId, ['author'])
-      if (message.author !== user)
-        throw new Error('You are not the author of this post')
+      if (message.author !== user) throw new Error('error.comment.notAuthor')
       return next()
     }
   )

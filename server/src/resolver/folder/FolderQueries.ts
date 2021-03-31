@@ -1,8 +1,6 @@
 import { Arg, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { Folder, Server, ServerFolder, UserFolder } from '@/entity'
 import { Context } from '@/types'
-import { ServerPermission } from '@/types/ServerPermission'
-import { CheckServerPermission } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 
@@ -10,7 +8,7 @@ import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 export class FolderQueries {
   @Authorized()
   @Query(() => [Folder])
-  async getUserFolders(@Ctx() { user, em }: Context) {
+  async getUserFolders(@Ctx() { user, em }: Context): Promise<Folder[]> {
     const userFolders = await em.find(UserFolder, { user }, ['folder'], {
       position: QueryOrder.DESC
     })
@@ -22,7 +20,7 @@ export class FolderQueries {
   async getServerFolders(
     @Ctx() { user, em }: Context,
     @Arg('serverId', () => ID) serverId: string
-  ) {
+  ): Promise<Folder[]> {
     const server = await em.findOneOrFail(Server, serverId)
     const serverFolders = await em.find(ServerFolder, { server }, ['folder'], {
       position: QueryOrder.DESC

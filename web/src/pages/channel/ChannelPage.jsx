@@ -1,10 +1,7 @@
 import ServerSidebar from '@/components/sidebars/ServerSidebar'
 import Header from '@/components/headers/base/Header'
 import ChannelUsersSidebar from '@/components/sidebars/ChannelUsersSidebar'
-import {
-  useChannel,
-  useServer
-} from '@/components/providers/ServerDataProvider'
+import { useChannel, useServer } from '@/components/providers/DataProvider'
 import Container from '@/components/Container'
 import { IconChannel, IconUsers } from '@/lib/Icons'
 import Messages from '@/components/message/Messages'

@@ -9,12 +9,11 @@ import { Message } from '@/entity'
 export const CheckMessageAuthor = () =>
   createMethodDecorator<Context>(
     async ({ args: { messageId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
       // if (!messageId) throw new Error('Args must include messageId')
       if (!messageId) return next()
       const message = await em.findOneOrFail(Message, messageId, ['author'])
-      if (message.author !== user)
-        throw new Error('You are not the author of this message')
+      if (message.author !== user) throw new Error('error.message.notAuthor')
       return next()
     }
   )

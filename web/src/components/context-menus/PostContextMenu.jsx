@@ -9,6 +9,7 @@ import ContextMenuItem from '@/components/context-menus/ContextMenuItem'
 import ContextMenuDivider from '@/components/context-menus/ContextMenuDivider'
 import ContextMenu from '@/components/context-menus/ContextMenu'
 import { ServerPermission } from '@/lib/ServerPermission'
+import { useUser } from '@/components/providers/DataProvider'
 
 export default function PostContextMenu() {
   const menuEvent = useContextMenuEvent()
@@ -28,6 +29,8 @@ export default function PostContextMenu() {
 
   const { t } = useTranslation()
 
+  const user = useUser()
+
   return (
     <ContextMenu>
       <div className="space-y-0.5">
@@ -41,7 +44,7 @@ export default function PostContextMenu() {
         <ContextMenuItem label={t('post.context.addToUserFolder')} arrow />
         <ContextMenuItem label={t('post.context.sendToFriend')} arrow />
       </div>
-      {!post.author.isCurrentUser ? (
+      {!(post.author.id === user.id) ? (
         <>
           <ContextMenuDivider />
           <ContextMenuItem

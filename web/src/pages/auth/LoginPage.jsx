@@ -4,27 +4,20 @@ import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
 import { useMutation } from 'urql'
 import { LOGIN } from '@/graphql/mutations'
-import { useUser } from '@/components/providers/UserProvider'
+import { useUser } from '@/components/providers/DataProvider'
+import { useEffect } from 'react'
 
 export default function LoginPage() {
   const [{ fetching }, login] = useMutation(LOGIN)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
+  const user = useUser()
 
-  const [_, __, refetchCurrentUser] = useUser()
+  useEffect(() => {
+    if (user) push('/posts')
+  }, [user])
 
-  const onSubmit = variables =>
-    login(variables).then(
-      ({
-        data: {
-          login: { accessToken }
-        }
-      }) => {
-        localStorage.setItem('token', accessToken)
-        refetchCurrentUser()
-        push('/posts')
-      }
-    )
+  const onSubmit = variables => login(variables)
 
   return (
     <AuthCard>

@@ -41,7 +41,7 @@ export class MessageMutations {
     messageSent: Publisher<MessageSentPayload>,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
-  ) {
+  ): Promise<Message> {
     const channel = channelId
       ? await em.findOneOrFail(Channel, channelId)
       : null
@@ -51,9 +51,9 @@ export class MessageMutations {
     if (toUser) {
       const [myData, theirData] = await user.getFriendData(em, userId)
       if (myData.status === FriendStatus.Blocked)
-        throw new Error('This user has blocked you')
+        throw new Error('error.user.blocked')
       if (myData.status === FriendStatus.Blocking)
-        throw new Error('You are blocking this user')
+        throw new Error('error.user.blocking')
     }
 
     const message = em.create(Message, {
@@ -106,8 +106,8 @@ export class MessageMutations {
     @PubSub(SubscriptionTopic.MessageUpdated)
     messageUpdated: Publisher<MessageSentPayload>,
     @Ctx() { user, em }: Context
-  ) {
-    if (!text) throw new Error('Text cannot be empty')
+  ): Promise<Message> {
+    if (!text) throw new Error('error.message.empty')
     const message = await em.findOneOrFail(Message, messageId, [
       'author',
       'toUser',
@@ -183,7 +183,7 @@ export class MessageMutations {
     @Arg('userId', () => ID) userId: string,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
-  ) {
+  ): Promise<boolean> {
     const toUser = await em.findOneOrFail(User, userId)
     const dm = await em.findOne(FriendData, { user, toUser })
     if (!dm) return true

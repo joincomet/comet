@@ -7,7 +7,6 @@ export const USER_FRAGMENT = gql`
     name
     tag
     avatarUrl
-    isCurrentUser
     isOnline
   }
 `

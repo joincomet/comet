@@ -1,14 +1,10 @@
 import { verify } from 'jsonwebtoken'
 
-export const getUserId = (authorization: string) => {
-  if (!authorization) return null
-
-  const accessToken = authorization.split('Bearer ')[1]
-
-  if (!accessToken) return null
+export const getUserId = (token: string) => {
+  if (!token) return null
 
   try {
-    const payload: any = verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
+    const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET)
     return payload.userId
   } catch {
     return null

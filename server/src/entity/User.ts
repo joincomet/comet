@@ -23,6 +23,7 @@ import {
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { ServerPermission, ChannelPermission } from '@/types'
+import { CustomError } from '@/types/CustomError'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -88,9 +89,6 @@ export class User extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
-  @Field()
-  isCurrentUser: boolean
-
   @Property()
   isBanned: boolean = false
 
@@ -110,12 +108,12 @@ export class User extends BaseEntity {
 
   async checkJoinedServer(em: EntityManager, server: Server) {
     if (!(await this.hasJoinedServer(em, server)))
-      throw new Error('You have not joined this server')
+      throw new Error('error.server.notJoined')
   }
 
   async checkBannedFromServer(em: EntityManager, server: Server) {
     if (await this.isBannedFromServer(em, server))
-      throw new Error('You are banned from this server')
+      throw new Error('error.server.banned')
   }
 
   async banFromServer(
@@ -151,13 +149,13 @@ export class User extends BaseEntity {
   ) {
     await this.checkBannedFromServer(em, server)
     if ((await em.count(ServerUserJoin, { user: this })) >= 100)
-      throw new Error('Cannot join more than 100 servers')
+      throw new Error('error.server.joinLimit')
 
     let serverJoin = await em.findOne(ServerUserJoin, {
       server,
       user: this
     })
-    if (serverJoin) throw new Error('You have already joined this server')
+    if (serverJoin) throw new Error('error.server.alreadyJoined')
     serverJoin = em.create(ServerUserJoin, { server, user: this })
     server.userCount++
     await em.persistAndFlush([server, serverJoin])
@@ -198,7 +196,7 @@ export class User extends BaseEntity {
   ) {
     await this.checkJoinedServer(em, server)
     if (!(await this.hasServerPermission(em, server, permission)))
-      throw new Error(`Missing server permission ${permission}`)
+      throw new CustomError('error.server.missingPermission', permission)
   }
 
   async hasChannelPermission(
@@ -253,7 +251,10 @@ export class User extends BaseEntity {
       serverPermission
     )
     if (!hasChannelPermission)
-      throw new Error(`Missing channel permission ${channelPermission}`)
+      throw new CustomError(
+        'error.channel.missingPermission',
+        channelPermission
+      )
   }
 
   async isInGroup(em: EntityManager, group: Group) {
@@ -263,7 +264,7 @@ export class User extends BaseEntity {
 
   async checkInGroup(em: EntityManager, group: Group) {
     if (!(await this.isInGroup(em, group)))
-      throw new Error('You are not in this group')
+      throw new Error('error.group.notJoined')
   }
 
   async getFriendData(em: EntityManager, userId: string) {

@@ -8,7 +8,7 @@ export class FolderSubscriptions {
     topics: SubscriptionTopic.RefetchUserFolders,
     filter: ({ payload: userId, context: { user } }) => user.id === userId
   })
-  refetchUserFolders() {
+  refetchUserFolders(): boolean {
     return true
   }
 
@@ -18,7 +18,7 @@ export class FolderSubscriptions {
     filter: ({ payload: serverId, context: { user, em } }) =>
       user.hasJoinedServer(em, serverId)
   })
-  refetchServerFolders() {
+  refetchServerFolders(): boolean {
     return true
   }
 }

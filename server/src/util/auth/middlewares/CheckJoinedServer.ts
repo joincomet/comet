@@ -9,7 +9,7 @@ import { Server } from '@/entity'
 export const CheckJoinedServer = () =>
   createMethodDecorator<Context>(
     async ({ args: { serverId }, context: { em, user } }, next) => {
-      if (!user) throw new Error('Not logged in')
+      if (!user) throw new Error('error.notLoggedIn')
       // if (!serverId) throw new Error('Args must include serverId')
       if (!serverId) return next()
       const server = await em.findOneOrFail(Server, serverId)

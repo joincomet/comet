@@ -49,7 +49,7 @@ export class MessageSubscriptions {
     @Ctx() { em, user }: Context,
     @Root()
     { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
-  ) {
+  ): Promise<MessageSentResponse> {
     const userId = toUserId
       ? toUserId === user.id
         ? fromUserId
@@ -74,7 +74,7 @@ export class MessageSubscriptions {
     @Ctx() { em, user }: Context,
     @Root()
     { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
-  ) {
+  ): Promise<MessageSentResponse> {
     const userId = toUserId
       ? toUserId === user.id
         ? fromUserId
@@ -99,7 +99,7 @@ export class MessageSubscriptions {
     @Ctx() { em, user }: Context,
     @Root()
     { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
-  ) {
+  ): MessageRemovedResponse {
     const userId = toUserId
       ? toUserId === user.id
         ? fromUserId

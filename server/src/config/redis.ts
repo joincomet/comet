@@ -8,10 +8,10 @@ export default {
   retryStrategy: times => Math.max(times * 100, 3000)
 } as Redis.RedisOptions
 
-export const onConnect = (connectionParams: { authorization: string }) => {
-  if (connectionParams.authorization) {
+export const onConnect = (connectionParams: { token: string }) => {
+  if (connectionParams.token) {
     return {
-      userId: getUserId(connectionParams.authorization)
+      userId: getUserId(connectionParams.token)
     }
   } else {
     return { userId: null }

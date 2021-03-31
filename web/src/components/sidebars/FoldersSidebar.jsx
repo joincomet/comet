@@ -10,7 +10,7 @@ import {
   IconReadLaterFolder
 } from '@/lib/Icons'
 import SidebarItem from '@/components/sidebars/base/SidebarItem'
-import { useServerFolders } from '@/components/providers/ServerDataProvider'
+import { useServerFolders } from '@/components/providers/DataProvider'
 import { useHasServerPermissions } from '@/lib/hasPermission'
 import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
 import { useTranslation } from 'react-i18next'

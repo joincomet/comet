@@ -25,9 +25,9 @@ export class CommentMutations {
   async createComment(
     @Args() { text, postId, parentCommentId }: CreateCommentArgs,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<Comment> {
     text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
-    if (!text) throw new Error('Comment cannot be empty')
+    if (!text) throw new Error('error.comment.empty')
 
     const post = await em.findOneOrFail(Post, postId)
     const parentComment = parentCommentId
@@ -88,10 +88,9 @@ export class CommentMutations {
     @Ctx() { user, em }: Context
   ) {
     const comment = await em.findOne(Comment, commentId, ['author', 'post'])
-    if (comment.author !== user)
-      throw new Error('Attempt to delete post by someone other than author')
+    if (comment.author !== user) throw new Error('error.comment.notAuthor')
 
-    if (comment.isDeleted) throw new Error('Comment already deleted')
+    if (comment.isDeleted) throw new Error('error.comment.alreadyDeleted')
 
     comment.post.commentCount--
     comment.isDeleted = true
@@ -107,10 +106,9 @@ export class CommentMutations {
     @Arg('commentId', () => ID) commentId: string,
     @Arg('text', { description: 'New comment text' }) text: string,
     @Ctx() { user, em }: Context
-  ) {
+  ): Promise<Comment> {
     const comment = await em.findOne(Comment, commentId, ['author'])
-    if (comment.author !== user)
-      throw new Error('Attempt to edit post by someone other than author')
+    if (comment.author !== user) throw new Error('error.post.notAuthor')
     text = handleText(text)
     comment.editedAt = new Date()
     comment.text = text
@@ -124,10 +122,10 @@ export class CommentMutations {
     @Ctx() { user, em }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to vote' })
     commentId: string
-  ) {
+  ): Promise<Comment> {
     const comment = await em.findOneOrFail(Comment, commentId)
     let vote = await em.findOne(CommentVote, { user, comment })
-    if (vote) throw new Error('You have already voted this comment')
+    if (vote) throw new Error('error.comment.alreadyVoted')
     vote = em.create(CommentVote, { user, comment })
     comment.voteCount++
     comment.isVoted = true
@@ -141,7 +139,7 @@ export class CommentMutations {
     @Ctx() { user, em }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to remove vote' })
     commentId: string
-  ) {
+  ): Promise<Comment> {
     const comment = await em.findOneOrFail(Comment, commentId)
     const vote = await em.findOneOrFail(CommentVote, { user, comment })
     comment.voteCount--
@@ -163,7 +161,7 @@ export class CommentMutations {
       nullable: true
     })
     reason?: string
-  ) {
+  ): Promise<boolean> {
     const comment = await em.findOneOrFail(Comment, commentId)
 
     em.assign(comment, {

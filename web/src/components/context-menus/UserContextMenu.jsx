@@ -20,6 +20,7 @@ import {
   useFriendRequests,
   useFriends
 } from '@/components/providers/DataProvider'
+import { useUser } from '@/components/providers/DataProvider'
 
 export default function UserContextMenu({ user, server, show = true, button }) {
   const menuEvent = useContextMenuEvent()
@@ -65,13 +66,15 @@ export default function UserContextMenu({ user, server, show = true, button }) {
 
   const { t } = useTranslation()
 
+  const currentUser = useUser()
+
   return (
     <ContextMenu show={show} button={button}>
       <div className="space-y-0.5">
         <ContextMenuItem label={t('user.context.viewProfile')} />
         <ContextMenuItem label={t('user.context.sendMessage')} />
       </div>
-      {!user.isCurrentUser ? (
+      {user.id !== currentUser.id ? (
         <>
           <ContextMenuDivider />
           {isFriend ? (
@@ -109,7 +112,7 @@ export default function UserContextMenu({ user, server, show = true, button }) {
             )}
             {canBanUser && (
               <ContextMenuItem
-                label={t('user.context.banUser', user)}
+                label={t('user.context.banUser', { user })}
                 red
                 onClick={() => {
                   const reason = window.prompt(t('user.context.banPrompt'))

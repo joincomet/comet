@@ -18,8 +18,8 @@ import faker from 'faker'
 import { FriendStatus } from '@/resolver/friend'
 import { ServerCategory } from '@/resolver/server'
 
-const NUM_USERS = 1000
-const MAX_MESSAGES_PER_USER = 5
+const NUM_USERS = 100
+const MAX_MESSAGES_PER_USER = 3
 
 const rand = (min: number, max: number) => {
   min = Math.ceil(min)
@@ -81,8 +81,7 @@ export const seed = async (em: EntityManager) => {
     featuredPosition: Lexico.FIRST_POSITION,
     owner: userDan,
     category: ServerCategory.Meta,
-    avatarUrl:
-      'https://pbs.twimg.com/profile_images/1316960164008751104/lBuM-qHc_400x400.jpg'
+    avatarUrl: 'https://avatars.githubusercontent.com/u/53412679?s=200&v=4'
   })
 
   const channelGeneral = em.create(Channel, {
@@ -194,7 +193,7 @@ export const seed = async (em: EntityManager) => {
       })
     } else if (n === 3) {
       // Image
-      const numImages = rand(1, 5)
+      const numImages = rand(1, 3)
       const imageUrls = []
       for (let j = 0; j < numImages; j++) {
         imageUrls.push(faker.image.imageUrl(96, 64, undefined, false, true))
@@ -208,13 +207,15 @@ export const seed = async (em: EntityManager) => {
     const comment1 = em.create(Comment, {
       post,
       author: user,
-      text: faker.lorem.sentences()
+      text: faker.lorem.sentences(),
+      voteCount: 1
     })
     const comment2 = em.create(Comment, {
       post,
       author: user,
       text: faker.lorem.sentences(),
-      parentComment: comment1
+      parentComment: comment1,
+      voteCount: 1
     })
 
     entities.push(post, comment1, comment2)

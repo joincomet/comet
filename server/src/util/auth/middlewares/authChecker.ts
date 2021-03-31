@@ -21,7 +21,7 @@ export const authChecker: AuthChecker<Context> = async (
 
   if (roles[0] === 'USER') {
     if (!root || !(root instanceof User))
-      throw new Error(`'USER' authorization can only be used on User entity`)
+      throw new Error('error.invalidUserAuth')
 
     return user === root
   }
