@@ -1,10 +1,11 @@
 name: comet
 services:
   - name: server
-    image:
-      registry_type: DOCKER_HUB
-      registry: joincomet
-      repository: server
+    github:
+      repo: joincomet/comet
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: server/Dockerfile
     http_port: 4000
     routes:
       - path: /api
@@ -28,10 +29,11 @@ services:
       - key: MEDIA_DOMAIN
         value: media.joincomet.app
   - name: web
-    image:
-      registry_type: DOCKER_HUB
-      registry: joincomet
-      repository: web
+    github:
+      repo: joincomet/comet
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: web/Dockerfile
     http_port: 3000
     routes:
       - path: /
