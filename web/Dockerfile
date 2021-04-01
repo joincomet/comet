@@ -1,16 +1,16 @@
-# build
-FROM node:latest as build
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY . .
+FROM node:latest
+
+RUN yarn global add http-server
+
+WORKDIR /app
+
+COPY .yarn .yarnrc.yml yarn.lock .pnp.cjs package.json web/package.json ./
+
 RUN yarn
-COPY . .
-RUN yarn run build
+
 COPY . .
 
-# nginx
-FROM nginx:alpine
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
-COPY --from=build /usr/src/app/web/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+RUN yarn run build
+
+EXPOSE 3000
+CMD [ "http-server", "web/dist", "-p", "3000" ]
