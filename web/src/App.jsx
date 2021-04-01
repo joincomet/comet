@@ -1,4 +1,3 @@
-import TitleBar from '@/electron/titlebar/TitleBar'
 import { DndProvider } from 'react-dnd'
 import { TouchBackend } from 'react-dnd-touch-backend'
 import Routes from '@/Routes'
@@ -22,8 +21,7 @@ export default function App() {
             <ResponsiveToaster />
             <CustomDragLayer />
             <ContextMenus />
-            {window.electron && <TitleBar />}
-            <div className={`h-full max-h-full electron:pt-5.5`}>
+            <div className={`h-full max-h-full`}>
               <Routes />
             </div>
           </DndProvider>

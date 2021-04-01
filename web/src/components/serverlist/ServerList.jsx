@@ -21,7 +21,7 @@ export default function ServerList() {
   return (
     <>
       <div
-        className={`top-0 electron:top-5.5 fixed left-0 bottom-0 flex flex-col items-center w-18 bg-white dark:bg-gray-900`}
+        className={`top-0 fixed left-0 bottom-0 flex flex-col items-center w-18 bg-white dark:bg-gray-900`}
       >
         <div className="h-full flex flex-col w-full">
           <ServerListItem name={t('home')} to="/posts">

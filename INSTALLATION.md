@@ -25,7 +25,6 @@ AWS_SECRET_ACCESS_KEY=<AWS secret access key>
 A postgres database must be available at `DATABASE_URL`
 
 * Web (http://localhost:3000): `yarn workspace web run dev:vite`
-* Electron app (Web must be running first): `yarn workspace web run dev:electron`
 * Server w/ GraphQL Playground (http://localhost:4000/graphql): `yarn workspace server run dev`
 
 ## Deploy Production to DigitalOcean

@@ -17,8 +17,7 @@
 	"scripts": {
 		"build": "yarn workspace web run build",
 		"start": "yarn workspace server start",
-		"dev:web": "yarn workspace web run dev:vite",
-		"dev:server": "yarn workspace server run dev",
-		"dev:electron": "yarn workspace web run dev:electron"
+		"dev:web": "yarn workspace web run dev",
+		"dev:server": "yarn workspace server run dev"
 	}
 }

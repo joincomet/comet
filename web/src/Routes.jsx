@@ -36,15 +36,9 @@ export default function Routes() {
       <Route
         path="/"
         exact
-        render={() => {
-          if (window.electron) {
-            if (user) return <Redirect to="/posts" />
-            return <Redirect to="/login" />
-          } else {
-            return <LandingPage />
-          }
-        }}
-      />
+      >
+        <LandingPage />
+      </Route>
 
       <Route
         path={[

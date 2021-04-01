@@ -190,10 +190,7 @@ module.exports = {
   },
   variants: {
     extend: {
-      typography: ['dark'],
-      inset: ['electron'],
-      padding: ['electron'],
-      margin: ['electron']
+      typography: ['dark']
     },
     scrollbar: ['dark', 'rounded']
   },
@@ -203,21 +200,6 @@ module.exports = {
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/line-clamp'),
-    require('tailwind-scrollbar'),
-    plugin(function ({ addVariant, e }) {
-      addVariant('electron', ({ modifySelectors, separator }) => {
-        const modified = modifySelectors(({ className }) => {
-          return `.${e(`electron${separator}${className}`)}`
-        })
-
-        modified.walkRules(rule => {
-          rule.selectors = rule.selectors.map(selector => {
-            return `.electron ${selector}`
-          })
-        })
-
-        return modified
-      })
-    })
+    require('tailwind-scrollbar')
   ]
 }

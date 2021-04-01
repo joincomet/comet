@@ -19,7 +19,7 @@ export default function AuthLayout({ children }) {
     >
       {children}
 
-      {window.electron ? logo : <Link to="/">{logo}</Link>}
+      <Link to="/">{logo}</Link>
 
       <div className="flex absolute bottom-0 left-0 right-0 z-10 text-gray-900">
         <GraphicGrass className="w-1/2" />
