@@ -4,7 +4,9 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . .
 RUN yarn
+COPY . .
 RUN yarn run build
+COPY . .
 
 # nginx
 FROM nginx:alpine
