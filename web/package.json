@@ -8,12 +8,7 @@
   "scripts": {
     "dev:vite": "vite",
     "dev:electron": "electron .",
-    "build": "yarn run clean && yarn run build:vite && yarn run build:electron",
-    "build:vite": "vite build",
-    "build:electron": "electron-builder --dir",
-    "export:electron": "electron-builder",
-    "export": "yarn run clean && yarn run build:vite && yarn run export:electron",
-    "clean": "rimraf dist dist-electron node_modules"
+    "build": "vite build"
   },
   "dependencies": {
     "@electron/remote": "^1.1.0",
@@ -102,8 +97,8 @@
     "tailwindcss": "^2.0.4",
     "vite": "^2.1.5"
   },
-  "productName": "Comet",
   "build": {
+    "productName": "Comet",
     "appId": "app.joincomet.desktop",
     "asar": true,
     "files": [

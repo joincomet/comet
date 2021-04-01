@@ -2,8 +2,8 @@
 	"name": "comet",
 	"license": "MPL-2.0",
 	"author": {
-		"name": "Comet",
-		"email": "admin@joincomet.app"
+		"name": "Dan Beneventano",
+		"email": "danbeneventano@protonmail.com"
 	},
 	"repository": {
 		"url": "https://github.com/joincomet/comet"
@@ -16,13 +16,10 @@
 		"web"
 	],
 	"scripts": {
-		"build": "if-env PROCFILE=web/Procfile && yarn workspace web run build:vite || node -e \"process.exit(0)\"",
+		"build": "yarn workspace web run build",
 		"start": "yarn workspace server start",
 		"dev:web": "yarn workspace web run dev:vite",
-		"dev:electron": "yarn workspace web run dev:electron",
-		"dev:server": "yarn workspace server run dev"
-	},
-	"dependencies": {
-		"if-env": "^1.0.4"
+		"dev:server": "yarn workspace server run dev",
+		"dev:electron": "yarn workspace web run dev:electron"
 	}
 }
