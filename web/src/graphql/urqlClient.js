@@ -13,7 +13,7 @@ import i18n from '@/i18n/i18n'
 
 export const subscriptionClient = new SubscriptionClient(
   import.meta.env.PROD
-    ? `wss://${import.meta.env.VITE_SERVER_DOMAIN}/graphql`
+    ? `wss://${location.host}/api/graphql`
     : 'ws://localhost:4000/graphql',
   {
     reconnect: true,
@@ -28,7 +28,7 @@ export const subscriptionClient = new SubscriptionClient(
 
 export const urqlClient = createClient({
   url: import.meta.env.PROD
-    ? `https://${import.meta.env.VITE_SERVER_DOMAIN}/graphql`
+    ? `https://${location.host}/api/graphql`
     : 'http://localhost:4000/graphql',
   requestPolicy: 'cache-and-network',
   fetchOptions: () => {

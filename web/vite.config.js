@@ -31,10 +31,5 @@ export default defineConfig(({ command }) => ({
   },
   esbuild: {
     jsxInject: `import React from 'react'`
-  },
-  build: {
-    rollupOptions: {
-      external: ['react', 'react-dom']
-    }
   }
 }))
