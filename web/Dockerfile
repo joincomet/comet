@@ -8,7 +8,6 @@ RUN yarn run build
 
 # nginx
 FROM nginx:alpine
-RUN apk add --no-
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 COPY --from=build /usr/src/app/web/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
