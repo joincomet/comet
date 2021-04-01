@@ -1,13 +1,12 @@
 {
 	"name": "comet",
+	"private": true,
 	"license": "MPL-2.0",
 	"author": {
 		"name": "Dan Beneventano",
 		"email": "danbeneventano@protonmail.com"
 	},
-	"repository": {
-		"url": "https://github.com/joincomet/comet"
-	},
+	"repository": "github:joincomet/comet",
 	"engines": {
 		"node": "15.x.x"
 	},
