@@ -1,11 +1,10 @@
 name: comet
 services:
   - name: server
-    github:
-      repo: joincomet/comet
-      branch: main
-      deploy_on_push: true
-    dockerfile_path: server/Dockerfile
+    image:
+      registry_type: DOCKER_HUB
+      registry: joincomet
+      repository: server
     http_port: 4000
     routes:
       - path: /api
@@ -29,19 +28,13 @@ services:
       - key: MEDIA_DOMAIN
         value: media.joincomet.app
   - name: web
-    github:
-      repo: joincomet/comet
-      branch: main
-      deploy_on_push: true
-    dockerfile_path: web/Dockerfile
+    image:
+      registry_type: DOCKER_HUB
+      registry: joincomet
+      repository: web
     http_port: 3000
     routes:
       - path: /
-    envs:
-      - key: SERVER_PATH
-        value: ${server.PUBLIC_ROUTE_PATH}
-      - key: APP_DOMAIN
-        value: ${APP_DOMAIN}
 databases:
   - name: db
     engine: PG

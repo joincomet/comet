@@ -1,7 +1,6 @@
 import Tippy from '@tippyjs/react/headless'
-import { useMotionValue, animate, AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
-import ReactDOM from 'react-dom'
+import { useMotionValue, animate, motion } from 'framer-motion'
+import { useState } from 'react'
 
 export default function Popup({
   children,
