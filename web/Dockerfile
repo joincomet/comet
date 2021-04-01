@@ -1,5 +1,5 @@
 # build
-FROM node:alpine as build
+FROM node:latest as build
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . .
