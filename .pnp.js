@@ -6822,6 +6822,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["builder-util-runtime", "npm:8.7.3"],
             ["chromium-pickle-js", "npm:0.2.0"],
             ["debug", "virtual:428f325a939c2653ad822eb3d75efb02ac311523dd0d4f9645afc39ea00bd86eceac35a9d59c9b6977d76b670a4ef0ae057ea572338a44729aa592711a8c05a3#npm:4.3.2"],
+            ["dmg-builder", "npm:22.10.5"],
             ["ejs", "npm:3.1.6"],
             ["electron-publish", "npm:22.10.5"],
             ["fs-extra", "npm:9.1.0"],
