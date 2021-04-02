@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { MESSAGE_FRAGMENT, USER_FRAGMENT } from '@/graphql/fragments'
-import { useSubscription } from 'urql'
 
 export const MESSAGE_UPDATED = gql`
   subscription MessageUpdated {
@@ -19,6 +18,3 @@ export const MESSAGE_UPDATED = gql`
   ${MESSAGE_FRAGMENT}
   ${USER_FRAGMENT}
 `
-
-export const useMessageUpdatedSubscription = () =>
-  useSubscription({ query: MESSAGE_UPDATED })

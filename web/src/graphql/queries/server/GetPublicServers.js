@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { SERVER_FRAGMENT } from '@/graphql/fragments'
-import { useQuery } from 'urql'
 
 export const GET_PUBLIC_SERVERS = gql`
   query GetPublicServers(
@@ -24,9 +23,3 @@ export const GET_PUBLIC_SERVERS = gql`
   }
   ${SERVER_FRAGMENT}
 `
-
-export const usePublicServersQuery = ({ sort, category, page, pageSize }) =>
-  useQuery({
-    query: GET_PUBLIC_SERVERS,
-    variables: { sort, category, page, pageSize }
-  })

@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { USER_FRAGMENT } from '@/graphql/fragments'
-import { useMutation } from 'urql'
 
 export const UPDATE_USER = gql`
   mutation UpdateUser($name: String, $avatarFile: Upload) {
@@ -10,5 +9,3 @@ export const UPDATE_USER = gql`
   }
   ${USER_FRAGMENT}
 `
-
-export const useUpdateUserMutation = () => useMutation(USER_FRAGMENT)

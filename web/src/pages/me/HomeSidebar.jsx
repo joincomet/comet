@@ -19,7 +19,8 @@ import { mergeRefs } from '@/utils/mergeRefs'
 import toast from 'react-hot-toast'
 import { VectorLogo } from '@/components/ui/vectors'
 import { useGroupsAndDms } from '@/providers/DataProvider'
-import { useHideDmMutation, useSendMessageMutation } from '@/graphql/mutations'
+import { HIDE_DM, SEND_MESSAGE } from '@/graphql/mutations'
+import { useMutation } from 'urql'
 
 export default function HomeSidebar() {
   const groupsAndDms = useGroupsAndDms()
@@ -76,7 +77,7 @@ export default function HomeSidebar() {
 function DirectMessage({ user }) {
   const { t } = useTranslation()
 
-  const [_, hideDm] = useHideDmMutation()
+  const [_, hideDm] = useMutation(HIDE_DM)
 
   const { push } = useHistory()
   const { pathname } = useLocation()
@@ -86,7 +87,7 @@ function DirectMessage({ user }) {
     data: { user, showCloseDm: true }
   })
 
-  const [_sendMessageRes, sendMessage] = useSendMessageMutation()
+  const [_sendMessageRes, sendMessage] = useMutation(SEND_MESSAGE)
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,

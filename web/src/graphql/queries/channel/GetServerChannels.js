@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { CHANNEL_FRAGMENT } from '@/graphql/fragments'
-import { useQuery } from 'urql'
 
 export const GET_SERVER_CHANNELS = gql`
   query GetServerChannels($serverId: ID!) {
@@ -10,6 +9,3 @@ export const GET_SERVER_CHANNELS = gql`
   }
   ${CHANNEL_FRAGMENT}
 `
-
-export const useServerChannelsQuery = ({ serverId }) =>
-  useQuery({ query: GET_SERVER_CHANNELS })

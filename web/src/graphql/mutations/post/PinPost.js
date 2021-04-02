@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { POST_FRAGMENT } from '@/graphql/fragments'
-import { useMutation } from 'urql'
 
 export const PIN_POST = gql`
   mutation PinPost($postId: ID!) {
@@ -10,5 +9,3 @@ export const PIN_POST = gql`
   }
   ${POST_FRAGMENT}
 `
-
-export const usePinPostMutation = () => useMutation(PIN_POST)

@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { SERVER_FRAGMENT } from '@/graphql/fragments'
-import { useMutation } from 'urql'
 
 export const UPDATE_SERVER = gql`
   mutation UpdateServer(
@@ -22,5 +21,3 @@ export const UPDATE_SERVER = gql`
   }
   ${SERVER_FRAGMENT}
 `
-
-export const useUpdateServerMutation = () => useMutation(UPDATE_SERVER)

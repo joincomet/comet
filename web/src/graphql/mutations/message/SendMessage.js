@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { MESSAGE_FRAGMENT } from '@/graphql/fragments'
-import { useMutation } from 'urql'
 
 export const SEND_MESSAGE = gql`
   mutation SendMessage(
@@ -20,5 +19,3 @@ export const SEND_MESSAGE = gql`
   }
   ${MESSAGE_FRAGMENT}
 `
-
-export const useSendMessageMutation = () => useMutation(SEND_MESSAGE)

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { GET_MESSAGES, useMessagesQuery } from '@/graphql/queries'
+import { GET_MESSAGES } from '@/graphql/queries'
 import { useQuery } from 'urql'
 
 export function useMessages({ channel, group, user }) {

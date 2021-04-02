@@ -1,5 +1,4 @@
 import { gql } from '@urql/core'
-import { useMutation } from 'urql'
 
 export const BAN_USER_FROM_SERVER = gql`
   mutation BanUserFromServer(
@@ -16,6 +15,3 @@ export const BAN_USER_FROM_SERVER = gql`
     )
   }
 `
-
-export const useBanUserFromServerMutation = () =>
-  useMutation(BAN_USER_FROM_SERVER)

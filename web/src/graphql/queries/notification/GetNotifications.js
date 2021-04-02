@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { USER_FRAGMENT } from '@/graphql/fragments'
-import { useQuery } from 'urql'
 
 export const GET_NOTIFICATIONS = gql`
   query GetNotifications($unreadOnly: Boolean) {
@@ -24,6 +23,3 @@ export const GET_NOTIFICATIONS = gql`
   }
   ${USER_FRAGMENT}
 `
-
-export const useNotificationsQuery = ({ unreadOnly }) =>
-  useQuery({ query: GET_NOTIFICATIONS, variables: { unreadOnly } })

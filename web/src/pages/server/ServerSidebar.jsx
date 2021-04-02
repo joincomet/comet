@@ -11,7 +11,7 @@ import {
 import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
 import Dialog from '@/components/ui/dialog/Dialog'
-import { useCreateChannelMutation } from '@/graphql/mutations/channel'
+import { CREATE_CHANNEL } from '@/graphql/mutations/channel'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { ServerPermission } from '@/types/ServerPermission'
@@ -21,6 +21,7 @@ import Switch from '@/components/ui/Switch'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useServer, useServerChannels } from '@/providers/ServerProvider'
+import { useMutation } from 'urql'
 
 export default function ServerSidebar() {
   const { t } = useTranslation()
@@ -91,7 +92,7 @@ function CreateChannel({ serverId }) {
 
   const { push } = useHistory()
 
-  const [{ fetching }, createChannel] = useCreateChannelMutation()
+  const [{ fetching }, createChannel] = useMutation(CREATE_CHANNEL)
 
   const onSubmit = ({ name }) => {
     createChannel({ name, serverId, isPrivate }).then(

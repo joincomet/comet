@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 import {
-  useChannelPermissionsQuery,
-  useServerPermissionsQuery
+  GET_CHANNEL_PERMISSIONS,
+  GET_SERVER_PERMISSIONS
 } from '@/graphql/queries'
 import { useCurrentUser } from '@/providers/UserProvider'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from 'urql'
 
 /**
  * @param channelId The ID of the channel to check permissions
@@ -21,8 +22,14 @@ export const useHasChannelPermissions = (
 ) => {
   const { t } = useTranslation()
   const user = useCurrentUser()
-  const [{ data: serverData }] = useServerPermissionsQuery({ serverId })
-  const [{ data: channelData }] = useChannelPermissionsQuery({ channelId })
+  const [{ data: serverData }] = useQuery({
+    query: GET_SERVER_PERMISSIONS,
+    variables: { serverId }
+  })
+  const [{ data: channelData }] = useQuery({
+    query: GET_CHANNEL_PERMISSIONS,
+    variables: { channelId }
+  })
   if (channelPermissions.length !== serverPermissions.length)
     throw new Error(t('error.channelPermissions'))
   return useMemo(() => {

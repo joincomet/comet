@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { useCurrentUserQuery } from '@/graphql/queries'
+import { GET_CURRENT_USER } from '@/graphql/queries'
+import { useQuery } from 'urql'
 
 export const UserContext = createContext({
   user: null,
@@ -7,7 +8,7 @@ export const UserContext = createContext({
 })
 
 export function UserProvider({ children }) {
-  const [{ data, fetching }] = useCurrentUserQuery()
+  const [{ data, fetching }] = useQuery({ query: GET_CURRENT_USER })
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     if (!fetching) setLoading(false)

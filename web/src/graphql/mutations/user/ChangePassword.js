@@ -1,5 +1,4 @@
 import { gql } from '@urql/core'
-import { useMutation } from 'urql'
 
 export const CHANGE_PASSWORD = gql`
   mutation ChangePassword($password: String!, $currentPassword: String!) {
@@ -8,5 +7,3 @@ export const CHANGE_PASSWORD = gql`
     }
   }
 `
-
-export const useChangePasswordMutation = () => useMutation(CHANGE_PASSWORD)

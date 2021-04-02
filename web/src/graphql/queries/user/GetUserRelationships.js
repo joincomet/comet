@@ -1,6 +1,5 @@
 import { gql } from '@urql/core'
 import { USER_FRAGMENT } from '@/graphql/fragments'
-import { useQuery } from 'urql'
 
 export const GET_USER_RELATIONSHIPS = gql`
   query GetUserRelationships {
@@ -24,6 +23,3 @@ export const GET_USER_RELATIONSHIPS = gql`
   }
   ${USER_FRAGMENT}
 `
-
-export const useUserRelationshipsQuery = () =>
-  useQuery({ query: GET_USER_RELATIONSHIPS })
