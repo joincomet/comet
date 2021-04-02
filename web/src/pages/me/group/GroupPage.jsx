@@ -4,12 +4,14 @@ import GroupUsersSidebar from '@/pages/me/group/GroupUsersSidebar'
 import Container from '@/components/ui/Container'
 import Messages from '@/components/message/Messages'
 import { useGroupsAndDms } from '@/providers/DataProvider'
+import { useSetHomePage } from '@/hooks/useSetHomePage'
 
 export default function GroupPage() {
   const { groupId } = useParams()
   const group = useGroupsAndDms().find(
     o => o.__typename === 'Group' && o.id === groupId
   )
+  useSetHomePage(`group/${groupId}`)
   return (
     <>
       <Header />

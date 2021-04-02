@@ -208,7 +208,7 @@ export class MessageMutations {
     @Args() { channelId, groupId, userId }: TypingArgs
   ): Promise<boolean> {
     await userStartedTyping({
-      name: user.name,
+      username: user.username,
       userId,
       groupId,
       channelId

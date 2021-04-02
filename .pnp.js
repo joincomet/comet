@@ -3407,6 +3407,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@urql/exchange-retry", [
+        ["npm:0.2.0", {
+          "packageLocation": "./.yarn/cache/@urql-exchange-retry-npm-0.2.0-8ba7244c40-4bc50405bd.zip/node_modules/@urql/exchange-retry/",
+          "packageDependencies": [
+            ["@urql/exchange-retry", "npm:0.2.0"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:0.2.0", {
+          "packageLocation": "./.yarn/$$virtual/@urql-exchange-retry-virtual-efdf03fa86/0/cache/@urql-exchange-retry-npm-0.2.0-8ba7244c40-4bc50405bd.zip/node_modules/@urql/exchange-retry/",
+          "packageDependencies": [
+            ["@urql/exchange-retry", "virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:0.2.0"],
+            ["@types/graphql", null],
+            ["@urql/core", "virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:2.0.0"],
+            ["graphql", "npm:15.5.0"],
+            ["wonka", "npm:4.0.15"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "graphql"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@use-it/event-listener", [
         ["npm:0.1.6", {
           "packageLocation": "./.yarn/cache/@use-it-event-listener-npm-0.1.6-8a61efd0ee-7ba9bb306c.zip/node_modules/@use-it/event-listener/",
@@ -15555,6 +15579,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@urql/exchange-auth", "virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:0.1.2"],
             ["@urql/exchange-graphcache", "virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:4.0.0"],
             ["@urql/exchange-multipart-fetch", "virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:0.1.11"],
+            ["@urql/exchange-retry", "virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:0.2.0"],
             ["@vitejs/plugin-react-refresh", "npm:1.3.2"],
             ["autoprefixer", "virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:10.2.5"],
             ["babel-eslint", "virtual:42b1ed7d3a3ef35c42ac579b760bc4a57b4d9efe82aa857be421d347a9d5eb77b93f1eefdf7c38f1138ec18d742a002770af95542f0d242dcc89856cb39b7f23#npm:10.1.0"],

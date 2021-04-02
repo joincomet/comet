@@ -22,8 +22,12 @@ export default function MessageInput({ channel, group, user }) {
       variables,
       pause: !channel && !group && !user
     },
-    (a, b) => {
-      console.log({ a, b })
+    (_, { userStartedTyping: username }) => {
+      setTypingNames([...typingNames, username])
+      setTimeout(
+        () => setTypingNames(typingNames.filter(u => u !== username)),
+        1000
+      )
     }
   )
 

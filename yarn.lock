@@ -2201,7 +2201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@urql/core@npm:>=1.14.0, @urql/core@npm:>=1.14.1, @urql/core@npm:>=2.0.0, @urql/core@npm:^2.0.0":
+"@urql/core@npm:>=1.14.0, @urql/core@npm:>=1.14.1, @urql/core@npm:>=1.15.0, @urql/core@npm:>=2.0.0, @urql/core@npm:^2.0.0":
   version: 2.0.0
   resolution: "@urql/core@npm:2.0.0"
   dependencies:
@@ -2259,6 +2259,18 @@ __metadata:
   peerDependencies:
     graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 0e28ea5dd2c49eff722999ddf10a3a7e7c8f26d69cbc316e83c9c9742f938ea5dbae2d3a32f936f5fb9b1456f8c3669a6d7255ac870df5607b2e25fc2cfd2bb0
+  languageName: node
+  linkType: hard
+
+"@urql/exchange-retry@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@urql/exchange-retry@npm:0.2.0"
+  dependencies:
+    "@urql/core": ">=1.15.0"
+    wonka: ^4.0.14
+  peerDependencies:
+    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 4bc50405bdbb4840301c9dc24de2550716ce0bf18270efd8db3be86a744519f0083e6a00d83b713672f422bef8ea1a02ea9d61624d4385210572338984ab253d
   languageName: node
   linkType: hard
 
@@ -12397,6 +12409,7 @@ typescript@^4.2.3:
     "@urql/exchange-auth": ^0.1.2
     "@urql/exchange-graphcache": ^4.0.0
     "@urql/exchange-multipart-fetch": ^0.1.11
+    "@urql/exchange-retry": ^0.2.0
     "@vitejs/plugin-react-refresh": ^1.3.2
     autoprefixer: ^10.2.5
     babel-eslint: ^10.1.0

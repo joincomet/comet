@@ -22,15 +22,6 @@ export const GET_MESSAGES = gql`
       author {
         ...USER_FRAGMENT
       }
-      channel {
-        id
-      }
-      toUser {
-        id
-      }
-      group {
-        id
-      }
     }
   }
   ${MESSAGE_FRAGMENT}

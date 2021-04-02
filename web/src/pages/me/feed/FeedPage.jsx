@@ -4,6 +4,7 @@ import PostsHeader from '@/components/post/PostsHeader'
 import { useStore } from '@/hooks/useStore'
 import Container from '@/components/ui/Container'
 import Posts from '@/components/post/Posts'
+import { useSetHomePage } from '@/hooks/useSetHomePage'
 
 export default function FeedPage() {
   const showFolders = useStore(s => s.showFolders)
@@ -13,7 +14,7 @@ export default function FeedPage() {
   const refreshPosts = () => {
     if (ref && ref.current) ref.current.refresh()
   }
-
+  useSetHomePage(`feed`)
   return (
     <>
       <PostsHeader refreshPosts={refreshPosts} />

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { IconHome, IconExplore } from '@/components/ui/icons/Icons'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import CreateServerDialog from '@/components/server/create/CreateServerDialog'
@@ -9,14 +10,14 @@ import { ContextMenuType } from '@/types/ContextMenuType'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
 import { mergeRefs } from '@/utils/mergeRefs'
-import { GET_JOINED_SERVERS } from '@/graphql/queries'
-import { useQuery } from 'urql'
 import { useJoinedServers } from '@/providers/DataProvider'
+import { useStore } from '@/hooks/useStore'
 
 export default function ServerList() {
   const servers = useJoinedServers()
   const { pathname } = useLocation()
   const { t } = useTranslation()
+  const homePage = useStore(s => s.homePage)
 
   return (
     <>
@@ -24,7 +25,10 @@ export default function ServerList() {
         className={`top-0 fixed left-0 bottom-0 flex flex-col items-center w-18 bg-white dark:bg-gray-900`}
       >
         <div className="h-full flex flex-col w-full">
-          <ServerListItem name={t('home')} to="/me">
+          <ServerListItem
+            name={t('home')}
+            to={`/me${homePage ? `/${homePage}` : ''}`}
+          >
             <IconHome
               className={`w-5 h-5 group-hover:text-white transition ${
                 pathname === '/' ? 'text-white' : 'text-blue-500'
@@ -72,10 +76,14 @@ function ServerListServer({ server }) {
   })
 
   const { serverId } = useParams()
+  const serverPages = useStore(s => s.serverPages)
+  useEffect(() => console.log(serverPages), [serverPages])
 
   return (
     <ServerListItem
-      to={`/server/${server.id}`}
+      to={`/server/${server.id}${
+        serverPages[server.id] ? `/${serverPages[server.id]}` : ''
+      }`}
       name={server.name}
       ref={mergeRefs(contextMenuRef, dragRef)}
       active={serverId === server.id}

@@ -1,6 +1,6 @@
 import create from 'zustand'
 
-export const useStore = create(set => ({
+export const useStore = create((set, get) => ({
   friendsPage: 'Online',
   setFriendsPage: friendsPage => set({ friendsPage }),
   inboxPage: 'Unread',
@@ -20,5 +20,11 @@ export const useStore = create(set => ({
   showFolders: true,
   setShowFolders: showFolders => set({ showFolders }),
   showUsers: true,
-  setShowUsers: showUsers => set({ showUsers })
+  setShowUsers: showUsers => set({ showUsers }),
+
+  serverPages: {},
+  setServerPage: (serverId, page) =>
+    set({ serverPages: { ...get().serverPages, [serverId]: page } }),
+  homePage: null,
+  setHomePage: page => set({ homePage: page })
 }))

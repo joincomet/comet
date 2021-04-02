@@ -4,6 +4,7 @@ import { GET_USER } from '@/graphql/queries'
 import DmHeader from '@/pages/me/dm/DmHeader'
 import Container from '@/components/ui/Container'
 import Messages from '@/components/message/Messages'
+import { useSetHomePage } from '@/hooks/useSetHomePage'
 
 export default function DmPage() {
   const { userId } = useParams()
@@ -12,7 +13,7 @@ export default function DmPage() {
     variables: { userId }
   })
   const user = userData?.getUser
-
+  useSetHomePage(`dm/${userId}`)
   return (
     <>
       <DmHeader user={user} />

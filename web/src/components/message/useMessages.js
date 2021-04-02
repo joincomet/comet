@@ -19,5 +19,5 @@ export function useMessages({ channel, group, user }) {
     pause: !channel && !group && !user
   })
 
-  return [data?.getMessages ?? [], fetching, () => setPage(page + 1)]
+  return [data?.getMessages, fetching, () => setPage(page + 1)]
 }

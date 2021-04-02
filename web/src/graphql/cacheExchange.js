@@ -50,84 +50,6 @@ const removeMessageFromGetMessages = (messageId, cache) => {
     })
 }
 
-const pinPost = ({ postId: id }, cache) => {
-  return {
-    __typename: 'Post',
-    id,
-    isPinned: true
-  }
-}
-
-const unpinPost = ({ postId: id }, cache) => {
-  return {
-    __typename: 'Post',
-    id,
-    isPinned: false
-  }
-}
-
-const removePost = ({ postId: id, reason }, cache) => {
-  removePostFromGetPosts(id, cache)
-  return {
-    __typename: 'Post',
-    id,
-    isPinned: false,
-    isRemoved: true,
-    text: `[removed${reason ? `: ${reason}` : ''}]`
-  }
-}
-
-const deletePost = ({ postId: id }, cache) => {
-  removePostFromGetPosts(id, cache)
-  return {
-    __typename: 'Post',
-    id,
-    isPinned: false,
-    isDeleted: true,
-    text: '[deleted]'
-  }
-}
-
-const createPostVote = ({ postId: id }, cache) => {
-  const post = cache.readFragment(POST_FRAGMENT, { id })
-  return {
-    __typename: 'Post',
-    id,
-    isVoted: true,
-    voteCount: post.voteCount + 1
-  }
-}
-
-const removePostVote = ({ postId: id }, cache) => {
-  const post = cache.readFragment(POST_FRAGMENT, { id })
-  return {
-    __typename: 'Post',
-    id,
-    isVoted: false,
-    voteCount: post.voteCount - 1
-  }
-}
-
-const createCommentVote = ({ commentId: id }, cache) => {
-  const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
-  return {
-    __typename: 'Comment',
-    id,
-    isVoted: true,
-    voteCount: comment.voteCount + 1
-  }
-}
-
-const removeCommentVote = ({ commentId: id }, cache) => {
-  const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
-  return {
-    __typename: 'Post',
-    id,
-    isVoted: false,
-    voteCount: comment.voteCount - 1
-  }
-}
-
 export const cacheExchange = ce({
   keys: {
     GetPostsResponse: () => null,
@@ -153,14 +75,76 @@ export const cacheExchange = ce({
     }
   },
   optimistic: {
-    pinPost,
-    unpinPost,
-    removePost,
-    deletePost,
-    createPostVote,
-    removePostVote,
-    createCommentVote,
-    removeCommentVote
+    pinPost: ({ postId: id }) => {
+      return {
+        __typename: 'Post',
+        id,
+        isPinned: true
+      }
+    },
+    unpinPost: ({ postId: id }) => {
+      return {
+        __typename: 'Post',
+        id,
+        isPinned: false
+      }
+    },
+    removePost: ({ postId: id, reason }, cache) => {
+      removePostFromGetPosts(id, cache)
+      return {
+        __typename: 'Post',
+        id,
+        isPinned: false,
+        isRemoved: true,
+        text: `[removed${reason ? `: ${reason}` : ''}]`
+      }
+    },
+    deletePost: ({ postId: id }, cache) => {
+      removePostFromGetPosts(id, cache)
+      return {
+        __typename: 'Post',
+        id,
+        isPinned: false,
+        isDeleted: true,
+        text: '[deleted]'
+      }
+    },
+    createPostVote: ({ postId: id }, cache) => {
+      const post = cache.readFragment(POST_FRAGMENT, { id })
+      return {
+        __typename: 'Post',
+        id,
+        isVoted: true,
+        voteCount: post.voteCount + 1
+      }
+    },
+    removePostVote: ({ postId: id }, cache) => {
+      const post = cache.readFragment(POST_FRAGMENT, { id })
+      return {
+        __typename: 'Post',
+        id,
+        isVoted: false,
+        voteCount: post.voteCount - 1
+      }
+    },
+    createCommentVote: ({ commentId: id }, cache) => {
+      const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
+      return {
+        __typename: 'Comment',
+        id,
+        isVoted: true,
+        voteCount: comment.voteCount + 1
+      }
+    },
+    removeCommentVote: ({ commentId: id }, cache) => {
+      const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
+      return {
+        __typename: 'Post',
+        id,
+        isVoted: false,
+        voteCount: comment.voteCount - 1
+      }
+    }
   },
   updates: {
     Mutation: {

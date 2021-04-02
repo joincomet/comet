@@ -7,12 +7,14 @@ import { IconFolder } from '@/components/ui/icons/Icons'
 import ShowFoldersButton from '@/components/ui/header/buttons/ShowFoldersButton'
 import { useStore } from '@/hooks/useStore'
 import { useUserFolders } from '@/providers/DataProvider'
+import { useSetHomePage } from '@/hooks/useSetHomePage'
 
 export default function UserFolderPage() {
   const { folderId } = useParams()
   const showFolders = useStore(s => s.showFolders)
 
   const folder = useUserFolders().find(f => f.id === folderId)
+  useSetHomePage(`folder/${folderId}`)
 
   return (
     <>

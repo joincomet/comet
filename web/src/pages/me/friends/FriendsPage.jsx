@@ -7,6 +7,7 @@ import View from '@/components/ui/View'
 import ctl from '@netlify/classnames-template-literals'
 import FriendRequestListItem from '@/pages/me/friends/FriendRequestListItem'
 import { useUserRelationships } from '@/providers/DataProvider'
+import { useSetHomePage } from '@/hooks/useSetHomePage'
 
 const label = ctl(`
   px-2
@@ -31,7 +32,7 @@ export default function FriendsPage() {
   const friendsPage = useStore(s => s.friendsPage)
 
   const [username, setUsername] = useState('')
-
+  useSetHomePage(`friends`)
   return (
     <>
       <FriendsHeader pendingCount={incomingFriendRequests.length} />

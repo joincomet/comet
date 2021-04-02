@@ -29,12 +29,15 @@ import LoadingScreen from '@/pages/LoadingScreen'
 import ServerLoadingScreen from '@/pages/ServerLoadingScreen'
 
 export default function PrivateRoutes() {
-  const loading = useDataLoading()
+  const dataLoading = useDataLoading()
   const user = useCurrentUser()
+  const userLoading = useCurrentUserLoading()
   return (
     <>
       <AnimatePresence>
-        {!!user && loading && <LoadingScreen />}
+        {((!!user && dataLoading) || (!user && userLoading)) && (
+          <LoadingScreen />
+        )}
       </AnimatePresence>
 
       <Switch>

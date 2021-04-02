@@ -7,12 +7,14 @@ import Messages from '@/components/message/Messages'
 import { useStore } from '@/hooks/useStore'
 import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
 import { useServerChannels } from '@/providers/ServerProvider'
+import { useSetServerPage } from '@/hooks/useSetServerPage'
 
 export default function ServerChannelPage() {
   const showUsers = useStore(s => s.showUsers)
   const { channelId } = useParams()
   const channels = useServerChannels()
   const channel = channels.find(c => c.id === channelId)
+  useSetServerPage(`channel/${channelId}`)
 
   return (
     <>

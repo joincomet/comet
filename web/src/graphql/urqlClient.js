@@ -4,6 +4,7 @@ import {
   subscriptionExchange,
   errorExchange
 } from 'urql'
+import { retryExchange } from '@urql/exchange-retry'
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { devtoolsExchange } from '@urql/devtools'
@@ -46,13 +47,20 @@ export const urqlClient = createClient({
     errorExchange({
       onError(error, operation) {
         if (import.meta.env.DEV) console.error({ error, operation })
-        const message = error.message.substring(10)
-        if (error.replace) {
-          toast.error(i18n.t(message, { replace: error.replace }))
-        } else {
-          toast.error(i18n.t(message))
+        if (!error.networkError) {
+          const message = error.message.substring(10)
+          if (error.replace) {
+            toast.error(i18n.t(message, { replace: error.replace }))
+          } else {
+            toast.error(i18n.t(message))
+          }
         }
       }
+    }),
+    retryExchange({
+      initialDelayMs: 1000,
+      randomDelay: false,
+      maxNumberAttempts: 10 ** 7
     }),
     multipartFetchExchange,
     subscriptionExchange({

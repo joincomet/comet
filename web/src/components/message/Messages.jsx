@@ -5,7 +5,6 @@ import { usePrependedMessagesCount } from '@/components/message/usePrependedMess
 import Message from '@/components/message/Message'
 import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/MessageInput'
-import { useCurrentUser } from '@/providers/UserProvider'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 
 const PREPEND_OFFSET = 10 ** 7
@@ -13,7 +12,6 @@ const PREPEND_OFFSET = 10 ** 7
 export default function Messages({ channel, user, group }) {
   const [messages, fetching, fetchMore] = useMessages({ channel, user, group })
   const virtuoso = useRef(null)
-  const currentUser = useCurrentUser()
 
   const {
     atBottom,

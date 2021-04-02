@@ -124,7 +124,7 @@ export class MessageSubscriptions {
   @Authorized()
   @Subscription(() => String, {
     topics: SubscriptionTopic.Typing,
-    /*filter: async ({
+    filter: async ({
       payload: {
         channelId: typingChannelId,
         groupId: typingGroupId,
@@ -133,16 +133,6 @@ export class MessageSubscriptions {
       context: { user, em },
       args: { channelId, groupId, userId }
     }: SubscriptionFilter<TypingPayload>) => {
-      console.log('------------------------------------')
-      console.log({
-        channelId,
-        typingChannelId,
-        groupId,
-        typingGroupId,
-        userId,
-        typingUserId
-      })
-      console.log('------------------------------------')
       if (typingChannelId && channelId === typingChannelId) {
         const channel = await em.findOneOrFail(Channel, typingChannelId)
         return user.hasChannelPermission(
@@ -154,16 +144,15 @@ export class MessageSubscriptions {
         const group = await em.findOneOrFail(Group, typingGroupId)
         return group.users.contains(user)
       } else return typingUserId && userId === typingUserId
-    },*/
+    },
     description:
       'Published to all users looking at messages when a user starts typing'
   })
   userStartedTyping(
     @Root()
-    { name }: TypingPayload,
+    { username }: TypingPayload,
     @Args() { channelId, groupId, userId }: TypingArgs
   ): string {
-    console.log({ channelId, groupId, userId })
-    return name
+    return username
   }
 }
