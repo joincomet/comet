@@ -135,5 +135,5 @@ body {
 
 [contentEditable=true]:empty:before{
   content: attr(data-placeholder);
-  @apply text-gray-500 dark:text-gray-500;
+  @apply text-gray-500 dark:text-gray-500 leading-none;
 }

@@ -45,6 +45,11 @@ export default function MessageInput({ channel, group, user }) {
     inputRef.current?.el?.current?.focus()
   }, [])
 
+  useEffect(() => {
+    if (inputRef.current?.el?.current)
+      inputRef.current.el.current.dataset.placeholder = placeholder
+  }, [placeholder])
+
   const { t } = useTranslation()
 
   return (

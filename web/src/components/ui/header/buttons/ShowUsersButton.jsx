@@ -9,7 +9,7 @@ export default function ShowUsersButton() {
 
   return (
     <Tippy
-      content={showUsers ? t('channel.hideUsers') : t('channel.showUsers')}
+      content={showUsers ? t('channels.hideUsers') : t('channels.showUsers')}
     >
       <div className="highlightable" onClick={() => setShowUsers(!showUsers)}>
         <IconUsers className="w-5 h-5" />

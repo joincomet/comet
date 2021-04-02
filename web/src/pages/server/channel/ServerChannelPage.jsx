@@ -6,10 +6,12 @@ import { IconChannel } from '@/components/ui/icons/Icons'
 import Messages from '@/components/message/Messages'
 import { useStore } from '@/hooks/useStore'
 import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
+import { useServerChannels } from '@/providers/ServerProvider'
 
-export default function ServerChannelPage({ channels }) {
+export default function ServerChannelPage() {
   const showUsers = useStore(s => s.showUsers)
   const { channelId } = useParams()
+  const channels = useServerChannels()
   const channel = channels.find(c => c.id === channelId)
 
   return (

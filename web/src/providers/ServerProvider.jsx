@@ -52,9 +52,10 @@ export function ServerProvider({ children }) {
   return (
     <ServerContext.Provider
       value={{
-        channel: serverChannelsData?.getServerChannels,
+        channels: serverChannelsData?.getServerChannels,
         folders: foldersData?.getServerFolders,
-        permissions: permissionsData?.getServerPermissions
+        permissions: permissionsData?.getServerPermissions,
+        loading: !serverChannelsData || !foldersData || !permissionsData
       }}
     >
       {children}
@@ -62,6 +63,15 @@ export function ServerProvider({ children }) {
   )
 }
 
+export const useServer = () => {
+  const { serverId } = useParams()
+  const joinedServers = useJoinedServers()
+  return joinedServers?.find(s => s.id === serverId)
+}
+export const useServerLoading = () => {
+  const { loading } = useContext(ServerContext)
+  return loading
+}
 export const useServerChannels = () => {
   const { channels } = useContext(ServerContext)
   return channels

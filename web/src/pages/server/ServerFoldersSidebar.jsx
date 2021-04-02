@@ -30,7 +30,7 @@ export default function ServerFoldersSidebar({ serverId }) {
   return (
     <Sidebar right show={showFolders}>
       <div className="px-1.5">
-        {!!serverFolders.length && (
+        {serverFolders.length > 0 && (
           <>
             {canManageFolders ? (
               <SidebarLabel
@@ -44,15 +44,16 @@ export default function ServerFoldersSidebar({ serverId }) {
             )}
 
             <div className="space-y-0.5">
-              {serverFolders.map(folder => (
-                <Folder key={folder.id} folder={folder} />
-              ))}
+              {!!serverFolders &&
+                serverFolders.map(folder => (
+                  <Folder key={folder.id} folder={folder} />
+                ))}
             </div>
           </>
         )}
 
         <SidebarLabel plusLabel={t('folders.user.create')} onClick={() => {}}>
-          Your Folders
+          {t('folders.user.title')}
         </SidebarLabel>
 
         <div className="space-y-0.5">

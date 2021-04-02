@@ -6,7 +6,6 @@ import './locales/i18n'
 import './styles/index.css'
 import './styles/app.css'
 import './styles/tippy.css'
-import './styles/editor.css'
 
 import App from './App'
 

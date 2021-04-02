@@ -20,10 +20,12 @@ import { useTranslation } from 'react-i18next'
 import Switch from '@/components/ui/Switch'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { useServerChannels } from '@/providers/ServerProvider'
+import { useServer, useServerChannels } from '@/providers/ServerProvider'
 
-export default function ServerSidebar({ server }) {
-  const channels = useServerChannels(server.id)
+export default function ServerSidebar() {
+  const { t } = useTranslation()
+  const server = useServer()
+  const channels = useServerChannels()
 
   return (
     <Sidebar>
@@ -35,10 +37,10 @@ export default function ServerSidebar({ server }) {
       <div className="px-1.5 pt-4">
         <SidebarItem>
           <IconUsers className="mr-3 w-5 h-5" />
-          Invite People
+          {t('server.invitePeople')}
         </SidebarItem>
 
-        <SidebarLabel plusLabel="Create Post">Feed</SidebarLabel>
+        <SidebarLabel plusLabel="Create Post">{t('server.feed')}</SidebarLabel>
 
         <SidebarSortButtons />
 
@@ -60,7 +62,7 @@ function Channel({ channel, serverId }) {
     <SidebarItem to={`/server/${serverId}/channel/${channel.id}`}>
       <IconChannel className="w-5 h-5 mr-3" />
       {channel.name}
-      <Tippy content={t('channel.edit')}>
+      <Tippy content={t('channels.edit')}>
         <div className="group-hover:opacity-100 opacity-0 ml-auto">
           <IconSettings className="w-4 h-4 text-tertiary" />
         </div>
@@ -100,11 +102,15 @@ function CreateChannel({ serverId }) {
     )
   }
 
-  if (!canManageChannels) return <SidebarLabel>CHANNELS</SidebarLabel>
+  if (!canManageChannels)
+    return <SidebarLabel>{t('channels.title')}</SidebarLabel>
 
   return (
     <>
-      <SidebarLabel onClick={() => setIsOpen(true)} plusLabel="Create Channel">
+      <SidebarLabel
+        onClick={() => setIsOpen(true)}
+        plusLabel={t('channels.create')}
+      >
         Channels
       </SidebarLabel>
 
@@ -153,7 +159,7 @@ function CreateChannel({ serverId }) {
           <Button loading={fetching}>{t('continue')}</Button>
 
           <Switch checked={isPrivate} onChange={() => setIsPrivate(!isPrivate)}>
-            {t('channel.togglePrivate')}
+            {t('channels.togglePrivate')}
           </Switch>
         </form>
       </Dialog>

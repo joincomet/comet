@@ -22,13 +22,13 @@ import PostPage from '@/pages/post/PostPage'
 import ServerChannelPage from '@/pages/server/channel/ServerChannelPage'
 import ServerFolderPage from '@/pages/server/ServerFolderPage'
 import { useDataLoading } from '@/providers/DataProvider'
-import { ServerProvider } from '@/providers/ServerProvider'
+import { ServerProvider, useServerLoading } from '@/providers/ServerProvider'
 import { useCurrentUser, useCurrentUserLoading } from '@/providers/UserProvider'
 import { AnimatePresence } from 'framer-motion'
 import LoadingScreen from '@/pages/LoadingScreen'
+import ServerLoadingScreen from '@/pages/ServerLoadingScreen'
 
 export default function PrivateRoutes() {
-  const { serverId } = useParams()
   const loading = useDataLoading()
   const user = useCurrentUser()
   return (
@@ -72,30 +72,43 @@ export default function PrivateRoutes() {
           <PrivateRoute path="/explore">
             <ExplorePage />
           </PrivateRoute>
-          <ServerProvider>
-            <PrivateRoute path="/server/:serverId">
-              <ServerSidebar />
-              <Switch>
-                <PrivateRoute path="/server/:serverId" exact>
-                  <Redirect to={`/server/${serverId}/posts`} />
-                </PrivateRoute>
-                <PrivateRoute path="/server/:serverId/posts" exact>
-                  <ServerPostsPage />
-                </PrivateRoute>
-                <PrivateRoute path="/server/:serverId/posts/:postId">
-                  <PostPage />
-                </PrivateRoute>
-                <PrivateRoute path="/server/:serverId/channel/:channelId">
-                  <ServerChannelPage />
-                </PrivateRoute>
-                <PrivateRoute path="/server/:serverId/folder/:folderId">
-                  <ServerFolderPage />
-                </PrivateRoute>
-              </Switch>
-            </PrivateRoute>
-          </ServerProvider>
+          <PrivateRoute path="/server/:serverId">
+            <ServerProvider>
+              <ServerRoutes />
+            </ServerProvider>
+          </PrivateRoute>
         </PrivateRoute>
       </Switch>
+    </>
+  )
+}
+
+function ServerRoutes() {
+  const { serverId } = useParams()
+  const loading = useServerLoading()
+  return (
+    <>
+      <AnimatePresence>{loading && <ServerLoadingScreen />}</AnimatePresence>
+      <ServerRoute path="/server/:serverId">
+        <ServerSidebar />
+        <Switch>
+          <ServerRoute path="/server/:serverId" exact>
+            <Redirect to={`/server/${serverId}/posts`} />
+          </ServerRoute>
+          <ServerRoute path="/server/:serverId/posts" exact>
+            <ServerPostsPage />
+          </ServerRoute>
+          <ServerRoute path="/server/:serverId/posts/:postId">
+            <PostPage />
+          </ServerRoute>
+          <ServerRoute path="/server/:serverId/channel/:channelId">
+            <ServerChannelPage />
+          </ServerRoute>
+          <ServerRoute path="/server/:serverId/folder/:folderId">
+            <ServerFolderPage />
+          </ServerRoute>
+        </Switch>
+      </ServerRoute>
     </>
   )
 }
@@ -109,6 +122,22 @@ function PrivateRoute({ children, ...rest }) {
       {...rest}
       render={() => {
         if (userLoading || dataLoading) return null
+        return user ? children : <Redirect to="/login" />
+      }}
+    />
+  )
+}
+
+function ServerRoute({ children, ...rest }) {
+  const user = useCurrentUser()
+  const userLoading = useCurrentUserLoading()
+  const dataLoading = useDataLoading()
+  const serverLoading = useServerLoading()
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        if (userLoading || dataLoading || serverLoading) return null
         return user ? children : <Redirect to="/login" />
       }}
     />

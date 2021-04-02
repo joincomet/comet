@@ -1,11 +1,12 @@
 import { Virtuoso } from 'react-virtuoso'
-import { Suspense, useCallback, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { useNewMessageNotification } from '@/components/message/useNewMessageNotification'
 import { usePrependedMessagesCount } from '@/components/message/usePrependedMessagesCount'
 import Message from '@/components/message/Message'
 import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/MessageInput'
 import { useCurrentUser } from '@/providers/UserProvider'
+import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 
 const PREPEND_OFFSET = 10 ** 7
 
@@ -21,13 +22,7 @@ export default function Messages({ channel, user, group }) {
   } = useNewMessageNotification(messages)
 
   const numItemsPrepended = usePrependedMessagesCount(messages)
-
-  const shouldForceScrollToBottom = useCallback(() => {
-    if (!messages || messages.length === 0) return false
-    const lastMessage = messages[messages.length - 1]
-    console.log(messages)
-    return lastMessage.author.id === currentUser.id
-  }, [messages, currentUser])
+  const shouldForceScrollToBottom = useShouldForceScrollToBottom(messages)
 
   const messageRenderer = useCallback(
     (messageList, virtuosoIndex) => {
@@ -55,7 +50,7 @@ export default function Messages({ channel, user, group }) {
   )
 
   return (
-    <Suspense fallback={'loading'}>
+    <>
       <div className="relative flex-1 overflow-x-hidden overflow-y-auto dark:bg-gray-750 w-full h-full">
         <Virtuoso
           className="scrollbar"
@@ -88,6 +83,6 @@ export default function Messages({ channel, user, group }) {
         />
       </div>
       <MessageInput channel={channel} user={user} group={group} />
-    </Suspense>
+    </>
   )
 }

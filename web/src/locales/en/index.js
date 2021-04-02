@@ -154,6 +154,9 @@ export const en = {
     title: 'Settings'
   },
   server: {
+    loading: 'Loading server...',
+    feed: 'Feed',
+    invitePeople: 'Invite People',
     context: {
       markRead: 'Mark As Read',
       mute: 'Mute Server',
@@ -279,7 +282,8 @@ export const en = {
       }
     }
   },
-  channel: {
+  channels: {
+    title: 'Channels',
     togglePrivate: 'Private Channel',
     hideUsers: 'Hide Users',
     showUsers: 'Show Users',
