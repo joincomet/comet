@@ -1,18 +1,16 @@
-import { Suspense, lazy, useEffect } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import LandingPage from '@/pages/LandingPage'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
 import AuthLayout from '@/pages/auth/AuthLayout'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
-import LoadingScreen from '@/pages/LoadingScreen'
 import NotFound from '@/pages/NotFound'
-
-const PrivateRoutes = lazy(() => import('@/pages/PrivateRoutes'))
+import { useCurrentUser, useCurrentUserLoading } from '@/providers/UserProvider'
+import PrivateRoutes from '@/pages/PrivateRoutes'
+import { DataProvider } from '@/providers/DataProvider'
 
 export default function Routes() {
   const user = useCurrentUser()
-
+  const userLoading = useCurrentUserLoading()
   return (
     <Switch>
       <Route path="/" exact>
@@ -35,12 +33,14 @@ export default function Routes() {
               <Route
                 path="/login"
                 render={() => {
+                  if (userLoading) return null
                   return user ? <Redirect to="/me" /> : <LoginPage />
                 }}
               />
               <Route
                 path="/register"
                 render={() => {
+                  if (userLoading) return null
                   return user ? <Redirect to="/me" /> : <RegisterPage />
                 }}
               />
@@ -48,9 +48,9 @@ export default function Routes() {
           </AuthLayout>
         </Route>
 
-        <Suspense fallback={<LoadingScreen />}>
-          <PrivateRoutes user={user} />
-        </Suspense>
+        <DataProvider>
+          <PrivateRoutes />
+        </DataProvider>
       </Route>
 
       <Route>

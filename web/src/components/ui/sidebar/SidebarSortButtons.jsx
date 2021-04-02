@@ -6,7 +6,7 @@ import { useStore } from '@/hooks/useStore'
 import { useTranslation } from 'react-i18next'
 
 function SortItem({ name, icon }) {
-  const { postsSort, setPostsSort } = useStore()
+  const [postsSort, setPostsSort] = useStore(s => [s.postsSort, s.setPostsSort])
   const { serverId } = useParams()
 
   const { pathname } = useLocation()

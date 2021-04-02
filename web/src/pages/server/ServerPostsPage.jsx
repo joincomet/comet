@@ -8,7 +8,7 @@ import ServerFoldersSidebar from '@/pages/server/ServerFoldersSidebar'
 
 export default function ServerPostsPage() {
   const { serverId } = useParams()
-  const { showFolders } = useStore()
+  const showFolders = useStore(s => s.showFolders)
 
   const ref = useRef(null)
 

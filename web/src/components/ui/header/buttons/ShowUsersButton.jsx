@@ -4,7 +4,7 @@ import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 
 export default function ShowUsersButton() {
-  const { showUsers, setShowUsers } = useStore()
+  const [showUsers, setShowUsers] = useStore(s => [s.showUsers, s.setShowUsers])
   const { t } = useTranslation()
 
   return (

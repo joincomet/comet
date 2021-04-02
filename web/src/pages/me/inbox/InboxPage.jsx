@@ -7,7 +7,7 @@ const label =
   'px-2 pb-2 text-11 text-tertiary uppercase tracking-widest font-semibold'
 
 export default function InboxPage() {
-  const { inboxPage } = useStore()
+  const inboxPage = useStore(s => s.inboxPage)
   return (
     <>
       <InboxHeader />

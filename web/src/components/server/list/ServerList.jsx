@@ -11,12 +11,10 @@ import { DragItemTypes } from '@/types/DragItemTypes'
 import { mergeRefs } from '@/utils/mergeRefs'
 import { GET_JOINED_SERVERS } from '@/graphql/queries'
 import { useQuery } from 'urql'
+import { useJoinedServers } from '@/providers/DataProvider'
 
 export default function ServerList() {
-  const [{ data: joinedServersData }, refetchJoinedServers] = useQuery({
-    query: GET_JOINED_SERVERS
-  })
-  const servers = joinedServersData?.getJoinedServers ?? []
+  const servers = useJoinedServers()
   const { pathname } = useLocation()
   const { t } = useTranslation()
 
@@ -44,7 +42,7 @@ export default function ServerList() {
 
           <CreateServerDialog />
 
-          {servers.length > 0 && (
+          {!!servers && servers.length > 0 && (
             <>
               <div className="border-b-2 border-gray-200 dark:border-gray-800 h-2 mx-3 box-content" />
 

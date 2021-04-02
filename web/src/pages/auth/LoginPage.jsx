@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
 import { useMutation } from 'urql'
 import { LOGIN } from '@/graphql/mutations'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 import { useEffect } from 'react'
 
 export default function LoginPage() {

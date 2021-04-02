@@ -6,7 +6,7 @@ import Container from '@/components/ui/Container'
 import Posts from '@/components/post/Posts'
 
 export default function FeedPage() {
-  const { showFolders } = useStore()
+  const showFolders = useStore(s => s.showFolders)
 
   const ref = useRef(null)
 

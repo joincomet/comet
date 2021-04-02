@@ -4491,10 +4491,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["aws-sdk", [
-        ["npm:2.878.0", {
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.878.0-626608dc9b-5666b47413.zip/node_modules/aws-sdk/",
+        ["npm:2.879.0", {
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.879.0-4ae270b0d3-3ff4002c69.zip/node_modules/aws-sdk/",
           "packageDependencies": [
-            ["aws-sdk", "npm:2.878.0"],
+            ["aws-sdk", "npm:2.879.0"],
             ["buffer", "npm:4.9.2"],
             ["events", "npm:1.1.1"],
             ["ieee754", "npm:1.1.13"],
@@ -8614,10 +8614,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:4.24.6", {
-          "packageLocation": "./.yarn/cache/ioredis-npm-4.24.6-367a941594-b709f86d61.zip/node_modules/ioredis/",
+        ["npm:4.25.0", {
+          "packageLocation": "./.yarn/cache/ioredis-npm-4.25.0-6f7f6814fa-5356c31b8a.zip/node_modules/ioredis/",
           "packageDependencies": [
-            ["ioredis", "npm:4.24.6"],
+            ["ioredis", "npm:4.25.0"],
             ["cluster-key-slot", "npm:1.1.0"],
             ["debug", "virtual:428f325a939c2653ad822eb3d75efb02ac311523dd0d4f9645afc39ea00bd86eceac35a9d59c9b6977d76b670a4ef0ae057ea572338a44729aa592711a8c05a3#npm:4.3.2"],
             ["denque", "npm:1.5.0"],
@@ -13495,7 +13495,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/parser", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:4.20.0"],
             ["apollo-server-express", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:2.22.2"],
             ["argon2", "npm:0.27.2"],
-            ["aws-sdk", "npm:2.878.0"],
+            ["aws-sdk", "npm:2.879.0"],
             ["class-validator", "npm:0.13.1"],
             ["cookie-parser", "npm:1.4.5"],
             ["cross-env", "npm:7.0.3"],
@@ -13513,7 +13513,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-tools", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:7.0.4"],
             ["graphql-type-json", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:0.3.2"],
             ["graphql-upload", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:11.0.0"],
-            ["ioredis", "npm:4.24.6"],
+            ["ioredis", "npm:4.25.0"],
             ["jsonwebtoken", "npm:8.5.1"],
             ["metascraper", "npm:5.21.4"],
             ["metascraper-author", "npm:5.21.4"],

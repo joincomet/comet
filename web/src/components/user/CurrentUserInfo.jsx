@@ -1,7 +1,7 @@
 import { IconSettings } from '@/components/ui/icons/Icons'
 
 import Tippy from '@tippyjs/react'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 import UserAvatar from '@/components/user/UserAvatar'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'

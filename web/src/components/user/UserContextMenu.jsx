@@ -14,9 +14,9 @@ import ContextMenuDivider from '@/components/ui/context/ContextMenuDivider'
 import ContextMenu from '@/components/ui/context/ContextMenu'
 import { KICK_USER_FROM_SERVER } from '@/graphql/mutations/server/KickUserFromServer'
 import { ServerPermission } from '@/types/ServerPermission'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
-import { useUserRelationships } from '@/hooks/useUserRelationships'
-import { useServerPermissions } from '@/hooks/useServerPermissions'
+import { useCurrentUser } from '@/providers/UserProvider'
+import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
+import { useUserRelationships } from '@/providers/DataProvider'
 
 export default function UserContextMenu({ user, server, show = true, button }) {
   const menuEvent = useContextMenuEvent()
@@ -30,7 +30,7 @@ export default function UserContextMenu({ user, server, show = true, button }) {
     canKickUser,
     canChangeNickname,
     canManageNicknames
-  ] = useServerPermissions(server?.id, [
+  ] = useHasServerPermissions(server?.id, [
     ServerPermission.BanUser,
     ServerPermission.KickUser,
     ServerPermission.ChangeNickname,

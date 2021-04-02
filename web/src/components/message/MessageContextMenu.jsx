@@ -13,17 +13,17 @@ import ContextMenuItem from '@/components/ui/context/ContextMenuItem'
 import ContextMenuDivider from '@/components/ui/context/ContextMenuDivider'
 import ContextMenu from '@/components/ui/context/ContextMenu'
 import { ServerPermission } from '@/types/ServerPermission'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 import { ChannelPermission } from '@/types/ChannelPermission'
 import { useParams } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
-import { useChannelPermissions } from '@/hooks/useChannelPermissions'
+import { useHasChannelPermissions } from '@/hooks/useHasChannelPermissions'
 
 export default function MessageContextMenu() {
   const menuEvent = useContextMenuEvent()
   const message = menuEvent?.data?.message
   const { serverId } = useParams()
-  const [canManageMessages] = useChannelPermissions(
+  const [canManageMessages] = useHasChannelPermissions(
     [ChannelPermission.ManageMessages],
     [ServerPermission.ManageMessages],
     message?.channel?.id,

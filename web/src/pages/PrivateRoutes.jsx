@@ -1,4 +1,11 @@
-import { Switch, Redirect, useParams, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import {
+  Route,
+  Switch,
+  Redirect,
+  useParams,
+  useLocation
+} from 'react-router-dom'
 import SettingsPage from '@/pages/settings/SettingsPage'
 import ServerList from '@/components/server/list/ServerList'
 import HomeSidebar from '@/pages/me/HomeSidebar'
@@ -14,73 +21,96 @@ import ServerPostsPage from '@/pages/server/ServerPostsPage'
 import PostPage from '@/pages/post/PostPage'
 import ServerChannelPage from '@/pages/server/channel/ServerChannelPage'
 import ServerFolderPage from '@/pages/server/ServerFolderPage'
+import { useDataLoading } from '@/providers/DataProvider'
+import { ServerProvider } from '@/providers/ServerProvider'
+import { useCurrentUser, useCurrentUserLoading } from '@/providers/UserProvider'
+import { AnimatePresence } from 'framer-motion'
+import LoadingScreen from '@/pages/LoadingScreen'
 
-export default function PrivateRoutes({ user }) {
+export default function PrivateRoutes() {
   const { serverId } = useParams()
+  const loading = useDataLoading()
+  const user = useCurrentUser()
   return (
-    <Switch>
-      <PrivateRoute user={user} path="/settings">
-        <SettingsPage />
-      </PrivateRoute>
-      <PrivateRoute user={user} path={['/me', '/explore', '/server']}>
-        <ServerList />
-        <PrivateRoute user={user} path="/me">
-          <HomeSidebar />
-          <Switch>
-            <PrivateRoute user={user} path="/me" exact>
-              <Redirect to="/me/feed" />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/me/feed">
-              <FeedPage />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/me/friends">
-              <FriendsPage />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/me/inbox">
-              <InboxPage />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/me/folder/:folderId">
-              <UserFolderPage />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/me/group/:groupId">
-              <GroupPage />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/me/dm/:userId">
-              <DmPage />
-            </PrivateRoute>
-          </Switch>
+    <>
+      <AnimatePresence>
+        {!!user && loading && <LoadingScreen />}
+      </AnimatePresence>
+
+      <Switch>
+        <PrivateRoute path="/settings">
+          <SettingsPage />
         </PrivateRoute>
-        <PrivateRoute user={user} path="/explore">
-          <ExplorePage />
+        <PrivateRoute path={['/me', '/explore', '/server']}>
+          <ServerList />
+          <PrivateRoute path="/me">
+            <HomeSidebar />
+            <Switch>
+              <PrivateRoute path="/me" exact>
+                <Redirect to="/me/feed" />
+              </PrivateRoute>
+              <PrivateRoute path="/me/feed">
+                <FeedPage />
+              </PrivateRoute>
+              <PrivateRoute path="/me/friends">
+                <FriendsPage />
+              </PrivateRoute>
+              <PrivateRoute path="/me/inbox">
+                <InboxPage />
+              </PrivateRoute>
+              <PrivateRoute path="/me/folder/:folderId">
+                <UserFolderPage />
+              </PrivateRoute>
+              <PrivateRoute path="/me/group/:groupId">
+                <GroupPage />
+              </PrivateRoute>
+              <PrivateRoute path="/me/dm/:userId">
+                <DmPage />
+              </PrivateRoute>
+            </Switch>
+          </PrivateRoute>
+          <PrivateRoute path="/explore">
+            <ExplorePage />
+          </PrivateRoute>
+          <ServerProvider>
+            <PrivateRoute path="/server/:serverId">
+              <ServerSidebar />
+              <Switch>
+                <PrivateRoute path="/server/:serverId" exact>
+                  <Redirect to={`/server/${serverId}/posts`} />
+                </PrivateRoute>
+                <PrivateRoute path="/server/:serverId/posts" exact>
+                  <ServerPostsPage />
+                </PrivateRoute>
+                <PrivateRoute path="/server/:serverId/posts/:postId">
+                  <PostPage />
+                </PrivateRoute>
+                <PrivateRoute path="/server/:serverId/channel/:channelId">
+                  <ServerChannelPage />
+                </PrivateRoute>
+                <PrivateRoute path="/server/:serverId/folder/:folderId">
+                  <ServerFolderPage />
+                </PrivateRoute>
+              </Switch>
+            </PrivateRoute>
+          </ServerProvider>
         </PrivateRoute>
-        <PrivateRoute user={user} path="/server/:serverId">
-          <ServerSidebar />
-          <Switch>
-            <PrivateRoute user={user} path="/server/:serverId" exact>
-              <Redirect to={`/server/${serverId}/posts`} />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/server/:serverId/posts" exact>
-              <ServerPostsPage />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/server/:serverId/posts/:postId">
-              <PostPage />
-            </PrivateRoute>
-            <PrivateRoute
-              user={user}
-              path="/server/:serverId/channel/:channelId"
-            >
-              <ServerChannelPage />
-            </PrivateRoute>
-            <PrivateRoute user={user} path="/server/:serverId/folder/:folderId">
-              <ServerFolderPage />
-            </PrivateRoute>
-          </Switch>
-        </PrivateRoute>
-      </PrivateRoute>
-    </Switch>
+      </Switch>
+    </>
   )
 }
 
-function PrivateRoute({ user, children, ...rest }) {
-  return <Route {...rest}>{user ? children : <Redirect to="/login" />}</Route>
+function PrivateRoute({ children, ...rest }) {
+  const user = useCurrentUser()
+  const userLoading = useCurrentUserLoading()
+  const dataLoading = useDataLoading()
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        if (userLoading || dataLoading) return null
+        return user ? children : <Redirect to="/login" />
+      }}
+    />
+  )
 }

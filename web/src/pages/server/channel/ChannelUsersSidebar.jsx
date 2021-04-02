@@ -40,7 +40,7 @@ export default function ChannelUsersSidebar({ channel }) {
     [roles]
   )
 
-  const { showUsers } = useStore()
+  const showUsers = useStore(s => s.showUsers)
 
   return (
     <Sidebar right show={showUsers}>

@@ -3,9 +3,9 @@ import { Suspense, useCallback, useRef } from 'react'
 import { useNewMessageNotification } from '@/components/message/useNewMessageNotification'
 import { usePrependedMessagesCount } from '@/components/message/usePrependedMessagesCount'
 import Message from '@/components/message/Message'
-import { useMessages } from '@/hooks/useMessages'
+import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/MessageInput'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 
 const PREPEND_OFFSET = 10 ** 7
 

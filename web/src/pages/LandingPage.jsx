@@ -8,7 +8,7 @@ import {
 import Tippy from '@tippyjs/react'
 import { Link } from 'react-router-dom'
 import { getOS } from '@/utils/getOS'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 import {
   VectorGrass,
   VectorLogo,

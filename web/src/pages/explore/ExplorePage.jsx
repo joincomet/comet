@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import ExploreSidebar from '@/pages/explore/ExploreSidebar'
 import {
   IconSearch,
@@ -7,19 +6,17 @@ import {
   IconNew,
   IconAll
 } from '@/components/ui/icons/Icons'
-import Header from '@/components/ui/header/Header'
 import ServerInfoCard from '@/components/server/ServerInfoCard'
-import { useCategoryIcon } from '@/hooks/useCategoryIcon'
-import { useParams } from 'react-router-dom'
-import { useQuery } from 'urql'
-import { GET_PUBLIC_SERVERS } from '@/graphql/queries'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
 import Container from '@/components/ui/Container'
 import View from '@/components/ui/View'
 
 export default function ExplorePage() {
-  const { explorePage, setExplorePage } = useStore()
+  const [explorePage, setExplorePage] = useStore(s => [
+    s.explorePage,
+    s.setExplorePage
+  ])
 
   const { t } = useTranslation()
 

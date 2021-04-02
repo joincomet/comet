@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 import UserAvatar from '@/components/user/UserAvatar'
 import CommentEditor from '@/components/comment/CommentEditor'
 import { useTranslation } from 'react-i18next'

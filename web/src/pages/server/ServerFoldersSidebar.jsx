@@ -12,20 +12,20 @@ import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import { useTranslation } from 'react-i18next'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useStore } from '@/hooks/useStore'
-import { useServerPermissions } from '@/hooks/useServerPermissions'
-import { useUserFolders } from '@/hooks/useUserFolders'
-import { useServerFolders } from '@/hooks/useServerFolders'
+import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
+import { useUserFolders } from '@/providers/DataProvider'
+import { useServerFolders } from '@/providers/ServerProvider'
 
 export default function ServerFoldersSidebar({ serverId }) {
   const userFolders = useUserFolders()
   const serverFolders = useServerFolders(serverId)
 
-  const [canManageFolders] = useServerPermissions(serverId, [
+  const [canManageFolders] = useHasServerPermissions(serverId, [
     ServerPermission.ManagePosts
   ])
 
   const { t } = useTranslation()
-  const { showFolders } = useStore()
+  const showFolders = useStore(s => s.showFolders)
 
   return (
     <Sidebar right show={showFolders}>

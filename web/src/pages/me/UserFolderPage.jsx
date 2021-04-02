@@ -6,11 +6,11 @@ import Header from '@/components/ui/header/Header'
 import { IconFolder } from '@/components/ui/icons/Icons'
 import ShowFoldersButton from '@/components/ui/header/buttons/ShowFoldersButton'
 import { useStore } from '@/hooks/useStore'
-import { useUserFolders } from '@/hooks/useUserFolders'
+import { useUserFolders } from '@/providers/DataProvider'
 
 export default function UserFolderPage() {
   const { folderId } = useParams()
-  const { showFolders } = useStore()
+  const showFolders = useStore(s => s.showFolders)
 
   const folder = useUserFolders().find(f => f.id === folderId)
 

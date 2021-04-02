@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import AuthLayout from '@/pages/auth/AuthLayout'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 
 export default function NotFound() {
   const user = useCurrentUser()

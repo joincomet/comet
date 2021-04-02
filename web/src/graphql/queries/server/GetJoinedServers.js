@@ -11,5 +11,5 @@ export const GET_JOINED_SERVERS = gql`
   ${SERVER_FRAGMENT}
 `
 
-export const useJoinedServersQuery = () =>
-  useQuery({ query: GET_JOINED_SERVERS })
+export const useJoinedServersQuery = pause =>
+  useQuery({ query: GET_JOINED_SERVERS, pause })

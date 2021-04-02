@@ -11,11 +11,11 @@ import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
-import { useUserFolders } from '@/hooks/useUserFolders'
+import { useUserFolders } from '@/providers/DataProvider'
 
 export default function UserFoldersSidebar() {
   const { t } = useTranslation()
-  const { showFolders } = useStore()
+  const showFolders = useStore(s => s.showFolders)
   const userFolders = useUserFolders()
 
   return (
@@ -26,9 +26,10 @@ export default function UserFoldersSidebar() {
         </SidebarLabel>
 
         <div className="space-y-0.5">
-          {userFolders.map(folder => (
-            <Folder key={folder.id} folder={folder} />
-          ))}
+          {!!userFolders &&
+            userFolders.map(folder => (
+              <Folder key={folder.id} folder={folder} />
+            ))}
         </div>
       </div>
     </Sidebar>

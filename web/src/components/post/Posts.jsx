@@ -3,7 +3,7 @@ import Post from '@/components/post/Post'
 import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useVirtual } from 'react-virtual'
 import CreatePostCard from '@/components/post/CreatePostCard'
-import { usePosts } from '@/hooks/usePosts'
+import { usePosts } from '@/components/post/usePosts'
 
 export default function Posts({ serverId, folderId, showServerName }) {
   const canFetchMore = true

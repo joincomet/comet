@@ -6,7 +6,7 @@ import Container from '@/components/ui/Container'
 import View from '@/components/ui/View'
 import ctl from '@netlify/classnames-template-literals'
 import FriendRequestListItem from '@/pages/me/friends/FriendRequestListItem'
-import { useUserRelationships } from '@/hooks/useUserRelationships'
+import { useUserRelationships } from '@/providers/DataProvider'
 
 const label = ctl(`
   px-2
@@ -28,7 +28,7 @@ export default function FriendsPage() {
   } = useUserRelationships()
   const onlineFriends = friends.filter(f => f.isOnline)
   const friendRequests = outgoingFriendRequests.concat(incomingFriendRequests)
-  const { friendsPage } = useStore()
+  const friendsPage = useStore(s => s.friendsPage)
 
   const [username, setUsername] = useState('')
 

@@ -18,7 +18,7 @@ import { ContextMenuType } from '@/types/ContextMenuType'
 import { mergeRefs } from '@/utils/mergeRefs'
 import toast from 'react-hot-toast'
 import { VectorLogo } from '@/components/ui/vectors'
-import { useGroupsAndDms } from '@/hooks/useGroupsAndDms'
+import { useGroupsAndDms } from '@/providers/DataProvider'
 import { useHideDmMutation, useSendMessageMutation } from '@/graphql/mutations'
 
 export default function HomeSidebar() {
@@ -57,15 +57,16 @@ export default function HomeSidebar() {
         <SidebarLabel plusLabel="Create DM">{t('dms.title')}</SidebarLabel>
 
         <div className="space-y-0.5">
-          {groupsAndDms.map(groupOrDm => {
-            if (groupOrDm.__typename === 'Group') {
-              const group = groupOrDm
-              return <div>Group</div>
-            } else if (groupOrDm.__typename === 'User') {
-              const user = groupOrDm
-              return <DirectMessage user={user} key={`user-${user.id}`} />
-            }
-          })}
+          {!!groupsAndDms &&
+            groupsAndDms.map(groupOrDm => {
+              if (groupOrDm.__typename === 'Group') {
+                const group = groupOrDm
+                return <div>Group</div>
+              } else if (groupOrDm.__typename === 'User') {
+                const user = groupOrDm
+                return <DirectMessage user={user} key={`user-${user.id}`} />
+              }
+            })}
         </div>
       </div>
     </Sidebar>

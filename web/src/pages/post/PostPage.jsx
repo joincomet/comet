@@ -29,12 +29,12 @@ export default function PostPage() {
     query: GET_COMMENTS,
     variables: { postId }
   })
-  const flatComments = commentsData?.getComments ?? []
-  const comments = useMemo(() => createCommentTree(flatComments), [
-    flatComments
-  ])
+  const comments = useMemo(
+    () => createCommentTree(commentsData?.getComments ?? []),
+    [commentsData?.getComments]
+  )
   const users = useMemo(() => getParticipants(comments), [comments])
-  const { showUsers } = useStore()
+  const showUsers = useStore(s => s.showUsers)
 
   return (
     <>

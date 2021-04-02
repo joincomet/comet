@@ -1,5 +1,5 @@
 import UserAvatar from '@/components/user/UserAvatar'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import { IconX } from '@/components/ui/icons/Icons'

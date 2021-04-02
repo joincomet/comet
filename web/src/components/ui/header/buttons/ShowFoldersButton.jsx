@@ -4,7 +4,10 @@ import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 
 export default function ShowFoldersButton() {
-  const { showFolders, setShowFolders } = useStore()
+  const [showFolders, setShowFolders] = useStore(s => [
+    s.showFolders,
+    s.setShowFolders
+  ])
   const { t } = useTranslation()
 
   return (

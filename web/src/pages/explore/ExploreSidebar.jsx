@@ -13,7 +13,10 @@ import { useCategoryIcon } from '@/hooks/useCategoryIcon'
 import { useTranslation } from 'react-i18next'
 
 function CategoryItem({ category }) {
-  const { explorePage, setExplorePage } = useStore()
+  const [explorePage, setExplorePage] = useStore(s => [
+    s.explorePage,
+    s.setExplorePage
+  ])
 
   const Icon = useCategoryIcon(category)
   return (
@@ -28,7 +31,10 @@ function CategoryItem({ category }) {
 }
 
 function CategorySort({ sort, icon }) {
-  const { explorePage, setExplorePage } = useStore()
+  const [explorePage, setExplorePage] = useStore(s => [
+    s.explorePage,
+    s.setExplorePage
+  ])
 
   const Icon = icon
   return (

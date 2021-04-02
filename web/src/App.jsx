@@ -7,22 +7,25 @@ import ResponsiveToaster from '@/components/ui/ResponsiveToaster'
 import CustomDragLayer from '@/components/ui/CustomDragLayer'
 import ContextMenus from '@/components/ui/context/ContextMenus'
 import { BrowserRouter } from 'react-router-dom'
+import { UserProvider } from '@/providers/UserProvider'
 
 export default function App() {
   return (
     <BrowserRouter>
       <UrqlProvider value={urqlClient}>
-        <DndProvider
-          backend={TouchBackend}
-          options={{ enableTouchEvents: false, enableMouseEvents: true }}
-        >
-          <ResponsiveToaster />
-          <CustomDragLayer />
-          <ContextMenus />
-          <div className={`h-full max-h-full`}>
-            <Routes />
-          </div>
-        </DndProvider>
+        <UserProvider>
+          <DndProvider
+            backend={TouchBackend}
+            options={{ enableTouchEvents: false, enableMouseEvents: true }}
+          >
+            <ResponsiveToaster />
+            <CustomDragLayer />
+            <ContextMenus />
+            <div className={`h-full max-h-full`}>
+              <Routes />
+            </div>
+          </DndProvider>
+        </UserProvider>
       </UrqlProvider>
     </BrowserRouter>
   )

@@ -8,7 +8,7 @@ import { useStore } from '@/hooks/useStore'
 import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
 
 export default function ServerChannelPage({ channels }) {
-  const { showUsers } = useStore()
+  const showUsers = useStore(s => s.showUsers)
   const { channelId } = useParams()
   const channel = channels.find(c => c.id === channelId)
 

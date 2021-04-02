@@ -17,7 +17,11 @@ import ShowFoldersButton from '@/components/ui/header/buttons/ShowFoldersButton'
 const iconClassName = 'w-5 h-5'
 
 export default function PostsHeader({ refreshPosts }) {
-  const { postsSort, showFolders, liveMode, setLiveMode } = useStore()
+  const [postsSort, showFolders, liveMode] = useStore(s => [
+    s.postsSort,
+    s.showFolders,
+    s.liveMode
+  ])
 
   const { t } = useTranslation()
 
@@ -89,7 +93,7 @@ export default function PostsHeader({ refreshPosts }) {
 
 function TimeTab({ time }) {
   const { t } = useTranslation()
-  const { postsTime, setPostsTime } = useStore()
+  const [postsTime, setPostsTime] = useStore(s => [s.postsTime, s.setPostsTime])
   return (
     <HeaderTab
       page={time}

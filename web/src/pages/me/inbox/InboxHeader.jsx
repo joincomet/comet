@@ -15,7 +15,7 @@ export default function InboxHeader() {
 }
 
 function InboxTab({ page }) {
-  const { inboxPage, setInboxPage } = useStore()
+  const [inboxPage, setInboxPage] = useStore(s => [s.inboxPage, s.setInboxPage])
   return (
     <HeaderTab
       page={page}

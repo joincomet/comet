@@ -19,8 +19,8 @@ import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 import Switch from '@/components/ui/Switch'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'
-import { useServerPermissions } from '@/hooks/useServerPermissions'
-import { useServerChannels } from '@/hooks/useServerChannels'
+import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
+import { useServerChannels } from '@/providers/ServerProvider'
 
 export default function ServerSidebar({ server }) {
   const channels = useServerChannels(server.id)
@@ -72,7 +72,7 @@ function Channel({ channel, serverId }) {
 function CreateChannel({ serverId }) {
   const { t } = useTranslation()
 
-  const [canManageChannels] = useServerPermissions(serverId, [
+  const [canManageChannels] = useHasServerPermissions(serverId, [
     ServerPermission.ManageChannels
   ])
 

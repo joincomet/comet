@@ -6,7 +6,7 @@ import { useStore } from '@/hooks/useStore'
 
 export default function PostUsersSidebar({ post, users = [] }) {
   const { t } = useTranslation()
-  const { showUsers } = useStore()
+  const showUsers = useStore(s => s.showUsers)
 
   return (
     <Sidebar right show={showUsers}>

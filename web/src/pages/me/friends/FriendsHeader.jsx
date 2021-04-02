@@ -22,7 +22,10 @@ export default function FriendsHeader({ pendingCount = 0 }) {
 }
 
 function FriendTab({ page, green = false, pendingCount = 0 }) {
-  const { friendsPage, setFriendsPage } = useStore()
+  const [friendsPage, setFriendsPage] = useStore(s => [
+    s.friendsPage,
+    s.setFriendsPage
+  ])
   return (
     <HeaderTab
       page={page}

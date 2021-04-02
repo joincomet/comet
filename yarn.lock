@@ -3074,9 +3074,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.878.0":
-  version: 2.878.0
-  resolution: "aws-sdk@npm:2.878.0"
+"aws-sdk@npm:^2.879.0":
+  version: 2.879.0
+  resolution: "aws-sdk@npm:2.879.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -3087,7 +3087,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 5666b47413a1756102ebcdfdebbdd28c71222c33d1fec194907da8613fd8e7711174272326dd5c64453135274a8d7b52874fcbae05afc549ce952ba654afb695
+  checksum: 3ff4002c690074950039db8d951e5490498bf52a3ab8831315007ba6a6fd6042603b58efcd246ade8b2d7ada75e3a10871c39ca93fbcb14f17862d52aeef632a
   languageName: node
   linkType: hard
 
@@ -6572,9 +6572,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"ioredis@npm:^4.24.6":
-  version: 4.24.6
-  resolution: "ioredis@npm:4.24.6"
+"ioredis@npm:^4.25.0":
+  version: 4.25.0
+  resolution: "ioredis@npm:4.25.0"
   dependencies:
     cluster-key-slot: ^1.1.0
     debug: ^4.3.1
@@ -6586,7 +6586,7 @@ fsevents@~2.3.1:
     redis-errors: ^1.2.0
     redis-parser: ^3.0.0
     standard-as-callback: ^2.1.0
-  checksum: b709f86d613def454a925530e041ec4571bd2b172494db133c4c2aa27857ad8652e68ae83fb721c0ddc348a3293100847d6ce57e4e4cb58e582014ceb8d9437d
+  checksum: 5356c31b8a057e69f8384284086359ea955012e67677e1b6a8317b4d5ed92e6669d15d048b1489d561fc5783165a6481f0e45b2bbb5ca95f73d2da23a4ebde3f
   languageName: node
   linkType: hard
 
@@ -10654,7 +10654,7 @@ resolve@^2.0.0-next.3:
     "@typescript-eslint/parser": ^4.20.0
     apollo-server-express: ^2.22.2
     argon2: ^0.27.2
-    aws-sdk: ^2.878.0
+    aws-sdk: ^2.879.0
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
@@ -10672,7 +10672,7 @@ resolve@^2.0.0-next.3:
     graphql-tools: ^7.0.4
     graphql-type-json: ^0.3.2
     graphql-upload: ^11.0.0
-    ioredis: ^4.24.6
+    ioredis: ^4.25.0
     jsonwebtoken: ^8.5.1
     metascraper: ^5.21.4
     metascraper-author: ^5.21.4

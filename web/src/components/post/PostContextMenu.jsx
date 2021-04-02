@@ -8,15 +8,15 @@ import ContextMenuItem from '@/components/ui/context/ContextMenuItem'
 import ContextMenuDivider from '@/components/ui/context/ContextMenuDivider'
 import ContextMenu from '@/components/ui/context/ContextMenu'
 import { ServerPermission } from '@/types/ServerPermission'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCurrentUser } from '@/providers/UserProvider'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
-import { useServerPermissions } from '@/hooks/useServerPermissions'
+import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 
 export default function PostContextMenu() {
   const menuEvent = useContextMenuEvent()
   const post = menuEvent?.data?.post
 
-  const [canManagePosts] = useServerPermissions(post.server.id, [
+  const [canManagePosts] = useHasServerPermissions(post.server.id, [
     ServerPermission.ManagePosts
   ])
 
