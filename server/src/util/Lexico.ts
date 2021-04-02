@@ -29,14 +29,14 @@ export function positionBefore(pos: string): string {
   assertDev(0 !== pos.length)
 
   for (let i = pos.length - 1; i >= 0; i--) {
-    let curCharCode = pos.charCodeAt(i)
+    const curCharCode = pos.charCodeAt(i)
     if (curCharCode > START_CHAR_CODE + 1) {
-      let position = pos.substr(0, i) + String.fromCharCode(curCharCode - 1)
+      const position = pos.substr(0, i) + String.fromCharCode(curCharCode - 1)
       assertDev(isValidPosition(position))
       return position
     }
   }
-  let position =
+  const position =
     pos.substr(0, pos.length - 1) +
     String.fromCharCode(START_CHAR_CODE) +
     String.fromCharCode(END_CHAR_CODE)
@@ -47,14 +47,14 @@ export function positionAfter(pos: string): string {
   assertDev(0 !== pos.length)
 
   for (let i = pos.length - 1; i >= 0; i--) {
-    let curCharCode = pos.charCodeAt(i)
+    const curCharCode = pos.charCodeAt(i)
     if (curCharCode < END_CHAR_CODE) {
-      let position = pos.substr(0, i) + String.fromCharCode(curCharCode + 1)
+      const position = pos.substr(0, i) + String.fromCharCode(curCharCode + 1)
       assertDev(isValidPosition(position))
       return position
     }
   }
-  let position = pos + String.fromCharCode(START_CHAR_CODE + 1)
+  const position = pos + String.fromCharCode(START_CHAR_CODE + 1)
   assertDev(isValidPosition(position))
   return position
 }

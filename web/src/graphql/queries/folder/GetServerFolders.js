@@ -9,3 +9,6 @@ export const GET_SERVER_FOLDERS = gql`
   }
   ${FOLDER_FRAGMENT}
 `
+
+export const useServerFoldersQuery = ({ serverId }) =>
+  useQuery({ query: GET_SERVER_FOLDERS, variables: { serverId } })

@@ -6,7 +6,7 @@ export function usePrependedMessagesCount(messages) {
   const earliestMessageId = useRef(currentFirstMessageId)
   const previousNumItemsPrepended = useRef(0)
 
-  const numItemsPrepended = useMemo(() => {
+  return useMemo(() => {
     if (!messages || !messages.length) {
       return 0
     }
@@ -35,6 +35,4 @@ export function usePrependedMessagesCount(messages) {
     // TODO: there's a bug here, the messages prop is the same array instance (something mutates it)
     // that's why the second dependency is necessary
   }, [messages, messages?.length])
-
-  return numItemsPrepended
 }

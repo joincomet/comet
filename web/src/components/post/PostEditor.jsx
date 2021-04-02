@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
-import Editor from '@/components/editor/Editor'
+import Editor from '@/components/ui/Editor'
 import { useMutation } from 'urql'
 import { CREATE_POST } from '@/graphql/mutations'
-import { IconSpinner } from '@/lib/Icons'
+import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useHistory, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
@@ -33,7 +33,7 @@ const cancelBtnClass = ctl(`
 `)
 
 export default function PostEditor({ setOpen }) {
-  const [text, setText] = useState('')
+  const text = useRef('')
   const [{ fetching }, createPost] = useMutation(CREATE_POST)
   const { t } = useTranslation()
   const { push } = useHistory()
@@ -49,13 +49,13 @@ export default function PostEditor({ setOpen }) {
         onChange={e => setTitle(e.target.value)}
         value={title}
       />
-      <Editor text={text} setText={setText} />
+      <Editor text={text} />
       <div className="flex justify-end space-x-3 items-center pt-3">
         <button
           className={cancelBtnClass}
           onClick={() => {
             setOpen(false)
-            setText('')
+            text.current = ''
           }}
         >
           {t('post.create.cancel')}
@@ -64,16 +64,18 @@ export default function PostEditor({ setOpen }) {
           className={postBtnClass}
           disabled={!title || !serverId || fetching}
           onClick={() => {
-            createPost({ title, text: text ? text : null, serverId }).then(
-              ({ data }) => {
-                const post = data?.createPost
-                if (!post) return
-                setOpen(false)
-                setText('')
-                setTitle('')
-                push(post.relativeUrl)
-              }
-            )
+            createPost({
+              title,
+              text: text.current ? text.current : null,
+              serverId
+            }).then(({ data }) => {
+              const post = data?.createPost
+              if (!post) return
+              setOpen(false)
+              text.current = ''
+              setTitle('')
+              push(post.relativeUrl)
+            })
           }}
         >
           {t('post.create.submit')}

@@ -23,7 +23,7 @@ export class Folder extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
-  @ManyToMany(() => Post)
+  @ManyToMany(() => Post, 'folders', { owner: true })
   posts = new Collection<Post>(this)
 
   @ManyToOne(() => User, { nullable: true })

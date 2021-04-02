@@ -1,5 +1,12 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { Comment, User, Server, LinkMetadata, BaseEntity } from '@/entity'
+import {
+  Comment,
+  User,
+  Server,
+  LinkMetadata,
+  BaseEntity,
+  Folder
+} from '@/entity'
 import { URL } from 'url'
 import { isUrl } from '@/util/isUrl'
 import {
@@ -8,6 +15,7 @@ import {
   Embedded,
   Entity,
   Formula,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   Property
@@ -76,6 +84,9 @@ export class Post extends BaseEntity {
   @Field(() => Server)
   @ManyToOne({ entity: () => Server })
   server: Server
+
+  @ManyToMany(() => Folder, 'posts')
+  folders = new Collection<Folder>(this)
 
   @Field(() => Int)
   @Property({ unsigned: true })

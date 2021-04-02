@@ -9,7 +9,7 @@ import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { devtoolsExchange } from '@urql/devtools'
 import toast from 'react-hot-toast'
 import { cacheExchange } from '@/graphql/cacheExchange'
-import i18n from '@/i18n/i18n'
+import i18n from '@/locales/i18n'
 
 export const subscriptionClient = new SubscriptionClient(
   import.meta.env.PROD

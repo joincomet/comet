@@ -1,5 +1,6 @@
-import { IconSpinner, GraphicLogo } from '@/lib/Icons'
+import { IconSpinner } from '@/components/ui/icons/Icons'
 import { motion } from 'framer-motion'
+import { VectorLogo } from '@/components/ui/vectors'
 
 export default function LoadingScreen() {
   return (
@@ -11,7 +12,7 @@ export default function LoadingScreen() {
       className="h-full fixed inset-0 flex items-center justify-center dark:bg-gray-800"
     >
       <div className="space-y-8">
-        <GraphicLogo className="w-36" />
+        <VectorLogo className="w-36" />
         <div className="flex items-center justify-center">
           <IconSpinner />
         </div>

@@ -1,31 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import Post from '@/components/post/Post'
-import { useQuery } from 'urql'
-import { GET_POSTS } from '@/graphql/queries'
-import { useStore } from '@/lib/stores/useStore'
-import { IconSpinner } from '@/lib/Icons'
+import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useVirtual } from 'react-virtual'
-import { useUser } from '@/components/providers/DataProvider'
 import CreatePostCard from '@/components/post/CreatePostCard'
+import { usePosts } from '@/hooks/usePosts'
 
-export default function Posts({ variables, showServerName }) {
-  const { postsSort, postsTime } = useStore()
-
-  const [page, setPage] = useState(0)
-
-  const [{ data, fetching }] = useQuery({
-    query: GET_POSTS,
-    variables: {
-      pageSize: 20,
-      page,
-      sort: postsSort,
-      time: postsTime,
-      ...variables
-    }
-  })
+export default function Posts({ serverId, folderId, showServerName }) {
   const canFetchMore = true
 
-  const posts = data?.getPosts ?? []
+  const [posts, fetching, fetchMore] = usePosts({ serverId, folderId })
 
   const parentRef = useRef()
 
@@ -48,7 +31,7 @@ export default function Posts({ variables, showServerName }) {
     }
 
     if (lastItem.index === posts.length - 1 && canFetchMore && !fetching) {
-      setPage(page + 1)
+      fetchMore()
     }
   }, [canFetchMore, posts.length, fetching, rowVirtualizer.virtualItems])
 

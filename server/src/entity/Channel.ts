@@ -23,6 +23,7 @@ export class Channel extends BaseEntity {
   @OneToMany(() => Message, 'channel')
   messages = new Collection<Message>(this)
 
+  @Field(() => Server)
   @ManyToOne({ entity: () => Server, inversedBy: 'channels' })
   server: Server
 

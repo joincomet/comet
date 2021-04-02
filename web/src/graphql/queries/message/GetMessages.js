@@ -1,5 +1,6 @@
 import { gql } from '@urql/core'
 import { MESSAGE_FRAGMENT, USER_FRAGMENT } from '@/graphql/fragments'
+import { useQuery } from 'urql'
 
 export const GET_MESSAGES = gql`
   query GetMessages(
@@ -22,8 +23,30 @@ export const GET_MESSAGES = gql`
       author {
         ...USER_FRAGMENT
       }
+      channel {
+        id
+      }
+      toUser {
+        id
+      }
+      group {
+        id
+      }
     }
   }
   ${MESSAGE_FRAGMENT}
   ${USER_FRAGMENT}
 `
+
+export const useMessagesQuery = ({
+  channelId,
+  userId,
+  groupId,
+  pageSize,
+  page,
+  initialTime
+}) =>
+  useQuery({
+    query: GET_MESSAGES,
+    variables: { channelId, userId, groupId, pageSize, page, initialTime }
+  })

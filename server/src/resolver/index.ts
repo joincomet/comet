@@ -9,7 +9,6 @@ export {
   CommentSubscriptions
 } from './comment'
 export { FolderQueries, FolderMutations, FolderSubscriptions } from './folder'
-export { FriendSubscriptions, FriendQueries, FriendMutations } from './friend'
 export { GroupMutations, GroupQueries, GroupSubscriptions } from './group'
 export {
   MessageMutations,

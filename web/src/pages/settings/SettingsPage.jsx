@@ -1,17 +1,17 @@
-import UserAvatar from '@/components/avatars/UserAvatar'
-import { useUser } from '@/components/providers/DataProvider'
-import SidebarItem from '@/components/sidebars/base/SidebarItem'
-import SidebarLabel from '@/components/sidebars/base/SidebarLabel'
-import { IconX } from '@/lib/Icons'
+import UserAvatar from '@/components/user/UserAvatar'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
+import SidebarItem from '@/components/ui/sidebar/SidebarItem'
+import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
+import { IconX } from '@/components/ui/icons/Icons'
 import { Link } from 'react-router-dom'
 
 export default function SettingsPage() {
-  const user = useUser()
+  const user = useCurrentUser()
   return (
     <>
       <div className="h-full flex relative">
         <Link
-          to="/posts"
+          to="/me"
           className="absolute top-4 left-4 rounded-full cursor-pointer transition dark:hover:bg-gray-700 p-3"
         >
           <IconX className="w-6 h-6 text-tertiary" />

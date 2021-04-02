@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useUser } from '@/components/providers/DataProvider'
-import UserAvatar from '@/components/avatars/UserAvatar'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
+import UserAvatar from '@/components/user/UserAvatar'
 import CommentEditor from '@/components/comment/CommentEditor'
 import { useTranslation } from 'react-i18next'
 
 export default function CreateCommentCard({ postId }) {
   const [open, setOpen] = useState(false)
-  const user = useUser()
+  const user = useCurrentUser()
   const { t } = useTranslation()
 
   return (

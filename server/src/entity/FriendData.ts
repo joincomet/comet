@@ -6,7 +6,7 @@ import {
   Property
 } from '@mikro-orm/core'
 import { User } from '@/entity'
-import { FriendStatus } from '@/resolver/friend'
+import { FriendStatus } from '@/resolver/user'
 
 @Entity()
 export class FriendData {

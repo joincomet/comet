@@ -1,18 +1,18 @@
 import { Virtuoso } from 'react-virtuoso'
-import { useCallback, useRef } from 'react'
+import { Suspense, useCallback, useRef } from 'react'
 import { useNewMessageNotification } from '@/components/message/useNewMessageNotification'
 import { usePrependedMessagesCount } from '@/components/message/usePrependedMessagesCount'
-import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import Message from '@/components/message/Message'
-import { useMessages } from '@/components/message/useMessages'
-import SendMessageBar from '@/components/message/SendMessageBar'
-import MessagesHeader from '@/components/message/MessagesHeader'
+import { useMessages } from '@/hooks/useMessages'
+import MessageInput from '@/components/message/MessageInput'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 
 const PREPEND_OFFSET = 10 ** 7
 
 export default function Messages({ channel, user, group }) {
   const [messages, fetching, fetchMore] = useMessages({ channel, user, group })
   const virtuoso = useRef(null)
+  const currentUser = useCurrentUser()
 
   const {
     atBottom,
@@ -22,7 +22,12 @@ export default function Messages({ channel, user, group }) {
 
   const numItemsPrepended = usePrependedMessagesCount(messages)
 
-  const shouldForceScrollToBottom = useShouldForceScrollToBottom(messages)
+  const shouldForceScrollToBottom = useCallback(() => {
+    if (!messages || messages.length === 0) return false
+    const lastMessage = messages[messages.length - 1]
+    console.log(messages)
+    return lastMessage.author.id === currentUser.id
+  }, [messages, currentUser])
 
   const messageRenderer = useCallback(
     (messageList, virtuosoIndex) => {
@@ -42,6 +47,7 @@ export default function Messages({ channel, user, group }) {
             streamMessageIndex === 0 ||
             (prevMessage && prevMessage.author.id !== message.author.id)
           }
+          last={streamMessageIndex === messageList.length - 1}
         />
       )
     },
@@ -49,7 +55,7 @@ export default function Messages({ channel, user, group }) {
   )
 
   return (
-    <>
+    <Suspense fallback={'loading'}>
       <div className="relative flex-1 overflow-x-hidden overflow-y-auto dark:bg-gray-750 w-full h-full">
         <Virtuoso
           className="scrollbar"
@@ -81,7 +87,7 @@ export default function Messages({ channel, user, group }) {
           totalCount={messages?.length || 0}
         />
       </div>
-      <SendMessageBar channel={channel} user={user} group={group} />
-    </>
+      <MessageInput channel={channel} user={user} group={group} />
+    </Suspense>
   )
 }

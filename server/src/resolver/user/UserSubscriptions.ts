@@ -37,4 +37,13 @@ export class UserSubscriptions {
   refetchUsers(): boolean {
     return true
   }
+
+  @Authorized()
+  @Subscription(() => Boolean, {
+    topics: SubscriptionTopic.RefetchUserRelationships,
+    filter: ({ payload: userId, context: { user } }) => userId === user.id
+  })
+  refetchUserRelationships(): boolean {
+    return true
+  }
 }

@@ -2,9 +2,9 @@ import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { Channel, Server, ServerUserJoin, User } from '@/entity'
 import {
   ChannelUsersResponse,
-  GetServersArgs,
-  GetServersResponse,
-  GetServersSort
+  GetPublicServersArgs,
+  GetPublicServersResponse,
+  GetPublicServersSort
 } from '@/resolver/server'
 import { QueryOrder } from '@mikro-orm/core'
 import { Context } from '@/types'
@@ -16,16 +16,16 @@ import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 @Resolver(() => Server)
 export class ServerQueries {
   @Authorized()
-  @Query(() => GetServersResponse)
-  async getServers(
+  @Query(() => GetPublicServersResponse)
+  async getPublicServers(
     @Args()
-    { sort, category, page, pageSize }: GetServersArgs,
+    { sort, category, page, pageSize }: GetPublicServersArgs,
     @Ctx() { user, em }: Context
-  ): Promise<GetServersResponse> {
+  ): Promise<GetPublicServersResponse> {
     let where = {}
     let orderBy = {}
 
-    if (sort === GetServersSort.Featured) {
+    if (sort === GetPublicServersSort.Featured) {
       where = { featured: true }
       orderBy = { featuredPosition: QueryOrder.ASC }
     } else if (category) {
@@ -33,11 +33,11 @@ export class ServerQueries {
       orderBy = { name: QueryOrder.ASC }
     }
 
-    if (sort === GetServersSort.New) {
+    if (sort === GetPublicServersSort.New) {
       orderBy = { createdAt: QueryOrder.DESC }
-    } else if (sort === GetServersSort.Top) {
+    } else if (sort === GetPublicServersSort.Top) {
       orderBy = { userCount: QueryOrder.DESC }
-    } else if (sort === GetServersSort.AZ) {
+    } else if (sort === GetPublicServersSort.AZ) {
       orderBy = { name: QueryOrder.ASC }
     }
 
@@ -54,7 +54,7 @@ export class ServerQueries {
       servers,
       page,
       nextPage: page >= 0 && servers.length >= pageSize ? page + 1 : null
-    } as GetServersResponse
+    } as GetPublicServersResponse
   }
 
   @Authorized()

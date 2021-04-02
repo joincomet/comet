@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { useUser } from '@/components/providers/DataProvider'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 
 export function useNewMessageNotification(messages) {
-  const currentUser = useUser()
+  const currentUser = useCurrentUser()
   const [newMessagesNotification, setNewMessagesNotification] = useState(false)
 
   const lastMessageId = useRef('')

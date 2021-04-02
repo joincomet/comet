@@ -1,18 +1,10 @@
-import {
-  Arg,
-  Authorized,
-  Ctx,
-  FieldResolver,
-  ID,
-  Query,
-  Resolver,
-  Root
-} from 'type-graphql'
+import { Arg, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { Context } from '@/types'
 import { FriendData, Group, User } from '@/entity'
 import { GroupDmUnion } from '@/resolver/user/types/GroupDmUnion'
 import { QueryOrder } from '@mikro-orm/core'
 import { CustomError } from '@/types/CustomError'
+import { FriendStatus, GetUserRelationshipsResponse } from '@/resolver/user'
 
 @Resolver(() => User)
 export class UserQueries {
@@ -77,5 +69,80 @@ export class UserQueries {
     @Arg('userId', () => ID) userId: string
   ): Promise<User> {
     return em.findOneOrFail(User, userId)
+  }
+
+  @Authorized()
+  @Query(() => GetUserRelationshipsResponse)
+  async getUserRelationships(
+    @Ctx() { em, user }: Context
+  ): Promise<GetUserRelationshipsResponse> {
+    const friends = (
+      await em.find(
+        FriendData,
+        {
+          user,
+          status: FriendStatus.Friends
+        },
+        ['toUser']
+      )
+    )
+      .map(friend => friend.toUser)
+      .sort((a, b) => b.name.localeCompare(a.name))
+
+    const outgoingFriendRequests = (
+      await em.find(
+        FriendData,
+        {
+          user,
+          status: FriendStatus.FriendRequestOutgoing
+        },
+        ['toUser'],
+        { updatedAt: QueryOrder.DESC }
+      )
+    ).map(friend => friend.user)
+
+    const incomingFriendRequests = (
+      await em.find(
+        FriendData,
+        {
+          user,
+          status: FriendStatus.FriendRequestOutgoing
+        },
+        ['toUser'],
+        { updatedAt: QueryOrder.DESC }
+      )
+    ).map(friend => friend.user)
+
+    const blockingUsers = (
+      await em.find(
+        FriendData,
+        {
+          user,
+          status: FriendStatus.Blocking
+        },
+        ['toUser'],
+        { updatedAt: QueryOrder.DESC }
+      )
+    ).map(friend => friend.toUser)
+
+    const blockedByUsers = (
+      await em.find(
+        FriendData,
+        {
+          user,
+          status: FriendStatus.Blocked
+        },
+        ['toUser'],
+        { updatedAt: QueryOrder.DESC }
+      )
+    ).map(friend => friend.toUser)
+
+    return {
+      friends,
+      outgoingFriendRequests,
+      incomingFriendRequests,
+      blockingUsers,
+      blockedByUsers
+    } as GetUserRelationshipsResponse
   }
 }

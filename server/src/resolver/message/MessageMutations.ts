@@ -23,8 +23,13 @@ import {
   CheckMessageAuthor,
   CheckMessageChannelPermission
 } from '@/util'
-import { SendMessageArgs, MessageSentPayload } from '@/resolver/message'
-import { FriendStatus } from '@/resolver/friend'
+import {
+  MessageSentPayload,
+  SendMessageArgs,
+  TypingPayload,
+  TypingArgs
+} from '@/resolver/message'
+import { FriendStatus } from '@/resolver/user'
 
 @Resolver()
 export class MessageMutations {
@@ -190,6 +195,24 @@ export class MessageMutations {
     dm.showChat = false
     await em.persistAndFlush(dm)
     await refetchGroupsAndDms(user.id)
+    return true
+  }
+
+  @CheckChannelPermission(ChannelPermission.SendMessages)
+  @CheckGroupMember()
+  @Mutation(() => Boolean)
+  async startTyping(
+    @Ctx() { user, em }: Context,
+    @PubSub(SubscriptionTopic.Typing)
+    userStartedTyping: Publisher<TypingPayload>,
+    @Args() { channelId, groupId, userId }: TypingArgs
+  ): Promise<boolean> {
+    await userStartedTyping({
+      name: user.name,
+      userId,
+      groupId,
+      channelId
+    })
     return true
   }
 

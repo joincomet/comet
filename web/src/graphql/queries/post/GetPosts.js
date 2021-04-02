@@ -4,6 +4,7 @@ import {
   SERVER_FRAGMENT,
   USER_FRAGMENT
 } from '@/graphql/fragments'
+import { useQuery } from 'urql'
 
 export const GET_POSTS = gql`
   query GetPosts(
@@ -17,12 +18,12 @@ export const GET_POSTS = gql`
   ) {
     getPosts(
       sort: $sort
-      page: $page
-      pageSize: $pageSize
       time: $time
       folderId: $folderId
       serverId: $serverId
       search: $search
+      page: $page
+      pageSize: $pageSize
     ) {
       ...POST_FRAGMENT
       author {
@@ -37,3 +38,16 @@ export const GET_POSTS = gql`
   ${USER_FRAGMENT}
   ${SERVER_FRAGMENT}
 `
+
+export const usePostsQuery = ({
+  sort,
+  time,
+  folderId,
+  serverId,
+  page,
+  pageSize
+}) =>
+  useQuery({
+    query: GET_POSTS,
+    variables: { sort, time, folderId, serverId, page, pageSize }
+  })

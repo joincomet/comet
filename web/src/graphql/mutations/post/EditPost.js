@@ -1,5 +1,6 @@
 import { gql } from '@urql/core'
 import { POST_FRAGMENT } from '@/graphql/fragments'
+import { useMutation } from 'urql'
 
 export const EDIT_POST = gql`
   mutation EditPost($text: String!, $postId: ID!) {
@@ -9,3 +10,5 @@ export const EDIT_POST = gql`
   }
   ${POST_FRAGMENT}
 `
+
+export const useEditPostMutation = () => useMutation(EDIT_POST)

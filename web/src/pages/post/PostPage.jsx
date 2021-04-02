@@ -1,18 +1,18 @@
+import { useMemo } from 'react'
 import { useQuery } from 'urql'
 import { GET_COMMENTS, GET_POST } from '@/graphql/queries'
 import Post from '@/components/post/Post'
-import Container from '@/components/Container'
-import View from '@/components/View'
+import Container from '@/components/ui/Container'
+import View from '@/components/ui/View'
 import { useParams } from 'react-router-dom'
-import PostUsersSidebar from '@/components/sidebars/PostUsersSidebar'
-import Header from '@/components/headers/base/Header'
-import { IconText } from '@/lib/Icons'
-import { createCommentTree, getParticipants } from '@/lib/commentUtils'
+import PostUsersSidebar from '@/pages/post/PostUsersSidebar'
+import Header from '@/components/ui/header/Header'
+import { IconText } from '@/components/ui/icons/Icons'
+import { createCommentTree, getParticipants } from '@/utils/commentUtils'
 import Comment from '@/components/comment/Comment'
-import { useTranslation } from 'react-i18next'
 import CreateCommentCard from '@/components/comment/CreateCommentCard'
-import { useStore } from '@/lib/stores/useStore'
-import ShowUsersButton from '@/components/headers/base/ShowUsersButton'
+import { useStore } from '@/hooks/useStore'
+import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
 
 export default function PostPage() {
   const { postId } = useParams()
@@ -29,12 +29,11 @@ export default function PostPage() {
     query: GET_COMMENTS,
     variables: { postId }
   })
-
-  const comments = createCommentTree(commentsData?.getComments ?? [])
-
-  const users = getParticipants(comments)
-
-  const { t } = useTranslation()
+  const flatComments = commentsData?.getComments ?? []
+  const comments = useMemo(() => createCommentTree(flatComments), [
+    flatComments
+  ])
+  const users = useMemo(() => getParticipants(comments), [comments])
   const { showUsers } = useStore()
 
   return (
@@ -45,7 +44,7 @@ export default function PostPage() {
           <ShowUsersButton />
         </div>
       </Header>
-      <PostUsersSidebar post={post} users={users} show={showUsers} />
+      <PostUsersSidebar post={post} users={users} />
 
       <Container rightSidebar={showUsers}>
         <View>

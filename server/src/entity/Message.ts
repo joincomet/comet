@@ -23,12 +23,11 @@ export class Message extends BaseEntity {
   @ManyToOne(() => User)
   author: User
 
+  @Field(() => Channel, { nullable: true })
   @ManyToOne(() => Channel, { nullable: true })
   channel?: Channel
 
-  @ManyToMany(() => ServerInvite)
-  invites = new Collection<ServerInvite>(this)
-
+  @Field(() => Group, { nullable: true })
   @ManyToOne({
     entity: () => Group,
     nullable: true,
@@ -36,6 +35,7 @@ export class Message extends BaseEntity {
   })
   group?: Group
 
+  @Field(() => User, { nullable: true })
   @ManyToOne({
     entity: () => User,
     nullable: true
@@ -49,6 +49,9 @@ export class Message extends BaseEntity {
   @Field(() => [LinkMetadata])
   @Embedded(() => LinkMetadata, { object: true, array: true })
   linkMetadatas: LinkMetadata[] = []
+
+  @ManyToMany(() => ServerInvite)
+  invites = new Collection<ServerInvite>(this)
 
   @Field()
   @Property()

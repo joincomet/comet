@@ -1,10 +1,16 @@
-import { Authorized, Ctx, ID, Resolver, Root, Subscription } from 'type-graphql'
-import { Message } from '@/entity'
+import {
+  Args,
+  Authorized,
+  Ctx,
+  Resolver,
+  Root,
+  Subscription
+} from 'type-graphql'
+import { Channel, Group, Message } from '@/entity'
 import {
   SubscriptionFilter,
   SubscriptionTopic,
   ChannelPermission,
-  ServerPermission,
   Context
 } from '@/types'
 import {
@@ -12,6 +18,8 @@ import {
   MessageSentPayload
 } from '@/resolver/message/types'
 import { MessageSentResponse } from '@/resolver/message/types/MessageSentResponse'
+import { TypingPayload } from '@/resolver/message/types/TypingPayload'
+import { TypingArgs } from '@/resolver/message/types/TypingArgs'
 
 const filter = async ({
   payload: { messageId },
@@ -111,5 +119,51 @@ export class MessageSubscriptions {
       channelId,
       messageId
     } as MessageRemovedResponse
+  }
+
+  @Authorized()
+  @Subscription(() => String, {
+    topics: SubscriptionTopic.Typing,
+    /*filter: async ({
+      payload: {
+        channelId: typingChannelId,
+        groupId: typingGroupId,
+        userId: typingUserId
+      },
+      context: { user, em },
+      args: { channelId, groupId, userId }
+    }: SubscriptionFilter<TypingPayload>) => {
+      console.log('------------------------------------')
+      console.log({
+        channelId,
+        typingChannelId,
+        groupId,
+        typingGroupId,
+        userId,
+        typingUserId
+      })
+      console.log('------------------------------------')
+      if (typingChannelId && channelId === typingChannelId) {
+        const channel = await em.findOneOrFail(Channel, typingChannelId)
+        return user.hasChannelPermission(
+          em,
+          channel,
+          ChannelPermission.ViewChannel
+        )
+      } else if (typingGroupId && groupId === typingGroupId) {
+        const group = await em.findOneOrFail(Group, typingGroupId)
+        return group.users.contains(user)
+      } else return typingUserId && userId === typingUserId
+    },*/
+    description:
+      'Published to all users looking at messages when a user starts typing'
+  })
+  userStartedTyping(
+    @Root()
+    { name }: TypingPayload,
+    @Args() { channelId, groupId, userId }: TypingArgs
+  ): string {
+    console.log({ channelId, groupId, userId })
+    return name
   }
 }

@@ -1,4 +1,4 @@
-import { IconSpinner } from '@/lib/Icons'
+import { IconSpinner } from '@/components/ui/icons/Icons'
 
 export default function Button({
   type = 'submit',

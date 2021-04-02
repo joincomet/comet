@@ -50,7 +50,8 @@ export class PostQueries {
               },
           { server: { $ne: null } },
           joinedOnly ? { server: servers } : {},
-          serverId ? { server: { id: serverId } } : {}
+          serverId ? { server: serverId } : {},
+          folderId ? { folders: folderId } : {}
         ]
       },
       ['author', 'server', 'votes'],

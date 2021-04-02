@@ -1,27 +1,25 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import Tippy from '@tippyjs/react'
 import { useDrag } from 'react-dnd'
-import { DragItemTypes } from '@/lib/DragItemTypes'
-import ReactPlayer from 'react-player'
-import UserAvatar from '@/components/avatars/UserAvatar'
-import ServerAvatar from '@/components/avatars/ServerAvatar'
-import ServerPopup from '@/components/popups/ServerPopup'
-import UserPopup from '@/components/popups/UserPopup'
+import { DragItemTypes } from '@/types/DragItemTypes'
+import UserAvatar from '@/components/user/UserAvatar'
+import ServerAvatar from '@/components/server/ServerAvatar'
+import ServerPopup from '@/components/server/ServerPopup'
+import UserPopup from '@/components/user/UserPopup'
 import { useMutation } from 'urql'
 import { CREATE_POST_VOTE, REMOVE_POST_VOTE } from '@/graphql/mutations'
-import { calendarDate } from '@/lib/timeUtils'
+import { calendarDate } from '@/utils/timeUtils'
 import {
   IconChat,
   IconDotsHorizontal,
   IconLinkWeb,
   IconText,
   IconVote
-} from '@/lib/Icons'
-import { useContextMenuTrigger } from '@/context-menu'
-import { mergeRefs } from '@/lib/mergeRefs'
+} from '@/components/ui/icons/Icons'
+import { useContextMenuTrigger } from '@/components/ui/context'
+import { mergeRefs } from '@/utils/mergeRefs'
 import { useTranslation } from 'react-i18next'
-import { ContextMenuType } from '@/components/context-menus/ContextMenuType'
+import { ContextMenuType } from '@/types/ContextMenuType'
 
 export default memo(function Post({
   post,

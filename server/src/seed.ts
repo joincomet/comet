@@ -15,7 +15,7 @@ import {
 import { Lexico, tagGenerator } from '@/util'
 import * as argon2 from 'argon2'
 import faker from 'faker'
-import { FriendStatus } from '@/resolver/friend'
+import { FriendStatus } from '@/resolver/user'
 import { ServerCategory } from '@/resolver/server'
 
 const NUM_USERS = 100

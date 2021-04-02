@@ -52,6 +52,10 @@ export async function bootstrap() {
         ? connection.context.userId
         : getUserId(req.headers.token as string)
       const user = userId ? await em.findOne(User, userId) : null
+      if (user) {
+        user.lastLoginAt = new Date()
+        await em.persistAndFlush(user)
+      }
       return {
         em,
         user

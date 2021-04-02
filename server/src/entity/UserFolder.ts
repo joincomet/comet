@@ -14,7 +14,4 @@ export class UserFolder {
 
   @Property({ columnType: 'text' })
   position: string = Lexico.FIRST_POSITION
-
-  @Property()
-  createdAt: Date = new Date()
 }

@@ -1,9 +1,9 @@
 import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
-import { Folder, Post } from '@/entity'
+import { Folder, Post, Server, ServerFolder, UserFolder } from '@/entity'
 import { handleUnderscore } from '@/util/text'
 import { ServerPermission } from '@/types/ServerPermission'
-import { CheckPostServerPermission } from '@/util'
+import { CheckPostServerPermission, CheckServerPermission } from '@/util'
 
 @Resolver()
 export class FolderMutations {
@@ -45,23 +45,41 @@ export class FolderMutations {
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => Folder)
   async createUserFolder(
     @Arg('name') name: string,
     @Ctx() { user, em }: Context
-  ): Promise<boolean> {
+  ): Promise<Folder> {
     if (name.length > 300) throw new Error('error.folder.nameTooLong')
-    if (
-      await em.findOne(Folder, {
-        $and: [{ name: { $ilike: handleUnderscore(name) } }, { owner: user }]
-      })
-    )
-      throw new Error('error.folder.alreadyExists')
     const folder = em.create(Folder, {
       owner: user,
       name
     })
-    await em.persistAndFlush(folder)
-    return true
+    const userFolder = em.create(UserFolder, {
+      user,
+      folder
+    })
+    await em.persistAndFlush([folder, userFolder])
+    return folder
+  }
+
+  @CheckServerPermission(ServerPermission.ManagePosts)
+  @Mutation(() => Folder)
+  async createServerFolder(
+    @Arg('name') name: string,
+    @Arg('serverId', () => ID) serverId: string,
+    @Ctx() { user, em }: Context
+  ): Promise<Folder> {
+    if (name.length > 300) throw new Error('error.folder.nameTooLong')
+    const server = await em.findOneOrFail(Server, serverId)
+    const folder = em.create(Folder, {
+      name
+    })
+    const serverFolder = em.create(ServerFolder, {
+      server,
+      folder
+    })
+    await em.persistAndFlush([folder, serverFolder])
+    return folder
   }
 }

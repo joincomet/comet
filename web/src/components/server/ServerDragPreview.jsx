@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import ServerAvatar from '@/components/avatars/ServerAvatar'
+import ServerAvatar from '@/components/server/ServerAvatar'
 
 export default function ServerDragPreview({ server, show }) {
   return (

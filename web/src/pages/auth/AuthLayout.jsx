@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom'
 import {
-  GraphicLogo,
-  GraphicGrass,
-  GraphicTelescopeMan,
-  GraphicMeteors
-} from '@/lib/Icons'
-
-const logo = <GraphicLogo className="absolute left-8 top-8 h-6" />
+  VectorGrass,
+  VectorLogo,
+  VectorTelescopeMan
+} from '@/components/ui/vectors'
+import { Meteors } from '@/components/ui/meteors'
 
 export default function AuthLayout({ children }) {
   return (
@@ -19,14 +17,16 @@ export default function AuthLayout({ children }) {
     >
       {children}
 
-      <Link to="/">{logo}</Link>
+      <Link to="/">
+        <VectorLogo className="absolute left-8 top-8 h-6" />
+      </Link>
 
       <div className="flex absolute bottom-0 left-0 right-0 z-10 text-gray-900">
-        <GraphicGrass className="w-1/2" />
-        <GraphicGrass className="w-1/2" />
+        <VectorGrass className="w-1/2" />
+        <VectorGrass className="w-1/2" />
       </div>
-      <GraphicTelescopeMan className="absolute bottom-0 right-32 text-gray-900 z-10 h-96" />
-      <GraphicMeteors />
+      <VectorTelescopeMan className="absolute bottom-0 right-32 text-gray-900 z-10 h-96" />
+      <Meteors />
     </div>
   )
 }

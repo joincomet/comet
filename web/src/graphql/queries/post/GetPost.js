@@ -4,6 +4,7 @@ import {
   SERVER_FRAGMENT,
   USER_FRAGMENT
 } from '@/graphql/fragments'
+import { useQuery } from 'urql'
 
 export const GET_POST = gql`
   query GetPost($postId: ID!) {
@@ -21,3 +22,6 @@ export const GET_POST = gql`
   ${USER_FRAGMENT}
   ${SERVER_FRAGMENT}
 `
+
+export const usePostQuery = ({ postId }) =>
+  useQuery({ query: GET_POST, variables: { postId } })

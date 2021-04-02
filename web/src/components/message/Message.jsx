@@ -1,11 +1,11 @@
-import UserPopup from '@/components/popups/UserPopup'
-import UserAvatar from '@/components/avatars/UserAvatar'
-import { calendarDate, shortTime } from '@/lib/timeUtils'
+import UserPopup from '@/components/user/UserPopup'
+import UserAvatar from '@/components/user/UserAvatar'
+import { calendarDate, shortTime } from '@/utils/timeUtils'
 import { memo } from 'react'
 
-export default memo(function Message({ showUser, message, measure }) {
+export default memo(function Message({ showUser, message, last }) {
   return (
-    <div className={`${showUser ? 'pt-4' : ''}`}>
+    <div className={`${showUser ? 'pt-4' : ''} ${last ? 'pb-5.5' : ''}`}>
       <div className={`flex py-1 px-4 dark:hover:bg-gray-775 group`}>
         {showUser ? (
           <UserPopup user={message.author}>
