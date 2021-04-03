@@ -143,7 +143,10 @@ export class MessageSubscriptions {
       } else if (typingGroupId && groupId === typingGroupId) {
         const group = await em.findOneOrFail(Group, typingGroupId)
         return group.users.contains(user)
-      } else return typingUserId && userId === typingUserId
+      } else
+        return (
+          typingUserId && (userId === typingUserId || user.id === typingUserId)
+        )
     },
     description:
       'Published to all users looking at messages when a user starts typing'

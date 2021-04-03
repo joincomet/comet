@@ -18,9 +18,7 @@ export default function DmPage() {
     <>
       <DmHeader user={user} />
 
-      <Container>
-        <Messages user={user} />
-      </Container>
+      <Container>{!!user && <Messages user={user} />}</Container>
     </>
   )
 }

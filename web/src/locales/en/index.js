@@ -350,8 +350,15 @@ export const en = {
     Other: 'Other'
   },
   messages: {
+    message: 'Message',
     pinned: 'Pinned Messages',
-    upload: 'Upload a File'
+    upload: 'Upload a File',
+    typing: {
+      one: '{{name}} is typing...',
+      two: '{{name1}} and {{name2}} are typing...',
+      three: '{{name1}}, {{name2}}, and {{name3}} are typing...',
+      several: 'Several people are typing...'
+    }
   },
   comment: {
     reply: 'Reply',

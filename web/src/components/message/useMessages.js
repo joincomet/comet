@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { GET_MESSAGES } from '@/graphql/queries'
 import { useQuery } from 'urql'
+import { useCurrentUser } from '@/providers/UserProvider'
 
 export function useMessages({ channel, group, user }) {
   const initialTime = useRef(new Date().toString())

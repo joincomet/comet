@@ -77,8 +77,6 @@ function ServerListServer({ server }) {
 
   const { serverId } = useParams()
   const serverPages = useStore(s => s.serverPages)
-  useEffect(() => console.log(serverPages), [serverPages])
-
   return (
     <ServerListItem
       to={`/server/${server.id}${

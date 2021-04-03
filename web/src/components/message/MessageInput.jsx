@@ -6,9 +6,14 @@ import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 import { USER_STARTED_TYPING } from '@/graphql/subscriptions'
 import ContentEditable from 'react-contenteditable'
+import { useCurrentUser } from '@/providers/UserProvider'
+
+const TYPING_TIMEOUT = 3000
 
 export default function MessageInput({ channel, group, user }) {
-  const [typingNames, setTypingNames] = useState([])
+  const { t } = useTranslation()
+  const currentUser = useCurrentUser()
+  const [typingNames, setTypingNames] = useState(new Set())
 
   const variables = {
     channelId: channel?.id,
@@ -23,23 +28,49 @@ export default function MessageInput({ channel, group, user }) {
       pause: !channel && !group && !user
     },
     (_, { userStartedTyping: username }) => {
-      setTypingNames([...typingNames, username])
+      setTypingNames(prev => new Set(prev.add(username)))
       setTimeout(
-        () => setTypingNames(typingNames.filter(u => u !== username)),
-        1000
+        () =>
+          setTypingNames(
+            prev => new Set([...prev].filter(u => u !== username))
+          ),
+        TYPING_TIMEOUT
       )
     }
   )
 
   const [_startTypingRes, startTyping] = useMutation(START_TYPING)
 
+  const typingNamesDisplay = useMemo(() => {
+    const names = [...typingNames]
+      .filter(u => u !== currentUser.username)
+      .map(
+        u =>
+          `<span style="font-weight: 700">
+          ${u.split('#')[0]}&nbsp;
+        </span>`
+      )
+    if (names.length === 0) return null
+    else if (names.length === 1)
+      return t('messages.typing.one', { name: names[0] })
+    else if (names.length === 2)
+      return t('messages.typing.two', { name1: names[0], name2: names[1] })
+    else if (names.length === 3)
+      return t('messages.typing.three', {
+        name1: names[0],
+        name2: names[1],
+        name3: names[2]
+      })
+    else return t('messages.typing.several')
+  }, [typingNames, currentUser.username])
+
   const [_, sendMessage] = useMutation(SEND_MESSAGE)
 
   const placeholder = useMemo(() => {
-    if (channel) return `Message #${channel.name}`
-    else if (group) return `Message ${group.name}`
-    else if (user) return `Message @${user.name}`
-    return 'Message'
+    if (channel) return `${t('messages.message')} #${channel.name}`
+    else if (group) return `${t('messages.message')} ${group.name}`
+    else if (user) return `${t('messages.message')} @${user.name}`
+    return `${t('messages.message')}`
   }, [channel, group, user])
 
   const inputRef = useRef(null)
@@ -54,10 +85,8 @@ export default function MessageInput({ channel, group, user }) {
       inputRef.current.el.current.dataset.placeholder = placeholder
   }, [placeholder])
 
-  const { t } = useTranslation()
-
   return (
-    <div className="pb-6 px-4 dark:bg-gray-750">
+    <div className="px-4 dark:bg-gray-750">
       <div className="relative">
         <Tippy content={t('messages.upload')}>
           <div className="block absolute left-4.5 top-1/2 transform -translate-y-1/2">
@@ -100,6 +129,11 @@ export default function MessageInput({ channel, group, user }) {
           }}
         />
       </div>
+
+      <div
+        className="h-6 flex items-center text-primoary text-xs"
+        dangerouslySetInnerHTML={{ __html: typingNamesDisplay }}
+      />
     </div>
   )
 }
