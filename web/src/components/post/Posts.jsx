@@ -6,14 +6,12 @@ import CreatePostCard from '@/components/post/CreatePostCard'
 import { usePosts } from '@/components/post/usePosts'
 
 export default function Posts({ serverId, folderId, showServerName }) {
-  const canFetchMore = true
-
-  const [posts, fetching, fetchMore] = usePosts({ serverId, folderId })
+  const [posts, fetching, fetchMore, hasMore] = usePosts({ serverId, folderId })
 
   const parentRef = useRef()
 
   const rowVirtualizer = useVirtual({
-    size: canFetchMore ? posts.length + 1 : posts.length,
+    size: hasMore ? posts.length + 1 : posts.length,
     parentRef,
     estimateSize: useCallback(() => 100, []),
     keyExtractor: useCallback(
@@ -30,10 +28,10 @@ export default function Posts({ serverId, folderId, showServerName }) {
       return
     }
 
-    if (lastItem.index === posts.length - 1 && canFetchMore && !fetching) {
+    if (lastItem.index === posts.length - 1 && hasMore && !fetching) {
       fetchMore()
     }
-  }, [canFetchMore, posts.length, fetching, rowVirtualizer.virtualItems])
+  }, [hasMore, posts.length, fetching, rowVirtualizer.virtualItems])
 
   return (
     <div

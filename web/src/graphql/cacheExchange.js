@@ -21,9 +21,9 @@ const removePostFromGetPosts = (postId, cache) => {
           variables: { ...field.arguments }
         },
         data => {
-          data.getPosts.posts = data.getPosts.posts.filter(
-            post => post.id !== postId
-          )
+          data.getPosts.forEach(res => {
+            res.posts = res.posts.filter(post => post.id !== postId)
+          })
           return data
         }
       )
@@ -41,9 +41,11 @@ const removeMessageFromGetMessages = (messageId, cache) => {
           variables: { ...field.arguments }
         },
         data => {
-          data.getMessages.messages = data.getMessages.messages.filter(
-            message => message.id !== messageId
-          )
+          data.getMessages.forEach(res => {
+            res.messages = res.messages.filter(
+              message => message.id !== messageId
+            )
+          })
           return data
         }
       )
@@ -53,8 +55,8 @@ const removeMessageFromGetMessages = (messageId, cache) => {
 export const cacheExchange = ce({
   keys: {
     GetPostsResponse: () => null,
-    LinkMetadata: () => null,
     GetMessagesResponse: () => null,
+    LinkMetadata: () => null,
     MessageSentResponse: () => null,
     MessageRemovedResponse: () => null,
     GetFriendRequestsResponse: () => null,
@@ -223,30 +225,31 @@ export const cacheExchange = ce({
         if (groupId) variables = { groupId }
         if (channelId) variables = { channelId }
 
-        cache
+        const fields = cache
           .inspectFields('Query')
           .filter(field => field.fieldName === 'getMessages')
-          .forEach(field => {
-            cache.updateQuery(
-              {
-                query: GET_MESSAGES,
-                variables: {
-                  ...variables,
-                  pageSize: 100,
-                  page: 0,
-                  initialTime: field.arguments.initialTime
-                }
-              },
-              data => {
-                if (data !== null) {
-                  data.getMessages.push(message)
-                  return data
-                } else {
-                  return null
-                }
-              }
-            )
-          })
+        const field = fields[fields.length - 1]
+        cache.updateQuery(
+          {
+            query: GET_MESSAGES,
+            variables: {
+              ...variables,
+              pageSize: 100,
+              page: 0,
+              initialTime: field.arguments.initialTime
+            }
+          },
+          data => {
+            if (data !== null) {
+              data.getMessages[data.getMessages.length - 1].messages.push(
+                message
+              )
+              return data
+            } else {
+              return null
+            }
+          }
+        )
       },
       messageUpdated(
         { messageUpdated: { userId, groupId, channelId, message } },

@@ -7,7 +7,7 @@ export default function LoadingScreen() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, delay: 0.3 }}
       style={{ zIndex: 9999 }}
       className="h-full fixed inset-0 flex items-center justify-center dark:bg-gray-800"
     >

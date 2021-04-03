@@ -19,5 +19,10 @@ export function usePosts({ serverId, folderId }) {
     }
   })
 
-  return [data?.getPosts ?? [], fetching, () => setPage(page + 1)]
+  return [
+    data?.getPosts.flatMap(res => res.posts) ?? [],
+    fetching,
+    () => setPage(page + 1),
+    data ? data.getPosts[data.getPosts.length - 1].hasMore : true
+  ]
 }

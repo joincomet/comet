@@ -24,12 +24,15 @@ export const GET_POSTS = gql`
       page: $page
       pageSize: $pageSize
     ) {
-      ...POST_FRAGMENT
-      author {
-        ...USER_FRAGMENT
-      }
-      server {
-        ...SERVER_FRAGMENT
+      hasMore
+      posts {
+        ...POST_FRAGMENT
+        author {
+          ...USER_FRAGMENT
+        }
+        server {
+          ...SERVER_FRAGMENT
+        }
       }
     }
   }

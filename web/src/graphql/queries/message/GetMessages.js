@@ -18,9 +18,12 @@ export const GET_MESSAGES = gql`
       page: $page
       initialTime: $initialTime
     ) {
-      ...MESSAGE_FRAGMENT
-      author {
-        ...USER_FRAGMENT
+      hasMore
+      messages {
+        ...MESSAGE_FRAGMENT
+        author {
+          ...USER_FRAGMENT
+        }
       }
     }
   }

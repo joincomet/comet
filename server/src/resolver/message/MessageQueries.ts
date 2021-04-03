@@ -11,7 +11,7 @@ import { CheckChannelPermission, CheckGroupMember } from '@/util'
 export class MessageQueries {
   @CheckChannelPermission(ChannelPermission.ViewChannel)
   @CheckGroupMember()
-  @Query(() => [Message], {
+  @Query(() => [GetMessagesResponse], {
     description:
       'Get messages in a DM, group, or channel (requires ChannelPermission.ViewChannel or ServerPermission.ViewChannels)'
   })
@@ -29,7 +29,7 @@ export class MessageQueries {
     }: GetMessagesArgs,
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
-  ): Promise<Message[]> {
+  ): Promise<GetMessagesResponse[]> {
     const channel = channelId
       ? await em.findOneOrFail(Channel, channelId)
       : null
@@ -72,11 +72,17 @@ export class MessageQueries {
         where,
         ['author'],
         { createdAt: QueryOrder.DESC },
-        pageSize,
+        pageSize + 1, // get one extra to determine hasMore
         page * pageSize
       )
     ).reverse()
 
-    return messages
+    const hasMore = messages.length > pageSize
+    return [
+      {
+        hasMore,
+        messages: hasMore ? messages.slice(0, messages.length - 1) : messages
+      } as GetMessagesResponse
+    ]
   }
 }

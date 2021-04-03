@@ -1,7 +1,6 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { GET_MESSAGES } from '@/graphql/queries'
 import { useQuery } from 'urql'
-import { useCurrentUser } from '@/providers/UserProvider'
 
 export function useMessages({ channel, group, user }) {
   const initialTime = useRef(new Date().toString())
@@ -20,5 +19,10 @@ export function useMessages({ channel, group, user }) {
     pause: !channel && !group && !user
   })
 
-  return [data?.getMessages, fetching, () => setPage(page + 1)]
+  return [
+    data?.getMessages.flatMap(res => res.messages),
+    fetching,
+    () => setPage(page + 1),
+    data ? data.getMessages[0].hasMore : true
+  ]
 }

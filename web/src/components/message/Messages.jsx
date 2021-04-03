@@ -1,16 +1,22 @@
+import { useCallback, useRef, useEffect } from 'react'
 import { Virtuoso } from 'react-virtuoso'
-import { useCallback, useRef } from 'react'
 import { useNewMessageNotification } from '@/components/message/useNewMessageNotification'
 import { usePrependedMessagesCount } from '@/components/message/usePrependedMessagesCount'
 import Message from '@/components/message/Message'
 import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
+import MessagesStart from '@/components/message/MessagesStart'
 
 const PREPEND_OFFSET = 10 ** 7
 
 export default function Messages({ channel, user, group }) {
-  const [messages, fetching, fetchMore] = useMessages({ channel, user, group })
+  const [messages, fetching, fetchMore, hasMore] = useMessages({
+    channel,
+    user,
+    group
+  })
+
   const virtuoso = useRef(null)
 
   const {
@@ -24,12 +30,11 @@ export default function Messages({ channel, user, group }) {
 
   const messageRenderer = useCallback(
     (messageList, virtuosoIndex) => {
-      const streamMessageIndex =
-        virtuosoIndex + numItemsPrepended - PREPEND_OFFSET
+      const messageIndex = virtuosoIndex + numItemsPrepended - PREPEND_OFFSET
 
-      const message = messageList[streamMessageIndex]
+      const message = messageList[messageIndex]
       const prevMessage =
-        streamMessageIndex > 0 ? messageList[streamMessageIndex - 1] : null
+        messageIndex > 0 ? messageList[messageIndex - 1] : null
 
       if (!message) return <div style={{ height: '1px' }} /> // returning null or zero height breaks the virtuoso
 
@@ -37,10 +42,9 @@ export default function Messages({ channel, user, group }) {
         <Message
           message={message}
           showUser={
-            streamMessageIndex === 0 ||
+            messageIndex === 0 ||
             (prevMessage && prevMessage.author.id !== message.author.id)
           }
-          last={streamMessageIndex === messageList.length - 1}
         />
       )
     },
@@ -59,13 +63,24 @@ export default function Messages({ channel, user, group }) {
               setNewMessagesNotification(false)
             }
           }}
+          components={{
+            Header: () => (
+              <MessagesStart
+                user={user}
+                group={group}
+                channel={channel}
+                show={!hasMore}
+              />
+            ),
+            Footer: () => <div className="h-5.5" />
+          }}
           firstItemIndex={PREPEND_OFFSET - numItemsPrepended}
           followOutput={isAtBottom => {
             if (shouldForceScrollToBottom()) {
-              return isAtBottom ? 'smooth' : 'auto'
+              return 'auto'
             }
             // a message from another user has been received - don't scroll to bottom unless already there
-            return isAtBottom ? 'smooth' : false
+            return isAtBottom ? 'auto' : false
           }}
           initialTopMostItemIndex={
             messages && messages.length > 0 ? messages.length - 1 : 0
@@ -74,7 +89,7 @@ export default function Messages({ channel, user, group }) {
           overscan={0}
           ref={virtuoso}
           startReached={() => {
-            if (!fetching) fetchMore()
+            if (!fetching && hasMore) fetchMore()
           }}
           style={{ overflowX: 'hidden' }}
           totalCount={messages?.length || 0}

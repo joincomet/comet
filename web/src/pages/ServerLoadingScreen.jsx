@@ -8,7 +8,7 @@ export default function ServerLoadingScreen() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, delay: 0.3 }}
       style={{ zIndex: 9999 }}
       className="h-full fixed inset-y-0 right-0 left-78 flex items-center justify-center dark:bg-gray-800"
     >

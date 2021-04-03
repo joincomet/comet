@@ -1,6 +1,11 @@
 import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { Post, LinkMetadata, ServerUserJoin } from '@/entity'
-import { GetPostsArgs, GetPostsTime, GetPostsSort } from '@/resolver/post'
+import {
+  GetPostsArgs,
+  GetPostsTime,
+  GetPostsSort,
+  GetPostsResponse
+} from '@/resolver/post'
 import { Context } from '@/types'
 import { scrapeMetadata } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
@@ -10,7 +15,7 @@ import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 @Resolver(() => Post)
 export class PostQueries {
   @CheckJoinedServer()
-  @Query(() => [Post], {
+  @Query(() => [GetPostsResponse], {
     description:
       'Get posts (requires ServerPermission.ViewPosts if serverId is provided)'
   })
@@ -18,7 +23,7 @@ export class PostQueries {
     @Args()
     { page, pageSize, sort, time, folderId, serverId }: GetPostsArgs,
     @Ctx() { user, em }: Context
-  ): Promise<Post[]> {
+  ): Promise<GetPostsResponse[]> {
     let orderBy = {}
     if (sort === GetPostsSort.New) orderBy = { createdAt: QueryOrder.DESC }
     else if (sort === GetPostsSort.Hot) orderBy = { hotRank: QueryOrder.DESC }
@@ -56,7 +61,7 @@ export class PostQueries {
       },
       ['author', 'server', 'votes'],
       orderBy,
-      pageSize,
+      pageSize + 1, // get one extra to determine hasMore
       page * pageSize
     )
 
@@ -67,7 +72,13 @@ export class PostQueries {
         .includes(user)
     })
 
-    return posts
+    const hasMore = posts.length > pageSize
+    return [
+      {
+        hasMore,
+        posts: hasMore ? posts.slice(0, posts.length - 1) : posts
+      }
+    ]
   }
 
   @CheckJoinedServer()
