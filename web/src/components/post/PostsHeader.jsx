@@ -7,12 +7,12 @@ import {
 } from '@/components/ui/icons/Icons'
 import { useStore } from '@/hooks/useStore'
 import Tippy from '@tippyjs/react'
-import { Switch } from '@headlessui/react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import HeaderTab from '@/components/ui/header/HeaderTab'
 import { HiNewspaper } from 'react-icons/hi'
 import ShowFoldersButton from '@/components/ui/header/buttons/ShowFoldersButton'
+import Switch from '@/components/ui/Switch'
 
 const iconClassName = 'w-5 h-5'
 

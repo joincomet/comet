@@ -1,6 +1,6 @@
-import { useRef } from 'react'
+import { useState, useEffect } from 'react'
 import ctl from '@netlify/classnames-template-literals'
-import Editor from '@/components/ui/Editor'
+import Editor from '@/components/ui/editor/Editor'
 import { useMutation } from 'urql'
 import { CREATE_COMMENT } from '@/graphql/mutations'
 import { IconSpinner } from '@/components/ui/icons/Icons'
@@ -32,33 +32,33 @@ const cancelBtnClass = ctl(`
 `)
 
 export default function CommentEditor({ postId, parentCommentId, setOpen }) {
-  const text = useRef('')
+  const [text, setText] = useState('')
   const [{ fetching }, createComment] = useMutation(CREATE_COMMENT)
   const { t } = useTranslation()
 
+  useEffect(() => console.log(text), [text])
+
   return (
     <div className="max-w-screen-md w-full">
-      <Editor text={text} />
+      <Editor text={text} setText={setText} />
       <div className="flex justify-end space-x-3 items-center pt-3">
         <button
           className={cancelBtnClass}
           onClick={() => {
             setOpen(false)
-            text.current = ''
+            setText('')
           }}
         >
           {t('comment.create.cancel')}
         </button>
         <button
           className={commentBtnClass}
-          disabled={!text.current || fetching}
+          disabled={!text || fetching}
           onClick={() => {
-            createComment({ postId, text: text.current, parentCommentId }).then(
-              () => {
-                setOpen(false)
-                text.current = ''
-              }
-            )
+            createComment({ postId, text, parentCommentId }).then(() => {
+              setOpen(false)
+              setText('')
+            })
           }}
         >
           {t('comment.create.submit')}

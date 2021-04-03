@@ -4,7 +4,7 @@ import { IconChannel, IconUsers } from '@/components/ui/icons/Icons'
 export default function MessagesStart({ user, channel, group, show = false }) {
   return (
     <div
-      className={`px-4 flex items-end min-h-screen ${
+      className={`px-4 flex items-end messages-start ${
         show ? 'opacity-100' : 'opacity-0'
       }`}
     >

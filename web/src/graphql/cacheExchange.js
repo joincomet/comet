@@ -2,6 +2,7 @@ import { COMMENT_FRAGMENT, POST_FRAGMENT } from '@/graphql/fragments'
 import {
   GET_COMMENTS,
   GET_CURRENT_USER,
+  GET_JOINED_SERVERS,
   GET_MESSAGES,
   GET_POSTS,
   GET_SERVER_CHANNELS
@@ -206,6 +207,21 @@ export const cacheExchange = ce({
           data => {
             if (data) {
               data.getServerChannels.unshift(channel)
+              return data
+            } else {
+              return null
+            }
+          }
+        )
+      },
+      createServer({ createServer: server }, _variables, cache) {
+        cache.updateQuery(
+          {
+            query: GET_JOINED_SERVERS
+          },
+          data => {
+            if (data) {
+              data.getJoinedServers.unshift(server)
               return data
             } else {
               return null

@@ -18,9 +18,9 @@ import {
   IconFormatUnderline
 } from '@/components/ui/icons/Icons'
 import toast from 'react-hot-toast'
-import ContentEditable from 'react-contenteditable'
+import ContentEditable from './ContentEditable'
 
-export default function Editor({ text }) {
+export default function Editor({ text, setText }) {
   return (
     <div className="dark:bg-gray-700 rounded">
       <div className="h-9 border-b dark:border-gray-650 flex items-center divide-x dark:divide-gray-650">
@@ -63,9 +63,9 @@ export default function Editor({ text }) {
         </FormatGroup>
       </div>
       <ContentEditable
-        html={text.current}
+        html={text}
         className="min-h-[7.5rem] p-4 focus:outline-none text-base text-primary"
-        onChange={e => (text.current = e.target.value)}
+        onChange={e => setText(e.target.value)}
       />
     </div>
   )

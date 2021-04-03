@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
-import Editor from '@/components/ui/Editor'
+import Editor from '@/components/ui/editor/Editor'
 import { useMutation } from 'urql'
 import { CREATE_POST } from '@/graphql/mutations'
 import { IconSpinner } from '@/components/ui/icons/Icons'
@@ -33,7 +33,7 @@ const cancelBtnClass = ctl(`
 `)
 
 export default function PostEditor({ setOpen }) {
-  const text = useRef('')
+  const [text, setText] = useState('')
   const [{ fetching }, createPost] = useMutation(CREATE_POST)
   const { t } = useTranslation()
   const { push } = useHistory()
@@ -55,7 +55,7 @@ export default function PostEditor({ setOpen }) {
           className={cancelBtnClass}
           onClick={() => {
             setOpen(false)
-            text.current = ''
+            setText('')
           }}
         >
           {t('post.create.cancel')}
@@ -66,13 +66,13 @@ export default function PostEditor({ setOpen }) {
           onClick={() => {
             createPost({
               title,
-              text: text.current ? text.current : null,
+              text: text ? text : null,
               serverId
             }).then(({ data }) => {
               const post = data?.createPost
               if (!post) return
               setOpen(false)
-              text.current = ''
+              setText('')
               setTitle('')
               push(post.relativeUrl)
             })

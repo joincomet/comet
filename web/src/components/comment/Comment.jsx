@@ -35,8 +35,9 @@ export default function Comment({
 
   return (
     <div
-      className={`relative rounded dark:bg-gray-800`}
-      style={{ paddingLeft: level + 'rem' }}
+      className={`relative rounded dark:bg-gray-800 ${
+        level === 0 ? '' : 'pl-4'
+      }`}
     >
       <div id={comment.id} />
 

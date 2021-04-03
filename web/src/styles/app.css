@@ -137,3 +137,7 @@ body {
   content: attr(data-placeholder);
   @apply text-gray-500 dark:text-gray-500 leading-none;
 }
+
+.messages-start {
+  min-height: calc(100vh - 23rem);
+}

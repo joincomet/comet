@@ -35,12 +35,12 @@ export default function HomeSidebar() {
 
       <div className="px-1.5 pt-3">
         <div className="space-y-0.5">
-          <SidebarItem to="/friends">
+          <SidebarItem to="/me/friends">
             <IconFriends className="mr-3 h-5 w-5" />
             {t('friends.title')}
           </SidebarItem>
 
-          <SidebarItem to="/inbox">
+          <SidebarItem to="/me/inbox">
             <IconInbox className="mr-3 h-5 w-5" />
             {t('inbox.title')}
           </SidebarItem>
@@ -51,7 +51,7 @@ export default function HomeSidebar() {
           </SidebarItem>
         </div>
 
-        <SidebarLabel>Your Feed</SidebarLabel>
+        <SidebarLabel>{t('feed.title')}</SidebarLabel>
 
         <SidebarSortButtons />
 

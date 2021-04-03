@@ -5,8 +5,8 @@ import { IconUpload } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 import { USER_STARTED_TYPING } from '@/graphql/subscriptions'
-import ContentEditable from 'react-contenteditable'
 import { useCurrentUser } from '@/providers/UserProvider'
+import ContentEditable from '@/components/ui/editor/ContentEditable'
 
 const TYPING_TIMEOUT = 3000
 
@@ -74,7 +74,7 @@ export default function MessageInput({ channel, group, user }) {
   }, [channel, group, user])
 
   const inputRef = useRef(null)
-  const text = useRef('')
+  const [text, setText] = useState('')
 
   useEffect(() => {
     inputRef.current?.el?.current?.focus()
@@ -106,23 +106,23 @@ export default function MessageInput({ channel, group, user }) {
         <ContentEditable
           ref={inputRef}
           className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
-          html={text.current}
+          html={text}
           data-placeholder={placeholder}
           onChange={e => {
             startTyping(variables)
-            text.current = e.target.value
-            if (text.current === '<br>') text.current = ''
+            setText(e.target.value)
+            if (text === '<br>') setText('')
           }}
           onKeyDown={e => {
             if (e.key === 'Enter') {
-              if (text.current && !e.shiftKey) {
+              if (text && !e.shiftKey) {
                 e.preventDefault()
                 sendMessage({
-                  text: text.current,
+                  text,
                   ...variables
                 })
-                text.current = ''
-              } else if (!text.current) {
+                setText('')
+              } else if (!text) {
                 e.preventDefault()
               }
             }

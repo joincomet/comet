@@ -3,29 +3,20 @@ import Tippy from '@tippyjs/react'
 import { NavLink } from 'react-router-dom'
 import ctl from '@netlify/classnames-template-literals'
 
-const itemClass = ctl(`
-  flex-shrink-0
-  inline-flex
-  items-end
-  justify-center
-  w-full
-  h-14
-  rounded-full
-  cursor-pointer
-  group
-`)
-
-const dotClass = ctl(`
+const dotClass = active =>
+  ctl(`
   w-12
   h-12
   object-cover
   inline-flex
   items-center
   justify-center
-  rounded-full
+  ${active ? 'rounded-2xl' : 'rounded-full'}
   transform
   transition
   relative
+  group
+  cursor-pointer
 `)
 
 const highlightClass = active =>
@@ -57,20 +48,18 @@ export default forwardRef(
     ref
   ) => {
     return (
-      <Tippy content={name} placement="right" ref={ref}>
-        <div className={itemClass}>
-          {to ? (
-            <NavLink to={to} className={`${dotClass} ${className}`}>
-              <div className={highlightClass(active)} />
-              {children}
-            </NavLink>
-          ) : (
-            <div onClick={onClick} className={`${dotClass} ${className}`}>
-              <div className={highlightClass(active)} />
-              {children}
-            </div>
-          )}
-        </div>
+      <Tippy content={name} placement="right" ref={ref} offset={[0, 22]}>
+        {to ? (
+          <NavLink to={to} className={`${dotClass(active)} ${className}`}>
+            <div className={highlightClass(active)} />
+            {children}
+          </NavLink>
+        ) : (
+          <div onClick={onClick} className={`${dotClass(active)} ${className}`}>
+            <div className={highlightClass(active)} />
+            {children}
+          </div>
+        )}
       </Tippy>
     )
   }

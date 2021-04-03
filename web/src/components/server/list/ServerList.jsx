@@ -1,8 +1,7 @@
-import { useEffect } from 'react'
 import { IconHome, IconExplore } from '@/components/ui/icons/Icons'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import CreateServerDialog from '@/components/server/create/CreateServerDialog'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, matchPath } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ServerListItem from '@/components/server/list/ServerListItem'
 import { useContextMenuTrigger } from '@/components/ui/context'
@@ -18,42 +17,59 @@ export default function ServerList() {
   const { pathname } = useLocation()
   const { t } = useTranslation()
   const homePage = useStore(s => s.homePage)
+  const homeActive = pathname.startsWith('/me')
+  const exploreActive = pathname.startsWith('/explore')
 
   return (
     <>
       <div
         className={`top-0 fixed left-0 bottom-0 flex flex-col items-center w-18 bg-white dark:bg-gray-900`}
       >
-        <div className="h-full flex flex-col w-full">
-          <ServerListItem
-            name={t('home')}
-            to={`/me${homePage ? `/${homePage}` : ''}`}
-          >
-            <IconHome
-              className={`w-5 h-5 group-hover:text-white transition ${
-                pathname === '/' ? 'text-white' : 'text-blue-500'
+        <div className="h-full flex flex-col items-center w-full divide-y dark:divide-gray-800 divide-gray-200">
+          <div className="space-y-2 flex flex-col items-center py-2">
+            <ServerListItem
+              name={t('home')}
+              to={`/me${homePage ? `/${homePage}` : ''}`}
+              active={homeActive}
+              className={`${
+                homeActive
+                  ? 'bg-blue-600'
+                  : 'dark:bg-gray-800 bg-gray-200 hover:bg-blue-600 dark:hover:bg-blue-600'
               }`}
-            />
-          </ServerListItem>
+            >
+              <IconHome
+                className={`w-5 h-5 group-hover:text-white transition ${
+                  homeActive ? 'text-white' : 'text-blue-500'
+                }`}
+              />
+            </ServerListItem>
 
-          <ServerListItem name={t('explore.title')} to="/explore">
-            <IconExplore
-              className={`w-5 h-5 group-hover:text-white transition ${
-                pathname === '/explore' ? 'text-white' : 'text-green-500'
-              }`}
-            />
-          </ServerListItem>
+            <ServerListItem
+              name={t('explore.title')}
+              to="/explore"
+              active={exploreActive}
+              className={
+                exploreActive
+                  ? 'bg-green-600'
+                  : 'dark:bg-gray-800 bg-gray-200 hover:bg-green-600 dark:hover:bg-green-600'
+              }
+            >
+              <IconExplore
+                className={`w-5 h-5 group-hover:text-white transition ${
+                  exploreActive ? 'text-white' : 'text-green-500'
+                }`}
+              />
+            </ServerListItem>
 
-          <CreateServerDialog />
+            <CreateServerDialog />
+          </div>
 
           {!!servers && servers.length > 0 && (
-            <>
-              <div className="border-b-2 border-gray-200 dark:border-gray-800 h-2 mx-3 box-content" />
-
+            <div className="space-y-2 flex flex-col items-center py-2">
               {servers.map(server => (
                 <ServerListServer server={server} key={server.id} />
               ))}
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -75,7 +91,9 @@ function ServerListServer({ server }) {
     })
   })
 
-  const { serverId } = useParams()
+  const { pathname } = useLocation()
+  const matched = matchPath(pathname, { path: '/server/:serverId' })
+  const serverId = matched?.params?.serverId
   const serverPages = useStore(s => s.serverPages)
   return (
     <ServerListItem

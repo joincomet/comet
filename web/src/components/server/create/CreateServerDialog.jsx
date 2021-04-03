@@ -41,12 +41,13 @@ export default function CreateServerDialog() {
 
   const { push } = useHistory()
 
-  const onSubmit = variables => {
-    createServer({
-      variables: { ...variables, avatarFile: avatarFile ? avatarFile[0] : null }
-    }).then(({ data: { createServer } }) => {
-      push(`/server/${createServer.id}`)
-    })
+  const onSubmit = ({ name }) => {
+    createServer({ name, avatarFile: avatarFile ? avatarFile[0] : null }).then(
+      ({ data: { createServer } }) => {
+        setIsOpen(false)
+        push(`/server/${createServer.id}`)
+      }
+    )
   }
 
   const { t } = useTranslation()
@@ -56,6 +57,7 @@ export default function CreateServerDialog() {
       <ServerListItem
         name={t('server.create.title')}
         onClick={() => setIsOpen(true)}
+        className="dark:bg-gray-800 bg-gray-200 hover:bg-purple-600 dark:hover:bg-purple-600"
       >
         <IconCreateServer
           className={`w-5 h-5 text-purple-500 group-hover:text-white transition`}
@@ -111,12 +113,14 @@ export default function CreateServerDialog() {
                 maxLength: 100
               })}
               maxLength={100}
-              className="textbox"
+              className="textbox px-3"
               id="name"
             />
           </div>
 
-          <Button loading={fetching}>{t('continue')}</Button>
+          <div className="pb-4 w-full">
+            <Button loading={fetching}>{t('continue')}</Button>
+          </div>
 
           <Switch
             checked={privateServer}
