@@ -11,7 +11,7 @@ export default function ShowFoldersButton() {
   const { t } = useTranslation()
 
   return (
-    <Tippy content={showFolders ? t('folders.hide') : t('folders.show')}>
+    <Tippy content={showFolders ? t('folder.hide') : t('folder.show')}>
       <div
         className="highlightable"
         onClick={() => setShowFolders(!showFolders)}

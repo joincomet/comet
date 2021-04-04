@@ -74,7 +74,7 @@ export class CommentMutations {
 
     await em.flush()
 
-    await this.createCommentVote({ user, em }, comment.id)
+    await this.voteComment({ user, em }, comment.id)
     comment.isVoted = true
     comment.voteCount = 1
 
@@ -118,7 +118,7 @@ export class CommentMutations {
 
   @CheckCommentServerPermission(ServerPermission.VoteComment)
   @Mutation(() => Comment, { description: 'Add vote to a comment' })
-  async createCommentVote(
+  async voteComment(
     @Ctx() { user, em }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to vote' })
     commentId: string
@@ -135,7 +135,7 @@ export class CommentMutations {
 
   @CheckCommentServerPermission(ServerPermission.VoteComment)
   @Mutation(() => Comment, { description: 'Remove vote from a comment' })
-  async removeCommentVote(
+  async unvoteComment(
     @Ctx() { user, em }: Context,
     @Arg('commentId', () => ID, { description: 'ID of comment to remove vote' })
     commentId: string
@@ -146,34 +146,5 @@ export class CommentMutations {
     comment.isVoted = false
     await em.remove(vote).persistAndFlush([comment])
     return comment
-  }
-
-  @CheckCommentServerPermission(ServerPermission.ManageComments)
-  @Mutation(() => Boolean, {
-    description: 'Remove a comment (Requires ServerPermission.ManageComments)'
-  })
-  async removeComment(
-    @Ctx() { em, user }: Context,
-    @Arg('commentId', () => ID, { description: 'ID of comment to remove' })
-    commentId: string,
-    @Arg('reason', {
-      description: 'Reason for comment removal',
-      nullable: true
-    })
-    reason?: string
-  ): Promise<boolean> {
-    const comment = await em.findOneOrFail(Comment, commentId)
-
-    em.assign(comment, {
-      isRemoved: true,
-      removedReason: reason,
-      isPinned: false,
-      pinPosition: null
-    })
-
-    await em.nativeDelete(Notification, { comment })
-    comment.post.commentCount--
-    await em.persistAndFlush(comment)
-    return true
   }
 }

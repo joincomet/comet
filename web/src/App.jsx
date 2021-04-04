@@ -5,7 +5,6 @@ import { Provider as UrqlProvider } from 'urql'
 import { urqlClient } from '@/graphql/urqlClient'
 import ResponsiveToaster from '@/components/ui/ResponsiveToaster'
 import CustomDragLayer from '@/components/ui/CustomDragLayer'
-import ContextMenus from '@/components/ui/context/ContextMenus'
 import { BrowserRouter } from 'react-router-dom'
 import { UserProvider } from '@/providers/UserProvider'
 
@@ -20,7 +19,6 @@ export default function App() {
           >
             <ResponsiveToaster />
             <CustomDragLayer />
-            <ContextMenus />
             <div className={`h-full max-h-full`}>
               <Routes />
             </div>

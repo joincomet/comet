@@ -3,17 +3,22 @@ import { useCurrentUser } from '@/providers/UserProvider'
 import UserAvatar from '@/components/user/UserAvatar'
 import CommentEditor from '@/components/comment/CommentEditor'
 import { useTranslation } from 'react-i18next'
+import { useStore } from '@/hooks/useStore'
 
 export default function CreateCommentCard({ postId }) {
   const [open, setOpen] = useState(false)
   const user = useCurrentUser()
   const { t } = useTranslation()
+  const setReplyingCommentId = useStore(s => s.setReplyingCommentId)
 
   return (
     <>
       {!open ? (
         <div
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setReplyingCommentId(null)
+            setOpen(true)
+          }}
           className="dark:bg-gray-700 h-13 flex items-center rounded transition dark:hover:bg-gray-650 cursor-pointer"
         >
           <div className="px-3 border-r dark:border-gray-650 h-7">

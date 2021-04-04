@@ -36,15 +36,15 @@ export default function SidebarSortButtons() {
   return (
     <div className="space-y-0.5">
       <SortItem
-        name={t('feed.sort.hot')}
+        name={t('post.feed.sort.hot')}
         icon={<IconHot className="w-5 h-5 mr-3" />}
       />
       <SortItem
-        name={t('feed.sort.new')}
+        name={t('post.feed.sort.new')}
         icon={<IconNew className="w-5 h-5 mr-3" />}
       />
       <SortItem
-        name={t('feed.sort.top')}
+        name={t('post.feed.sort.top')}
         icon={<IconTop className="w-5 h-5 mr-3" />}
       />
     </div>

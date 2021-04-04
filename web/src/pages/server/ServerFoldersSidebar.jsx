@@ -34,7 +34,7 @@ export default function ServerFoldersSidebar({ serverId }) {
           <>
             {canManageFolders ? (
               <SidebarLabel
-                plusLabel={t('folders.server.create')}
+                plusLabel={t('folder.server.create')}
                 onClick={() => {}}
               >
                 Server Folders
@@ -52,8 +52,8 @@ export default function ServerFoldersSidebar({ serverId }) {
           </>
         )}
 
-        <SidebarLabel plusLabel={t('folders.user.create')} onClick={() => {}}>
-          {t('folders.user.title')}
+        <SidebarLabel plusLabel={t('folder.user.create')} onClick={() => {}}>
+          {t('folder.user.title')}
         </SidebarLabel>
 
         <div className="space-y-0.5">
@@ -70,7 +70,7 @@ function Folder({ folder }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,
     drop: (item, monitor) => {
-      toast.success(t('folders.added', { folder }))
+      toast.success(t('folder.added', { folder }))
     },
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -81,8 +81,8 @@ function Folder({ folder }) {
 
   const { t } = useTranslation()
 
-  const favorites = t('folders.favorites')
-  const readLater = t('folders.readLater')
+  const favorites = t('folder.favorites')
+  const readLater = t('folder.readLater')
 
   return (
     <SidebarItem active={isActive} to={`/folder/${folder.id}`} ref={dropRef}>

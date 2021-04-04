@@ -1,13 +1,11 @@
 import { memo } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
 import UserAvatar from '@/components/user/UserAvatar'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import ServerPopup from '@/components/server/ServerPopup'
 import UserPopup from '@/components/user/UserPopup'
-import { useMutation } from 'urql'
-import { VOTE_POST, UNVOTE_POST } from '@/graphql/mutations'
 import { calendarDate } from '@/utils/timeUtils'
 import {
   IconChat,
@@ -18,7 +16,6 @@ import {
 } from '@/components/ui/icons/Icons'
 import { useContextMenuTrigger } from '@/components/ui/context'
 import { mergeRefs } from '@/utils/mergeRefs'
-import { useTranslation } from 'react-i18next'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 

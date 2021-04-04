@@ -159,28 +159,6 @@ export class MessageMutations {
     return true
   }
 
-  @CheckMessageChannelPermission(
-    ChannelPermission.ManageMessages,
-    ServerPermission.ManageMessages
-  )
-  @Mutation(() => Boolean, {
-    description:
-      'Remove a message (requires ChannelPermission.ManageMessages or ServerPermission.ManageMessages)'
-  })
-  async removeMessage(
-    @Arg('messageId', () => ID, { description: 'ID of message to remove' })
-    messageId: string,
-    @PubSub(SubscriptionTopic.MessageRemoved)
-    messageRemoved: Publisher<Message>,
-    @Ctx() { em }: Context
-  ): Promise<boolean> {
-    const message = await em.findOneOrFail(Message, messageId)
-    message.isDeleted = true
-    await em.persistAndFlush(message)
-    await messageRemoved(message)
-    return true
-  }
-
   @Authorized()
   @Mutation(() => Boolean)
   async hideDm(
