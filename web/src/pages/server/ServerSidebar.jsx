@@ -22,6 +22,9 @@ import DialogTitle from '@/components/ui/dialog/DialogTitle'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useServer, useServerChannels } from '@/providers/ServerProvider'
 import { useMutation } from 'urql'
+import SidebarChannel from '@/components/channel/SidebarChannel'
+import CreateChannel from '@/components/channel/CreateChannel'
+import ChannelContextMenuWrapper from '@/components/channel/ChannelContextMenuWrapper'
 
 export default function ServerSidebar() {
   const { t } = useTranslation()
@@ -30,6 +33,8 @@ export default function ServerSidebar() {
 
   return (
     <Sidebar>
+      <ChannelContextMenuWrapper />
+
       <div className="h-12 border-b dark:border-gray-850 flex items-center justify-between px-5 text-base font-medium">
         {server.name}
         <IconChevronDown className="w-5 h-5" />
@@ -49,121 +54,14 @@ export default function ServerSidebar() {
 
         <div className="space-y-0.5">
           {channels.map(channel => (
-            <Channel key={channel.id} channel={channel} serverId={server.id} />
+            <SidebarChannel
+              key={channel.id}
+              channel={channel}
+              serverId={server.id}
+            />
           ))}
         </div>
       </div>
     </Sidebar>
-  )
-}
-
-function Channel({ channel, serverId }) {
-  const { t } = useTranslation()
-  return (
-    <SidebarItem to={`/server/${serverId}/channel/${channel.id}`}>
-      <IconChannel className="w-5 h-5 mr-3" />
-      {channel.name}
-      <Tippy content={t('channels.edit')}>
-        <div className="group-hover:opacity-100 opacity-0 ml-auto">
-          <IconSettings className="w-4 h-4 text-tertiary" />
-        </div>
-      </Tippy>
-    </SidebarItem>
-  )
-}
-
-function CreateChannel({ serverId }) {
-  const { t } = useTranslation()
-
-  const [canManageChannels] = useHasServerPermissions(serverId, [
-    ServerPermission.ManageChannels
-  ])
-
-  const [isOpen, setIsOpen] = useState(false)
-  const [isPrivate, setIsPrivate] = useState(false)
-
-  const { handleSubmit, register, reset } = useForm()
-
-  useEffect(() => {
-    if (!isOpen) return
-    reset()
-    setIsPrivate(false)
-  }, [isOpen, setIsPrivate, reset])
-
-  const { push } = useHistory()
-
-  const [{ fetching }, createChannel] = useMutation(CREATE_CHANNEL)
-
-  const onSubmit = ({ name }) => {
-    createChannel({ name, serverId, isPrivate }).then(
-      ({ data: { createChannel } }) => {
-        setIsOpen(false)
-        push(`/server/${serverId}/channel/${createChannel.id}`)
-      }
-    )
-  }
-
-  if (!canManageChannels)
-    return <SidebarLabel>{t('channels.title')}</SidebarLabel>
-
-  return (
-    <>
-      <SidebarLabel
-        onClick={() => setIsOpen(true)}
-        plusLabel={t('channels.create')}
-      >
-        Channels
-      </SidebarLabel>
-
-      <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-        <DialogTitle className="title mb-4">Create Channel</DialogTitle>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4 w-full">
-            <label className="label" htmlFor="name">
-              Channel Name
-            </label>
-
-            <div className="relative">
-              <input
-                {...register('name', {
-                  required: true,
-                  maxLength: 100,
-                  pattern: /[a-z0-9_-]+/g
-                })}
-                maxLength={100}
-                className="textbox pl-9 pr-3 lowercase"
-                spellCheck={false}
-                autoCapitalize="none"
-                id="name"
-                onChange={e => {
-                  if (e.target.value === ' ' || e.target.value === '-')
-                    e.target.value = ''
-                  e.target.value = e.target.value
-                    .toLowerCase()
-                    .replace(' ', '-')
-                  if (e.target.value.endsWith('--'))
-                    e.target.value = e.target.value.substring(
-                      0,
-                      e.target.value.length - 1
-                    )
-                  e.target.value = e.target.value.replace(/[^a-z0-9_-]+/g, '')
-                }}
-              />
-
-              <div className="absolute left-0 top-0 bottom-0 flex items-center w-10 justify-center pointer-events-none">
-                <IconChannel className="w-5 h-5 text-tertiary" />
-              </div>
-            </div>
-          </div>
-
-          <Button loading={fetching}>{t('continue')}</Button>
-
-          <Switch checked={isPrivate} onChange={() => setIsPrivate(!isPrivate)}>
-            {t('channels.togglePrivate')}
-          </Switch>
-        </form>
-      </Dialog>
-    </>
   )
 }

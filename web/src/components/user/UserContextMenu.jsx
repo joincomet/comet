@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useContextMenuEvent } from '@/components/ui/context'
 import { useMutation } from 'urql'
 import {
@@ -30,12 +31,15 @@ export default function UserContextMenu({ user, server, show = true, button }) {
     canKickUser,
     canChangeNickname,
     canManageNicknames
-  ] = useHasServerPermissions(server?.id, [
-    ServerPermission.BanUser,
-    ServerPermission.KickUser,
-    ServerPermission.ChangeNickname,
-    ServerPermission.ManageNicknames
-  ])
+  ] = useHasServerPermissions({
+    serverId: server?.id,
+    permissions: [
+      ServerPermission.BanUser,
+      ServerPermission.KickUser,
+      ServerPermission.ChangeNickname,
+      ServerPermission.ManageNicknames
+    ]
+  })
 
   const [_banRes, banUser] = useMutation(BAN_USER_FROM_SERVER)
   const [_kickRes, kickUser] = useMutation(KICK_USER_FROM_SERVER)

@@ -4,5 +4,6 @@ export const ContextMenuType = {
   Comment: 'Comment',
   Message: 'Message',
   Server: 'Server',
-  Folder: 'Folder'
+  Folder: 'Folder',
+  Channel: 'Channel'
 }

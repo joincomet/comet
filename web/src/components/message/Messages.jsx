@@ -7,6 +7,10 @@ import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import MessagesStart from '@/components/message/MessagesStart'
+import { ContextMenuType } from '@/types/ContextMenuType'
+import MessageContextMenu from '@/components/message/MessageContextMenu'
+import { ContextMenuWrapper } from '@/components/ui/context'
+import MessageContextMenuWrapper from '@/components/message/MessageContextMenuWrapper'
 
 const PREPEND_OFFSET = 10 ** 7
 
@@ -53,6 +57,8 @@ export default function Messages({ channel, user, group }) {
 
   return (
     <>
+      <MessageContextMenuWrapper />
+
       <div className="relative flex-1 overflow-x-hidden overflow-y-auto dark:bg-gray-750 w-full h-full">
         <Virtuoso
           className="scrollbar"
