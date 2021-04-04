@@ -64,9 +64,7 @@ export const urqlClient = createClient({
     }),
     multipartFetchExchange,
     subscriptionExchange({
-      forwardSubscription(operation) {
-        return subscriptionClient.request(operation)
-      }
+      forwardSubscription: operation => subscriptionClient.request(operation)
     })
   ]
 })

@@ -12,6 +12,7 @@ import { Context } from '@/types'
 import { onConnect } from '@/config/redis'
 import http from 'http'
 import { seed } from '@/seed'
+import { writeSchemaJson } from '@/writeSchemaJson'
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -93,4 +94,6 @@ export async function bootstrap() {
       `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
     )
   })
+
+  if (process.env.NODE_ENV !== 'production') writeSchemaJson()
 }

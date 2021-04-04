@@ -33,8 +33,6 @@ export const COMMENT_FRAGMENT = gql`
     voteCount
     isVoted
     isDeleted
-    isRemoved
-    removedReason
     createdAt
     editedAt
   }
@@ -55,8 +53,6 @@ export const POST_FRAGMENT = gql`
     thumbnailUrl
     domain
     isDeleted
-    isRemoved
-    removedReason
     createdAt
     editedAt
     linkMetadata {

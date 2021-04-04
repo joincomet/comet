@@ -5324,6 +5324,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@urql/introspection", [
+        ["npm:0.2.0", {
+          "packageLocation": "./.yarn/cache/@urql-introspection-npm-0.2.0-a3b6debc17-e32443999c.zip/node_modules/@urql/introspection/",
+          "packageDependencies": [
+            ["@urql/introspection", "npm:0.2.0"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:0.2.0", {
+          "packageLocation": "./.yarn/$$virtual/@urql-introspection-virtual-8c370085be/0/cache/@urql-introspection-npm-0.2.0-a3b6debc17-e32443999c.zip/node_modules/@urql/introspection/",
+          "packageDependencies": [
+            ["@urql/introspection", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:0.2.0"],
+            ["@types/graphql", null],
+            ["graphql", "npm:15.5.0"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "graphql"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@use-it/event-listener", [
         ["npm:0.1.6", {
           "packageLocation": "./.yarn/cache/@use-it-event-listener-npm-0.1.6-8a61efd0ee-7ba9bb306c.zip/node_modules/@use-it/event-listener/",
@@ -15751,6 +15773,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/sharp", "npm:0.27.3"],
             ["@typescript-eslint/eslint-plugin", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:4.20.0"],
             ["@typescript-eslint/parser", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:4.20.0"],
+            ["@urql/introspection", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:0.2.0"],
             ["apollo-server-express", "virtual:5e2e00b31e527ff544c90eb3e3e3e977a366e52a6e25602d03686a4c9a155eee4d7b92ccdea0b04275344f5b2189eb629d123eb4cc6e1b883b42aea6d965568d#npm:2.22.2"],
             ["argon2", "npm:0.27.2"],
             ["aws-sdk", "npm:2.879.0"],
@@ -15786,6 +15809,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["metascraper-youtube", "npm:5.21.4"],
             ["mime", "npm:2.5.2"],
             ["nanoid", "npm:3.1.22"],
+            ["node-fetch", "npm:2.6.1"],
             ["prettier", "npm:2.2.1"],
             ["reflect-metadata", "npm:0.1.13"],
             ["sharp", "npm:0.28.0"],

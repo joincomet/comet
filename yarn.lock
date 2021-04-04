@@ -3340,6 +3340,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@urql/introspection@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@urql/introspection@npm:0.2.0"
+  peerDependencies:
+    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: e32443999c86291a2f555c79be5e2d95a12c9e4f7cff110512f9f18aab3ed5fe45a37046f1d53e0d24730f770a43640060ea1fdac03fe59d92ebbf6cc98b1403
+  languageName: node
+  linkType: hard
+
 "@use-it/event-listener@npm:^0.1.2":
   version: 0.1.6
   resolution: "@use-it/event-listener@npm:0.1.6"
@@ -11999,6 +12008,7 @@ resolve@^2.0.0-next.3:
     "@types/sharp": ^0.27.3
     "@typescript-eslint/eslint-plugin": ^4.20.0
     "@typescript-eslint/parser": ^4.20.0
+    "@urql/introspection": ^0.2.0
     apollo-server-express: ^2.22.2
     argon2: ^0.27.2
     aws-sdk: ^2.879.0
@@ -12034,6 +12044,7 @@ resolve@^2.0.0-next.3:
     metascraper-youtube: ^5.21.4
     mime: ^2.5.2
     nanoid: ^3.1.22
+    node-fetch: ^2.6.1
     prettier: ^2.2.1
     reflect-metadata: ^0.1.13
     sharp: ^0.28.0

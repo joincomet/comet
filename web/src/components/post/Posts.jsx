@@ -4,6 +4,7 @@ import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useVirtual } from 'react-virtual'
 import CreatePostCard from '@/components/post/CreatePostCard'
 import { usePosts } from '@/components/post/usePosts'
+import PostContextMenuWrapper from '@/components/post/PostContextMenuWrapper'
 
 export default function Posts({ serverId, folderId, showServerName }) {
   const [posts, fetching, fetchMore, hasMore] = usePosts({ serverId, folderId })
@@ -18,7 +19,7 @@ export default function Posts({ serverId, folderId, showServerName }) {
       index => (index < posts.length ? posts[index].id : 'loader'),
       [posts]
     ),
-    overscan: 1
+    overscan: 5
   })
 
   useEffect(() => {
@@ -34,55 +35,59 @@ export default function Posts({ serverId, folderId, showServerName }) {
   }, [hasMore, posts.length, fetching, rowVirtualizer.virtualItems])
 
   return (
-    <div
-      ref={parentRef}
-      style={{
-        height: `100%`,
-        width: `100%`,
-        overflow: 'auto'
-      }}
-      className="scrollbar dark:bg-gray-750"
-    >
-      <div className="py-4 px-4">
-        <CreatePostCard />
-      </div>
+    <>
+      <PostContextMenuWrapper />
 
       <div
+        ref={parentRef}
         style={{
-          height: `${rowVirtualizer.totalSize}px`
+          height: `100%`,
+          width: `100%`,
+          overflow: 'auto'
         }}
-        className="relative w-full"
+        className="scrollbar dark:bg-gray-750"
       >
-        {rowVirtualizer.virtualItems.map(virtualRow => {
-          const isLoaderRow = virtualRow.index > posts.length - 1
-          const post = posts[virtualRow.index]
+        <div className="py-4 px-4">
+          <CreatePostCard />
+        </div>
 
-          return (
-            <div
-              key={virtualRow.index}
-              ref={el => virtualRow.measureRef(el)}
-              className="absolute top-0 left-0 w-full h-auto"
-              style={{
-                transform: `translateY(${virtualRow.start}px)`
-              }}
-            >
-              {isLoaderRow ? (
-                <div className="flex items-center justify-center h-20">
-                  <IconSpinner />
-                </div>
-              ) : (
-                <div className="px-4 pb-1">
-                  <Post
-                    post={post}
-                    showServerName={showServerName}
-                    measure={rowVirtualizer.measure}
-                  />
-                </div>
-              )}
-            </div>
-          )
-        })}
+        <div
+          style={{
+            height: `${rowVirtualizer.totalSize}px`
+          }}
+          className="relative w-full"
+        >
+          {rowVirtualizer.virtualItems.map(virtualRow => {
+            const isLoaderRow = virtualRow.index > posts.length - 1
+            const post = posts[virtualRow.index]
+
+            return (
+              <div
+                key={virtualRow.index}
+                ref={el => virtualRow.measureRef(el)}
+                className="absolute top-0 left-0 w-full h-auto"
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`
+                }}
+              >
+                {isLoaderRow ? (
+                  <div className="flex items-center justify-center h-20">
+                    <IconSpinner />
+                  </div>
+                ) : (
+                  <div className="px-4 pb-1">
+                    <Post
+                      post={post}
+                      showServerName={showServerName}
+                      measure={rowVirtualizer.measure}
+                    />
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

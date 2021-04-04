@@ -57,29 +57,29 @@ export default function PostsHeader({ refreshPosts }) {
       )}
 
       {postsSort === 'New' && (
-        <Tippy content={t('feed.liveMode.description')} placement="right">
+        <Tippy content={t('post.feed.liveMode.description')} placement="right">
           <div>
             <Switch
               checked={liveMode}
-              onChange={() => toast.error(t('feed.liveMode.comingSoon'))}
+              onChange={() => toast.error(t('post.feed.liveMode.comingSoon'))}
             >
-              {t('feed.liveMode.title')}
+              {t('post.feed.liveMode.title')}
             </Switch>
           </div>
         </Tippy>
       )}
 
       <div className="ml-auto space-x-5 flex items-center">
-        <Tippy content={t('feed.subscriptions.show')}>
+        <Tippy content={t('post.feed.subscriptions.show')}>
           <div
             className="highlightable"
-            onClick={() => toast.error(t('feed.subscriptions.comingSoon'))}
+            onClick={() => toast.error(t('post.feed.subscriptions.comingSoon'))}
           >
             <HiNewspaper className="w-5 h-5" />
           </div>
         </Tippy>
 
-        <Tippy content={t('feed.refresh')}>
+        <Tippy content={t('post.feed.refresh')}>
           <div className="highlightable" onClick={refreshPosts}>
             <IconRefresh className="w-5 h-5" />
           </div>

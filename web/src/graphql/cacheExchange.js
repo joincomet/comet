@@ -10,6 +10,7 @@ import {
 import { cacheExchange as ce } from '@urql/exchange-graphcache'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
 import { subscriptionClient } from '@/graphql/urqlClient'
+import schema from '../../../schema.json'
 
 const removePostFromGetPosts = (postId, cache) => {
   cache
@@ -23,7 +24,7 @@ const removePostFromGetPosts = (postId, cache) => {
         },
         data => {
           data.getPosts.forEach(res => {
-            res.posts = res.posts.filter(post => post.id !== postId)
+            res.post = res.posts.filter(post => post.id !== postId)
           })
           return data
         }
@@ -43,7 +44,7 @@ const removeMessageFromGetMessages = (messageId, cache) => {
         },
         data => {
           data.getMessages.forEach(res => {
-            res.messages = res.messages.filter(
+            res.message = res.messages.filter(
               message => message.id !== messageId
             )
           })
@@ -54,13 +55,13 @@ const removeMessageFromGetMessages = (messageId, cache) => {
 }
 
 export const cacheExchange = ce({
+  schema,
   keys: {
     GetPostsResponse: () => null,
     GetMessagesResponse: () => null,
     LinkMetadata: () => null,
     MessageSentResponse: () => null,
     MessageRemovedResponse: () => null,
-    GetFriendRequestsResponse: () => null,
     ChannelUsersResponse: () => null,
     GetUserRelationshipsResponse: () => null
   },
@@ -93,16 +94,6 @@ export const cacheExchange = ce({
         isPinned: false
       }
     },
-    removePost: ({ postId: id, reason }, cache) => {
-      removePostFromGetPosts(id, cache)
-      return {
-        __typename: 'Post',
-        id,
-        isPinned: false,
-        isRemoved: true,
-        text: `[removed${reason ? `: ${reason}` : ''}]`
-      }
-    },
     deletePost: ({ postId: id }, cache) => {
       removePostFromGetPosts(id, cache)
       return {
@@ -113,7 +104,7 @@ export const cacheExchange = ce({
         text: '[deleted]'
       }
     },
-    createPostVote: ({ postId: id }, cache) => {
+    votePost: ({ postId: id }, cache) => {
       const post = cache.readFragment(POST_FRAGMENT, { id })
       return {
         __typename: 'Post',
@@ -122,7 +113,7 @@ export const cacheExchange = ce({
         voteCount: post.voteCount + 1
       }
     },
-    removePostVote: ({ postId: id }, cache) => {
+    unvotePost: ({ postId: id }, cache) => {
       const post = cache.readFragment(POST_FRAGMENT, { id })
       return {
         __typename: 'Post',
@@ -131,7 +122,7 @@ export const cacheExchange = ce({
         voteCount: post.voteCount - 1
       }
     },
-    createCommentVote: ({ commentId: id }, cache) => {
+    voteComment: ({ commentId: id }, cache) => {
       const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
       return {
         __typename: 'Comment',
@@ -140,7 +131,7 @@ export const cacheExchange = ce({
         voteCount: comment.voteCount + 1
       }
     },
-    removeCommentVote: ({ commentId: id }, cache) => {
+    unvoteComment: ({ commentId: id }, cache) => {
       const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
       return {
         __typename: 'Post',

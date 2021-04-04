@@ -22,7 +22,16 @@ export function useMessages({ channel, group, user }) {
   return [
     data?.getMessages.flatMap(res => res.messages),
     fetching,
-    () => setPage(page + 1),
+    () => {
+      // Wait 3 seconds before fetching because of bug where messages sometimes starts at top and immediately loads more
+      if (
+        !data ||
+        !data.getMessages[0].hasMore ||
+        new Date().getTime() - initialTime.current.getTime() < 3000
+      )
+        return
+      setPage(page + 1)
+    },
     data ? data.getMessages[0].hasMore : true
   ]
 }

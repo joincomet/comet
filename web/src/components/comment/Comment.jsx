@@ -3,12 +3,17 @@ import { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
 import Twemoji from 'react-twemoji'
 import UserPopup from '@/components/user/UserPopup'
-import { useMutation } from 'urql'
-import { CREATE_COMMENT_VOTE, REMOVE_COMMENT_VOTE } from '@/graphql/mutations'
 import { calendarDate } from '@/utils/timeUtils'
 import ctl from '@netlify/classnames-template-literals'
 import CommentEditor from '@/components/comment/CommentEditor'
 import { useTranslation } from 'react-i18next'
+import { useContextMenuTrigger } from '@/components/ui/context'
+import { ContextMenuType } from '@/types/ContextMenuType'
+import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
+import { ServerPermission } from '@/types/ServerPermission'
+import { useParams } from 'react-router-dom'
+import { useStore } from '@/hooks/useStore'
+import { useToggleCommentVote } from '@/components/comment/useToggleCommentVote'
 
 const replyBtnClass = ctl(`
   ml-4
@@ -29,9 +34,23 @@ export default function Comment({
   setParentComment,
   isLast
 }) {
-  const [collapse, setCollapse] = useState(false)
-  const [replying, setReplying] = useState(false)
   const { t } = useTranslation()
+  const { serverId } = useParams()
+  const [canComment, canVote] = useHasServerPermissions({
+    serverId,
+    permissions: [ServerPermission.CreateComment, ServerPermission.VoteComment]
+  })
+  const [collapse, setCollapse] = useState(false)
+  const [replyingCommentId, setReplyingCommentId] = useStore(s => [
+    s.replyingCommentId,
+    s.setReplyingCommentId
+  ])
+  const isReplying = replyingCommentId === comment.id
+
+  const contextMenuRef = useContextMenuTrigger({
+    menuId: ContextMenuType.Comment,
+    data: { comment }
+  })
 
   return (
     <div
@@ -41,7 +60,7 @@ export default function Comment({
     >
       <div id={comment.id} />
 
-      <div className="flex px-3 pt-3">
+      <div ref={contextMenuRef} className="flex px-3 pt-3">
         <UserPopup user={comment.author}>
           <UserAvatar
             size={7}
@@ -76,13 +95,23 @@ export default function Comment({
           </Twemoji>
 
           <div className="flex items-center pt-2">
-            <VoteButton comment={comment} />
-            <div
-              className={replyBtnClass}
-              onClick={() => setReplying(!replying)}
-            >
-              {replying ? t('comment.cancelReply') : t('comment.reply')}
-            </div>
+            <VoteButton comment={comment} canVote={canVote} />
+
+            {canComment && (
+              <div
+                className={replyBtnClass}
+                onClick={() => {
+                  if (isReplying) {
+                    setReplyingCommentId(null)
+                  } else {
+                    setReplyingCommentId(comment.id)
+                  }
+                }}
+              >
+                {isReplying ? t('comment.cancelReply') : t('comment.reply')}
+              </div>
+            )}
+
             {!!comment.childCount && (
               <div
                 className={replyBtnClass}
@@ -101,12 +130,12 @@ export default function Comment({
             </div>
           </div>
 
-          {replying && (
+          {isReplying && (
             <div className="pt-3 max-w-screen-md w-full">
               <CommentEditor
                 postId={post.id}
                 parentCommentId={comment.id}
-                setOpen={setReplying}
+                setOpen={() => setReplyingCommentId(null)}
               />
             </div>
           )}
@@ -131,14 +160,7 @@ export default function Comment({
 }
 
 function VoteButton({ comment }) {
-  const variables = { commentId: comment.id }
-  const [_, createVote] = useMutation(CREATE_COMMENT_VOTE)
-  const [__, removeVote] = useMutation(REMOVE_COMMENT_VOTE)
-
-  const toggleVote = () => {
-    if (!comment.isVoted) createVote(variables)
-    else removeVote(variables)
-  }
+  const toggleVote = useToggleCommentVote(comment)
 
   return (
     <div

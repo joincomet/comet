@@ -37,7 +37,7 @@ export default function HomeSidebar() {
         <div className="space-y-0.5">
           <SidebarItem to="/me/friends">
             <IconFriends className="mr-3 h-5 w-5" />
-            {t('friends.title')}
+            {t('user.friends.title')}
           </SidebarItem>
 
           <SidebarItem to="/me/inbox">
@@ -51,11 +51,11 @@ export default function HomeSidebar() {
           </SidebarItem>
         </div>
 
-        <SidebarLabel>{t('feed.title')}</SidebarLabel>
+        <SidebarLabel>{t('post.feed.title')}</SidebarLabel>
 
         <SidebarSortButtons />
 
-        <SidebarLabel plusLabel="Create DM">{t('dms.title')}</SidebarLabel>
+        <SidebarLabel plusLabel="Create DM">{t('dm.title')}</SidebarLabel>
 
         <div className="space-y-0.5">
           {!!groupsAndDms &&

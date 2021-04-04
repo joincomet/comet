@@ -7,7 +7,7 @@ import ServerAvatar from '@/components/server/ServerAvatar'
 import ServerPopup from '@/components/server/ServerPopup'
 import UserPopup from '@/components/user/UserPopup'
 import { useMutation } from 'urql'
-import { CREATE_POST_VOTE, REMOVE_POST_VOTE } from '@/graphql/mutations'
+import { VOTE_POST, UNVOTE_POST } from '@/graphql/mutations'
 import { calendarDate } from '@/utils/timeUtils'
 import {
   IconChat,
@@ -20,6 +20,7 @@ import { useContextMenuTrigger } from '@/components/ui/context'
 import { mergeRefs } from '@/utils/mergeRefs'
 import { useTranslation } from 'react-i18next'
 import { ContextMenuType } from '@/types/ContextMenuType'
+import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 
 export default memo(function Post({
   post,
@@ -28,14 +29,7 @@ export default memo(function Post({
   className = '',
   measure
 }) {
-  const [_createVoteRes, createVote] = useMutation(CREATE_POST_VOTE)
-  const [_removeVoteRes, removeVote] = useMutation(REMOVE_POST_VOTE)
-
-  const variables = { postId: post.id }
-  const toggleVote = () => {
-    if (!post.isVoted) createVote(variables)
-    else removeVote(variables)
-  }
+  const toggleVote = useTogglePostVote(post)
 
   const [{ opacity }, dragRef] = useDrag({
     type: DragItemTypes.Post,
@@ -49,10 +43,6 @@ export default memo(function Post({
     menuId: ContextMenuType.Post,
     data: { post }
   })
-
-  const { push } = useHistory()
-
-  const { t } = useTranslation()
 
   let type = ''
   if (post.text) type = 'Text'
@@ -120,7 +110,7 @@ export default memo(function Post({
               />
             )}
             {post.imageUrls.length >= 1 && (
-              <img src={post.imageUrls[0]} className="max-w-screen-lg" />
+              <img alt="" src={post.imageUrls[0]} className="max-w-screen-lg" />
             )}
           </div>
         )}
@@ -128,7 +118,7 @@ export default memo(function Post({
         <div className="flex items-center pt-2">
           <div
             onClick={e => {
-              e.stopPropagation()
+              e.preventDefault()
               toggleVote()
             }}
             className={`${
@@ -155,7 +145,7 @@ export default memo(function Post({
           </div>
 
           {showServerName && (
-            <div className="ml-4 flex items-center">
+            <div className="ml-4 flex items-center" onClick={onClick}>
               <ServerPopup server={post.server}>
                 <ServerAvatar server={post.server} size={5} />
               </ServerPopup>

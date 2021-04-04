@@ -26,5 +26,11 @@ export const useStore = create((set, get) => ({
   setServerPage: (serverId, page) =>
     set({ serverPages: { ...get().serverPages, [serverId]: page } }),
   homePage: null,
-  setHomePage: page => set({ homePage: page })
+  setHomePage: page => set({ homePage: page }),
+
+  replyingCommentId: null,
+  setReplyingCommentId: commentId => set({ replyingCommentId: commentId }),
+
+  canGoBack: false,
+  setCanGoBack: canGoBack => set({ canGoBack })
 }))

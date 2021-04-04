@@ -7,7 +7,7 @@ export default function ServerInfoCard({
 }) {
   return (
     <Link
-      to={`/server/${server.name}`}
+      to={`/server/${server.id}`}
       className={`${className} cursor-pointer relative flex flex-col w-full rounded-lg group dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 transform transition hover:shadow-xl ${
         shadow ? 'shadow-lg' : ''
       }`}

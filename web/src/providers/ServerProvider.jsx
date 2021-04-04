@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 import {
   GET_SERVER_CHANNELS,
   GET_SERVER_FOLDERS,
@@ -55,7 +55,7 @@ export function ServerProvider({ children }) {
         channels: serverChannelsData?.getServerChannels,
         folders: foldersData?.getServerFolders,
         permissions: permissionsData?.getServerPermissions,
-        loading: !serverChannelsData || !foldersData || !permissionsData
+        loading: !serverChannelsData || !foldersData
       }}
     >
       {children}

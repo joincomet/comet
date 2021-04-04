@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Route,
   Switch,
@@ -27,11 +27,23 @@ import { useCurrentUser, useCurrentUserLoading } from '@/providers/UserProvider'
 import { AnimatePresence } from 'framer-motion'
 import LoadingScreen from '@/pages/LoadingScreen'
 import ServerLoadingScreen from '@/pages/ServerLoadingScreen'
+import { useStore } from '@/hooks/useStore'
+import { usePrevious } from 'react-use'
 
 export default function PrivateRoutes() {
   const dataLoading = useDataLoading()
   const user = useCurrentUser()
   const userLoading = useCurrentUserLoading()
+
+  const setCanGoBack = useStore(s => s.setCanGoBack)
+  const [path, setPath] = useState(null)
+  const prevPath = usePrevious(path)
+  const { pathname } = useLocation()
+  useEffect(() => {
+    if (prevPath) setCanGoBack(true)
+    setPath(pathname)
+  }, [pathname])
+
   return (
     <>
       <AnimatePresence>

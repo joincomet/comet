@@ -14,21 +14,24 @@ import { useQuery } from 'urql'
  * @param serverPermissions Fallback ServerPermissions, if ChannelPermission is neither allowed nor denied
  * @return {boolean[]} Array of booleans representing if user has permission, same length and order as input permissions
  */
-export const useHasChannelPermissions = (
+export const useHasChannelPermissions = ({
   channelId,
   serverId,
   channelPermissions,
   serverPermissions
-) => {
+}) => {
   const { t } = useTranslation()
   const user = useCurrentUser()
+  const pause = !channelId || !serverId
   const [{ data: serverData }] = useQuery({
     query: GET_SERVER_PERMISSIONS,
-    variables: { serverId }
+    variables: { serverId },
+    pause
   })
   const [{ data: channelData }] = useQuery({
     query: GET_CHANNEL_PERMISSIONS,
-    variables: { channelId }
+    variables: { channelId },
+    pause
   })
   if (channelPermissions.length !== serverPermissions.length)
     throw new Error(t('error.channelPermissions'))

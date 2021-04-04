@@ -1,9 +1,9 @@
 import { gql } from '@urql/core'
 import { POST_FRAGMENT } from '@/graphql/fragments'
 
-export const CREATE_POST_VOTE = gql`
-  mutation CreatePostVote($postId: ID!) {
-    createPostVote(postId: $postId) {
+export const VOTE_POST = gql`
+  mutation VotePost($postId: ID!) {
+    votePost(postId: $postId) {
       ...POST_FRAGMENT
     }
   }

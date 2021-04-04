@@ -52,25 +52,25 @@ export default function MessageInput({ channel, group, user }) {
       )
     if (names.length === 0) return null
     else if (names.length === 1)
-      return t('messages.typing.one', { name: names[0] })
+      return t('message.typing.one', { name: names[0] })
     else if (names.length === 2)
-      return t('messages.typing.two', { name1: names[0], name2: names[1] })
+      return t('message.typing.two', { name1: names[0], name2: names[1] })
     else if (names.length === 3)
-      return t('messages.typing.three', {
+      return t('message.typing.three', {
         name1: names[0],
         name2: names[1],
         name3: names[2]
       })
-    else return t('messages.typing.several')
+    else return t('message.typing.several')
   }, [typingNames, currentUser.username])
 
   const [_, sendMessage] = useMutation(SEND_MESSAGE)
 
   const placeholder = useMemo(() => {
-    if (channel) return `${t('messages.message')} #${channel.name}`
-    else if (group) return `${t('messages.message')} ${group.name}`
-    else if (user) return `${t('messages.message')} @${user.name}`
-    return `${t('messages.message')}`
+    if (channel) return `${t('message.message')} #${channel.name}`
+    else if (group) return `${t('message.message')} ${group.name}`
+    else if (user) return `${t('message.message')} @${user.name}`
+    return `${t('message.message')}`
   }, [channel, group, user])
 
   const inputRef = useRef(null)
@@ -88,7 +88,7 @@ export default function MessageInput({ channel, group, user }) {
   return (
     <div className="px-4 dark:bg-gray-750">
       <div className="relative">
-        <Tippy content={t('messages.upload')}>
+        <Tippy content={t('message.upload')}>
           <div className="block absolute left-4.5 top-1/2 transform -translate-y-1/2">
             <input
               className="hidden"

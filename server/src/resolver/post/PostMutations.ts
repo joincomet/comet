@@ -51,7 +51,7 @@ export class PostMutations {
 
     await em.persistAndFlush(post)
 
-    await this.createPostVote({ user, em }, post.id)
+    await this.votePost({ user, em }, post.id)
     post.isVoted = true
     post.voteCount = 1
 
@@ -98,7 +98,7 @@ export class PostMutations {
 
   @CheckPostServerPermission(ServerPermission.VotePost)
   @Mutation(() => Post, { description: 'Add vote to post' })
-  async createPostVote(
+  async votePost(
     @Ctx() { user, em }: Context,
     @Arg('postId', () => ID, {
       description: 'ID of post to vote (requires ServerPermission.VotePost)'
@@ -117,7 +117,7 @@ export class PostMutations {
 
   @CheckPostServerPermission(ServerPermission.VotePost)
   @Mutation(() => Post, { description: 'Remove vote from post' })
-  async removePostVote(
+  async unvotePost(
     @Ctx() { user, em }: Context,
     @Arg('postId', () => ID, {
       description:
@@ -131,27 +131,6 @@ export class PostMutations {
     post.isVoted = false
     await em.remove(vote).persistAndFlush([post])
     return post
-  }
-
-  @CheckPostServerPermission(ServerPermission.ManagePosts)
-  @Mutation(() => Boolean, {
-    description: 'Remove a post (requires ServerPermission.ManagePosts)'
-  })
-  async removePost(
-    @Ctx() { em }: Context,
-    @Arg('postId', () => ID) postId: string,
-    @Arg('reason', { nullable: true }) reason?: string
-  ): Promise<boolean> {
-    const post = await em.findOne(Post, postId)
-
-    em.assign(post, {
-      isRemoved: true,
-      removedReason: reason,
-      isPinned: false,
-      pinPosition: null
-    })
-    await em.persistAndFlush(post)
-    return true
   }
 
   @CheckPostServerPermission(ServerPermission.ManagePosts)

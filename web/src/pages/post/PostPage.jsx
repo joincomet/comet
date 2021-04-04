@@ -6,24 +6,41 @@ import Container from '@/components/ui/Container'
 import View from '@/components/ui/View'
 import { useParams } from 'react-router-dom'
 import PostUsersSidebar from '@/pages/post/PostUsersSidebar'
-import Header from '@/components/ui/header/Header'
-import { IconText } from '@/components/ui/icons/Icons'
 import { createCommentTree, getParticipants } from '@/utils/commentUtils'
 import Comment from '@/components/comment/Comment'
 import CreateCommentCard from '@/components/comment/CreateCommentCard'
 import { useStore } from '@/hooks/useStore'
-import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
+import PostContextMenuWrapper from '@/components/post/PostContextMenuWrapper'
+import CommentContextMenuWrapper from '@/components/comment/CommentContextMenuWrapper'
+import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
+import { ServerPermission } from '@/types/ServerPermission'
+import { useTranslation } from 'react-i18next'
+import PostHeader from '@/pages/post/PostHeader'
+import { usePosts } from '@/components/post/usePosts'
 
 export default function PostPage() {
-  const { postId } = useParams()
+  const { t } = useTranslation()
+  const { postId, serverId } = useParams()
+
+  const [serverPosts] = usePosts({ serverId })
+  const [feedPosts] = usePosts({})
+  const foundPost =
+    serverPosts.find(p => p.id === postId) ??
+    feedPosts.find(p => p.id === postId)
+
+  const [canViewComments, canCreateComment] = useHasServerPermissions({
+    serverId,
+    permissions: [ServerPermission.ViewComments, ServerPermission.CreateComment]
+  })
 
   const [{ data }] = useQuery({
     query: GET_POST,
     variables: {
       postId
-    }
+    },
+    pause: !!foundPost
   })
-  const post = data?.getPost
+  const post = foundPost ? foundPost : data?.getPost
 
   const [{ data: commentsData }] = useQuery({
     query: GET_COMMENTS,
@@ -38,12 +55,10 @@ export default function PostPage() {
 
   return (
     <>
-      <Header icon={<IconText className="w-5 h-5" />} title="Post" showDivider>
-        <div className="text-base font-medium truncate">{post?.title}</div>
-        <div className="ml-auto pl-6">
-          <ShowUsersButton />
-        </div>
-      </Header>
+      <PostContextMenuWrapper />
+      <CommentContextMenuWrapper />
+
+      <PostHeader post={post} />
       <PostUsersSidebar post={post} users={users} />
 
       <Container rightSidebar={showUsers}>
@@ -52,22 +67,28 @@ export default function PostPage() {
             {!!post && <Post post={post} isPostPage />}
           </div>
 
-          <div className="py-4 px-4">
-            <CreateCommentCard postId={postId} />
-          </div>
+          {canCreateComment && (
+            <div className="pt-4 px-4">
+              <CreateCommentCard postId={postId} />
+            </div>
+          )}
 
-          <div className="space-y-2 px-4">
-            {comments.map((comment, index) => (
-              <Comment
-                key={comment.id}
-                comment={comment}
-                post={post}
-                isLast={index < comments.length - 1}
-              />
-            ))}
-          </div>
-
-          <div className="h-96" />
+          {canViewComments ? (
+            <div className="space-y-2 px-4 pt-4 pb-96">
+              {comments.map((comment, index) => (
+                <Comment
+                  key={comment.id}
+                  comment={comment}
+                  post={post}
+                  isLast={index < comments.length - 1}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="py-10 px-4 text-center font-semibold text-xl text-tertiary">
+              {t('comment.noPermission')}
+            </div>
+          )}
         </View>
       </Container>
     </>

@@ -11,6 +11,7 @@ import { DataProvider } from '@/providers/DataProvider'
 export default function Routes() {
   const user = useCurrentUser()
   const userLoading = useCurrentUserLoading()
+
   return (
     <Switch>
       <Route path="/" exact>

@@ -45,6 +45,7 @@ export {
   HiRefresh as IconRefresh,
   HiPlusCircle as IconUpload,
   HiUsers as IconUsers,
+  HiArrowLeft as IconBack,
   // EDITOR
   HiCode as IconFormatCodeInline,
   HiEmojiHappy as IconFormatEmoji,
