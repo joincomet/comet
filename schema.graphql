@@ -43,6 +43,7 @@ type Comment implements BaseEntity {
   isDeleted: Boolean!
   isPinned: Boolean!
   isVoted: Boolean!
+  linkMetadatas: [LinkMetadata!]!
   parentComment: Comment
   pinPosition: String
   post: Post!
@@ -132,6 +133,16 @@ type Group implements BaseEntity {
 
 union GroupDmUnion = Group | User
 
+type Image {
+  originalUrl: String!
+  popupHeight: Int!
+  popupUrl: String!
+  popupWidth: Int!
+  smallHeight: Int!
+  smallUrl: String!
+  smallWidth: Int!
+}
+
 type LinkMetadata {
   author: String
   date: DateTime
@@ -154,10 +165,11 @@ type Message implements BaseEntity {
   createdAt: DateTime!
   editedAt: DateTime
   id: ID!
+  image: Image
   isDeleted: Boolean!
   isPinned: Boolean!
   linkMetadatas: [LinkMetadata!]!
-  text: String!
+  text: String
 }
 
 type MessageRemovedResponse {
@@ -348,7 +360,7 @@ type Mutation {
   ): Boolean!
 
   """Create a chat message"""
-  sendMessage(channelId: ID, file: Upload, groupId: ID, text: String!, userId: ID): Message!
+  sendMessage(channelId: ID, file: Upload, groupId: ID, text: String, userId: ID): Message!
   startTyping(channelId: ID, groupId: ID, userId: ID): Boolean!
   unbanUserFromServer(serverId: ID!, userId: ID!): Boolean!
 
@@ -421,6 +433,7 @@ type Post implements BaseEntity {
   isPinned: Boolean!
   isVoted: Boolean!
   linkMetadata: LinkMetadata
+  linkMetadatas: [LinkMetadata!]!
   linkUrl: String
   pinPosition: String
   relativeUrl: String!

@@ -18,16 +18,10 @@ export default forwardRef(
     },
     ref
   ) => {
-    const contextMenuRef = useContextMenuTrigger({
-      menuId: ContextMenuType.User,
-      data: { user, server }
-    })
-
-    if (!user) return null
     return (
       <Avatar
-        ref={mergeRefs(ref, contextMenuRef)}
-        avatarUrl={user.avatarUrl}
+        ref={ref}
+        avatarUrl={user?.avatarUrl}
         loading={loading}
         className={`${className} bg-gray-200 dark:bg-gray-650 cursor-pointer`}
         size={size}
@@ -35,11 +29,11 @@ export default forwardRef(
         {showOnline && (
           <div
             className={`absolute bottom-0 right-0 rounded-full z-10 ${dotClassName} ${
-              user.isOnline ? 'bg-green-500' : 'bg-gray-600'
+              user?.isOnline ? 'bg-green-500' : 'bg-gray-600'
             }`}
           />
         )}
-        {!user.avatarUrl && <IconUser className="text-mid w-2/3 h-2/3" />}
+        {!user?.avatarUrl && <IconUser className="text-mid w-2/3 h-2/3" />}
       </Avatar>
     )
   }

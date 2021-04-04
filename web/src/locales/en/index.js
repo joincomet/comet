@@ -1,3 +1,4 @@
+import { auth } from './auth'
 import { categories } from './categories'
 import { channel } from './channel'
 import { comment } from './comment'
@@ -22,6 +23,7 @@ export const en = {
   continue: 'Continue',
   more: 'More',
   // Defined in other files
+  auth,
   categories,
   channel,
   comment,

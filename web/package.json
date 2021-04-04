@@ -32,7 +32,7 @@
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
     "react-dnd-touch-backend": "^14.0.0",
-    "react-helmet": "^6.1.0",
+    "react-helmet-async": "^1.0.9",
     "react-hook-form": "^7.0.0",
     "react-hot-toast": "^1.0.2",
     "react-i18next": "^11.8.12",
@@ -45,7 +45,7 @@
     "react-twitter-widgets": "^1.10.0",
     "react-use": "^17.2.1",
     "react-virtual": "^2.6.1",
-    "react-virtuoso": "^1.5.14",
+    "react-virtuoso": "^1.6.0",
     "subscriptions-transport-ws": "^0.9.18",
     "tippy.js": "^6.3.1",
     "twemoji": "^13.0.2",
@@ -83,6 +83,6 @@
     "tailwind-scrollbar": "^1.2.4",
     "tailwindcss": "^2.0.4",
     "vite": "^2.1.5",
-    "vite-plugin-pwa": "^0.6.4"
+    "vite-plugin-pwa": "^0.6.5"
   }
 }

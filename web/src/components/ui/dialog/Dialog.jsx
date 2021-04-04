@@ -1,10 +1,15 @@
 import { Fragment } from 'react'
 import { Dialog as HeadlessDialog, Transition } from '@headlessui/react'
 
-export default function Dialog({ isOpen, setIsOpen, children }) {
+export default function Dialog({
+  isOpen,
+  close,
+  children,
+  closeOnOverlayClick = false
+}) {
   return (
     <Transition show={isOpen} as={Fragment}>
-      <HeadlessDialog open={isOpen} onClose={setIsOpen} static>
+      <HeadlessDialog open={isOpen} onClose={close} static>
         <div className="fixed z-10 inset-0 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <Transition.Child
@@ -35,8 +40,15 @@ export default function Dialog({ isOpen, setIsOpen, children }) {
               >
                 &#8203;
               </span>
-              <div className="inline-block bg-white dark:bg-gray-750 rounded-lg p-4 overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
-                {children}
+              <div
+                onClick={() => {
+                  if (closeOnOverlayClick) close()
+                }}
+                className="inline-block h-screen overflow-hidden transform transition-all align-middle w-full"
+              >
+                <div className="flex h-full w-full items-center justify-center">
+                  {children}
+                </div>
               </div>
             </Transition.Child>
           </div>

@@ -36,8 +36,6 @@ export default function CommentEditor({ postId, parentCommentId, setOpen }) {
   const [{ fetching }, createComment] = useMutation(CREATE_COMMENT)
   const { t } = useTranslation()
 
-  useEffect(() => console.log(text), [text])
-
   return (
     <div className="max-w-screen-md w-full">
       <Editor text={text} setText={setText} />

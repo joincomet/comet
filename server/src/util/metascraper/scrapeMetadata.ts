@@ -64,7 +64,7 @@ export const scrapeMetadata = async (
 
   if (image) {
     try {
-      meta.image = await uploadImage(image, resize)
+      meta.image = (await uploadImage({ file: image, resize })).url
     } catch {
       delete meta.image
     }
@@ -72,7 +72,7 @@ export const scrapeMetadata = async (
 
   if (logo) {
     try {
-      meta.logo = await uploadImage(logo, resize)
+      meta.logo = (await uploadImage({ file: logo, resize })).url
     } catch {
       delete meta.logo
     }

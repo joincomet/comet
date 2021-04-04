@@ -3,8 +3,8 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 @ArgsType()
 export class SendMessageArgs {
-  @Field()
-  text: string
+  @Field({ nullable: true })
+  text?: string
 
   @Field(() => GraphQLUpload, { nullable: true })
   file?: FileUpload

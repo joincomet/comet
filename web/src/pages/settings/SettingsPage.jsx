@@ -4,11 +4,18 @@ import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import { IconX } from '@/components/ui/icons/Icons'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 
 export default function SettingsPage() {
+  const { t } = useTranslation()
   const user = useCurrentUser()
   return (
     <>
+      <Helmet>
+        <title>{t('settings.title')}</title>
+      </Helmet>
+
       <div className="h-full flex relative">
         <Link
           to="/me"

@@ -98,12 +98,17 @@ export class GroupMutations {
     avatarFile?: FileUpload
   ): Promise<Group> {
     const group = await em.findOneOrFail(Group, groupId, ['users'])
-    group.avatarUrl = avatarFile
-      ? await uploadImage(avatarFile, {
-          width: 256,
-          height: 256
+    if (avatarFile) {
+      group.avatarUrl = (
+        await uploadImage({
+          file: avatarFile,
+          resize: {
+            width: 256,
+            height: 256
+          }
         })
-      : null
+      ).url
+    }
     await em.persistAndFlush(group)
     await refetchGroupsAndDms(user.id)
     return group

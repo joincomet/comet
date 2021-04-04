@@ -51,7 +51,7 @@
     "xss": "^1.0.8"
   },
   "devDependencies": {
-    "@types/async": "^3.2.5",
+    "@types/async": "^3.2.6",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.11",
     "@types/faker": "^5.5.0",

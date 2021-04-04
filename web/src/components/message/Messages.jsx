@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState, useEffect } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import { useNewMessageNotification } from '@/components/message/useNewMessageNotification'
 import { usePrependedMessagesCount } from '@/components/message/usePrependedMessagesCount'
@@ -8,17 +8,25 @@ import MessageInput from '@/components/message/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import MessagesStart from '@/components/message/MessagesStart'
 import MessageContextMenuWrapper from '@/components/message/MessageContextMenuWrapper'
+import { usePrevious } from 'react-use'
 
 const PREPEND_OFFSET = 10 ** 7
 
 export default function Messages({ channel, user, group }) {
+  const virtuoso = useRef(null)
+
   const [messages, fetching, fetchMore, hasMore] = useMessages({
     channel,
     user,
     group
   })
 
-  const virtuoso = useRef(null)
+  const [length, setLength] = useState(messages?.length || 0)
+  const prevLength = usePrevious(length)
+  useEffect(() => {
+    setLength(messages?.length || 0)
+    if (prevLength === 0) virtuoso.current.scrollBy({ top: PREPEND_OFFSET })
+  }, [messages?.length])
 
   const {
     atBottom,

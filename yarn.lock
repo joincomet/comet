@@ -2629,10 +2629,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/async@npm:^3.2.5":
-  version: 3.2.5
-  resolution: "@types/async@npm:3.2.5"
-  checksum: 37cb5722b9892e286a22da58f407218d9195cc612b50628aabe10375e9d30ade4cdf2a26d8000de3ef6fe13802579dc50b51193a6f9a05a74d9d384135968da4
+"@types/async@npm:^3.2.6":
+  version: 3.2.6
+  resolution: "@types/async@npm:3.2.6"
+  checksum: 7ebfcd7f0ec936e832969d0bcc32823ce4fec744271bceff5988afd02ccafd04eda1166aede8fcdf39b382838044abb5d712879d558fa0c1c789c904e1e0fc17
   languageName: node
   linkType: hard
 
@@ -7729,6 +7729,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"invariant@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "invariant@npm:2.2.4"
+  dependencies:
+    loose-envify: ^1.0.0
+  checksum: 96d8a2a4f0ad21020c5847546fc36bec5c0870d99f071aaa93df00c1036439d48211a1823ab6128f78a15ccc4c4f62baf6a65f6c0ed489270dd44d0a04f443a1
+  languageName: node
+  linkType: hard
+
 "ioredis@npm:^4.17.3":
   version: 4.19.4
   resolution: "ioredis@npm:4.19.4"
@@ -10922,24 +10931,26 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-fast-compare@npm:^3.0.1, react-fast-compare@npm:^3.1.1":
+"react-fast-compare@npm:^3.0.1, react-fast-compare@npm:^3.2.0":
   version: 3.2.0
   resolution: "react-fast-compare@npm:3.2.0"
   checksum: 6fe65c889eb4f326e97769135f97b3d63ac68737866f9c37f9625c9de4f5eaa9abed6f748eb3fd6a66808392118842916309cab7cfa99c67991f0c837433d6d2
   languageName: node
   linkType: hard
 
-"react-helmet@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "react-helmet@npm:6.1.0"
+"react-helmet-async@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "react-helmet-async@npm:1.0.9"
   dependencies:
-    object-assign: ^4.1.1
+    "@babel/runtime": ^7.12.5
+    invariant: ^2.2.4
     prop-types: ^15.7.2
-    react-fast-compare: ^3.1.1
-    react-side-effect: ^2.1.0
+    react-fast-compare: ^3.2.0
+    shallowequal: ^1.1.0
   peerDependencies:
-    react: ">=16.3.0"
-  checksum: 56fd795b0aecc89bac8d2733268751f0ef463bf6764090f8a801778741d4a6eaf135234cdaa50188bbda29c8e2d3ec43e9a42d1ec06b60092645c8754c7bad81
+    react: ^16.6.0 || ^17.0.0
+    react-dom: ^16.6.0 || ^17.0.0
+  checksum: 69d082670e7b09f2df1784d1d58f8361d7bd3f57f37f2f4155aaf4f6cace1c213bb25a4cea9e1bd4bfaeb56b1dc83f614f5f6e4713f9d2465cf3d716c0ec897b
   languageName: node
   linkType: hard
 
@@ -11074,15 +11085,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-side-effect@npm:^2.1.0":
-  version: 2.1.1
-  resolution: "react-side-effect@npm:2.1.1"
-  peerDependencies:
-    react: ^16.3.0 || ^17.0.0
-  checksum: 5896f7c126b9e7147e3ea6cc967dab8e3a2f6c395bd5327d16483adb91177866eec47770500a92fece866ea551f395484f6e6e078796002293bc1b53b7e65b26
-  languageName: node
-  linkType: hard
-
 "react-twemoji@npm:^0.3.0":
   version: 0.3.0
   resolution: "react-twemoji@npm:0.3.0"
@@ -11155,9 +11157,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^1.5.14":
-  version: 1.5.14
-  resolution: "react-virtuoso@npm:1.5.14"
+"react-virtuoso@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "react-virtuoso@npm:1.6.0"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.5
     "@virtuoso.dev/urx": ^0.2.5
@@ -11165,7 +11167,7 @@ fsevents@~2.3.1:
     resize-observer-polyfill: ^1.5.1
   peerDependencies:
     react: ">=16"
-  checksum: 50ae9d5e9f8e904a62dd6406c931a87dfdd37f6306fc5507ec26224f34d1156d11daeea1842cb1c14dd09f211d2b5a1670fca02eadf4e4229528b26c65cd2e1f
+  checksum: 5f856a2a238264279d7709ce54de9c6250e99a0210379e3a4ba2abf646e1232f9cd7897b0ff6575fa6c18488cdd96414516601c174972141571e93cef4ed6176
   languageName: node
   linkType: hard
 
@@ -11996,7 +11998,7 @@ resolve@^2.0.0-next.3:
     "@mikro-orm/core": ^4.5.1
     "@mikro-orm/postgresql": ^4.5.1
     "@mikro-orm/sql-highlighter": ^1.0.1
-    "@types/async": ^3.2.5
+    "@types/async": ^3.2.6
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.11
     "@types/faker": ^5.5.0
@@ -12115,6 +12117,13 @@ resolve@^2.0.0-next.3:
   bin:
     sha.js: ./bin.js
   checksum: 7554240ab76e683f7115123eb4815aae16b5fc6f2cdff97009831ad5b17b107ffcef022526211f7306957bce7a67fa4d0ccad79a3040c5073414365595e90516
+  languageName: node
+  linkType: hard
+
+"shallowequal@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "shallowequal@npm:1.1.0"
+  checksum: 15820dd544ce15521565c366940a46dcbe0f093c1336f6259c7b3e2490ca10135645ee262778f555d3ccc38283207f2f0a41e9a0f26888b5d5159f2904c4ac68
   languageName: node
   linkType: hard
 
@@ -13808,16 +13817,16 @@ typescript@^4.2.3:
   languageName: node
   linkType: hard
 
-"vite-plugin-pwa@npm:^0.6.4":
-  version: 0.6.4
-  resolution: "vite-plugin-pwa@npm:0.6.4"
+"vite-plugin-pwa@npm:^0.6.5":
+  version: 0.6.5
+  resolution: "vite-plugin-pwa@npm:0.6.5"
   dependencies:
     debug: ^4.3.2
     fast-glob: ^3.2.5
     pretty-bytes: ^5.6.0
     workbox-build: ^6.1.2
     workbox-window: ^6.1.2
-  checksum: 2e328f5f2c9db9a8bf2dfe0d50549055ab2f75bae2cb753b02918662c9f51c1867e0a6ad68b1c18d7fdb66154d10e85e620b8745e1aa500f723cbc562b424d28
+  checksum: d761a3f4fd7da8eff16e2f36bca4d91c7d2bce471c8af6b89a83b8db7db16cdd675a20d14c62bef631bb1f9d7740d1c81371b1835f44cb36e0f1e702a82e5ced
   languageName: node
   linkType: hard
 
@@ -13924,7 +13933,7 @@ typescript@^4.2.3:
     react-dnd-html5-backend: ^14.0.0
     react-dnd-touch-backend: ^14.0.0
     react-dom: ^17.0.2
-    react-helmet: ^6.1.0
+    react-helmet-async: ^1.0.9
     react-hook-form: ^7.0.0
     react-hot-toast: ^1.0.2
     react-i18next: ^11.8.12
@@ -13937,7 +13946,7 @@ typescript@^4.2.3:
     react-twitter-widgets: ^1.10.0
     react-use: ^17.2.1
     react-virtual: ^2.6.1
-    react-virtuoso: ^1.5.14
+    react-virtuoso: ^1.6.0
     sass: ^1.32.8
     string-hash: ^1.1.3
     subscriptions-transport-ws: ^0.9.18
@@ -13949,7 +13958,7 @@ typescript@^4.2.3:
     use-dark-mode: ^2.3.1
     validator: ^13.5.2
     vite: ^2.1.5
-    vite-plugin-pwa: ^0.6.4
+    vite-plugin-pwa: ^0.6.5
     zustand: ^3.3.3
   languageName: unknown
   linkType: soft

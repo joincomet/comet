@@ -1,11 +1,13 @@
 import UserPopup from '@/components/user/UserPopup'
 import UserAvatar from '@/components/user/UserAvatar'
 import { calendarDate, shortTime } from '@/utils/timeUtils'
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { useContextMenuTrigger } from '@/components/ui/context'
 import { ContextMenuType } from '@/types/ContextMenuType'
+import Dialog from '@/components/ui/dialog/Dialog'
 
 export default memo(function Message({ showUser, message }) {
+  const [showImagePopup, setShowImagePopup] = useState(false)
   const contextMenuRef = useContextMenuTrigger({
     menuId: ContextMenuType.Message,
     data: { message }
@@ -44,10 +46,54 @@ export default memo(function Message({ showUser, message }) {
             </div>
           )}
 
-          <div
-            className="text-base text-gray-700 dark:text-gray-300"
-            dangerouslySetInnerHTML={{ __html: message.text }}
-          />
+          {!!message.text && (
+            <div
+              className="text-base text-gray-700 dark:text-gray-300"
+              dangerouslySetInnerHTML={{ __html: message.text }}
+            />
+          )}
+
+          {!!message.image && (
+            <div className="pt-1">
+              <img
+                onClick={() => setShowImagePopup(true)}
+                src={message.image.smallUrl}
+                alt=""
+                className="rounded cursor-pointer"
+                width={message.image.smallWidth}
+                height={message.image.smallHeight}
+              />
+
+              <Dialog
+                closeOnOverlayClick
+                close={() => setShowImagePopup(false)}
+                isOpen={showImagePopup}
+              >
+                <div className="mx-auto">
+                  <div className="text-left">
+                    <img
+                      onClick={e => e.stopPropagation()}
+                      src={message.image.popupUrl}
+                      alt=""
+                      width={message.image.popupWidth}
+                      height={message.image.popupHeight}
+                    />
+                    <div className="pt-1">
+                      <a
+                        href={message.image.originalUrl}
+                        className="hover:underline cursor-pointer text-mid font-semibold text-13"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        Open original
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </Dialog>
+            </div>
+          )}
         </div>
       </div>
     </div>

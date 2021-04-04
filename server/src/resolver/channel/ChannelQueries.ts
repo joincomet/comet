@@ -14,11 +14,7 @@ export class ChannelQueries {
     @Ctx() { user, em }: Context,
     @Arg('channelId', () => ID) channelId: string
   ): Promise<GetChannelPermissionsResponse> {
-    const channel = await em.findOneOrFail(Channel, channelId, [
-      'owner',
-      'roles',
-      'server'
-    ])
+    const channel = await em.findOneOrFail(Channel, channelId, ['server'])
     const join = await em.findOne(
       ServerUserJoin,
       { server: channel.server, user },

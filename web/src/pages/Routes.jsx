@@ -7,6 +7,7 @@ import NotFound from '@/pages/NotFound'
 import { useCurrentUser, useCurrentUserLoading } from '@/providers/UserProvider'
 import PrivateRoutes from '@/pages/PrivateRoutes'
 import { DataProvider } from '@/providers/DataProvider'
+import { Helmet } from 'react-helmet-async'
 
 export default function Routes() {
   const user = useCurrentUser()
@@ -28,6 +29,8 @@ export default function Routes() {
           '/server'
         ]}
       >
+        <Helmet titleTemplate="%s – Comet" />
+
         <Route path={['/login', '/register']}>
           <AuthLayout>
             <Switch>

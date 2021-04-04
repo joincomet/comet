@@ -34,7 +34,7 @@ export class PostMutations {
 
     if (images && images.length > 0) {
       for (const image of images) {
-        const imageUrl = await uploadImage(image)
+        const { url: imageUrl } = await uploadImage({ file: image })
         imageUrls.push(imageUrl)
       }
     }

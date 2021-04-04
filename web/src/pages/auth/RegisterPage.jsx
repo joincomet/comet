@@ -7,8 +7,11 @@ import { useMutation } from 'urql'
 import { CREATE_ACCOUNT } from '@/graphql/mutations'
 import { useCurrentUser } from '@/providers/UserProvider'
 import { useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 
 export default function RegisterPage() {
+  const { t } = useTranslation()
   const [{ fetching }, createAccount] = useMutation(CREATE_ACCOUNT)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
@@ -21,51 +24,57 @@ export default function RegisterPage() {
   const onSubmit = variables => createAccount(variables)
 
   return (
-    <AuthCard>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-        <div className="title mb-6">Create an account</div>
-        <div className="mb-4">
-          <label htmlFor="username" className="label">
-            Username
-          </label>
-          <input
-            className="textbox px-3"
-            id="username"
-            {...register('username', { required: true })}
-          />
-        </div>
+    <>
+      <Helmet>
+        <title>{t('auth.login')}</title>
+      </Helmet>
 
-        <div className="mb-4">
-          <label htmlFor="email" className="label">
-            Email (Recommended)
-          </label>
-          <input
-            className="textbox px-3"
-            id="email"
-            type="email"
-            {...register('email', { validate: email => isEmail(email) })}
-          />
-        </div>
+      <AuthCard>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+          <div className="title mb-6">{t('auth.createAccount')}</div>
+          <div className="mb-4">
+            <label htmlFor="username" className="label">
+              {t('auth.username')}
+            </label>
+            <input
+              className="textbox px-3"
+              id="username"
+              {...register('username', { required: true })}
+            />
+          </div>
 
-        <div className="mb-6">
-          <label htmlFor="password" className="label">
-            PASSWORD
-          </label>
-          <input
-            className="textbox px-3"
-            type="password"
-            id="password"
-            {...register('password', { required: true })}
-          />
-        </div>
+          <div className="mb-4">
+            <label htmlFor="email" className="label">
+              {t('auth.email')}
+            </label>
+            <input
+              className="textbox px-3"
+              id="email"
+              type="email"
+              {...register('email', { validate: email => isEmail(email) })}
+            />
+          </div>
 
-        <Button loading={fetching}>Continue</Button>
-        <div className="pt-3 text-mid text-sm">
-          <Link to="/login" className="text-accent hover:underline">
-            Already have an account?
-          </Link>
-        </div>
-      </form>
-    </AuthCard>
+          <div className="mb-6">
+            <label htmlFor="password" className="label">
+              {t('auth.password')}
+            </label>
+            <input
+              className="textbox px-3"
+              type="password"
+              id="password"
+              {...register('password', { required: true })}
+            />
+          </div>
+
+          <Button loading={fetching}>Continue</Button>
+          <div className="pt-3 text-mid text-sm">
+            <Link to="/login" className="text-accent hover:underline">
+              {t('auth.alreadyHaveAccount')}
+            </Link>
+          </div>
+        </form>
+      </AuthCard>
+    </>
   )
 }

@@ -9,7 +9,7 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { Channel, FriendData, Group, Message, User } from '@/entity'
+import { Channel, FriendData, Group, Image, Message, User } from '@/entity'
 import { scrapeMetadata } from '@/util/metascraper'
 import {
   ChannelPermission,
@@ -18,9 +18,11 @@ import {
   SubscriptionTopic
 } from '@/types'
 import {
+  calculateDimensions,
   CheckChannelPermission,
   CheckGroupMember,
-  CheckMessageAuthor
+  CheckMessageAuthor,
+  uploadImage
 } from '@/util'
 import {
   MessageSentPayload,
@@ -46,6 +48,8 @@ export class MessageMutations {
     @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
     refetchGroupsAndDms: Publisher<string>
   ): Promise<Message> {
+    if (!text && !file) throw new Error('error.message.textOrFile')
+
     const channel = channelId
       ? await em.findOneOrFail(Channel, channelId)
       : null
@@ -60,15 +64,62 @@ export class MessageMutations {
         throw new Error('error.user.blocking')
     }
 
+    let image = null
+    if (file) {
+      const POPUP_MAX_WIDTH = 1440
+      const POPUP_MAX_HEIGHT = 630
+      const SMALL_MAX_WIDTH = 400
+      const SMALL_MAX_HEIGHT = 300
+      const fit = 'inside'
+
+      const {
+        url: originalUrl,
+        metadata: { width, height }
+      } = await uploadImage({ file })
+
+      let popupResize = null
+      if (width > POPUP_MAX_WIDTH || height > POPUP_MAX_HEIGHT)
+        popupResize = { fit, width: POPUP_MAX_WIDTH, height: POPUP_MAX_HEIGHT }
+      const { url: popupUrl } = await uploadImage({ file, resize: popupResize })
+      const { width: popupWidth, height: popupHeight } = calculateDimensions({
+        width,
+        height,
+        maxWidth: POPUP_MAX_WIDTH,
+        maxHeight: POPUP_MAX_HEIGHT
+      })
+
+      let smallResize = null
+      if (width > SMALL_MAX_WIDTH || height > SMALL_MAX_HEIGHT)
+        smallResize = { fit, width: SMALL_MAX_WIDTH, height: SMALL_MAX_HEIGHT }
+      const { url: smallUrl } = await uploadImage({ file, resize: smallResize })
+      const { width: smallWidth, height: smallHeight } = calculateDimensions({
+        width,
+        height,
+        maxWidth: SMALL_MAX_WIDTH,
+        maxHeight: SMALL_MAX_HEIGHT
+      })
+
+      image = {
+        originalUrl,
+        popupUrl,
+        popupWidth,
+        popupHeight,
+        smallUrl,
+        smallWidth,
+        smallHeight
+      } as Image
+    }
+
     const message = em.create(Message, {
       text,
       channel,
       group,
       toUser,
-      author: user
+      author: user,
+      image
     })
 
-    message.linkMetadatas = await this.getLinkMetas(message)
+    if (text) message.linkMetadatas = await this.getLinkMetas(message)
     await em.persistAndFlush(message)
 
     if (toUser) {

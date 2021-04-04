@@ -1,12 +1,44 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useSubscription } from 'urql'
 import { SEND_MESSAGE, START_TYPING } from '@/graphql/mutations'
-import { IconUpload } from '@/components/ui/icons/Icons'
+import { IconSpinner, IconUpload } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 import { USER_STARTED_TYPING } from '@/graphql/subscriptions'
 import { useCurrentUser } from '@/providers/UserProvider'
 import ContentEditable from '@/components/ui/editor/ContentEditable'
+import Dialog from '@/components/ui/dialog/Dialog'
+import DialogTitle from '@/components/ui/dialog/DialogTitle'
+import { useDataUrl } from '@/hooks/useDataUrl'
+import ctl from '@netlify/classnames-template-literals'
+
+const cancelBtnClass = ctl(`
+  ml-auto
+  text-sm
+  text-primary
+  h-10
+  px-7
+  hover:underline
+  focus:outline-none
+  select-none
+`)
+
+const uploadBtnClass = ctl(`
+  text-sm
+  text-primary
+  transition
+  bg-blue-500
+  hover:bg-blue-600
+  flex
+  items-center
+  justify-center
+  rounded
+  px-7
+  h-10
+  focus:outline-none
+  select-none
+  disabled:opacity-50
+`)
 
 const TYPING_TIMEOUT = 3000
 
@@ -64,17 +96,18 @@ export default function MessageInput({ channel, group, user }) {
     else return t('message.typing.several')
   }, [typingNames, currentUser.username])
 
-  const [_, sendMessage] = useMutation(SEND_MESSAGE)
+  const [{ fetching }, sendMessage] = useMutation(SEND_MESSAGE)
 
   const placeholder = useMemo(() => {
-    if (channel) return `${t('message.message')} #${channel.name}`
-    else if (group) return `${t('message.message')} ${group.name}`
-    else if (user) return `${t('message.message')} @${user.name}`
-    return `${t('message.message')}`
+    if (channel) return `#${channel.name}`
+    else if (group) return `${group.name}`
+    else if (user) return `@${user.name}`
+    return ``
   }, [channel, group, user])
 
   const inputRef = useRef(null)
   const [text, setText] = useState('')
+  const [file, setFile] = useState(null)
 
   useEffect(() => {
     inputRef.current?.el?.current?.focus()
@@ -82,7 +115,9 @@ export default function MessageInput({ channel, group, user }) {
 
   useEffect(() => {
     if (inputRef.current?.el?.current)
-      inputRef.current.el.current.dataset.placeholder = placeholder
+      inputRef.current.el.current.dataset.placeholder = `${t(
+        'message.message'
+      )} ${placeholder}`
   }, [placeholder])
 
   return (
@@ -90,24 +125,31 @@ export default function MessageInput({ channel, group, user }) {
       <div className="relative">
         <Tippy content={t('message.upload')}>
           <div className="block absolute left-4.5 top-1/2 transform -translate-y-1/2">
-            <input
-              className="hidden"
-              id="file"
-              name="file"
-              type="file"
-              accept="image/png, image/jpeg"
-            />
+            <input className="hidden" id="file" name="file" type="file" />
             <label htmlFor="file" className="text-tertiary highlightable">
               <IconUpload className="w-5 h-5" />
             </label>
           </div>
         </Tippy>
 
+        <UploadDialog
+          {...{
+            placeholder,
+            file,
+            setFile,
+            text,
+            setText,
+            sendMessage,
+            fetching,
+            variables
+          }}
+        />
+
         <ContentEditable
           ref={inputRef}
           className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
           html={text}
-          data-placeholder={placeholder}
+          data-placeholder={`${t('message.message')} ${placeholder}`}
           onChange={e => {
             startTyping(variables)
             setText(e.target.value)
@@ -135,5 +177,115 @@ export default function MessageInput({ channel, group, user }) {
         dangerouslySetInnerHTML={{ __html: typingNamesDisplay }}
       />
     </div>
+  )
+}
+
+function UploadDialog({
+  placeholder,
+  file,
+  setFile,
+  sendMessage,
+  fetching,
+  variables
+}) {
+  const [text, setText] = useState('')
+  const [uploadOpen, setUploadOpen] = useState(false)
+
+  const imgSrc = useDataUrl(file)
+
+  const pasteListener = e => {
+    const file = e.clipboardData.files[0]
+    if (file) {
+      setFile(file)
+      setUploadOpen(true)
+      e.preventDefault()
+    }
+  }
+
+  const send = () =>
+    sendMessage({ text: text ? text : null, file, ...variables }).then(() =>
+      setUploadOpen(false)
+    )
+
+  const enterPressed = e => {
+    if (e.key === 'Enter' && !!file) {
+      send()
+    }
+  }
+
+  useEffect(() => {
+    document.body.addEventListener('paste', pasteListener)
+    document.body.addEventListener('keydown', enterPressed)
+    return () => {
+      document.body.removeEventListener('paste', pasteListener)
+      document.body.removeEventListener('keydown', enterPressed)
+    }
+  })
+
+  const close = () => {
+    setUploadOpen(false)
+    setTimeout(() => {
+      setFile(null)
+      setText(null)
+    }, 300)
+  }
+
+  return (
+    <Dialog close={close} isOpen={uploadOpen}>
+      <div className="text-left relative w-full rounded-xl dark:bg-gray-750 max-w-lg mx-auto">
+        <div className="absolute left-5 -top-20 flex w-46 h-40">
+          <img
+            alt=""
+            src={imgSrc}
+            className="absolute max-w-full max-h-full top-0 left-0 rounded shadow-md object-cover"
+          />
+        </div>
+
+        <div className="px-5 pt-24 pb-5">
+          <DialogTitle className="truncate text-left text-xl text-primary font-semibold select-none">
+            {file?.name ?? ''}
+          </DialogTitle>
+
+          <div className="text-tertiary text-13 pb-5 pt-0.5 select-none">
+            Upload to{' '}
+            <span className="font-medium text-secondary">{placeholder}</span>
+          </div>
+
+          <label
+            htmlFor="comment"
+            className="block uppercase text-xs font-medium text-secondary pb-1.5"
+          >
+            Add a Comment <span className="text-tertiary">(Optional)</span>
+          </label>
+          <input
+            className="h-10 rounded-lg dark:bg-gray-700 w-full focus:outline-none px-4 text-secondary text-base"
+            id="comment"
+            value={text}
+            onChange={e => {
+              const val = e.target.value
+              setText(val)
+            }}
+          />
+        </div>
+
+        <div className="flex p-4 dark:bg-gray-775 rounded-b-xl">
+          <button className={cancelBtnClass} onClick={close}>
+            Cancel
+          </button>
+          <button
+            className={uploadBtnClass}
+            disabled={!file || fetching}
+            onClick={send}
+          >
+            Upload
+            {fetching && (
+              <div className="ml-3">
+                <IconSpinner />
+              </div>
+            )}
+          </button>
+        </div>
+      </div>
+    </Dialog>
   )
 }

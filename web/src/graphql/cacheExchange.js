@@ -63,7 +63,8 @@ export const cacheExchange = ce({
     MessageSentResponse: () => null,
     MessageRemovedResponse: () => null,
     ChannelUsersResponse: () => null,
-    GetUserRelationshipsResponse: () => null
+    GetUserRelationshipsResponse: () => null,
+    GetChannelPermissionsResponse: () => null
   },
   resolvers: {
     Query: {

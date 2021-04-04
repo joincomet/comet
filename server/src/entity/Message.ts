@@ -3,6 +3,7 @@ import {
   BaseEntity,
   Channel,
   Group,
+  Image,
   LinkMetadata,
   ServerInvite,
   User
@@ -39,9 +40,13 @@ export class Message extends BaseEntity {
   })
   toUser?: User
 
-  @Field()
-  @Property({ columnType: 'text' })
-  text: string
+  @Field({ nullable: true })
+  @Property({ columnType: 'text', nullable: true })
+  text?: string
+
+  @Field({ nullable: true })
+  @Embedded(() => Image, { object: true, nullable: true })
+  image?: Image
 
   @Field(() => [LinkMetadata])
   @Embedded(() => LinkMetadata, { object: true, array: true })

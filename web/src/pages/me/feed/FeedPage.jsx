@@ -5,8 +5,11 @@ import { useStore } from '@/hooks/useStore'
 import Container from '@/components/ui/Container'
 import Posts from '@/components/post/Posts'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
+import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 
 export default function FeedPage() {
+  const { t } = useTranslation()
   const showFolders = useStore(s => s.showFolders)
 
   const ref = useRef(null)
@@ -17,6 +20,10 @@ export default function FeedPage() {
   useSetHomePage(`feed`)
   return (
     <>
+      <Helmet>
+        <title>{t('post.feed.title')}</title>
+      </Helmet>
+
       <PostsHeader refreshPosts={refreshPosts} />
       <UserFoldersSidebar show={showFolders} />
 

@@ -155,10 +155,15 @@ export class UserMutations {
     @Ctx() { user, em }: Context
   ): Promise<User> {
     const avatarUrl = avatarFile
-      ? await uploadImage(avatarFile, {
-          width: 256,
-          height: 256
-        })
+      ? (
+          await uploadImage({
+            file: avatarFile,
+            resize: {
+              width: 256,
+              height: 256
+            }
+          })
+        ).url
       : user.avatarUrl
     em.assign(user, {
       name: name ? name : user.name,

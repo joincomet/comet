@@ -57,7 +57,7 @@ export default function CreateChannel({ serverId }) {
         Channels
       </SidebarLabel>
 
-      <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Dialog isOpen={isOpen} close={() => setIsOpen(false)}>
         <DialogTitle className="title mb-4">Create Channel</DialogTitle>
 
         <form onSubmit={handleSubmit(onSubmit)}>

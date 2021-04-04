@@ -1,5 +1,19 @@
 import { gql } from '@urql/core'
 
+export const METADATA_FRAGMENT = gql`
+  fragment METADATA_FRAGMENT on LinkMetadata {
+    author
+    date
+    description
+    image
+    logo
+    publisher
+    title
+    twitterCard
+    url
+  }
+`
+
 export const USER_FRAGMENT = gql`
   fragment USER_FRAGMENT on User {
     id
@@ -35,7 +49,11 @@ export const COMMENT_FRAGMENT = gql`
     isDeleted
     createdAt
     editedAt
+    linkMetadata {
+      ...METADATA_FRAGMENT
+    }
   }
+  ${METADATA_FRAGMENT}
 `
 
 export const POST_FRAGMENT = gql`
@@ -56,10 +74,10 @@ export const POST_FRAGMENT = gql`
     createdAt
     editedAt
     linkMetadata {
-      title
-      description
+      ...METADATA_FRAGMENT
     }
   }
+  ${METADATA_FRAGMENT}
 `
 
 export const MESSAGE_FRAGMENT = gql`
@@ -68,7 +86,20 @@ export const MESSAGE_FRAGMENT = gql`
     text
     createdAt
     editedAt
+    image {
+      originalUrl
+      popupUrl
+      popupWidth
+      popupHeight
+      smallUrl
+      smallWidth
+      smallHeight
+    }
+    linkMetadatas {
+      ...METADATA_FRAGMENT
+    }
   }
+  ${METADATA_FRAGMENT}
 `
 
 export const FOLDER_FRAGMENT = gql`

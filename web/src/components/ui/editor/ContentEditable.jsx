@@ -16,12 +16,16 @@ const useRefCallback = (value, deps) => {
 }
 
 export default forwardRef(
-  ({ onChange, onInput, onBlur, onKeyPress, onKeyDown, ...props }, ref) => {
+  (
+    { onChange, onInput, onBlur, onKeyPress, onKeyDown, onPaste, ...props },
+    ref
+  ) => {
     const onChangeRef = useRefCallback(onChange)
     const onInputRef = useRefCallback(onInput)
     const onBlurRef = useRefCallback(onBlur)
     const onKeyPressRef = useRefCallback(onKeyPress)
     const onKeyDownRef = useRefCallback(onKeyDown)
+    const onPasteRef = useRefCallback(onPaste)
 
     return (
       <ReactContentEditable
@@ -32,6 +36,7 @@ export default forwardRef(
         onBlur={onBlurRef}
         onKeyPress={onKeyPressRef}
         onKeyDown={onKeyDownRef}
+        onPaste={onPasteRef}
       />
     )
   }

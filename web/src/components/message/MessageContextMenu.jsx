@@ -12,9 +12,11 @@ import { ChannelPermission } from '@/types/ChannelPermission'
 import { useParams } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasChannelPermissions } from '@/hooks/useHasChannelPermissions'
+import { useToggleMessagePin } from '@/components/message/useToggleMessagePin'
 
 export default function MessageContextMenu() {
   const menuEvent = useContextMenuEvent()
+  console.log(menuEvent)
   const message = menuEvent?.data?.message
   const { serverId, channelId, userId, groupId } = useParams()
   const [canManageMessages] = useHasChannelPermissions({
@@ -25,8 +27,7 @@ export default function MessageContextMenu() {
   })
   const copyToClipboard = useCopyToClipboard()[1]
   const [_deleteRes, deleteMessage] = useMutation(DELETE_MESSAGE)
-  const [_pinRes, pinMessage] = useMutation(PIN_MESSAGE)
-  const [_unpinRes, unpinMessage] = useMutation(UNPIN_MESSAGE)
+  const togglePin = useToggleMessagePin(message)
   const { t } = useTranslation()
   const currentUser = useCurrentUser()
 
@@ -40,7 +41,16 @@ export default function MessageContextMenu() {
     <ContextMenu>
       <ContextMenuSection>
         {isAuthor && <ContextMenuItem label={t('message.context.edit')} />}
-        {canPin && <ContextMenuItem label={t('message.context.pin')} />}
+        {canPin && (
+          <ContextMenuItem
+            label={
+              message.isPinned
+                ? t('message.context.unpin')
+                : t('message.context.pin')
+            }
+            onClick={() => togglePin()}
+          />
+        )}
         <ContextMenuItem
           onClick={() => {
             copyToClipboard(`${message.relativeUrl}`)

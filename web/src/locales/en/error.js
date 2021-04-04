@@ -15,7 +15,8 @@ export const error = {
     notAuthor: 'You are not the author of this message',
     missingArgs: 'Must provide channelId, groupId, or userId',
     notSentInChannel: 'Message was not sent in a channel',
-    empty: 'Message cannot be empty'
+    empty: 'Message cannot be empty',
+    textOrFile: 'Must provide text or a file'
   },
   comment: {
     notAuthor: 'You are not the author of this comment',

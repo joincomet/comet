@@ -1,7 +1,8 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { BaseEntity, Post, User } from '@/entity'
+import { BaseEntity, LinkMetadata, Post, User } from '@/entity'
 import {
   Collection,
+  Embedded,
   Entity,
   ManyToOne,
   OneToMany,
@@ -53,4 +54,8 @@ export class Comment extends BaseEntity {
   @Field()
   @Property()
   isDeleted: boolean = false
+
+  @Field(() => [LinkMetadata])
+  @Embedded(() => LinkMetadata, { object: true, array: true })
+  linkMetadatas: LinkMetadata[] = []
 }

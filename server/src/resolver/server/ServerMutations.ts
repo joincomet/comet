@@ -40,10 +40,15 @@ export class ServerMutations {
 
     let avatarUrl = null
     if (avatarFile) {
-      avatarUrl = await uploadImage(avatarFile, {
-        width: 256,
-        height: 256
-      })
+      avatarUrl = (
+        await uploadImage({
+          file: avatarFile,
+          resize: {
+            width: 256,
+            height: 256
+          }
+        })
+      ).url
     }
 
     const server = em.create(Server, {
@@ -192,15 +197,25 @@ export class ServerMutations {
   ): Promise<Server> {
     const server = await em.findOneOrFail(Server, serverId)
 
-    const avatarUrl = await uploadImage(avatarFile, {
-      width: 256,
-      height: 256
-    })
+    const avatarUrl = (
+      await uploadImage({
+        file: avatarFile,
+        resize: {
+          width: 256,
+          height: 256
+        }
+      })
+    ).url
 
-    const bannerUrl = await uploadImage(bannerFile, {
-      width: 256,
-      height: 256
-    })
+    const bannerUrl = (
+      await uploadImage({
+        file: bannerFile,
+        resize: {
+          width: 256,
+          height: 256
+        }
+      })
+    ).url
 
     em.assign(server, {
       name,

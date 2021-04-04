@@ -64,7 +64,7 @@ export default function CreateServerDialog() {
         />
       </ServerListItem>
 
-      <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Dialog isOpen={isOpen} close={() => setIsOpen(false)}>
         <DialogTitle className="title mb-4">
           {t('server.create.title')}
         </DialogTitle>

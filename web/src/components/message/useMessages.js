@@ -4,6 +4,7 @@ import { useQuery } from 'urql'
 
 export function useMessages({ channel, group, user }) {
   const initialTime = useRef(new Date().toString())
+  const [mountTime] = useState(new Date())
   const [page, setPage] = useState(0)
 
   const [{ data, fetching }] = useQuery({
@@ -26,12 +27,12 @@ export function useMessages({ channel, group, user }) {
       // Wait 3 seconds before fetching because of bug where messages sometimes starts at top and immediately loads more
       if (
         !data ||
-        !data.getMessages[0].hasMore ||
-        new Date().getTime() - initialTime.current.getTime() < 3000
+        !data?.getMessages[0]?.hasMore ||
+        new Date() - mountTime < 3000
       )
         return
       setPage(page + 1)
     },
-    data ? data.getMessages[0].hasMore : true
+    data && data.getMessages.length > 0 ? data.getMessages[0].hasMore : true
   ]
 }
