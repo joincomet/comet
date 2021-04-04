@@ -1,5 +1,4 @@
 import {
-  IconDownload,
   IconDiscord,
   IconGithub,
   IconPatreon,
@@ -7,7 +6,6 @@ import {
 } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { Link } from 'react-router-dom'
-import { getOS } from '@/utils/getOS'
 import { useCurrentUser } from '@/providers/UserProvider'
 import {
   VectorGrass,

@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { Message, Server, BaseEntity } from '@/entity'
+import { BaseEntity, Message, Server } from '@/entity'
 import {
   Collection,
   Entity,

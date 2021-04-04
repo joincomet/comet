@@ -1,6 +1,6 @@
-import { Context, ServerPermission } from '@/types'
-import { createMethodDecorator } from 'type-graphql'
-import { Server } from '@/entity'
+import {Context, ServerPermission} from '@/types'
+import {createMethodDecorator} from 'type-graphql'
+import {Server} from '@/entity'
 
 /**
  * Expects serverId arg

@@ -1,5 +1,4 @@
 import { Field, ObjectType } from 'type-graphql'
-import { User } from '@/entity'
 import { ChannelPermission } from '@/types'
 
 @ObjectType()

@@ -1,4 +1,4 @@
-import { Channel, User, BaseEntity, Message } from '@/entity'
+import { BaseEntity, Message, User } from '@/entity'
 import { Field, ObjectType } from 'type-graphql'
 import {
   Collection,

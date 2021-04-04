@@ -1,6 +1,6 @@
-import { ChannelPermission, Context, ServerPermission } from '@/types'
-import { createMethodDecorator } from 'type-graphql'
-import { Message } from '@/entity'
+import {ChannelPermission, Context, ServerPermission} from '@/types'
+import {createMethodDecorator} from 'type-graphql'
+import {Message} from '@/entity'
 
 /**
  * Expects messageId arg

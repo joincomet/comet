@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useContextMenuEvent } from '@/components/ui/context'
 import { useMutation } from 'urql'
 import {

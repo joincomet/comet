@@ -1,4 +1,4 @@
-import { ArgsType, Field, Int } from 'type-graphql'
+import { ArgsType, Field } from 'type-graphql'
 import { IsEmail, Length } from 'class-validator'
 
 @ArgsType()

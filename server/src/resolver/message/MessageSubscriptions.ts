@@ -8,10 +8,10 @@ import {
 } from 'type-graphql'
 import { Channel, Group, Message } from '@/entity'
 import {
-  SubscriptionFilter,
-  SubscriptionTopic,
   ChannelPermission,
-  Context
+  Context,
+  SubscriptionFilter,
+  SubscriptionTopic
 } from '@/types'
 import {
   MessageRemovedResponse,

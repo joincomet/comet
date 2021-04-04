@@ -1,8 +1,8 @@
 import {
-  IconNew,
-  IconTop,
   IconAll,
-  IconFeatured
+  IconFeatured,
+  IconNew,
+  IconTop
 } from '@/components/ui/icons/Icons'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'

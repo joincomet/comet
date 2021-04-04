@@ -1,11 +1,11 @@
 import { Field, ObjectType } from 'type-graphql'
 import {
-  User,
-  Channel,
   BaseEntity,
-  LinkMetadata,
+  Channel,
   Group,
-  ServerInvite
+  LinkMetadata,
+  ServerInvite,
+  User
 } from '@/entity'
 import {
   Collection,

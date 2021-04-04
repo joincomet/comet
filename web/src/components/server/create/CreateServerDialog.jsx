@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import Dialog from '@/components/ui/dialog/Dialog'
 import {
+  IconCreateServer,
   IconEditAvatar,
-  IconUploadPhoto,
-  IconCreateServer
+  IconUploadPhoto
 } from '@/components/ui/icons/Icons'
 import Button from '@/components/ui/Button'
 import { readURL } from '@/utils/readURL'

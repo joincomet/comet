@@ -1,4 +1,4 @@
-import { Args, Ctx, Query, Resolver, UseMiddleware } from 'type-graphql'
+import { Args, Ctx, Query, Resolver } from 'type-graphql'
 import { Context } from '@/types'
 import { Comment, Post } from '@/entity'
 import { GetCommentsArgs, GetCommentsSort } from '@/resolver/comment'

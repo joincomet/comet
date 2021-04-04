@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import {
+  Redirect,
   Route,
   Switch,
-  Redirect,
-  useParams,
-  useLocation
+  useLocation,
+  useParams
 } from 'react-router-dom'
 import SettingsPage from '@/pages/settings/SettingsPage'
 import ServerList from '@/components/server/list/ServerList'

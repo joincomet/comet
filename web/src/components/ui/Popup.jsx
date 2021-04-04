@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react/headless'
-import { useMotionValue, animate, motion } from 'framer-motion'
+import { animate, motion, useMotionValue } from 'framer-motion'
 import { useState } from 'react'
 
 export default function Popup({

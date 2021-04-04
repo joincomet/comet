@@ -1,7 +1,7 @@
 import { useContextMenuEvent } from '@/components/ui/context'
 import { useMutation } from 'urql'
 import { useCopyToClipboard } from 'react-use'
-import { DELETE_COMMENT, PIN_MESSAGE, UNPIN_MESSAGE } from '@/graphql/mutations'
+import { DELETE_COMMENT } from '@/graphql/mutations'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import ContextMenuItem from '@/components/ui/context/ContextMenuItem'

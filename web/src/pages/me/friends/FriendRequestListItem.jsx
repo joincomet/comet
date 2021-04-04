@@ -1,5 +1,5 @@
 import FriendListItemBase from '@/pages/me/friends/FriendListItemBase'
-import { IconX, IconCheck } from '@/components/ui/icons/Icons'
+import { IconCheck, IconX } from '@/components/ui/icons/Icons'
 import FriendListItemButton from '@/pages/me/friends/FriendListItemButton'
 
 export default function FriendRequestListItem({ request }) {

@@ -1,4 +1,4 @@
-import { useRef, useState, memo } from 'react'
+import { memo, useRef, useState } from 'react'
 
 import {
   ContextMenuEventContext,

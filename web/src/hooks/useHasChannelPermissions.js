@@ -1,11 +1,8 @@
-import { useMemo } from 'react'
-import {
-  GET_CHANNEL_PERMISSIONS,
-  GET_SERVER_PERMISSIONS
-} from '@/graphql/queries'
-import { useCurrentUser } from '@/providers/UserProvider'
-import { useTranslation } from 'react-i18next'
-import { useQuery } from 'urql'
+import {useMemo} from 'react'
+import {GET_CHANNEL_PERMISSIONS, GET_SERVER_PERMISSIONS} from '@/graphql/queries'
+import {useCurrentUser} from '@/providers/UserProvider'
+import {useTranslation} from 'react-i18next'
+import {useQuery} from 'urql'
 
 /**
  * @param channelId The ID of the channel to check permissions

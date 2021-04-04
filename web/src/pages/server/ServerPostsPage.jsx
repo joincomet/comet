@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import PostsHeader from '@/components/post/PostsHeader'
 import { useStore } from '@/hooks/useStore'
 import Container from '@/components/ui/Container'

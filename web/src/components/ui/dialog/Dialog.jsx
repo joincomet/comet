@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Transition, Dialog as HeadlessDialog } from '@headlessui/react'
+import { Dialog as HeadlessDialog, Transition } from '@headlessui/react'
 
 export default function Dialog({ isOpen, setIsOpen, children }) {
   return (

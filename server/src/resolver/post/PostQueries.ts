@@ -1,10 +1,10 @@
 import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
-import { Post, LinkMetadata, ServerUserJoin } from '@/entity'
+import { LinkMetadata, Post, ServerUserJoin } from '@/entity'
 import {
   GetPostsArgs,
-  GetPostsTime,
+  GetPostsResponse,
   GetPostsSort,
-  GetPostsResponse
+  GetPostsTime
 } from '@/resolver/post'
 import { Context } from '@/types'
 import { scrapeMetadata } from '@/util'

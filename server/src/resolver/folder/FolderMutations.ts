@@ -1,7 +1,6 @@
 import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
 import { Folder, Post, Server, ServerFolder, UserFolder } from '@/entity'
-import { handleUnderscore } from '@/util/text'
 import { ServerPermission } from '@/types/ServerPermission'
 import { CheckPostServerPermission, CheckServerPermission } from '@/util'
 

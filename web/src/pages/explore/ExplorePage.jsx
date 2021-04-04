@@ -1,11 +1,5 @@
 import ExploreSidebar from '@/pages/explore/ExploreSidebar'
-import {
-  IconSearch,
-  IconFeatured,
-  IconTop,
-  IconNew,
-  IconAll
-} from '@/components/ui/icons/Icons'
+import { IconSearch } from '@/components/ui/icons/Icons'
 import ServerInfoCard from '@/components/server/ServerInfoCard'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'

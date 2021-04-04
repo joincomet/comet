@@ -1,15 +1,6 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  ID,
-  Mutation,
-  Resolver,
-  UseMiddleware
-} from 'type-graphql'
+import { Arg, Args, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Context, ServerPermission } from '@/types'
-import { Comment, Notification, Post, CommentVote } from '@/entity'
+import { Comment, CommentVote, Notification, Post } from '@/entity'
 import { CreateCommentArgs } from '@/resolver/comment'
 import {
   CheckCommentAuthor,

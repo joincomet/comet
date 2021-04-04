@@ -1,5 +1,5 @@
 import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { BaseEntity, Comment, User } from '@/entity'
+import { Comment, User } from '@/entity'
 
 @Entity()
 export class CommentVote {

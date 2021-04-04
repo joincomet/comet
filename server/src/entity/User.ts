@@ -12,17 +12,16 @@ import {
 import {
   BaseEntity,
   Channel,
+  ChannelRole,
+  FriendData,
   Group,
   Server,
-  UserFolder,
   ServerUserBan,
   ServerUserJoin,
-  ServerRole,
-  ChannelRole,
-  FriendData
+  UserFolder
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
-import { ServerPermission, ChannelPermission } from '@/types'
+import { ChannelPermission, ServerPermission } from '@/types'
 import { CustomError } from '@/types/CustomError'
 
 @ObjectType({ implements: BaseEntity })

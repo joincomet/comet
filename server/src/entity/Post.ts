@@ -1,11 +1,11 @@
 import { Field, Int, ObjectType } from 'type-graphql'
 import {
-  Comment,
-  User,
-  Server,
-  LinkMetadata,
   BaseEntity,
-  Folder
+  Comment,
+  Folder,
+  LinkMetadata,
+  Server,
+  User
 } from '@/entity'
 import { URL } from 'url'
 import { isUrl } from '@/util/isUrl'

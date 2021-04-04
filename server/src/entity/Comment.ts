@@ -1,7 +1,6 @@
-import { Field, ID, Int, ObjectType } from 'type-graphql'
-import { Post, User, BaseEntity } from '@/entity'
+import { Field, Int, ObjectType } from 'type-graphql'
+import { BaseEntity, Post, User } from '@/entity'
 import {
-  BigIntType,
   Collection,
   Entity,
   ManyToOne,

@@ -1,8 +1,8 @@
 import {
   createClient,
   dedupExchange,
-  subscriptionExchange,
-  errorExchange
+  errorExchange,
+  subscriptionExchange
 } from 'urql'
 import { retryExchange } from '@urql/exchange-retry'
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch'

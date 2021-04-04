@@ -20,14 +20,13 @@ import {
 import {
   CheckChannelPermission,
   CheckGroupMember,
-  CheckMessageAuthor,
-  CheckMessageChannelPermission
+  CheckMessageAuthor
 } from '@/util'
 import {
   MessageSentPayload,
   SendMessageArgs,
-  TypingPayload,
-  TypingArgs
+  TypingArgs,
+  TypingPayload
 } from '@/resolver/message'
 import { FriendStatus } from '@/resolver/user'
 

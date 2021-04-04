@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react'
+import { useCallback, useRef } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import { useNewMessageNotification } from '@/components/message/useNewMessageNotification'
 import { usePrependedMessagesCount } from '@/components/message/usePrependedMessagesCount'
@@ -7,9 +7,6 @@ import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import MessagesStart from '@/components/message/MessagesStart'
-import { ContextMenuType } from '@/types/ContextMenuType'
-import MessageContextMenu from '@/components/message/MessageContextMenu'
-import { ContextMenuWrapper } from '@/components/ui/context'
 import MessageContextMenuWrapper from '@/components/message/MessageContextMenuWrapper'
 
 const PREPEND_OFFSET = 10 ** 7

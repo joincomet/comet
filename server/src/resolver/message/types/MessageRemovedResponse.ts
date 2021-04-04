@@ -1,5 +1,4 @@
-import { Field, ID, Int, ObjectType } from 'type-graphql'
-import { Message } from '@/entity'
+import { Field, ID, ObjectType } from 'type-graphql'
 
 @ObjectType()
 export class MessageRemovedResponse {

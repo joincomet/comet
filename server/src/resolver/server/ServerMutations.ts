@@ -11,7 +11,7 @@ import {
 } from 'type-graphql'
 import { Channel, Server, ServerInvite, User } from '@/entity'
 import { uploadImage } from '@/util/s3'
-import { SubscriptionTopic, Context } from '@/types'
+import { Context, SubscriptionTopic } from '@/types'
 import { ServerUserJoin } from '@/entity/ServerUserJoin'
 import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
 import { CreateServerArgs } from '@/resolver/server/types/CreateServerArgs'

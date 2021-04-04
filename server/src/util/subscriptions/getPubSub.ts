@@ -1,7 +1,4 @@
-import { RedisPubSub } from 'graphql-redis-subscriptions'
-import { PubSub } from 'apollo-server-express'
-import Redis from 'ioredis'
-import redisOptions from '@/config/redis'
+import {PubSub} from 'apollo-server-express'
 
 /*export const getPubSub = () =>
   process.env.NODE_ENV === 'production'

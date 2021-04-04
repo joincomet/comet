@@ -1,6 +1,6 @@
-import { Context } from '@/types'
-import { createMethodDecorator } from 'type-graphql'
-import { Channel, Server } from '@/entity'
+import {Context} from '@/types'
+import {createMethodDecorator} from 'type-graphql'
+import {Channel} from '@/entity'
 
 /**
  * Expects channelId arg

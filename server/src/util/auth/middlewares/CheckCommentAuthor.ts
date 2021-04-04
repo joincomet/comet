@@ -1,6 +1,6 @@
-import { Context } from '@/types'
-import { createMethodDecorator, MiddlewareFn } from 'type-graphql'
-import { Group, Message, Comment, FriendData, Post } from '@/entity'
+import {Context} from '@/types'
+import {createMethodDecorator} from 'type-graphql'
+import {Comment} from '@/entity'
 
 /**
  * Expects groupId arg

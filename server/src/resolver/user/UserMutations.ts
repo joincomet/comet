@@ -11,29 +11,29 @@ import {
 } from 'type-graphql'
 import { Context, SubscriptionTopic } from '@/types'
 import {
-  User,
-  Folder,
-  Post,
   Comment,
-  ServerUserJoin,
+  Folder,
+  FriendData,
   Message,
-  FriendData
+  Post,
+  ServerUserJoin,
+  User
 } from '@/entity'
 import {
-  uploadImage,
-  handleUnderscore,
   createAccessToken,
-  tagGenerator
+  handleUnderscore,
+  tagGenerator,
+  uploadImage
 } from '@/util'
 import isEmail from 'validator/lib/isEmail'
 import * as argon2 from 'argon2'
 import {
+  ChangePasswordArgs,
+  FriendStatus,
   LoginResponse,
-  UpdateUserArgs,
-  ChangePasswordArgs
+  UpdateUserArgs
 } from '@/resolver/user'
 import { CustomError } from '@/types/CustomError'
-import { FriendStatus } from '@/resolver/user'
 
 @Resolver()
 export class UserMutations {

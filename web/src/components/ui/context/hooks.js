@@ -1,9 +1,9 @@
 import {
+  createContext,
   useCallback,
   useContext,
   useEffect,
-  useRef,
-  createContext
+  useRef
 } from 'react'
 
 import {

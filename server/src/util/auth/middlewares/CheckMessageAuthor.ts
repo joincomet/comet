@@ -1,6 +1,6 @@
-import { Context } from '@/types'
-import { createMethodDecorator } from 'type-graphql'
-import { Message } from '@/entity'
+import {Context} from '@/types'
+import {createMethodDecorator} from 'type-graphql'
+import {Message} from '@/entity'
 
 /**
  * Expects groupId arg

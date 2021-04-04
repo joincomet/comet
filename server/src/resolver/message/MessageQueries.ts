@@ -4,7 +4,6 @@ import { FilterQuery, QueryOrder } from '@mikro-orm/core'
 import { GetMessagesArgs, GetMessagesResponse } from '@/resolver/message'
 import { Context, SubscriptionTopic } from '@/types'
 import { ChannelPermission } from '@/types/ChannelPermission'
-import { ServerPermission } from '@/types/ServerPermission'
 import { CheckChannelPermission, CheckGroupMember } from '@/util'
 
 @Resolver(() => Message)

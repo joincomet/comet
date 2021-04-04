@@ -1,10 +1,10 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
 import {
-  IconInbox,
   IconFriends,
-  IconX,
-  IconInfinity
+  IconInbox,
+  IconInfinity,
+  IconX
 } from '@/components/ui/icons/Icons'
 import { useHistory, useLocation } from 'react-router-dom'
 import UserAvatar from '@/components/user/UserAvatar'
