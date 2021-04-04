@@ -42,12 +42,10 @@ type Comment implements BaseEntity {
   id: ID!
   isDeleted: Boolean!
   isPinned: Boolean!
-  isRemoved: Boolean!
   isVoted: Boolean!
   parentComment: Comment
   pinPosition: String
   post: Post!
-  removedReason: String
   text: String!
   voteCount: Int!
 }
@@ -158,7 +156,6 @@ type Message implements BaseEntity {
   id: ID!
   isDeleted: Boolean!
   isPinned: Boolean!
-  isRemoved: Boolean!
   linkMetadatas: [LinkMetadata!]!
   text: String!
 }
@@ -422,13 +419,11 @@ type Post implements BaseEntity {
   imageUrls: [String!]!
   isDeleted: Boolean!
   isPinned: Boolean!
-  isRemoved: Boolean!
   isVoted: Boolean!
   linkMetadata: LinkMetadata
   linkUrl: String
   pinPosition: String
   relativeUrl: String!
-  removedReason: String
   server: Server!
   text: String
   thumbnailUrl: String
