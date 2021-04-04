@@ -1,11 +1,11 @@
 import { ContextMenuType } from '@/types/ContextMenuType'
-import ServerContextMenu from '@/components/server/ServerContextMenu'
 import { ContextMenuWrapper } from '@/components/ui/context'
+import ChannelContextMenu from '@/components/channel/ChannelContextMenu'
 
-export default function ServerContextMenuWrapper() {
+export default function ChannelContextMenuWrapper() {
   return (
-    <ContextMenuWrapper id={ContextMenuType.Server}>
-      <ServerContextMenu />
+    <ContextMenuWrapper id={ContextMenuType.Channel}>
+      <ChannelContextMenu />
     </ContextMenuWrapper>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
 import Editor from '@/components/ui/editor/Editor'
 import { useMutation } from 'urql'
@@ -20,7 +20,6 @@ const postBtnClass = ctl(`
   items-center
   disabled:cursor-not-allowed
   focus:outline-none
-  select-none
 `)
 
 const cancelBtnClass = ctl(`
@@ -31,7 +30,6 @@ const cancelBtnClass = ctl(`
   h-8
   flex
   items-center
-  select-none
 `)
 
 export default function PostEditor({ setOpen }) {

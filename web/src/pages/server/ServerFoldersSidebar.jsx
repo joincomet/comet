@@ -20,9 +20,10 @@ export default function ServerFoldersSidebar({ serverId }) {
   const userFolders = useUserFolders()
   const serverFolders = useServerFolders(serverId)
 
-  const [canManageFolders] = useHasServerPermissions(serverId, [
-    ServerPermission.ManagePosts
-  ])
+  const [canManageFolders] = useHasServerPermissions({
+    serverId,
+    permissions: [ServerPermission.ManagePosts]
+  })
 
   const { t } = useTranslation()
   const showFolders = useStore(s => s.showFolders)

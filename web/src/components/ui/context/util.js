@@ -16,6 +16,7 @@ export const determineMenuPlacement = (
   let left, top
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
+  let placeLeft = false
 
   if (isMobileDevice) {
     // On mobile devices, horizontally centre the menu on the tap, and place it above the tap
@@ -24,7 +25,7 @@ export const determineMenuPlacement = (
     top = clientY - menuHeight - 20
   } else {
     // On desktop, mimic native context menu placement
-    const placeLeft = windowWidth - clientX <= menuWidth
+    placeLeft = windowWidth - clientX <= menuWidth
     const placeBelow = windowHeight - clientY > menuHeight
     left = placeLeft ? clientX : clientX + menuWidth
     top = placeBelow ? clientY : windowHeight - (windowHeight - clientY)
@@ -33,9 +34,9 @@ export const determineMenuPlacement = (
   // If menu overflows the page, try to nudge it in the correct direction, applying a small buffer
   const bufferX = 24
   const bufferY = 12
-  const right = windowWidth - left - menuWidth
+  const right = placeLeft ? windowWidth - left : windowWidth - left - menuWidth
   const bottom = windowHeight - top - menuHeight
-  if (right < 0) left += right - bufferX
+  if (right < bufferX) left += right - bufferX
   if (bottom < 0) top += bottom - bufferY
   if (left < 0) left = bufferX
   if (top < 0) top = bufferY

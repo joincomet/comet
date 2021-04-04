@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 import {
   GET_SERVER_CHANNELS,
   GET_SERVER_FOLDERS,

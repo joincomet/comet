@@ -43,7 +43,6 @@ export class PostQueries {
       Post,
       {
         $and: [
-          { isRemoved: false },
           { isDeleted: false },
           !time || time === GetPostsTime.All
             ? {}
@@ -99,11 +98,6 @@ export class PostQueries {
     if (post.isDeleted) {
       post.author = null
       post.text = '<p>[deleted]</p>'
-    }
-
-    if (post.isRemoved) {
-      post.author = null
-      post.text = `<p>[removed: ${post.removedReason}]</p>`
     }
 
     post.isVoted = post.votes

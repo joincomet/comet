@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 import {
   GET_GROUPS_AND_DMS,
   GET_JOINED_SERVERS,

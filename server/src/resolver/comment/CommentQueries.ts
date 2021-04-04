@@ -35,10 +35,6 @@ export class CommentQueries {
         comment.text = `<p>[deleted]</p>`
         comment.author = null
       }
-      if (comment.isRemoved) {
-        comment.text = `<p>[removed: ${comment.removedReason}]</p>`
-        comment.author = null
-      }
     })
 
     return comments

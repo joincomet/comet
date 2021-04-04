@@ -54,12 +54,4 @@ export class Comment extends BaseEntity {
   @Field()
   @Property()
   isDeleted: boolean = false
-
-  @Field()
-  @Property()
-  isRemoved: boolean = false
-
-  @Field({ nullable: true })
-  @Property({ nullable: true, columnType: 'text' })
-  removedReason?: string
 }

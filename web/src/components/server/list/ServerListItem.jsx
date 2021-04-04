@@ -11,6 +11,7 @@ const dotClass = active =>
   inline-flex
   items-center
   justify-center
+  hover:rounded-2xl
   ${active ? 'rounded-2xl' : 'rounded-full'}
   transform
   transition

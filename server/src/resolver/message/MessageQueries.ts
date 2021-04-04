@@ -40,8 +40,7 @@ export class MessageQueries {
       throw new Error('error.message.missingArgs')
 
     const where: FilterQuery<Message> = {
-      isDeleted: false,
-      isRemoved: false
+      isDeleted: false
     }
     if (pinned) where.isPinned = true
     if (channel) {

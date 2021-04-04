@@ -9,7 +9,7 @@ const className = ctl(`
   right-0
   w-48
   origin-top-right
-  dark:bg-gray-950
+  dark:bg-gray-900
   rounded
   shadow-lg
   outline-none

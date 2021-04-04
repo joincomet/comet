@@ -200,8 +200,7 @@ export class UserMutations {
       await em
         .createQueryBuilder(Post)
         .update({
-          isRemoved: true,
-          removedReason: reason
+          isDeleted: true
         })
         .where({ author: user })
         .execute()
@@ -209,8 +208,7 @@ export class UserMutations {
       await em
         .createQueryBuilder(Comment)
         .update({
-          isRemoved: true,
-          removedReason: reason
+          isDeleted: true
         })
         .where({ author: user })
         .execute()
@@ -218,7 +216,7 @@ export class UserMutations {
       await em
         .createQueryBuilder(Message)
         .update({
-          isRemoved: true
+          isDeleted: true
         })
         .where({ author: user })
         .execute()

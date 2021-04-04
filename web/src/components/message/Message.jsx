@@ -2,11 +2,20 @@ import UserPopup from '@/components/user/UserPopup'
 import UserAvatar from '@/components/user/UserAvatar'
 import { calendarDate, shortTime } from '@/utils/timeUtils'
 import { memo } from 'react'
+import { useContextMenuTrigger } from '@/components/ui/context'
+import { ContextMenuType } from '@/types/ContextMenuType'
 
 export default memo(function Message({ showUser, message }) {
+  const contextMenuRef = useContextMenuTrigger({
+    menuId: ContextMenuType.Message,
+    data: { message }
+  })
   return (
     <div className={`${showUser ? 'pt-4' : ''}`}>
-      <div className={`flex py-1 px-4 dark:hover:bg-gray-775 group`}>
+      <div
+        ref={contextMenuRef}
+        className={`flex py-1 px-4 dark:hover:bg-gray-775 group`}
+      >
         {showUser ? (
           <UserPopup user={message.author}>
             <UserAvatar

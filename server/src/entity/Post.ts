@@ -128,12 +128,4 @@ export class Post extends BaseEntity {
   @Field()
   @Property()
   isDeleted: boolean = false
-
-  @Field()
-  @Property()
-  isRemoved: boolean = false
-
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  removedReason?: string
 }

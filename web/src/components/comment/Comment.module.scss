@@ -1,0 +1,10 @@
+.comment-collapse {
+    @apply absolute top-0 bottom-0 w-8 cursor-pointer z-10;
+    &::before {
+        @apply absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 transition;
+        content: "";
+    }
+    &:hover::before {
+        @apply bg-blue-500;
+    }
+}

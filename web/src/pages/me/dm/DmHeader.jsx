@@ -21,7 +21,7 @@ export default function DmHeader({ user }) {
       }
     >
       <div className="ml-auto">
-        <Tippy content={t('messages.pinned')}>
+        <Tippy content={t('message.pinned')}>
           <div className="highlightable">
             <IconPin className="w-5 h-5" />
           </div>

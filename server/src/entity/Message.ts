@@ -61,8 +61,4 @@ export class Message extends BaseEntity {
   @Field()
   @Property()
   isDeleted: boolean = false
-
-  @Field()
-  @Property()
-  isRemoved: boolean = false
 }

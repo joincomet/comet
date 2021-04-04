@@ -19,7 +19,6 @@ const commentBtnClass = ctl(`
   items-center
   disabled:cursor-not-allowed
   focus:outline-none
-  select-none
 `)
 
 const cancelBtnClass = ctl(`
@@ -30,13 +29,14 @@ const cancelBtnClass = ctl(`
   h-8
   flex
   items-center
-  select-none
 `)
 
 export default function CommentEditor({ postId, parentCommentId, setOpen }) {
   const [text, setText] = useState('')
   const [{ fetching }, createComment] = useMutation(CREATE_COMMENT)
   const { t } = useTranslation()
+
+  useEffect(() => console.log(text), [text])
 
   return (
     <div className="max-w-screen-md w-full">
