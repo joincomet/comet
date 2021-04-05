@@ -57,7 +57,7 @@ export class UserMutations {
     const bannedSubstrings = ['@', '#', ':', '```']
 
     for (const s of bannedSubstrings) {
-      if (name.includes(s)) throw new CustomError('user.login.illegalName', s)
+      if (name.includes(s)) throw new CustomError('error.login.illegalName', s)
     }
 
     const foundUser = await em.findOne(User, {
@@ -95,8 +95,7 @@ export class UserMutations {
       owner: user
     })
     await em.persistAndFlush([user, favoritesFolder, readLaterFolder])
-    await em.persistAndFlush(user)
-
+    user.username = `${user.name}#${user.tag}`
     const accessToken = createAccessToken(user)
     return {
       accessToken,

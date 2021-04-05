@@ -47,7 +47,6 @@ export const seed = async (em: EntityManager) => {
   const passwordHash = await argon2.hash('password')
 
   const userAdmin = em.create(User, {
-    id: '1',
     name: 'Admin',
     tag: '0001',
     email: 'admin@joincomet.app',
@@ -56,7 +55,6 @@ export const seed = async (em: EntityManager) => {
   })
 
   const userDan = em.create(User, {
-    id: '2',
     name: 'Dan',
     tag: '0001',
     email: 'dan@joincomet.app',
@@ -65,7 +63,6 @@ export const seed = async (em: EntityManager) => {
   })
 
   const userMichael = em.create(User, {
-    id: '3',
     name: 'Michael',
     tag: '0001',
     email: 'michael@joincomet.app',
@@ -126,7 +123,6 @@ export const seed = async (em: EntityManager) => {
   const users: User[] = []
   for (let i = 0; i < NUM_USERS; i++) {
     const user = em.create(User, {
-      id: `${i + 4}`,
       name: faker.name.firstName(),
       tag: tagGenerator(),
       passwordHash,

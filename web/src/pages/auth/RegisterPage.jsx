@@ -33,13 +33,13 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="w-full">
           <div className="title mb-6">{t('auth.createAccount')}</div>
           <div className="mb-4">
-            <label htmlFor="username" className="label">
-              {t('auth.username')}
+            <label htmlFor="name" className="label">
+              {t('auth.name')}
             </label>
             <input
               className="textbox px-3"
-              id="username"
-              {...register('username', { required: true })}
+              id="name"
+              {...register('name', { required: true })}
             />
           </div>
 

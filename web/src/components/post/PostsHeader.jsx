@@ -100,7 +100,7 @@ function TimeTab({ time }) {
       setCurrentPage={setPostsTime}
       currentPage={postsTime}
     >
-      {t(`feed.time.${time.toLowerCase()}`)}
+      {t(`post.feed.time.${time.toLowerCase()}`)}
     </HeaderTab>
   )
 }

@@ -2,7 +2,7 @@ export const auth = {
   login: 'Login',
   createAccount: 'Create an Account',
   welcomeBack: 'Welcome Back!',
-  username: 'Username',
+  name: 'Name',
   password: 'Password',
   email: 'Email',
   alreadyHaveAccount: 'Already have an account?',
