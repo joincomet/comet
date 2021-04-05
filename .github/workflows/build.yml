@@ -80,6 +80,6 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Update deployment file tags
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i "s/<TAG>/$TAG/g" $GITHUB_WORKSPACE/.do/app.yaml
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i "s/<TAG>/$TAG/g" .do/app.yaml
       - name: Update app spec
-        run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec $GITHUB_WORKSPACE/.do/app.yaml
+        run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml
