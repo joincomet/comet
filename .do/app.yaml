@@ -6,7 +6,7 @@ services:
       registry_type: DOCKER_HUB
       registry: joincomet
       repository: server
-      tag: latest
+      tag: <TAG>
     instance_count: 1
     instance_size_slug: basic-xxs
     http_port: 4000
@@ -36,7 +36,7 @@ services:
       registry_type: DOCKER_HUB
       registry: joincomet
       repository: web
-      tag: latest
+      tag: <TAG>
     instance_count: 1
     instance_size_slug: basic-xxs
     http_port: 3000

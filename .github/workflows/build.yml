@@ -24,9 +24,7 @@ jobs:
         with:
           file: server/Dockerfile
           push: true
-          tags: joincomet/server:latest
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          tags: joincomet/server:$(echo $GITHUB_SHA | head -c7)
   web:
     runs-on: ubuntu-latest
     steps:
@@ -45,11 +43,9 @@ jobs:
         with:
           file: web/Dockerfile
           push: true
-          tags: joincomet/web:latest
+          tags: joincomet/web:$(echo $GITHUB_SHA | head -c7)
           build-args: |
             API_DOMAIN=${{ secrets.API_DOMAIN }}
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
   electron:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -69,3 +65,15 @@ jobs:
           github_token: ${{ secrets.github_token }}
           # If the commit is tagged with a version (e.g. "v1.0.0"), release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+  deploy:
+    needs: [server, web]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Update deployment file tags
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i "s/<TAG>/$TAG/g" $GITHUB_WORKSPACE/.do/app.yaml
+      - name: Update app spec
+        run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec $GITHUB_WORKSPACE/.do/app.yaml

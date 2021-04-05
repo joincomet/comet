@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import LandingPage from '@/pages/LandingPage'
 import AuthLayout from '@/pages/auth/AuthLayout'
 import LoginPage from '@/pages/auth/LoginPage'
@@ -9,13 +9,10 @@ import PrivateRoutes from '@/pages/PrivateRoutes'
 import { DataProvider } from '@/providers/DataProvider'
 import { Helmet } from 'react-helmet-async'
 import LoadingScreen from '@/pages/LoadingScreen'
-import { useEffect } from 'react'
 
 export default function Routes() {
   const user = useCurrentUser()
   const userLoading = useCurrentUserLoading()
-  const pathname = useLocation()
-  useEffect(() => console.log(pathname), [pathname])
 
   return (
     <Switch>
