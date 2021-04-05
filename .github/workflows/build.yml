@@ -58,6 +58,8 @@ jobs:
       matrix:
         os: [ macos-latest, ubuntu-latest, windows-latest ]
     steps:
+      - name: print
+        run: echo ${{ github.ref }}
       - name: Check out Git repository
         uses: actions/checkout@v1
       - name: Install Node.js, NPM and Yarn
