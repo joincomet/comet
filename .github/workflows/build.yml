@@ -70,6 +70,8 @@ jobs:
           package_root: web
           github_token: ${{ secrets.github_token }}
           release: false
+        env:
+          VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
   deploy:
     needs: [server, web]
     runs-on: ubuntu-latest
