@@ -27,7 +27,7 @@ jobs:
         with:
           file: server/Dockerfile
           push: true
-          tags: ${{ steps.prep.outputs.tag }}
+          tags: ${{ steps.prep.outputs.tag }},joincomet/server:latest
   web:
     runs-on: ubuntu-latest
     steps:
@@ -49,7 +49,7 @@ jobs:
         with:
           file: web/Dockerfile
           push: true
-          tags: ${{ steps.prep.outputs.tag }}
+          tags: ${{ steps.prep.outputs.tag }},joincomet/web:latest
           build-args: |
             API_DOMAIN=${{ secrets.API_DOMAIN }}
   electron:
