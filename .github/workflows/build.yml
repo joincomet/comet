@@ -52,26 +52,6 @@ jobs:
           tags: ${{ steps.prep.outputs.tag }},joincomet/web:latest
           build-args: |
             API_DOMAIN=${{ secrets.API_DOMAIN }}
-  electron:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
-        with:
-          node-version: 15
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          package_root: web
-          github_token: ${{ secrets.github_token }}
-          release: false
-        env:
-          VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
   deploy:
     needs: [server, web]
     runs-on: ubuntu-latest
@@ -85,11 +65,13 @@ jobs:
       - name: Update deployment file tags
         run: |
           TAG=$(echo $GITHUB_SHA | head -c7)
+          ACCESS_TOKEN_SECRET=$(printf '%s\n' "${{ secrets.ACCESS_TOKEN_SECRET }}" | sed -e 's/[]\/$*.^[]/\\&/g');
+          AWS_SECRET_ACCESS_KEY=$(printf '%s\n' "${{ secrets.AWS_SECRET_ACCESS_KEY }}" | sed -e 's/[]\/$*.^[]/\\&/g');
           sed -i "s/<TAG>/$TAG/g" .do/app.yaml
-          sed -i "s/<ACCESS_TOKEN_SECRET>/${{ secrets.ACCESS_TOKEN_SECRET }}/g" .do/app.yaml
+          sed -i "s/<ACCESS_TOKEN_SECRET>/$ACCESS_TOKEN_SECRET/g" .do/app.yaml
           sed -i "s/<BUCKET>/${{ secrets.BUCKET }}/g" .do/app.yaml
           sed -i "s/<AWS_ACCESS_KEY_ID>/${{ secrets.AWS_ACCESS_KEY_ID }}/g" .do/app.yaml
-          sed -i "s/<AWS_SECRET_ACCESS_KEY>/${{ secrets.AWS_SECRET_ACCESS_KEY }}/g" .do/app.yaml
+          sed -i "s/<AWS_SECRET_ACCESS_KEY>/$AWS_SECRET_ACCESS_KEY/g" .do/app.yaml
           sed -i "s/<AWS_ENDPOINT>/${{ secrets.AWS_ENDPOINT }}/g" .do/app.yaml
           sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
       - name: Update app spec
