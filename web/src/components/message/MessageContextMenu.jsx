@@ -16,7 +16,6 @@ import { useToggleMessagePin } from '@/components/message/useToggleMessagePin'
 
 export default function MessageContextMenu() {
   const menuEvent = useContextMenuEvent()
-  console.log(menuEvent)
   const message = menuEvent?.data?.message
   const { serverId, channelId, userId, groupId } = useParams()
   const [canManageMessages] = useHasChannelPermissions({

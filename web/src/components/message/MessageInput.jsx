@@ -109,9 +109,9 @@ export default function MessageInput({ channel, group, user }) {
   const [text, setText] = useState('')
   const [file, setFile] = useState(null)
 
-  useEffect(() => {
-    inputRef.current?.el?.current?.focus()
-  }, [])
+  const focus = () => inputRef.current?.el?.current?.focus()
+
+  useEffect(() => focus(), [])
 
   useEffect(() => {
     if (inputRef.current?.el?.current)
@@ -119,6 +119,15 @@ export default function MessageInput({ channel, group, user }) {
         'message.message'
       )} ${placeholder}`
   }, [placeholder])
+
+  const keypress = e => {
+    focus()
+  }
+
+  useEffect(() => {
+    document.body.addEventListener('keypress', keypress)
+    return () => document.body.removeEventListener('keypress', keypress)
+  })
 
   return (
     <div className="px-4 dark:bg-gray-750">
@@ -204,7 +213,7 @@ function UploadDialog({
 
   const send = () =>
     sendMessage({ text: text ? text : null, file, ...variables }).then(() =>
-      setUploadOpen(false)
+      close()
     )
 
   const enterPressed = e => {

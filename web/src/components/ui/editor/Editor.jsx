@@ -23,7 +23,7 @@ import ContentEditable from './ContentEditable'
 export default function Editor({ text, setText }) {
   return (
     <div className="dark:bg-gray-700 rounded">
-      <div className="h-9 border-b dark:border-gray-650 flex items-center divide-x dark:divide-gray-650">
+      <div className="min-h-[2.25rem] border-b dark:border-gray-650 flex flex-wrap items-center divide-x dark:divide-gray-650">
         <FormatGroup>
           <FormatButton label="Bold (Ctrl+B)" icon={IconFormatBold} />
           <FormatButton label="Italic (Ctrl+U)" icon={IconFormatItalic} />
@@ -75,7 +75,10 @@ function FormatButton({ label, icon, small }) {
   const Icon = icon
   return (
     <Tippy content={label}>
-      <div onClick={() => toast.error('Formatting is coming soon!')}>
+      <div
+        className="h-9 flex items-center"
+        onClick={() => toast.error('Formatting is coming soon!')}
+      >
         <Icon
           className={`${!small ? 'w-5 h-5' : 'w-4 h-4 mt-0.5'} highlightable`}
         />

@@ -2,12 +2,16 @@
   "name": "web",
   "version": "1.0.0",
   "private": true,
+  "main": "electron/index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:electron": "electron .",
+    "build:electron": "yarn run build && electron-builder"
   },
   "dependencies": {
+    "@electron/remote": "^1.1.0",
     "@headlessui/react": "dev",
     "@netlify/classnames-template-literals": "^1.0.0",
     "@popperjs/core": "^2.9.2",
@@ -22,6 +26,10 @@
     "date-fns": "^2.19.0",
     "dayjs": "^1.10.4",
     "dayjs-twitter": "^0.4.0",
+    "electron-context-menu": "^2.5.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-store": "^7.0.2",
+    "electron-updater": "^4.3.8",
     "events": "^3.3.0",
     "framer-motion": "^4.1.2",
     "fuse.js": "^6.4.6",
@@ -69,6 +77,8 @@
     "autoprefixer": "^10.2.5",
     "babel-eslint": "^10.1.0",
     "concurrently": "^6.0.0",
+    "electron": "12.0.2",
+    "electron-builder": "^22.10.5",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
@@ -84,5 +94,18 @@
     "tailwindcss": "^2.0.4",
     "vite": "^2.1.5",
     "vite-plugin-pwa": "^0.6.5"
+  },
+  "build": {
+    "productName": "Comet",
+    "appId": "app.joincomet.desktop",
+    "asar": true,
+    "files": [
+      "electron",
+      "dist"
+    ],
+    "directories": {
+      "buildResources": "electron/resources",
+      "output": "dist-electron"
+    }
   }
 }

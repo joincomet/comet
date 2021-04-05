@@ -6,6 +6,7 @@ All-in-one chat and forums for communities.
 
 ### Frontend
 - [React.js](https://reactjs.org/)
+- [Electron](https://www.electronjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [urql](https://formidable.com/open-source/urql/docs/)
 - [Vite](https://vitejs.dev/guide/introduction.html)

@@ -9,6 +9,8 @@ import './styles/tippy.css'
 
 import App from './App'
 
+if (window.electron) document.documentElement.classList.add('electron')
+
 ReactDOM.render(
   <StrictMode>
     <App />

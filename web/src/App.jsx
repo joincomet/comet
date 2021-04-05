@@ -5,11 +5,14 @@ import { Provider as UrqlProvider } from 'urql'
 import { urqlClient } from '@/graphql/urqlClient'
 import ResponsiveToaster from '@/components/ui/ResponsiveToaster'
 import CustomDragLayer from '@/components/ui/CustomDragLayer'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, HashRouter } from 'react-router-dom'
 import { UserProvider } from '@/providers/UserProvider'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
+import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 
 export default function App() {
+  const AppRouter = window.electron ? HashRouter : BrowserRouter
+
   return (
     <HelmetProvider>
       <Helmet>
@@ -19,7 +22,7 @@ export default function App() {
         <title>Comet – All-in-one chat and forums for communities.</title>
       </Helmet>
 
-      <BrowserRouter>
+      <AppRouter>
         <UrqlProvider value={urqlClient}>
           <UserProvider>
             <DndProvider
@@ -28,13 +31,21 @@ export default function App() {
             >
               <ResponsiveToaster />
               <CustomDragLayer />
-              <div className={`h-full max-h-full`}>
+              {window.electron && <TitleBar />}
+              <div
+                style={
+                  window.electron
+                    ? { height: 'calc(100% - 1.375rem)' }
+                    : { height: '100%' }
+                }
+                className="flex"
+              >
                 <Routes />
               </div>
             </DndProvider>
           </UserProvider>
         </UrqlProvider>
-      </BrowserRouter>
+      </AppRouter>
     </HelmetProvider>
   )
 }

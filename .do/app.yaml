@@ -1,11 +1,14 @@
 name: comet
+region: nyc
 services:
   - name: server
-    github:
-      repo: joincomet/comet
-      branch: main
-      deploy_on_push: true
-    dockerfile_path: server/Dockerfile
+    image:
+      registry_type: DOCKER_HUB
+      registry: joincomet
+      repository: server
+      tag: latest
+    instance_count: 1
+    instance_size_slug: basic-xxs
     http_port: 4000
     routes:
       - path: /api
@@ -29,11 +32,13 @@ services:
       - key: MEDIA_DOMAIN
         value: media.joincomet.app
   - name: web
-    github:
-      repo: joincomet/comet
-      branch: main
-      deploy_on_push: true
-    dockerfile_path: web/Dockerfile
+    image:
+      registry_type: DOCKER_HUB
+      registry: joincomet
+      repository: web
+      tag: latest
+    instance_count: 1
+    instance_size_slug: basic-xxs
     http_port: 3000
     routes:
       - path: /

@@ -23,7 +23,7 @@ export default function ServerList() {
   return (
     <>
       <div
-        className={`top-0 fixed left-0 bottom-0 flex flex-col items-center w-18 bg-white dark:bg-gray-900`}
+        className={`flex flex-col items-center min-w-[4.5rem] w-18 bg-white dark:bg-gray-900`}
       >
         <div className="h-full flex flex-col items-center w-full divide-y dark:divide-gray-800 divide-gray-200">
           <div className="space-y-2 flex flex-col items-center py-2">

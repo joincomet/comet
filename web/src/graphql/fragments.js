@@ -49,7 +49,7 @@ export const COMMENT_FRAGMENT = gql`
     isDeleted
     createdAt
     editedAt
-    linkMetadata {
+    linkMetadatas {
       ...METADATA_FRAGMENT
     }
   }

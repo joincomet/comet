@@ -19,7 +19,7 @@ import ExplorePage from '@/pages/explore/ExplorePage'
 import ServerSidebar from '@/pages/server/ServerSidebar'
 import ServerPostsPage from '@/pages/server/ServerPostsPage'
 import PostPage from '@/pages/post/PostPage'
-import ServerChannelPage from '@/pages/server/channel/ServerChannelPage'
+import ChannelPage from '@/pages/server/channel/ChannelPage'
 import ServerFolderPage from '@/pages/server/ServerFolderPage'
 import { useDataLoading } from '@/providers/DataProvider'
 import { ServerProvider, useServerLoading } from '@/providers/ServerProvider'
@@ -117,7 +117,7 @@ function ServerRoutes() {
             <PostPage />
           </ServerRoute>
           <ServerRoute path="/server/:serverId/channel/:channelId">
-            <ServerChannelPage />
+            <ChannelPage />
           </ServerRoute>
           <ServerRoute path="/server/:serverId/folder/:folderId">
             <ServerFolderPage />

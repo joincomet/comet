@@ -2,9 +2,9 @@ import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import { GET_USER } from '@/graphql/queries'
 import DmHeader from '@/pages/me/dm/DmHeader'
-import Container from '@/components/ui/Container'
 import Messages from '@/components/message/Messages'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
+import Page from '@/components/ui/page/Page'
 
 export default function DmPage() {
   const { userId } = useParams()
@@ -15,10 +15,8 @@ export default function DmPage() {
   const user = userData?.getUser
   useSetHomePage(`dm/${userId}`)
   return (
-    <>
-      <DmHeader user={user} />
-
-      <Container>{!!user && <Messages user={user} />}</Container>
-    </>
+    <Page header={<DmHeader user={user} />}>
+      <Messages user={user} />
+    </Page>
   )
 }

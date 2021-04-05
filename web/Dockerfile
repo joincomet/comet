@@ -1,4 +1,6 @@
 FROM node:latest
+ARG API_DOMAIN
+ENV VITE_API_DOMAIN=$API_DOMAIN
 RUN yarn global add http-server
 WORKDIR /app
 COPY . .

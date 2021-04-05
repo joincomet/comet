@@ -2,8 +2,6 @@ import { useMemo } from 'react'
 import { useQuery } from 'urql'
 import { GET_COMMENTS, GET_POST } from '@/graphql/queries'
 import Post from '@/components/post/Post'
-import Container from '@/components/ui/Container'
-import View from '@/components/ui/View'
 import { useParams } from 'react-router-dom'
 import PostUsersSidebar from '@/pages/post/PostUsersSidebar'
 import { createCommentTree, getParticipants } from '@/utils/commentUtils'
@@ -17,6 +15,7 @@ import { ServerPermission } from '@/types/ServerPermission'
 import { useTranslation } from 'react-i18next'
 import PostHeader from '@/pages/post/PostHeader'
 import { usePosts } from '@/components/post/usePosts'
+import Page from '@/components/ui/page/Page'
 
 export default function PostPage() {
   const { t } = useTranslation()
@@ -54,43 +53,41 @@ export default function PostPage() {
   const showUsers = useStore(s => s.showUsers)
 
   return (
-    <>
+    <Page
+      header={<PostHeader post={post} />}
+      rightSidebar={<PostUsersSidebar post={post} users={users} />}
+    >
       <PostContextMenuWrapper />
       <CommentContextMenuWrapper />
 
-      <PostHeader post={post} />
-      <PostUsersSidebar post={post} users={users} />
+      <div className="max-h-full h-full scrollbar dark:bg-gray-750">
+        <div className="pt-4 px-4">
+          {!!post && <Post post={post} isPostPage />}
+        </div>
 
-      <Container rightSidebar={showUsers}>
-        <View>
+        {canCreateComment && (
           <div className="pt-4 px-4">
-            {!!post && <Post post={post} isPostPage />}
+            <CreateCommentCard postId={postId} />
           </div>
+        )}
 
-          {canCreateComment && (
-            <div className="pt-4 px-4">
-              <CreateCommentCard postId={postId} />
-            </div>
-          )}
-
-          {canViewComments ? (
-            <div className="space-y-2 px-4 pt-4 pb-96">
-              {comments.map((comment, index) => (
-                <Comment
-                  key={comment.id}
-                  comment={comment}
-                  post={post}
-                  isLast={index < comments.length - 1}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="py-10 px-4 text-center font-semibold text-xl text-tertiary">
-              {t('comment.noPermission')}
-            </div>
-          )}
-        </View>
-      </Container>
-    </>
+        {canViewComments ? (
+          <div className="space-y-2 px-4 pt-4 pb-96">
+            {comments.map((comment, index) => (
+              <Comment
+                key={comment.id}
+                comment={comment}
+                post={post}
+                isLast={index < comments.length - 1}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="py-10 px-4 text-center font-semibold text-xl text-tertiary">
+            {t('comment.noPermission')}
+          </div>
+        )}
+      </div>
+    </Page>
   )
 }

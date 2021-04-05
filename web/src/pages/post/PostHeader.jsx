@@ -11,7 +11,7 @@ export default function PostHeader({ post }) {
   return (
     <header
       id="header"
-      className={`fixed left-78 right-0 z-10 top-0 h-12 items-center bg-white dark:bg-gray-750 border-b dark:border-gray-800 shadow flex`}
+      className={`h-12 min-h-[3rem] items-center bg-white dark:bg-gray-750 border-b dark:border-gray-800 shadow flex`}
     >
       <div
         className={`flex items-center font-semibold text-base text-primary pl-4 pr-4`}

@@ -1,10 +1,10 @@
 import Header from '@/components/ui/header/Header'
 import { useParams } from 'react-router-dom'
 import GroupUsersSidebar from '@/pages/me/group/GroupUsersSidebar'
-import Container from '@/components/ui/Container'
 import Messages from '@/components/message/Messages'
 import { useGroupsAndDms } from '@/providers/DataProvider'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
+import Page from '@/components/ui/page/Page'
 
 export default function GroupPage() {
   const { groupId } = useParams()
@@ -13,13 +13,8 @@ export default function GroupPage() {
   )
   useSetHomePage(`group/${groupId}`)
   return (
-    <>
-      <Header />
-      <GroupUsersSidebar />
-
-      <Container>
-        <Messages group={group} />
-      </Container>
-    </>
+    <Page header={<Header></Header>} rightSidebar={<GroupUsersSidebar />}>
+      <Messages group={group} />
+    </Page>
   )
 }
