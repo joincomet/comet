@@ -16,6 +16,7 @@ export const comment = {
     unvote: 'Remove Rocket',
     votePermission: 'This server does not allow you to rocket comments.',
     pin: 'Pin Comment',
-    unpin: 'Unpin Comment'
+    unpin: 'Unpin Comment',
+    edit: 'Edit Comment'
   }
 }

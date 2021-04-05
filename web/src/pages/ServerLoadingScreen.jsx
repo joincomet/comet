@@ -10,7 +10,7 @@ export default function ServerLoadingScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, delay: 0.3 }}
       style={{ zIndex: 9999 }}
-      className="h-full fixed inset-y-0 right-0 left-78 flex items-center justify-center dark:bg-gray-800"
+      className="h-full fixed bottom-0 right-0 left-78 top-0 electron:top-5.5 flex items-center justify-center dark:bg-gray-800"
     >
       <div className="space-y-8">
         <div>{t('server.loading')}</div>

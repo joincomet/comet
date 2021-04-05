@@ -4,10 +4,6 @@ export default () => {
       console.error('DATABASE_URL environment variable missing. Shutting down.')
       process.exit()
     }
-    if (!process.env.CORS_ORIGIN) {
-      console.error('CORS_ORIGIN environment variable missing. Shutting down.')
-      process.exit()
-    }
   }
 
   if (!process.env.ACCESS_TOKEN_SECRET) {

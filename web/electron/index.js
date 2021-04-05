@@ -6,7 +6,7 @@ const isDev = require('electron-is-dev')
 const contextMenu = require('electron-context-menu')
 const Store = require('electron-store')
 
-contextMenu()
+contextMenu({ showInspectElement: true }) // TODO disable this
 const store = new Store()
 
 const icon = join(__dirname, './resources/icon.png')

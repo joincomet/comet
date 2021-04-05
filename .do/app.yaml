@@ -17,20 +17,18 @@ services:
         value: ${db.DATABASE_URL}
       - key: CA_CERT
         value: ${db.CA_CERT}
-      - key: CORS_ORIGIN
-        value: ${web.PUBLIC_URL}
       - key: ACCESS_TOKEN_SECRET
-        value: change this!
+        value: <ACCESS_TOKEN_SECRET>
       - key: BUCKET
-        value: comet
+        value: <BUCKET>
       - key: AWS_ACCESS_KEY_ID
-        value: change this!
+        value: <AWS_ACCESS_KEY_ID>
       - key: AWS_SECRET_ACCESS_KEY
-        value: change this!
+        value: <AWS_SECRET_ACCESS_KEY>
       - key: AWS_ENDPOINT
-        value: nyc3.digitaloceanspaces.com
+        value: <AWS_ENDPOINT>
       - key: MEDIA_DOMAIN
-        value: media.joincomet.app
+        value: <MEDIA_DOMAIN>
   - name: web
     image:
       registry_type: DOCKER_HUB

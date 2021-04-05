@@ -83,6 +83,14 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Update deployment file tags
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i "s/<TAG>/$TAG/g" .do/app.yaml
+        run: |
+          TAG=$(echo $GITHUB_SHA | head -c7)
+          sed -i "s/<TAG>/$TAG/g" .do/app.yaml
+          sed -i "s/<ACCESS_TOKEN_SECRET>/${{ secrets.ACCESS_TOKEN_SECRET }}/g" .do/app.yaml
+          sed -i "s/<BUCKET>/${{ secrets.BUCKET }}/g" .do/app.yaml
+          sed -i "s/<AWS_ACCESS_KEY_ID>/${{ secrets.AWS_ACCESS_KEY_ID }}/g" .do/app.yaml
+          sed -i "s/<AWS_SECRET_ACCESS_KEY>/${{ secrets.AWS_SECRET_ACCESS_KEY }}/g" .do/app.yaml
+          sed -i "s/<AWS_ENDPOINT>/${{ secrets.AWS_ENDPOINT }}/g" .do/app.yaml
+          sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
       - name: Update app spec
         run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml

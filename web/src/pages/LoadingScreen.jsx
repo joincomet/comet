@@ -9,7 +9,7 @@ export default function LoadingScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, delay: 0.3 }}
       style={{ zIndex: 9999 }}
-      className="h-full fixed inset-0 flex items-center justify-center dark:bg-gray-800"
+      className="h-full fixed inset-x-0 bottom-0 top-0 electron:top-5.5 flex items-center justify-center dark:bg-gray-800"
     >
       <div className="space-y-8">
         <VectorLogo className="w-36" />
