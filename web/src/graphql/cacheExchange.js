@@ -109,7 +109,7 @@ export const cacheExchange = ce({
       const post = cache.readFragment(POST_FRAGMENT, { id })
       return {
         __typename: 'Post',
-        id,
+        ...post,
         isVoted: true,
         voteCount: post.voteCount + 1
       }
@@ -118,7 +118,7 @@ export const cacheExchange = ce({
       const post = cache.readFragment(POST_FRAGMENT, { id })
       return {
         __typename: 'Post',
-        id,
+        ...post,
         isVoted: false,
         voteCount: post.voteCount - 1
       }
@@ -127,7 +127,7 @@ export const cacheExchange = ce({
       const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
       return {
         __typename: 'Comment',
-        id,
+        ...comment,
         isVoted: true,
         voteCount: comment.voteCount + 1
       }
@@ -135,8 +135,8 @@ export const cacheExchange = ce({
     unvoteComment: ({ commentId: id }, cache) => {
       const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
       return {
-        __typename: 'Post',
-        id,
+        __typename: 'Comment',
+        ...comment,
         isVoted: false,
         voteCount: comment.voteCount - 1
       }
