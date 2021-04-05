@@ -85,16 +85,3 @@ jobs:
         run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i "s/<TAG>/$TAG/g" .do/app.yaml
       - name: Update app spec
         run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout main
-        uses: actions/checkout@v2
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      - name: Update deployment file tags
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i "s/<TAG>/$TAG/g" .do/app.yaml
-      - name: print
-        run: cat .do/app.yaml
