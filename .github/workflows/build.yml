@@ -9,6 +9,9 @@ jobs:
   server:
     runs-on: ubuntu-latest
     steps:
+      - name: Prepare
+        id: prep
+        run: echo ::set-output name=tag::joincomet/server:${GITHUB_SHA::7}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -24,10 +27,13 @@ jobs:
         with:
           file: server/Dockerfile
           push: true
-          tags: joincomet/server:$(echo $GITHUB_SHA | head -c7)
+          tags: ${{ steps.prep.outputs.tag }}
   web:
     runs-on: ubuntu-latest
     steps:
+      - name: Prepare
+        id: prep
+        run: echo ::set-output name=tag::joincomet/web:${GITHUB_SHA::7}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -43,7 +49,7 @@ jobs:
         with:
           file: web/Dockerfile
           push: true
-          tags: joincomet/web:$(echo $GITHUB_SHA | head -c7)
+          tags: ${{ steps.prep.outputs.tag }}
           build-args: |
             API_DOMAIN=${{ secrets.API_DOMAIN }}
   electron:
