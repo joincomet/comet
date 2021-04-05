@@ -1,16 +1,18 @@
 {
   "name": "web",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "repository": "github:joincomet/comet",
   "main": "electron/index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:electron": "cross-env ELECTRON=true vite build",
     "preview": "vite preview --port 3000",
     "dev:electron": "electron .",
     "dist": "electron-builder",
-    "pack": "electron-builder --dir"
+    "pack": "electron-builder --dir",
+    "patch": "yarn version patch"
   },
   "dependencies": {
     "@electron/remote": "^1.1.0",
@@ -25,6 +27,7 @@
     "@urql/exchange-graphcache": "^4.0.0",
     "@urql/exchange-multipart-fetch": "^0.1.11",
     "@urql/exchange-retry": "^0.2.0",
+    "cross-env": "^7.0.3",
     "date-fns": "^2.19.0",
     "dayjs": "^1.10.4",
     "dayjs-twitter": "^0.4.0",
@@ -43,7 +46,7 @@
     "react-dnd-html5-backend": "^14.0.0",
     "react-dnd-touch-backend": "^14.0.0",
     "react-helmet-async": "^1.0.9",
-    "react-hook-form": "^7.0.0",
+    "react-hook-form": "^7.0.1",
     "react-hot-toast": "^1.0.2",
     "react-i18next": "^11.8.12",
     "react-icons": "^4.2.0",

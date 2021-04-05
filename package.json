@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -21,6 +21,7 @@
 		"start": "yarn workspace server start",
 		"dev:web": "yarn workspace web run dev",
 		"dev:server": "yarn workspace server run dev",
-		"dev:electron": "yarn workspace web run dev:electron"
+		"dev:electron": "yarn workspace web run dev:electron",
+		"patch": "yarn version patch && yarn workspace web run patch && yarn workspace server run patch"
 	}
 }

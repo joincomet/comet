@@ -30,7 +30,7 @@ const pwa = VitePWA({
 })
 
 export default defineConfig(({ command }) => ({
-  base: './',
+  base: process.env.ELECTRON === 'true' ? './' : '/',
   plugins: [reactRefresh(), pwa],
   resolve: {
     alias: {

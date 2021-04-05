@@ -1,10 +1,11 @@
 {
   "name": "server",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
-    "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts"
+    "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "patch": "yarn version patch"
   },
   "dependencies": {
     "@mikro-orm/core": "^4.5.1",
@@ -44,7 +45,7 @@
     "nanoid": "^3.1.22",
     "node-fetch": "^2.6.1",
     "reflect-metadata": "^0.1.13",
-    "sharp": "^0.28.0",
+    "sharp": "^0.28.1",
     "src": "link:./src",
     "type-graphql": "^1.1.1",
     "validator": "^13.5.2",
@@ -61,8 +62,8 @@
     "@types/mime": "^2.0.3",
     "@types/node": "^14.14.37",
     "@types/sharp": "^0.27.3",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "@typescript-eslint/parser": "^4.20.0",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
