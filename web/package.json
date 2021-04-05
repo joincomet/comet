@@ -107,6 +107,12 @@
     "directories": {
       "buildResources": "electron/resources",
       "output": "dist-electron"
+    },
+    "snap": {
+      "publish": {
+        "provider": "generic",
+        "url": "https://anydummyurl.com"
+      }
     }
   }
 }
