@@ -80,7 +80,7 @@ function createWindow() {
   const window = new BrowserWindow(options)
 
   const port = process.env.PORT || 3000
-  const dev = !isDev
+  const dev = isDev
   const url = dev
     ? `http://localhost:${port}`
     : join(__dirname, '../dist/index.html')

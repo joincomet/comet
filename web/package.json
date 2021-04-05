@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview --port 3000",
     "dev:electron": "electron .",
-    "build:electron": "yarn run build && electron-builder"
+    "dist": "electron-builder",
+    "pack": "electron-builder --dir"
   },
   "dependencies": {
     "@electron/remote": "^1.1.0",
