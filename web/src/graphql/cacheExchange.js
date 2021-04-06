@@ -5,7 +5,9 @@ import {
   GET_JOINED_SERVERS,
   GET_MESSAGES,
   GET_POSTS,
-  GET_SERVER_CHANNELS
+  GET_SERVER_CHANNELS,
+  GET_SERVER_FOLDERS,
+  GET_USER_FOLDERS
 } from '@/graphql/queries'
 import { cacheExchange as ce } from '@urql/exchange-graphcache'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
@@ -65,7 +67,8 @@ export const cacheExchange = ce({
     ChannelUsersResponse: () => null,
     GetUserRelationshipsResponse: () => null,
     GetChannelPermissionsResponse: () => null,
-    Image: i => i.originalUrl
+    Image: i => i.originalUrl,
+    File: f => f.url
   },
   resolvers: {
     Query: {

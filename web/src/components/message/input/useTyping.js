@@ -27,13 +27,14 @@ export const useTyping = ({ channel, group, user }) => {
     },
     (_, { userStartedTyping: username }) => {
       setTypingNames(prev => new Set(prev.add(username)))
-      setTimeout(
+      const timeoutId = setTimeout(
         () =>
           setTypingNames(
             prev => new Set([...prev].filter(u => u !== username))
           ),
         TYPING_TIMEOUT
       )
+      return () => clearTimeout(timeoutId)
     }
   )
 

@@ -49,9 +49,10 @@ export function DataProvider({ children }) {
     pause
   })
   const userFolders = userFoldersData?.getUserFolders
-  useSubscription({ query: REFETCH_USER_FOLDERS, pause }, () =>
+  useSubscription({ query: REFETCH_USER_FOLDERS, pause }, () => {
+    console.log('refetchUserFolders')
     refetchFolders()
-  )
+  })
 
   const [{ data: userRelationshipsData }, refetchRels] = useQuery({
     query: GET_USER_RELATIONSHIPS,

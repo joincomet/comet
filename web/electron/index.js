@@ -5,6 +5,7 @@ const { BrowserWindow, app, shell, screen } = require('electron')
 const isDev = require('electron-is-dev')
 const contextMenu = require('electron-context-menu')
 const Store = require('electron-store')
+const DiscordRPC = require('discord-rpc')
 
 contextMenu({ showInspectElement: true }) // TODO disable this
 const store = new Store()
@@ -12,6 +13,7 @@ const store = new Store()
 const icon = join(__dirname, './resources/icon.png')
 
 let loadingScreen
+let mainWindow
 
 const createLoadingScreen = () => {
   /// create a browser window
@@ -77,7 +79,7 @@ function createWindow() {
   }
 
   // Create the browser window.
-  const window = new BrowserWindow(options)
+  mainWindow = new BrowserWindow(options)
 
   const port = process.env.PORT || 3000
   const dev = isDev
@@ -86,34 +88,36 @@ function createWindow() {
     : join(__dirname, '../dist/index.html')
 
   // and load the index.html of the app.
-  dev ? window?.loadURL(url) : window?.loadFile(url)
+  dev ? mainWindow?.loadURL(url) : mainWindow?.loadFile(url)
 
   // window.once('ready-to-show', window.show)
 
-  window.on('resize', saveBoundsSoon)
-  window.on('move', saveBoundsSoon)
-  window.on('close', () => store.set('windowBounds', window.getNormalBounds()))
+  mainWindow.on('resize', saveBoundsSoon)
+  mainWindow.on('move', saveBoundsSoon)
+  mainWindow.on('close', () =>
+    store.set('windowBounds', mainWindow.getNormalBounds())
+  )
   let saveBoundsCookie
 
   function saveBoundsSoon() {
     if (saveBoundsCookie) clearTimeout(saveBoundsCookie)
     saveBoundsCookie = setTimeout(() => {
       saveBoundsCookie = undefined
-      if (window) store.set('windowBounds', window.getNormalBounds())
+      if (mainWindow) store.set('windowBounds', mainWindow.getNormalBounds())
     }, 1000)
   }
 
-  window.webContents.on('new-window', function (e, url) {
+  mainWindow.webContents.on('new-window', function (e, url) {
     e.preventDefault()
     shell.openExternal(url)
   })
 
-  window.webContents.on('did-finish-load', () => {
+  mainWindow.webContents.on('did-finish-load', () => {
     /// when the content has loaded, hide the loading screen and show the main window
     if (loadingScreen) {
       loadingScreen.close()
     }
-    window.show()
+    mainWindow.show()
     // if (isDev) window.webContents.openDevTools()
   })
 }
@@ -138,3 +142,38 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
+
+// Set this to your Client ID.
+const clientId = '829047983378792518'
+
+// Only needed if you want to use spectate, join, or ask to join
+DiscordRPC.register(clientId)
+
+const rpc = new DiscordRPC.Client({ transport: 'ipc' })
+
+async function setActivity() {
+  if (!rpc || !mainWindow) {
+    return
+  }
+
+  // You'll need to have snek_large and snek_small assets uploaded to
+  // https://discord.com/developers/applications/<application_id>/rich-presence/assets
+  rpc.setActivity({
+    details: `Chat and forums for communities.`,
+    state: 'joincomet.app',
+    largeImageKey: 'discord_rich_presence_icon',
+    largeImageText: 'Drop Discord and Reddit, join Comet',
+    instance: false
+  })
+}
+
+rpc.on('ready', () => {
+  setActivity()
+
+  // activity can only be set every 15 seconds
+  setInterval(() => {
+    setActivity()
+  }, 15e3)
+})
+
+rpc.login({ clientId }).catch(console.error)

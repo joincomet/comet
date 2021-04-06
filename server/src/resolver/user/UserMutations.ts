@@ -16,6 +16,7 @@ import {
   FriendData,
   Message,
   Post,
+  Server,
   ServerUserJoin,
   User
 } from '@/entity'
@@ -95,7 +96,11 @@ export class UserMutations {
       name: 'Read Later',
       owner: user
     })
-    await em.persistAndFlush([user, favoritesFolder, readLaterFolder])
+
+    const cometServer = await em.findOne(Server, { name: 'Comet' })
+    const join = await em.create(ServerUserJoin, { user, server: cometServer })
+
+    await em.persistAndFlush([user, favoritesFolder, readLaterFolder, join])
     user.username = `${user.name}#${user.tag}`
     const accessToken = createAccessToken(user)
     return {

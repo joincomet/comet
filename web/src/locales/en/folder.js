@@ -4,12 +4,13 @@ export const folder = {
   favorites: 'Favorites',
   readLater: 'Read Later',
   added: 'Added to {{folder.name}}!',
+  name: 'Name',
   user: {
     title: 'Your Folders',
-    create: 'Create a Folder'
+    create: 'Create Folder'
   },
   server: {
     title: 'Server Folders',
-    create: 'Create a Server Folder'
+    create: 'Create Server Folder'
   }
 }

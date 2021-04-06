@@ -17,7 +17,7 @@ export default function ChannelPage() {
       header={<ChannelHeader channel={channel} />}
       rightSidebar={<ChannelUsersSidebar channel={channel} />}
     >
-      <Messages channel={channel} />
+      {!!channel && <Messages channel={channel} />}
     </Page>
   )
 }

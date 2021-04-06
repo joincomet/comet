@@ -53,13 +53,17 @@ export default function MessageInput({ channel, group, user }) {
 
   useEffect(() => {
     if (!files) return
+    let timeoutId
     if (currentFileIndex >= files.length) {
       setFiles(null)
       setCurrentFile(null)
       setCurrentFileIndex(0)
     } else {
       setCurrentFile(null)
-      setTimeout(() => setCurrentFile(files[currentFileIndex]), 300)
+      timeoutId = setTimeout(() => setCurrentFile(files[currentFileIndex]), 300)
+    }
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
     }
   }, [currentFileIndex])
 

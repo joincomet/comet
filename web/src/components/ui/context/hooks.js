@@ -145,11 +145,15 @@ export const useInternalHandlers = (
       if (!node || !isVisible) return
 
       const wasOutside = event.target !== node && !node.contains(event.target)
+      let timeoutId
       if (wasOutside && hideOnOutsideClick) {
         hideMenu()
       } else if (hideOnSelfClick) {
-        if (event.touches) setTimeout(() => hideMenu(), 200)
+        if (event.touches) timeoutId = setTimeout(() => hideMenu(), 200)
         else hideMenu()
+      }
+      return () => {
+        if (timeoutId) clearTimeout(timeoutId)
       }
     },
     [hideMenu, isVisible, wrapperRef, hideOnSelfClick, hideOnOutsideClick]

@@ -14,7 +14,7 @@ export default function GroupPage() {
   useSetHomePage(`group/${groupId}`)
   return (
     <Page header={<Header></Header>} rightSidebar={<GroupUsersSidebar />}>
-      <Messages group={group} />
+      {!!group && <Messages group={group} />}
     </Page>
   )
 }

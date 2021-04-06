@@ -261,6 +261,7 @@ type Mutation {
 
   """Create a comment on a post"""
   createComment(parentCommentId: ID, postId: ID!, text: String!): Comment!
+  createFolder(name: String!, serverId: ID): Folder!
 
   """Request to be friends with a user"""
   createFriendRequest(
@@ -276,8 +277,6 @@ type Mutation {
 
   """Create a server"""
   createServer(avatarFile: Upload, category: ServerCategory, name: String!, searchable: Boolean = false): Server!
-  createServerFolder(name: String!, serverId: ID!): Folder!
-  createUserFolder(name: String!): Folder!
 
   """Delete a comment"""
   deleteComment(commentId: ID!): Boolean!

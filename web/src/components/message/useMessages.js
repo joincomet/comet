@@ -3,8 +3,7 @@ import { GET_MESSAGES } from '@/graphql/queries'
 import { useQuery } from 'urql'
 
 export function useMessages({ channel, group, user }) {
-  const initialTime = useRef(new Date().toString())
-  const [mountTime] = useState(new Date())
+  const initialTime = useRef(new Date())
   const [page, setPage] = useState(0)
 
   const [{ data, fetching }] = useQuery({
@@ -13,7 +12,7 @@ export function useMessages({ channel, group, user }) {
       channelId: channel?.id,
       groupId: group?.id,
       userId: user?.id,
-      initialTime: initialTime.current,
+      initialTime: initialTime.current.toString(),
       pageSize: 100,
       page
     },
@@ -28,7 +27,7 @@ export function useMessages({ channel, group, user }) {
       if (
         !data ||
         !data?.getMessages[0]?.hasMore ||
-        new Date() - mountTime < 3000
+        new Date() - initialTime.current < 3000
       )
         return
       setPage(page + 1)

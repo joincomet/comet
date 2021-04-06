@@ -9,7 +9,7 @@ import { Meteors } from '@/components/ui/meteors'
 export default function AuthLayout({ children }) {
   return (
     <div
-      className="h-full flex flex-grow items-center justify-center relative overflow-x-hidden"
+      className="h-full flex flex-grow items-center justify-center relative overflow-x-hidden overflow-y-hidden"
       style={{
         backgroundImage:
           'radial-gradient(ellipse at top , #18181B 0%,  #27272A 95%)'

@@ -9,7 +9,6 @@ import { useShouldForceScrollToBottom } from '@/components/message/useShouldForc
 import MessagesStart from '@/components/message/MessagesStart'
 import MessageContextMenuWrapper from '@/components/message/MessageContextMenuWrapper'
 import { usePrevious } from 'react-use'
-import MessageDropZone from '@/components/message/input/MessageDropZone'
 
 const PREPEND_OFFSET = 10 ** 7
 

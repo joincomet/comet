@@ -34,7 +34,4 @@ export class Folder extends BaseEntity {
 
   @Property({ nullable: true })
   updatedAt?: Date
-
-  @Property()
-  isCollaborative: boolean = false
 }

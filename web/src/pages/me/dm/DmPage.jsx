@@ -16,7 +16,7 @@ export default function DmPage() {
   useSetHomePage(`dm/${userId}`)
   return (
     <Page header={<DmHeader user={user} />}>
-      <Messages user={user} />
+      {!!user && <Messages user={user} />}
     </Page>
   )
 }

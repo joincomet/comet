@@ -1,93 +1,59 @@
-import { useCallback, useEffect, useRef } from 'react'
-import Post from '@/components/post/Post'
-import { IconSpinner } from '@/components/ui/icons/Icons'
-import { useVirtual } from 'react-virtual'
-import CreatePostCard from '@/components/post/CreatePostCard'
+import { Virtuoso } from 'react-virtuoso'
 import { usePosts } from '@/components/post/usePosts'
+import CreatePostCard from '@/components/post/CreatePostCard'
+import Post from '@/components/post/Post'
+import { IconSpinner } from '@/components/ui/icons/IconSpinner'
+import { useCallback, useRef } from 'react'
 import PostContextMenuWrapper from '@/components/post/PostContextMenuWrapper'
 
-export default function Posts({ serverId, folderId, showServerName }) {
-  const [posts, fetching, fetchMore, hasMore] = usePosts({ serverId, folderId })
+export default function Posts({ folderId, serverId, showServerName }) {
+  const virtuoso = useRef(null)
 
-  const parentRef = useRef()
+  const [posts, fetching, fetchMore, hasMore] = usePosts({ folderId, serverId })
 
-  const rowVirtualizer = useVirtual({
-    size: hasMore ? posts.length + 1 : posts.length,
-    parentRef,
-    estimateSize: useCallback(() => 100, []),
-    keyExtractor: useCallback(
-      index => (index < posts.length ? posts[index].id : 'loader'),
-      [posts]
-    ),
-    overscan: 5
-  })
-
-  useEffect(() => {
-    const [lastItem] = [...rowVirtualizer.virtualItems].reverse()
-
-    if (!lastItem) {
-      return
-    }
-
-    if (lastItem.index === posts.length - 1 && hasMore && !fetching) {
-      fetchMore()
-    }
-  }, [hasMore, posts.length, fetching, rowVirtualizer.virtualItems])
+  const postRenderer = useCallback(
+    (postsList, index) => {
+      const post = postsList[index]
+      if (!post) return <div style={{ height: '1px' }} /> // returning null or zero height breaks the virtuoso
+      return (
+        <div className="px-4 pb-1">
+          <Post post={post} showServerName={showServerName} />
+        </div>
+      )
+    },
+    [showServerName]
+  )
 
   return (
     <>
       <PostContextMenuWrapper />
 
-      <div
-        ref={parentRef}
-        style={{
-          height: `100%`,
-          width: `100%`,
-          overflow: 'auto'
-        }}
+      <Virtuoso
         className="scrollbar dark:bg-gray-750"
-      >
-        <div className="py-4 px-4">
-          <CreatePostCard />
-        </div>
-
-        <div
-          style={{
-            height: `${rowVirtualizer.totalSize}px`
-          }}
-          className="relative w-full"
-        >
-          {rowVirtualizer.virtualItems.map(virtualRow => {
-            const isLoaderRow = virtualRow.index > posts.length - 1
-            const post = posts[virtualRow.index]
-
-            return (
-              <div
-                key={virtualRow.index}
-                ref={el => virtualRow.measureRef(el)}
-                className="absolute top-0 left-0 w-full h-auto"
-                style={{
-                  transform: `translateY(${virtualRow.start}px)`
-                }}
-              >
-                {isLoaderRow ? (
-                  <div className="flex items-center justify-center h-20">
-                    <IconSpinner />
-                  </div>
-                ) : (
-                  <div className="px-4 pb-1">
-                    <Post
-                      post={post}
-                      showServerName={showServerName}
-                      measure={rowVirtualizer.measure}
-                    />
-                  </div>
-                )}
+        components={{
+          Header: () => (
+            <div className="py-4 px-4">
+              <CreatePostCard />
+            </div>
+          ),
+          Footer: () =>
+            hasMore ? (
+              <div className="flex items-center justify-center h-20">
+                <IconSpinner />
               </div>
-            )
-          })}
-        </div>
-      </div>
+            ) : null
+        }}
+        endReached={() => {
+          if (!fetching && hasMore) {
+            fetchMore()
+          }
+        }}
+        itemContent={i => postRenderer(posts, i)}
+        overscan={100}
+        ref={virtuoso}
+        style={{ overflowX: 'hidden' }}
+        totalCount={posts?.length || 0}
+      />
     </>
   )
 }
