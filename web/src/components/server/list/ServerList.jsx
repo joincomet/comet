@@ -11,6 +11,7 @@ import { DragItemTypes } from '@/types/DragItemTypes'
 import { mergeRefs } from '@/utils/mergeRefs'
 import { useJoinedServers } from '@/providers/DataProvider'
 import { useStore } from '@/hooks/useStore'
+import { getOS } from '@/utils/getOS'
 
 export default function ServerList() {
   const servers = useJoinedServers()
@@ -19,12 +20,14 @@ export default function ServerList() {
   const homePage = useStore(s => s.homePage)
   const homeActive = pathname.startsWith('/me')
   const exploreActive = pathname.startsWith('/explore')
+  const isMac = getOS() === 'Mac OS' && window.electron
 
   return (
     <>
       <div
         className={`flex flex-col items-center min-w-[4.5rem] w-18 bg-white dark:bg-gray-900`}
       >
+        {isMac && <div className="h-5" />}
         <div className="h-full flex flex-col items-center w-full divide-y dark:divide-gray-800 divide-gray-200">
           <div className="space-y-2 flex flex-col items-center py-2">
             <ServerListItem

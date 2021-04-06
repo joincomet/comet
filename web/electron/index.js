@@ -42,6 +42,7 @@ const createLoadingScreen = () => {
 function createWindow() {
   const options = {
     frame: false,
+    titleBarStyle: 'hidden',
     backgroundColor: '#fff',
     width: 1280,
     height: 800,

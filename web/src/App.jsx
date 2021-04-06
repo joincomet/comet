@@ -9,6 +9,7 @@ import { BrowserRouter, HashRouter } from 'react-router-dom'
 import { UserProvider } from '@/providers/UserProvider'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
+import { getOS } from '@/utils/getOS'
 
 export default function App() {
   const AppRouter = window.electron ? HashRouter : BrowserRouter
@@ -31,7 +32,7 @@ export default function App() {
             >
               <ResponsiveToaster />
               <CustomDragLayer />
-              {window.electron && <TitleBar />}
+              {window.electron && getOS() !== 'Mac OS' && <TitleBar />}
               <div
                 style={
                   window.electron

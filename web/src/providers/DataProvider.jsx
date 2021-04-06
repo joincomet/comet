@@ -75,7 +75,11 @@ export function DataProvider({ children }) {
         userFolders,
         userRelationships,
         loading:
-          !joinedServers || !groupsAndDms || !userFolders || !userRelationships
+          user &&
+          (!joinedServers ||
+            !groupsAndDms ||
+            !userFolders ||
+            !userRelationships)
       }}
     >
       {children}
