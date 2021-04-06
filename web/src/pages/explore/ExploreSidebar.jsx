@@ -12,38 +12,39 @@ import { ServerCategory } from '@/types/ServerCategory'
 import { useCategoryIcon } from '@/hooks/useCategoryIcon'
 import { useTranslation } from 'react-i18next'
 
-function CategoryItem({ category }) {
-  const [explorePage, setExplorePage] = useStore(s => [
-    s.explorePage,
-    s.setExplorePage
+function Category({ category }) {
+  const { t } = useTranslation()
+  const [exploreCategory, setExploreCategory] = useStore(s => [
+    s.exploreCategory,
+    s.setExploreCategory
   ])
 
   const Icon = useCategoryIcon(category)
   return (
     <SidebarItem
-      onClick={() => setExplorePage(category)}
-      active={explorePage === category}
+      onClick={() => setExploreCategory(category)}
+      active={exploreCategory === category}
     >
       <Icon className="w-5 h-5 mr-3" />
-      {category}
+      {category ? t(`category.${category}`) : t('explore.all')}
     </SidebarItem>
   )
 }
 
-function CategorySort({ sort, icon }) {
-  const [explorePage, setExplorePage] = useStore(s => [
-    s.explorePage,
-    s.setExplorePage
+function Sort({ sort, label, icon }) {
+  const [exploreSort, setExploreSort] = useStore(s => [
+    s.exploreSort,
+    s.setExploreSort
   ])
 
   const Icon = icon
   return (
     <SidebarItem
-      onClick={() => setExplorePage(sort)}
-      active={explorePage === sort}
+      onClick={() => setExploreSort(sort)}
+      active={exploreSort === sort}
     >
       <Icon className="w-5 h-5 mr-3" />
-      {sort}
+      {label}
     </SidebarItem>
   )
 }
@@ -59,17 +60,17 @@ export default function ExploreSidebar() {
       </div>
       <div className="px-1.5 pb-6">
         <div className="space-y-0.5">
-          <CategorySort sort="Featured" icon={IconFeatured} />
-          <CategorySort sort="Most Popular" icon={IconTop} />
-          <CategorySort sort="Recently Created" icon={IconNew} />
-          <CategorySort sort="All" icon={IconAll} />
+          <Sort label="Featured" sort="Featured" icon={IconFeatured} />
+          <Sort label="Most Popular" sort="Top" icon={IconTop} />
+          <Sort label="Recently Created" sort="New" icon={IconNew} />
         </div>
 
         <SidebarLabel>{t('explore.categories')}</SidebarLabel>
 
         <div className="space-y-0.5">
+          <Category category={null} />
           {categories.map(category => (
-            <CategoryItem key={category} category={category} />
+            <Category key={category} category={category} />
           ))}
         </div>
       </div>

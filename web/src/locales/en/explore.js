@@ -1,4 +1,5 @@
 export const explore = {
   title: 'Explore',
-  categories: 'Categories'
+  categories: 'Categories',
+  all: 'All'
 }

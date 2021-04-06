@@ -7,7 +7,7 @@ export default function ServerInfoCard({
 }) {
   return (
     <Link
-      to={`/server/${server.name}`}
+      to={`/server/${server.id}`}
       className={`${className} cursor-pointer relative flex flex-col w-full rounded-lg group dark:bg-gray-850 dark:hover:bg-gray-900 duration-200 transform transition hover:shadow-xl ${
         shadow ? 'shadow-lg' : ''
       }`}
@@ -39,14 +39,14 @@ export default function ServerInfoCard({
         </div>
 
         <div className="text-13 text-tertiary line-clamp-3">
-          {server.description || 'New CometX Planet'}
+          {server.description || 'New Comet Planet'}
         </div>
 
         <div className="flex space-x-6 mt-auto text-xs">
           <div className="inline-flex items-center">
             <div className="w-1.5 h-1.5 bg-green-600 rounded-full" />
             <div className="ml-1.5 text-green-600">
-              {parseInt(Math.random() * server.userCount)} online
+              {parseInt(server.onlineUserCount)} online
             </div>
           </div>
           <div className="inline-flex items-center">

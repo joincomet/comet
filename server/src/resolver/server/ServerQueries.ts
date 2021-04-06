@@ -3,7 +3,6 @@ import { Channel, Server, ServerUserJoin, User } from '@/entity'
 import {
   ChannelUsersResponse,
   GetPublicServersArgs,
-  GetPublicServersResponse,
   GetPublicServersSort
 } from '@/resolver/server'
 import { QueryOrder } from '@mikro-orm/core'
@@ -16,45 +15,44 @@ import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 @Resolver(() => Server)
 export class ServerQueries {
   @Authorized()
-  @Query(() => GetPublicServersResponse)
+  @Query(() => [Server])
   async getPublicServers(
     @Args()
-    { sort, category, page, pageSize }: GetPublicServersArgs,
+    { sort, category }: GetPublicServersArgs,
     @Ctx() { user, em }: Context
-  ): Promise<GetPublicServersResponse> {
-    let where = {}
+  ): Promise<Server[]> {
+    let where: any = {}
     let orderBy = {}
 
     if (sort === GetPublicServersSort.Featured) {
-      where = { featured: true }
+      where = { isFeatured: true }
       orderBy = { featuredPosition: QueryOrder.ASC }
-    } else if (category) {
-      where = { category: category }
-      orderBy = { name: QueryOrder.ASC }
-    }
-
-    if (sort === GetPublicServersSort.New) {
+    } else if (sort === GetPublicServersSort.New) {
       orderBy = { createdAt: QueryOrder.DESC }
     } else if (sort === GetPublicServersSort.Top) {
       orderBy = { userCount: QueryOrder.DESC }
-    } else if (sort === GetPublicServersSort.AZ) {
-      orderBy = { name: QueryOrder.ASC }
     }
 
-    const servers = await em.find(
+    if (category) {
+      where.category = category
+    }
+
+    const servers = (await em.find(
       Server,
       where,
-      [],
-      orderBy,
-      pageSize,
-      page * pageSize
+      ['userJoins.user'],
+      orderBy
+    )) as Server[]
+
+    servers.forEach(
+      server =>
+        (server.onlineUserCount = server.userJoins
+          .getItems()
+          .map(j => j.user)
+          .filter(u => u.isOnline).length)
     )
 
-    return {
-      servers,
-      page,
-      nextPage: page >= 0 && servers.length >= pageSize ? page + 1 : null
-    } as GetPublicServersResponse
+    return servers
   }
 
   @Authorized()

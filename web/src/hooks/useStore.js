@@ -5,8 +5,6 @@ export const useStore = create((set, get) => ({
   setFriendsPage: friendsPage => set({ friendsPage }),
   inboxPage: 'Unread',
   setInboxPage: inboxPage => set({ inboxPage }),
-  explorePage: 'Featured',
-  setExplorePage: explorePage => set({ explorePage }),
   postsSort: 'Hot',
   setPostsSort: postsSort => set({ postsSort }),
   postsTime: 'Day',
@@ -32,5 +30,10 @@ export const useStore = create((set, get) => ({
   setReplyingCommentId: commentId => set({ replyingCommentId: commentId }),
 
   canGoBack: false,
-  setCanGoBack: canGoBack => set({ canGoBack })
+  setCanGoBack: canGoBack => set({ canGoBack }),
+
+  exploreSort: 'Featured',
+  setExploreSort: exploreSort => set({ exploreSort }),
+  exploreCategory: null,
+  setExploreCategory: exploreCategory => set({ exploreCategory })
 }))

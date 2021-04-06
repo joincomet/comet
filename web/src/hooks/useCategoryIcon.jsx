@@ -17,11 +17,13 @@ import {
   IconCategoryProgramming,
   IconCategorySports,
   IconCategoryScience,
-  IconCategoryTechnology
+  IconCategoryTechnology,
+  IconAll
 } from '@/components/ui/icons/Icons'
 
 export const useCategoryIcon = category =>
   useMemo(() => {
+    if (!category) return IconAll
     switch (category) {
       case 'Arts':
         return IconCategoryArts

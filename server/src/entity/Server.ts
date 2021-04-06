@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, Int, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
   Channel,
@@ -60,9 +60,12 @@ export class Server extends BaseEntity {
   @OneToMany(() => ServerUserBan, 'server')
   userBans = new Collection<ServerUserBan>(this)
 
-  @Field()
+  @Field(() => Int)
   @Property({ unsigned: true })
   userCount: number = 0
+
+  @Field(() => Int)
+  onlineUserCount: number = 0
 
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })

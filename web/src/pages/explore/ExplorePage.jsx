@@ -5,16 +5,37 @@ import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
 import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'
+import { useQuery } from 'urql'
+import { GET_PUBLIC_SERVERS } from '@/graphql/queries'
+import { useEffect, useState } from 'react'
 
 export default function ExplorePage() {
-  const [explorePage, setExplorePage] = useStore(s => [
-    s.explorePage,
-    s.setExplorePage
+  const [page, setPage] = useState(0)
+
+  const [
+    exploreCategory,
+    setExploreCategory,
+    exploreSort,
+    setExploreSort
+  ] = useStore(s => [
+    s.exploreCategory,
+    s.setExploreCategory,
+    s.exploreSort,
+    s.setExploreSort
   ])
 
   const { t } = useTranslation()
 
-  const servers = [] // TODO
+  const [{ data }] = useQuery({
+    query: GET_PUBLIC_SERVERS,
+    variables: {
+      sort: exploreSort,
+      category: exploreCategory,
+      page,
+      pageSize: 20
+    }
+  })
+  const servers = data?.getPublicServers ?? []
 
   return (
     <Page leftSidebar={<ExploreSidebar />}>
@@ -33,7 +54,7 @@ export default function ExplorePage() {
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5">
             {servers.map(server => (
-              <ServerInfoCard planet={server} key={server.id} />
+              <ServerInfoCard server={server} key={server.id} />
             ))}
           </div>
         </div>

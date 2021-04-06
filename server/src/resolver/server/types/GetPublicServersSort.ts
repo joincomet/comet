@@ -1,10 +1,9 @@
 import { registerEnumType } from 'type-graphql'
 
 export enum GetPublicServersSort {
-  New = 'NEW',
-  Top = 'TOP',
-  AZ = 'AZ',
-  Featured = 'FEATURED'
+  New = 'New',
+  Top = 'Top',
+  Featured = 'Featured'
 }
 
 registerEnumType(GetPublicServersSort, {

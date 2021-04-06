@@ -1,5 +1,5 @@
 import { auth } from './auth'
-import { categories } from './categories'
+import { category } from './category'
 import { channel } from './channel'
 import { comment } from './comment'
 import { dm } from './dm'
@@ -24,7 +24,7 @@ export const en = {
   more: 'More',
   // Defined in other files
   auth,
-  categories,
+  category,
   channel,
   comment,
   dm,

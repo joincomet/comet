@@ -1,6 +1,5 @@
 export * from './ChannelUsersResponse'
 export * from './GetPublicServersArgs'
-export * from './GetPublicServersResponse'
 export * from './GetPublicServersSort'
 export * from './ServerCategory'
 export * from './ServerInviteDuration'

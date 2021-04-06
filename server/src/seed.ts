@@ -78,7 +78,8 @@ export const seed = async (em: EntityManager) => {
     featuredPosition: ReorderUtils.FIRST_POSITION,
     owner: userDan,
     category: ServerCategory.Meta,
-    avatarUrl: 'https://avatars.githubusercontent.com/u/53412679?s=200&v=4'
+    avatarUrl: 'https://avatars.githubusercontent.com/u/53412679?s=200&v=4',
+    userCount: NUM_USERS + 3
   })
 
   const channelGeneral = em.create(Channel, {

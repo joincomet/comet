@@ -106,14 +106,7 @@ enum GetPostsTime {
   Year
 }
 
-type GetPublicServersResponse {
-  nextPage: Int
-  page: Int
-  servers: [Server!]!
-}
-
 enum GetPublicServersSort {
-  AZ
   Featured
   New
   Top
@@ -511,7 +504,7 @@ type Query {
     """Filter by all, hour, day, week, month, year"""
     time: GetPostsTime = All
   ): [GetPostsResponse!]!
-  getPublicServers(category: ServerCategory, page: Int, pageSize: Int = 20, sort: GetPublicServersSort = AZ): GetPublicServersResponse!
+  getPublicServers(category: ServerCategory, sort: GetPublicServersSort = Top): [Server!]!
   getServerChannels(serverId: ID!): [Channel!]!
   getServerFolders(serverId: ID!): [Folder!]!
   getServerPermissions(serverId: ID!): [ServerPermission!]!
@@ -536,7 +529,8 @@ type Server implements BaseEntity {
   isPostsEnabled: Boolean!
   isPublic: Boolean!
   name: String!
-  userCount: Float!
+  onlineUserCount: Int!
+  userCount: Int!
 }
 
 enum ServerCategory {

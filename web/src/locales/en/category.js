@@ -1,4 +1,4 @@
-export const categories = {
+export const category = {
   Arts: 'Arts',
   Business: 'Business',
   Culture: 'Culture',
