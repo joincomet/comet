@@ -23,13 +23,14 @@ export default function SidebarFolder({ folder, serverId }) {
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,
-    drop: (post, monitor) => {
+    drop: async (post, monitor) => {
       if (serverId && !canManagePosts) {
         toast.error(t('folder.noPermission'))
         return
       }
-      addPostToFolder({ folderId: folder.id, postId: post.id })
-      toast.success(t('folder.added', { folder }))
+      addPostToFolder({ folderId: folder.id, postId: post.id }).then(res => {
+        if (!res.error) toast.success(t('folder.added', { folder }))
+      })
     },
     collect: monitor => ({
       isOver: monitor.isOver(),

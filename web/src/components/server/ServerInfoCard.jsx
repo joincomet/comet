@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export default function ServerInfoCard({
   server,
   shadow = false,
   className = ''
 }) {
+  const { t } = useTranslation()
   return (
     <Link
       to={`/server/${server.id}`}
@@ -38,22 +40,23 @@ export default function ServerInfoCard({
           {server.name}
         </div>
 
-        <div className="text-13 text-tertiary line-clamp-3">
-          {server.description || 'New Comet Planet'}
-        </div>
+        {server.description && (
+          <div className="text-13 text-tertiary line-clamp-3">
+            {server.description}
+          </div>
+        )}
 
         <div className="flex space-x-6 mt-auto text-xs">
           <div className="inline-flex items-center">
             <div className="w-1.5 h-1.5 bg-green-600 rounded-full" />
             <div className="ml-1.5 text-green-600">
-              {parseInt(server.onlineUserCount)} online
+              {t('server.onlineCount', { count: server.onlineUserCount })}
             </div>
           </div>
           <div className="inline-flex items-center">
             <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
             <div className="ml-1.5 text-tertiary">
-              {server.userCount} member
-              {server.userCount === 1 ? '' : 's'}
+              {t('server.memberCount', { count: server.userCount })}
             </div>
           </div>
         </div>

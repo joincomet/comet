@@ -102,15 +102,6 @@ jobs:
           sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
       - name: Update app spec
         run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml
-      - name: Delete unnecessary release assets
-        uses: mknejp/delete-release-assets@v1
-        with:
-          token: ${{ github.token }}
-          tag: ${{ github.ref }}
-          assets: |
-            *.yml
-            *.zip
-            *.blockmap
       - name: Get version from ref
         id: get-version
         run: |

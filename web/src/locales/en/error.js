@@ -10,7 +10,8 @@ export const error = {
     notOwner: 'You do not own this folder',
     nameTooLong: 'Name cannot be longer than 300 characters',
     alreadyExists: 'You already have a folder with that name',
-    noPermission: 'You do not have permission to modify this folder.'
+    noPermission: 'You do not have permission to modify this folder.',
+    alreadyAdded: 'This post is already in this folder.'
   },
   message: {
     notAuthor: 'You are not the author of this message',

@@ -26,9 +26,11 @@ export class FolderMutations {
     @Arg('folderId', () => ID) folderId: string,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
-    const folder = await em.findOneOrFail(Folder, folderId)
+    const folder = await em.findOneOrFail(Folder, folderId, ['posts'])
     const post = await em.findOneOrFail(Post, postId)
     if (folder.isDeleted) throw new Error('error.folder.deleted')
+    if (folder.posts.contains(post))
+      throw new Error('error.folder.alreadyAdded')
     folder.posts.add(post)
     folder.updatedAt = new Date()
     await em.persistAndFlush(folder)
