@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": true,
   "repository": "github:joincomet/comet",
   "main": "electron/index.js",
@@ -11,8 +11,7 @@
     "preview": "vite preview --port 3000",
     "dev:electron": "electron .",
     "dist": "electron-builder",
-    "pack": "electron-builder --dir",
-    "patch": "yarn version patch"
+    "pack": "electron-builder --dir"
   },
   "dependencies": {
     "@electron/remote": "^1.1.0",
