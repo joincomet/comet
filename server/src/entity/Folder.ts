@@ -1,10 +1,12 @@
 import { Field, ObjectType } from 'type-graphql'
-import { BaseEntity, Post, User } from '@/entity'
+import { BaseEntity, Post, ServerFolder, User } from '@/entity'
 import {
   Collection,
   Entity,
   ManyToMany,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   Property
 } from '@mikro-orm/core'
 
@@ -28,6 +30,9 @@ export class Folder extends BaseEntity {
 
   @ManyToOne(() => User, { nullable: true })
   owner?: User
+
+  @OneToOne(() => ServerFolder, 'folder', { nullable: true })
+  serverFolder?: ServerFolder
 
   @Property()
   isDeleted: boolean = false

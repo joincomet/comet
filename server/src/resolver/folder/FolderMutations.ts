@@ -11,41 +11,40 @@ import {
 import { Context, SubscriptionTopic } from '@/types'
 import { Folder, Post, Server, ServerFolder, UserFolder } from '@/entity'
 import { ServerPermission } from '@/types/ServerPermission'
-import { CheckPostServerPermission, CheckServerPermission } from '@/util'
+import {
+  CheckFolderServerPermission,
+  CheckPostServerPermission,
+  CheckServerPermission
+} from '@/util'
 
 @Resolver()
 export class FolderMutations {
-  @CheckPostServerPermission(ServerPermission.ManagePosts)
+  @CheckFolderServerPermission(ServerPermission.ManagePosts)
   @Mutation(() => Boolean)
   async addPostToFolder(
     @Arg('postId', () => ID) postId: string,
     @Arg('folderId', () => ID) folderId: string,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
-    const folder = await em.findOneOrFail(Folder, folderId, [
-      'creator',
-      'server'
-    ])
+    const folder = await em.findOneOrFail(Folder, folderId)
+    const post = await em.findOneOrFail(Post, postId)
     if (folder.isDeleted) throw new Error('error.folder.deleted')
-    if (folder.owner !== user) throw new Error('error.folder.notOwner')
-    const post = await em.findOne(Post, postId)
     folder.posts.add(post)
     folder.updatedAt = new Date()
     await em.persistAndFlush(folder)
     return true
   }
 
-  @CheckPostServerPermission(ServerPermission.ManagePosts)
+  @CheckFolderServerPermission(ServerPermission.ManagePosts)
   @Mutation(() => Boolean)
   async removePostFromFolder(
     @Arg('postId', () => ID) postId: string,
     @Arg('folderId', () => ID) folderId: string,
     @Ctx() { user, em }: Context
   ): Promise<boolean> {
-    const folder = await em.findOneOrFail(Folder, folderId, ['creator'])
+    const folder = await em.findOneOrFail(Folder, folderId)
+    const post = await em.findOneOrFail(Post, postId)
     if (folder.isDeleted) throw new Error('error.folder.deleted')
-    if (folder.owner !== user) throw new Error('error.folder.notOwner')
-    const post = await em.findOne(Post, postId)
     folder.posts.remove(post)
     folder.updatedAt = new Date()
     await em.persistAndFlush(folder)

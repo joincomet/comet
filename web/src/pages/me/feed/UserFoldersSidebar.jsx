@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
 import { useUserFolders } from '@/providers/DataProvider'
 import SidebarFolder from '@/components/folder/SidebarFolder'
+import CreateFolder from '@/components/folder/CreateFolder'
 
 export default function UserFoldersSidebar() {
   const { t } = useTranslation()
@@ -22,9 +23,7 @@ export default function UserFoldersSidebar() {
   return (
     <Sidebar right show={showFolders}>
       <div className="px-1.5">
-        <SidebarLabel plusLabel={t('folder.user.create')} onClick={() => {}}>
-          Your Folders
-        </SidebarLabel>
+        <CreateFolder />
 
         <div className="space-y-0.5">
           {!!userFolders &&

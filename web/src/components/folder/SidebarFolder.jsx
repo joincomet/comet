@@ -9,11 +9,26 @@ import {
   IconReadLaterFolder
 } from '@/components/ui/icons/Icons'
 import { useMemo } from 'react'
+import { useMutation } from 'urql'
+import { ADD_POST_TO_FOLDER } from '@/graphql/mutations'
+import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
+import { ServerPermission } from '@/types/ServerPermission'
 
 export default function SidebarFolder({ folder, serverId }) {
+  const [_addPostRes, addPostToFolder] = useMutation(ADD_POST_TO_FOLDER)
+  const [canManagePosts] = useHasServerPermissions({
+    serverId,
+    permissions: [ServerPermission.ManagePosts]
+  })
+
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,
-    drop: (item, monitor) => {
+    drop: (post, monitor) => {
+      if (serverId && !canManagePosts) {
+        toast.error(t('folder.noPermission'))
+        return
+      }
+      addPostToFolder({ folderId: folder.id, postId: post.id })
       toast.success(t('folder.added', { folder }))
     },
     collect: monitor => ({
@@ -56,7 +71,7 @@ export default function SidebarFolder({ folder, serverId }) {
   return (
     <SidebarItem
       active={isActive}
-      to={`${serverId ? `/server/${serverId}` : ''}/folder/${folder.id}`}
+      to={`${serverId ? `/server/${serverId}` : '/me'}/folder/${folder.id}`}
       ref={dropRef}
     >
       {folderContents}

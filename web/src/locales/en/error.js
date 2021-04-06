@@ -9,7 +9,8 @@ export const error = {
     deleted: 'Folder has been deleted',
     notOwner: 'You do not own this folder',
     nameTooLong: 'Name cannot be longer than 300 characters',
-    alreadyExists: 'You already have a folder with that name'
+    alreadyExists: 'You already have a folder with that name',
+    noPermission: 'You do not have permission to modify this folder.'
   },
   message: {
     notAuthor: 'You are not the author of this message',
