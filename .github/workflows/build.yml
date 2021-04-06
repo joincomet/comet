@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     tags:
-      - '*'
+      - 'v*.*.*'
 
 jobs:
   server:
@@ -52,8 +52,31 @@ jobs:
           tags: ${{ steps.prep.outputs.tag }},joincomet/web:latest
           build-args: |
             API_DOMAIN=${{ secrets.API_DOMAIN }}
+  electron:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          build_script_name: build:electron
+          max_attempts: 10
+          package_root: web
+          github_token: ${{ secrets.github_token }}
+          # If the commit is tagged with a version (e.g. "v1.0.0"), release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        env:
+          VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
   deploy:
-    needs: [server, web]
+    needs: [server, web, electron]
     runs-on: ubuntu-latest
     steps:
       - name: Prepare
@@ -79,33 +102,6 @@ jobs:
           sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
       - name: Update app spec
         run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml
-  electron:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
-        with:
-          node-version: 15
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          build_script_name: build:electron
-          max_attempts: 10
-          package_root: web
-          github_token: ${{ secrets.github_token }}
-          # If the commit is tagged with a version (e.g. "v1.0.0"), release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        env:
-          VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
-  release:
-    needs: [electron]
-    runs-on: ubuntu-latest
-    steps:
       - name: Delete unnecessary release assets
         uses: mknejp/delete-release-assets@v1
         with:
@@ -115,9 +111,11 @@ jobs:
             *.yml
             *.zip
             *.blockmap
-      - name: Publish release
-        uses: eregon/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get version from ref
+        id: get-version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Publish release on GitHub
+        uses: test-room-7/action-publish-release-drafts@v0
         with:
-          release_id: ${{ github.ref }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tag-name: ${{ steps.get-version.outputs.VERSION }}
