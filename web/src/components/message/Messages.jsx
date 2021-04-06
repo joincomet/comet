@@ -4,11 +4,12 @@ import { useNewMessageNotification } from '@/components/message/useNewMessageNot
 import { usePrependedMessagesCount } from '@/components/message/usePrependedMessagesCount'
 import Message from '@/components/message/Message'
 import { useMessages } from '@/components/message/useMessages'
-import MessageInput from '@/components/message/MessageInput'
+import MessageInput from '@/components/message/input/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import MessagesStart from '@/components/message/MessagesStart'
 import MessageContextMenuWrapper from '@/components/message/MessageContextMenuWrapper'
 import { usePrevious } from 'react-use'
+import MessageDropZone from '@/components/message/input/MessageDropZone'
 
 const PREPEND_OFFSET = 10 ** 7
 

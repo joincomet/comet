@@ -4399,6 +4399,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"attr-accept@npm:^2.2.1":
+  version: 2.2.2
+  resolution: "attr-accept@npm:2.2.2"
+  checksum: e9c5d3580f6cae9c5c25c5c9c8660d344dd8bed25e77df7515c046864fe1aa4bb245e743ad46f55b85443ff53c95e378b3203c3e83f2168a2557e94d0552d458
+  languageName: node
+  linkType: hard
+
 "audio-extensions@npm:0.0.0":
   version: 0.0.0
   resolution: "audio-extensions@npm:0.0.0"
@@ -5217,6 +5224,16 @@ __metadata:
   version: 2.1.2
   resolution: "clone@npm:2.1.2"
   checksum: 85232d66015d2d703dc59812e30049931d97c7815bf70569ae4fb7a66be257f46fcf47040e4e7050966ca195a9e615d59d73ba9e39fc37eedba1a76865f27ab1
+  languageName: node
+  linkType: hard
+
+"cloneable-readable@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "cloneable-readable@npm:2.1.0"
+  dependencies:
+    inherits: ^2.0.1
+    readable-stream: ^3.3.0
+  checksum: fd5658ca98f9418f99ecd8aa78a422374d5a44deb80df9c95c217a2447ef775381e367f6bb239d142277a4bf9629921471425f67e2d1d258450ab64606bd97c4
   languageName: node
   linkType: hard
 
@@ -7241,6 +7258,15 @@ __metadata:
   version: 4.0.5
   resolution: "file-extension@npm:4.0.5"
   checksum: d78573810f4af09d655353f87353d9d5610c7a0e98f86d20261ef06492f39efa39c23892f2bb8de0dfe1f33b019caf1b6aa5dabff8ee633169c01fa63552b37e
+  languageName: node
+  linkType: hard
+
+"file-selector@npm:^0.2.2":
+  version: 0.2.4
+  resolution: "file-selector@npm:0.2.4"
+  dependencies:
+    tslib: ^2.0.3
+  checksum: 45258fb1218ba9362e1fd0fdfd25e40b18fd2473adf8a45436245a78310dc76d2fdde95463afe1f4e9e8c0ef178837eb0e5335978c0db348bc1dec425e510429
   languageName: node
   linkType: hard
 
@@ -12233,6 +12259,19 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"react-dropzone@npm:^11.3.2":
+  version: 11.3.2
+  resolution: "react-dropzone@npm:11.3.2"
+  dependencies:
+    attr-accept: ^2.2.1
+    file-selector: ^0.2.2
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ">= 16.8"
+  checksum: 805c53808fbd3040edccdc3fef8418e0bc3d3bafe79ab47335de25fc419b9b93ba14d375795f7cc9ae418c175b1c7f26dc784550be1087375cf67171a5cc4053
+  languageName: node
+  linkType: hard
+
 "react-fast-compare@npm:^3.0.1, react-fast-compare@npm:^3.2.0":
   version: 3.2.0
   resolution: "react-fast-compare@npm:3.2.0"
@@ -12544,7 +12583,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:^3.0.0, readable-stream@npm:^3.1.1, readable-stream@npm:^3.4.0, readable-stream@npm:^3.6.0":
+"readable-stream@npm:^3.0.0, readable-stream@npm:^3.1.1, readable-stream@npm:^3.3.0, readable-stream@npm:^3.4.0, readable-stream@npm:^3.6.0":
   version: 3.6.0
   resolution: "readable-stream@npm:3.6.0"
   dependencies:
@@ -13405,6 +13444,7 @@ resolve@^2.0.0-next.3:
     argon2: ^0.27.2
     aws-sdk: ^2.879.0
     class-validator: ^0.13.1
+    cloneable-readable: ^2.1.0
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
     dataloader: ^2.0.0
@@ -15548,6 +15588,7 @@ typescript@^4.2.3:
     react-dnd-html5-backend: ^14.0.0
     react-dnd-touch-backend: ^14.0.0
     react-dom: ^17.0.2
+    react-dropzone: ^11.3.2
     react-helmet-async: ^1.0.9
     react-hook-form: ^7.0.1
     react-hot-toast: ^1.0.2

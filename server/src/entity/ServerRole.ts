@@ -4,7 +4,7 @@ import {
   defaultServerPermissions,
   ServerPermission
 } from '@/types/ServerPermission'
-import { Lexico } from '@/util/Lexico'
+import { ReorderUtils } from '@/util/ReorderUtils'
 import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType({ implements: BaseEntity })
@@ -18,7 +18,7 @@ export class ServerRole extends BaseEntity {
   server: Server
 
   @Property({ columnType: 'text' })
-  position: string = Lexico.FIRST_POSITION
+  position: string = ReorderUtils.FIRST_POSITION
 
   @Field()
   @Property({ nullable: true })

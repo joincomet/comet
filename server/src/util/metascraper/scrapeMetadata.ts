@@ -1,6 +1,6 @@
 import got from 'got'
 import { LinkMetadata } from '@/entity'
-import { uploadImage } from '@/util/s3'
+import { uploadImage, uploadImageSingle } from '@/util/s3'
 import { isUrl } from '@/util/isUrl'
 
 const metascraperTwitterCard = () => ({
@@ -64,7 +64,7 @@ export const scrapeMetadata = async (
 
   if (image) {
     try {
-      meta.image = (await uploadImage({ file: image, resize })).url
+      meta.image = await uploadImageSingle(image, resize)
     } catch {
       delete meta.image
     }
@@ -72,7 +72,7 @@ export const scrapeMetadata = async (
 
   if (logo) {
     try {
-      meta.logo = (await uploadImage({ file: logo, resize })).url
+      meta.logo = await uploadImageSingle(logo, resize)
     } catch {
       delete meta.logo
     }

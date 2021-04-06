@@ -10,7 +10,7 @@ import {
   Resolver
 } from 'type-graphql'
 import { Channel, Server, ServerInvite, User } from '@/entity'
-import { uploadImage } from '@/util/s3'
+import { uploadImage, uploadImageSingle } from '@/util/s3'
 import { Context, SubscriptionTopic } from '@/types'
 import { ServerUserJoin } from '@/entity/ServerUserJoin'
 import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
@@ -40,15 +40,14 @@ export class ServerMutations {
 
     let avatarUrl = null
     if (avatarFile) {
-      avatarUrl = (
-        await uploadImage({
-          file: avatarFile,
-          resize: {
-            width: 256,
-            height: 256
-          }
-        })
-      ).url
+      avatarUrl = await uploadImageSingle(
+        avatarFile,
+        {
+          width: 256,
+          height: 256
+        },
+        true
+      )
     }
 
     const server = em.create(Server, {
@@ -197,25 +196,16 @@ export class ServerMutations {
   ): Promise<Server> {
     const server = await em.findOneOrFail(Server, serverId)
 
-    const avatarUrl = (
-      await uploadImage({
-        file: avatarFile,
-        resize: {
-          width: 256,
-          height: 256
-        }
-      })
-    ).url
+    const avatarUrl = await uploadImageSingle(
+      avatarFile,
+      {
+        width: 256,
+        height: 256
+      },
+      true
+    )
 
-    const bannerUrl = (
-      await uploadImage({
-        file: bannerFile,
-        resize: {
-          width: 256,
-          height: 256
-        }
-      })
-    ).url
+    const bannerUrl = await uploadImageSingle(bannerFile, null, false)
 
     em.assign(server, {
       name,

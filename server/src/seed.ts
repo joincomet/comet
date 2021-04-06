@@ -12,7 +12,7 @@ import {
   User,
   UserFolder
 } from '@/entity'
-import { Lexico, tagGenerator } from '@/util'
+import { ReorderUtils, tagGenerator } from '@/util'
 import * as argon2 from 'argon2'
 import faker from 'faker'
 import { FriendStatus } from '@/resolver/user'
@@ -75,7 +75,7 @@ export const seed = async (em: EntityManager) => {
     description: 'Official announcements and discussion relating to Comet.',
     isFeatured: true,
     isPublic: true,
-    featuredPosition: Lexico.FIRST_POSITION,
+    featuredPosition: ReorderUtils.FIRST_POSITION,
     owner: userDan,
     category: ServerCategory.Meta,
     avatarUrl: 'https://avatars.githubusercontent.com/u/53412679?s=200&v=4'

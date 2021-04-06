@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "repository": "github:joincomet/comet",
   "main": "electron/index.js",
@@ -45,6 +45,7 @@
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
     "react-dnd-touch-backend": "^14.0.0",
+    "react-dropzone": "^11.3.2",
     "react-helmet-async": "^1.0.9",
     "react-hook-form": "^7.0.1",
     "react-hot-toast": "^1.0.2",

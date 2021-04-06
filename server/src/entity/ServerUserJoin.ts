@@ -7,7 +7,7 @@ import {
   Property
 } from '@mikro-orm/core'
 import { Server, ServerRole, User } from '@/entity'
-import { Lexico } from '@/util/Lexico'
+import { ReorderUtils } from '@/util/ReorderUtils'
 import { Field } from 'type-graphql'
 
 @Entity()
@@ -21,7 +21,7 @@ export class ServerUserJoin {
   [PrimaryKeyType]: [string, string]
 
   @Property({ columnType: 'text' })
-  position: string = Lexico.FIRST_POSITION
+  position: string = ReorderUtils.FIRST_POSITION
 
   @Property()
   createdAt: Date = new Date()

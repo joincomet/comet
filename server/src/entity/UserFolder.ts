@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
 import { Folder, User } from '@/entity'
-import { Lexico } from '@/util'
+import { ReorderUtils } from '@/util'
 
 @Entity()
 export class UserFolder {
@@ -13,5 +13,5 @@ export class UserFolder {
   [PrimaryKeyType]: [string, string]
 
   @Property({ columnType: 'text' })
-  position: string = Lexico.FIRST_POSITION
+  position: string = ReorderUtils.FIRST_POSITION
 }

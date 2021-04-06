@@ -23,7 +23,8 @@ import {
   createAccessToken,
   handleUnderscore,
   tagGenerator,
-  uploadImage
+  uploadImage,
+  uploadImageSingle
 } from '@/util'
 import isEmail from 'validator/lib/isEmail'
 import * as argon2 from 'argon2'
@@ -154,15 +155,14 @@ export class UserMutations {
     @Ctx() { user, em }: Context
   ): Promise<User> {
     const avatarUrl = avatarFile
-      ? (
-          await uploadImage({
-            file: avatarFile,
-            resize: {
-              width: 256,
-              height: 256
-            }
-          })
-        ).url
+      ? await uploadImageSingle(
+          avatarFile,
+          {
+            width: 256,
+            height: 256
+          },
+          true
+        )
       : user.avatarUrl
     em.assign(user, {
       name: name ? name : user.name,

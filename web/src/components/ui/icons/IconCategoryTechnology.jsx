@@ -1,4 +1,4 @@
-export default function IconCategoryTechnology({ className }) {
+export function IconCategoryTechnology({ className }) {
   return (
     <svg
       className={className}

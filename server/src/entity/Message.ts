@@ -16,6 +16,7 @@ import {
   ManyToOne,
   Property
 } from '@mikro-orm/core'
+import { File } from '@/entity/File'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -47,6 +48,10 @@ export class Message extends BaseEntity {
   @Field({ nullable: true })
   @Embedded(() => Image, { object: true, nullable: true })
   image?: Image
+
+  @Field({ nullable: true })
+  @Embedded(() => File, { object: true, nullable: true })
+  file?: File
 
   @Field(() => [LinkMetadata])
   @Embedded(() => LinkMetadata, { object: true, array: true })

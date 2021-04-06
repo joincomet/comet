@@ -5,6 +5,9 @@ import { memo, useState } from 'react'
 import { useContextMenuTrigger } from '@/components/ui/context'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import Dialog from '@/components/ui/dialog/Dialog'
+import { IconDownload, IconDownloadLarge } from '@/components/ui/icons/Icons'
+import { useFileIcon } from '@/hooks/useFileIcon'
+import { formatBytes } from '@/utils/formatBytes'
 
 export default memo(function Message({ showUser, message }) {
   const [showImagePopup, setShowImagePopup] = useState(false)
@@ -12,6 +15,7 @@ export default memo(function Message({ showUser, message }) {
     menuId: ContextMenuType.Message,
     data: { message }
   })
+  const FileIcon = useFileIcon(message?.file?.mime)
   return (
     <div className={`${showUser ? 'pt-4' : ''}`}>
       <div
@@ -32,7 +36,7 @@ export default memo(function Message({ showUser, message }) {
           </div>
         )}
 
-        <div className="pl-4">
+        <div className="pl-4 w-full">
           {showUser && (
             <div className="flex items-end pb-1.5">
               <UserPopup user={message.author}>
@@ -92,6 +96,35 @@ export default memo(function Message({ showUser, message }) {
                   </div>
                 </div>
               </Dialog>
+            </div>
+          )}
+
+          {!!message.file && (
+            <div className="pt-1 max-w-screen-sm w-full">
+              <div className="flex border dark:border-gray-850 dark:bg-gray-800 p-3 rounded w-full items-center">
+                <FileIcon className="w-8 h-8 dark:text-white" />
+                <div className="pl-3">
+                  <a
+                    href={message.file.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="block text-base text-accent hover:underline cursor-pointer truncate"
+                  >
+                    {message.file.filename}
+                  </a>
+                  <div className="text-mid text-xs">
+                    {formatBytes(message.file.size)}
+                  </div>
+                </div>
+                <a
+                  className="block ml-auto"
+                  href={message.file.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <IconDownloadLarge className="h-6 w-6 highlightable" />
+                </a>
+              </div>
             </div>
           )}
         </div>

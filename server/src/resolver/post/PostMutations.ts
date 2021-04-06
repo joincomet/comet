@@ -8,7 +8,8 @@ import {
   CheckServerPermission,
   handleText,
   scrapeMetadata,
-  uploadImage
+  uploadImage,
+  uploadImageSingle
 } from '@/util'
 
 @Resolver()
@@ -34,7 +35,7 @@ export class PostMutations {
 
     if (images && images.length > 0) {
       for (const image of images) {
-        const { url: imageUrl } = await uploadImage({ file: image })
+        const imageUrl = await uploadImageSingle(image)
         imageUrls.push(imageUrl)
       }
     }

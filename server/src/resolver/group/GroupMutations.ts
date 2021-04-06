@@ -11,7 +11,7 @@ import {
 import { Context, SubscriptionTopic } from '@/types'
 import { Channel, Group, User } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { uploadImage } from '@/util/s3'
+import { uploadImage, uploadImageSingle } from '@/util/s3'
 import { CheckGroupMember } from '@/util'
 
 @Resolver()
@@ -99,15 +99,14 @@ export class GroupMutations {
   ): Promise<Group> {
     const group = await em.findOneOrFail(Group, groupId, ['users'])
     if (avatarFile) {
-      group.avatarUrl = (
-        await uploadImage({
-          file: avatarFile,
-          resize: {
-            width: 256,
-            height: 256
-          }
-        })
-      ).url
+      group.avatarUrl = await uploadImageSingle(
+        avatarFile,
+        {
+          width: 256,
+          height: 256
+        },
+        true
+      )
     }
     await em.persistAndFlush(group)
     await refetchGroupsAndDms(user.id)

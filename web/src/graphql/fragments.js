@@ -95,6 +95,12 @@ export const MESSAGE_FRAGMENT = gql`
       smallWidth
       smallHeight
     }
+    file {
+      url
+      mime
+      filename
+      size
+    }
     linkMetadatas {
       ...METADATA_FRAGMENT
     }

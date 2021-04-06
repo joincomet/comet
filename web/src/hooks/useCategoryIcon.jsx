@@ -15,10 +15,10 @@ import {
   IconCategoryOther,
   IconCategoryPolitics,
   IconCategoryProgramming,
-  IconCategorySports
+  IconCategorySports,
+  IconCategoryScience,
+  IconCategoryTechnology
 } from '@/components/ui/icons/Icons'
-import IconCategoryScience from '@/components/ui/icons/IconCategoryScience'
-import IconCategoryTechnology from '@/components/ui/icons/IconCategoryTechnology'
 
 export const useCategoryIcon = category =>
   useMemo(() => {

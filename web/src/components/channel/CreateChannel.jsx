@@ -57,54 +57,70 @@ export default function CreateChannel({ serverId }) {
         Channels
       </SidebarLabel>
 
-      <Dialog isOpen={isOpen} close={() => setIsOpen(false)}>
-        <DialogTitle className="title mb-4">Create Channel</DialogTitle>
+      <Dialog
+        isOpen={isOpen}
+        close={() => setIsOpen(false)}
+        closeOnOverlayClick
+      >
+        <div
+          className="rounded-lg dark:bg-gray-750 p-4 max-w-md w-full"
+          onClick={e => e.stopPropagation()}
+        >
+          <DialogTitle className="title mb-4">
+            {t('channel.create')}
+          </DialogTitle>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4 w-full">
-            <label className="label" htmlFor="name">
-              Channel Name
-            </label>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-4 w-full">
+              <label className="label" htmlFor="name">
+                Channel Name
+              </label>
 
-            <div className="relative">
-              <input
-                {...register('name', {
-                  required: true,
-                  maxLength: 100,
-                  pattern: /[a-z0-9_-]+/g
-                })}
-                maxLength={100}
-                className="textbox pl-9 pr-3 lowercase"
-                spellCheck={false}
-                autoCapitalize="none"
-                id="name"
-                onChange={e => {
-                  if (e.target.value === ' ' || e.target.value === '-')
-                    e.target.value = ''
-                  e.target.value = e.target.value
-                    .toLowerCase()
-                    .replace(' ', '-')
-                  if (e.target.value.endsWith('--'))
-                    e.target.value = e.target.value.substring(
-                      0,
-                      e.target.value.length - 1
-                    )
-                  e.target.value = e.target.value.replace(/[^a-z0-9_-]+/g, '')
-                }}
-              />
+              <div className="relative">
+                <input
+                  {...register('name', {
+                    required: true,
+                    maxLength: 100,
+                    pattern: /[a-z0-9_-]+/g
+                  })}
+                  maxLength={100}
+                  className="textbox pl-9 pr-3 lowercase"
+                  spellCheck={false}
+                  autoCapitalize="none"
+                  id="name"
+                  onChange={e => {
+                    if (e.target.value === ' ' || e.target.value === '-')
+                      e.target.value = ''
+                    e.target.value = e.target.value
+                      .toLowerCase()
+                      .replace(' ', '-')
+                    if (e.target.value.endsWith('--'))
+                      e.target.value = e.target.value.substring(
+                        0,
+                        e.target.value.length - 1
+                      )
+                    e.target.value = e.target.value.replace(/[^a-z0-9_-]+/g, '')
+                  }}
+                />
 
-              <div className="absolute left-0 top-0 bottom-0 flex items-center w-10 justify-center pointer-events-none">
-                <IconChannel className="w-5 h-5 text-tertiary" />
+                <div className="absolute left-0 top-0 bottom-0 flex items-center w-10 justify-center pointer-events-none">
+                  <IconChannel className="w-5 h-5 text-tertiary" />
+                </div>
               </div>
             </div>
-          </div>
 
-          <Button loading={fetching}>{t('continue')}</Button>
+            <Button loading={fetching}>{t('continue')}</Button>
 
-          <Switch checked={isPrivate} onChange={() => setIsPrivate(!isPrivate)}>
-            {t('channel.togglePrivate')}
-          </Switch>
-        </form>
+            <div className="pt-4">
+              <Switch
+                checked={isPrivate}
+                onChange={() => setIsPrivate(!isPrivate)}
+              >
+                {t('channel.togglePrivate')}
+              </Switch>
+            </div>
+          </form>
+        </div>
       </Dialog>
     </>
   )

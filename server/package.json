@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
@@ -16,6 +16,7 @@
     "argon2": "^0.27.2",
     "aws-sdk": "^2.879.0",
     "class-validator": "^0.13.1",
+    "cloneable-readable": "^2.1.0",
     "cookie-parser": "^1.4.5",
     "dataloader": "^2.0.0",
     "dayjs": "^1.10.4",

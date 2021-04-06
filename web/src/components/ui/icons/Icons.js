@@ -32,6 +32,7 @@ export {
   HiPencil as IconEdit,
   HiUser as IconUser,
   HiDownload as IconDownload,
+  HiOutlineDownload as IconDownloadLarge,
   HiClock as IconNew,
   HiSortAscending as IconTop,
   HiCheckCircle as IconFeatured,
@@ -86,6 +87,18 @@ export {
 } from 'react-icons/md'
 
 export {
+  FaFile as IconFile,
+  FaFileImage as IconFileImage,
+  FaFileVideo as IconFileVideo,
+  FaFileWord as IconFileWord,
+  FaFilePowerpoint as IconFilePowerpoint,
+  FaFilePdf as IconFilePdf,
+  FaFileCode as IconFileCode,
+  FaFileAudio as IconFileAudio,
+  FaFileExcel as IconFileExcel,
+  FaFileAlt as IconFileText,
+  FaFileArchive as IconFileArchive,
+  FaFileCsv as IconFileCsv,
   FaSortAlphaDown as IconAll,
   // CATEGORIES
   FaGamepad as IconCategoryGaming

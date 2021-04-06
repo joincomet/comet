@@ -64,71 +64,80 @@ export default function CreateServerDialog() {
         />
       </ServerListItem>
 
-      <Dialog isOpen={isOpen} close={() => setIsOpen(false)}>
-        <DialogTitle className="title mb-4">
-          {t('server.create.title')}
-        </DialogTitle>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center"
+      <Dialog
+        isOpen={isOpen}
+        close={() => setIsOpen(false)}
+        closeOnOverlayClick
+      >
+        <div
+          className="rounded-lg dark:bg-gray-750 max-w-md w-full p-4"
+          onClick={e => e.stopPropagation()}
         >
-          <input
-            type="file"
-            {...register('avatarFile')}
-            className="hidden"
-            id="avatarFile"
-            accept="image/png, image/jpeg"
-          />
-
-          {!avatarSrc ? (
-            <label
-              htmlFor="avatarFile"
-              className="transition dark:hover:bg-gray-700 rounded-full h-24 w-24 border-2 text-tertiary border-dashed border-gray-600 dark:border-gray-400 flex flex-col items-center justify-center mb-4 cursor-pointer select-none"
-            >
-              <IconUploadPhoto className="w-6 h-6" />
-              <div className="text-sm pt-1">{t('server.create.upload')}</div>
-            </label>
-          ) : (
-            <label
-              htmlFor="avatarFile"
-              className="transition rounded-full h-24 w-24 block mb-4 cursor-pointer select-none group relative"
-            >
-              <IconEditAvatar className="absolute w-6 h-6 text-white inset-1/2 transform -translate-x-1/2 -translate-y-1/2 transition opacity-0 group-hover:opacity-100" />
-              <img
-                src={avatarSrc}
-                className="w-full h-full object-cover rounded-full transition group-hover:opacity-25"
-                alt=""
-              />
-            </label>
-          )}
-
-          <div className="mb-4 w-full">
-            <label className="label text-left" htmlFor="name">
-              {t('server.create.name')}
-            </label>
-
-            <input
-              {...register('name', {
-                required: true,
-                maxLength: 100
-              })}
-              maxLength={100}
-              className="textbox px-3"
-              id="name"
-            />
-          </div>
-
-          <div className="pb-4 w-full">
-            <Button loading={fetching}>{t('continue')}</Button>
-          </div>
-
-          <Switch
-            checked={privateServer}
-            onChange={() => setPrivate(!privateServer)}
+          <DialogTitle className="title mb-4">
+            {t('server.create.title')}
+          </DialogTitle>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col items-center"
           >
-            {t('server.create.requireInvite')}
-          </Switch>
-        </form>
+            <input
+              type="file"
+              {...register('avatarFile')}
+              className="hidden"
+              id="avatarFile"
+              accept="image/png, image/jpeg"
+            />
+
+            {!avatarSrc ? (
+              <label
+                htmlFor="avatarFile"
+                className="transition dark:hover:bg-gray-700 rounded-full h-24 w-24 border-2 text-tertiary border-dashed border-gray-600 dark:border-gray-400 flex flex-col items-center justify-center mb-4 cursor-pointer select-none"
+              >
+                <IconUploadPhoto className="w-6 h-6" />
+                <div className="text-sm pt-1">{t('server.create.upload')}</div>
+              </label>
+            ) : (
+              <label
+                htmlFor="avatarFile"
+                className="transition rounded-full h-24 w-24 block mb-4 cursor-pointer select-none group relative"
+              >
+                <IconEditAvatar className="absolute w-6 h-6 text-white inset-1/2 transform -translate-x-1/2 -translate-y-1/2 transition opacity-0 group-hover:opacity-100" />
+                <img
+                  src={avatarSrc}
+                  className="w-full h-full object-cover rounded-full transition group-hover:opacity-25"
+                  alt=""
+                />
+              </label>
+            )}
+
+            <div className="mb-4 w-full">
+              <label className="label text-left" htmlFor="name">
+                {t('server.create.name')}
+              </label>
+
+              <input
+                {...register('name', {
+                  required: true,
+                  maxLength: 100
+                })}
+                maxLength={100}
+                className="textbox px-3"
+                id="name"
+              />
+            </div>
+
+            <div className="pb-4 w-full">
+              <Button loading={fetching}>{t('continue')}</Button>
+            </div>
+
+            <Switch
+              checked={privateServer}
+              onChange={() => setPrivate(!privateServer)}
+            >
+              {t('server.create.requireInvite')}
+            </Switch>
+          </form>
+        </div>
       </Dialog>
     </>
   )

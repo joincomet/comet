@@ -56,6 +56,13 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+type File {
+  filename: String!
+  mime: String!
+  size: Float!
+  url: String!
+}
+
 type Folder implements BaseEntity {
   avatarUrl: String
   createdAt: DateTime!
@@ -134,12 +141,14 @@ type Group implements BaseEntity {
 union GroupDmUnion = Group | User
 
 type Image {
+  originalHeight: Int!
   originalUrl: String!
+  originalWidth: Int!
   popupHeight: Int!
-  popupUrl: String!
+  popupUrl: String
   popupWidth: Int!
   smallHeight: Int!
-  smallUrl: String!
+  smallUrl: String
   smallWidth: Int!
 }
 
@@ -164,6 +173,7 @@ type Message implements BaseEntity {
   author: User!
   createdAt: DateTime!
   editedAt: DateTime
+  file: File
   id: ID!
   image: Image
   isDeleted: Boolean!

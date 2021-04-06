@@ -7,7 +7,7 @@ import {
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { Lexico } from '@/util/Lexico'
+import { ReorderUtils } from '@/util/ReorderUtils'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -28,7 +28,7 @@ export class Channel extends BaseEntity {
   server: Server
 
   @Property({ columnType: 'text' })
-  position: string = Lexico.FIRST_POSITION
+  position: string = ReorderUtils.FIRST_POSITION
 
   @Property()
   isPrivate: boolean = false

@@ -104,7 +104,7 @@ interface IOrdering<T> {
   readonly FIRST_POSITION: T
 }
 
-export const Lexico: IOrdering<string> = {
+export const ReorderUtils: IOrdering<string> = {
   positionBefore,
   positionAfter,
   positionBetween,
