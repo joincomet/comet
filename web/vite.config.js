@@ -3,7 +3,6 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 import { resolve } from 'path'
 import stringHash from 'string-hash'
 import { VitePWA } from 'vite-plugin-pwa'
-import { join } from 'path'
 
 const pwa = VitePWA({
   manifest: {

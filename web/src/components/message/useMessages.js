@@ -6,10 +6,6 @@ export function useMessages({ channel, group, user }) {
   const initialTime = useRef(new Date().toString())
   const [mountTime] = useState(new Date())
   const [page, setPage] = useState(0)
-  const [pause, setPause] = useState(true)
-  useEffect(() => {
-    setTimeout(() => setPause(false), 300)
-  }, [])
 
   const [{ data, fetching }] = useQuery({
     query: GET_MESSAGES,
@@ -21,7 +17,7 @@ export function useMessages({ channel, group, user }) {
       pageSize: 100,
       page
     },
-    pause: pause || (!channel && !group && !user)
+    pause: !channel && !group && !user
   })
 
   return [

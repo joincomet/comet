@@ -16,6 +16,8 @@ import {
 import { Meteors } from '@/components/ui/meteors'
 import { getOS } from '@/utils/getOS'
 import Page from '@/components/ui/page/Page'
+import { useMemo } from 'react'
+import { version } from '../../package.json'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
@@ -23,6 +25,16 @@ const iconButton =
 
 export default function LandingPage() {
   const currentUser = useCurrentUser()
+
+  const os = getOS()
+  const downloadLink = useMemo(() => {
+    if (os === 'Windows')
+      return `https://github.com/joincomet/comet/releases/download/${version}/Comet-Setup-${version}.exe`
+    else if (os === 'Mac OS')
+      return `https://github.com/joincomet/comet/releases/download/${version}/Comet-${version}.dmg`
+    else if (os === 'Linux')
+      return `https://github.com/joincomet/comet/releases/download/${version}/Comet-${version}.AppImage`
+  }, [os])
 
   return (
     <Page>
@@ -96,12 +108,12 @@ export default function LandingPage() {
               </p>
               <div className="inline-flex items-center space-x-6">
                 <a
-                  href="https://github.com/joincomet/comet"
+                  href={downloadLink}
                   rel="noreferrer noopener"
                   target="_blank"
                   className="bg-blue-500 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
                 >
-                  Download for {getOS()}
+                  Download for {os}
                   <IconDownload className="w-6 h-6 ml-3" />
                 </a>
 
