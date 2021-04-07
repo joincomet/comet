@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "private": true,
   "repository": "github:joincomet/comet",
   "main": "electron/index.js",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@electron/remote": "^1.1.0",
-    "@headlessui/react": "dev",
+    "@headlessui/react": "^0.3.2-5ff5225",
     "@netlify/classnames-template-literals": "^1.0.0",
     "@popperjs/core": "^2.9.2",
     "@reach/observe-rect": "^1.2.0",
@@ -40,7 +40,7 @@
     "framer-motion": "^4.1.2",
     "fuse.js": "^6.4.6",
     "graphql": "^15.5.0",
-    "i18next": "^20.1.0",
+    "i18next": "^20.2.0",
     "i18next-browser-languagedetector": "^6.1.0",
     "react-contenteditable": "^3.3.5",
     "react-dnd": "^14.0.2",
@@ -103,7 +103,7 @@
   },
   "build": {
     "productName": "Comet",
-    "appId": "app.joincomet.desktop",
+    "appId": "app.joincomet",
     "asar": true,
     "files": [
       "electron",
@@ -118,6 +118,14 @@
         "provider": "generic",
         "url": "https://anydummyurl.com"
       }
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "joincomet",
+        "repo": "comet",
+        "vPrefixedTagName": true
+      }
+    ]
   }
 }

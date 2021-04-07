@@ -1,39 +1,19 @@
 require('@electron/remote/main').initialize()
 
-const { autoUpdater } = require('electron-updater')
-const log = require('electron-log')
 const { join } = require('path')
-const { BrowserWindow, app, shell, screen, Menu } = require('electron')
+const { BrowserWindow, app, shell, screen } = require('electron')
 const isDev = require('electron-is-dev')
 const contextMenu = require('electron-context-menu')
 const Store = require('electron-store')
 const DiscordRPC = require('discord-rpc')
+const { autoUpdater } = require('electron-updater')
+const log = require('electron-log')
 
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 log.info('App starting...')
 
-let template = []
-if (process.platform === 'darwin') {
-  // OS X
-  const name = app.getName()
-  template.unshift({
-    label: name,
-    submenu: [
-      {
-        label: 'About ' + name,
-        role: 'about'
-      },
-      {
-        label: 'Quit',
-        // accelerator: 'Command+Q',
-        click() {
-          app.quit()
-        }
-      }
-    ]
-  })
-}
+autoUpdater.checkForUpdatesAndNotify()
 
 contextMenu({ showInspectElement: true }) // TODO disable this
 const store = new Store()
@@ -42,24 +22,6 @@ const icon = join(__dirname, './resources/icon.png')
 
 let loadingScreen
 let mainWindow
-
-if (!isDev) {
-  app.on('ready', function () {
-    autoUpdater.checkForUpdates()
-  })
-  autoUpdater.on('checking-for-update', () => {})
-  autoUpdater.on('update-available', info => {
-    autoUpdater.downloadUpdate()
-  })
-  autoUpdater.on('update-not-available', info => {
-    createWindow()
-  })
-  autoUpdater.on('error', err => {})
-  autoUpdater.on('download-progress', progressObj => {})
-  autoUpdater.on('update-downloaded', info => {
-    autoUpdater.quitAndInstall()
-  })
-}
 
 const createLoadingScreen = () => {
   /// create a browser window
@@ -172,11 +134,8 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  const menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
-
   createLoadingScreen()
-  if (isDev) createWindow()
+  createWindow()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

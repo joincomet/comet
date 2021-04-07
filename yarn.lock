@@ -2210,12 +2210,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:dev":
-  version: 0.3.1-d519f7d
-  resolution: "@headlessui/react@npm:0.3.1-d519f7d"
+"@headlessui/react@npm:^0.3.2-5ff5225":
+  version: 0.3.2
+  resolution: "@headlessui/react@npm:0.3.2"
   peerDependencies:
     react: ">=16"
-  checksum: 3b3751e289d8e13365891f4a3f3b53e0eaa9f228d5e47a5d0fde7fd338649c5534b5c0f2f768ac1fb13cffb6952c39baf16921dc7bd7c5d999f6df27062040b8
+  checksum: 711515ee54a3afc8c2658464a1ba7cce1897bc83546d14f4cbf36f43ccfe80df73a7b6fd852857878aa288f8a0a2fd6e2c92aea687682054039fca2a7cbfe2e4
   languageName: node
   linkType: hard
 
@@ -4411,9 +4411,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.880.0":
-  version: 2.880.0
-  resolution: "aws-sdk@npm:2.880.0"
+"aws-sdk@npm:^2.881.0":
+  version: 2.881.0
+  resolution: "aws-sdk@npm:2.881.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4424,7 +4424,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: d8a4be8eab16992871e9b97cd6f2853e4c0afcc37951409d0bfcdb36cff5c380ed751c62b2b4273f506634266d7eccb39ea00adf2cd225eb3cfd1fa0a2b906e4
+  checksum: e34c5e7c424d0aacdae5498709bff39d078127d79a02fa5489542e526dcc7d8451568bf8f811211dc8f4790408b391f7764df6a25ea0f685a8acdc264a1d79bf
   languageName: node
   linkType: hard
 
@@ -8510,12 +8510,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"i18next@npm:^20.1.0":
-  version: 20.1.0
-  resolution: "i18next@npm:20.1.0"
+"i18next@npm:^20.2.0":
+  version: 20.2.0
+  resolution: "i18next@npm:20.2.0"
   dependencies:
     "@babel/runtime": ^7.12.0
-  checksum: fb95e19026c2d3d9376087ddfb33c65ba98c80d3e1fb62b93edf7f6b178a492cd5a54bf139edd515a774ee65a75b0051774fdfcf7630f577c26f7014cad2bb12
+  checksum: 21b0bdc691936de79ad9630770e471b19f6807d8ed9d240cd7a188d636f2c7394390009589641e471bcd670a17452b39ca9992fac9e99a1a4d91b1ea8ff48e7e
   languageName: node
   linkType: hard
 
@@ -13441,7 +13441,7 @@ resolve@^2.0.0-next.3:
     "@urql/introspection": ^0.2.0
     apollo-server-express: ^2.22.2
     argon2: ^0.27.2
-    aws-sdk: ^2.880.0
+    aws-sdk: ^2.881.0
     class-validator: ^0.13.1
     cloneable-readable: ^2.1.0
     cookie-parser: ^1.4.5
@@ -15540,7 +15540,7 @@ typescript@^4.2.3:
   resolution: "web@workspace:web"
   dependencies:
     "@electron/remote": ^1.1.0
-    "@headlessui/react": dev
+    "@headlessui/react": ^0.3.2-5ff5225
     "@netlify/classnames-template-literals": ^1.0.0
     "@popperjs/core": ^2.9.2
     "@reach/observe-rect": ^1.2.0
@@ -15585,7 +15585,7 @@ typescript@^4.2.3:
     framer-motion: ^4.1.2
     fuse.js: ^6.4.6
     graphql: ^15.5.0
-    i18next: ^20.1.0
+    i18next: ^20.2.0
     i18next-browser-languagedetector: ^6.1.0
     postcss: ^8.2.9
     prettier: ^2.2.1
