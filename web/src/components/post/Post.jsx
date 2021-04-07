@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
@@ -18,13 +18,14 @@ import { useContextMenuTrigger } from '@/components/ui/context'
 import { mergeRefs } from '@/utils/mergeRefs'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
+import { useContextMenu } from '@/hooks/useContextMenu'
+import PostContextMenu from '@/components/post/PostContextMenu'
 
 export default memo(function Post({
   post,
   isPostPage = false,
   showServerName = false,
-  className = '',
-  measure
+  className = ''
 }) {
   const toggleVote = useTogglePostVote(post)
 
@@ -34,11 +35,6 @@ export default memo(function Post({
     collect: monitor => ({
       opacity: monitor.isDragging() ? 0.4 : 1
     })
-  })
-
-  const contextMenuRef = useContextMenuTrigger({
-    menuId: ContextMenuType.Post,
-    data: { post }
   })
 
   let type = ''
@@ -52,109 +48,141 @@ export default memo(function Post({
     e.preventDefault()
   }
 
+  const contextMenuRef = useRef(null)
+  const { menu, xPos, yPos } = useContextMenu(contextMenuRef)
+
   return (
-    <Link
-      to={post.relativeUrl}
-      ref={mergeRefs(contextMenuRef, dragRef)}
-      style={{ opacity }}
-      className={`${className} cursor-pointer relative transition dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
-    >
-      {!isPostPage && (
-        <div
-          className="w-24 h-16 flex-shrink-0 rounded dark:bg-gray-700 mr-3 flex items-center justify-center"
-          style={
-            post.thumbnailUrl
-              ? { backgroundImage: `url(${post.thumbnailUrl})` }
-              : {}
-          }
-        >
-          {!!post.text && <IconText className="w-8 h-8 text-tertiary" />}
-          {!post.thumbnailUrl && !post.text && (
-            <IconLinkWeb className="w-8 h-8 text-tertiary" />
-          )}
-        </div>
-      )}
+    <>
+      {menu && <PostContextMenu />}
 
-      <div onClick={onClick}>
-        <UserPopup user={post.author}>
-          <UserAvatar user={post.author} size={7} />
-        </UserPopup>
-      </div>
-
-      <div className="pl-3 flex-grow">
-        <div className="flex items-end pb-2">
-          <div onClick={onClick}>
-            <UserPopup user={post.author}>
-              <div className="hover:underline cursor-pointer text-sm font-medium text-accent leading-none">
-                {post.author.name}
-              </div>
-            </UserPopup>
-          </div>
-
-          <div className="text-11 text-mid font-medium pl-2 leading-none">
-            {calendarDate(post.createdAt)} &middot; {type}
-          </div>
-        </div>
-
-        <div className="text-primary text-base">{post.title}</div>
-
-        {isPostPage && type && (
-          <div className="border-t dark:border-gray-750 mt-2 pt-2">
-            {!!post.text && (
-              <div
-                dangerouslySetInnerHTML={{ __html: post.text }}
-                className="prose prose-sm dark:prose-dark max-w-none"
-              />
-            )}
-            {post.imageUrls.length >= 1 && (
-              <img alt="" src={post.imageUrls[0]} className="max-w-screen-lg" />
+      <Link
+        to={post.relativeUrl}
+        ref={mergeRefs(contextMenuRef, dragRef)}
+        style={{ opacity }}
+        className={`${className} cursor-pointer relative transition dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
+      >
+        {!isPostPage && (
+          <div
+            className="w-24 h-16 flex-shrink-0 rounded dark:bg-gray-700 mr-3 flex items-center justify-center"
+            style={
+              post.thumbnailUrl
+                ? { backgroundImage: `url(${post.thumbnailUrl})` }
+                : {}
+            }
+          >
+            {!!post.text && <IconText className="w-8 h-8 text-tertiary" />}
+            {!post.thumbnailUrl && !post.text && (
+              <IconLinkWeb className="w-8 h-8 text-tertiary" />
             )}
           </div>
         )}
 
-        <div className="flex items-center pt-2">
-          <div
-            onClick={e => {
-              e.preventDefault()
-              toggleVote()
-            }}
-            className={`${
-              post.isVoted
-                ? 'text-red-400'
-                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-            } flex items-center cursor-pointer`}
-          >
-            <IconVote className="w-4 h-4" />
-            <div className="ml-2 text-xs font-medium">{post.voteCount}</div>
+        <div onClick={onClick}>
+          <Avatar post={post} />
+        </div>
+
+        <div className="pl-3 flex-grow">
+          <div className="flex items-end pb-2">
+            <div onClick={onClick}>
+              <UserPopup user={post.author}>
+                <div className="hover:underline cursor-pointer text-sm font-medium text-accent leading-none">
+                  {post.author.name}
+                </div>
+              </UserPopup>
+            </div>
+
+            <div className="text-11 text-mid font-medium pl-2 leading-none">
+              {calendarDate(post.createdAt)} &middot; {type}
+            </div>
           </div>
 
-          <div
-            className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
-          >
-            <IconChat className="w-5 h-5" />
-            <div className="ml-2 text-xs font-medium">{post.commentCount}</div>
-          </div>
+          <div className="text-primary text-base">{post.title}</div>
 
-          <div
-            className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
-          >
-            <IconDotsHorizontal className="w-5 h-5" />
-          </div>
-
-          {showServerName && (
-            <div className="ml-4 flex items-center" onClick={onClick}>
-              <ServerPopup server={post.server}>
-                <ServerAvatar server={post.server} size={5} />
-              </ServerPopup>
-              <ServerPopup server={post.server}>
-                <span className="ml-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                  {post.server.name}
-                </span>
-              </ServerPopup>
+          {isPostPage && type && (
+            <div className="border-t dark:border-gray-750 mt-2 pt-2">
+              {!!post.text && (
+                <div
+                  dangerouslySetInnerHTML={{ __html: post.text }}
+                  className="prose prose-sm dark:prose-dark max-w-none"
+                />
+              )}
+              {post.imageUrls.length >= 1 && (
+                <img
+                  alt=""
+                  src={post.imageUrls[0]}
+                  className="max-w-screen-lg"
+                />
+              )}
             </div>
           )}
+
+          <div className="flex items-center pt-2">
+            <div
+              onClick={e => {
+                e.preventDefault()
+                toggleVote()
+              }}
+              className={`${
+                post.isVoted
+                  ? 'text-red-400'
+                  : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+              } flex items-center cursor-pointer`}
+            >
+              <IconVote className="w-4 h-4" />
+              <div className="ml-2 text-xs font-medium">{post.voteCount}</div>
+            </div>
+
+            <div
+              className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+            >
+              <IconChat className="w-5 h-5" />
+              <div className="ml-2 text-xs font-medium">
+                {post.commentCount}
+              </div>
+            </div>
+
+            <div
+              className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+            >
+              <IconDotsHorizontal className="w-5 h-5" />
+            </div>
+
+            {showServerName && (
+              <div className="ml-4 flex items-center" onClick={onClick}>
+                <ServerPopup server={post.server}>
+                  <ServerAvatar server={post.server} size={5} />
+                </ServerPopup>
+                <ServerPopup server={post.server}>
+                  <span className="ml-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    {post.server.name}
+                  </span>
+                </ServerPopup>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </>
   )
 })
+
+function Avatar({ post }) {
+  const avatarRef = useContextMenuTrigger({
+    menuId: ContextMenuType.User,
+    data: { user: post.author, server: post.server }
+  })
+  return (
+    <div
+      ref={avatarRef}
+      onClick={e => {
+        console.log(e)
+        e.stopPropagation()
+        e.preventDefault()
+      }}
+    >
+      <UserPopup user={post.author}>
+        <UserAvatar user={post.author} size={7} />
+      </UserPopup>
+    </div>
+  )
+}

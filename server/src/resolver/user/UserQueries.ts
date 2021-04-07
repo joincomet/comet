@@ -1,6 +1,6 @@
 import { Arg, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { Context } from '@/types'
-import { FriendData, Group, User } from '@/entity'
+import { FriendData, Group, ServerUserJoin, User } from '@/entity'
 import { GroupDmUnion } from '@/resolver/user/types/GroupDmUnion'
 import { QueryOrder } from '@mikro-orm/core'
 import { CustomError } from '@/types/CustomError'
@@ -144,5 +144,27 @@ export class UserQueries {
       blockingUsers,
       blockedByUsers
     } as GetUserRelationshipsResponse
+  }
+
+  @Authorized()
+  @Query(() => [User])
+  async getMutualFriends(
+    @Ctx() { user, em }: Context,
+    @Arg('userId', () => ID) userId: string
+  ) {
+    const them = await em.findOneOrFail(User, userId)
+    const myFriends = (
+      await em.find(FriendData, { user, status: FriendStatus.Friends }, [
+        'toUser'
+      ])
+    ).map(f => f.toUser)
+    const theirFriends = (
+      await em.find(FriendData, { user: them, status: FriendStatus.Friends }, [
+        'toUser'
+      ])
+    )
+      .map(f => f.toUser)
+      .map(f => f.id)
+    return myFriends.filter(f => theirFriends.includes(f.id))
   }
 }

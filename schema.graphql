@@ -125,7 +125,6 @@ type Group implements BaseEntity {
   createdAt: DateTime!
   displayName: String!
   id: ID!
-  lastMessageAt: DateTime!
   name: String!
   owner: User!
   users: [User!]!
@@ -470,6 +469,8 @@ type Query {
   Get messages in a DM, group, or channel (requires ChannelPermission.ViewChannel or ServerPermission.ViewChannels)
   """
   getMessages(channelId: ID, groupId: ID, initialTime: DateTime, page: Int = 0, pageSize: Int = 50, pinned: Boolean = false, userId: ID): [GetMessagesResponse!]!
+  getMutualFriends(userId: ID!): [User!]!
+  getMutualServers(userId: ID!): [Server!]!
 
   """Get all notifications or only unread notifications"""
   getNotifications(

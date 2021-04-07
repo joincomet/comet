@@ -21,6 +21,7 @@ import { VectorLogo } from '@/components/ui/vectors'
 import { useGroupsAndDms } from '@/providers/DataProvider'
 import { HIDE_DM, SEND_MESSAGE } from '@/graphql/mutations'
 import { useMutation } from 'urql'
+import UserContextMenuWrapper from '@/components/user/UserContextMenuWrapper'
 
 export default function HomeSidebar() {
   const groupsAndDms = useGroupsAndDms()
@@ -28,49 +29,53 @@ export default function HomeSidebar() {
   const { t } = useTranslation()
 
   return (
-    <Sidebar>
-      <div className="h-12 border-b dark:border-gray-850 shadow flex items-center px-5 text-base font-medium">
-        <VectorLogo className="h-4" />
-      </div>
+    <>
+      <UserContextMenuWrapper />
 
-      <div className="px-1.5 pt-3">
-        <div className="space-y-0.5">
-          <SidebarItem to="/me/friends">
-            <IconFriends className="mr-3 h-5 w-5" />
-            {t('user.friends.title')}
-          </SidebarItem>
-
-          <SidebarItem to="/me/inbox">
-            <IconInbox className="mr-3 h-5 w-5" />
-            {t('inbox.title')}
-          </SidebarItem>
-
-          <SidebarItem onClick={() => toast.error(t('infinity.comingSoon'))}>
-            <IconInfinity className="mr-3 h-5 w-5" />
-            {t('infinity.title')}
-          </SidebarItem>
+      <Sidebar>
+        <div className="h-12 border-b dark:border-gray-850 shadow flex items-center px-5 text-base font-medium">
+          <VectorLogo className="h-4" />
         </div>
 
-        <SidebarLabel>{t('post.feed.title')}</SidebarLabel>
+        <div className="px-1.5 pt-3">
+          <div className="space-y-0.5">
+            <SidebarItem to="/me/friends">
+              <IconFriends className="mr-3 h-5 w-5" />
+              {t('user.friends.title')}
+            </SidebarItem>
 
-        <SidebarSortButtons />
+            <SidebarItem to="/me/inbox">
+              <IconInbox className="mr-3 h-5 w-5" />
+              {t('inbox.title')}
+            </SidebarItem>
 
-        <SidebarLabel plusLabel="Create DM">{t('dm.title')}</SidebarLabel>
+            <SidebarItem onClick={() => toast.error(t('infinity.comingSoon'))}>
+              <IconInfinity className="mr-3 h-5 w-5" />
+              {t('infinity.title')}
+            </SidebarItem>
+          </div>
 
-        <div className="space-y-0.5">
-          {!!groupsAndDms &&
-            groupsAndDms.map(groupOrDm => {
-              if (groupOrDm.__typename === 'Group') {
-                const group = groupOrDm
-                return <div>Group</div>
-              } else if (groupOrDm.__typename === 'User') {
-                const user = groupOrDm
-                return <DirectMessage user={user} key={`user-${user.id}`} />
-              }
-            })}
+          <SidebarLabel>{t('post.feed.title')}</SidebarLabel>
+
+          <SidebarSortButtons />
+
+          <SidebarLabel plusLabel="Create DM">{t('dm.title')}</SidebarLabel>
+
+          <div className="space-y-0.5">
+            {!!groupsAndDms &&
+              groupsAndDms.map(groupOrDm => {
+                if (groupOrDm.__typename === 'Group') {
+                  const group = groupOrDm
+                  return <div>Group</div>
+                } else if (groupOrDm.__typename === 'User') {
+                  const user = groupOrDm
+                  return <DirectMessage user={user} key={`user-${user.id}`} />
+                }
+              })}
+          </div>
         </div>
-      </div>
-    </Sidebar>
+      </Sidebar>
+    </>
   )
 }
 

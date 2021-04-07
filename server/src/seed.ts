@@ -118,6 +118,18 @@ export const seed = async (em: EntityManager) => {
       toUser: userDan,
       status: FriendStatus.Friends,
       showChat: true
+    }),
+    em.create(FriendData, {
+      user: userDan,
+      toUser: userAdmin,
+      status: FriendStatus.Friends,
+      showChat: true
+    }),
+    em.create(FriendData, {
+      user: userMichael,
+      toUser: userAdmin,
+      status: FriendStatus.Friends,
+      showChat: true
     })
   )
 

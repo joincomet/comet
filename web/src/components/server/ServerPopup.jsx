@@ -6,13 +6,13 @@ export default function ServerPopup({ server, children }) {
   return (
     <Popup
       className="w-96"
-      render={
+      render={close => (
         <ServerInfoCard
           server={server}
           shadow
           className="rounded-b-none lg:rounded-b-lg"
         />
-      }
+      )}
     >
       {children}
     </Popup>

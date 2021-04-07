@@ -13,11 +13,8 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import { useTogglePostPin } from '@/components/post/useTogglePostPin'
 
-export default function PostContextMenu() {
+export default function PostContextMenu({ post }) {
   const { t } = useTranslation()
-
-  const menuEvent = useContextMenuEvent()
-  const post = menuEvent?.data?.post
 
   const [canManagePosts] = useHasServerPermissions({
     serverId: post?.server.id,
@@ -32,10 +29,10 @@ export default function PostContextMenu() {
   const togglePin = useTogglePostPin(post)
 
   const currentUser = useCurrentUser()
-  const isAuthor = post.author.id === currentUser.id
+  const isAuthor = post?.author?.id === currentUser.id
   const canDelete = isAuthor || canManagePosts
 
-  if (!menuEvent || !menuEvent.data) return null
+  if (!post) return null
 
   return (
     <ContextMenu>

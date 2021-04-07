@@ -24,7 +24,6 @@ export class Group extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl: string
 
-  @Field()
   @Property()
   lastMessageAt: Date = new Date()
 

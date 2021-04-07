@@ -17,13 +17,30 @@ import { ServerPermission } from '@/types/ServerPermission'
 import { useCurrentUser } from '@/providers/UserProvider'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useUserRelationships } from '@/providers/DataProvider'
+import UserDialog from '@/components/user/UserDialog'
+import { useEffect, useState } from 'react'
 
-export default function UserContextMenu({ user, server, show = true, button }) {
+export default function UserContextMenu({
+  user,
+  server,
+  show = true,
+  button,
+  dialogOpen,
+  setDialogOpen,
+  setDialogUser
+}) {
+  const { t } = useTranslation()
+  const currentUser = useCurrentUser()
+  const [menuUser, setMenuUser] = useState(user)
+  const [menuServer, setMenuServer] = useState(server)
+
   const menuEvent = useContextMenuEvent()
-  if (menuEvent && menuEvent.data) {
-    user = menuEvent.data.user
-    server = menuEvent.data.server
-  }
+  useEffect(() => {
+    if (menuEvent && menuEvent.data) {
+      setMenuUser(menuEvent.data.user)
+      setMenuServer(menuEvent.data.server)
+    }
+  }, [menuEvent])
 
   const [
     canBanUser,
@@ -31,7 +48,7 @@ export default function UserContextMenu({ user, server, show = true, button }) {
     canChangeNickname,
     canManageNicknames
   ] = useHasServerPermissions({
-    serverId: server?.id,
+    serverId: menuServer?.id,
     permissions: [
       ServerPermission.BanUser,
       ServerPermission.KickUser,
@@ -52,71 +69,86 @@ export default function UserContextMenu({ user, server, show = true, button }) {
   const [_removeFriendRes, removeFriend] = useMutation(REMOVE_FRIEND)
 
   const { friends, outgoingFriendRequests } = useUserRelationships()
-  const isFriend = friends.map(f => f.id).includes(user.id)
 
-  const hasSentFriendRequest = outgoingFriendRequests.includes(user.id)
-
-  const { t } = useTranslation()
-
-  const currentUser = useCurrentUser()
+  if (!menuUser) return null
+  const isFriend = friends.map(f => f.id).includes(menuUser?.id)
+  const hasSentFriendRequest = outgoingFriendRequests.includes(menuUser?.id)
 
   return (
-    <ContextMenu show={show} button={button}>
-      <div className="space-y-0.5">
-        <ContextMenuItem label={t('user.context.viewProfile')} />
-        <ContextMenuItem label={t('user.context.sendMessage')} />
-      </div>
-      {user.id !== currentUser.id ? (
-        <>
-          <ContextMenuDivider />
-          {isFriend ? (
-            <ContextMenuItem
-              label={t('user.context.removeFriend')}
-              onClick={() => removeFriend({ userId: user.id })}
-              red
-            />
-          ) : (
-            <ContextMenuItem
-              label={t('user.context.addFriend')}
-              onClick={() => createFriendRequest({ userId: user.id })}
-            />
-          )}
-        </>
-      ) : (
-        <></>
-      )}
-      {!!server && (canManageNicknames || canBanUser || canKickUser) && (
-        <>
-          <ContextMenuDivider />
-          <div className="space-y-0.5">
-            {canManageNicknames && (
-              <ContextMenuItem label={t('user.context.changeNickname')} />
-            )}
-            {canKickUser && (
+    <>
+      <UserDialog user={menuUser} open={dialogOpen} setOpen={setDialogOpen} />
+
+      <ContextMenu show={show} button={button}>
+        <div className="space-y-0.5">
+          <ContextMenuItem
+            label={t('user.context.viewProfile')}
+            onClick={() => {
+              setDialogUser(menuUser)
+              setDialogOpen(true)
+            }}
+          />
+          <ContextMenuItem label={t('user.context.sendMessage')} />
+        </div>
+        {menuUser.id !== currentUser.id ? (
+          <>
+            <ContextMenuDivider />
+            {isFriend ? (
               <ContextMenuItem
-                label={t('user.context.kickUser', { user })}
+                label={t('user.context.removeFriend')}
+                onClick={() => removeFriend({ userId: menuUser.id })}
                 red
-                onClick={() => {
-                  kickUser({ serverId: server.id, userId: user.id })
-                  toast.success(t('user.context.kickedUser', { user }))
-                }}
+              />
+            ) : (
+              <ContextMenuItem
+                label={t('user.context.addFriend')}
+                onClick={() => createFriendRequest({ userId: menuUser.id })}
               />
             )}
-            {canBanUser && (
-              <ContextMenuItem
-                label={t('user.context.banUser', { user })}
-                red
-                onClick={() => {
-                  const reason = window.prompt(t('user.context.banPrompt'))
-                  if (reason === null) return
-                  banUser({ serverId: server.id, userId: user.id, reason })
-                  toast.success(t('user.context.bannedUser', { user }))
-                }}
-              />
-            )}
-          </div>
-        </>
-      )}
-    </ContextMenu>
+          </>
+        ) : (
+          <></>
+        )}
+        {!!server && (canManageNicknames || canBanUser || canKickUser) && (
+          <>
+            <ContextMenuDivider />
+            <div className="space-y-0.5">
+              {canManageNicknames && (
+                <ContextMenuItem label={t('user.context.changeNickname')} />
+              )}
+              {canKickUser && (
+                <ContextMenuItem
+                  label={t('user.context.kickUser', { user: menuUser })}
+                  red
+                  onClick={() => {
+                    kickUser({ serverId: menuServer.id, userId: menuUser.id })
+                    toast.success(
+                      t('user.context.kickedUser', { user: menuUser })
+                    )
+                  }}
+                />
+              )}
+              {canBanUser && (
+                <ContextMenuItem
+                  label={t('user.context.banUser', { user: menuUser })}
+                  red
+                  onClick={() => {
+                    const reason = window.prompt(t('user.context.banPrompt'))
+                    if (reason === null) return
+                    banUser({
+                      serverId: menuServer.id,
+                      userId: menuUser.id,
+                      reason
+                    })
+                    toast.success(
+                      t('user.context.bannedUser', { user: menuUser })
+                    )
+                  }}
+                />
+              )}
+            </div>
+          </>
+        )}
+      </ContextMenu>
+    </>
   )
 }

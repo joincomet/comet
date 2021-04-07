@@ -7,6 +7,7 @@ import {
 } from '@mikro-orm/core'
 import { User } from '@/entity'
 import { FriendStatus } from '@/resolver/user'
+import { Field } from 'type-graphql'
 
 @Entity()
 export class FriendData {
@@ -25,8 +26,8 @@ export class FriendData {
   @Property()
   createdAt: Date = new Date()
 
-  @Property({ nullable: true })
-  lastMessageAt?: Date
+  @Property()
+  lastMessageAt: Date = new Date()
 
   @Property({ nullable: true })
   updatedAt?: Date

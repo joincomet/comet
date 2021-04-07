@@ -21,12 +21,6 @@ export default function PostPage() {
   const { t } = useTranslation()
   const { postId, serverId } = useParams()
 
-  const [serverPosts] = usePosts({ serverId })
-  const [feedPosts] = usePosts({})
-  const foundPost =
-    serverPosts.find(p => p.id === postId) ??
-    feedPosts.find(p => p.id === postId)
-
   const [canViewComments, canCreateComment] = useHasServerPermissions({
     serverId,
     permissions: [ServerPermission.ViewComments, ServerPermission.CreateComment]
@@ -36,10 +30,9 @@ export default function PostPage() {
     query: GET_POST,
     variables: {
       postId
-    },
-    pause: !!foundPost
+    }
   })
-  const post = foundPost ? foundPost : data?.getPost
+  const post = data?.getPost
 
   const [{ data: commentsData }] = useQuery({
     query: GET_COMMENTS,

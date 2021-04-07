@@ -1,9 +1,6 @@
 import { forwardRef } from 'react'
 import { IconUser } from '@/components/ui/icons/Icons'
 import Avatar from '@/components/ui/Avatar'
-import { useContextMenuTrigger } from '@/components/ui/context'
-import { mergeRefs } from '@/utils/mergeRefs'
-import { ContextMenuType } from '@/types/ContextMenuType'
 
 export default forwardRef(
   (

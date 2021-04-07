@@ -149,4 +149,20 @@ export class ServerQueries {
     userRoles.forEach(role => role.permissions.forEach(perm => perms.add(perm)))
     return [...perms]
   }
+
+  @Authorized()
+  @Query(() => [Server])
+  async getMutualServers(
+    @Ctx() { user, em }: Context,
+    @Arg('userId', () => ID) userId: string
+  ) {
+    const them = await em.findOneOrFail(User, userId)
+    const myServers = (await em.find(ServerUserJoin, { user }, ['server'])).map(
+      j => j.server
+    )
+    const theirServers = (
+      await em.find(ServerUserJoin, { user: them }, ['server'])
+    ).map(j => j.server.id)
+    return myServers.filter(s => theirServers.includes(s.id))
+  }
 }

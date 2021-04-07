@@ -48,19 +48,22 @@ export default function Popup({
             {...attrs}
             className={`hidden lg:block ${className}`}
           >
-            {render}
+            {render(() => setOpen(false))}
           </motion.div>
         )}
-        trigger="click"
         placement={placement}
         interactive
         onMount={onMount}
+        visible={open}
         onHide={() => setOpen(false)}
+        onClickOutside={() => setOpen(false)}
         plugins={[hideOnPopperBlur]}
         zIndex={9999}
         appendTo={document.body}
       >
-        {children}
+        <span className="leading-none" onClick={() => setOpen(true)}>
+          {children}
+        </span>
       </Tippy>
     </>
   )
