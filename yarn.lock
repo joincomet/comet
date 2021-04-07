@@ -2210,12 +2210,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:^0.3.2-5ff5225":
-  version: 0.3.2
-  resolution: "@headlessui/react@npm:0.3.2"
+"@headlessui/react@npm:dev":
+  version: 0.3.2-5ff5225
+  resolution: "@headlessui/react@npm:0.3.2-5ff5225"
   peerDependencies:
     react: ">=16"
-  checksum: 711515ee54a3afc8c2658464a1ba7cce1897bc83546d14f4cbf36f43ccfe80df73a7b6fd852857878aa288f8a0a2fd6e2c92aea687682054039fca2a7cbfe2e4
+  checksum: ecbd336096bc9c41edbdc81b85eaa7535bb67ff0a3f18abae81b3dbdafaf9692cc258b42cd5399e0b0dcf3e937a2e71ce5e71e02a95d5ca2768972ae78c3d9f8
   languageName: node
   linkType: hard
 
@@ -15540,7 +15540,7 @@ typescript@^4.2.3:
   resolution: "web@workspace:web"
   dependencies:
     "@electron/remote": ^1.1.0
-    "@headlessui/react": ^0.3.2-5ff5225
+    "@headlessui/react": dev
     "@netlify/classnames-template-literals": ^1.0.0
     "@popperjs/core": ^2.9.2
     "@reach/observe-rect": ^1.2.0

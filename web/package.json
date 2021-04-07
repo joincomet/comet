@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "private": true,
   "repository": "github:joincomet/comet",
   "main": "electron/index.js",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@electron/remote": "^1.1.0",
-    "@headlessui/react": "^0.3.2-5ff5225",
+    "@headlessui/react": "dev",
     "@netlify/classnames-template-literals": "^1.0.0",
     "@popperjs/core": "^2.9.2",
     "@reach/observe-rect": "^1.2.0",
