@@ -36,6 +36,7 @@ import {
   UpdateUserArgs
 } from '@/resolver/user'
 import { CustomError } from '@/types/CustomError'
+import { FolderVisibility } from '@/resolver/folder'
 
 @Resolver()
 export class UserMutations {
@@ -89,12 +90,14 @@ export class UserMutations {
 
     const favoritesFolder = em.create(Folder, {
       name: 'Favorites',
-      owner: user
+      owner: user,
+      visibility: FolderVisibility.Private
     })
 
     const readLaterFolder = em.create(Folder, {
       name: 'Read Later',
-      owner: user
+      owner: user,
+      visibility: FolderVisibility.Private
     })
 
     const cometServer = await em.findOne(Server, { name: 'Comet' })

@@ -1,7 +1,7 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
@@ -129,7 +129,7 @@
         "provider": "github",
         "owner": "joincomet",
         "repo": "comet",
-        "vPrefixedTagName": true
+        "vPrefixedTagName": false
       }
     ]
   }

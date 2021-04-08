@@ -75,7 +75,7 @@ export class FolderMutations {
     let folderPost = await em.findOne(FolderPost, { folder, post })
     if (folderPost) throw new Error('error.folder.alreadyAdded')
 
-    folderPost = em.create(FolderPost, { folder, post })
+    folderPost = em.create(FolderPost, { folder, post, addedByUser: user })
     folder.updatedAt = new Date()
     folder.postCount++
     await em.persistAndFlush([folder, folderPost])

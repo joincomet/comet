@@ -1,5 +1,5 @@
 import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { Folder, Post } from '@/entity'
+import { Folder, Post, User } from '@/entity'
 
 @Entity()
 export class FolderPost {
@@ -7,7 +7,10 @@ export class FolderPost {
   post: Post
 
   @ManyToOne({ entity: () => Folder, primary: true })
-  folder: Folder;
+  folder: Folder
+
+  @ManyToOne({ entity: () => User, primary: true })
+  addedByUser: User;
 
   [PrimaryKeyType]: [string, string]
 
