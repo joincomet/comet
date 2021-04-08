@@ -4,7 +4,6 @@ import CreatePostCard from '@/components/post/CreatePostCard'
 import Post from '@/components/post/Post'
 import { IconSpinner } from '@/components/ui/icons/IconSpinner'
 import { useCallback, useRef } from 'react'
-import PostContextMenuWrapper from '@/components/post/PostContextMenuWrapper'
 
 export default function Posts({ folderId, serverId, showServerName }) {
   const virtuoso = useRef(null)
@@ -26,8 +25,6 @@ export default function Posts({ folderId, serverId, showServerName }) {
 
   return (
     <>
-      <PostContextMenuWrapper />
-
       <Virtuoso
         className="scrollbar dark:bg-gray-750"
         components={{

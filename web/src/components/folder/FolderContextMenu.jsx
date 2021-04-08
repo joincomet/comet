@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 
-export default function ServerContextMenu({ server, ContextMenuItem }) {
+export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const { t } = useTranslation()
 
   return (

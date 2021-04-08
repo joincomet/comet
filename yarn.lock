@@ -2893,12 +2893,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ioredis@npm:^4.22.2":
-  version: 4.22.2
-  resolution: "@types/ioredis@npm:4.22.2"
+"@types/ioredis@npm:^4.22.3":
+  version: 4.22.3
+  resolution: "@types/ioredis@npm:4.22.3"
   dependencies:
     "@types/node": "*"
-  checksum: c955880f47bc5484022141cf20ddb056b932a4d0632016ce51dcbc24659d8e62704de0a3354881bc9927b7233782693292965ea66a37e3a3903916d7e9c8b87b
+  checksum: b586228dc41f12465bd73d05dd1978d17b3f15ad8363e25dc2ed3faa8ace6effd61619e8bb2fd7810c0e6270a11840ed91755a0a0c5726eb482897e9ba9bf854
   languageName: node
   linkType: hard
 
@@ -4411,9 +4411,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.881.0":
-  version: 2.881.0
-  resolution: "aws-sdk@npm:2.881.0"
+"aws-sdk@npm:^2.882.0":
+  version: 2.882.0
+  resolution: "aws-sdk@npm:2.882.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4424,7 +4424,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: e34c5e7c424d0aacdae5498709bff39d078127d79a02fa5489542e526dcc7d8451568bf8f811211dc8f4790408b391f7764df6a25ea0f685a8acdc264a1d79bf
+  checksum: 46e54b9c62430a5b8a6cebbe080dc164949b121f9224bd94efa85ee31224dede39a9adc5034e27c60575497c2fd5281be68285b4adf6e86c1a1a50db63054459
   languageName: node
   linkType: hard
 
@@ -6404,10 +6404,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-log@npm:^4.3.2":
-  version: 4.3.2
-  resolution: "electron-log@npm:4.3.2"
-  checksum: da344fe8ff51c27b915af53225999fa9fc99278ea626b601f3b639984e10209d174679bf0ee8048760dcfa210dfcda0ff2c31d26560998ea6921d7a979283d74
+"electron-log@npm:^4.3.3":
+  version: 4.3.3
+  resolution: "electron-log@npm:4.3.3"
+  checksum: 8f87c6b2c592b9e1ac6af2dd91b203b03da26c1f77c0e11edbcbbf506400402096f33e80e6741d3ceaa98c9a2a28305bce199ddd2de0113c05b67781fbfefcfe
   languageName: node
   linkType: hard
 
@@ -6427,13 +6427,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-store@npm:^7.0.2":
-  version: 7.0.2
-  resolution: "electron-store@npm:7.0.2"
+"electron-store@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "electron-store@npm:7.0.3"
   dependencies:
     conf: ^9.0.0
     type-fest: ^0.20.2
-  checksum: 9731ddfe3152ee184edfa23da0f174fb92433b209802690cc95ec00a15eac428288b1f4680d6744f2b0b4bffc22c63a61df98e97e25e12e590405d97163fba76
+  checksum: 0c178dd8e5a794edc21f5f829ef508ff72d5e61a36589f41668d5d92522951347a2a6e6401eb80b69b4c3530ed00261d2e5407327aeed8b115ad870612a7ad6e
   languageName: node
   linkType: hard
 
@@ -6934,13 +6934,6 @@ __metadata:
   version: 1.1.1
   resolution: "events@npm:1.1.1"
   checksum: ec57b605851d6c4421fb2b0c86af432e87dd94b8b8cd936d74383a19e66a0d7e4af27f6a946ad49dad7e9c66000f3b16ef33e38ec12e31dc69d1b36321bc00ce
-  languageName: node
-  linkType: hard
-
-"events@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "events@npm:3.3.0"
-  checksum: 56fa12567013e85b98782a1d971442ea29df057129d8a94432711fd68303357594ea37bfbe234860e28581a7768f943a8bea88c16b48aa01b96acf804bc01d52
   languageName: node
   linkType: hard
 
@@ -7492,9 +7485,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "framer-motion@npm:4.1.2"
+"framer-motion@npm:^4.1.3":
+  version: 4.1.3
+  resolution: "framer-motion@npm:4.1.3"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     framesync: 5.3.0
@@ -7508,7 +7501,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: 7eb54e3ebcdf66ed47bdeb2f2e1d8b2509e29c3ad70426853b5e941c356e014cc1df62971d7b79e232c3e43a4436c244d4ff9a1423263233e12dd204114cb947
+  checksum: 9b85bfa1283762b202b973b5bb869ce9e528e74f16492eb868481a38ebb88d75dbe42fd636cec5b04898f2107c301e10328c78b581cfef33e30c6631c33f4771
   languageName: node
   linkType: hard
 
@@ -8510,12 +8503,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"i18next@npm:^20.2.0":
-  version: 20.2.0
-  resolution: "i18next@npm:20.2.0"
+"i18next@npm:^20.2.1":
+  version: 20.2.1
+  resolution: "i18next@npm:20.2.1"
   dependencies:
     "@babel/runtime": ^7.12.0
-  checksum: 21b0bdc691936de79ad9630770e471b19f6807d8ed9d240cd7a188d636f2c7394390009589641e471bcd670a17452b39ca9992fac9e99a1a4d91b1ea8ff48e7e
+  checksum: b73d828f43a8df4edfcc85f23721c1f2bc797367ac9864e75f6312a5f7e9a3729917f4ea0e6149eb78f87b3acdf9dfee72b37c2b2f00e5f5ed31ccb1de75c33c
   languageName: node
   linkType: hard
 
@@ -12294,12 +12287,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "react-hook-form@npm:7.0.3"
+"react-hook-form@npm:^7.0.4":
+  version: 7.0.4
+  resolution: "react-hook-form@npm:7.0.4"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 83f24ddf6b6578fd677cd1a60338894a8068988a2ac235b545a076c12029e14aba240dc034bc2f17234c0f5978455804f12b1857e0f7439dd039434f08bd3724
+  checksum: 8d2ed4522fb2dd0b33140457f1af8cc82c95cf3fe9827b1c305b897bea8a820563ef1bc0291cf4cd7ac8fa50a92f5a339a6bb9fc26f4d2f4c0f8bf60957c79a3
   languageName: node
   linkType: hard
 
@@ -13431,7 +13424,7 @@ resolve@^2.0.0-next.3:
     "@types/express": ^4.17.11
     "@types/faker": ^5.5.0
     "@types/graphql-upload": ^8.0.4
-    "@types/ioredis": ^4.22.2
+    "@types/ioredis": ^4.22.3
     "@types/jsonwebtoken": ^8.5.1
     "@types/mime": ^2.0.3
     "@types/node": ^14.14.37
@@ -13441,7 +13434,7 @@ resolve@^2.0.0-next.3:
     "@urql/introspection": ^0.2.0
     apollo-server-express: ^2.22.2
     argon2: ^0.27.2
-    aws-sdk: ^2.881.0
+    aws-sdk: ^2.882.0
     class-validator: ^0.13.1
     cloneable-readable: ^2.1.0
     cookie-parser: ^1.4.5
@@ -13484,7 +13477,7 @@ resolve@^2.0.0-next.3:
     ts-node-dev: ^1.1.6
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
-    typescript: ^4.2.3
+    typescript: ^4.2.4
     validator: ^13.5.2
     xss: ^1.0.8
   languageName: unknown
@@ -15038,23 +15031,23 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-typescript@^4.2.3:
-  version: 4.2.3
-  resolution: "typescript@npm:4.2.3"
+typescript@^4.2.4:
+  version: 4.2.4
+  resolution: "typescript@npm:4.2.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 06e8470f317db6f5e2fce809b20eb84a67a7d8179057abff36e5427bd1b891bd08e54581ff81f0fa36aef9b6d1eb0f54eaf6e2643c6dbd4e37a0adcc41eed256
+  checksum: edaede2fa77f56b7fba80ee624a2368ab1216e75b0434d968ccb47ab0a5e2f6d94f848b3b111c1237dd71e988cd376af26370dcdad3b94355c76e759f0dd0a1e
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.2.3#builtin<compat/typescript>":
-  version: 4.2.3
-  resolution: "typescript@patch:typescript@npm%3A4.2.3#builtin<compat/typescript>::version=4.2.3&hash=a45b0e"
+"typescript@patch:typescript@^4.2.4#builtin<compat/typescript>":
+  version: 4.2.4
+  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: a8956044aabf730699bcc3c2475efdd3f35e509329325cf60b4989761d4c2188e2c474183e2cf92b8c201fcf976814a5a16f144508b2a832643c4f972d0ab803
+  checksum: 3be44317593182e8ce494c114e7ad9b0bb2553a22f3085cc6da4f0a36912c20850daa9be4c898af2ab6fc8b12f430c1c9e46ac715721867cd38643f2350d3ef9
   languageName: node
   linkType: hard
 
@@ -15573,19 +15566,18 @@ typescript@^4.2.3:
     electron-builder: ^22.10.5
     electron-context-menu: ^2.5.0
     electron-is-dev: ^2.0.0
-    electron-log: ^4.3.2
-    electron-store: ^7.0.2
+    electron-log: ^4.3.3
+    electron-store: ^7.0.3
     electron-updater: ^4.3.8
     eslint: ^7.23.0
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
     eslint-plugin-react: ^7.23.1
     eslint-plugin-react-hooks: ^4.2.0
-    events: ^3.3.0
-    framer-motion: ^4.1.2
+    framer-motion: ^4.1.3
     fuse.js: ^6.4.6
     graphql: ^15.5.0
-    i18next: ^20.2.0
+    i18next: ^20.2.1
     i18next-browser-languagedetector: ^6.1.0
     postcss: ^8.2.9
     prettier: ^2.2.1
@@ -15597,7 +15589,7 @@ typescript@^4.2.3:
     react-dom: ^17.0.2
     react-dropzone: ^11.3.2
     react-helmet-async: ^1.0.9
-    react-hook-form: ^7.0.3
+    react-hook-form: ^7.0.4
     react-hot-toast: ^1.0.2
     react-i18next: ^11.8.12
     react-icons: ^4.2.0
@@ -15622,7 +15614,7 @@ typescript@^4.2.3:
     validator: ^13.5.2
     vite: ^2.1.5
     vite-plugin-pwa: ^0.6.5
-    zustand: ^3.4.0
+    zustand: ^3.4.1
   languageName: unknown
   linkType: soft
 
@@ -16254,11 +16246,11 @@ typescript@^4.2.3:
   languageName: node
   linkType: hard
 
-"zustand@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "zustand@npm:3.4.0"
+"zustand@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "zustand@npm:3.4.1"
   peerDependencies:
     react: ">=16.8"
-  checksum: 547f93e6d9ca8bcb41bd1172bc04a006be81cedce5015eaefbb29d585e9dd7632e4b4dd51304467555a2468578ef8240fdbf5e0cdaa910582ff0a21d94d036e6
+  checksum: d86719ad9fcfc9f9ab601957507a5f18b2cdba0710dcf77497765ba4cf0f70197cb3744e1aa6c9a062ceb187b987faae623c9635ebd4f154c67a8e64e1810e78
   languageName: node
   linkType: hard

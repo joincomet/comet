@@ -50,7 +50,6 @@ export function DataProvider({ children }) {
   })
   const userFolders = userFoldersData?.getUserFolders
   useSubscription({ query: REFETCH_USER_FOLDERS, pause }, () => {
-    console.log('refetchUserFolders')
     refetchFolders()
   })
 

@@ -7,7 +7,6 @@ import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/input/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import MessagesStart from '@/components/message/MessagesStart'
-import MessageContextMenuWrapper from '@/components/message/MessageContextMenuWrapper'
 import { usePrevious } from 'react-use'
 
 const PREPEND_OFFSET = 10 ** 7
@@ -62,8 +61,6 @@ export default function Messages({ channel, user, group }) {
 
   return (
     <>
-      <MessageContextMenuWrapper />
-
       <div className="relative flex-1 overflow-x-hidden overflow-y-auto dark:bg-gray-750 w-full h-full">
         <Virtuoso
           className="scrollbar"

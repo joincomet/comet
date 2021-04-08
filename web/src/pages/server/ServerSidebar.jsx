@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { useServer, useServerChannels } from '@/providers/ServerProvider'
 import SidebarChannel from '@/components/channel/SidebarChannel'
 import CreateChannel from '@/components/channel/CreateChannel'
-import ChannelContextMenuWrapper from '@/components/channel/ChannelContextMenuWrapper'
 
 export default function ServerSidebar() {
   const { t } = useTranslation()
@@ -16,8 +15,6 @@ export default function ServerSidebar() {
 
   return (
     <Sidebar>
-      <ChannelContextMenuWrapper />
-
       <div className="h-12 border-b dark:border-gray-850 flex items-center justify-between px-5 text-base font-medium">
         {server.name}
         <IconChevronDown className="w-5 h-5" />

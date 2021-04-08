@@ -1,14 +1,11 @@
 import Popup from '@/components/ui/Popup'
 import UserAvatar from '@/components/user/UserAvatar'
-import { useState } from 'react'
-import UserDialog from '@/components/user/UserDialog'
+import { useStore } from '@/hooks/useStore'
 
 export default function UserPopup({ user, children, placement = 'right' }) {
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const setDialogUser = useStore(s => s.setDialogUser)
   return (
     <>
-      <UserDialog open={dialogOpen} setOpen={setDialogOpen} user={user} />
-
       <Popup
         className="w-64"
         placement={placement}
@@ -26,7 +23,7 @@ export default function UserPopup({ user, children, placement = 'right' }) {
               <div
                 onClick={() => {
                   close()
-                  setDialogOpen(true)
+                  setDialogUser(user)
                 }}
                 className="cursor-pointer bg-black bg-opacity-50 transition rounded-full absolute whitespace-nowrap inset-0 flex items-center justify-center text-9 uppercase tracking-widest font-semibold opacity-0 group-hover:opacity-100"
               >

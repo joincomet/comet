@@ -21,7 +21,7 @@ import ServerPostsPage from '@/pages/server/ServerPostsPage'
 import PostPage from '@/pages/post/PostPage'
 import ChannelPage from '@/pages/server/channel/ChannelPage'
 import ServerFolderPage from '@/pages/server/ServerFolderPage'
-import { useDataLoading } from '@/providers/DataProvider'
+import { DataProvider, useDataLoading } from '@/providers/DataProvider'
 import { ServerProvider, useServerLoading } from '@/providers/ServerProvider'
 import { useCurrentUser, useCurrentUserLoading } from '@/providers/UserProvider'
 import { AnimatePresence } from 'framer-motion'
@@ -29,6 +29,7 @@ import LoadingScreen from '@/pages/LoadingScreen'
 import ServerLoadingScreen from '@/pages/ServerLoadingScreen'
 import { useStore } from '@/hooks/useStore'
 import { usePrevious } from 'react-use'
+import UserDialog from '@/components/user/UserDialog'
 
 export default function PrivateRoutes() {
   const dataLoading = useDataLoading()
@@ -47,10 +48,10 @@ export default function PrivateRoutes() {
   return (
     <>
       <AnimatePresence>
-        {((!!user && dataLoading) || (!user && userLoading)) && (
-          <LoadingScreen />
-        )}
+        {((user && dataLoading) || (!user && userLoading)) && <LoadingScreen />}
       </AnimatePresence>
+
+      {user && !dataLoading && <UserDialog />}
 
       <Switch>
         <PrivateRoute path="/settings">

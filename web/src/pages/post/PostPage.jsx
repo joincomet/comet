@@ -8,13 +8,10 @@ import { createCommentTree, getParticipants } from '@/utils/commentUtils'
 import Comment from '@/components/comment/Comment'
 import CreateCommentCard from '@/components/comment/CreateCommentCard'
 import { useStore } from '@/hooks/useStore'
-import PostContextMenuWrapper from '@/components/post/PostContextMenuWrapper'
-import CommentContextMenuWrapper from '@/components/comment/CommentContextMenuWrapper'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useTranslation } from 'react-i18next'
 import PostHeader from '@/pages/post/PostHeader'
-import { usePosts } from '@/components/post/usePosts'
 import Page from '@/components/ui/page/Page'
 
 export default function PostPage() {
@@ -50,9 +47,6 @@ export default function PostPage() {
       header={<PostHeader post={post} />}
       rightSidebar={<PostUsersSidebar post={post} users={users} />}
     >
-      <PostContextMenuWrapper />
-      <CommentContextMenuWrapper />
-
       <div className="max-h-full h-full scrollbar dark:bg-gray-750">
         <div className="pt-4 px-4">
           {!!post && <Post post={post} isPostPage />}

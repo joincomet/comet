@@ -10,6 +10,7 @@ import { UserProvider } from '@/providers/UserProvider'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 import { getOS } from '@/utils/getOS'
+import UserDialog from '@/components/user/UserDialog'
 
 export default function App() {
   const AppRouter = window.electron ? HashRouter : BrowserRouter

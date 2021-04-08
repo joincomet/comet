@@ -1,24 +1,14 @@
 import { useHistory } from 'react-router-dom'
 import UserAvatar from '@/components/user/UserAvatar'
 import { useTranslation } from 'react-i18next'
-import { useContextMenuTrigger } from '@/components/ui/context'
-import { ContextMenuType } from '@/types/ContextMenuType'
 
 export default function FriendListItemBase({ friend, children }) {
   const { t } = useTranslation()
 
-  const contextMenuRef = useContextMenuTrigger({
-    menuId: ContextMenuType.User,
-    data: { user: friend }
-  })
-
   const { push } = useHistory()
 
   return (
-    <div
-      ref={contextMenuRef}
-      className="group px-2 dark:hover:bg-gray-725 rounded-lg"
-    >
+    <div className="group px-2 dark:hover:bg-gray-725 rounded-lg">
       <div
         onClick={() => push(`/dm/${friend.id}`)}
         className="relative h-16 py-2 flex items-center cursor-pointer group border-t dark:border-gray-700"

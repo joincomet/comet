@@ -35,5 +35,10 @@ export const useStore = create((set, get) => ({
   exploreSort: 'Featured',
   setExploreSort: exploreSort => set({ exploreSort }),
   exploreCategory: null,
-  setExploreCategory: exploreCategory => set({ exploreCategory })
+  setExploreCategory: exploreCategory => set({ exploreCategory }),
+
+  dialogUser: null,
+  setDialogUser: user => set({ dialogUser: user, userDialogOpen: !!user }),
+  userDialogOpen: false,
+  setUserDialogOpen: open => set({ userDialogOpen: open })
 }))

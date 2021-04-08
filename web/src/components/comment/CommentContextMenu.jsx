@@ -1,11 +1,8 @@
-import { useContextMenuEvent } from '@/components/ui/context'
 import { useMutation } from 'urql'
 import { useCopyToClipboard } from 'react-use'
 import { DELETE_COMMENT } from '@/graphql/mutations'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import ContextMenuItem from '@/components/ui/context/ContextMenuItem'
-import ContextMenu from '@/components/ui/context/ContextMenu'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useCurrentUser } from '@/providers/UserProvider'
 import { useParams } from 'react-router-dom'
@@ -13,14 +10,13 @@ import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useToggleCommentVote } from '@/components/comment/useToggleCommentVote'
 import { useToggleCommentPin } from '@/components/comment/useToggleCommentPin'
+import { useStore } from '@/hooks/useStore'
 
-export default function CommentContextMenu() {
+export default function CommentContextMenu({ comment, ContextMenuItem }) {
   const { t } = useTranslation()
   const currentUser = useCurrentUser()
-
-  const menuEvent = useContextMenuEvent()
-  const comment = menuEvent?.data?.comment
   const { serverId } = useParams()
+  const setReplyingCommentId = useStore(s => s.setReplyingCommentId)
   const [canManageComments, canVote, canComment] = useHasServerPermissions({
     serverId,
     permissions: [
@@ -36,12 +32,8 @@ export default function CommentContextMenu() {
 
   const isAuthor = comment.author.id === currentUser.id
   const canDelete = canManageComments || isAuthor
-  const canPin = canManageComments
-
-  if (!menuEvent || !menuEvent.data) return null
-
   return (
-    <ContextMenu>
+    <>
       <ContextMenuSection>
         {canVote && (
           <ContextMenuItem
@@ -54,7 +46,7 @@ export default function CommentContextMenu() {
           />
         )}
         {isAuthor && <ContextMenuItem label={t('comment.context.edit')} />}
-        {canPin && (
+        {canManageComments && (
           <ContextMenuItem
             label={
               comment.isPinned
@@ -64,7 +56,12 @@ export default function CommentContextMenu() {
             onClick={() => togglePin()}
           />
         )}
-        {canComment && <ContextMenuItem label={t('comment.context.reply')} />}
+        {canComment && (
+          <ContextMenuItem
+            onClick={() => setReplyingCommentId(comment?.id)}
+            label={t('comment.context.reply')}
+          />
+        )}
 
         <ContextMenuItem
           onClick={() => {
@@ -80,6 +77,6 @@ export default function CommentContextMenu() {
           />
         )}
       </ContextMenuSection>
-    </ContextMenu>
+    </>
   )
 }

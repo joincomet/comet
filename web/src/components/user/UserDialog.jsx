@@ -10,6 +10,7 @@ import { useQuery } from 'urql'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { Link } from 'react-router-dom'
 import { GET_MUTUAL_FRIENDS } from '@/graphql/queries/user/GetMutualFriends'
+import { useStore } from '@/hooks/useStore'
 
 const tabClass = active =>
   ctl(`
@@ -62,23 +63,27 @@ const tabName = {
   MutualFriends: 'MutualFriends'
 }
 
-export default memo(function UserDialog({ open, setOpen, user }) {
+export default memo(function UserDialog() {
+  const [user, setUser, open, setOpen] = useStore(s => [
+    s.dialogUser,
+    s.setDialogUser,
+    s.userDialogOpen,
+    s.setUserDialogOpen
+  ])
   const { t } = useTranslation()
   const [tab, setTab] = useState(tabName.MutualServers)
-  const [dialogUser, setDialogUser] = useState(user)
-  useEffect(() => setDialogUser(user), [user, setDialogUser])
 
   const [{ data: mutualServersData }] = useQuery({
     query: GET_MUTUAL_SERVERS,
-    variables: { userId: dialogUser?.id },
-    pause: !dialogUser
+    variables: { userId: user?.id },
+    pause: !user
   })
   const mutualServers = mutualServersData?.getMutualServers ?? []
 
   const [{ data: mutualFriendsData }] = useQuery({
     query: GET_MUTUAL_FRIENDS,
-    variables: { userId: dialogUser?.id },
-    pause: !dialogUser
+    variables: { userId: user?.id },
+    pause: !user
   })
   const mutualFriends = mutualFriendsData?.getMutualFriends ?? []
 
@@ -91,13 +96,13 @@ export default memo(function UserDialog({ open, setOpen, user }) {
   } = useUserRelationships()
   const isFriendRequestSent = outgoingFriendRequests
     .map(u => u.id)
-    .includes(dialogUser?.id)
+    .includes(user?.id)
   const isFriendRequestReceived = incomingFriendRequests
     .map(u => u.id)
-    .includes(dialogUser?.id)
-  const isFriend = friends.map(u => u.id).includes(dialogUser?.id)
-  const isBlocking = blockingUsers.map(u => u.id).includes(dialogUser?.id)
-  const isBlocked = blockedByUsers.map(u => u.id).includes(dialogUser?.id)
+    .includes(user?.id)
+  const isFriend = friends.map(u => u.id).includes(user?.id)
+  const isBlocking = blockingUsers.map(u => u.id).includes(user?.id)
+  const isBlocked = blockedByUsers.map(u => u.id).includes(user?.id)
 
   const buttons = useMemo(() => {
     if (isFriendRequestReceived)
@@ -149,26 +154,29 @@ export default memo(function UserDialog({ open, setOpen, user }) {
     isBlocked
   ])
 
-  if (!dialogUser) return null
+  const close = () => {
+    setOpen(false)
+    setTimeout(() => setUser(null), 300)
+  }
 
   return (
-    <Dialog closeOnOverlayClick isOpen={open} close={() => setOpen(false)}>
+    <Dialog closeOnOverlayClick isOpen={open} close={close}>
       <div
         onClick={e => e.stopPropagation()}
         className="rounded-lg max-w-xl w-full dark:bg-gray-850"
       >
         <div className="flex p-5">
           <UserAvatar
-            user={dialogUser}
+            user={user}
             size={20}
             showOnline
             dotClassName="ring-5 dark:ring-gray-850 w-4 h-4"
           />
           <div className="ml-5 flex w-full pt-5">
             <div className="font-semibold text-lg text-primary">
-              {dialogUser.name}
+              {user?.name}
               <span className="text-tertiary text-sm font-normal">
-                #{dialogUser.tag}
+                #{user?.tag}
               </span>
             </div>
 
@@ -201,6 +209,7 @@ export default memo(function UserDialog({ open, setOpen, user }) {
                 to={`/server/${server.id}`}
                 key={server.id}
                 className={itemClass}
+                onClick={() => close()}
               >
                 <ServerAvatar server={server} size={10} />
                 <div className="pl-2.5">
@@ -216,7 +225,7 @@ export default memo(function UserDialog({ open, setOpen, user }) {
               <div
                 key={friend.id}
                 className={itemClass}
-                onClick={() => setDialogUser(friend)}
+                onClick={() => setUser(friend)}
               >
                 <UserAvatar
                   user={friend}

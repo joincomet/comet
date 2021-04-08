@@ -13,15 +13,11 @@ import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { useTranslation } from 'react-i18next'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
-import { useContextMenuTrigger } from '@/components/ui/context'
-import { ContextMenuType } from '@/types/ContextMenuType'
-import { mergeRefs } from '@/utils/mergeRefs'
 import toast from 'react-hot-toast'
 import { VectorLogo } from '@/components/ui/vectors'
 import { useGroupsAndDms } from '@/providers/DataProvider'
 import { HIDE_DM, SEND_MESSAGE } from '@/graphql/mutations'
 import { useMutation } from 'urql'
-import UserContextMenuWrapper from '@/components/user/UserContextMenuWrapper'
 
 export default function HomeSidebar() {
   const groupsAndDms = useGroupsAndDms()
@@ -30,8 +26,6 @@ export default function HomeSidebar() {
 
   return (
     <>
-      <UserContextMenuWrapper />
-
       <Sidebar>
         <div className="h-12 border-b dark:border-gray-850 shadow flex items-center px-5 text-base font-medium">
           <VectorLogo className="h-4" />
@@ -87,11 +81,6 @@ function DirectMessage({ user }) {
   const { push } = useHistory()
   const { pathname } = useLocation()
 
-  const contextMenuRef = useContextMenuTrigger({
-    menuId: ContextMenuType.User,
-    data: { user, showCloseDm: true }
-  })
-
   const [_sendMessageRes, sendMessage] = useMutation(SEND_MESSAGE)
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
@@ -112,7 +101,7 @@ function DirectMessage({ user }) {
 
   return (
     <SidebarItem
-      ref={mergeRefs(contextMenuRef, dropRef)}
+      ref={dropRef}
       large
       to={`/me/dm/${user.id}`}
       key={`user-${user.id}`}

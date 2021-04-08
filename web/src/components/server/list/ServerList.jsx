@@ -4,14 +4,13 @@ import CreateServerDialog from '@/components/server/create/CreateServerDialog'
 import { matchPath, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ServerListItem from '@/components/server/list/ServerListItem'
-import { useContextMenuTrigger } from '@/components/ui/context'
-import { ContextMenuType } from '@/types/ContextMenuType'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
-import { mergeRefs } from '@/utils/mergeRefs'
 import { useJoinedServers } from '@/providers/DataProvider'
 import { useStore } from '@/hooks/useStore'
 import { getOS } from '@/utils/getOS'
+import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
+import { ContextMenuType } from '@/types/ContextMenuType'
 
 export default function ServerList() {
   const servers = useJoinedServers()
@@ -81,11 +80,6 @@ export default function ServerList() {
 }
 
 function ServerListServer({ server }) {
-  const contextMenuRef = useContextMenuTrigger({
-    menuId: ContextMenuType.Server,
-    data: { server }
-  })
-
   const [{ opacity }, dragRef] = useDrag({
     type: DragItemTypes.Server,
     item: server,
@@ -99,20 +93,22 @@ function ServerListServer({ server }) {
   const serverId = matched?.params?.serverId
   const serverPages = useStore(s => s.serverPages)
   return (
-    <ServerListItem
-      to={`/server/${server.id}${
-        serverPages[server.id] ? `/${serverPages[server.id]}` : ''
-      }`}
-      name={server.name}
-      ref={mergeRefs(contextMenuRef, dragRef)}
-      active={serverId === server.id}
-    >
-      <ServerAvatar
-        server={server}
-        size={12}
-        style={{ opacity }}
-        className="bg-gray-200 dark:bg-gray-800"
-      />
-    </ServerListItem>
+    <ContextMenuTrigger data={{ type: ContextMenuType.Server, server }}>
+      <ServerListItem
+        to={`/server/${server.id}${
+          serverPages[server.id] ? `/${serverPages[server.id]}` : ''
+        }`}
+        name={server.name}
+        ref={dragRef}
+        active={serverId === server.id}
+      >
+        <ServerAvatar
+          server={server}
+          size={12}
+          style={{ opacity }}
+          className="bg-gray-200 dark:bg-gray-800"
+        />
+      </ServerListItem>
+    </ContextMenuTrigger>
   )
 }

@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { memo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
@@ -14,12 +14,10 @@ import {
   IconText,
   IconVote
 } from '@/components/ui/icons/Icons'
-import { useContextMenuTrigger } from '@/components/ui/context'
-import { mergeRefs } from '@/utils/mergeRefs'
-import { ContextMenuType } from '@/types/ContextMenuType'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
-import { useContextMenu } from '@/hooks/useContextMenu'
-import PostContextMenu from '@/components/post/PostContextMenu'
+import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
+import useContextMenu from '@/hooks/use-context-menu'
+import { ContextMenuType } from '@/types/ContextMenuType'
 
 export default memo(function Post({
   post,
@@ -48,16 +46,15 @@ export default memo(function Post({
     e.preventDefault()
   }
 
-  const contextMenuRef = useRef(null)
-  const { menu, xPos, yPos } = useContextMenu(contextMenuRef)
+  const contextMenu = useContextMenu()
+  const nameContextMenu = useContextMenu()
+  const avatarContextMenu = useContextMenu()
 
   return (
-    <>
-      {menu && <PostContextMenu />}
-
+    <ContextMenuTrigger data={{ type: ContextMenuType.Post, post }}>
       <Link
         to={post.relativeUrl}
-        ref={mergeRefs(contextMenuRef, dragRef)}
+        ref={dragRef}
         style={{ opacity }}
         className={`${className} cursor-pointer relative transition dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
       >
@@ -78,17 +75,27 @@ export default memo(function Post({
         )}
 
         <div onClick={onClick}>
-          <Avatar post={post} />
+          <ContextMenuTrigger
+            data={{ type: ContextMenuType.User, user: post.author }}
+          >
+            <UserPopup user={post.author}>
+              <UserAvatar user={post.author} size={7} />
+            </UserPopup>
+          </ContextMenuTrigger>
         </div>
 
         <div className="pl-3 flex-grow">
           <div className="flex items-end pb-2">
             <div onClick={onClick}>
-              <UserPopup user={post.author}>
-                <div className="hover:underline cursor-pointer text-sm font-medium text-accent leading-none">
-                  {post.author.name}
-                </div>
-              </UserPopup>
+              <ContextMenuTrigger
+                data={{ type: ContextMenuType.User, user: post.author }}
+              >
+                <UserPopup user={post.author}>
+                  <div className="hover:underline cursor-pointer text-sm font-medium text-accent leading-none">
+                    {post.author.name}
+                  </div>
+                </UserPopup>
+              </ContextMenuTrigger>
             </div>
 
             <div className="text-11 text-mid font-medium pl-2 leading-none">
@@ -142,6 +149,10 @@ export default memo(function Post({
             </div>
 
             <div
+              onClick={e => {
+                e.stopPropagation()
+                e.preventDefault()
+              }}
               className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
             >
               <IconDotsHorizontal className="w-5 h-5" />
@@ -162,27 +173,6 @@ export default memo(function Post({
           </div>
         </div>
       </Link>
-    </>
+    </ContextMenuTrigger>
   )
 })
-
-function Avatar({ post }) {
-  const avatarRef = useContextMenuTrigger({
-    menuId: ContextMenuType.User,
-    data: { user: post.author, server: post.server }
-  })
-  return (
-    <div
-      ref={avatarRef}
-      onClick={e => {
-        console.log(e)
-        e.stopPropagation()
-        e.preventDefault()
-      }}
-    >
-      <UserPopup user={post.author}>
-        <UserAvatar user={post.author} size={7} />
-      </UserPopup>
-    </div>
-  )
-}
