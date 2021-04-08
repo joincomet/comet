@@ -18,6 +18,8 @@ import { VectorLogo } from '@/components/ui/vectors'
 import { useGroupsAndDms } from '@/providers/DataProvider'
 import { HIDE_DM, SEND_MESSAGE } from '@/graphql/mutations'
 import { useMutation } from 'urql'
+import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
+import { ContextMenuType } from '@/types/ContextMenuType'
 
 export default function HomeSidebar() {
   const groupsAndDms = useGroupsAndDms()
@@ -100,29 +102,35 @@ function DirectMessage({ user }) {
   const isActive = isOver && canDrop
 
   return (
-    <SidebarItem
-      ref={dropRef}
-      large
-      to={`/me/dm/${user.id}`}
-      key={`user-${user.id}`}
-    >
-      <UserAvatar
-        size={9}
-        showOnline
-        user={user}
-        dotClassName="ring-3 w-2.5 h-2.5 dark:ring-gray-800"
-      />
-      <span className="ml-3">{user.name}</span>
+    <div>
+      <ContextMenuTrigger
+        data={{ type: ContextMenuType.User, user, showCloseDm: true }}
+      >
+        <SidebarItem
+          ref={dropRef}
+          large
+          to={`/me/dm/${user.id}`}
+          key={`user-${user.id}`}
+        >
+          <UserAvatar
+            size={9}
+            showOnline
+            user={user}
+            dotClassName="ring-3 w-2.5 h-2.5 dark:ring-gray-800"
+          />
+          <span className="ml-3">{user.name}</span>
 
-      <IconX
-        onClick={e => {
-          e.stopPropagation()
-          e.preventDefault()
-          hideDm({ userId: user.id })
-          if (pathname === `/me/dm/${user.id}`) push('/me/friends')
-        }}
-        className="group-hover:block hidden w-5 h-5 ml-auto cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-      />
-    </SidebarItem>
+          <IconX
+            onClick={e => {
+              e.stopPropagation()
+              e.preventDefault()
+              hideDm({ userId: user.id })
+              if (pathname === `/me/dm/${user.id}`) push('/me/friends')
+            }}
+            className="group-hover:block hidden w-5 h-5 ml-auto cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+          />
+        </SidebarItem>
+      </ContextMenuTrigger>
+    </div>
   )
 }

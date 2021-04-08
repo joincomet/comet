@@ -5,9 +5,9 @@ import {
   USER_FRAGMENT
 } from '@/graphql/fragments'
 
-export const ADD_POST_TO_FOLDER = gql`
-  mutation AddPostToFolder($folderId: ID!, $postId: ID!) {
-    addPostToFolder(folderId: $folderId, postId: $postId) {
+export const UNFOLLOW_FOLDER = gql`
+  mutation UnfollowFolder($folderId: ID!) {
+    unfollowFolder(folderId: $folderId) {
       ...FOLDER_FRAGMENT
       owner {
         ...USER_FRAGMENT

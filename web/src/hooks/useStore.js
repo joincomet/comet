@@ -40,5 +40,8 @@ export const useStore = create((set, get) => ({
   dialogUser: null,
   setDialogUser: user => set({ dialogUser: user, userDialogOpen: !!user }),
   userDialogOpen: false,
-  setUserDialogOpen: open => set({ userDialogOpen: open })
+  setUserDialogOpen: open => set({ userDialogOpen: open }),
+
+  folderSort: 'Added',
+  setFolderSort: sort => set({ folderSort: sort })
 }))

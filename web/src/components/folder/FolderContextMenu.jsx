@@ -4,13 +4,18 @@ import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const { t } = useTranslation()
 
+  const editable = folder.name !== 'Read Later' && folder.name !== 'Favorites'
+
   return (
     <>
       <ContextMenuSection>
-        <ContextMenuItem label={t('server.context.markRead')} />
-        <ContextMenuItem label={t('server.context.mute')} />
-        <ContextMenuItem label={t('server.context.invite')} />
-        <ContextMenuItem label={t('server.context.leave')} red />
+        <ContextMenuItem label={t('folder.context.copyLink')} />
+        {editable && (
+          <>
+            <ContextMenuItem label={t('folder.context.edit')} />
+            <ContextMenuItem label={t('folder.context.delete')} red />
+          </>
+        )}
       </ContextMenuSection>
     </>
   )

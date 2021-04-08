@@ -4,13 +4,13 @@ import UserAvatar from '@/components/user/UserAvatar'
 import { useTranslation } from 'react-i18next'
 import PostEditor from '@/components/post/PostEditor'
 
-export default function CreatePostCard() {
+export default function CreatePostHeader() {
   const [open, setOpen] = useState(false)
   const user = useCurrentUser()
   const { t } = useTranslation()
 
   return (
-    <>
+    <div className="p-4">
       {!open ? (
         <div
           onClick={() => setOpen(true)}
@@ -32,6 +32,6 @@ export default function CreatePostCard() {
           <PostEditor setOpen={setOpen} />
         </div>
       )}
-    </>
+    </div>
   )
 }

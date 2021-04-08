@@ -14,7 +14,7 @@ export const comment = {
     reply: 'Reply',
     vote: 'Add Rocket',
     unvote: 'Remove Rocket',
-    votePermission: 'This server does not allow you to rocket comments.',
+    votePermission: 'This planet does not allow you to rocket comments.',
     pin: 'Pin Comment',
     unpin: 'Unpin Comment',
     edit: 'Edit Comment'

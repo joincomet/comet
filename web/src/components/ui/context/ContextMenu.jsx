@@ -38,7 +38,12 @@ export default function ContextMenu({
         <PostContextMenu post={data?.post} ContextMenuItem={ContextMenuItem} />
       )}
       {data?.type === ContextMenuType.User && (
-        <UserContextMenu user={data?.user} ContextMenuItem={ContextMenuItem} />
+        <UserContextMenu
+          user={data?.user}
+          server={data?.server}
+          showCloseDm={data?.showCloseDm}
+          ContextMenuItem={ContextMenuItem}
+        />
       )}
       {data?.type === ContextMenuType.Message && (
         <MessageContextMenu

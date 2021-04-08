@@ -14,20 +14,20 @@ export const permissions = {
         'Allows members to create new roles and edit or delete roles lower than their highest role. Also allows members to change permissions of individual channels that they have access to.'
     },
     [ServerPermission.ManageServer]: {
-      title: 'Manage Server',
+      title: 'Manage Planet',
       description:
-        "Allows members to change this server's name, description, icon, and banner image."
+        "Allows members to change this planet's name, description, icon, and banner image."
     },
 
     // Membership
     [ServerPermission.CreateInvite]: {
       title: 'Create Invite',
-      description: 'Allows members to invite new people to this server.'
+      description: 'Allows members to invite new people to this planet.'
     },
     [ServerPermission.ChangeNickname]: {
       title: 'Change Nicknames',
       description:
-        'Allows members to change their own nickname, a custom name for just this server.'
+        'Allows members to change their own nickname, a custom name for just this planet.'
     },
     [ServerPermission.ManageNicknames]: {
       title: 'Manage Nicknames',
@@ -36,12 +36,13 @@ export const permissions = {
     [ServerPermission.KickUser]: {
       title: 'Kick Members',
       description:
-        'Allows members to remove other members from this server. Kicked members will be able to rejoin if they have another invite, or the server is public.'
+        'Allows members to remove other members from this planet. Kicked members will be able to rejoin if they have' +
+        ' another invite, or the planet is public.'
     },
     [ServerPermission.BanUser]: {
       title: 'Ban Members',
       description:
-        'Allows members to permanently ban other members from this server.'
+        'Allows members to permanently ban other members from this planet.'
     },
 
     // Channels
@@ -60,7 +61,7 @@ export const permissions = {
     },
     [ServerPermission.Mention]: {
       title: 'Mention @everyone, @here, and All Roles',
-      description: `Allows members to use @everyone (everyone in the server) or @here (only online members in that channel). They can also @mention all roles, even if the role's "Allow anyone to mention this role" permission is disabled.`
+      description: `Allows members to use @everyone (everyone in the planet) or @here (only online members in that channel). They can also @mention all roles, even if the role's "Allow anyone to mention this role" permission is disabled.`
     },
     [ServerPermission.ManageMessages]: {
       title: 'Manage Messages',
@@ -98,6 +99,16 @@ export const permissions = {
     [ServerPermission.ManageComments]: {
       title: 'Manage Comments',
       description: 'Allows members to pin and remove comments.'
+    },
+
+    // Folders
+    [ServerPermission.ManageFolders]: {
+      title: 'Manage Folders',
+      description: 'Allows members to create, delete, and edit folders.'
+    },
+    [ServerPermission.AddPostToFolder]: {
+      title: 'Add Posts to Folders',
+      description: 'Allows members to add and remove posts from folders.'
     },
 
     // Other

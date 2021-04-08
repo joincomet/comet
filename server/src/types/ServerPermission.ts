@@ -28,6 +28,9 @@ export enum ServerPermission {
   ManageComments = 'ManageComments',
   ViewComments = 'ViewComments',
 
+  ManageFolders = 'ManageFolders',
+  AddPostToFolder = 'AddPostToFolder',
+
   DisplayRoleSeparately = 'DisplayRoleSeparately',
   Mentionable = 'Mentionable',
   Admin = 'Admin'

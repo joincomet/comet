@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
   Comment,
-  Folder,
+  FolderPost,
   LinkMetadata,
   Server,
   User
@@ -15,10 +15,10 @@ import {
   Embedded,
   Entity,
   Formula,
-  ManyToMany,
   ManyToOne,
   OneToMany,
-  Property
+  Property,
+  QueryOrder
 } from '@mikro-orm/core'
 import { PostVote } from '@/entity/PostVote'
 
@@ -89,8 +89,10 @@ export class Post extends BaseEntity {
   @ManyToOne({ entity: () => Server })
   server: Server
 
-  @ManyToMany(() => Folder, 'posts')
-  folders = new Collection<Folder>(this)
+  @OneToMany(() => FolderPost, 'post', {
+    orderBy: { addedAt: QueryOrder.DESC }
+  })
+  folderPosts = new Collection<FolderPost>(this)
 
   @Field(() => Int)
   @Property({ unsigned: true })

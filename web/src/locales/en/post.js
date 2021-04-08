@@ -22,7 +22,7 @@ export const post = {
     unpin: 'Unpin Post',
     unpinned: 'Post unpinned!',
     addToUserFolder: 'Add to Folder',
-    addToServerFolder: 'Add to Server Folder',
+    addToServerFolder: 'Add to Planet Folder',
     edit: 'Edit Post',
     delete: 'Delete Post',
     deleted: 'Post deleted!',
@@ -30,7 +30,7 @@ export const post = {
     sendToFriend: 'Send to Friend',
     vote: 'Add Rocket',
     unvote: 'Remove Rocket',
-    votePermission: 'This server does not allow you to rocket posts.'
+    votePermission: 'This planet does not allow you to rocket posts.'
   },
   hideParticipants: 'Hide Participants',
   showParticipants: 'Show Participants',
@@ -61,7 +61,7 @@ export const post = {
     subscriptions: {
       show: 'Show Subscriptions',
       hide: 'Hide Subscriptions',
-      comingSoon: 'Server subscriptions are coming soon!'
+      comingSoon: 'Planet subscriptions are coming soon!'
     }
   }
 }

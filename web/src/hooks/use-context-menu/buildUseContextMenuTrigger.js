@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { getCoords } from './helpers'
 
-const MOUSE_BUTTON = {
+export const MOUSE_BUTTON = {
   LEFT: 0,
   RIGHT: 2
 }
@@ -26,8 +26,9 @@ export default function buildUseContextMenuTrigger(
     const touchstartTimeoutId = useRef()
 
     const handleContextClick = event => {
-      if (config.disable) return
-      if (config.disableIfShiftIsPressed && event.shiftKey) return
+      if (event.ctrlKey) return
+      // if (config.disable) return
+      // if (config.disableIfShiftIsPressed && event.shiftKey) return
 
       event.preventDefault()
       event.stopPropagation()
@@ -39,12 +40,14 @@ export default function buildUseContextMenuTrigger(
       if (config.holdToDisplay >= 0 && event.button === MOUSE_BUTTON.LEFT) {
         event.persist()
         event.stopPropagation()
-        hideIfVisible()
+        if (config.mouseButton === MOUSE_BUTTON.RIGHT) hideIfVisible()
+        if (config.mouseButton === MOUSE_BUTTON.LEFT)
+          triggerVisible(getCoords(event, config), config.collect())
 
-        mouseDownTimeoutId.current = setTimeout(
+        /*mouseDownTimeoutId.current = setTimeout(
           () => handleContextClick(event),
           config.holdToDisplay
-        )
+        )*/
       }
     }
 
@@ -96,10 +99,10 @@ export default function buildUseContextMenuTrigger(
     const triggerBind = {
       onContextMenu: handleContextMenu,
       onClick: handleMouseClick,
-      onMouseDown: handleMouseDown,
-      onMouseUp: handleMouseUp,
-      onTouchStart: handleTouchstart,
-      onTouchEnd: handleTouchEnd,
+      // onMouseDown: handleMouseDown,
+      // onMouseUp: handleMouseUp,
+      // onTouchStart: handleTouchstart,
+      // onTouchEnd: handleTouchEnd,
       onMouseOut: handleMouseOut
     }
 

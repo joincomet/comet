@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
 import useContextMenu from '@/hooks/use-context-menu'
 import ContextMenu from '@/components/ui/context/ContextMenu'
+import { MOUSE_BUTTON } from '@/hooks/use-context-menu/buildUseContextMenuTrigger'
 
 export const ContextMenuContext = createContext({
   useContextTrigger: props => [{}]
@@ -30,7 +31,10 @@ export default function ContextMenuProvider({ children }) {
   )
 }
 
-export const useContextTrigger = data => {
+export const useContextTrigger = (data, leftClick = false) => {
   const { useContextTrigger } = useContext(ContextMenuContext)
-  return useContextTrigger({ collect: () => data })
+  return useContextTrigger({
+    collect: () => data,
+    mouseButton: leftClick ? MOUSE_BUTTON.LEFT : MOUSE_BUTTON.RIGHT
+  })
 }

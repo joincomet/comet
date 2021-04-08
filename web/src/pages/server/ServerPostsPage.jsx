@@ -5,6 +5,7 @@ import Posts from '@/components/post/Posts'
 import ServerFoldersSidebar from '@/pages/server/ServerFoldersSidebar'
 import { useSetServerPage } from '@/hooks/useSetServerPage'
 import Page from '@/components/ui/page/Page'
+import CreatePostHeader from '@/components/post/CreatePostHeader'
 
 export default function ServerPostsPage() {
   const { serverId } = useParams()
@@ -22,7 +23,7 @@ export default function ServerPostsPage() {
       header={<PostsHeader refreshPosts={refreshPosts} />}
       rightSidebar={<ServerFoldersSidebar serverId={serverId} />}
     >
-      <Posts serverId={serverId} />
+      <Posts serverId={serverId} header={<CreatePostHeader />} />
     </Page>
   )
 }

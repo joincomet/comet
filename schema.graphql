@@ -67,8 +67,21 @@ type Folder implements BaseEntity {
   avatarUrl: String
   createdAt: DateTime!
   description: String
+  followerCount: Int!
   id: ID!
+  isCollaborative: Boolean!
   name: String!
+  owner: User
+  postCount: Int!
+  server: Server
+  visibility: FolderVisibility!
+}
+
+enum FolderVisibility {
+  Friends
+  Private
+  Public
+  Unlisted
 }
 
 type GetChannelPermissionsResponse {
@@ -92,6 +105,7 @@ type GetPostsResponse {
 }
 
 enum GetPostsSort {
+  Added
   Hot
   New
   Top
@@ -194,7 +208,7 @@ type Mutation {
     """ID of user whose friend request will be accepted"""
     userId: ID!
   ): Boolean!
-  addPostToFolder(folderId: ID!, postId: ID!): Boolean!
+  addPostToFolder(folderId: ID!, postId: ID!): Folder!
 
   """Ban a user from a server (requires ServerPermission.BanUser)"""
   banUserFromServer(
@@ -253,7 +267,7 @@ type Mutation {
 
   """Create a comment on a post"""
   createComment(parentCommentId: ID, postId: ID!, text: String!): Comment!
-  createFolder(name: String!, serverId: ID): Folder!
+  createFolder(isCollaborative: Boolean = false, name: String!, serverId: ID, visibility: FolderVisibility = Public): Folder!
 
   """Request to be friends with a user"""
   createFriendRequest(
@@ -272,6 +286,7 @@ type Mutation {
 
   """Delete a comment"""
   deleteComment(commentId: ID!): Boolean!
+  deleteFolder(folderId: ID!): Boolean!
 
   """Delete a message"""
   deleteMessage(
@@ -303,6 +318,7 @@ type Mutation {
     postId: ID!
     text: String!
   ): Post!
+  followFolder(folderId: ID!): Folder!
   hideDm(userId: ID!): Boolean!
 
   """Ignore (reject) a friend request"""
@@ -343,7 +359,7 @@ type Mutation {
     """ID of friend to remove"""
     userId: ID!
   ): Boolean!
-  removePostFromFolder(folderId: ID!, postId: ID!): Boolean!
+  removePostFromFolder(folderId: ID!, postId: ID!): Folder!
 
   """Rename a group"""
   renameGroup(
@@ -376,6 +392,7 @@ type Mutation {
     """ID of user to unblock"""
     userId: ID!
   ): Boolean!
+  unfollowFolder(folderId: ID!): Folder!
 
   """Unpin a post (requires ServerPermission.PinPosts)"""
   unpinPost(
@@ -394,6 +411,7 @@ type Mutation {
     """ID of post to remove vote (requires ServerPermission.VotePost)"""
     postId: ID!
   ): Post!
+  updateFolder(avatarFile: Upload, description: String, folderId: ID!, isCollaborative: Boolean, name: String, visibility: FolderVisibility): Folder!
   updateServer(avatarFile: Upload, bannerFile: Upload, category: ServerCategory, description: String, name: String, searchable: Boolean, serverId: ID!): Server!
 
   """Update user properties"""
@@ -460,6 +478,7 @@ type Query {
 
   """Returns the currently logged in user, or null"""
   getCurrentUser: User
+  getFolder(folderId: ID!): Folder!
 
   """Get list of groups and DMs, sorted by latest activity (updatedAt)"""
   getGroupsAndDms: [GroupDmUnion!]!
@@ -477,6 +496,7 @@ type Query {
     """Return only unread notifications"""
     unreadOnly: Boolean = false
   ): [Notification!]!
+  getOtherUserFolders(userId: ID!): [Folder!]!
 
   """Get a specific post (requires ServerPermission.ViewPosts)"""
   getPost(
@@ -556,6 +576,7 @@ enum ServerCategory {
 }
 
 enum ServerPermission {
+  AddPostToFolder
   Admin
   AttachFiles
   BanUser
@@ -568,6 +589,7 @@ enum ServerPermission {
   KickUser
   ManageChannels
   ManageComments
+  ManageFolders
   ManageMessages
   ManageNicknames
   ManagePosts

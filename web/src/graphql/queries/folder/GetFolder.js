@@ -5,10 +5,11 @@ import {
   USER_FRAGMENT
 } from '@/graphql/fragments'
 
-export const ADD_POST_TO_FOLDER = gql`
-  mutation AddPostToFolder($folderId: ID!, $postId: ID!) {
-    addPostToFolder(folderId: $folderId, postId: $postId) {
+export const GET_FOLDER = gql`
+  query GetFolder($folderId: ID!) {
+    getFolder(folderId: $folderId) {
       ...FOLDER_FRAGMENT
+      postCount
       owner {
         ...USER_FRAGMENT
       }

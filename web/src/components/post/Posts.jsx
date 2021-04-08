@@ -1,11 +1,11 @@
 import { Virtuoso } from 'react-virtuoso'
 import { usePosts } from '@/components/post/usePosts'
-import CreatePostCard from '@/components/post/CreatePostCard'
+import CreatePostHeader from '@/components/post/CreatePostHeader'
 import Post from '@/components/post/Post'
 import { IconSpinner } from '@/components/ui/icons/IconSpinner'
 import { useCallback, useRef } from 'react'
 
-export default function Posts({ folderId, serverId, showServerName }) {
+export default function Posts({ folderId, serverId, showServerName, header }) {
   const virtuoso = useRef(null)
 
   const [posts, fetching, fetchMore, hasMore] = usePosts({ folderId, serverId })
@@ -28,11 +28,7 @@ export default function Posts({ folderId, serverId, showServerName }) {
       <Virtuoso
         className="scrollbar dark:bg-gray-750"
         components={{
-          Header: () => (
-            <div className="py-4 px-4">
-              <CreatePostCard />
-            </div>
-          ),
+          Header: header ? () => header : null,
           Footer: () =>
             hasMore ? (
               <div className="flex items-center justify-center h-20">

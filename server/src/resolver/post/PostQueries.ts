@@ -1,5 +1,5 @@
 import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
-import { LinkMetadata, Post, ServerUserJoin } from '@/entity'
+import { Folder, LinkMetadata, Post, Server, ServerUserJoin } from '@/entity'
 import {
   GetPostsArgs,
   GetPostsResponse,
@@ -11,6 +11,8 @@ import { scrapeMetadata } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 import dayjs from 'dayjs'
 import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
+import { FolderVisibility } from '@/resolver/folder'
+import { FriendStatus } from '@/resolver/user'
 
 @Resolver(() => Post)
 export class PostQueries {
@@ -30,6 +32,8 @@ export class PostQueries {
     else if (sort === GetPostsSort.Top) orderBy = { voteCount: QueryOrder.DESC }
 
     const joinedOnly = !folderId && !serverId
+    let server
+    if (serverId) server = await em.findOneOrFail(Server, serverId)
 
     let servers = []
     if (joinedOnly) {
@@ -38,13 +42,32 @@ export class PostQueries {
         .map(join => join.server)
         .filter(server => server.isPostsEnabled)
     }
+    let folder
+    if (folderId) {
+      folder = await em.findOneOrFail(Folder, folderId, ['owner'])
+      if (!sort || sort === GetPostsSort.Added)
+        orderBy = { folderPosts: { addedAt: QueryOrder.DESC } }
+      if (
+        folder.visibility === FolderVisibility.Private &&
+        folder.owner !== user
+      )
+        throw new Error('error.folder.private')
+      if (
+        folder.visibility === FolderVisibility.Friends &&
+        folder.owner !== user
+      ) {
+        const [myData] = await user.getFriendData(em, folder.owner.id)
+        if (myData.status !== FriendStatus.Friends)
+          throw new Error('error.folder.friends')
+      }
+    }
 
     const posts = await em.find(
       Post,
       {
         $and: [
           { isDeleted: false },
-          !time || time === GetPostsTime.All
+          !time || time === GetPostsTime.All || folder
             ? {}
             : {
                 createdAt: {
@@ -54,8 +77,8 @@ export class PostQueries {
               },
           { server: { $ne: null } },
           joinedOnly ? { server: servers } : {},
-          serverId ? { server: serverId } : {},
-          folderId ? { folders: folderId } : {}
+          server ? { server } : {},
+          folder ? { folderPosts: { folder } } : {}
         ]
       },
       ['author', 'server.userJoins.user', 'votes'],

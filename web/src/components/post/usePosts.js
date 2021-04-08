@@ -4,7 +4,11 @@ import { useStore } from '@/hooks/useStore'
 import { useQuery } from 'urql'
 
 export function usePosts({ serverId, folderId }) {
-  const [postsSort, postsTime] = useStore(s => [s.postsSort, s.postsTime])
+  const [postsSort, postsTime, folderSort] = useStore(s => [
+    s.postsSort,
+    s.postsTime,
+    s.folderSort
+  ])
   const [page, setPage] = useState(0)
 
   const [{ data, fetching }] = useQuery({
@@ -12,8 +16,8 @@ export function usePosts({ serverId, folderId }) {
     variables: {
       pageSize: 20,
       page,
-      sort: postsSort,
-      time: postsTime,
+      sort: folderId ? folderSort : postsSort,
+      time: folderId ? null : postsTime,
       serverId,
       folderId
     }

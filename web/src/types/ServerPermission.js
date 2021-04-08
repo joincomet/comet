@@ -26,6 +26,9 @@ export const ServerPermission = {
   ManageComments: 'ManageComments',
   ViewComments: 'ViewComments',
 
+  ManageFolders: 'ManageFolders',
+  AddPostToFolder: 'AddPostToFolder',
+
   DisplayRoleSeparately: 'DisplayRoleSeparately',
   Mentionable: 'Mentionable',
   Admin: 'Admin'

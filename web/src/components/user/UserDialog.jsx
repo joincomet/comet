@@ -11,6 +11,7 @@ import ServerAvatar from '@/components/server/ServerAvatar'
 import { Link } from 'react-router-dom'
 import { GET_MUTUAL_FRIENDS } from '@/graphql/queries/user/GetMutualFriends'
 import { useStore } from '@/hooks/useStore'
+import { GET_OTHER_USER_FOLDERS } from '@/graphql/queries/folder/GetOtherUserFolders'
 
 const tabClass = active =>
   ctl(`
@@ -54,13 +55,15 @@ const itemClass = ctl(`
   dark:hover:bg-gray-725
   px-2
   py-1
+  h-12
   rounded
   cursor-pointer
 `)
 
-const tabName = {
+const tab = {
   MutualServers: 'MutualServers',
-  MutualFriends: 'MutualFriends'
+  MutualFriends: 'MutualFriends',
+  Folders: 'Folders'
 }
 
 export default memo(function UserDialog() {
@@ -71,7 +74,7 @@ export default memo(function UserDialog() {
     s.setUserDialogOpen
   ])
   const { t } = useTranslation()
-  const [tab, setTab] = useState(tabName.MutualServers)
+  const [currentTab, setCurrentTab] = useState(tab.MutualServers)
 
   const [{ data: mutualServersData }] = useQuery({
     query: GET_MUTUAL_SERVERS,
@@ -86,6 +89,13 @@ export default memo(function UserDialog() {
     pause: !user
   })
   const mutualFriends = mutualFriendsData?.getMutualFriends ?? []
+
+  const [{ data: foldersData }] = useQuery({
+    query: GET_OTHER_USER_FOLDERS,
+    variables: { userId: user?.id },
+    pause: !user
+  })
+  const folders = foldersData?.getOtherUserFolders ?? []
 
   const {
     outgoingFriendRequests,
@@ -124,9 +134,13 @@ export default memo(function UserDialog() {
       )
     else if (isFriend)
       return (
-        <button className={buttonClass(true)}>
+        <Link
+          to={`/me/dm/${user.id}`}
+          onClick={() => close()}
+          className={buttonClass(true)}
+        >
           {t('user.context.sendMessage')}
-        </button>
+        </Link>
       )
     else if (isBlocking)
       return (
@@ -190,20 +204,28 @@ export default memo(function UserDialog() {
         </div>
         <div className="px-5 dark:border-gray-775 border-t h-14 flex items-center space-x-10">
           <button
-            className={tabClass(tab === tabName.MutualServers)}
-            onClick={() => setTab(tabName.MutualServers)}
+            className={tabClass(currentTab === tab.MutualServers)}
+            onClick={() => setCurrentTab(tab.MutualServers)}
           >
             <div className="transform translate-y-0.5">Mutual Servers</div>
           </button>
+
           <button
-            className={tabClass(tab === tabName.MutualFriends)}
-            onClick={() => setTab(tabName.MutualFriends)}
+            className={tabClass(currentTab === tab.MutualFriends)}
+            onClick={() => setCurrentTab(tab.MutualFriends)}
           >
             <div className="transform translate-y-0.5">Mutual Friends</div>
           </button>
+
+          <button
+            className={tabClass(currentTab === tab.Folders)}
+            onClick={() => setCurrentTab(tab.Folders)}
+          >
+            <div className="transform translate-y-0.5">Folders</div>
+          </button>
         </div>
         <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar">
-          {tab === tabName.MutualServers &&
+          {currentTab === tab.MutualServers &&
             mutualServers.map(server => (
               <Link
                 to={`/server/${server.id}`}
@@ -212,15 +234,13 @@ export default memo(function UserDialog() {
                 onClick={() => close()}
               >
                 <ServerAvatar server={server} size={10} />
-                <div className="pl-2.5">
-                  <div className="text-base text-secondary font-medium">
-                    {server.name}
-                  </div>
+                <div className="pl-2.5 text-base text-secondary font-medium">
+                  {server.name}
                 </div>
               </Link>
             ))}
 
-          {tab === tabName.MutualFriends &&
+          {currentTab === tab.MutualFriends &&
             mutualFriends.map(friend => (
               <div
                 key={friend.id}
@@ -242,6 +262,20 @@ export default memo(function UserDialog() {
                   </div>
                 </div>
               </div>
+            ))}
+
+          {currentTab === tab.Folders &&
+            folders.map(folder => (
+              <Link
+                to={`/me/folder/${folder.id}`}
+                key={folder.id}
+                className={itemClass}
+                onClick={() => close()}
+              >
+                <div className="pl-2.5 text-base text-secondary font-medium">
+                  {folder.name}
+                </div>
+              </Link>
             ))}
         </div>
       </div>

@@ -11,7 +11,15 @@ export const error = {
     nameTooLong: 'Name cannot be longer than 300 characters',
     alreadyExists: 'You already have a folder with that name',
     noPermission: 'You do not have permission to modify this folder.',
-    alreadyAdded: 'This post is already in this folder.'
+    alreadyAdded: 'This post is already in this folder.',
+    cannotEdit: 'Cannot edit Read Later or Favorites folders.',
+    cannotDelete: 'Cannot delete Read Later or Favorites folders.',
+    cannotCreate: 'Cannot create Read Later or Favorites folders.',
+    notCollaborative: 'This folder is not collaborative.',
+    notInFolder: 'That post is not in this folder.',
+    owner: 'You are the owner of this folder',
+    private: 'That folder is private.',
+    friends: `Must be friends with this folder's owner`
   },
   message: {
     notAuthor: 'You are not the author of this message',
@@ -37,13 +45,13 @@ export const error = {
     notJoined: 'You are not in this group'
   },
   server: {
-    notJoined: 'You have not joined this server',
-    banned: 'You are banned from this server',
-    joinLimit: 'Cannot join more than 100 servers',
-    alreadyJoined: 'You have already joined this server',
-    missingPermission: 'Missing server permission {{replace}}',
-    notOwner: 'Must be server owner',
-    inviteRequired: 'Invite required to join this server',
+    notJoined: 'You have not joined this planet',
+    banned: 'You are banned from this planet',
+    joinLimit: 'Cannot join more than 100 planets',
+    alreadyJoined: 'You have already joined this planet',
+    missingPermission: 'Missing planet permission {{replace}}',
+    notOwner: 'Must be planet owner',
+    inviteRequired: 'Invite required to join this planet',
     inviteExpired: 'This invite has expired.'
   },
   channel: {

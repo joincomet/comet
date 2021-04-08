@@ -5,12 +5,22 @@ export const folder = {
   readLater: 'Read Later',
   added: 'Added to {{folder.name}}!',
   name: 'Name',
+  postCount: '{{count}} Post',
+  postCount_plural: '{{count}} Posts',
+  createdBy: 'Created by',
+  userFolder: 'User Folder',
+  serverFolder: 'Planet Folder',
   user: {
     title: 'Your Folders',
     create: 'Create Folder'
   },
   server: {
-    title: 'Server Folders',
-    create: 'Create Server Folder'
+    title: `{{name}}'s Folders`,
+    create: 'Create Planet Folder'
+  },
+  context: {
+    delete: 'Delete Folder',
+    copyLink: 'Copy Folder Link',
+    edit: 'Edit Folder'
   }
 }

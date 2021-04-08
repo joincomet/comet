@@ -1,29 +1,28 @@
 import { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/types/ServerPermission'
-import { CREATE_CHANNEL, CREATE_FOLDER } from '@/graphql/mutations'
+import { CREATE_FOLDER } from '@/graphql/mutations'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import Dialog from '@/components/ui/dialog/Dialog'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'
-import { IconChannel } from '@/components/ui/icons/Icons'
 import Button from '@/components/ui/Button'
-import Switch from '@/components/ui/Switch'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'urql'
 
-export default function CreateFolder({ serverId }) {
+export default function CreateFolder({ server }) {
   const { t } = useTranslation()
 
   const [canManagePosts] = useHasServerPermissions({
-    serverId,
+    serverId: server?.id,
     permissions: [ServerPermission.ManagePosts]
   })
 
   const [isOpen, setIsOpen] = useState(false)
 
-  const { handleSubmit, register, reset } = useForm()
+  const { handleSubmit, register, reset, watch } = useForm()
+
+  const name = watch('name')
 
   useEffect(() => {
     if (!isOpen) return
@@ -33,13 +32,17 @@ export default function CreateFolder({ serverId }) {
   const [{ fetching }, createFolder] = useMutation(CREATE_FOLDER)
 
   const onSubmit = ({ name }) => {
-    createFolder({ name, serverId }).then(({ data: { createFolder } }) => {
-      setIsOpen(false)
-    })
+    createFolder({ name, serverId: server?.id }).then(
+      ({ data: { createFolder } }) => {
+        setIsOpen(false)
+      }
+    )
   }
 
-  const title = serverId ? t('folder.server.title') : t('folder.user.title')
-  const create = serverId ? t('folder.server.create') : t('folder.user.create')
+  const title = server
+    ? t('folder.server.title', { name: server?.id })
+    : t('folder.user.title')
+  const create = server ? t('folder.server.create') : t('folder.user.create')
 
   if (!canManagePosts) return <SidebarLabel>{title}</SidebarLabel>
 
@@ -77,7 +80,12 @@ export default function CreateFolder({ serverId }) {
               />
             </div>
 
-            <Button loading={fetching}>{t('continue')}</Button>
+            <Button
+              loading={fetching}
+              disabled={name === 'Read Later' || name === 'Favorites'}
+            >
+              {t('continue')}
+            </Button>
           </form>
         </div>
       </Dialog>

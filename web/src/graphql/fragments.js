@@ -114,6 +114,10 @@ export const FOLDER_FRAGMENT = gql`
     name
     avatarUrl
     description
+    postCount
+    followerCount
+    isCollaborative
+    visibility
   }
 `
 

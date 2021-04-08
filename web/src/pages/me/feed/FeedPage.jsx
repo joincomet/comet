@@ -7,6 +7,7 @@ import { useSetHomePage } from '@/hooks/useSetHomePage'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import Page from '@/components/ui/page/Page'
+import CreatePostHeader from '@/components/post/CreatePostHeader'
 
 export default function FeedPage() {
   const { t } = useTranslation()
@@ -28,7 +29,7 @@ export default function FeedPage() {
         header={<PostsHeader refreshPosts={refreshPosts} />}
         rightSidebar={<UserFoldersSidebar show={showFolders} />}
       >
-        <Posts showServerName />
+        <Posts showServerName header={<CreatePostHeader />} />
       </Page>
     </>
   )

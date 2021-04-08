@@ -3,6 +3,7 @@ import {
   BAN_USER_FROM_SERVER,
   BLOCK_USER,
   CREATE_FRIEND_REQUEST,
+  HIDE_DM,
   REMOVE_FRIEND,
   REVOKE_FRIEND_REQUEST
 } from '@/graphql/mutations'
@@ -18,7 +19,12 @@ import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useStore } from '@/hooks/useStore'
 import { useHistory } from 'react-router-dom'
 
-export default function UserContextMenu({ user, server, ContextMenuItem }) {
+export default function UserContextMenu({
+  user,
+  server,
+  showCloseDm,
+  ContextMenuItem
+}) {
   const { t } = useTranslation()
   const currentUser = useCurrentUser()
 
@@ -37,6 +43,7 @@ export default function UserContextMenu({ user, server, ContextMenuItem }) {
     ]
   })
 
+  const [_, hideDm] = useMutation(HIDE_DM)
   const [_banRes, banUser] = useMutation(BAN_USER_FROM_SERVER)
   const [_kickRes, kickUser] = useMutation(KICK_USER_FROM_SERVER)
   const [_blockRes, blockUser] = useMutation(BLOCK_USER)
@@ -64,6 +71,14 @@ export default function UserContextMenu({ user, server, ContextMenuItem }) {
             setDialogUser(user)
           }}
         />
+        {showCloseDm && (
+          <ContextMenuItem
+            label={t('user.context.closeDm')}
+            onClick={() => {
+              hideDm({ userId: user.id })
+            }}
+          />
+        )}
         <ContextMenuItem
           onClick={() => push(`/me/dm/${user.id}`)}
           label={t('user.context.sendMessage')}

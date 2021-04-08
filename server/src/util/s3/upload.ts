@@ -108,11 +108,11 @@ export const uploadImageSingle = async (
   let body: Readable = createReadStream()
   const ext = mime.getExtension(mimetype)
   const s = initSharp()
+  body = body.pipe(s)
   const { pages } = await s.metadata()
   if (resize && (!pages || !allowGif)) {
     s.resize(resize)
   }
-  body = body.pipe(s)
   return s3upload(ext, body, 'image/webp')
 }
 

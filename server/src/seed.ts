@@ -28,8 +28,11 @@ const rand = (min: number, max: number) => {
 }
 
 export const seed = async (em: EntityManager) => {
-  const createFolder = (name: string, owner: User, description?: string) =>
-    em.create(Folder, { name, description, owner })
+  const createFolder = (
+    name: string,
+    owner: User | null,
+    description?: string
+  ) => em.create(Folder, { name, description, owner })
 
   const createUserFolders = (user: User) => [
     em.create(UserFolder, {
@@ -103,7 +106,7 @@ export const seed = async (em: EntityManager) => {
       server: serverComet,
       folder: createFolder(
         'Announcements',
-        userDan,
+        null,
         'All official Comet announcements'
       )
     }),

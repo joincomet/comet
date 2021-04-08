@@ -23,7 +23,7 @@ export const user = {
   profile: {
     sentFriendRequest: 'Request Sent',
     receivedFriendRequest: 'Accept Request',
-    mutualServers: 'Mutual Servers',
+    mutualServers: 'Mutual Planets',
     mutualFriends: 'Mutual Friends',
     sendMessage: 'Send Message'
   },
