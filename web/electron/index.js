@@ -13,8 +13,6 @@ autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 log.info('App starting...')
 
-autoUpdater.checkForUpdatesAndNotify()
-
 contextMenu({ showInspectElement: true }) // TODO disable this
 const store = new Store()
 
@@ -136,12 +134,39 @@ function createWindow() {
 app.whenReady().then(() => {
   createLoadingScreen()
   createWindow()
+  if (!isDev) autoUpdater.checkForUpdatesAndNotify()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+})
+
+autoUpdater.on('checking-for-update', () => {
+  log.info('Checking for update...')
+})
+autoUpdater.on('update-available', info => {
+  log.info('Update available.')
+  log.info(info)
+})
+autoUpdater.on('update-not-available', info => {
+  log.info('Update not available.')
+  log.info(info)
+})
+autoUpdater.on('error', err => {
+  log.error('Error in auto-updater. ' + err)
+})
+autoUpdater.on('download-progress', progressObj => {
+  let logMessage = 'Download speed: ' + progressObj.bytesPerSecond
+  logMessage = logMessage + ' - Downloaded ' + progressObj.percent + '%'
+  logMessage =
+    logMessage + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
+  log.info(logMessage)
+})
+autoUpdater.on('update-downloaded', info => {
+  log.info('Update downloaded')
+  log.info(info)
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

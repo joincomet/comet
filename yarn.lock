@@ -2818,10 +2818,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/faker@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "@types/faker@npm:5.5.0"
-  checksum: 13cbb2f64e07811519b3f95ef2016fa45e7f0a8f9ad46943dafb672a1a8f04aa70b36b3a2b5bcc1b62439529242acda7e194deba036fc713d09631a2399d1faf
+"@types/faker@npm:^5.5.1":
+  version: 5.5.1
+  resolution: "@types/faker@npm:5.5.1"
+  checksum: c939edb04cc0b484e0edc076645e0c2ea4b88cc7aa9f2daa272306eb2b9cf3e6107f796556828932c55e4e1bd424c589dd4ff5795f4572e9940037078530b8c6
   languageName: node
   linkType: hard
 
@@ -5774,10 +5774,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.19.0":
-  version: 2.19.0
-  resolution: "date-fns@npm:2.19.0"
-  checksum: 99ec34199c3a61cdb7fd27dcd68dd3c0c949ddfc34aa1daba9a6b2e0b5381bf42d8955d28ec2770f72eee429f5e7ab10fadba7b69108379d2545f003461d04f7
+"date-fns@npm:^2.20.0":
+  version: 2.20.0
+  resolution: "date-fns@npm:2.20.0"
+  checksum: d20103d9c1ae81aafe37941b2e9ccfcf25d5e504e6fcf200b7a7e2d43ca8e7e6ffdaa30e36fb7abdade0f27820a9ec67cb337f6f426a585fee22923a156119b2
   languageName: node
   linkType: hard
 
@@ -8756,9 +8756,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"ioredis@npm:^4.25.0":
-  version: 4.25.0
-  resolution: "ioredis@npm:4.25.0"
+"ioredis@npm:^4.26.0":
+  version: 4.26.0
+  resolution: "ioredis@npm:4.26.0"
   dependencies:
     cluster-key-slot: ^1.1.0
     debug: ^4.3.1
@@ -8770,7 +8770,7 @@ fsevents@~2.3.1:
     redis-errors: ^1.2.0
     redis-parser: ^3.0.0
     standard-as-callback: ^2.1.0
-  checksum: 5356c31b8a057e69f8384284086359ea955012e67677e1b6a8317b4d5ed92e6669d15d048b1489d561fc5783165a6481f0e45b2bbb5ca95f73d2da23a4ebde3f
+  checksum: 7b2519162bbd4a036e414f45f256a5c37b07bb02393d8c9cdb874c89ab905da039dfbbfd5795d59c63dcc4a47a8537cc87b605fadf70509e9583e77a8c867c2a
   languageName: node
   linkType: hard
 
@@ -13146,7 +13146,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.25.0":
+"rollup@npm:^2.25.0, rollup@npm:^2.44.0":
   version: 2.44.0
   resolution: "rollup@npm:2.44.0"
   dependencies:
@@ -13422,7 +13422,7 @@ resolve@^2.0.0-next.3:
     "@types/async": ^3.2.6
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.11
-    "@types/faker": ^5.5.0
+    "@types/faker": ^5.5.1
     "@types/graphql-upload": ^8.0.4
     "@types/ioredis": ^4.22.3
     "@types/jsonwebtoken": ^8.5.1
@@ -13453,7 +13453,7 @@ resolve@^2.0.0-next.3:
     graphql-tools: ^7.0.4
     graphql-type-json: ^0.3.2
     graphql-upload: ^11.0.0
-    ioredis: ^4.25.0
+    ioredis: ^4.26.0
     jsonwebtoken: ^8.5.1
     metascraper: ^5.21.5
     metascraper-author: ^5.21.5
@@ -15463,16 +15463,19 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"vite-plugin-pwa@npm:^0.6.5":
-  version: 0.6.5
-  resolution: "vite-plugin-pwa@npm:0.6.5"
+"vite-plugin-pwa@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "vite-plugin-pwa@npm:0.7.0"
   dependencies:
     debug: ^4.3.2
     fast-glob: ^3.2.5
     pretty-bytes: ^5.6.0
+    rollup: ^2.44.0
     workbox-build: ^6.1.2
     workbox-window: ^6.1.2
-  checksum: d761a3f4fd7da8eff16e2f36bca4d91c7d2bce471c8af6b89a83b8db7db16cdd675a20d14c62bef631bb1f9d7740d1c81371b1835f44cb36e0f1e702a82e5ced
+  peerDependencies:
+    vite: ^2.0.0
+  checksum: 89c39c88366075aef8f746e0c4c01a54681e3770c013dcce4749d78ba1a79c1fd3be679f08c75a67e6046041aae6c3f1cdfe3a6a42223e98fb663653a54a281f
   languageName: node
   linkType: hard
 
@@ -15558,7 +15561,7 @@ typescript@^4.2.4:
     babel-eslint: ^10.1.0
     concurrently: ^6.0.1
     cross-env: ^7.0.3
-    date-fns: ^2.19.0
+    date-fns: ^2.20.0
     dayjs: ^1.10.4
     dayjs-twitter: ^0.4.0
     discord-rpc: ^3.2.0
@@ -15613,7 +15616,7 @@ typescript@^4.2.4:
     use-dark-mode: ^2.3.1
     validator: ^13.5.2
     vite: ^2.1.5
-    vite-plugin-pwa: ^0.6.5
+    vite-plugin-pwa: ^0.7.0
     zustand: ^3.4.1
   languageName: unknown
   linkType: soft

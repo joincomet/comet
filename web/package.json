@@ -1,8 +1,14 @@
 {
   "name": "web",
-  "version": "0.0.14",
+  "description": "All-in-one chat and forums for communities.",
+  "version": "0.0.15",
   "private": true,
   "repository": "github:joincomet/comet",
+  "homepage": "https://joincomet.app",
+  "author": {
+    "name": "Comet",
+    "email": "admin@joincomet.app"
+  },
   "main": "electron/index.js",
   "scripts": {
     "dev": "vite",
@@ -27,7 +33,7 @@
     "@urql/exchange-multipart-fetch": "^0.1.11",
     "@urql/exchange-retry": "^0.2.0",
     "cross-env": "^7.0.3",
-    "date-fns": "^2.19.0",
+    "date-fns": "^2.20.0",
     "dayjs": "^1.10.4",
     "dayjs-twitter": "^0.4.0",
     "discord-rpc": "^3.2.0",
@@ -98,7 +104,7 @@
     "tailwind-scrollbar": "^1.2.4",
     "tailwindcss": "^2.1.1",
     "vite": "^2.1.5",
-    "vite-plugin-pwa": "^0.6.5"
+    "vite-plugin-pwa": "^0.7.0"
   },
   "build": {
     "productName": "Comet",
