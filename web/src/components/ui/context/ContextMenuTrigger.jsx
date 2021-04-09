@@ -7,9 +7,5 @@ export default function ContextMenuTrigger({
 }) {
   const [bindTrigger] = useContextTrigger(data, leftClick)
 
-  return (
-    <span className="leading-none" {...bindTrigger}>
-      {children}
-    </span>
-  )
+  return <div {...bindTrigger}>{children}</div>
 }

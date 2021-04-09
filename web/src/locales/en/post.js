@@ -21,6 +21,7 @@ export const post = {
     pinned: 'Post pinned!',
     unpin: 'Unpin Post',
     unpinned: 'Post unpinned!',
+    removeFromFolder: 'Remove from Folder',
     addToUserFolder: 'Add to Folder',
     addToServerFolder: 'Add to Planet Folder',
     edit: 'Edit Post',

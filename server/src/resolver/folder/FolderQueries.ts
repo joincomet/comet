@@ -11,9 +11,14 @@ export class FolderQueries {
   @Authorized()
   @Query(() => [Folder])
   async getUserFolders(@Ctx() { user, em }: Context): Promise<Folder[]> {
-    const userFolders = await em.find(UserFolder, { user }, ['folder'], {
-      position: QueryOrder.DESC
-    })
+    const userFolders = await em.find(
+      UserFolder,
+      { user, folder: { isDeleted: false } },
+      ['folder.owner', 'folder.serverFolder.server'],
+      {
+        position: QueryOrder.DESC
+      }
+    )
     return userFolders.map(userFolder => userFolder.folder)
   }
 
@@ -24,9 +29,14 @@ export class FolderQueries {
     @Arg('serverId', () => ID) serverId: string
   ): Promise<Folder[]> {
     const server = await em.findOneOrFail(Server, serverId)
-    const serverFolders = await em.find(ServerFolder, { server }, ['folder'], {
-      position: QueryOrder.DESC
-    })
+    const serverFolders = await em.find(
+      ServerFolder,
+      { server, folder: { isDeleted: false } },
+      ['folder.serverFolder.server'],
+      {
+        position: QueryOrder.DESC
+      }
+    )
     return serverFolders.map(serverFolder => serverFolder.folder)
   }
 
@@ -40,10 +50,10 @@ export class FolderQueries {
       'owner',
       'serverFolder.server'
     ])
+    if (folder.isDeleted) throw new Error('error.folder.deleted')
     if (folder.serverFolder) {
       const server = folder.serverFolder.server
       await user.checkJoinedServer(em, server)
-      folder.server = server
     }
     return folder
   }
@@ -63,6 +73,7 @@ export class FolderQueries {
           ? {
               user: them,
               folder: {
+                isDeleted: false,
                 owner: them,
                 $or: [
                   { visibility: FolderVisibility.Friends },
@@ -72,9 +83,13 @@ export class FolderQueries {
             }
           : {
               user: them,
-              folder: { owner: them, visibility: FolderVisibility.Public }
+              folder: {
+                isDeleted: false,
+                owner: them,
+                visibility: FolderVisibility.Public
+              }
             },
-        ['folder'],
+        ['folder.owner', 'folder.serverFolder.server'],
         {
           position: QueryOrder.DESC
         }

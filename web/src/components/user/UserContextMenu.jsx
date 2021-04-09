@@ -71,6 +71,10 @@ export default function UserContextMenu({
             setDialogUser(user)
           }}
         />
+        <ContextMenuItem
+          onClick={() => push(`/me/dm/${user.id}`)}
+          label={t('user.context.sendMessage')}
+        />
         {showCloseDm && (
           <ContextMenuItem
             label={t('user.context.closeDm')}
@@ -79,34 +83,26 @@ export default function UserContextMenu({
             }}
           />
         )}
-        <ContextMenuItem
-          onClick={() => push(`/me/dm/${user.id}`)}
-          label={t('user.context.sendMessage')}
-        />
-      </ContextMenuSection>
-      {user.id !== currentUser.id ? (
-        <>
-          <ContextMenuDivider />
-          {isFriend ? (
-            <ContextMenuItem
-              label={t('user.context.removeFriend')}
-              onClick={() => removeFriend({ userId: user.id })}
-              red
-            />
-          ) : (
-            <ContextMenuItem
-              label={t('user.context.addFriend')}
-              onClick={() => createFriendRequest({ userId: user.id })}
-            />
-          )}
-        </>
-      ) : (
-        <></>
-      )}
-      {!!server && (canManageNicknames || canBanUser || canKickUser) && (
-        <>
-          <ContextMenuDivider />
-          <ContextMenuSection>
+        {user.id !== currentUser.id ? (
+          <>
+            {isFriend ? (
+              <ContextMenuItem
+                label={t('user.context.removeFriend')}
+                onClick={() => removeFriend({ userId: user.id })}
+                red
+              />
+            ) : (
+              <ContextMenuItem
+                label={t('user.context.addFriend')}
+                onClick={() => createFriendRequest({ userId: user.id })}
+              />
+            )}
+          </>
+        ) : (
+          <></>
+        )}
+        {!!server && (canManageNicknames || canBanUser || canKickUser) && (
+          <>
             {canManageNicknames && (
               <ContextMenuItem label={t('user.context.changeNickname')} />
             )}
@@ -136,9 +132,9 @@ export default function UserContextMenu({
                 }}
               />
             )}
-          </ContextMenuSection>
-        </>
-      )}
+          </>
+        )}
+      </ContextMenuSection>
     </>
   )
 }

@@ -1,4 +1,8 @@
-import { COMMENT_FRAGMENT, POST_FRAGMENT } from '@/graphql/fragments'
+import {
+  COMMENT_FRAGMENT,
+  FOLDER_FRAGMENT,
+  POST_FRAGMENT
+} from '@/graphql/fragments'
 import {
   GET_COMMENTS,
   GET_CURRENT_USER,

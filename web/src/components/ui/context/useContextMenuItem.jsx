@@ -1,17 +1,19 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
 import { IconChevrownRight } from '@/components/ui/icons/Icons'
 
 export const useContextMenuItem = item =>
   useCallback(
-    ({ onClick, arrow, red, label }) => (
+    ({ onClick, red, label, checked, children }) => (
       <ContextMenuItem
         item={item}
-        arrow={arrow}
         onClick={onClick}
         red={red}
         label={label}
-      />
+        checked={checked}
+      >
+        {children}
+      </ContextMenuItem>
     ),
     [item]
   )
@@ -36,6 +38,8 @@ const itemClass = red =>
   rounded-sm
   font-medium
   focus:outline-none
+  group
+  relative
   ${
     red
       ? 'text-red-500 active:bg-red-600 hover:bg-red-500 focus:bg-red-500'
@@ -48,8 +52,9 @@ function ContextMenuItem({
   item: { bindMenuItem, hideMenu },
   onClick,
   red,
-  arrow,
-  label
+  checked = null,
+  label,
+  children
 }) {
   return (
     <div
@@ -61,7 +66,32 @@ function ContextMenuItem({
       }}
     >
       {label}
-      {arrow && <IconChevrownRight className="w-5 h-5 ml-auto" />}
+      {checked !== null && (
+        <input
+          type="checkbox"
+          className="ml-auto h-4 w-4 border-none rounded dark:checked:bg-green-600 dark:bg-gray-750 focus:outline-none cursor-pointer"
+          checked={checked}
+          readOnly
+        />
+      )}
+
+      {children && (
+        <>
+          <div className="ml-auto">
+            <IconChevrownRight className="w-5 h-5 -mr-0.5" />
+          </div>
+
+          <div
+            className={`absolute left-full -top-2 -ml-2 hidden group-hover:block`}
+          >
+            <div className="pl-2">
+              <div className="p-2 ml-3 dark:bg-gray-900 rounded w-48 shadow-lg">
+                {children}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

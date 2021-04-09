@@ -60,7 +60,7 @@ export default memo(function Post({
       >
         {!isPostPage && (
           <div
-            className="w-24 h-16 flex-shrink-0 rounded dark:bg-gray-700 mr-3 flex items-center justify-center"
+            className="w-28 h-18 flex-shrink-0 rounded dark:bg-gray-700 mr-3 flex items-center justify-center bg-center bg-cover bg-no-repeat"
             style={
               post.thumbnailUrl
                 ? { backgroundImage: `url(${post.thumbnailUrl})` }

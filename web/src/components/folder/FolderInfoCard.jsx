@@ -75,19 +75,20 @@ export default function FolderInfoCard({ folder }) {
             )}
           </div>
 
-          <div className="ml-6 flex flex-col py-1">
-            <div className="uppercase text-secondary text-11 pb-2 font-semibold tracking-widest">
+          <div className="ml-6 flex flex-col py-0.5">
+            <div className="text-tertiary text-13 pb-1">
               {folder.owner ? t('folder.userFolder') : t('folder.serverFolder')}
+              {folder.isCollaborative && (
+                <>&nbsp;&middot;&nbsp;{t('folder.collaborative')}</>
+              )}
             </div>
-            <div className="text-5xl font-extrabold tracking-tight text-primary">
-              {folder.name}
-            </div>
+            <div className="text-4xl font-bold text-primary">{folder.name}</div>
             {folder.description && (
               <div className="text-tertiary text-sm pt-2">
                 {folder.description}
               </div>
             )}
-            <div className="text-tertiary text-sm pt-3 flex items-center">
+            <div className="text-tertiary text-13 pt-3 mt-auto flex items-center">
               {folder.owner ? (
                 <>
                   {t('folder.createdBy')}&nbsp;

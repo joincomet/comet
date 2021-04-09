@@ -22,4 +22,6 @@ export const useMessageInput = (inputRef, placeholder) => {
     document.body.addEventListener('keypress', keypress)
     return () => document.body.removeEventListener('keypress', keypress)
   }, [keypress])
+
+  return focus
 }

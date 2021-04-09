@@ -170,7 +170,10 @@ export class FolderMutations {
     @Arg('visibility', () => FolderVisibility, { nullable: true })
     visibility?: FolderVisibility
   ): Promise<Folder> {
-    const folder = await em.findOneOrFail(Folder, folderId)
+    const folder = await em.findOneOrFail(Folder, folderId, [
+      'serverFolder.server',
+      'owner'
+    ])
     if (folder.name === 'Favorites' || folder.name === 'Read Later')
       throw new Error('error.folder.cannotEdit')
     em.assign(folder, {
@@ -185,6 +188,16 @@ export class FolderMutations {
       isCollaborative: isCollaborative ?? folder.isCollaborative,
       visibility: visibility ?? folder.visibility
     })
+    if (visibility === FolderVisibility.Private) {
+      await em.nativeDelete(UserFolder, { folder, user: { $ne: user } })
+    } else if (visibility === FolderVisibility.Friends) {
+      const friends = (
+        await em.find(FriendData, { user, status: FriendStatus.Friends }, [
+          'toUser'
+        ])
+      ).map(fd => fd.toUser)
+      await em.nativeDelete(UserFolder, { folder, user: { $nin: friends } })
+    }
     await em.persistAndFlush(folder)
     return folder
   }
@@ -208,7 +221,6 @@ export class FolderMutations {
     if (folder.serverFolder) {
       const server = folder.serverFolder.server
       await user.checkServerPermission(em, server, ServerPermission.ManagePosts)
-      folder.server = server
     }
     folder.isDeleted = true
     await em.nativeDelete(UserFolder, { folder })
@@ -223,9 +235,14 @@ export class FolderMutations {
   @Mutation(() => Folder)
   async followFolder(
     @Ctx() { em, user }: Context,
-    @Arg('folderId', () => ID) folderId: string
+    @Arg('folderId', () => ID) folderId: string,
+    @PubSub(SubscriptionTopic.RefetchUserFolders)
+    refetchUserFolders: Publisher<string>
   ): Promise<Folder> {
-    const folder = await em.findOne(Folder, folderId, ['owner'])
+    const folder = await em.findOne(Folder, folderId, [
+      'owner',
+      'serverFolder.server'
+    ])
     if (folder.owner === user) throw new Error('error.folder.owner')
     if (folder.visibility === FolderVisibility.Private)
       throw new Error('error.folder.private')
@@ -240,6 +257,7 @@ export class FolderMutations {
     })
     folder.followerCount++
     await em.persistAndFlush([userFolder, folder])
+    await refetchUserFolders(user.id)
     return folder
   }
 
@@ -247,12 +265,18 @@ export class FolderMutations {
   @Mutation(() => Folder)
   async unfollowFolder(
     @Ctx() { em, user }: Context,
-    @Arg('folderId', () => ID) folderId: string
+    @Arg('folderId', () => ID) folderId: string,
+    @PubSub(SubscriptionTopic.RefetchUserFolders)
+    refetchUserFolders: Publisher<string>
   ): Promise<Folder> {
-    const folder = await em.findOne(Folder, folderId)
+    const folder = await em.findOne(Folder, folderId, [
+      'owner',
+      'serverFolder.server'
+    ])
     const userFolder = await em.findOneOrFail(UserFolder, { user, folder })
     folder.followerCount--
     await em.remove(userFolder).persistAndFlush([folder])
+    await refetchUserFolders(user.id)
     return folder
   }
 }

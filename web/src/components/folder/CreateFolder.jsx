@@ -9,12 +9,13 @@ import Button from '@/components/ui/Button'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'urql'
+import { useJoinedServers } from '@/providers/DataProvider'
 
-export default function CreateFolder({ server }) {
+export default function CreateFolder({ serverId }) {
   const { t } = useTranslation()
 
   const [canManagePosts] = useHasServerPermissions({
-    serverId: server?.id,
+    serverId,
     permissions: [ServerPermission.ManagePosts]
   })
 
@@ -32,17 +33,17 @@ export default function CreateFolder({ server }) {
   const [{ fetching }, createFolder] = useMutation(CREATE_FOLDER)
 
   const onSubmit = ({ name }) => {
-    createFolder({ name, serverId: server?.id }).then(
-      ({ data: { createFolder } }) => {
-        setIsOpen(false)
-      }
-    )
+    createFolder({ name, serverId }).then(({ data: { createFolder } }) => {
+      setIsOpen(false)
+    })
   }
 
-  const title = server
-    ? t('folder.server.title', { name: server?.id })
+  const server = useJoinedServers().find(s => s.id === serverId)
+
+  const title = serverId
+    ? t('folder.server.title', { name: server?.name })
     : t('folder.user.title')
-  const create = server ? t('folder.server.create') : t('folder.user.create')
+  const create = serverId ? t('folder.server.create') : t('folder.user.create')
 
   if (!canManagePosts) return <SidebarLabel>{title}</SidebarLabel>
 

@@ -17,6 +17,7 @@ import * as argon2 from 'argon2'
 import faker from 'faker'
 import { FriendStatus } from '@/resolver/user'
 import { ServerCategory } from '@/resolver/server'
+import { FolderVisibility } from '@/resolver/folder'
 
 const NUM_USERS = 100
 const MAX_MESSAGES_PER_USER = 3
@@ -31,17 +32,18 @@ export const seed = async (em: EntityManager) => {
   const createFolder = (
     name: string,
     owner: User | null,
+    visibility: FolderVisibility = FolderVisibility.Public,
     description?: string
-  ) => em.create(Folder, { name, description, owner })
+  ) => em.create(Folder, { name, description, owner, visibility })
 
   const createUserFolders = (user: User) => [
     em.create(UserFolder, {
       user,
-      folder: createFolder('Favorites', user)
+      folder: createFolder('Favorites', user, FolderVisibility.Private)
     }),
     em.create(UserFolder, {
       user,
-      folder: createFolder('Read Later', user)
+      folder: createFolder('Read Later', user, FolderVisibility.Private)
     })
   ]
 
@@ -107,6 +109,7 @@ export const seed = async (em: EntityManager) => {
       folder: createFolder(
         'Announcements',
         null,
+        FolderVisibility.Public,
         'All official Comet announcements'
       )
     }),

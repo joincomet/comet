@@ -1,7 +1,7 @@
-import { memo, useEffect, useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import Dialog from '@/components/ui/dialog/Dialog'
 import UserAvatar from '@/components/user/UserAvatar'
-import { IconDotsVertical } from '@/components/ui/icons/Icons'
+import { IconDotsVertical, IconFolder } from '@/components/ui/icons/Icons'
 import ctl from '@netlify/classnames-template-literals'
 import { useUserRelationships } from '@/providers/DataProvider'
 import { useTranslation } from 'react-i18next'
@@ -272,6 +272,14 @@ export default memo(function UserDialog() {
                 className={itemClass}
                 onClick={() => close()}
               >
+                {folder.avatarUrl ? (
+                  <div
+                    className="h-10 w-10 rounded-full bg-cover bg-no-repeat bg-center"
+                    style={{ backgroundImage: `url(${folder.avatarUrl})` }}
+                  />
+                ) : (
+                  <IconFolder className="text-gray-500 w-6 h-6 mx-2" />
+                )}
                 <div className="pl-2.5 text-base text-secondary font-medium">
                   {folder.name}
                 </div>

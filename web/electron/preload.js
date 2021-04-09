@@ -1,5 +1,5 @@
 const { contextBridge } = require('electron')
-const { getCurrentWindow, Notification } = require('@electron/remote')
+const { getCurrentWindow, Notification, app } = require('@electron/remote')
 
 contextBridge.exposeInMainWorld('electron', {
   minimize: () => getCurrentWindow().minimize(),
@@ -7,7 +7,9 @@ contextBridge.exposeInMainWorld('electron', {
   unmaximize: () => getCurrentWindow().unmaximize(),
   close: () => getCurrentWindow().close(),
   isMaximized: () => getCurrentWindow().isMaximized(),
-  showNotification: options => new Notification(options).show()
+  showNotification: options => new Notification(options).show(),
+  isEmojiPanelSupported: () => app.isEmojiPanelSupported(),
+  showEmojiPanel: () => app.showEmojiPanel()
 })
 
 /*

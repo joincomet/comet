@@ -24,21 +24,18 @@ export default function ServerFoldersSidebar({ serverId }) {
   return (
     <Sidebar right show={showFolders}>
       <div className="px-1.5">
+        <CreateFolder serverId={serverId} />
         {serverFolders.length > 0 && (
-          <>
-            <CreateFolder serverId={serverId} />
-
-            <div className="space-y-0.5">
-              {!!serverFolders &&
-                serverFolders.map(folder => (
-                  <SidebarFolder
-                    key={folder.id}
-                    folder={folder}
-                    serverId={serverId}
-                  />
-                ))}
-            </div>
-          </>
+          <div className="space-y-0.5">
+            {!!serverFolders &&
+              serverFolders.map(folder => (
+                <SidebarFolder
+                  key={folder.id}
+                  folder={folder}
+                  serverId={serverId}
+                />
+              ))}
+          </div>
         )}
 
         <CreateFolder />

@@ -8,30 +8,31 @@ import {
   IconFolder,
   IconReadLaterFolder
 } from '@/components/ui/icons/Icons'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useMutation } from 'urql'
 import { ADD_POST_TO_FOLDER } from '@/graphql/mutations'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/types/ServerPermission'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
+import { useFolderName } from '@/components/folder/useFolderName'
 
 export default function SidebarFolder({ folder, serverId }) {
   const [_addPostRes, addPostToFolder] = useMutation(ADD_POST_TO_FOLDER)
-  const [canManagePosts] = useHasServerPermissions({
+  const [canAddPosts] = useHasServerPermissions({
     serverId,
-    permissions: [ServerPermission.ManagePosts]
+    permissions: [ServerPermission.AddPostToFolder]
   })
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,
     drop: async (post, monitor) => {
-      if (serverId && !canManagePosts) {
+      if (serverId && !canAddPosts) {
         toast.error(t('folder.noPermission'))
         return
       }
       addPostToFolder({ folderId: folder.id, postId: post.id }).then(res => {
-        if (!res.error) toast.success(t('folder.added', { folder }))
+        if (!res.error) toast.success(t('folder.added', { name: folder.name }))
       })
     },
     collect: monitor => ({
@@ -43,8 +44,7 @@ export default function SidebarFolder({ folder, serverId }) {
 
   const { t } = useTranslation()
 
-  const favorites = t('folder.favorites')
-  const readLater = t('folder.readLater')
+  const folderName = useFolderName(folder)
 
   const folderContents = useMemo(() => {
     if (folder.avatarUrl) {
@@ -54,41 +54,45 @@ export default function SidebarFolder({ folder, serverId }) {
             className="rounded-full h-7 w-7 mr-3 bg-center bg-contain"
             style={{ backgroundImage: `url(${folder.avatarUrl})` }}
           />
-          <span className="truncate">{favorites}</span>
+          <span className="truncate">{folderName}</span>
         </>
       )
     }
 
-    if (!serverId && folder.name === favorites)
+    if (!serverId && folder.name === 'Favorites')
       return (
         <>
           <IconFavoritesFolder className="w-5 h-5 ml-1 mr-4 text-yellow-500" />
-          <span className="truncate">{favorites}</span>
+          <span className="truncate">{folderName}</span>
         </>
       )
 
-    if (!serverId && folder.name === readLater)
+    if (!serverId && folder.name === 'Read Later')
       return (
         <>
           <IconReadLaterFolder className="w-5 h-5 ml-1 mr-4 text-blue-500" />
-          <span className="truncate">{readLater}</span>
+          <span className="truncate">{folderName}</span>
         </>
       )
 
     return (
       <>
-        <IconFolder className="w-5 h-5 mr-3" />
+        <IconFolder className="w-5 h-5 ml-1 mr-4" />
         <span className="truncate">{folder.name}</span>
       </>
     )
-  }, [serverId, folder, favorites, readLater])
+  }, [serverId, folder, folderName])
 
   return (
     <div>
       <ContextMenuTrigger data={{ type: ContextMenuType.Folder, folder }}>
         <SidebarItem
           active={isActive}
-          to={`${serverId ? `/server/${serverId}` : '/me'}/folder/${folder.id}`}
+          to={`${
+            serverId || folder.server
+              ? `/server/${serverId ?? folder.server.id}`
+              : '/me'
+          }/folder/${folder.id}`}
           ref={dropRef}
         >
           {folderContents}

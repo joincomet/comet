@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMutation } from 'urql'
 import { SEND_MESSAGE } from '@/graphql/mutations'
-import { IconUpload } from '@/components/ui/icons/Icons'
+import { IconFormatEmoji, IconUpload } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 import ContentEditable from '@/components/ui/editor/ContentEditable'
@@ -10,12 +10,13 @@ import MessageUploadDialog from '@/components/message/input/MessageUploadDialog'
 import { useTyping } from '@/components/message/input/useTyping'
 import { useMessagePlaceholder } from '@/components/message/input/useMessagePlaceholder'
 import { useMessageInput } from '@/components/message/input/useMessageInput'
+import Twemoji from 'react-twemoji'
 
 export default function MessageInput({ channel, group, user }) {
   const { t } = useTranslation()
   const inputRef = useRef(null)
   const placeholder = useMessagePlaceholder({ channel, group, user })
-  useMessageInput(inputRef, placeholder)
+  const focus = useMessageInput(inputRef, placeholder)
   const [startTyping, typingNames] = useTyping({ channel, group, user })
   const [text, setText] = useState('')
   const [files, setFiles] = useState(null)
@@ -73,6 +74,10 @@ export default function MessageInput({ channel, group, user }) {
     setCurrentFileIndex(0)
   }, [setFiles, setCurrentFile, setCurrentFileIndex])
 
+  useEffect(() => {
+    setText('')
+  }, [user, group, channel])
+
   return (
     <>
       <MessageDropZone placeholder={placeholder} setFiles={setFiles} />
@@ -105,31 +110,48 @@ export default function MessageInput({ channel, group, user }) {
             </div>
           </Tippy>
 
-          <ContentEditable
-            ref={inputRef}
-            className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
-            html={text}
-            data-placeholder={`${t('message.message')} ${placeholder}`}
-            onChange={e => {
-              startTyping(variables)
-              setText(e.target.value)
-              if (text === '<br>') setText('')
-            }}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                if (text && !e.shiftKey) {
-                  e.preventDefault()
-                  sendMessage({
-                    text,
-                    ...variables
-                  })
-                  setText('')
-                } else if (!text) {
-                  e.preventDefault()
+          {window.electron && window.electron.isEmojiPanelSupported() && (
+            <div
+              className="absolute right-4.5 top-1/2 transform -translate-y-1/2"
+              onClick={() => {
+                focus()
+                const te = text
+                setText('')
+                setTimeout(() => setText(te))
+                window.electron.showEmojiPanel()
+              }}
+            >
+              <IconFormatEmoji className="w-5 h-5 text-tertiary cursor-pointer" />
+            </div>
+          )}
+
+          <Twemoji options={{ className: 'twemoji' }}>
+            <ContentEditable
+              ref={inputRef}
+              className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
+              html={text}
+              data-placeholder={`${t('message.message')} ${placeholder}`}
+              onChange={e => {
+                startTyping(variables)
+                setText(e.target.value)
+                if (text === '<br>') setText('')
+              }}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  if (text && !e.shiftKey) {
+                    e.preventDefault()
+                    sendMessage({
+                      text,
+                      ...variables
+                    })
+                    setText('')
+                  } else if (!text) {
+                    e.preventDefault()
+                  }
                 }
-              }
-            }}
-          />
+              }}
+            />
+          </Twemoji>
         </div>
 
         <div
