@@ -73,6 +73,7 @@ export const POST_FRAGMENT = gql`
     isDeleted
     createdAt
     editedAt
+    addedAt
     linkMetadata {
       ...METADATA_FRAGMENT
     }

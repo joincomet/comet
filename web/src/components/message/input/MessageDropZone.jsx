@@ -24,7 +24,9 @@ const popupClassName = show =>
   ${show ? 'scale-100' : 'scale-0'}
   transform
   transition
-  bg-blue-500
+  bg-gradient-to-br
+  from-red-400
+  to-indigo-600
   rounded-xl
   p-3
   max-w-sm
@@ -46,9 +48,27 @@ export default function MessageDropZone({ placeholder, setFiles }) {
               isDragging ? 'scale-100' : 'scale-0'
             }`}
           >
-            <IconFileCode className="w-24 h-24 transform translate-x-6 translate-y-3 -rotate-12" />
-            <IconFileVideo className="w-24 h-24 " />
-            <IconFileImage className="w-24 h-24 transform -translate-x-6 translate-y-3 rotate-12" />
+            <div className="relative transform translate-x-6 translate-y-3 -rotate-12">
+              <div
+                className="absolute left-5 top-9 w-14 h-14 bg-red-400"
+                style={{ zIndex: -1 }}
+              />
+              <IconFileCode className="w-24 h-24" />
+            </div>
+            <div className="relative">
+              <div
+                className="absolute left-5 top-9 w-14 h-14 bg-red-400"
+                style={{ zIndex: -1 }}
+              />
+              <IconFileVideo className="w-24 h-24 " />
+            </div>
+            <div className="relative transform -translate-x-6 translate-y-3 rotate-12">
+              <div
+                className="absolute left-5 top-8 w-14 h-14 bg-red-400"
+                style={{ zIndex: -1 }}
+              />
+              <IconFileImage className="w-24 h-24" />
+            </div>
           </div>
 
           <div className="rounded-xl border-dashed border-white border-2 px-4 pb-4 pt-16 text-center">

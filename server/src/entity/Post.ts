@@ -72,7 +72,13 @@ export class Post extends BaseEntity {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User)
-  author: User
+  author?: User
+
+  @Field(() => User, { nullable: true })
+  addedByUser?: User
+
+  @Field({ nullable: true })
+  addedAt?: Date
 
   @Field()
   @Property()

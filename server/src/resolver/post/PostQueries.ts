@@ -81,7 +81,7 @@ export class PostQueries {
           folder ? { folderPosts: { folder } } : {}
         ]
       },
-      ['author', 'server.userJoins.user', 'votes'],
+      ['author', 'server.userJoins.user', 'votes', 'folderPosts.addedByUser'],
       orderBy,
       pageSize + 1, // get one extra to determine hasMore
       page * pageSize
@@ -96,6 +96,13 @@ export class PostQueries {
         .getItems()
         .map(j => j.user)
         .filter(u => u.isOnline).length
+      if (folder) {
+        const folderPost = post.folderPosts
+          .getItems()
+          .find(fp => fp.folder === folder)
+        post.addedByUser = folderPost.addedByUser
+        post.addedAt = folderPost.addedAt
+      }
     })
 
     const hasMore = posts.length > pageSize
