@@ -1,15 +1,19 @@
-const { contextBridge } = require('electron')
-const { getCurrentWindow, Notification, app } = require('@electron/remote')
+const { contextBridge, ipcRenderer } = require('electron')
+const { getCurrentWindow, app } = require('@electron/remote')
 
 contextBridge.exposeInMainWorld('electron', {
   minimize: () => getCurrentWindow().minimize(),
   maximize: () => getCurrentWindow().maximize(),
   unmaximize: () => getCurrentWindow().unmaximize(),
   close: () => getCurrentWindow().close(),
+  restart: () => {
+    app.relaunch()
+    app.exit()
+  },
   isMaximized: () => getCurrentWindow().isMaximized(),
-  showNotification: options => new Notification(options).show(),
   isEmojiPanelSupported: () => app.isEmojiPanelSupported(),
-  showEmojiPanel: () => app.showEmojiPanel()
+  showEmojiPanel: () => app.showEmojiPanel(),
+  on: (event, func) => ipcRenderer.on(event, (event, ...args) => func(...args))
 })
 
 /*

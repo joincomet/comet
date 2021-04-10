@@ -113,7 +113,9 @@ export function DataProvider({ children }) {
           : `@${message.author.name}`,
         {
           body: message.text,
-          icon: message.author.avatarUrl ?? '/icons/icon.png',
+          icon:
+            message.author.avatarUrl ??
+            `${window.electron ? '.' : ''}/icons/icon.png`,
           timestamp: message.createdAt,
           silent: true
         }
@@ -124,7 +126,7 @@ export function DataProvider({ children }) {
         else if (messageChannelId && messageServerId)
           push(`/server/${messageServerId}/channel/${messageChannelId}`)
       }
-      const audio = new Audio('/notification.mp3')
+      const audio = new Audio(`${window.electron ? '.' : ''}/notification.mp3`)
       audio.volume = 0.5
       audio.play()
     }

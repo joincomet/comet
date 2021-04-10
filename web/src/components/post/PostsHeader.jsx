@@ -70,15 +70,6 @@ export default function PostsHeader({ refreshPosts }) {
       )}
 
       <div className="ml-auto space-x-5 flex items-center">
-        <Tippy content={t('post.feed.subscriptions.show')}>
-          <div
-            className="highlightable"
-            onClick={() => toast.error(t('post.feed.subscriptions.comingSoon'))}
-          >
-            <HiNewspaper className="w-5 h-5" />
-          </div>
-        </Tippy>
-
         <Tippy content={t('post.feed.refresh')}>
           <div className="highlightable" onClick={refreshPosts}>
             <IconRefresh className="w-5 h-5" />

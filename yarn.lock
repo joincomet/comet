@@ -6411,6 +6411,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"electron-progressbar@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "electron-progressbar@npm:2.0.0"
+  dependencies:
+    extend: ^3.0.1
+  checksum: 23dbfc58b37d70ce09eb22146f20f4906234a13f9bd869c866a86415cad98dfa57550c5643d88a6e0f4fa0e9a9dd84adeac43f9e2d795a64aa5615a625f01eeb
+  languageName: node
+  linkType: hard
+
 "electron-publish@npm:22.10.5":
   version: 22.10.5
   resolution: "electron-publish@npm:22.10.5"
@@ -7053,7 +7062,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"extend@npm:^3.0.0, extend@npm:~3.0.2":
+"extend@npm:^3.0.0, extend@npm:^3.0.1, extend@npm:~3.0.2":
   version: 3.0.2
   resolution: "extend@npm:3.0.2"
   checksum: 1406da1f0c4b00b839497e4cdd0ec4303ce2ae349144b7c28064a5073c93ce8c08da4e8fb1bc5cb459ffcdff30a35fc0fe54344eb88320e70100c1baea6f195c
@@ -15570,6 +15579,7 @@ typescript@^4.2.4:
     electron-context-menu: ^2.5.0
     electron-is-dev: ^2.0.0
     electron-log: ^4.3.3
+    electron-progressbar: ^2.0.0
     electron-store: ^7.0.3
     electron-updater: ^4.3.8
     eslint: ^7.24.0

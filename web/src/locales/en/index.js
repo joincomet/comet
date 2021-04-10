@@ -22,6 +22,7 @@ export const en = {
   markRead: 'Mark As Read',
   continue: 'Continue',
   more: 'More',
+  updateAvailable: 'Update Available!',
   // Defined in other files
   auth,
   category,

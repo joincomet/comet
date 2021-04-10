@@ -1,7 +1,7 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
@@ -40,6 +40,7 @@
     "electron-context-menu": "^2.5.0",
     "electron-is-dev": "^2.0.0",
     "electron-log": "^4.3.3",
+    "electron-progressbar": "^2.0.0",
     "electron-store": "^7.0.3",
     "electron-updater": "^4.3.8",
     "framer-motion": "^4.1.3",
