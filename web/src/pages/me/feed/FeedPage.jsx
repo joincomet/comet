@@ -25,7 +25,13 @@ export default function FeedPage() {
       Notification.requestPermission().then(function (permission) {
         // If the user accepts, let's create a notification
         if (permission === 'granted') {
-          new Notification('Notifications enabled!')
+          new Notification('Notifications enabled!', {
+            silent: true,
+            icon: '/icons/icon.png'
+          })
+          const audio = new Audio('/notification.mp3')
+          audio.volume = 0.5
+          audio.play()
         }
       })
     }

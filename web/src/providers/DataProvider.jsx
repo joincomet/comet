@@ -114,7 +114,8 @@ export function DataProvider({ children }) {
         {
           body: message.text,
           icon: message.author.avatarUrl ?? '/icons/icon.png',
-          timestamp: message.createdAt
+          timestamp: message.createdAt,
+          silent: true
         }
       )
       notification.onclick = () => {
