@@ -52,7 +52,6 @@ export {
   HiEmojiHappy as IconFormatEmoji,
   HiPhotograph as IconFormatImage,
   HiMinus as IconFormatDivider,
-  HiLink as IconFormatLink,
   // CATEGORIES
   HiChatAlt2 as IconCategoryDiscussion,
   HiCode as IconCategoryProgramming,
@@ -74,7 +73,9 @@ export {
   BiUnderline as IconFormatUnderline,
   BiHeading as IconFormatHeading,
   BiStrikethrough as IconFormatStrikethrough,
-  BiHide as IconFormatSpoiler
+  BiHide as IconFormatSpoiler,
+  BiLink as IconFormatLink,
+  BiUnlink as IconFormatLinkRemove
 } from 'react-icons/bi'
 
 export {

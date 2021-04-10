@@ -73,52 +73,39 @@ module.exports = {
       typography: theme => ({
         DEFAULT: {
           css: {
-            color: theme('colors.gray.800'),
+            color: theme('colors.gray.900'),
             a: {
               color: theme('colors.blue.500'),
-              'text-decoration': 'none',
-              '&:hover, &.active': {
-                color: 'white',
-                'background-color': theme('colors.blue.500'),
-                strong: {
-                  color: 'white'
-                }
-              }
+              'text-decoration': 'none'
             },
             strong: {
-              color: theme('colors.blue.500')
-            },
-            h1: {
-              color: theme('colors.gray.800')
+              color: theme('colors.gray.900')
             },
             h2: {
-              color: theme('colors.gray.800')
+              color: theme('colors.gray.900')
             },
             h3: {
-              color: theme('colors.gray.800')
-            },
-            h4: {
-              color: theme('colors.gray.800')
+              color: theme('colors.gray.900')
             },
             code: {
               color: 'white',
-              'background-color': theme('colors.gray.800'),
+              'background-color': theme('colors.gray.900'),
               '&:before, &:after': {
                 display: 'none'
               }
             },
             p: {
-              color: theme('colors.gray.800')
+              color: theme('colors.gray.900')
             },
             'ul > li': {
               '&::before': {
-                'background-color': theme('colors.gray.800'),
+                'background-color': theme('colors.gray.900'),
                 'font-weight': 'bold'
               }
             },
             'ol > li': {
               '&::before': {
-                color: theme('colors.gray.800'),
+                color: theme('colors.gray.900'),
                 'font-weight': 'bold'
               }
             }
@@ -127,29 +114,22 @@ module.exports = {
 
         dark: {
           css: {
-            color: theme('colors.gray.200'),
+            color: theme('colors.gray.100'),
             a: {
               color: theme('colors.blue.500'),
-              'text-decoration': 'none',
-              '&:hover, &.active': {
-                color: theme('colors.gray.200'),
-                'background-color': theme('colors.blue.500')
-              }
+              'text-decoration': 'none'
             },
             strong: {
+              color: theme('colors.gray.100')
+            },
+            'a > strong': {
               color: theme('colors.blue.500')
             },
-            h1: {
-              color: theme('colors.gray.200')
-            },
             h2: {
-              color: theme('colors.gray.200')
+              color: theme('colors.gray.100')
             },
             h3: {
-              color: theme('colors.gray.200')
-            },
-            h4: {
-              color: theme('colors.gray.200')
+              color: theme('colors.gray.100')
             },
             code: {
               color: theme('colors.gray.100'),
@@ -158,17 +138,17 @@ module.exports = {
               }
             },
             p: {
-              color: theme('colors.gray.200')
+              color: theme('colors.gray.100')
             },
             'ul > li': {
               '&::before': {
-                'background-color': theme('colors.gray.200'),
+                'background-color': theme('colors.gray.100'),
                 'font-weight': 'bold'
               }
             },
             'ol > li': {
               '&::before': {
-                color: theme('colors.gray.200'),
+                color: theme('colors.gray.100'),
                 'font-weight': 'bold'
               }
             }

@@ -49,7 +49,7 @@ export default function PostEditor({ setOpen }) {
         onChange={e => setTitle(e.target.value)}
         value={title}
       />
-      <Editor text={text} />
+      <Editor text={text} setText={setText} />
       <div className="flex justify-end space-x-3 items-center pt-3">
         <button
           className={cancelBtnClass}

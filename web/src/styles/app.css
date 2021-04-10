@@ -129,3 +129,7 @@ body {
 .messages-start {
   min-height: calc(100vh - 23rem);
 }
+
+span[data-spoiler='1'] {
+  @apply dark:bg-gray-100 bg-gray-900 dark:hover:bg-transparent hover:bg-transparent;
+}

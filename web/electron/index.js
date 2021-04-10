@@ -9,7 +9,6 @@ const { createLoadingScreen } = require('./loading')
 const { createWindow } = require('./mainWindow')
 const DiscordRPC = require('discord-rpc')
 const { autoUpdater } = require('electron-updater')
-const ProgressBar = require('electron-progressbar')
 
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
@@ -34,7 +33,6 @@ log.info('App starting...')
 
 contextMenu({ showInspectElement: true }) // TODO disable this
 
-let progressBar = null
 let mainWindow = null
 let loadingScreen = null
 let tray = null
@@ -57,31 +55,6 @@ app.whenReady().then(() => {
       }
 
       autoUpdater.downloadUpdate()
-
-      progressBar = new ProgressBar({
-        indeterminate: false,
-        title: 'Update in progress',
-        text: 'Preparing to download updates.',
-        detail: 'Downloading...',
-        browserWindow: {
-          webPreferences: {
-            nodeIntegration: true
-          }
-        }
-      })
-
-      progressBar
-        .on('completed', function () {
-          progressBar.detail = 'Download completed.'
-        })
-        .on('aborted', function (value) {
-          log.error('Download aborted.')
-          app.quit()
-        })
-        .on('progress', function (value) {
-          progressBar.text = 'Downloading updates.'
-          progressBar.detail = `Downloading... ${value}%`
-        })
     })
 
     autoUpdater.on('update-not-available', info => {
@@ -124,7 +97,6 @@ app.whenReady().then(() => {
         progressObj.total +
         ')'
       log.info(logMessage)
-      progressBar.value = parseInt(progressObj.percent)
     })
 
     autoUpdater.on('update-downloaded', info => {
