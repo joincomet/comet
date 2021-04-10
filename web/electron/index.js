@@ -22,16 +22,17 @@ let tray = null
 
 app.whenReady().then(() => {
   loadingScreen = createLoadingScreen()
-  if (!isDev) runUpdater(mainWindow)
-  else mainWindow = createWindow()
-
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (loadingScreen) {
-      loadingScreen.hide()
-    }
-    mainWindow.show()
-    mainWindow.send('windowOpened')
-  })
+  if (!isDev) runUpdater(mainWindow, loadingScreen)
+  else {
+    mainWindow = createWindow(loadingScreen)
+    mainWindow.webContents.on('did-finish-load', () => {
+      if (loadingScreen) {
+        loadingScreen.hide()
+      }
+      mainWindow.show()
+      mainWindow.send('windowOpened')
+    })
+  }
 
   app.on('activate', function () {
     mainWindow.send('windowOpened')

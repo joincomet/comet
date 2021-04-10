@@ -5,7 +5,7 @@ const { app } = require('electron')
 const { createWindow } = require('./mainWindow')
 
 module.exports = {
-  runUpdater: mainWindow => {
+  runUpdater: (mainWindow, loadingScreen) => {
     autoUpdater.logger = log
     autoUpdater.logger.transports.file.level = 'info'
     autoUpdater.autoDownload = false
@@ -63,6 +63,13 @@ module.exports = {
       log.info('Update not available.')
       log.info(info)
       mainWindow = createWindow()
+      mainWindow.webContents.on('did-finish-load', () => {
+        if (loadingScreen) {
+          loadingScreen.hide()
+        }
+        mainWindow.show()
+        mainWindow.send('windowOpened')
+      })
     })
 
     autoUpdater.on('error', err => {
