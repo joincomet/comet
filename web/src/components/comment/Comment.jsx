@@ -1,7 +1,6 @@
 import { IconDotsHorizontal, IconVote } from '@/components/ui/icons/Icons'
 import { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
-import Twemoji from 'react-twemoji'
 import UserPopup from '@/components/user/UserPopup'
 import { calendarDate } from '@/utils/timeUtils'
 import ctl from '@netlify/classnames-template-literals'
@@ -92,12 +91,10 @@ export default function Comment({
               </div>
             </div>
 
-            <Twemoji options={{ className: 'twemoji' }}>
-              <div
-                className="prose prose-sm dark:prose-dark max-w-none"
-                dangerouslySetInnerHTML={{ __html: comment.text }}
-              />
-            </Twemoji>
+            <div
+              className="prose prose-sm dark:prose-dark max-w-none"
+              dangerouslySetInnerHTML={{ __html: comment.text }}
+            />
 
             <div className="flex items-center pt-2">
               <VoteButton comment={comment} canVote={canVote} />

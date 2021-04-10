@@ -4,14 +4,13 @@ import { IconChevronDown, IconUsers } from '@/components/ui/icons/Icons'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { useTranslation } from 'react-i18next'
-import { useServer, useServerChannels } from '@/providers/ServerProvider'
+import { useServer } from '@/providers/ServerProvider'
 import SidebarChannel from '@/components/channel/SidebarChannel'
 import CreateChannel from '@/components/channel/CreateChannel'
 
 export default function ServerSidebar() {
   const { t } = useTranslation()
   const server = useServer()
-  const channels = useServerChannels()
 
   return (
     <Sidebar>
@@ -33,7 +32,7 @@ export default function ServerSidebar() {
         <CreateChannel serverId={server.id} />
 
         <div className="space-y-0.5">
-          {channels.map(channel => (
+          {server.channels.map(channel => (
             <SidebarChannel
               key={channel.id}
               channel={channel}

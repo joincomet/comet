@@ -20,6 +20,7 @@ import { HIDE_DM, SEND_MESSAGE } from '@/graphql/mutations'
 import { useMutation } from 'urql'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
+import CountBadge from '@/components/ui/CountBadge'
 
 export default function HomeSidebar() {
   const groupsAndDms = useGroupsAndDms()
@@ -104,7 +105,7 @@ function DirectMessage({ user }) {
   return (
     <div>
       <ContextMenuTrigger
-        data={{ type: ContextMenuType.User, user, showCloseDm: true }}
+        data={{ type: ContextMenuType.User, user, isDm: true }}
       >
         <SidebarItem
           ref={dropRef}
@@ -120,6 +121,12 @@ function DirectMessage({ user }) {
           />
           <span className="ml-3">{user.name}</span>
 
+          <div className="ml-auto" />
+
+          <div className="pr-2">
+            {!!user.unreadCount && <CountBadge count={user.unreadCount} />}
+          </div>
+
           <IconX
             onClick={e => {
               e.stopPropagation()
@@ -127,7 +134,7 @@ function DirectMessage({ user }) {
               hideDm({ userId: user.id })
               if (pathname === `/me/dm/${user.id}`) push('/me/friends')
             }}
-            className="group-hover:block hidden w-5 h-5 ml-auto cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+            className="group-hover:visible invisible w-5 h-5 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           />
         </SidebarItem>
       </ContextMenuTrigger>

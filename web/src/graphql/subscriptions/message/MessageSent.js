@@ -7,6 +7,7 @@ export const MESSAGE_SENT = gql`
       userId
       groupId
       channelId
+      serverId
       message {
         ...MESSAGE_FRAGMENT
         author {

@@ -5,6 +5,7 @@ import { GroupDmUnion } from '@/resolver/user/types/GroupDmUnion'
 import { QueryOrder } from '@mikro-orm/core'
 import { CustomError } from '@/types/CustomError'
 import { FriendStatus, GetUserRelationshipsResponse } from '@/resolver/user'
+import { GroupUser } from '@/entity/GroupUser'
 
 @Resolver(() => User)
 export class UserQueries {
@@ -42,9 +43,12 @@ export class UserQueries {
       ['toUser'],
       { lastMessageAt: QueryOrder.DESC }
     )
+    dms.forEach(dm => (dm.toUser.unreadCount = dm.unreadCount))
 
-    await em.populate(user, ['groups'])
-    const groups = user.groups.getItems()
+    const groupUsers = await em.find(GroupUser, { user }, ['group'])
+    groupUsers.forEach(gu => (gu.group.unreadCount = gu.unreadCount))
+    const groups = groupUsers.map(gu => gu.group)
+
     const arr: (Group | FriendData)[] = [].concat(groups).concat(dms)
     return arr
       .sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime())

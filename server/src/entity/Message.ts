@@ -12,11 +12,14 @@ import {
   Collection,
   Embedded,
   Entity,
+  Enum,
   ManyToMany,
   ManyToOne,
   Property
 } from '@mikro-orm/core'
 import { File } from '@/entity/File'
+import { NotificationSetting } from '@/types/NotificationSetting'
+import { MessageType } from '@/resolver/message'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -71,4 +74,8 @@ export class Message extends BaseEntity {
   @Field()
   @Property()
   isDeleted: boolean = false
+
+  @Field(() => MessageType)
+  @Enum({ items: () => MessageType })
+  type: MessageType = MessageType.Normal
 }

@@ -25,7 +25,7 @@ export class ServerMutations {
   @Mutation(() => Server, { description: 'Create a server' })
   async createServer(
     @Ctx() { user, em }: Context,
-    @Args() { name, avatarFile, searchable, category }: CreateServerArgs,
+    @Args() { name, avatarFile, isPublic, category }: CreateServerArgs,
     @PubSub(SubscriptionTopic.RefetchUsers)
     refetchUsers: Publisher<string>
   ): Promise<Server> {
@@ -56,7 +56,8 @@ export class ServerMutations {
       channels: [channel],
       avatarUrl,
       category,
-      isPublic: searchable
+      isPublic,
+      systemMessagesChannel: channel
     })
     await em.persistAndFlush([server])
     await user.joinServer(em, refetchUsers, server)

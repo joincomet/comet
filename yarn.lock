@@ -2283,9 +2283,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/core@npm:^4.5.2":
-  version: 4.5.2
-  resolution: "@mikro-orm/core@npm:4.5.2"
+"@mikro-orm/core@npm:^4.5.3":
+  version: 4.5.3
+  resolution: "@mikro-orm/core@npm:4.5.3"
   dependencies:
     ansi-colors: 4.1.1
     clone: 2.1.2
@@ -2318,13 +2318,13 @@ __metadata:
       optional: true
     "@mikro-orm/sqlite":
       optional: true
-  checksum: 76879b0267548b1d78b39bcd58a916e494d1e81d9a5951cef0b38d67d2d6580536d65c35288f37d988df1486ef93cda7207c77c2bb0767e3b8dda23344454a77
+  checksum: 7b25414e8e4ede51ec46ef626c4f5b944894d87dd2200598677743b1a94eaf569c2366ba8ef6af33fd5390a0b5a9f773da344ba3bc185df2014a92ad3b901a92
   languageName: node
   linkType: hard
 
-"@mikro-orm/knex@npm:^4.5.2":
-  version: 4.5.2
-  resolution: "@mikro-orm/knex@npm:4.5.2"
+"@mikro-orm/knex@npm:^4.5.3":
+  version: 4.5.3
+  resolution: "@mikro-orm/knex@npm:4.5.3"
   dependencies:
     fs-extra: 9.1.0
     knex: 0.21.19
@@ -2347,19 +2347,19 @@ __metadata:
       optional: true
     sqlite3:
       optional: true
-  checksum: 5f892b5c683cd0b484f6b6519158cc0c5f71c48be959a3a34a9ed4260bc3d8d80a9780b1728bb34cb748750be4d65de974e2d8a96daca7838a59c5a416329c22
+  checksum: 1b1a57061153228f5b37b6afa75f342ce5c447acf6b90af6402d4051e980f0ac72812ac65849aa154e37e32971c02eaee4fed3bdc6fe53766d294f6446c008ea
   languageName: node
   linkType: hard
 
-"@mikro-orm/postgresql@npm:^4.5.2":
-  version: 4.5.2
-  resolution: "@mikro-orm/postgresql@npm:4.5.2"
+"@mikro-orm/postgresql@npm:^4.5.3":
+  version: 4.5.3
+  resolution: "@mikro-orm/postgresql@npm:4.5.3"
   dependencies:
-    "@mikro-orm/knex": ^4.5.2
+    "@mikro-orm/knex": ^4.5.3
     pg: 8.5.1
   peerDependencies:
     "@mikro-orm/core": ^4.0.0
-  checksum: d91fe246949abdd708ab0b8bf158c6c32c0d3456aff1c900bcf992124555aa85c70358828a3c42e884c6b1f4dfd315f30999ea0c1086589a62accb3c2eae0680
+  checksum: 191bfb52ab909273bee2822c62c893445fe08230f03808e4c5c9e646f8af1a91c58de746f18cd45d29283060d26b48cdd16cd6d6023fe566cbd8d11002b22b84
   languageName: node
   linkType: hard
 
@@ -4411,9 +4411,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.882.0":
-  version: 2.882.0
-  resolution: "aws-sdk@npm:2.882.0"
+"aws-sdk@npm:^2.884.0":
+  version: 2.884.0
+  resolution: "aws-sdk@npm:2.884.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4424,7 +4424,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 46e54b9c62430a5b8a6cebbe080dc164949b121f9224bd94efa85ee31224dede39a9adc5034e27c60575497c2fd5281be68285b4adf6e86c1a1a50db63054459
+  checksum: ca870719af0deee3fa1e9041a627fb80888b88d10cb59bb2c27a89cba5244fe0e778eb606e93ff6ef1bbe55263851e23d79356b002064b6705f3c645f7ac815f
   languageName: node
   linkType: hard
 
@@ -5774,10 +5774,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.20.0":
-  version: 2.20.0
-  resolution: "date-fns@npm:2.20.0"
-  checksum: d20103d9c1ae81aafe37941b2e9ccfcf25d5e504e6fcf200b7a7e2d43ca8e7e6ffdaa30e36fb7abdade0f27820a9ec67cb337f6f426a585fee22923a156119b2
+"date-fns@npm:^2.20.1":
+  version: 2.20.1
+  resolution: "date-fns@npm:2.20.1"
+  checksum: d7676077c30bb9ca983fc857acf38286fc6377fc2790ff181b95e2b30dd981a309eb6d7317d4604250a40f4fa3886b4ba02a87d5c1acd96285bcc9da9bad1440
   languageName: node
   linkType: hard
 
@@ -6733,9 +6733,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.23.1":
-  version: 7.23.1
-  resolution: "eslint-plugin-react@npm:7.23.1"
+"eslint-plugin-react@npm:^7.23.2":
+  version: 7.23.2
+  resolution: "eslint-plugin-react@npm:7.23.2"
   dependencies:
     array-includes: ^3.1.3
     array.prototype.flatmap: ^1.2.4
@@ -6751,7 +6751,7 @@ __metadata:
     string.prototype.matchall: ^4.0.4
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7
-  checksum: 1c9cfbe6f378d09c620d127c6f6e7708e0f482787a38dbd935b137c70ea65af8d648fda6b2755cd028ebed461628e230038146ab3b10eb9a76f02388ae554565
+  checksum: 0607db70fe5dd8366f046fee0bb8213b72a5f801fced1b82a7c85d5e88eac5cee43c221a0a20b032925210cbd52e2669a10ae03f1bd58e03485e2c18070cbb57
   languageName: node
   linkType: hard
 
@@ -6788,9 +6788,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.23.0":
-  version: 7.23.0
-  resolution: "eslint@npm:7.23.0"
+"eslint@npm:^7.24.0":
+  version: 7.24.0
+  resolution: "eslint@npm:7.24.0"
   dependencies:
     "@babel/code-frame": 7.12.11
     "@eslint/eslintrc": ^0.4.0
@@ -6831,7 +6831,7 @@ __metadata:
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: f444869506eb0b53fdc6f6f6508b9f5daed51034af0289e6b201f996e7f2d06134f765ef598568269d2a0575dc9da5d3308bd2716f795b789d92e7febb654aab
+  checksum: 8130aacc3698a730ba8fa10ac9e1436151181c34cad265c21c97708e62dba714b6f3cc4cb7a1d343918da3d35a5913505ccf53cfbdc1fa8d62d326b7e35b7aae
   languageName: node
   linkType: hard
 
@@ -7118,10 +7118,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"faker@npm:^5.5.2":
-  version: 5.5.2
-  resolution: "faker@npm:5.5.2"
-  checksum: de923c65eee33656c59fc5865c2486d04d6bae5a7e6cd70153bf81bf64b6461e00c34e7322e3559094455a41aa050c85c56a1da5ce445e0d805df7e215c69374
+"faker@npm:^5.5.3":
+  version: 5.5.3
+  resolution: "faker@npm:5.5.3"
+  checksum: d03b74947497b9f6e16ce3b8e06299f95190f942064fc8a43ebfc39b0c447160e00fdf2355060a2589b4aa5827ddcf35cc50674f5a229b2d367b2eb5a3380490
   languageName: node
   linkType: hard
 
@@ -12287,12 +12287,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.0.4":
-  version: 7.0.4
-  resolution: "react-hook-form@npm:7.0.4"
+"react-hook-form@npm:^7.0.5":
+  version: 7.0.5
+  resolution: "react-hook-form@npm:7.0.5"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 8d2ed4522fb2dd0b33140457f1af8cc82c95cf3fe9827b1c305b897bea8a820563ef1bc0291cf4cd7ac8fa50a92f5a339a6bb9fc26f4d2f4c0f8bf60957c79a3
+  checksum: d1ef5bfb233a695ef2f30e74c4bf5c7cb99aa9b65788612f47492a44946fb1293a658673d9ce24e23749a69c26edc68bcde14f535c1e70a59e5115394ac6634d
   languageName: node
   linkType: hard
 
@@ -13416,8 +13416,8 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "server@workspace:server"
   dependencies:
-    "@mikro-orm/core": ^4.5.2
-    "@mikro-orm/postgresql": ^4.5.2
+    "@mikro-orm/core": ^4.5.3
+    "@mikro-orm/postgresql": ^4.5.3
     "@mikro-orm/sql-highlighter": ^1.0.1
     "@types/async": ^3.2.6
     "@types/cookie-parser": ^1.4.2
@@ -13434,18 +13434,18 @@ resolve@^2.0.0-next.3:
     "@urql/introspection": ^0.2.0
     apollo-server-express: ^2.22.2
     argon2: ^0.27.2
-    aws-sdk: ^2.882.0
+    aws-sdk: ^2.884.0
     class-validator: ^0.13.1
     cloneable-readable: ^2.1.0
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
     dataloader: ^2.0.0
     dayjs: ^1.10.4
-    eslint: ^7.23.0
+    eslint: ^7.24.0
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
     express: ^4.17.1
-    faker: ^5.5.2
+    faker: ^5.5.3
     file-type: ^16.3.0
     got: ^11.8.2
     graphql: ^15.5.0
@@ -15561,7 +15561,7 @@ typescript@^4.2.4:
     babel-eslint: ^10.1.0
     concurrently: ^6.0.1
     cross-env: ^7.0.3
-    date-fns: ^2.20.0
+    date-fns: ^2.20.1
     dayjs: ^1.10.4
     dayjs-twitter: ^0.4.0
     discord-rpc: ^3.2.0
@@ -15572,10 +15572,10 @@ typescript@^4.2.4:
     electron-log: ^4.3.3
     electron-store: ^7.0.3
     electron-updater: ^4.3.8
-    eslint: ^7.23.0
+    eslint: ^7.24.0
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
-    eslint-plugin-react: ^7.23.1
+    eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
     framer-motion: ^4.1.3
     fuse.js: ^6.4.6
@@ -15592,7 +15592,7 @@ typescript@^4.2.4:
     react-dom: ^17.0.2
     react-dropzone: ^11.3.2
     react-helmet-async: ^1.0.9
-    react-hook-form: ^7.0.4
+    react-hook-form: ^7.0.5
     react-hot-toast: ^1.0.2
     react-i18next: ^11.8.12
     react-icons: ^4.2.0

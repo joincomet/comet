@@ -9,6 +9,8 @@ const DiscordRPC = require('discord-rpc')
 const { autoUpdater } = require('electron-updater')
 const log = require('electron-log')
 
+app.setAppUserModelId('Comet')
+
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 log.info('App starting...')

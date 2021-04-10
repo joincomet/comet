@@ -7,7 +7,6 @@ import {
 } from '@mikro-orm/core'
 import { User } from '@/entity'
 import { FriendStatus } from '@/resolver/user'
-import { Field } from 'type-graphql'
 
 @Entity()
 export class FriendData {
@@ -27,16 +26,22 @@ export class FriendData {
   createdAt: Date = new Date()
 
   @Property()
-  lastMessageAt: Date = new Date()
-
-  @Property({ nullable: true })
-  updatedAt?: Date
-
-  @Property()
   showChat: boolean = false
 
   @Enum({
     items: () => FriendStatus
   })
   status: FriendStatus = FriendStatus.None
+
+  @Property()
+  lastViewAt: Date = new Date()
+
+  @Property()
+  lastMessageAt: Date = new Date()
+
+  @Property()
+  updatedAt: Date = new Date()
+
+  @Property()
+  unreadCount: number = 0
 }

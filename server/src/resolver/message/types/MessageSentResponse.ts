@@ -12,6 +12,9 @@ export class MessageSentResponse {
   @Field(() => ID, { nullable: true })
   channelId: string
 
+  @Field(() => ID, { nullable: true })
+  serverId: string
+
   @Field(() => Message)
   message: Message
 }

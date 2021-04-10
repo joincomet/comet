@@ -2,6 +2,7 @@ import { IconFriends } from '@/components/ui/icons/Icons'
 import Header from '@/components/ui/header/Header'
 import { useStore } from '@/hooks/useStore'
 import HeaderTab from '@/components/ui/header/HeaderTab'
+import CountBadge from '@/components/ui/CountBadge'
 
 export default function FriendsHeader({ pendingCount = 0 }) {
   return (
@@ -35,8 +36,8 @@ function FriendTab({ page, green = false, pendingCount = 0 }) {
     >
       {page}
       {!!pendingCount && (
-        <div className="ml-2 rounded-full bg-red-400 w-4 h-4 inline-flex items-center justify-center text-xs font-semibold text-center">
-          {pendingCount}
+        <div className="ml-2">
+          <CountBadge count={pendingCount} />
         </div>
       )}
     </HeaderTab>

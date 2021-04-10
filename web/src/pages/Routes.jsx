@@ -9,8 +9,6 @@ import PrivateRoutes from '@/pages/PrivateRoutes'
 import { DataProvider } from '@/providers/DataProvider'
 import { Helmet } from 'react-helmet-async'
 import LoadingScreen from '@/pages/LoadingScreen'
-import UserDialog from '@/components/user/UserDialog'
-import { DndProvider } from 'react-dnd'
 import ContextMenuProvider from '@/providers/ContextMenuProvider'
 
 export default function Routes() {

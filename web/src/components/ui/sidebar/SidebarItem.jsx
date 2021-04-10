@@ -20,6 +20,7 @@ const className = large =>
   dark:active:bg-gray-775
   select-none
   focus:outline-none
+  relative
 `)
 
 const activeClassName = ctl(`

@@ -38,6 +38,8 @@ import {
   TypingPayload
 } from '@/resolver/message'
 import { FriendStatus } from '@/resolver/user'
+import { ChannelUser } from '@/entity/ChannelUser'
+import { GroupUser } from '@/entity/GroupUser'
 
 @Resolver()
 export class MessageMutations {
@@ -58,7 +60,7 @@ export class MessageMutations {
     if (!text && !file) throw new Error('error.message.textOrFile')
 
     const channel = channelId
-      ? await em.findOneOrFail(Channel, channelId)
+      ? await em.findOneOrFail(Channel, channelId, ['server'])
       : null
     const group = groupId ? await em.findOneOrFail(Group, groupId) : null
     const toUser = userId ? await em.findOneOrFail(User, userId) : null
@@ -95,6 +97,7 @@ export class MessageMutations {
       myData.lastMessageAt = new Date()
       theirData.showChat = true
       theirData.lastMessageAt = new Date()
+      theirData.unreadCount++
       await em.persistAndFlush([myData, theirData])
       await refetchGroupsAndDms(user.id)
       await refetchGroupsAndDms(toUser.id)
@@ -102,10 +105,17 @@ export class MessageMutations {
 
     if (group) {
       group.lastMessageAt = new Date()
+      const groupUsers = await em.find(GroupUser, {
+        group,
+        user: { $ne: user }
+      })
+      groupUsers.forEach(gu => gu.unreadCount++)
+      await em.persistAndFlush(groupUsers)
     }
 
     if (channel) {
       channel.lastMessageAt = new Date()
+      await em.persistAndFlush(channel)
     }
 
     await messageSent({
@@ -113,7 +123,8 @@ export class MessageMutations {
       fromUserId: user.id,
       toUserId: toUser?.id,
       groupId: group?.id,
-      channelId: channel?.id
+      channelId: channel?.id,
+      serverId: channel?.server?.id
     })
 
     return message
@@ -220,5 +231,53 @@ export class MessageMutations {
       if (meta) linkMetadatas.push(meta)
     }
     return linkMetadatas
+  }
+
+  @Authorized()
+  @Mutation(() => Channel)
+  async viewChannel(
+    @Ctx() { em, user }: Context,
+    @Arg('channelId', () => ID) channelId: string
+  ): Promise<Channel> {
+    const channel = await em.findOneOrFail(Channel, channelId)
+    let channelUser = await em.findOne(ChannelUser, { user, channel })
+    if (!channelUser) channelUser = em.create(ChannelUser, { user, channel })
+    channelUser.lastViewAt = new Date()
+    channelUser.mentionCount = 0
+    await em.persistAndFlush(channelUser)
+    channel.isUnread = false
+    channel.mentionCount = 0
+    return channel
+  }
+
+  @Authorized()
+  @Mutation(() => Group)
+  async viewGroup(
+    @Ctx() { em, user }: Context,
+    @Arg('groupId', () => ID) groupId: string
+  ): Promise<Group> {
+    const group = await em.findOneOrFail(Group, groupId)
+    let groupUser = await em.findOne(GroupUser, { user, group })
+    if (!groupUser) groupUser = em.create(GroupUser, { user, group })
+    groupUser.lastViewAt = new Date()
+    groupUser.unreadCount = 0
+    await em.persistAndFlush(groupUser)
+    group.unreadCount = 0
+    return group
+  }
+
+  @Authorized()
+  @Mutation(() => User)
+  async viewDm(
+    @Ctx() { em, user }: Context,
+    @Arg('userId', () => ID) userId: string
+  ): Promise<User> {
+    const [myData] = await user.getFriendData(em, userId)
+    myData.lastViewAt = new Date()
+    myData.unreadCount = 0
+    await em.persistAndFlush(myData)
+    const them = myData.toUser
+    them.unreadCount = 0
+    return them
   }
 }

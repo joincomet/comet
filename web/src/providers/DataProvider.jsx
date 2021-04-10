@@ -15,7 +15,8 @@ import {
 } from '@/graphql/subscriptions'
 import { REFETCH_USER_FOLDERS } from '@/graphql/subscriptions/folder'
 import { useCurrentUser } from '@/providers/UserProvider'
-import { useQuery, useSubscription } from 'urql'
+import { useClient, useQuery, useSubscription } from 'urql'
+import { matchPath, useHistory, useLocation } from 'react-router-dom'
 
 export const DataContext = createContext({
   joinedServers: null,
@@ -26,8 +27,8 @@ export const DataContext = createContext({
 })
 
 export function DataProvider({ children }) {
-  const user = useCurrentUser()
-  const pause = !user
+  const currentUser = useCurrentUser()
+  const pause = !currentUser
   const [{ data: joinedServersData }, refetchServers] = useQuery({
     query: GET_JOINED_SERVERS,
     pause
@@ -62,9 +63,79 @@ export function DataProvider({ children }) {
     refetchRels()
   )
 
-  useSubscription({ query: MESSAGE_SENT, pause })
+  const { push } = useHistory()
+  const { pathname } = useLocation()
+  const matchedChannel = matchPath(pathname, {
+    path: '/server/:serverId/channel/:channelId'
+  })
+  const currentServerId = matchedChannel?.params?.serverId
+  const currentChannelId = matchedChannel?.params?.channelId
+  const matchedDm = matchPath(pathname, { path: '/me/dm/:userId' })
+  const currentUserId = matchedDm?.params?.userId
+  const matchedGroup = matchPath(pathname, { path: '/me/group/:groupId' })
+  const currentGroupId = matchedGroup?.params?.groupId
+  const urqlClient = useClient()
+
+  useSubscription({ query: MESSAGE_SENT, pause }, (prev, res) => {
+    const data = res?.messageSent
+    const message = data?.message
+    const messageServerId = data?.serverId
+    const messageChannelId = data?.channelId
+    const messageGroupId = data?.groupId
+    const messageUserId = data?.userId
+    if (!message) return
+    if (
+      Notification.permission === 'granted' &&
+      message.author.id !== currentUser.id
+    ) {
+      if (
+        (currentGroupId &&
+          messageGroupId &&
+          currentGroupId === messageGroupId) ||
+        (currentUserId && messageUserId && currentUserId === messageUserId) ||
+        (currentChannelId &&
+          messageChannelId &&
+          currentChannelId === messageChannelId)
+      )
+        return
+
+      let channel
+      if (messageChannelId && messageServerId) {
+        channel = urqlClient
+          .readQuery(GET_JOINED_SERVERS)
+          ?.data?.getJoinedServers?.find(s => s.id === messageServerId)
+          ?.channels?.find(c => c.id === messageChannelId)
+      }
+
+      const notification = new Notification(
+        channel
+          ? `@${message.author.name} · #${channel.name}`
+          : `@${message.author.name}`,
+        {
+          body: message.text,
+          icon: message.author.avatarUrl ?? '/icons/icon.png',
+          timestamp: message.createdAt
+        }
+      )
+      notification.onclick = () => {
+        if (messageUserId) push(`/me/dm/${messageUserId}`)
+        else if (messageGroupId) push(`/me/group/${messageGroupId}`)
+        else if (messageChannelId && messageServerId)
+          push(`/server/${messageServerId}/channel/${messageChannelId}`)
+      }
+      const audio = new Audio('/notification.mp3')
+      audio.volume = 0.5
+      audio.play()
+    }
+  })
   useSubscription({ query: MESSAGE_REMOVED, pause })
   useSubscription({ query: MESSAGE_UPDATED, pause })
+
+  /*useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission()
+    }
+  }, [])*/
 
   return (
     <DataContext.Provider
@@ -74,7 +145,7 @@ export function DataProvider({ children }) {
         userFolders,
         userRelationships,
         loading:
-          user &&
+          currentUser &&
           (!joinedServers ||
             !groupsAndDms ||
             !userFolders ||

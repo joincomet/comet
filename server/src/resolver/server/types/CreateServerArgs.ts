@@ -10,7 +10,7 @@ export class CreateServerArgs {
   name: string
 
   @Field({ defaultValue: false })
-  searchable: boolean
+  isPublic: boolean
 
   @Field(() => ServerCategory, { nullable: true })
   category?: ServerCategory

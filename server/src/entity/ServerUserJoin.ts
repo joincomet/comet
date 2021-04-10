@@ -1,6 +1,7 @@
 import {
   Collection,
   Entity,
+  Enum,
   ManyToMany,
   ManyToOne,
   PrimaryKeyType,
@@ -9,6 +10,7 @@ import {
 import { Server, ServerRole, User } from '@/entity'
 import { ReorderUtils } from '@/util/ReorderUtils'
 import { Field } from 'type-graphql'
+import { NotificationSetting } from '@/types/NotificationSetting'
 
 @Entity()
 export class ServerUserJoin {
@@ -29,4 +31,8 @@ export class ServerUserJoin {
   @Field(() => [ServerRole])
   @ManyToMany(() => ServerRole)
   roles = new Collection<ServerRole>(this)
+
+  @Field(() => NotificationSetting)
+  @Enum({ items: () => NotificationSetting })
+  notificationSetting: NotificationSetting = NotificationSetting.Mentions
 }

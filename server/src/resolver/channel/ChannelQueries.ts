@@ -1,10 +1,17 @@
 import { Arg, Ctx, ID, Query, Resolver } from 'type-graphql'
-import { Channel, ChannelRole, Server, ServerUserJoin } from '@/entity'
+import {
+  Channel,
+  ChannelRole,
+  Server,
+  ServerRole,
+  ServerUserJoin
+} from '@/entity'
 import { CheckJoinedChannelServer } from '@/util/auth/middlewares/CheckJoinedChannelServer'
 import { GetChannelPermissionsResponse } from '@/resolver/user'
-import { ChannelPermission, Context } from '@/types'
+import { ChannelPermission, Context, ServerPermission } from '@/types'
 import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 import { QueryOrder } from '@mikro-orm/core'
+import { ChannelUser } from '@/entity/ChannelUser'
 
 @Resolver(() => Channel)
 export class ChannelQueries {
@@ -47,17 +54,5 @@ export class ChannelQueries {
       allowedPermissions: [...allowedPermissions],
       deniedPermissions: [...deniedPermissions]
     } as GetChannelPermissionsResponse
-  }
-
-  @CheckJoinedServer()
-  @Query(() => [Channel])
-  async getServerChannels(
-    @Ctx() { em }: Context,
-    @Arg('serverId', () => ID) serverId: string
-  ): Promise<Channel[]> {
-    const server = await em.findOneOrFail(Server, serverId)
-    return server.channels.matching({
-      orderBy: { position: QueryOrder.DESC }
-    })
   }
 }

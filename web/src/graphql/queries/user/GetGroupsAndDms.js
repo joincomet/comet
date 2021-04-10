@@ -17,6 +17,7 @@ export const GET_GROUPS_AND_DMS = gql`
       ... on User {
         __typename
         ...USER_FRAGMENT
+        unreadCount
       }
     }
   }

@@ -56,7 +56,14 @@ export class MessageSubscriptions {
   async messageSent(
     @Ctx() { em, user }: Context,
     @Root()
-    { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
+    {
+      messageId,
+      fromUserId,
+      toUserId,
+      groupId,
+      channelId,
+      serverId
+    }: MessageSentPayload
   ): Promise<MessageSentResponse> {
     const userId = toUserId
       ? toUserId === user.id
@@ -67,6 +74,7 @@ export class MessageSubscriptions {
       userId,
       groupId,
       channelId,
+      serverId,
       message: await em.findOneOrFail(Message, messageId, ['author'])
     } as MessageSentResponse
   }

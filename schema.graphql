@@ -13,7 +13,6 @@ type Channel implements BaseEntity {
   description: String
   id: ID!
   isUnread: Boolean!
-  lastMessageAt: DateTime
   mentionCount: Int!
   name: String
   server: Server!
@@ -141,6 +140,7 @@ type Group implements BaseEntity {
   id: ID!
   name: String!
   owner: User!
+  unreadCount: Int!
   users: [User!]!
 }
 
@@ -186,6 +186,7 @@ type Message implements BaseEntity {
   isPinned: Boolean!
   linkMetadatas: [LinkMetadata!]!
   text: String
+  type: MessageType!
 }
 
 type MessageRemovedResponse {
@@ -199,7 +200,13 @@ type MessageSentResponse {
   channelId: ID
   groupId: ID
   message: Message!
+  serverId: ID
   userId: ID
+}
+
+enum MessageType {
+  Join
+  Normal
 }
 
 type Mutation {
@@ -282,7 +289,7 @@ type Mutation {
   createPost(images: [Upload!], linkUrl: String, serverId: ID!, text: String, title: String!): Post!
 
   """Create a server"""
-  createServer(avatarFile: Upload, category: ServerCategory, name: String!, searchable: Boolean = false): Server!
+  createServer(avatarFile: Upload, category: ServerCategory, isPublic: Boolean = false, name: String!): Server!
 
   """Delete a comment"""
   deleteComment(commentId: ID!): Boolean!
@@ -416,6 +423,9 @@ type Mutation {
 
   """Update user properties"""
   updateUser(avatarFile: Upload, email: String, name: String): User!
+  viewChannel(channelId: ID!): Channel!
+  viewDm(userId: ID!): User!
+  viewGroup(groupId: ID!): Group!
 
   """Add vote to a comment"""
   voteComment(
@@ -528,7 +538,6 @@ type Query {
     time: GetPostsTime = All
   ): [GetPostsResponse!]!
   getPublicServers(category: ServerCategory, sort: GetPublicServersSort = Top): [Server!]!
-  getServerChannels(serverId: ID!): [Channel!]!
   getServerFolders(serverId: ID!): [Folder!]!
   getServerPermissions(serverId: ID!): [ServerPermission!]!
 
@@ -543,6 +552,7 @@ type Server implements BaseEntity {
   avatarUrl: String
   bannerUrl: String
   category: ServerCategory!
+  channels: [Channel!]!
   createdAt: DateTime!
   description: String
   id: ID!
@@ -647,5 +657,6 @@ type User implements BaseEntity {
   lastLoginAt: DateTime
   name: String!
   tag: String!
+  unreadCount: Int!
   username: String!
 }

@@ -1,4 +1,4 @@
-import { Authorized, Field, ObjectType, Publisher } from 'type-graphql'
+import { Authorized, Field, Int, ObjectType, Publisher } from 'type-graphql'
 import {
   Collection,
   Entity,
@@ -15,6 +15,7 @@ import {
   ChannelRole,
   FriendData,
   Group,
+  Message,
   Server,
   ServerUserBan,
   ServerUserJoin,
@@ -97,6 +98,9 @@ export class User extends BaseEntity {
   @Property({ nullable: true })
   purchasedPremiumAt?: Date
 
+  @Field(() => Int)
+  unreadCount: number = 0
+
   @Field()
   get isPremium(): boolean {
     if (!this.purchasedPremiumAt) return false
@@ -167,6 +171,16 @@ export class User extends BaseEntity {
     if (serverJoin) throw new Error('error.server.alreadyJoined')
     serverJoin = em.create(ServerUserJoin, { server, user: this })
     server.userCount++
+
+    await em.populate(server, 'systemMessagesChannel')
+    if (server.systemMessagesChannel) {
+      const joinMessage = em.create(Message, {
+        channel: server.systemMessagesChannel,
+        author: this
+      })
+      em.persist(joinMessage)
+    }
+
     await em.persistAndFlush([server, serverJoin])
     await refetchUsers(this.id)
   }

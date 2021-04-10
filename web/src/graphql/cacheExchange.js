@@ -1,6 +1,6 @@
 import {
+  CHANNEL_FRAGMENT,
   COMMENT_FRAGMENT,
-  FOLDER_FRAGMENT,
   POST_FRAGMENT
 } from '@/graphql/fragments'
 import {
@@ -8,10 +8,7 @@ import {
   GET_CURRENT_USER,
   GET_JOINED_SERVERS,
   GET_MESSAGES,
-  GET_POSTS,
-  GET_SERVER_CHANNELS,
-  GET_SERVER_FOLDERS,
-  GET_USER_FOLDERS
+  GET_POSTS
 } from '@/graphql/queries'
 import { cacheExchange as ce } from '@urql/exchange-graphcache'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
@@ -199,14 +196,13 @@ export const cacheExchange = ce({
       createChannel({ createChannel: channel }, { serverId }, cache) {
         cache.updateQuery(
           {
-            query: GET_SERVER_CHANNELS,
-            variables: {
-              serverId
-            }
+            query: GET_JOINED_SERVERS
           },
           data => {
             if (data) {
-              data.getServerChannels.unshift(channel)
+              data.getJoinedServers
+                .find(s => s.id === serverId)
+                .channels.unshift(channel)
               return data
             } else {
               return null
@@ -237,14 +233,29 @@ export const cacheExchange = ce({
         cache
       ) {
         let variables
-        if (userId) variables = { userId }
-        if (groupId) variables = { groupId }
-        if (channelId) variables = { channelId }
+        if (userId) {
+          variables = { userId }
+        }
+        if (groupId) {
+          variables = { groupId }
+        }
+        if (channelId) {
+          variables = { channelId }
+          const channel = cache.readFragment(CHANNEL_FRAGMENT, {
+            id: channelId
+          })
+          cache.writeFragment(CHANNEL_FRAGMENT, {
+            ...channel,
+            isUnread: true
+          })
+        }
 
         const fields = cache
           .inspectFields('Query')
           .filter(field => field.fieldName === 'getMessages')
+        if (!fields?.length) return
         const field = fields[fields.length - 1]
+
         cache.updateQuery(
           {
             query: GET_MESSAGES,

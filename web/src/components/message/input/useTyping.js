@@ -43,7 +43,7 @@ export const useTyping = ({ channel, group, user }) => {
       .filter(u => u !== currentUser.username)
       .map(
         u =>
-          `<span style="font-weight: 700">
+          `<span style="font-weight: 600" class="text-primary">
           ${u.split('#')[0]}&nbsp;
         </span>`
       )

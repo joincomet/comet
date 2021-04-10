@@ -41,7 +41,7 @@ export default function ContextMenu({
         <UserContextMenu
           user={data?.user}
           server={data?.server}
-          showCloseDm={data?.showCloseDm}
+          isDm={data?.isDm}
           ContextMenuItem={ContextMenuItem}
         />
       )}

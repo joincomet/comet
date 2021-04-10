@@ -9,7 +9,6 @@ import {
 } from '@/graphql/mutations'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import ContextMenuDivider from '@/components/ui/context/ContextMenuDivider'
 import { KICK_USER_FROM_SERVER } from '@/graphql/mutations/server/KickUserFromServer'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useCurrentUser } from '@/providers/UserProvider'
@@ -18,11 +17,12 @@ import { useUserRelationships } from '@/providers/DataProvider'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useStore } from '@/hooks/useStore'
 import { useHistory } from 'react-router-dom'
+import { VIEW_DM } from '@/graphql/mutations/dm/ViewDm'
 
 export default function UserContextMenu({
   user,
   server,
-  showCloseDm,
+  isDm,
   ContextMenuItem
 }) {
   const { t } = useTranslation()
@@ -43,7 +43,8 @@ export default function UserContextMenu({
     ]
   })
 
-  const [_, hideDm] = useMutation(HIDE_DM)
+  const [_hideRes, hideDm] = useMutation(HIDE_DM)
+  const [_viewRes, viewDm] = useMutation(VIEW_DM)
   const [_banRes, banUser] = useMutation(BAN_USER_FROM_SERVER)
   const [_kickRes, kickUser] = useMutation(KICK_USER_FROM_SERVER)
   const [_blockRes, blockUser] = useMutation(BLOCK_USER)
@@ -75,13 +76,24 @@ export default function UserContextMenu({
           onClick={() => push(`/me/dm/${user.id}`)}
           label={t('user.context.sendMessage')}
         />
-        {showCloseDm && (
-          <ContextMenuItem
-            label={t('user.context.closeDm')}
-            onClick={() => {
-              hideDm({ userId: user.id })
-            }}
-          />
+        {isDm && (
+          <>
+            {!!user.unreadCount && (
+              <ContextMenuItem
+                label={t('user.context.markRead')}
+                onClick={() => {
+                  viewDm({ userId: user.id })
+                }}
+              />
+            )}
+
+            <ContextMenuItem
+              label={t('user.context.closeDm')}
+              onClick={() => {
+                hideDm({ userId: user.id })
+              }}
+            />
+          </>
         )}
         {user.id !== currentUser.id ? (
           <>

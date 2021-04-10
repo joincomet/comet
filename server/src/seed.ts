@@ -18,6 +18,7 @@ import faker from 'faker'
 import { FriendStatus } from '@/resolver/user'
 import { ServerCategory } from '@/resolver/server'
 import { FolderVisibility } from '@/resolver/folder'
+import { NotificationSetting } from '@/types/NotificationSetting'
 
 const NUM_USERS = 100
 const MAX_MESSAGES_PER_USER = 3
@@ -93,6 +94,8 @@ export const seed = async (em: EntityManager) => {
     server: serverComet
   })
 
+  serverComet.systemMessagesChannel = channelGeneral
+
   entities.push(
     userAdmin,
     userDan,
@@ -101,9 +104,21 @@ export const seed = async (em: EntityManager) => {
     channelGeneral,
     ...createUserFolders(userDan),
     ...createUserFolders(userMichael),
-    em.create(ServerUserJoin, { user: userAdmin, server: serverComet }),
-    em.create(ServerUserJoin, { user: userDan, server: serverComet }),
-    em.create(ServerUserJoin, { user: userMichael, server: serverComet }),
+    em.create(ServerUserJoin, {
+      user: userAdmin,
+      server: serverComet,
+      notificationSetting: NotificationSetting.All
+    }),
+    em.create(ServerUserJoin, {
+      user: userDan,
+      server: serverComet,
+      notificationSetting: NotificationSetting.All
+    }),
+    em.create(ServerUserJoin, {
+      user: userMichael,
+      server: serverComet,
+      notificationSetting: NotificationSetting.All
+    }),
     em.create(ServerFolder, {
       server: serverComet,
       folder: createFolder(

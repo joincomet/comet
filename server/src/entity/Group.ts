@@ -1,5 +1,5 @@
 import { BaseEntity, Message, User } from '@/entity'
-import { Field, ObjectType } from 'type-graphql'
+import { Field, Int, ObjectType } from 'type-graphql'
 import {
   Collection,
   Entity,
@@ -44,4 +44,7 @@ export class Group extends BaseEntity {
         .join(', ')
     return this.id
   }
+
+  @Field(() => Int)
+  unreadCount: number = 0
 }

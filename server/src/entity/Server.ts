@@ -14,6 +14,7 @@ import {
   Enum,
   ManyToOne,
   OneToMany,
+  OneToOne,
   Property,
   QueryOrder
 } from '@mikro-orm/core'
@@ -79,10 +80,14 @@ export class Server extends BaseEntity {
   @Property()
   isBanned: boolean = false
 
+  @Field(() => [Channel])
   @OneToMany(() => Channel, 'server', {
     orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
   })
   channels = new Collection<Channel>(this)
+
+  @OneToOne(() => Channel, undefined, { nullable: true })
+  systemMessagesChannel?: Channel
 
   @Field()
   @Property()

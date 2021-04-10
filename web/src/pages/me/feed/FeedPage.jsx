@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import UserFoldersSidebar from '@/pages/me/feed/UserFoldersSidebar'
 import PostsHeader from '@/components/post/PostsHeader'
 import { useStore } from '@/hooks/useStore'
@@ -19,6 +19,18 @@ export default function FeedPage() {
     if (ref && ref.current) ref.current.refresh()
   }
   useSetHomePage(`feed`)
+
+  useEffect(() => {
+    if (Notification.permission === 'default') {
+      Notification.requestPermission().then(function (permission) {
+        // If the user accepts, let's create a notification
+        if (permission === 'granted') {
+          new Notification('Notifications enabled!')
+        }
+      })
+    }
+  })
+
   return (
     <>
       <Helmet>

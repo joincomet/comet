@@ -18,7 +18,8 @@ export const user = {
     accept: 'Accept',
     revoke: 'Revoke Friend Request',
     sendFriendRequest: 'Send Friend Request',
-    blockingYou: 'Blocking You'
+    blockingYou: 'Blocking You',
+    markRead: 'Mark as Read'
   },
   profile: {
     sentFriendRequest: 'Request Sent',

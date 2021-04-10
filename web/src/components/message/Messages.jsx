@@ -8,10 +8,17 @@ import MessageInput from '@/components/message/input/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import MessagesStart from '@/components/message/MessagesStart'
 import { usePrevious } from 'react-use'
+import { useMutation } from 'urql'
+import { VIEW_DM } from '@/graphql/mutations/dm/ViewDm'
+import { VIEW_CHANNEL, VIEW_GROUP } from '@/graphql/mutations'
 
 const PREPEND_OFFSET = 10 ** 7
 
 export default function Messages({ channel, user, group }) {
+  const [_viewDmRes, viewDm] = useMutation(VIEW_DM)
+  const [_viewGroupRes, viewGroup] = useMutation(VIEW_GROUP)
+  const [_viewChannelRes, viewChannel] = useMutation(VIEW_CHANNEL)
+
   const virtuoso = useRef(null)
 
   const [messages, fetching, fetchMore, hasMore] = useMessages({
@@ -25,6 +32,10 @@ export default function Messages({ channel, user, group }) {
   useEffect(() => {
     setLength(messages?.length || 0)
     if (prevLength === 0) virtuoso.current.scrollBy({ top: PREPEND_OFFSET })
+
+    if (channel) viewChannel({ channelId: channel.id })
+    if (group) viewGroup({ groupId: group.id })
+    if (user) viewDm({ userId: user.id })
   }, [messages?.length])
 
   const {

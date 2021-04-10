@@ -5,6 +5,8 @@ import { GetMessagesArgs, GetMessagesResponse } from '@/resolver/message'
 import { Context, SubscriptionTopic } from '@/types'
 import { ChannelPermission } from '@/types/ChannelPermission'
 import { CheckChannelPermission, CheckGroupMember } from '@/util'
+import { ChannelUser } from '@/entity/ChannelUser'
+import { GroupUser } from '@/entity/GroupUser'
 
 @Resolver(() => Message)
 export class MessageQueries {

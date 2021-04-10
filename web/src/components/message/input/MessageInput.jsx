@@ -10,7 +10,6 @@ import MessageUploadDialog from '@/components/message/input/MessageUploadDialog'
 import { useTyping } from '@/components/message/input/useTyping'
 import { useMessagePlaceholder } from '@/components/message/input/useMessagePlaceholder'
 import { useMessageInput } from '@/components/message/input/useMessageInput'
-import Twemoji from 'react-twemoji'
 
 export default function MessageInput({ channel, group, user }) {
   const { t } = useTranslation()
@@ -125,37 +124,35 @@ export default function MessageInput({ channel, group, user }) {
             </div>
           )}
 
-          <Twemoji options={{ className: 'twemoji' }}>
-            <ContentEditable
-              ref={inputRef}
-              className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
-              html={text}
-              data-placeholder={`${t('message.message')} ${placeholder}`}
-              onChange={e => {
-                startTyping(variables)
-                setText(e.target.value)
-                if (text === '<br>') setText('')
-              }}
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  if (text && !e.shiftKey) {
-                    e.preventDefault()
-                    sendMessage({
-                      text,
-                      ...variables
-                    })
-                    setText('')
-                  } else if (!text) {
-                    e.preventDefault()
-                  }
+          <ContentEditable
+            ref={inputRef}
+            className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
+            html={text}
+            data-placeholder={`${t('message.message')} ${placeholder}`}
+            onChange={e => {
+              startTyping(variables)
+              setText(e.target.value)
+              if (text === '<br>') setText('')
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                if (text && !e.shiftKey) {
+                  e.preventDefault()
+                  sendMessage({
+                    text,
+                    ...variables
+                  })
+                  setText('')
+                } else if (!text) {
+                  e.preventDefault()
                 }
-              }}
-            />
-          </Twemoji>
+              }
+            }}
+          />
         </div>
 
         <div
-          className="h-6 flex items-center text-primoary text-xs"
+          className="h-6 flex items-center text-secondary text-xs"
           dangerouslySetInnerHTML={{ __html: typingNames }}
         />
       </div>

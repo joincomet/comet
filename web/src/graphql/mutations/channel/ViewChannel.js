@@ -1,9 +1,9 @@
 import { gql } from '@urql/core'
 import { CHANNEL_FRAGMENT } from '@/graphql/fragments'
 
-export const GET_SERVER_CHANNELS = gql`
-  query GetServerChannels($serverId: ID!) {
-    getServerChannels(serverId: $serverId) {
+export const VIEW_CHANNEL = gql`
+  mutation ViewChannel($channelId: ID!) {
+    viewChannel(channelId: $channelId) {
       ...CHANNEL_FRAGMENT
     }
   }

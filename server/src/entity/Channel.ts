@@ -33,9 +33,8 @@ export class Channel extends BaseEntity {
   @Property()
   isPrivate: boolean = false
 
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  lastMessageAt?: Date
+  @Property()
+  lastMessageAt: Date = new Date()
 
   @Field()
   isUnread: boolean = false

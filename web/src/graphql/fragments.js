@@ -87,6 +87,7 @@ export const MESSAGE_FRAGMENT = gql`
     text
     createdAt
     editedAt
+    type
     image {
       originalUrl
       popupUrl
@@ -127,6 +128,8 @@ export const CHANNEL_FRAGMENT = gql`
     id
     name
     description
+    isUnread
+    mentionCount
   }
 `
 
@@ -136,5 +139,6 @@ export const GROUP_FRAGMENT = gql`
     name
     displayName
     avatarUrl
+    unreadCount
   }
 `
