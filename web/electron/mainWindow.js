@@ -57,9 +57,16 @@ module.exports = {
 
     mainWindow.on('resize', saveBoundsSoon)
     mainWindow.on('move', saveBoundsSoon)
-    mainWindow.on('close', () =>
+    mainWindow.on('close', event => {
       store.set('windowBounds', mainWindow.getNormalBounds())
-    )
+      event.preventDefault()
+      mainWindow.hide()
+      mainWindow.send('windowClosed')
+    })
+
+    mainWindow.on('restore', () => mainWindow.send('windowOpened'))
+    mainWindow.on('focus', () => mainWindow.send('windowOpened'))
+
     let saveBoundsCookie
 
     function saveBoundsSoon() {

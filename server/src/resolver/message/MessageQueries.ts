@@ -81,7 +81,7 @@ export class MessageQueries {
     return [
       {
         hasMore,
-        messages: hasMore ? messages.slice(0, messages.length - 1) : messages
+        messages: hasMore ? messages.slice(1, messages.length) : messages
       } as GetMessagesResponse
     ]
   }

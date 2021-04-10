@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('electron', {
   maximize: () => getCurrentWindow().maximize(),
   unmaximize: () => getCurrentWindow().unmaximize(),
   close: () => getCurrentWindow().close(),
+  show: () => getCurrentWindow().show(),
   restart: () => {
     app.relaunch()
     app.exit()

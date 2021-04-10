@@ -5,7 +5,7 @@ const { app } = require('electron')
 const { createWindow } = require('./mainWindow')
 
 module.exports = {
-  runUpdater: (mainWindow, loadingScreen) => {
+  runUpdater: mainWindow => {
     autoUpdater.logger = log
     autoUpdater.logger.transports.file.level = 'info'
     autoUpdater.autoDownload = false

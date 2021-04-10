@@ -11,12 +11,16 @@ import { useMutation } from 'urql'
 import { FolderVisibility } from '@/types/FolderVisibility'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { useUserFolders } from '@/providers/DataProvider'
+import { useCurrentUser } from '@/providers/UserProvider'
 
 export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const { t } = useTranslation()
-
+  const currentUser = useCurrentUser()
   const userFolders = useUserFolders()
-  const isFollowing = userFolders.map(f => f.id).includes(folder.id)
+  const isFollowing = userFolders
+    .filter(f => f.owner.id !== currentUser.id)
+    .map(f => f.id)
+    .includes(folder.id)
   const editable = folder.name !== 'Read Later' && folder.name !== 'Favorites'
   const [c, setC] = useState(false)
   const [_updateFolderRes, updateFolder] = useMutation(UPDATE_FOLDER)
@@ -33,16 +37,20 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
       <ContextMenuSection>
         <ContextMenuItem label={t('folder.context.copyLink')} />
 
-        {isFollowing ? (
-          <ContextMenuItem
-            label={t('folder.context.unfollow')}
-            onClick={() => unfollowFolder({ folderId: folder.id })}
-          />
-        ) : (
-          <ContextMenuItem
-            label={t('folder.context.follow')}
-            onClick={() => followFolder({ folderId: folder.id })}
-          />
+        {folder.owner.id !== currentUser.id && (
+          <>
+            {isFollowing ? (
+              <ContextMenuItem
+                label={t('folder.context.unfollow')}
+                onClick={() => unfollowFolder({ folderId: folder.id })}
+              />
+            ) : (
+              <ContextMenuItem
+                label={t('folder.context.follow')}
+                onClick={() => followFolder({ folderId: folder.id })}
+              />
+            )}
+          </>
         )}
 
         {editable && (

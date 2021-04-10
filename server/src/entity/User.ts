@@ -303,14 +303,12 @@ export class User extends BaseEntity {
         user: this,
         toUser
       })
-      em.persist(myData)
     }
     if (!theirData) {
       theirData = em.create(FriendData, {
         user: toUser,
         toUser: this
       })
-      em.persist(theirData)
     }
 
     return [myData, theirData]

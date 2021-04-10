@@ -11,6 +11,7 @@ import { usePrevious } from 'react-use'
 import { useMutation } from 'urql'
 import { VIEW_DM } from '@/graphql/mutations/dm/ViewDm'
 import { VIEW_CHANNEL, VIEW_GROUP } from '@/graphql/mutations'
+import { useLocation } from 'react-router-dom'
 
 const PREPEND_OFFSET = 10 ** 7
 
@@ -18,13 +19,18 @@ export default function Messages({ channel, user, group }) {
   const [_viewDmRes, viewDm] = useMutation(VIEW_DM)
   const [_viewGroupRes, viewGroup] = useMutation(VIEW_GROUP)
   const [_viewChannelRes, viewChannel] = useMutation(VIEW_CHANNEL)
+  const [initialTime, setInitialTime] = useState(() => new Date())
+
+  const { pathname } = useLocation()
+  useEffect(() => setInitialTime(new Date()), [pathname])
 
   const virtuoso = useRef(null)
 
   const [messages, fetching, fetchMore, hasMore] = useMessages({
     channel,
     user,
-    group
+    group,
+    initialTime
   })
 
   const [length, setLength] = useState(messages?.length || 0)

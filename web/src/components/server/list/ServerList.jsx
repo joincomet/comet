@@ -92,6 +92,9 @@ function ServerListServer({ server }) {
   const matched = matchPath(pathname, { path: '/server/:serverId' })
   const serverId = matched?.params?.serverId
   const serverPages = useStore(s => s.serverPages)
+
+  const unread = !!server.channels.find(c => c.isUnread)
+
   return (
     <ContextMenuTrigger data={{ type: ContextMenuType.Server, server }}>
       <ServerListItem
@@ -101,6 +104,7 @@ function ServerListServer({ server }) {
         name={server.name}
         ref={dragRef}
         active={serverId === server.id}
+        unread={unread}
       >
         <ServerAvatar
           server={server}

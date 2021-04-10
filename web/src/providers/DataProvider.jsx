@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import {
   GET_GROUPS_AND_DMS,
   GET_JOINED_SERVERS,
@@ -76,7 +76,15 @@ export function DataProvider({ children }) {
   const currentGroupId = matchedGroup?.params?.groupId
   const urqlClient = useClient()
 
-  useSubscription({ query: MESSAGE_SENT, pause }, (prev, res) => {
+  const [windowOpen, setWindowOpen] = useState(true)
+  useEffect(() => {
+    if (window.electron) {
+      window.electron.on('windowOpened', () => setWindowOpen(true))
+      window.electron.on('windowClosed', () => setWindowOpen(false))
+    }
+  }, [])
+
+  useSubscription({ query: MESSAGE_SENT, pause }, (messages = [], res) => {
     const data = res?.messageSent
     const message = data?.message
     const messageServerId = data?.serverId
@@ -88,14 +96,16 @@ export function DataProvider({ children }) {
       Notification.permission === 'granted' &&
       message.author.id !== currentUser.id
     ) {
+      console.log({ windowOpen })
       if (
-        (currentGroupId &&
+        (!window.electron || (window.electron && windowOpen)) &&
+        ((currentGroupId &&
           messageGroupId &&
           currentGroupId === messageGroupId) ||
-        (currentUserId && messageUserId && currentUserId === messageUserId) ||
-        (currentChannelId &&
-          messageChannelId &&
-          currentChannelId === messageChannelId)
+          (currentUserId && messageUserId && currentUserId === messageUserId) ||
+          (currentChannelId &&
+            messageChannelId &&
+            currentChannelId === messageChannelId))
       )
         return
 
@@ -125,10 +135,13 @@ export function DataProvider({ children }) {
         else if (messageGroupId) push(`/me/group/${messageGroupId}`)
         else if (messageChannelId && messageServerId)
           push(`/server/${messageServerId}/channel/${messageChannelId}`)
+        if (window.electron) window.electron.show()
       }
       const audio = new Audio(`${window.electron ? '.' : ''}/notification.mp3`)
       audio.volume = 0.5
       audio.play()
+
+      return [...messages, message]
     }
   })
   useSubscription({ query: MESSAGE_REMOVED, pause })

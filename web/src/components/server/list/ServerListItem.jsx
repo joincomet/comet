@@ -20,7 +20,7 @@ const dotClass = active =>
   cursor-pointer
 `)
 
-const highlightClass = active =>
+const highlightClass = (active, unread) =>
   ctl(`
   absolute
   left-0
@@ -33,7 +33,13 @@ const highlightClass = active =>
   transition
   duration-250
   group-hover:-translate-x-3
-  ${active ? '-translate-x-3 h-10' : '-translate-x-4 h-5'}
+  ${
+    active
+      ? '-translate-x-3 h-10'
+      : unread
+      ? '-translate-x-3 h-2.5 group-hover:h-5'
+      : '-translate-x-4 h-5'
+  }
 `)
 
 export default forwardRef(
@@ -44,7 +50,8 @@ export default forwardRef(
       to,
       onClick,
       className = 'dark:bg-gray-800 bg-gray-200',
-      active = false
+      active = false,
+      unread = false
     },
     ref
   ) => {
@@ -52,12 +59,12 @@ export default forwardRef(
       <Tippy content={name} placement="right" ref={ref} offset={[0, 22]}>
         {to ? (
           <NavLink to={to} className={`${dotClass(active)} ${className}`}>
-            <div className={highlightClass(active)} />
+            <div className={highlightClass(active, unread)} />
             {children}
           </NavLink>
         ) : (
           <div onClick={onClick} className={`${dotClass(active)} ${className}`}>
-            <div className={highlightClass(active)} />
+            <div className={highlightClass(active, unread)} />
             {children}
           </div>
         )}
