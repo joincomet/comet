@@ -87,26 +87,30 @@ app.whenReady().then(() => {
     autoUpdater.on('update-not-available', info => {
       log.info('Update not available.')
       log.info(info)
-      mainWindow = createWindow()
-      mainWindow.webContents.on('did-finish-load', () => {
-        if (loadingScreen) {
-          loadingScreen.hide()
-        }
-        mainWindow.show()
-        mainWindow.send('windowOpened')
-      })
+      if (!mainWindow) {
+        mainWindow = createWindow()
+        mainWindow.webContents.on('did-finish-load', () => {
+          if (loadingScreen) {
+            loadingScreen.hide()
+          }
+          mainWindow.show()
+          mainWindow.send('windowOpened')
+        })
+      }
     })
 
     autoUpdater.on('error', err => {
       log.error('Error in auto-updater. ' + err)
-      mainWindow = createWindow()
-      mainWindow.webContents.on('did-finish-load', () => {
-        if (loadingScreen) {
-          loadingScreen.hide()
-        }
-        mainWindow.show()
-        mainWindow.send('windowOpened')
-      })
+      if (!mainWindow) {
+        mainWindow = createWindow()
+        mainWindow.webContents.on('did-finish-load', () => {
+          if (loadingScreen) {
+            loadingScreen.hide()
+          }
+          mainWindow.show()
+          mainWindow.send('windowOpened')
+        })
+      }
     })
 
     autoUpdater.on('download-progress', progressObj => {
