@@ -8,7 +8,6 @@ const whiteList: any = {
   s: [],
   u: [],
   code: [],
-  h1: [],
   h2: [],
   h3: [],
   ul: [],
@@ -17,7 +16,8 @@ const whiteList: any = {
   blockquote: [],
   pre: [],
   hr: [],
-  br: []
+  br: [],
+  span: ['data-spoiler']
 }
 
 export const handleText = (text: string) =>

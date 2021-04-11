@@ -15,11 +15,7 @@ export {
   MessageQueries,
   MessageSubscriptions
 } from './message'
-export {
-  NotificationSubscriptions,
-  NotificationQueries,
-  NotificationMutations
-} from './notification'
+export { ReplySubscriptions, ReplyQueries, ReplyMutations } from './reply'
 export { PostQueries, PostMutations, PostSubscriptions } from './post'
 export { ServerSubscriptions, ServerQueries, ServerMutations } from './server'
 export { UserQueries, UserMutations, UserSubscriptions } from './user'

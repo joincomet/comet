@@ -13,6 +13,7 @@ import {
   BaseEntity,
   Channel,
   ChannelRole,
+  Folder,
   FriendData,
   Group,
   Message,
@@ -24,6 +25,8 @@ import {
 import { EntityManager } from '@mikro-orm/postgresql'
 import { ChannelPermission, ServerPermission } from '@/types'
 import { CustomError } from '@/types/CustomError'
+import { FolderVisibility } from '@/resolver/folder'
+import { FriendStatus } from '@/resolver/user'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -110,47 +113,47 @@ export class User extends BaseEntity {
 
   async isBannedFromServer(
     em: EntityManager,
-    server: Server
+    serverId: string
   ): Promise<boolean> {
-    return Boolean(await em.count(ServerUserBan, { server, user: this }))
+    return !!(await em.count(ServerUserBan, { server: serverId, user: this }))
   }
 
-  async hasJoinedServer(em: EntityManager, server: Server): Promise<boolean> {
-    return Boolean(await em.count(ServerUserJoin, { server, user: this }))
+  async hasJoinedServer(em: EntityManager, serverId: string): Promise<boolean> {
+    return !!(await em.count(ServerUserJoin, { server: serverId, user: this }))
   }
 
-  async checkJoinedServer(em: EntityManager, server: Server) {
-    if (!(await this.hasJoinedServer(em, server)))
+  async checkJoinedServer(em: EntityManager, serverId: string) {
+    if (!(await this.hasJoinedServer(em, serverId)))
       throw new Error('error.server.notJoined')
   }
 
-  async checkBannedFromServer(em: EntityManager, server: Server) {
-    if (await this.isBannedFromServer(em, server))
+  async checkBannedFromServer(em: EntityManager, serverId: string) {
+    if (await this.isBannedFromServer(em, serverId))
       throw new Error('error.server.banned')
   }
 
   async banFromServer(
     em: EntityManager,
     refetchUsers: Publisher<string>,
-    server: Server,
+    serverId: string,
     reason?: string,
     bannedBy?: User
   ) {
     const ban = em.create(ServerUserBan, {
       user: this,
-      server,
+      server: serverId,
       reason,
       bannedBy
     })
-    await this.leaveServer(em, refetchUsers, server)
+    await this.leaveServer(em, refetchUsers, serverId)
     await em.persistAndFlush(ban)
     await refetchUsers(this.id)
   }
 
-  async unbanFromServer(em: EntityManager, server: Server) {
+  async unbanFromServer(em: EntityManager, serverId: string) {
     const ban = await em.findOneOrFail(ServerUserBan, {
       user: this,
-      server
+      server: serverId
     })
     await em.remove(ban).flush()
   }
@@ -158,11 +161,15 @@ export class User extends BaseEntity {
   async joinServer(
     em: EntityManager,
     refetchUsers: Publisher<string>,
-    server: Server
+    serverId: string
   ) {
-    await this.checkBannedFromServer(em, server)
+    await this.checkBannedFromServer(em, serverId)
     if ((await em.count(ServerUserJoin, { user: this })) >= 100)
       throw new Error('error.server.joinLimit')
+
+    const server = await em.findOneOrFail(Server, serverId, [
+      'systemMessagesChannel'
+    ])
 
     let serverJoin = await em.findOne(ServerUserJoin, {
       server,
@@ -172,7 +179,6 @@ export class User extends BaseEntity {
     serverJoin = em.create(ServerUserJoin, { server, user: this })
     server.userCount++
 
-    await em.populate(server, 'systemMessagesChannel')
     if (server.systemMessagesChannel) {
       const joinMessage = em.create(Message, {
         channel: server.systemMessagesChannel,
@@ -188,8 +194,10 @@ export class User extends BaseEntity {
   async leaveServer(
     em: EntityManager,
     refetchUsers: Publisher<string>,
-    server: Server
+    serverId: string
   ) {
+    const server = await em.findOneOrFail(Server, serverId, ['owner'])
+    if (server.owner === this) throw new Error('error.server.owner')
     const join = await em.findOneOrFail(ServerUserJoin, { server, user: this })
     server.userCount--
     await em.remove(join).persistAndFlush([server, join])
@@ -198,11 +206,11 @@ export class User extends BaseEntity {
 
   async hasServerPermission(
     em: EntityManager,
-    server: Server,
+    serverId: string,
     permission: ServerPermission
   ): Promise<boolean> {
     if (this.isAdmin) return true
-    await em.populate(server, ['owner'])
+    const server = await em.findOneOrFail(Server, serverId, ['owner'])
     if (server.owner === this) return true
     const join = await em.findOne(ServerUserJoin, { server, user: this }, [
       'roles'
@@ -214,22 +222,22 @@ export class User extends BaseEntity {
 
   async checkServerPermission(
     em: EntityManager,
-    server: Server,
+    serverId: string,
     permission: ServerPermission
   ) {
-    await this.checkJoinedServer(em, server)
-    if (!(await this.hasServerPermission(em, server, permission)))
+    await this.checkJoinedServer(em, serverId)
+    if (!(await this.hasServerPermission(em, serverId, permission)))
       throw new CustomError('error.server.missingPermission', permission)
   }
 
   async hasChannelPermission(
     em: EntityManager,
-    channel: Channel,
+    channelId: string,
     channelPermission: ChannelPermission,
     serverPermission: ServerPermission = null
   ): Promise<boolean> {
     if (this.isAdmin) return true
-    await em.populate(channel, ['server.owner'])
+    const channel = await em.findOneOrFail(Channel, ['server.owner'])
     if (channel.server.owner === this) return true
     const join = await em.findOne(
       ServerUserJoin,
@@ -261,15 +269,15 @@ export class User extends BaseEntity {
 
   async checkChannelPermission(
     em: EntityManager,
-    channel: Channel,
+    channelId: string,
     channelPermission: ChannelPermission,
     serverPermission: ServerPermission | null
   ) {
-    await em.populate(channel, ['server'])
-    await this.checkJoinedServer(em, channel.server)
+    const channel = await em.findOneOrFail(Channel, channelId, ['server'])
+    await this.checkJoinedServer(em, channel.server.id)
     const hasChannelPermission = await this.hasChannelPermission(
       em,
-      channel,
+      channelId,
       channelPermission,
       serverPermission
     )
@@ -280,13 +288,13 @@ export class User extends BaseEntity {
       )
   }
 
-  async isInGroup(em: EntityManager, group: Group) {
-    await em.populate(group, ['users'])
+  async isInGroup(em: EntityManager, groupId: string) {
+    const group = await em.findOneOrFail(Group, groupId, ['users'])
     return group.users.contains(this)
   }
 
-  async checkInGroup(em: EntityManager, group: Group) {
-    if (!(await this.isInGroup(em, group)))
+  async checkInGroup(em: EntityManager, groupId: string) {
+    if (!(await this.isInGroup(em, groupId)))
       throw new Error('error.group.notJoined')
   }
 
@@ -312,5 +320,33 @@ export class User extends BaseEntity {
     }
 
     return [myData, theirData]
+  }
+
+  async checkCanModifyFolder(em: EntityManager, folder: Folder) {
+    if (folder.owner) {
+      if (folder.owner !== this && !folder.isCollaborative)
+        throw new Error('error.folder.notCollaborative')
+      if (
+        folder.visibility === FolderVisibility.Private &&
+        folder.owner !== this
+      )
+        throw new Error('error.folder.private')
+      if (folder.visibility === FolderVisibility.Friends) {
+        const friends = (
+          await em.find(FriendData, {
+            user: this,
+            status: FriendStatus.Friends
+          })
+        ).map(f => f.toUser)
+        if (!friends.includes(folder.owner))
+          throw new Error('error.folder.notFriends')
+      }
+    } else {
+      await this.checkServerPermission(
+        em,
+        folder.serverFolder.server.id,
+        ServerPermission.AddPostToFolder
+      )
+    }
   }
 }

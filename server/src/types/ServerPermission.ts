@@ -1,6 +1,7 @@
 import { registerEnumType } from 'type-graphql'
 
 export enum ServerPermission {
+  ViewChannels = 'ViewChannels',
   ManageChannels = 'ManageChannels',
   Mention = 'Mention',
 

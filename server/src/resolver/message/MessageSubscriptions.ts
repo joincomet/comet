@@ -1,55 +1,23 @@
+import { Authorized, Ctx, ID, Resolver, Root, Subscription } from 'type-graphql'
+import { Message, User } from '@/entity'
+import { Context, SubscriptionTopic } from '@/types'
+import { MessageResponse } from '@/resolver/message/subscriptions/MessageResponse'
+import { canViewMessageFilter } from '@/resolver/message/subscriptions/canViewMessageFilter'
+import { typingFilter } from '@/resolver/message/subscriptions/typingFilter'
+import { currentUserFilter } from '@/util/currentUserFilter'
 import {
-  Args,
-  Authorized,
-  Ctx,
-  Resolver,
-  Root,
-  Subscription
-} from 'type-graphql'
-import { Channel, Group, Message } from '@/entity'
-import {
-  ChannelPermission,
-  Context,
-  SubscriptionFilter,
-  SubscriptionTopic
-} from '@/types'
-import {
-  MessageRemovedResponse,
-  MessageSentPayload
-} from '@/resolver/message/types'
-import { MessageSentResponse } from '@/resolver/message/types/MessageSentResponse'
-import { TypingPayload } from '@/resolver/message/types/TypingPayload'
-import { TypingArgs } from '@/resolver/message/types/TypingArgs'
-
-const filter = async ({
-  payload: { messageId },
-  context: { user, em }
-}: SubscriptionFilter<MessageSentPayload>) => {
-  const message = await em.findOneOrFail(Message, messageId, [
-    'channel.server',
-    'group.users',
-    'toUser',
-    'author'
-  ])
-
-  if (message.channel) {
-    return user.hasChannelPermission(
-      em,
-      message.channel,
-      ChannelPermission.ViewChannel
-    )
-  } else if (message.group) return message.group.users.contains(user)
-  else if (message.toUser)
-    return message.toUser === user || message.author === user
-  else return false
-}
+  DmPayload,
+  MessageDeletedResponse,
+  MessagePayload
+} from '@/resolver/message/subscriptions'
+import { TypingPayload } from '@/resolver/message/mutations'
 
 @Resolver()
 export class MessageSubscriptions {
   @Authorized()
-  @Subscription(() => MessageSentResponse, {
+  @Subscription(() => MessageResponse, {
     topics: SubscriptionTopic.MessageSent,
-    filter,
+    filter: canViewMessageFilter,
     description:
       'Published to all users with permission to view message when a message is sent'
   })
@@ -63,8 +31,8 @@ export class MessageSubscriptions {
       groupId,
       channelId,
       serverId
-    }: MessageSentPayload
-  ): Promise<MessageSentResponse> {
+    }: MessagePayload
+  ): Promise<MessageResponse> {
     const userId = toUserId
       ? toUserId === user.id
         ? fromUserId
@@ -76,21 +44,21 @@ export class MessageSubscriptions {
       channelId,
       serverId,
       message: await em.findOneOrFail(Message, messageId, ['author'])
-    } as MessageSentResponse
+    }
   }
 
   @Authorized()
-  @Subscription(() => MessageSentResponse, {
+  @Subscription(() => MessageResponse, {
     topics: SubscriptionTopic.MessageUpdated,
-    filter,
+    filter: canViewMessageFilter,
     description:
       'Published to all users with permission to view message when a message is updated (edited or embeds fetched)'
   })
   async messageUpdated(
     @Ctx() { em, user }: Context,
     @Root()
-    { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
-  ): Promise<MessageSentResponse> {
+    { messageId, fromUserId, toUserId, groupId, channelId }: MessagePayload
+  ): Promise<MessageResponse> {
     const userId = toUserId
       ? toUserId === user.id
         ? fromUserId
@@ -101,21 +69,21 @@ export class MessageSubscriptions {
       groupId,
       channelId,
       message: await em.findOneOrFail(Message, messageId, ['author'])
-    } as MessageSentResponse
+    } as MessageResponse
   }
 
   @Authorized()
-  @Subscription(() => MessageRemovedResponse, {
-    topics: SubscriptionTopic.MessageRemoved,
-    filter,
+  @Subscription(() => MessageDeletedResponse, {
+    topics: SubscriptionTopic.MessageDeleted,
+    filter: canViewMessageFilter,
     description:
       'Published to all users with permission to view message when a message is deleted or removed'
   })
-  messageRemoved(
-    @Ctx() { em, user }: Context,
+  messageDeleted(
+    @Ctx() { user }: Context,
     @Root()
-    { messageId, fromUserId, toUserId, groupId, channelId }: MessageSentPayload
-  ): MessageRemovedResponse {
+    { messageId, fromUserId, toUserId, groupId, channelId }: MessagePayload
+  ): MessageDeletedResponse {
     const userId = toUserId
       ? toUserId === user.id
         ? fromUserId
@@ -126,44 +94,53 @@ export class MessageSubscriptions {
       groupId,
       channelId,
       messageId
-    } as MessageRemovedResponse
+    }
   }
 
   @Authorized()
   @Subscription(() => String, {
     topics: SubscriptionTopic.Typing,
-    filter: async ({
-      payload: {
-        channelId: typingChannelId,
-        groupId: typingGroupId,
-        userId: typingUserId
-      },
-      context: { user, em },
-      args: { channelId, groupId, userId }
-    }: SubscriptionFilter<TypingPayload>) => {
-      if (typingChannelId && channelId === typingChannelId) {
-        const channel = await em.findOneOrFail(Channel, typingChannelId)
-        return user.hasChannelPermission(
-          em,
-          channel,
-          ChannelPermission.ViewChannel
-        )
-      } else if (typingGroupId && groupId === typingGroupId) {
-        const group = await em.findOneOrFail(Group, typingGroupId)
-        return group.users.contains(user)
-      } else
-        return (
-          typingUserId && (userId === typingUserId || user.id === typingUserId)
-        )
-    },
+    filter: typingFilter,
     description:
       'Published to all users looking at messages when a user starts typing'
   })
   userStartedTyping(
     @Root()
-    { username }: TypingPayload,
-    @Args() { channelId, groupId, userId }: TypingArgs
+    { username }: TypingPayload
   ): string {
     return username
+  }
+
+  @Authorized()
+  @Subscription(() => User, {
+    topics: SubscriptionTopic.DmRead,
+    filter: currentUserFilter
+  })
+  async dmRead(
+    @Ctx() { em }: Context,
+    @Root() { toUserId }: DmPayload
+  ): Promise<User> {
+    return em.findOneOrFail(User, toUserId)
+  }
+
+  @Authorized()
+  @Subscription(() => User, {
+    topics: SubscriptionTopic.DmOpened,
+    filter: currentUserFilter
+  })
+  async dmOpened(
+    @Ctx() { em }: Context,
+    @Root() { toUserId }: DmPayload
+  ): Promise<User> {
+    return em.findOneOrFail(User, toUserId)
+  }
+
+  @Authorized()
+  @Subscription(() => ID, {
+    topics: SubscriptionTopic.DmClosed,
+    filter: currentUserFilter
+  })
+  dmClosed(@Root() { toUserId }: DmPayload): string {
+    return toUserId
   }
 }

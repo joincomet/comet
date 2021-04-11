@@ -3,13 +3,4 @@ import { Server } from '@/entity'
 import { SubscriptionTopic } from '@/types'
 
 @Resolver(() => Server)
-export class ServerSubscriptions {
-  @Authorized()
-  @Subscription(() => Boolean, {
-    topics: SubscriptionTopic.RefetchJoinedServers,
-    filter: ({ payload: userId, context: { user } }) => userId === user.id
-  })
-  refetchJoinedServers(): boolean {
-    return true
-  }
-}
+export class ServerSubscriptions {}

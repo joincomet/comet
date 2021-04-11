@@ -1,14 +1,6 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { BaseEntity, Post, Server, ServerFolder, User } from '@/entity'
-import {
-  Collection,
-  Entity,
-  Enum,
-  ManyToMany,
-  ManyToOne,
-  OneToOne,
-  Property
-} from '@mikro-orm/core'
+import { BaseEntity, Server, ServerFolder, User } from '@/entity'
+import { Entity, Enum, ManyToOne, OneToOne, Property } from '@mikro-orm/core'
 import { FolderVisibility } from '@/resolver/folder'
 
 @ObjectType({ implements: BaseEntity })

@@ -1,42 +1,18 @@
 import { Args, Ctx, Query, Resolver } from 'type-graphql'
 import { Context } from '@/types'
-import { Comment, Post } from '@/entity'
-import { GetCommentsArgs, GetCommentsSort } from '@/resolver/comment'
-import { QueryOrder } from '@mikro-orm/core'
+import { Comment } from '@/entity'
 import { ServerPermission } from '@/types/ServerPermission'
 import { CheckPostServerPermission } from '@/util'
+import { getComments, GetCommentsArgs } from './queries/getComments'
 
 @Resolver(() => Comment)
 export class CommentQueries {
   @CheckPostServerPermission(ServerPermission.ViewComments)
   @Query(() => [Comment], { description: 'Get comments on a post' })
   async getComments(
-    @Args() { postId, sort }: GetCommentsArgs,
-    @Ctx() { em, user }: Context
+    @Ctx() ctx: Context,
+    @Args() args: GetCommentsArgs
   ): Promise<Comment[]> {
-    const post = await em.findOneOrFail(Post, postId)
-
-    const comments = await em.find(
-      Comment,
-      { post },
-      ['author', 'votes.user'],
-      sort === GetCommentsSort.Top
-        ? { voteCount: QueryOrder.DESC, createdAt: QueryOrder.DESC }
-        : { createdAt: QueryOrder.DESC }
-    )
-
-    comments.forEach(comment => {
-      comment.isVoted = comment.votes
-        .getItems()
-        .map(vote => vote.user)
-        .includes(user)
-
-      if (comment.isDeleted) {
-        comment.text = `<p>[deleted]</p>`
-        comment.author = null
-      }
-    })
-
-    return comments
+    return getComments(ctx, args)
   }
 }

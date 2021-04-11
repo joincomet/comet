@@ -1,12 +1,14 @@
 import { Args, Ctx, Publisher, PubSub, Query, Resolver } from 'type-graphql'
-import { Channel, Group, Message, User } from '@/entity'
-import { FilterQuery, QueryOrder } from '@mikro-orm/core'
-import { GetMessagesArgs, GetMessagesResponse } from '@/resolver/message'
+import { Message } from '@/entity'
 import { Context, SubscriptionTopic } from '@/types'
 import { ChannelPermission } from '@/types/ChannelPermission'
 import { CheckChannelPermission, CheckGroupMember } from '@/util'
-import { ChannelUser } from '@/entity/ChannelUser'
-import { GroupUser } from '@/entity/GroupUser'
+import {
+  GetMessagesArgs,
+  GetMessagesResponse
+} from '@/resolver/message/queries/getMessages'
+import { DmPayload } from '@/resolver/message/subscriptions/DmPayload'
+import { getMessages } from '@/resolver/message/queries/getMessages'
 
 @Resolver(() => Message)
 export class MessageQueries {
@@ -17,72 +19,12 @@ export class MessageQueries {
       'Get messages in a DM, group, or channel (requires ChannelPermission.ViewChannel or ServerPermission.ViewChannels)'
   })
   async getMessages(
-    @Ctx() { em, user }: Context,
+    @Ctx() ctx: Context,
     @Args()
-    {
-      initialTime,
-      page,
-      pageSize,
-      pinned,
-      channelId,
-      groupId,
-      userId
-    }: GetMessagesArgs,
-    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
-    refetchGroupsAndDms: Publisher<string>
+    args: GetMessagesArgs,
+    @PubSub(SubscriptionTopic.DmOpened)
+    notifyDmOpened: Publisher<DmPayload>
   ): Promise<GetMessagesResponse[]> {
-    const channel = channelId
-      ? await em.findOneOrFail(Channel, channelId)
-      : null
-    const group = groupId ? await em.findOneOrFail(Group, groupId) : null
-    const toUser = userId ? await em.findOneOrFail(User, userId) : null
-
-    if (!channel && !group && !toUser)
-      throw new Error('error.message.missingArgs')
-
-    const where: FilterQuery<Message> = {
-      isDeleted: false
-    }
-    if (pinned) where.isPinned = true
-    if (channel) {
-      where.channel = channel
-    } else if (group) {
-      where.group = group
-    } else if (toUser) {
-      const [myData, theirData] = await user.getFriendData(em, userId)
-      myData.showChat = true
-      await em.persistAndFlush([myData, theirData])
-      await refetchGroupsAndDms(user.id)
-
-      where['$or'] = [
-        { author: user, toUser },
-        { author: toUser, toUser: user }
-      ]
-    }
-
-    if (initialTime) {
-      where.createdAt = {
-        $lte: initialTime
-      }
-    }
-
-    const messages = (
-      await em.find(
-        Message,
-        where,
-        ['author'],
-        { createdAt: QueryOrder.DESC },
-        pageSize + 1, // get one extra to determine hasMore
-        page * pageSize
-      )
-    ).reverse()
-
-    const hasMore = messages.length > pageSize
-    return [
-      {
-        hasMore,
-        messages: hasMore ? messages.slice(1, messages.length) : messages
-      } as GetMessagesResponse
-    ]
+    return getMessages(ctx, args, notifyDmOpened)
   }
 }

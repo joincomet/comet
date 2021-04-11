@@ -10,7 +10,7 @@ import {
   Resolver
 } from 'type-graphql'
 import { Channel, Server, ServerInvite, User } from '@/entity'
-import { uploadImage, uploadImageSingle } from '@/util/s3'
+import { uploadImageSingle } from '@/util/s3'
 import { Context, SubscriptionTopic } from '@/types'
 import { ServerUserJoin } from '@/entity/ServerUserJoin'
 import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
@@ -62,29 +62,6 @@ export class ServerMutations {
     await em.persistAndFlush([server])
     await user.joinServer(em, refetchUsers, server)
     return server
-  }
-
-  @CheckServerPermission(ServerPermission.ManageChannels)
-  @Mutation(() => Channel)
-  async createChannel(
-    @Ctx() { em }: Context,
-    @PubSub(SubscriptionTopic.RefetchJoinedServers)
-    refetchServerChannels: Publisher<string>,
-    @Arg('serverId', () => ID) serverId: string,
-    @Arg('name') name: string,
-    @Arg('isPrivate', { nullable: true }) isPrivate?: boolean
-  ): Promise<Channel> {
-    const server = await em.findOne(Server, serverId)
-
-    const channel = em.create(Channel, {
-      name,
-      server,
-      isPrivate
-    })
-
-    await em.persistAndFlush(channel)
-    await refetchServerChannels(server.id)
-    return channel
   }
 
   @Authorized()

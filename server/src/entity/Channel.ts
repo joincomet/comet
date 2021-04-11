@@ -34,6 +34,9 @@ export class Channel extends BaseEntity {
   isPrivate: boolean = false
 
   @Property()
+  isDeleted: boolean = false
+
+  @Property()
   lastMessageAt: Date = new Date()
 
   @Field()

@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Authorized,
   Ctx,
   ID,
@@ -9,107 +10,60 @@ import {
   Resolver
 } from 'type-graphql'
 import { Context, SubscriptionTopic } from '@/types'
-import { Channel, Group, User } from '@/entity'
-import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { uploadImage, uploadImageSingle } from '@/util/s3'
+import { Group } from '@/entity'
 import { CheckGroupMember } from '@/util'
+import { CreateGroupArgs } from '@/resolver/group/mutations/createGroup'
+import { createGroup } from '@/resolver/group/mutations/createGroup'
+import { GroupUserPayload } from '@/resolver/group/subscriptions/GroupUserPayload'
+import { leaveGroup } from '@/resolver/group/mutations/leaveGroup'
+import { EditGroupArgs } from '@/resolver/group/mutations/editGroup'
+import { editGroup } from '@/resolver/group/mutations/editGroup'
+import { readGroup } from '@/resolver/group/mutations'
 
 @Resolver()
 export class GroupMutations {
   @Authorized()
   @Mutation(() => Group, { description: 'Create group with users' })
   async createGroup(
-    @Ctx() { user, em }: Context,
-    @Arg('usernames', () => [String]) usernames: string[],
-    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
-    refetchGroupsAndDms: Publisher<string>
+    @Ctx() ctx: Context,
+    @Args() args: CreateGroupArgs,
+    @PubSub(SubscriptionTopic.UserJoinedGroup)
+    notifyUserJoinedGroup: Publisher<GroupUserPayload>
   ): Promise<Group> {
-    if (usernames.length > 9) throw new Error('error.group.maxSize')
-    const users = [user]
-    for (const username of usernames) {
-      users.push(await em.findOneOrFail(User, { username }))
-    }
-    const group = em.create(Group, {
-      users,
-      owner: user
-    })
-    const channel = em.create(Channel, {
-      group
-    })
-    await em.persistAndFlush([group, channel])
-    for (const u of users) await refetchGroupsAndDms(u.id)
-    return group
+    return createGroup(ctx, args, notifyUserJoinedGroup)
   }
 
   @CheckGroupMember()
   @Mutation(() => Boolean, { description: 'Leave a group' })
   async leaveGroup(
-    @Ctx() { user, em }: Context,
+    @Ctx() ctx: Context,
     @Arg('groupId', () => ID, { description: 'ID of group to leave' })
     groupId: string,
-    @PubSub(SubscriptionTopic.RefetchUsers)
-    refetchUsers: Publisher<string>,
-    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
-    refetchGroupsAndDms: Publisher<string>
+    @PubSub(SubscriptionTopic.UserLeftGroup)
+    notifyUserLeftGroup: Publisher<GroupUserPayload>
   ): Promise<boolean> {
-    const group = await em.findOneOrFail(Group, groupId, ['users'])
-    group.users.remove(user)
-    if (group.owner === user) group.owner = group.users.getItems()[0]
-    await em.persistAndFlush(group)
-    await refetchUsers(user.id)
-    await refetchGroupsAndDms(user.id)
-    return true
+    return leaveGroup(ctx, groupId, notifyUserLeftGroup)
   }
 
   @CheckGroupMember()
   @Mutation(() => Group, { description: 'Rename a group' })
-  async renameGroup(
-    @Ctx() { em, user }: Context,
-    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
-    refetchGroupsAndDms: Publisher<string>,
-    @Arg('groupId', () => ID, { description: 'ID of group to rename' })
-    groupId: string,
-    @Arg('name', {
-      nullable: true,
-      description:
-        'New name of group, or null to use default name (list of users)'
-    })
-    name?: string
+  async editGroup(
+    @Ctx() ctx: Context,
+    @Args() args: EditGroupArgs,
+    @PubSub(SubscriptionTopic.GroupUpdated)
+    notifyGroupUpdated: Publisher<{ groupId: string }>
   ): Promise<Group> {
-    const group = await em.findOneOrFail(Group, groupId, ['users'])
-    group.name = name
-    await em.persistAndFlush(group)
-    await refetchGroupsAndDms(user.id)
-    return group
+    return editGroup(ctx, args, notifyGroupUpdated)
   }
 
-  @CheckGroupMember()
-  @Mutation(() => Group, { description: 'Change avatar image of group' })
-  async changeGroupAvatar(
-    @Ctx() { em, user }: Context,
-    @PubSub(SubscriptionTopic.RefetchGroupsAndDms)
-    refetchGroupsAndDms: Publisher<string>,
-    @Arg('groupId', () => ID, { description: 'ID of group to update' })
-    groupId: string,
-    @Arg('avatarFile', () => GraphQLUpload, {
-      nullable: true,
-      description: 'Avatar file upload for group, or null to remove avatar'
-    })
-    avatarFile?: FileUpload
+  @Authorized()
+  @Mutation(() => Group)
+  async readGroup(
+    @Ctx() ctx: Context,
+    @Arg('groupId', () => ID) groupId: string,
+    @PubSub(SubscriptionTopic.GroupRead)
+    notifyGroupRead: Publisher<GroupUserPayload>
   ): Promise<Group> {
-    const group = await em.findOneOrFail(Group, groupId, ['users'])
-    if (avatarFile) {
-      group.avatarUrl = await uploadImageSingle(
-        avatarFile,
-        {
-          width: 256,
-          height: 256
-        },
-        true
-      )
-    }
-    await em.persistAndFlush(group)
-    await refetchGroupsAndDms(user.id)
-    return group
+    return readGroup(ctx, groupId, notifyGroupRead)
   }
 }

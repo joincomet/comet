@@ -24,7 +24,6 @@ import {
   createAccessToken,
   handleUnderscore,
   tagGenerator,
-  uploadImage,
   uploadImageSingle
 } from '@/util'
 import isEmail from 'validator/lib/isEmail'

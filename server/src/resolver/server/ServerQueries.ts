@@ -9,14 +9,7 @@ import {
   Resolver,
   Root
 } from 'type-graphql'
-import {
-  Channel,
-  ChannelRole,
-  ChannelUser,
-  Server,
-  ServerUserJoin,
-  User
-} from '@/entity'
+import { Channel, Server, ServerUserJoin, User } from '@/entity'
 import {
   ChannelUsersResponse,
   GetPublicServersArgs,
@@ -28,6 +21,7 @@ import { ServerPermission } from '@/types/ServerPermission'
 import { ChannelPermission } from '@/types/ChannelPermission'
 import { CheckChannelPermission } from '@/util'
 import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
+import { getServerChannels } from '@/resolver/channel/queries/getServerChannels'
 
 @Resolver(() => Server)
 export class ServerQueries {
@@ -186,57 +180,9 @@ export class ServerQueries {
   @CheckJoinedServer()
   @FieldResolver(() => [Channel])
   async channels(
-    @Ctx() { em, user }: Context,
+    @Ctx() ctx: Context,
     @Root() server: Server
   ): Promise<Channel[]> {
-    const channels = await em.find(
-      Channel,
-      { server },
-      { orderBy: { position: QueryOrder.DESC } }
-    )
-
-    const channelUsers = await em.find(
-      ChannelUser,
-      { user, channel: channels },
-      ['channel']
-    )
-
-    channels.forEach(channel => {
-      const channelUser = channelUsers.find(cu => cu.channel === channel)
-      if (channelUser) {
-        channel.mentionCount = channelUser.mentionCount
-        channel.isUnread =
-          channelUser.lastViewAt.getTime() < channel.lastMessageAt.getTime()
-      } else {
-        channel.isUnread = true
-        channel.mentionCount = 0
-      }
-    })
-
-    if (user.isAdmin) return channels
-
-    const join = await em.findOne(ServerUserJoin, { user, server }, ['roles'])
-    const roles = join.roles.getItems()
-
-    const hasAdminPermission = roles.find(r =>
-      r.permissions.includes(ServerPermission.Admin)
-    )
-    if (hasAdminPermission) return channels
-
-    const channelRoles = await em.find(ChannelRole, {
-      channel: channels,
-      role: roles
-    })
-    return channels.filter(channel => {
-      if (channel.isPrivate) {
-        return !!channelRoles.find(cr =>
-          cr.allowedPermissions.includes(ChannelPermission.ViewChannel)
-        )
-      } else {
-        return !!channelRoles.find(
-          cr => !cr.deniedPermissions.includes(ChannelPermission.ViewChannel)
-        )
-      }
-    })
+    return getServerChannels(ctx, server.id)
   }
 }
