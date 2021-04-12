@@ -3,6 +3,7 @@ import { ArgsType, Field, ID, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { Message } from '@/entity'
+import { getLinkMetas } from '@/util/getLinkMetas'
 
 @ArgsType()
 export class EditMessageArgs {
@@ -27,7 +28,7 @@ export async function editMessage(
     'channel'
   ])
   message.text = text
-  message.linkMetadatas = await this.getLinkMetas(message)
+  message.linkMetadatas = await getLinkMetas(text)
   await em.persistAndFlush(message)
   await notifyMessageUpdated({
     messageId: message.id,

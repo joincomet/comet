@@ -1,4 +1,12 @@
-import { Authorized, Ctx, ID, Resolver, Root, Subscription } from 'type-graphql'
+import {
+  Args,
+  Authorized,
+  Ctx,
+  ID,
+  Resolver,
+  Root,
+  Subscription
+} from 'type-graphql'
 import { Message, User } from '@/entity'
 import { Context, SubscriptionTopic } from '@/types'
 import { MessageResponse } from '@/resolver/message/subscriptions/MessageResponse'
@@ -10,7 +18,7 @@ import {
   MessageDeletedResponse,
   MessagePayload
 } from '@/resolver/message/subscriptions'
-import { TypingPayload } from '@/resolver/message/mutations'
+import { TypingArgs, TypingPayload } from '@/resolver/message/mutations'
 
 @Resolver()
 export class MessageSubscriptions {
@@ -106,7 +114,8 @@ export class MessageSubscriptions {
   })
   userStartedTyping(
     @Root()
-    { username }: TypingPayload
+    { username }: TypingPayload,
+    @Args() args: TypingArgs
   ): string {
     return username
   }
@@ -118,9 +127,9 @@ export class MessageSubscriptions {
   })
   async dmRead(
     @Ctx() { em }: Context,
-    @Root() { toUserId }: DmPayload
+    @Root() { friendId }: DmPayload
   ): Promise<User> {
-    return em.findOneOrFail(User, toUserId)
+    return em.findOneOrFail(User, friendId)
   }
 
   @Authorized()
@@ -130,9 +139,9 @@ export class MessageSubscriptions {
   })
   async dmOpened(
     @Ctx() { em }: Context,
-    @Root() { toUserId }: DmPayload
+    @Root() { friendId }: DmPayload
   ): Promise<User> {
-    return em.findOneOrFail(User, toUserId)
+    return em.findOneOrFail(User, friendId)
   }
 
   @Authorized()
@@ -140,7 +149,7 @@ export class MessageSubscriptions {
     topics: SubscriptionTopic.DmClosed,
     filter: currentUserFilter
   })
-  dmClosed(@Root() { toUserId }: DmPayload): string {
-    return toUserId
+  dmClosed(@Root() { friendId }: DmPayload): string {
+    return friendId
   }
 }

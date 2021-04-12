@@ -34,7 +34,7 @@ export async function reorderUserFolders(
     const firstUserFolder = await em.findOne(
       UserFolder,
       { user },
-      { orderBy: { position: QueryOrder.DESC } }
+      { orderBy: { position: QueryOrder.ASC } }
     )
     userFolder.position = firstUserFolder
       ? ReorderUtils.positionBefore(firstUserFolder.position)

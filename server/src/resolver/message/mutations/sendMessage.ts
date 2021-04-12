@@ -6,6 +6,7 @@ import { MessagePayload } from '@/resolver/message/subscriptions/MessagePayload'
 import { DmPayload } from '@/resolver/message/subscriptions/DmPayload'
 import { FriendStatus } from '@/resolver/user'
 import { uploadFileOrImage } from '@/util'
+import { getLinkMetas } from '@/util/getLinkMetas'
 
 @ArgsType()
 export class SendMessageArgs {
@@ -62,7 +63,7 @@ export async function sendMessage(
     file: upload && (upload as File).url ? upload : null
   })
 
-  if (text) message.linkMetadatas = await this.getLinkMetas(message)
+  if (text) message.linkMetadatas = await getLinkMetas(text)
   await em.persistAndFlush(message)
 
   if (toUser) {
@@ -73,8 +74,8 @@ export async function sendMessage(
     theirData.lastMessageAt = new Date()
     theirData.unreadCount++
     await em.persistAndFlush([myData, theirData])
-    await notifyDmOpened({ userId: user.id, toUserId: toUser.id })
-    await notifyDmOpened({ userId: toUser.id, toUserId: user.id })
+    await notifyDmOpened({ userId: user.id, friendId: toUser.id })
+    await notifyDmOpened({ userId: toUser.id, friendId: user.id })
   }
 
   if (group) {

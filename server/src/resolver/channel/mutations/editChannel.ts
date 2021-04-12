@@ -1,8 +1,8 @@
 import { Context } from '@/types'
-import { Field, ID, ObjectType, Publisher } from 'type-graphql'
+import { ArgsType, Field, ID, ObjectType, Publisher } from 'type-graphql'
 import { Channel } from '@/entity'
 
-@ObjectType()
+@ArgsType()
 export class EditChannelArgs {
   @Field(() => ID)
   channelId: string

@@ -1,4 +1,4 @@
 export * from './MessageSent'
 export * from './MessageUpdated'
-export * from './MessageRemoved'
+export * from './MessageDeleted'
 export * from './UserStartedTyping'

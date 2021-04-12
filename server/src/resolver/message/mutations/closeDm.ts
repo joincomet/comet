@@ -8,11 +8,11 @@ export async function closeDm(
   userId: string,
   notifyDmClosed: Publisher<DmPayload>
 ): Promise<boolean> {
-  const toUser = await em.findOneOrFail(User, userId)
-  const dm = await em.findOne(FriendData, { user, toUser })
+  const friend = await em.findOneOrFail(User, userId)
+  const dm = await em.findOne(FriendData, { user, friend })
   if (!dm) return true
   dm.showChat = false
   await em.persistAndFlush(dm)
-  await notifyDmClosed({ userId: user.id, toUserId: userId })
+  await notifyDmClosed({ userId: user.id, friendId: userId })
   return true
 }

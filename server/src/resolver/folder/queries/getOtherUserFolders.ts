@@ -35,7 +35,7 @@ export async function getOtherUserFolders(
           },
       ['folder.owner', 'folder.serverFolder.server'],
       {
-        position: QueryOrder.DESC
+        position: QueryOrder.ASC
       }
     )
   ).map(uf => uf.folder)

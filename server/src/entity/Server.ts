@@ -18,8 +18,7 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
-import { ServerUserBan } from '@/entity/ServerUserBan'
-import { ServerUserJoin } from '@/entity/ServerUserJoin'
+import { ServerUser } from '@/entity/ServerUser'
 import { ServerRole } from '@/entity/ServerRole'
 
 @ObjectType({ implements: BaseEntity })
@@ -44,10 +43,10 @@ export class Server extends BaseEntity {
   })
   roles = new Collection<ServerRole>(this)
 
-  @OneToMany(() => ServerUserJoin, 'server', {
+  @OneToMany(() => ServerUser, 'server', {
     orderBy: { createdAt: QueryOrder.DESC }
   })
-  userJoins = new Collection<ServerUserJoin>(this)
+  userJoins = new Collection<ServerUser>(this)
 
   @OneToMany(() => ServerFolder, 'server', {
     orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
@@ -58,15 +57,9 @@ export class Server extends BaseEntity {
   @Enum({ items: () => ServerCategory })
   category: ServerCategory = ServerCategory.Other
 
-  @OneToMany(() => ServerUserBan, 'server')
-  userBans = new Collection<ServerUserBan>(this)
-
   @Field(() => Int)
   @Property({ unsigned: true })
   userCount: number = 0
-
-  @Field(() => Int)
-  onlineUserCount: number = 0
 
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
@@ -82,7 +75,7 @@ export class Server extends BaseEntity {
 
   @Field(() => [Channel])
   @OneToMany(() => Channel, 'server', {
-    orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
+    orderBy: { position: QueryOrder.ASC }
   })
   channels = new Collection<Channel>(this)
 

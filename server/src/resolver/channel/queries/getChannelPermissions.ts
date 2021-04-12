@@ -1,6 +1,6 @@
 import { Field, ObjectType } from 'type-graphql'
 import { ChannelPermission, Context } from '@/types'
-import { Channel, ChannelRole, ServerUserJoin } from '@/entity'
+import { Channel, ChannelRole, ServerUser } from '@/entity'
 
 @ObjectType()
 export class GetChannelPermissionsResponse {
@@ -16,11 +16,9 @@ export async function getChannelPermissions(
   channelId: string
 ): Promise<GetChannelPermissionsResponse> {
   const channel = await em.findOneOrFail(Channel, channelId, ['server'])
-  const join = await em.findOne(
-    ServerUserJoin,
-    { server: channel.server, user },
-    ['roles']
-  )
+  const join = await em.findOne(ServerUser, { server: channel.server, user }, [
+    'roles'
+  ])
   const roles = join.roles.getItems()
 
   const channelRoles = await em.find(ChannelRole, {

@@ -9,16 +9,16 @@ import { useShouldForceScrollToBottom } from '@/components/message/useShouldForc
 import MessagesStart from '@/components/message/MessagesStart'
 import { usePrevious } from 'react-use'
 import { useMutation } from 'urql'
-import { VIEW_DM } from '@/graphql/mutations/dm/ViewDm'
-import { VIEW_CHANNEL, VIEW_GROUP } from '@/graphql/mutations'
+import { READ_DM } from '@/graphql/mutations/dm/ReadDm'
+import { READ_CHANNEL, READ_GROUP } from '@/graphql/mutations'
 import { useLocation } from 'react-router-dom'
 
 const PREPEND_OFFSET = 10 ** 7
 
 export default function Messages({ channel, user, group }) {
-  const [_viewDmRes, viewDm] = useMutation(VIEW_DM)
-  const [_viewGroupRes, viewGroup] = useMutation(VIEW_GROUP)
-  const [_viewChannelRes, viewChannel] = useMutation(VIEW_CHANNEL)
+  const [_viewDmRes, viewDm] = useMutation(READ_DM)
+  const [_viewGroupRes, viewGroup] = useMutation(READ_GROUP)
+  const [_viewChannelRes, viewChannel] = useMutation(READ_CHANNEL)
   const [initialTime, setInitialTime] = useState(() => new Date())
 
   const { pathname } = useLocation()

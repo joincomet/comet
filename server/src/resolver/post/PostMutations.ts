@@ -1,16 +1,32 @@
-import { Arg, Args, Ctx, ID, Mutation, Resolver } from 'type-graphql'
-import { Post, PostVote, Server } from '@/entity'
-import { CreatePostArgs } from '@/resolver/post'
-import { Context, ServerPermission } from '@/types'
+import {
+  Arg,
+  Args,
+  Ctx,
+  ID,
+  Mutation,
+  Publisher,
+  PubSub,
+  Resolver
+} from 'type-graphql'
+import { Post, PostVote } from '@/entity'
+import { Context, ServerPermission, SubscriptionTopic } from '@/types'
 import {
   CheckPostAuthor,
   CheckPostServerPermission,
-  CheckServerPermission,
-  handleText,
-  scrapeMetadata,
-  uploadImage,
-  uploadImageSingle
+  CheckServerPermission
 } from '@/util'
+import {
+  createPost,
+  CreatePostArgs,
+  editPost,
+  EditPostArgs,
+  deletePost,
+  votePost,
+  unvotePost,
+  pinPost,
+  unpinPost
+} from '@/resolver/post/mutations'
+import { PostServerPayload } from '@/resolver/post/subscriptions'
 
 @Resolver()
 export class PostMutations {
@@ -20,43 +36,13 @@ export class PostMutations {
       'Create a post in a server (requires ServerPermission.CreatePost)'
   })
   async createPost(
+    @Ctx() ctx: Context,
     @Args()
-    { title, linkUrl, text, serverId, images }: CreatePostArgs,
-    @Ctx() { user, em }: Context
+    args: CreatePostArgs,
+    @PubSub(SubscriptionTopic.PostCreated)
+    notifyPostCreated: Publisher<PostServerPayload>
   ): Promise<Post> {
-    if (text) {
-      text = handleText(text)
-      if (!text) text = null
-    }
-
-    const server = await em.findOne(Server, serverId)
-
-    const imageUrls = []
-
-    if (images && images.length > 0) {
-      for (const image of images) {
-        const imageUrl = await uploadImageSingle(image)
-        imageUrls.push(imageUrl)
-      }
-    }
-
-    const post = em.create(Post, {
-      title,
-      linkUrl,
-      author: user,
-      server,
-      linkMetadata: linkUrl ? await scrapeMetadata(linkUrl) : null,
-      imageUrls,
-      text: text
-    })
-
-    await em.persistAndFlush(post)
-
-    await this.votePost({ user, em }, post.id)
-    post.isVoted = true
-    post.voteCount = 1
-
-    return post
+    return createPost(ctx, args, notifyPostCreated)
   }
 
   @CheckPostAuthor()
@@ -64,22 +50,12 @@ export class PostMutations {
     description: 'Edit a post (must be author)'
   })
   async editPost(
-    @Arg('postId', () => ID, { description: 'ID of post to edit' })
-    postId: string,
-    @Arg('text') text: string,
-    @Ctx() { user, em }: Context
+    @Ctx() ctx: Context,
+    @Args() args: EditPostArgs,
+    @PubSub(SubscriptionTopic.PostUpdated)
+    notifyPostUpdated: Publisher<{ postId: string }>
   ): Promise<Post> {
-    const post = await em.findOne(Post, postId)
-
-    text = handleText(text)
-    if (!text) text = null
-
-    post.text = text
-    post.editedAt = new Date()
-
-    await em.persistAndFlush(post)
-
-    return post
+    return editPost(ctx, args, notifyPostUpdated)
   }
 
   @CheckPostAuthor()
@@ -87,51 +63,41 @@ export class PostMutations {
     description: 'Delete a post (must be author)'
   })
   async deletePost(
+    @Ctx() ctx: Context,
     @Arg('postId', () => ID) postId: string,
-    @Ctx() { user, em }: Context
+    @PubSub(SubscriptionTopic.PostDeleted)
+    notifyPostDeleted: Publisher<PostServerPayload>
   ): Promise<boolean> {
-    const post = await em.findOne(Post, postId)
-    post.isDeleted = true
-    post.isPinned = false
-    await em.persistAndFlush(post)
-    return true
+    return deletePost(ctx, postId, notifyPostDeleted)
   }
 
   @CheckPostServerPermission(ServerPermission.VotePost)
   @Mutation(() => Post, { description: 'Add vote to post' })
   async votePost(
-    @Ctx() { user, em }: Context,
+    @Ctx() ctx: Context,
     @Arg('postId', () => ID, {
       description: 'ID of post to vote (requires ServerPermission.VotePost)'
     })
-    postId: string
+    postId: string,
+    @PubSub(SubscriptionTopic.PostUpdated)
+    notifyPostUpdated: Publisher<{ postId: string }>
   ): Promise<Post> {
-    const post = await em.findOneOrFail(Post, postId)
-    let vote = await em.findOne(PostVote, { user, post })
-    if (vote) throw new Error('error.post.alreadyVoted')
-    vote = em.create(PostVote, { user, post })
-    post.voteCount++
-    post.isVoted = true
-    await em.persistAndFlush([post, vote])
-    return post
+    return votePost(ctx, postId, notifyPostUpdated)
   }
 
   @CheckPostServerPermission(ServerPermission.VotePost)
   @Mutation(() => Post, { description: 'Remove vote from post' })
   async unvotePost(
-    @Ctx() { user, em }: Context,
+    @Ctx() ctx: Context,
     @Arg('postId', () => ID, {
       description:
         'ID of post to remove vote (requires ServerPermission.VotePost)'
     })
-    postId: string
+    postId: string,
+    @PubSub(SubscriptionTopic.PostUpdated)
+    notifyPostUpdated: Publisher<{ postId: string }>
   ): Promise<Post> {
-    const post = await em.findOneOrFail(Post, postId)
-    const vote = await em.findOneOrFail(PostVote, { user, post })
-    post.voteCount--
-    post.isVoted = false
-    await em.remove(vote).persistAndFlush([post])
-    return post
+    return unvotePost(ctx, postId, notifyPostUpdated)
   }
 
   @CheckPostServerPermission(ServerPermission.ManagePosts)
@@ -139,15 +105,13 @@ export class PostMutations {
     description: 'Pin a post (requires ServerPermission.PinPosts)'
   })
   async pinPost(
+    @Ctx() ctx: Context,
     @Arg('postId', () => ID, { description: 'ID of post to pin' })
     postId: string,
-    @Ctx() { em }: Context
+    @PubSub(SubscriptionTopic.PostUpdated)
+    notifyPostUpdated: Publisher<{ postId: string }>
   ): Promise<Post> {
-    const post = await em.findOne(Post, postId)
-    if (post.isPinned) throw new Error('error.post.alreadyPinned')
-    post.isPinned = true
-    await em.persistAndFlush(post)
-    return post
+    return pinPost(ctx, postId, notifyPostUpdated)
   }
 
   @CheckPostServerPermission(ServerPermission.ManagePosts)
@@ -155,14 +119,12 @@ export class PostMutations {
     description: 'Unpin a post (requires ServerPermission.PinPosts)'
   })
   async unpinPost(
+    @Ctx() ctx: Context,
     @Arg('postId', () => ID, { description: 'ID of post to unpin' })
     postId: string,
-    @Ctx() { em }: Context
+    @PubSub(SubscriptionTopic.PostUpdated)
+    notifyPostUpdated: Publisher<{ postId: string }>
   ): Promise<Post> {
-    const post = await em.findOne(Post, postId)
-    if (!post.isPinned) throw new Error('error.post.notPinned')
-    post.isPinned = false
-    await em.persistAndFlush(post)
-    return post
+    return unpinPost(ctx, postId, notifyPostUpdated)
   }
 }

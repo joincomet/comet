@@ -1,11 +1,11 @@
 import { Context } from '@/types'
-import { Field, ID, ObjectType, Publisher } from 'type-graphql'
+import { ArgsType, Field, ID, ObjectType, Publisher } from 'type-graphql'
 import { Channel, Server } from '@/entity'
 import { ChannelPayload } from '@/resolver/channel/subscriptions/ChannelPayload'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
 
-@ObjectType()
+@ArgsType()
 export class CreateChannelArgs {
   @Field(() => ID)
   serverId: string
@@ -27,7 +27,7 @@ export async function createChannel(
   const firstChannel = await em.findOne(
     Channel,
     { server },
-    { orderBy: { position: QueryOrder.DESC } }
+    { orderBy: { position: QueryOrder.ASC } }
   )
 
   const channel = em.create(Channel, {

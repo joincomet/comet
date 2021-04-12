@@ -1,2 +1,2 @@
 export * from './LeaveGroup'
-export * from './ViewGroup'
+export * from './ReadGroup'

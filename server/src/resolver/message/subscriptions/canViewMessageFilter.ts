@@ -1,11 +1,11 @@
 import { ChannelPermission, SubscriptionFilter } from '@/types'
-import { MessagePayload } from '@/resolver/message'
 import { Message } from '@/entity'
+import { MessagePayload } from '@/resolver/message/subscriptions/MessagePayload'
 
 export const canViewMessageFilter = async ({
   payload: { messageId },
   context: { user, em }
-}: SubscriptionFilter<MessageSentPayload>) => {
+}: SubscriptionFilter<MessagePayload>) => {
   const message = await em.findOneOrFail(Message, messageId, [
     'channel.server',
     'group.users',

@@ -12,7 +12,7 @@ export async function getServerFolders(
     { server, folder: { isDeleted: false } },
     ['folder.serverFolder.server'],
     {
-      position: QueryOrder.DESC
+      position: QueryOrder.ASC
     }
   )
   return serverFolders.map(serverFolder => serverFolder.folder)

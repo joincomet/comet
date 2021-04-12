@@ -1,18 +1,14 @@
 import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
-import { Folder, LinkMetadata, Post, Server, ServerUserJoin } from '@/entity'
+import { LinkMetadata, Post } from '@/entity'
+import { Context } from '@/types'
+import { scrapeMetadata } from '@/util'
+import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 import {
   GetPostsArgs,
   GetPostsResponse,
-  GetPostsSort,
-  GetPostsTime
-} from '@/resolver/post'
-import { Context } from '@/types'
-import { scrapeMetadata } from '@/util'
-import { QueryOrder } from '@mikro-orm/core'
-import dayjs from 'dayjs'
-import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
-import { FolderVisibility } from '@/resolver/folder'
-import { FriendStatus } from '@/resolver/user'
+  getPost,
+  getPosts
+} from '@/resolver/post/queries'
 
 @Resolver(() => Post)
 export class PostQueries {
@@ -22,96 +18,11 @@ export class PostQueries {
       'Get posts (requires ServerPermission.ViewPosts if serverId is provided)'
   })
   async getPosts(
+    @Ctx() ctx: Context,
     @Args()
-    { page, pageSize, sort, time, folderId, serverId }: GetPostsArgs,
-    @Ctx() { user, em }: Context
+    args: GetPostsArgs
   ): Promise<GetPostsResponse[]> {
-    let orderBy = {}
-    if (sort === GetPostsSort.New) orderBy = { createdAt: QueryOrder.DESC }
-    else if (sort === GetPostsSort.Hot) orderBy = { hotRank: QueryOrder.DESC }
-    else if (sort === GetPostsSort.Top) orderBy = { voteCount: QueryOrder.DESC }
-
-    const joinedOnly = !folderId && !serverId
-    let server
-    if (serverId) server = await em.findOneOrFail(Server, serverId)
-
-    let servers = []
-    if (joinedOnly) {
-      const joins = await em.find(ServerUserJoin, { user }, ['server'])
-      servers = joins
-        .map(join => join.server)
-        .filter(server => server.isPostsEnabled)
-    }
-    let folder
-    if (folderId) {
-      folder = await em.findOneOrFail(Folder, folderId, ['owner'])
-      if (!sort || sort === GetPostsSort.Added)
-        orderBy = { folderPosts: { addedAt: QueryOrder.DESC } }
-      if (
-        folder.visibility === FolderVisibility.Private &&
-        folder.owner !== user
-      )
-        throw new Error('error.folder.private')
-      if (
-        folder.visibility === FolderVisibility.Friends &&
-        folder.owner !== user
-      ) {
-        const [myData] = await user.getFriendData(em, folder.owner.id)
-        if (myData.status !== FriendStatus.Friends)
-          throw new Error('error.folder.friends')
-      }
-    }
-
-    const posts = await em.find(
-      Post,
-      {
-        $and: [
-          { isDeleted: false },
-          !time || time === GetPostsTime.All || folder
-            ? {}
-            : {
-                createdAt: {
-                  // @ts-ignore
-                  $gt: dayjs().subtract(1, time.toLowerCase()).toDate()
-                }
-              },
-          { server: { $ne: null } },
-          joinedOnly ? { server: servers } : {},
-          server ? { server } : {},
-          folder ? { folderPosts: { folder } } : {}
-        ]
-      },
-      ['author', 'server.userJoins.user', 'votes', 'folderPosts.addedByUser'],
-      orderBy,
-      pageSize + 1, // get one extra to determine hasMore
-      page * pageSize
-    )
-
-    posts.forEach(post => {
-      post.isVoted = post.votes
-        .getItems()
-        .map(vote => vote.user)
-        .includes(user)
-      post.server.onlineUserCount = post.server.userJoins
-        .getItems()
-        .map(j => j.user)
-        .filter(u => u.isOnline).length
-      if (folder) {
-        const folderPost = post.folderPosts
-          .getItems()
-          .find(fp => fp.folder === folder)
-        post.addedByUser = folderPost.addedByUser
-        post.addedAt = folderPost.addedAt
-      }
-    })
-
-    const hasMore = posts.length > pageSize
-    return [
-      {
-        hasMore,
-        posts: hasMore ? posts.slice(0, posts.length - 1) : posts
-      }
-    ]
+    return getPosts(ctx, args)
   }
 
   @CheckJoinedServer()
@@ -119,27 +30,11 @@ export class PostQueries {
     description: 'Get a specific post (requires ServerPermission.ViewPosts)'
   })
   async getPost(
+    @Ctx() ctx: Context,
     @Arg('postId', () => ID, { description: 'ID of post to retrieve' })
-    postId: string,
-    @Ctx() { em, user }: Context
+    postId: string
   ): Promise<Post> {
-    const post = await em.findOneOrFail(Post, postId, [
-      'server',
-      'author',
-      'votes'
-    ])
-
-    if (post.isDeleted) {
-      post.author = null
-      post.text = '<p>[deleted]</p>'
-    }
-
-    post.isVoted = post.votes
-      .getItems()
-      .map(vote => vote.user)
-      .includes(user)
-
-    return post
+    return getPost(ctx, postId)
   }
 
   @Authorized('ADMIN')

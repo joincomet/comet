@@ -6,14 +6,10 @@ import {
   GET_USER_RELATIONSHIPS
 } from '@/graphql/queries'
 import {
-  MESSAGE_REMOVED,
+  MESSAGE_DELETED,
   MESSAGE_SENT,
-  MESSAGE_UPDATED,
-  REFETCH_GROUPS_AND_DMS,
-  REFETCH_JOINED_SERVERS,
-  REFETCH_USER_RELATIONSHIPS
+  MESSAGE_UPDATED
 } from '@/graphql/subscriptions'
-import { REFETCH_USER_FOLDERS } from '@/graphql/subscriptions/folder'
 import { useCurrentUser } from '@/providers/UserProvider'
 import { useClient, useQuery, useSubscription } from 'urql'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
@@ -34,34 +30,24 @@ export function DataProvider({ children }) {
     pause
   })
   const joinedServers = joinedServersData?.getJoinedServers
-  useSubscription({ query: REFETCH_JOINED_SERVERS, pause }, () =>
-    refetchServers()
-  )
 
   const [{ data: groupsAndDmsData }, refetchDms] = useQuery({
     query: GET_GROUPS_AND_DMS,
     pause
   })
   const groupsAndDms = groupsAndDmsData?.getGroupsAndDms
-  useSubscription({ query: REFETCH_GROUPS_AND_DMS, pause }, () => refetchDms())
 
   const [{ data: userFoldersData }, refetchFolders] = useQuery({
     query: GET_USER_FOLDERS,
     pause
   })
   const userFolders = userFoldersData?.getUserFolders
-  useSubscription({ query: REFETCH_USER_FOLDERS, pause }, () => {
-    refetchFolders()
-  })
 
   const [{ data: userRelationshipsData }, refetchRels] = useQuery({
     query: GET_USER_RELATIONSHIPS,
     pause
   })
   const userRelationships = userRelationshipsData?.getUserRelationships
-  useSubscription({ query: REFETCH_USER_RELATIONSHIPS, pause }, () =>
-    refetchRels()
-  )
 
   const { push } = useHistory()
   const { pathname } = useLocation()
@@ -144,7 +130,7 @@ export function DataProvider({ children }) {
       return [...messages, message]
     }
   })
-  useSubscription({ query: MESSAGE_REMOVED, pause })
+  useSubscription({ query: MESSAGE_DELETED, pause })
   useSubscription({ query: MESSAGE_UPDATED, pause })
 
   /*useEffect(() => {

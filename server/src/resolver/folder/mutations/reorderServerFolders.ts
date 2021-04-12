@@ -40,7 +40,7 @@ export async function reorderServerFolders(
     const firstServerFolder = await em.findOne(
       ServerFolder,
       { server },
-      { orderBy: { position: QueryOrder.DESC } }
+      { orderBy: { position: QueryOrder.ASC } }
     )
     serverFolder.position = firstServerFolder
       ? ReorderUtils.positionBefore(firstServerFolder.position)

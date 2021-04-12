@@ -8,7 +8,7 @@ export async function getUserFolders({ em, user }: Context): Promise<Folder[]> {
     { user, folder: { isDeleted: false } },
     ['folder.owner', 'folder.serverFolder.server'],
     {
-      position: QueryOrder.DESC
+      position: QueryOrder.ASC
     }
   )
   return userFolders.map(userFolder => userFolder.folder)

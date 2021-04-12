@@ -32,7 +32,6 @@ export const GET_POSTS = gql`
         }
         server {
           ...SERVER_FRAGMENT
-          onlineUserCount
         }
         addedByUser {
           ...USER_FRAGMENT

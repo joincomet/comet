@@ -67,9 +67,9 @@ export async function editFolder(
   } else if (visibility === FolderVisibility.Friends) {
     const friends = (
       await em.find(FriendData, { user, status: FriendStatus.Friends }, [
-        'toUser'
+        'friend'
       ])
-    ).map(fd => fd.toUser)
+    ).map(fd => fd.friend)
     await em.nativeDelete(UserFolder, { folder, user: { $nin: friends } })
   }
   await em.persistAndFlush(folder)

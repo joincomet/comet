@@ -1,6 +1,6 @@
 import { ChannelPermission, SubscriptionFilter } from '@/types'
-import { TypingPayload } from '@/resolver/message'
 import { Channel, Group } from '@/entity'
+import { TypingPayload } from '@/resolver/message/mutations'
 
 export const typingFilter = async ({
   payload: {

@@ -1,4 +1,4 @@
 export interface DmPayload {
   userId: string
-  toUserId: string
+  friendId: string
 }

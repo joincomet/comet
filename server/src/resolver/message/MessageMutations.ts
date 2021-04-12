@@ -106,17 +106,6 @@ export class MessageMutations {
     return startTyping(ctx, args, notifyUserStartedTyping)
   }
 
-  async getLinkMetas(message: Message) {
-    const linkRegex = /(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/gi
-    const links = message.text.match(linkRegex) || []
-    const linkMetadatas = []
-    for (const link of links) {
-      const meta = await scrapeMetadata(link)
-      if (meta) linkMetadatas.push(meta)
-    }
-    return linkMetadatas
-  }
-
   @Authorized()
   @Mutation(() => User)
   async readDm(

@@ -30,7 +30,7 @@ export async function reorderChannels(
     const firstChannel = await em.findOne(
       Channel,
       { server: channel.server },
-      { orderBy: { position: QueryOrder.DESC } }
+      { orderBy: { position: QueryOrder.ASC } }
     )
     channel.position = firstChannel
       ? ReorderUtils.positionBefore(firstChannel.position)

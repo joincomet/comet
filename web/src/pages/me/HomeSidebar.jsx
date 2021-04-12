@@ -16,7 +16,7 @@ import { DragItemTypes } from '@/types/DragItemTypes'
 import toast from 'react-hot-toast'
 import { VectorLogo } from '@/components/ui/vectors'
 import { useGroupsAndDms } from '@/providers/DataProvider'
-import { HIDE_DM, SEND_MESSAGE } from '@/graphql/mutations'
+import { CLOSE_DM, SEND_MESSAGE } from '@/graphql/mutations'
 import { useMutation } from 'urql'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
@@ -79,7 +79,7 @@ export default function HomeSidebar() {
 function DirectMessage({ user }) {
   const { t } = useTranslation()
 
-  const [_, hideDm] = useMutation(HIDE_DM)
+  const [_, hideDm] = useMutation(CLOSE_DM)
 
   const { push } = useHistory()
   const { pathname } = useLocation()

@@ -16,10 +16,8 @@ import {
   Folder,
   FriendData,
   Group,
-  Message,
   Server,
-  ServerUserBan,
-  ServerUserJoin,
+  ServerUser,
   UserFolder
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
@@ -27,6 +25,9 @@ import { ChannelPermission, ServerPermission } from '@/types'
 import { CustomError } from '@/types/CustomError'
 import { FolderVisibility } from '@/resolver/folder'
 import { FriendStatus } from '@/resolver/user'
+import { UserServerPayload } from '@/resolver/server/subscriptions'
+import { ReorderUtils } from '@/util'
+import { ServerUserStatus } from '@/resolver/server/types/ServerUserStatus'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -75,10 +76,10 @@ export class User extends BaseEntity {
   })
   folders = new Collection<UserFolder>(this)
 
-  @OneToMany(() => ServerUserJoin, 'user', {
+  @OneToMany(() => ServerUser, 'user', {
     orderBy: { position: QueryOrder.ASC, createdAt: QueryOrder.DESC }
   })
-  serverJoins = new Collection<ServerUserJoin>(this)
+  serverJoins = new Collection<ServerUser>(this)
 
   @ManyToMany(() => Group, group => group.users, {
     orderBy: { lastMessageAt: QueryOrder.DESC }
@@ -115,11 +116,19 @@ export class User extends BaseEntity {
     em: EntityManager,
     serverId: string
   ): Promise<boolean> {
-    return !!(await em.count(ServerUserBan, { server: serverId, user: this }))
+    return !!(await em.count(ServerUser, {
+      server: serverId,
+      user: this,
+      status: ServerUserStatus.Banned
+    }))
   }
 
   async hasJoinedServer(em: EntityManager, serverId: string): Promise<boolean> {
-    return !!(await em.count(ServerUserJoin, { server: serverId, user: this }))
+    return !!(await em.count(ServerUser, {
+      server: serverId,
+      user: this,
+      status: ServerUserStatus.Joined
+    }))
   }
 
   async checkJoinedServer(em: EntityManager, serverId: string) {
@@ -132,76 +141,43 @@ export class User extends BaseEntity {
       throw new Error('error.server.banned')
   }
 
-  async banFromServer(
-    em: EntityManager,
-    refetchUsers: Publisher<string>,
-    serverId: string,
-    reason?: string,
-    bannedBy?: User
-  ) {
-    const ban = em.create(ServerUserBan, {
-      user: this,
-      server: serverId,
-      reason,
-      bannedBy
-    })
-    await this.leaveServer(em, refetchUsers, serverId)
-    await em.persistAndFlush(ban)
-    await refetchUsers(this.id)
-  }
-
-  async unbanFromServer(em: EntityManager, serverId: string) {
-    const ban = await em.findOneOrFail(ServerUserBan, {
-      user: this,
-      server: serverId
-    })
-    await em.remove(ban).flush()
-  }
-
   async joinServer(
     em: EntityManager,
-    refetchUsers: Publisher<string>,
-    serverId: string
-  ) {
+    serverId: string,
+    notifyUserJoinedServer: Publisher<UserServerPayload>
+  ): Promise<Server> {
     await this.checkBannedFromServer(em, serverId)
-    if ((await em.count(ServerUserJoin, { user: this })) >= 100)
-      throw new Error('error.server.joinLimit')
-
-    const server = await em.findOneOrFail(Server, serverId, [
-      'systemMessagesChannel'
-    ])
-
-    let serverJoin = await em.findOne(ServerUserJoin, {
+    const server = await em.findOneOrFail(Server, serverId)
+    const firstServerJoin = await em.findOne(
+      ServerUser,
+      { server, user: this },
+      ['server'],
+      { position: QueryOrder.ASC }
+    )
+    const join = em.create(ServerUser, {
       server,
-      user: this
+      user: this,
+      position: firstServerJoin
+        ? ReorderUtils.positionBefore(firstServerJoin.position)
+        : ReorderUtils.FIRST_POSITION
     })
-    if (serverJoin) throw new Error('error.server.alreadyJoined')
-    serverJoin = em.create(ServerUserJoin, { server, user: this })
-    server.userCount++
-
-    if (server.systemMessagesChannel) {
-      const joinMessage = em.create(Message, {
-        channel: server.systemMessagesChannel,
-        author: this
-      })
-      em.persist(joinMessage)
-    }
-
-    await em.persistAndFlush([server, serverJoin])
-    await refetchUsers(this.id)
+    await em.persistAndFlush(join)
+    await notifyUserJoinedServer({ userId: this.id, serverId })
+    return server
   }
 
   async leaveServer(
     em: EntityManager,
-    refetchUsers: Publisher<string>,
-    serverId: string
+    serverId: string,
+    notifyUserLeftServer: Publisher<UserServerPayload>
   ) {
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
     if (server.owner === this) throw new Error('error.server.owner')
-    const join = await em.findOneOrFail(ServerUserJoin, { server, user: this })
+    const join = await em.findOneOrFail(ServerUser, { server, user: this })
     server.userCount--
-    await em.remove(join).persistAndFlush([server, join])
-    await refetchUsers(this.id)
+    join.status = ServerUserStatus.None
+    await em.persistAndFlush([server, join])
+    await notifyUserLeftServer({ userId: this.id, serverId: server.id })
   }
 
   async hasServerPermission(
@@ -212,9 +188,7 @@ export class User extends BaseEntity {
     if (this.isAdmin) return true
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
     if (server.owner === this) return true
-    const join = await em.findOne(ServerUserJoin, { server, user: this }, [
-      'roles'
-    ])
+    const join = await em.findOne(ServerUser, { server, user: this }, ['roles'])
     if (!join) return false
     const roles = join.roles.getItems()
     return !!roles.find(role => role.hasPermission(permission))
@@ -240,7 +214,7 @@ export class User extends BaseEntity {
     const channel = await em.findOneOrFail(Channel, ['server.owner'])
     if (channel.server.owner === this) return true
     const join = await em.findOne(
-      ServerUserJoin,
+      ServerUser,
       { server: channel.server, user: this },
       ['roles']
     )
@@ -299,23 +273,23 @@ export class User extends BaseEntity {
   }
 
   async getFriendData(em: EntityManager, userId: string) {
-    const toUser = await em.findOneOrFail(User, userId)
-    let myData = await em.findOne(FriendData, { user: this, toUser })
+    const friend = await em.findOneOrFail(User, userId)
+    let myData = await em.findOne(FriendData, { user: this, friend })
     let theirData = await em.findOne(FriendData, {
-      user: toUser,
-      toUser: this
+      user: friend,
+      friend: this
     })
 
     if (!myData) {
       myData = em.create(FriendData, {
         user: this,
-        toUser
+        friend
       })
     }
     if (!theirData) {
       theirData = em.create(FriendData, {
-        user: toUser,
-        toUser: this
+        user: friend,
+        friend: this
       })
     }
 
@@ -337,7 +311,7 @@ export class User extends BaseEntity {
             user: this,
             status: FriendStatus.Friends
           })
-        ).map(f => f.toUser)
+        ).map(f => f.friend)
         if (!friends.includes(folder.owner))
           throw new Error('error.folder.notFriends')
       }

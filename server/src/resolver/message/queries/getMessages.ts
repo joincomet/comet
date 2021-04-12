@@ -73,7 +73,7 @@ export async function getMessages(
     const [myData, theirData] = await user.getFriendData(em, userId)
     myData.showChat = true
     await em.persistAndFlush([myData, theirData])
-    await notifyDmOpened({ userId: user.id, toUserId: toUser.id })
+    await notifyDmOpened({ userId: user.id, friendId: toUser.id })
 
     where['$or'] = [
       { author: user, toUser },

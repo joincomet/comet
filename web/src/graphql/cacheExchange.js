@@ -63,8 +63,8 @@ export const cacheExchange = ce({
     GetPostsResponse: () => null,
     GetMessagesResponse: () => null,
     LinkMetadata: () => null,
-    MessageSentResponse: () => null,
-    MessageRemovedResponse: () => null,
+    MessageResponse: () => null,
+    MessageDeletedResponse: () => null,
     ChannelUsersResponse: () => null,
     GetUserRelationshipsResponse: () => null,
     GetChannelPermissionsResponse: () => null,
@@ -285,8 +285,8 @@ export const cacheExchange = ce({
       ) {
         // TODO
       },
-      messageRemoved(
-        { messageRemoved: { userId, groupId, channelId, messageId } },
+      messageDeleted(
+        { messageDeleted: { userId, groupId, channelId, messageId } },
         _variables,
         cache
       ) {

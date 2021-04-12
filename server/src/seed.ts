@@ -8,7 +8,7 @@ import {
   Post,
   Server,
   ServerFolder,
-  ServerUserJoin,
+  ServerUser,
   User,
   UserFolder
 } from '@/entity'
@@ -104,17 +104,17 @@ export const seed = async (em: EntityManager) => {
     channelGeneral,
     ...createUserFolders(userDan),
     ...createUserFolders(userMichael),
-    em.create(ServerUserJoin, {
+    em.create(ServerUser, {
       user: userAdmin,
       server: serverComet,
       notificationSetting: NotificationSetting.All
     }),
-    em.create(ServerUserJoin, {
+    em.create(ServerUser, {
       user: userDan,
       server: serverComet,
       notificationSetting: NotificationSetting.All
     }),
-    em.create(ServerUserJoin, {
+    em.create(ServerUser, {
       user: userMichael,
       server: serverComet,
       notificationSetting: NotificationSetting.All
@@ -130,25 +130,25 @@ export const seed = async (em: EntityManager) => {
     }),
     em.create(FriendData, {
       user: userDan,
-      toUser: userMichael,
+      friend: userMichael,
       status: FriendStatus.Friends,
       showChat: true
     }),
     em.create(FriendData, {
       user: userMichael,
-      toUser: userDan,
+      friend: userDan,
       status: FriendStatus.Friends,
       showChat: true
     }),
     em.create(FriendData, {
       user: userDan,
-      toUser: userAdmin,
+      friend: userAdmin,
       status: FriendStatus.Friends,
       showChat: true
     }),
     em.create(FriendData, {
       user: userMichael,
-      toUser: userAdmin,
+      friend: userAdmin,
       status: FriendStatus.Friends,
       showChat: true
     })
@@ -174,7 +174,7 @@ export const seed = async (em: EntityManager) => {
     )
       continue
     users.push(user)
-    entities.push(em.create(ServerUserJoin, { user, server: serverComet }))
+    entities.push(em.create(ServerUser, { user, server: serverComet }))
     const numMessages = rand(1, MAX_MESSAGES_PER_USER)
     const createdAt = faker.date.recent()
     for (let j = 0; j < numMessages; j++) {

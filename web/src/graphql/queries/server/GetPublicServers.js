@@ -8,7 +8,6 @@ export const GET_PUBLIC_SERVERS = gql`
   ) {
     getPublicServers(sort: $sort, category: $category) {
       ...SERVER_FRAGMENT
-      onlineUserCount
     }
   }
   ${SERVER_FRAGMENT}

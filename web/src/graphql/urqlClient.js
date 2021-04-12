@@ -46,9 +46,15 @@ export const urqlClient = createClient({
     cacheExchange,
     errorExchange({
       onError(error, operation) {
-        if (import.meta.env.DEV) console.error({ error, operation })
+        const message = error.message?.substring(10)
+        if (import.meta.env.DEV) {
+          console.error({
+            operation: operation?.query?.definitions[0].name.value,
+            message
+          })
+          console.error({ error, operation })
+        }
         if (!error.networkError) {
-          const message = error.message.substring(10)
           const replace = error.graphQLErrors[0]?.extensions?.exception?.replace
           if (replace) {
             toast.error(i18n.t(message, { replace }))

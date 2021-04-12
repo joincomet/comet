@@ -9,103 +9,64 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { Channel, Server, ServerInvite, User } from '@/entity'
-import { uploadImageSingle } from '@/util/s3'
+import { Server } from '@/entity'
 import { Context, SubscriptionTopic } from '@/types'
-import { ServerUserJoin } from '@/entity/ServerUserJoin'
-import { UpdateServerArgs } from '@/resolver/server/types/UpdateServerArgs'
-import { CreateServerArgs } from '@/resolver/server/types/CreateServerArgs'
 import { ServerPermission } from '@/types/ServerPermission'
 import { CheckServerPermission } from '@/util'
 import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
+import { UserServerPayload } from '@/resolver/server/subscriptions/UserServerPayload'
+import {
+  CreateServerArgs,
+  createServer
+} from '@/resolver/server/mutations/createServer'
+import {
+  EditServerArgs,
+  editServer
+} from '@/resolver/server/mutations/editServer'
+import {
+  JoinServerArgs,
+  joinServer,
+  banUserFromServer,
+  UserServerArgs,
+  unbanUserFromServer,
+  ReorderServersArgs,
+  reorderServers
+} from '@/resolver/server/mutations'
 
 @Resolver()
 export class ServerMutations {
   @Authorized()
   @Mutation(() => Server, { description: 'Create a server' })
   async createServer(
-    @Ctx() { user, em }: Context,
-    @Args() { name, avatarFile, isPublic, category }: CreateServerArgs,
-    @PubSub(SubscriptionTopic.RefetchUsers)
-    refetchUsers: Publisher<string>
+    @Ctx() ctx: Context,
+    @Args() args: CreateServerArgs,
+    @PubSub(SubscriptionTopic.UserJoinedServer)
+    notifyUserJoinedServer: Publisher<UserServerPayload>
   ): Promise<Server> {
-    if ((await em.count(ServerUserJoin, { user })) >= 100)
-      throw new Error('error.server.joinLimit')
-
-    const channel = em.create(Channel, {
-      name: 'general'
-    })
-
-    em.persist(channel)
-
-    let avatarUrl = null
-    if (avatarFile) {
-      avatarUrl = await uploadImageSingle(
-        avatarFile,
-        {
-          width: 256,
-          height: 256
-        },
-        true
-      )
-    }
-
-    const server = em.create(Server, {
-      name,
-      owner: user,
-      channels: [channel],
-      avatarUrl,
-      category,
-      isPublic,
-      systemMessagesChannel: channel
-    })
-    await em.persistAndFlush([server])
-    await user.joinServer(em, refetchUsers, server)
-    return server
+    return createServer(ctx, args, notifyUserJoinedServer)
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
-  async joinPublicServer(
-    @Arg('serverId', () => ID) serverId: string,
-    @Ctx() { user, em }: Context,
-    @PubSub(SubscriptionTopic.RefetchUsers)
-    refetchUsers: Publisher<string>
-  ): Promise<boolean> {
-    const server = await em.findOneOrFail(Server, serverId)
-    if (!server.isPublic) throw new Error('error.server.inviteRequired')
-    await user.checkBannedFromServer(em, server)
-    await user.joinServer(em, refetchUsers, server)
-    return true
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async joinServerWithInvite(
-    @Arg('inviteId', () => ID) inviteId: string,
-    @Ctx() { user, em }: Context,
-    @PubSub(SubscriptionTopic.RefetchUsers)
-    refetchUsers: Publisher<string>
-  ): Promise<boolean> {
-    const invite = await em.findOneOrFail(ServerInvite, inviteId, ['server'])
-    if (invite.isExpired) throw new Error('error.server.inviteExpired')
-    const server = invite.server
-    await user.checkBannedFromServer(em, server)
-    await user.joinServer(em, refetchUsers, server)
-    return true
+  @Mutation(() => Server)
+  async joinServer(
+    @Ctx() ctx: Context,
+    @Args() args: JoinServerArgs,
+    @PubSub(SubscriptionTopic.UserJoinedServer)
+    notifyUserJoinedServer: Publisher<UserServerPayload>
+  ): Promise<Server> {
+    return joinServer(ctx, args, notifyUserJoinedServer)
   }
 
   @CheckJoinedServer()
   @Mutation(() => Boolean)
   async leaveServer(
+    @Ctx() { user, em }: Context,
     @Arg('serverId', () => ID, { description: 'ID of server to leave' })
     serverId: string,
-    @Ctx() { user, em }: Context,
-    @PubSub(SubscriptionTopic.RefetchUsers)
-    refetchUsers: Publisher<string>
+    @PubSub(SubscriptionTopic.UserLeftServer)
+    notifyUserLeftServer: Publisher<UserServerPayload>
   ): Promise<boolean> {
-    const server = await em.findOneOrFail(Server, serverId)
-    await user.leaveServer(em, refetchUsers, server)
+    await user.leaveServer(em, serverId, notifyUserLeftServer)
     return true
   }
 
@@ -114,88 +75,42 @@ export class ServerMutations {
     description: 'Ban a user from a server (requires ServerPermission.BanUser)'
   })
   async banUserFromServer(
-    @Ctx() { em, user: currentUser }: Context,
-    @PubSub(SubscriptionTopic.RefetchUsers)
-    refetchUsers: Publisher<string>,
-    @Arg('serverId', () => ID, {
-      description: 'ID of server user is being banned from'
-    })
-    serverId: string,
-    @Arg('userId', () => ID, { description: 'ID of user to ban' })
-    userId: string,
-    @Arg('purge', {
-      defaultValue: false,
-      description: 'Remove all posts, comments and messages'
-    })
-    purge: boolean,
-    @Arg('reason', { nullable: true }) reason?: string
+    @Ctx() ctx: Context,
+    @Args() args: UserServerArgs,
+    @PubSub(SubscriptionTopic.UserLeftServer)
+    notifyUserLeftServer: Publisher<UserServerPayload>
   ): Promise<boolean> {
-    const server = await em.findOneOrFail(Server, serverId)
-    const bannedUser = await em.findOneOrFail(User, userId, [
-      'serverJoins.server'
-    ])
-    await bannedUser.banFromServer(
-      em,
-      refetchUsers,
-      server,
-      reason,
-      currentUser
-    )
-    return true
+    return banUserFromServer(ctx, args, notifyUserLeftServer)
   }
 
   @CheckServerPermission(ServerPermission.BanUser)
   @Mutation(() => Boolean)
   async unbanUserFromServer(
-    @Arg('serverId', () => ID) serverId: string,
-    @Arg('userId', () => ID) userId: string,
-    @Ctx() { em }: Context
+    @Ctx() ctx: Context,
+    @Args() args: UserServerArgs
   ): Promise<boolean> {
-    const server = await em.findOneOrFail(Server, serverId)
-    const user = await em.findOneOrFail(User, userId)
-    await user.unbanFromServer(em, server)
-    return true
+    return unbanUserFromServer(ctx, args)
   }
 
   @CheckServerPermission(ServerPermission.ManageServer)
   @Mutation(() => Server)
-  async updateServer(
-    @Ctx() { em }: Context,
-    @Args()
-    {
-      serverId,
-      name,
-      description,
-      avatarFile,
-      bannerFile,
-      category,
-      searchable
-    }: UpdateServerArgs
+  async editServer(
+    @Ctx() ctx: Context,
+    @Args() args: EditServerArgs,
+    @PubSub(SubscriptionTopic.ServerUpdated)
+    notifyServerUpdated: Publisher<{ serverId: string }>
   ): Promise<Server> {
-    const server = await em.findOneOrFail(Server, serverId)
+    return editServer(ctx, args, notifyServerUpdated)
+  }
 
-    const avatarUrl = await uploadImageSingle(
-      avatarFile,
-      {
-        width: 256,
-        height: 256
-      },
-      true
-    )
-
-    const bannerUrl = await uploadImageSingle(bannerFile, null, false)
-
-    em.assign(server, {
-      name,
-      description,
-      avatarUrl,
-      bannerUrl,
-      category,
-      isPublic: searchable
-    })
-
-    await em.persistAndFlush(server)
-
-    return server
+  @Authorized()
+  @Mutation(() => [Server])
+  async reorderServers(
+    @Ctx() ctx: Context,
+    @Args() args: ReorderServersArgs,
+    @PubSub(SubscriptionTopic.ServersReordered)
+    notifyServersReordered: Publisher<{ userId: string }>
+  ) {
+    return reorderServers(ctx, args, notifyServersReordered)
   }
 }

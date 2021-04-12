@@ -1,11 +1,5 @@
 import { ChannelPermission, Context, ServerPermission } from '@/types'
-import {
-  Channel,
-  ChannelRole,
-  ChannelUser,
-  Server,
-  ServerUserJoin
-} from '@/entity'
+import { Channel, ChannelRole, ChannelUser, Server, ServerUser } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 
 export async function getServerChannels(
@@ -17,7 +11,7 @@ export async function getServerChannels(
   const channels = await em.find(
     Channel,
     { server },
-    { orderBy: { position: QueryOrder.DESC } }
+    { orderBy: { position: QueryOrder.ASC } }
   )
 
   const channelUsers = await em.find(ChannelUser, { user, channel: channels }, [
@@ -38,7 +32,7 @@ export async function getServerChannels(
 
   if (user.isAdmin) return channels
 
-  const join = await em.findOne(ServerUserJoin, { user, server }, ['roles'])
+  const join = await em.findOne(ServerUser, { user, server }, ['roles'])
   const roles = join.roles.getItems()
 
   const hasAdminPermission = roles.find(r =>

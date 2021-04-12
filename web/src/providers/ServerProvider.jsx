@@ -3,7 +3,6 @@ import { GET_SERVER_FOLDERS, GET_SERVER_PERMISSIONS } from '@/graphql/queries'
 import { useParams } from 'react-router-dom'
 import { useQuery, useSubscription } from 'urql'
 import { useJoinedServers } from '@/providers/DataProvider'
-import { REFETCH_SERVER_FOLDERS } from '@/graphql/subscriptions/folder'
 
 export const ServerContext = createContext({
   folders: null,
@@ -24,9 +23,6 @@ export function ServerProvider({ children }) {
     variables: { serverId },
     pause
   })
-  useSubscription({ query: REFETCH_SERVER_FOLDERS, pause }, () =>
-    refetchFolders()
-  )
 
   const [{ data: permissionsData }, refetchPermissions] = useQuery({
     query: GET_SERVER_PERMISSIONS,

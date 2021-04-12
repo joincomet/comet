@@ -1,11 +1,8 @@
 import { useMutation } from 'urql'
 import {
   BAN_USER_FROM_SERVER,
-  BLOCK_USER,
-  CREATE_FRIEND_REQUEST,
-  HIDE_DM,
-  REMOVE_FRIEND,
-  REVOKE_FRIEND_REQUEST
+  CLOSE_DM,
+  CHANGE_FRIEND_STATUS
 } from '@/graphql/mutations'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
@@ -17,7 +14,8 @@ import { useUserRelationships } from '@/providers/DataProvider'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useStore } from '@/hooks/useStore'
 import { useHistory } from 'react-router-dom'
-import { VIEW_DM } from '@/graphql/mutations/dm/ViewDm'
+import { READ_DM } from '@/graphql/mutations/dm/ReadDm'
+import { FriendStatus } from '@/types/FriendStatus'
 
 export default function UserContextMenu({
   user,
@@ -43,18 +41,11 @@ export default function UserContextMenu({
     ]
   })
 
-  const [_hideRes, hideDm] = useMutation(HIDE_DM)
-  const [_viewRes, viewDm] = useMutation(VIEW_DM)
+  const [_hideRes, hideDm] = useMutation(CLOSE_DM)
+  const [_viewRes, viewDm] = useMutation(READ_DM)
   const [_banRes, banUser] = useMutation(BAN_USER_FROM_SERVER)
   const [_kickRes, kickUser] = useMutation(KICK_USER_FROM_SERVER)
-  const [_blockRes, blockUser] = useMutation(BLOCK_USER)
-  const [_addFriendRes, createFriendRequest] = useMutation(
-    CREATE_FRIEND_REQUEST
-  )
-  const [_revokeFriendReqestRes, revokeFriendRequest] = useMutation(
-    REVOKE_FRIEND_REQUEST
-  )
-  const [_removeFriendRes, removeFriend] = useMutation(REMOVE_FRIEND)
+  const [_statusRes, changeFriendStatus] = useMutation(CHANGE_FRIEND_STATUS)
 
   const { friends, outgoingFriendRequests } = useUserRelationships()
   const isFriend = friends.map(f => f.id).includes(user?.id)
@@ -100,13 +91,23 @@ export default function UserContextMenu({
             {isFriend ? (
               <ContextMenuItem
                 label={t('user.context.removeFriend')}
-                onClick={() => removeFriend({ userId: user.id })}
+                onClick={() =>
+                  changeFriendStatus({
+                    userId: user.id,
+                    status: FriendStatus.None
+                  })
+                }
                 red
               />
             ) : (
               <ContextMenuItem
                 label={t('user.context.addFriend')}
-                onClick={() => createFriendRequest({ userId: user.id })}
+                onClick={() =>
+                  changeFriendStatus({
+                    userId: user.id,
+                    status: FriendStatus.FriendRequestOutgoing
+                  })
+                }
               />
             )}
           </>

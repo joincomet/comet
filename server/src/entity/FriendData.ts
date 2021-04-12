@@ -18,7 +18,7 @@ export class FriendData {
   user: User
 
   @ManyToOne({ entity: () => User, primary: true })
-  toUser: User;
+  friend: User;
 
   [PrimaryKeyType]: [string, string]
 

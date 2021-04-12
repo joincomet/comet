@@ -4,10 +4,8 @@ export enum SubscriptionTopic {
   MessageDeleted = 'MessageDeleted',
   Typing = 'Typing',
 
-  FriendRequestReceived = 'FriendRequestReceived',
-  FriendRequestAccepted = 'FriendRequestAccepted',
-  FriendRemoved = 'FriendRemoved',
-  UserBlocked = 'UserBlocked',
+  FriendStatusChanged = 'FriendStatusChanged',
+  UserBannedGlobal = 'UserBannedGlobal',
 
   UserUpdated = 'UserUpdated',
 
@@ -25,8 +23,8 @@ export enum SubscriptionTopic {
 
   RolesUpdated = 'RolesUpdated',
   ServerUpdated = 'ServerUpdated',
-  JoinedServer = 'JoinedServer',
-  LeftServer = 'LeftServer',
+  UserJoinedServer = 'UserJoinedServer',
+  UserLeftServer = 'UserLeftServer',
   ServersReordered = 'ServersReordered',
 
   ChannelCreated = 'ChannelCreated',
