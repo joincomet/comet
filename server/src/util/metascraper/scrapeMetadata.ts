@@ -1,6 +1,6 @@
 import got from 'got'
 import { LinkMetadata } from '@/entity'
-import { uploadImage, uploadImageSingle } from '@/util/s3'
+import { uploadImageSingle } from '@/util/s3'
 import { isUrl } from '@/util/isUrl'
 
 const metascraperTwitterCard = () => ({

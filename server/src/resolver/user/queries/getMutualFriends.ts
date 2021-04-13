@@ -1,6 +1,5 @@
-import { FriendData, User } from '@/entity'
+import { Relationship, RelationshipStatus, User } from '@/entity'
 import { Context } from '@/types'
-import { FriendStatus } from '@/resolver/user'
 
 export async function getMutualFriends(
   { em, user }: Context,
@@ -8,14 +7,16 @@ export async function getMutualFriends(
 ): Promise<User[]> {
   const them = await em.findOneOrFail(User, userId)
   const myFriends = (
-    await em.find(FriendData, { user, status: FriendStatus.Friends }, [
+    await em.find(Relationship, { user, status: RelationshipStatus.Friends }, [
       'friend'
     ])
-  ).map(f => f.friend)
+  ).map(f => f.user)
   const theirFriends = (
-    await em.find(FriendData, { user: them, status: FriendStatus.Friends }, [
-      'friend'
-    ])
-  ).map(f => f.friend.id)
+    await em.find(
+      Relationship,
+      { user: them, status: RelationshipStatus.Friends },
+      ['friend']
+    )
+  ).map(f => f.user.id)
   return myFriends.filter(f => theirFriends.includes(f.id))
 }

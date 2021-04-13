@@ -1,6 +1,7 @@
 import {
   Arg,
   Args,
+  Authorized,
   Ctx,
   ID,
   Mutation,
@@ -8,13 +9,8 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { Post, PostVote } from '@/entity'
-import { Context, ServerPermission, SubscriptionTopic } from '@/types'
-import {
-  CheckPostAuthor,
-  CheckPostServerPermission,
-  CheckServerPermission
-} from '@/util'
+import { Post } from '@/entity'
+import { Context, SubscriptionTopic } from '@/types'
 import {
   createPost,
   CreatePostArgs,
@@ -30,11 +26,8 @@ import { PostServerPayload } from '@/resolver/post/subscriptions'
 
 @Resolver()
 export class PostMutations {
-  @CheckServerPermission(ServerPermission.CreatePost)
-  @Mutation(() => Post, {
-    description:
-      'Create a post in a server (requires ServerPermission.CreatePost)'
-  })
+  @Authorized()
+  @Mutation(() => Post)
   async createPost(
     @Ctx() ctx: Context,
     @Args()
@@ -45,10 +38,8 @@ export class PostMutations {
     return createPost(ctx, args, notifyPostCreated)
   }
 
-  @CheckPostAuthor()
-  @Mutation(() => Post, {
-    description: 'Edit a post (must be author)'
-  })
+  @Authorized()
+  @Mutation(() => Post)
   async editPost(
     @Ctx() ctx: Context,
     @Args() args: EditPostArgs,
@@ -58,10 +49,8 @@ export class PostMutations {
     return editPost(ctx, args, notifyPostUpdated)
   }
 
-  @CheckPostAuthor()
-  @Mutation(() => Boolean, {
-    description: 'Delete a post (must be author)'
-  })
+  @Authorized()
+  @Mutation(() => Boolean)
   async deletePost(
     @Ctx() ctx: Context,
     @Arg('postId', () => ID) postId: string,
@@ -71,13 +60,11 @@ export class PostMutations {
     return deletePost(ctx, postId, notifyPostDeleted)
   }
 
-  @CheckPostServerPermission(ServerPermission.VotePost)
-  @Mutation(() => Post, { description: 'Add vote to post' })
+  @Authorized()
+  @Mutation(() => Post)
   async votePost(
     @Ctx() ctx: Context,
-    @Arg('postId', () => ID, {
-      description: 'ID of post to vote (requires ServerPermission.VotePost)'
-    })
+    @Arg('postId', () => ID)
     postId: string,
     @PubSub(SubscriptionTopic.PostUpdated)
     notifyPostUpdated: Publisher<{ postId: string }>
@@ -85,14 +72,11 @@ export class PostMutations {
     return votePost(ctx, postId, notifyPostUpdated)
   }
 
-  @CheckPostServerPermission(ServerPermission.VotePost)
-  @Mutation(() => Post, { description: 'Remove vote from post' })
+  @Authorized()
+  @Mutation(() => Post)
   async unvotePost(
     @Ctx() ctx: Context,
-    @Arg('postId', () => ID, {
-      description:
-        'ID of post to remove vote (requires ServerPermission.VotePost)'
-    })
+    @Arg('postId', () => ID)
     postId: string,
     @PubSub(SubscriptionTopic.PostUpdated)
     notifyPostUpdated: Publisher<{ postId: string }>
@@ -100,13 +84,11 @@ export class PostMutations {
     return unvotePost(ctx, postId, notifyPostUpdated)
   }
 
-  @CheckPostServerPermission(ServerPermission.ManagePosts)
-  @Mutation(() => Post, {
-    description: 'Pin a post (requires ServerPermission.PinPosts)'
-  })
+  @Authorized()
+  @Mutation(() => Post)
   async pinPost(
     @Ctx() ctx: Context,
-    @Arg('postId', () => ID, { description: 'ID of post to pin' })
+    @Arg('postId', () => ID)
     postId: string,
     @PubSub(SubscriptionTopic.PostUpdated)
     notifyPostUpdated: Publisher<{ postId: string }>
@@ -114,13 +96,11 @@ export class PostMutations {
     return pinPost(ctx, postId, notifyPostUpdated)
   }
 
-  @CheckPostServerPermission(ServerPermission.ManagePosts)
-  @Mutation(() => Post, {
-    description: 'Unpin a post (requires ServerPermission.PinPosts)'
-  })
+  @Authorized()
+  @Mutation(() => Post)
   async unpinPost(
     @Ctx() ctx: Context,
-    @Arg('postId', () => ID, { description: 'ID of post to unpin' })
+    @Arg('postId', () => ID)
     postId: string,
     @PubSub(SubscriptionTopic.PostUpdated)
     notifyPostUpdated: Publisher<{ postId: string }>

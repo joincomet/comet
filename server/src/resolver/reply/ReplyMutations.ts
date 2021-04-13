@@ -17,9 +17,7 @@ import { markAllRepliesRead } from '@/resolver/reply/mutations/markAllRepliesRea
 @Resolver()
 export class ReplyMutations {
   @Authorized()
-  @Mutation(() => Reply, {
-    description: 'Mark a single comment reply as read'
-  })
+  @Mutation(() => Reply)
   async markReplyRead(
     @Ctx() ctx: Context,
     @Arg('replyId', () => ID) replyId: string,
@@ -30,9 +28,7 @@ export class ReplyMutations {
   }
 
   @Authorized()
-  @Mutation(() => [Reply], {
-    description: 'Mark all comment replies as read'
-  })
+  @Mutation(() => [Reply])
   async markAllRepliesRead(
     @Ctx() ctx: Context,
     @PubSub(SubscriptionTopic.AllRepliesRead)

@@ -16,6 +16,7 @@ export {
   MessageSubscriptions
 } from './message'
 export { ReplySubscriptions, ReplyQueries, ReplyMutations } from './reply'
+export { RoleSubscriptions, RoleQueries, RoleMutations } from './role'
 export { PostQueries, PostMutations, PostSubscriptions } from './post'
 export { ServerSubscriptions, ServerQueries, ServerMutations } from './server'
 export { UserQueries, UserMutations, UserSubscriptions } from './user'

@@ -1,7 +1,7 @@
 import { UserServerArgs } from '@/resolver/server/mutations/UserServerArgs'
 import { Context } from '@/types'
 import { ServerUser } from '@/entity'
-import { ServerUserStatus } from '@/resolver/server/types/ServerUserStatus'
+import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
 export async function unbanUserFromServer(
   { em }: Context,

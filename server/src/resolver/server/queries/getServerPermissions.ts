@@ -1,5 +1,5 @@
-import { Context, ServerPermission } from '@/types'
-import { Server, ServerUser } from '@/entity'
+import { Context } from '@/types'
+import { Server, ServerPermission, ServerUser } from '@/entity'
 
 export async function getServerPermissions(
   { em, user }: Context,

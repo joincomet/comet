@@ -1,10 +1,18 @@
 import { Context } from '@/types'
 import { ArgsType, Field, ID, Publisher } from 'type-graphql'
-import { Channel, File, Group, GroupUser, Image, Message, User } from '@/entity'
+import {
+  Channel,
+  File,
+  Group,
+  GroupUser,
+  Image,
+  Message,
+  RelationshipStatus,
+  User
+} from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { MessagePayload } from '@/resolver/message/subscriptions/MessagePayload'
 import { DmPayload } from '@/resolver/message/subscriptions/DmPayload'
-import { FriendStatus } from '@/resolver/user'
 import { uploadFileOrImage } from '@/util'
 import { getLinkMetas } from '@/util/getLinkMetas'
 
@@ -42,9 +50,9 @@ export async function sendMessage(
 
   if (toUser) {
     const [myData, theirData] = await user.getFriendData(em, userId)
-    if (myData.status === FriendStatus.Blocked)
+    if (myData.status === RelationshipStatus.Blocked)
       throw new Error('error.user.blocked')
-    if (myData.status === FriendStatus.Blocking)
+    if (myData.status === RelationshipStatus.Blocking)
       throw new Error('error.user.blocking')
   }
 

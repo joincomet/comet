@@ -1,11 +1,8 @@
 import { ArgsType, Field, ID, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
-import { ServerCategory } from '@/resolver/server'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import { UserServerPayload } from '@/resolver/server/subscriptions/UserServerPayload'
-import { Server } from '@/entity'
-import { CreateServerArgs } from '@/resolver/server/mutations/createServer'
+import { Server, ServerCategory } from '@/entity'
 import { uploadImageSingle } from '@/util'
 
 @ArgsType()

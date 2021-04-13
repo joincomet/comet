@@ -18,11 +18,6 @@ type Channel implements BaseEntity {
   server: Server!
 }
 
-type ChannelDeletedResponse {
-  channelId: ID!
-  serverId: ID!
-}
-
 enum ChannelPermission {
   AttachFiles
   EmbedLinks
@@ -37,6 +32,12 @@ enum ChannelPermission {
 type ChannelResponse {
   channel: Channel!
   serverId: ID!
+}
+
+type ChannelRole {
+  allowedPermissions: [ChannelPermission!]!
+  channel: Channel!
+  deniedPermissions: [ChannelPermission!]!
 }
 
 type ChannelUsersResponse {
@@ -240,99 +241,39 @@ enum MessageType {
 
 type Mutation {
   addPostToFolder(folderId: ID!, postId: ID!): Folder!
-
-  """Ban a user from a server (requires ServerPermission.BanUser)"""
   banUserFromServer(serverId: ID!, userId: ID!): Boolean!
-
-  """
-  Ban user globally and optionally purge all posts, comments, and messages (requires admin)
-  """
   banUserGlobal(purge: Boolean = false, reason: String, userId: ID!): Boolean!
   changeFriendStatus(status: FriendStatus!, userId: ID!): User!
-
-  """Change password"""
-  changePassword(
-    """Current password for verification"""
-    currentPassword: String!
-
-    """New password"""
-    password: String!
-  ): LoginResponse!
+  changePassword(currentPassword: String!, password: String!): LoginResponse!
   closeDm(userId: ID!): Boolean!
-
-  """Create an account"""
   createAccount(email: String!, name: String!, password: String!): LoginResponse!
   createChannel(isPrivate: Boolean = false, name: String!, serverId: ID!): Channel!
-
-  """Create a comment on a post"""
   createComment(parentCommentId: ID, postId: ID!, text: String!): Comment!
   createFolder(isCollaborative: Boolean = false, name: String!, serverId: ID, visibility: FolderVisibility = Public): Folder!
-
-  """Create group with users"""
   createGroup(usernames: [String!]!): Group!
-
-  """Create a post in a server (requires ServerPermission.CreatePost)"""
   createPost(images: [Upload!], linkUrl: String, serverId: ID!, text: String, title: String!): Post!
-
-  """Create a server"""
   createServer(avatarFile: Upload, category: ServerCategory, isPublic: Boolean = false, name: String!): Server!
   deleteChannel(channelId: ID!): Boolean!
-
-  """Delete a comment"""
   deleteComment(commentId: ID!): Boolean!
   deleteFolder(folderId: ID!): Boolean!
-
-  """Delete a message"""
-  deleteMessage(
-    """ID of message to delete"""
-    messageId: ID!
-  ): Boolean!
-
-  """Delete a post (must be author)"""
+  deleteMessage(messageId: ID!): Boolean!
   deletePost(postId: ID!): Boolean!
-
-  """Update user properties"""
   editAccount(avatarFile: Upload, email: String, name: String): User!
   editChannel(channelId: ID!, isPrivate: Boolean = false, name: String!): Channel!
-
-  """Update a comment"""
   editComment(commentId: ID!, text: String!): Comment!
   editFolder(avatarFile: Upload!, description: String!, folderId: ID!, isCollaborative: Boolean = false, name: String!, visibility: FolderVisibility = Public): Folder!
-
-  """Rename a group"""
   editGroup(avatarFile: Upload, groupId: ID!, name: String): Group!
   editMessage(messageId: ID!, text: String!): Message!
-
-  """Edit a post (must be author)"""
   editPost(postId: ID!, text: String): Post!
   editServer(avatarFile: Upload, bannerFile: Upload, category: ServerCategory, description: String, isPublic: Boolean, name: String, serverId: ID!): Server!
   followFolder(folderId: ID!): Folder!
   joinServer(inviteId: ID, serverId: ID): Server!
-
-  """Leave a group"""
-  leaveGroup(
-    """ID of group to leave"""
-    groupId: ID!
-  ): Boolean!
-  leaveServer(
-    """ID of server to leave"""
-    serverId: ID!
-  ): Boolean!
-
-  """Log in with email and password"""
+  leaveGroup(groupId: ID!): Boolean!
+  leaveServer(serverId: ID!): Boolean!
   login(email: String!, password: String!): LoginResponse!
-
-  """Mark all comment replies as read"""
   markAllRepliesRead: [Reply!]!
-
-  """Mark a single comment reply as read"""
   markReplyRead(replyId: ID!): Reply!
-
-  """Pin a post (requires ServerPermission.PinPosts)"""
-  pinPost(
-    """ID of post to pin"""
-    postId: ID!
-  ): Post!
+  pinPost(postId: ID!): Post!
   readChannel(channelId: ID!): Channel!
   readDm(userId: ID!): User!
   readGroup(groupId: ID!): Group!
@@ -341,48 +282,26 @@ type Mutation {
   reorderServerFolders(beforeFolderId: ID, folderId: ID!, serverId: ID!): [Folder!]!
   reorderServers(beforeServerId: ID, serverId: ID!): [Server!]!
   reorderUserFolders(beforeFolderId: ID, folderId: ID!): [Folder!]!
-
-  """Create a chat message"""
   sendMessage(channelId: ID, file: Upload, groupId: ID, text: String, userId: ID): Message!
   startTyping(channelId: ID, groupId: ID, userId: ID): Boolean!
   unbanUserFromServer(serverId: ID!, userId: ID!): Boolean!
-
-  """Unban a user globally (requires admin)"""
-  unbanUserGlobal(
-    """ID of user to unban"""
-    userId: ID!
-  ): Boolean!
+  unbanUserGlobal(userId: ID!): Boolean!
   unfollowFolder(folderId: ID!): Folder!
-
-  """Unpin a post (requires ServerPermission.PinPosts)"""
-  unpinPost(
-    """ID of post to unpin"""
-    postId: ID!
-  ): Post!
+  unpinPost(postId: ID!): Post!
 
   """Remove vote from a comment"""
   unvoteComment(
     """ID of comment to remove vote"""
     commentId: ID!
   ): Comment!
-
-  """Remove vote from post"""
-  unvotePost(
-    """ID of post to remove vote (requires ServerPermission.VotePost)"""
-    postId: ID!
-  ): Post!
+  unvotePost(postId: ID!): Post!
 
   """Add vote to a comment"""
   voteComment(
     """ID of comment to vote"""
     commentId: ID!
   ): Comment!
-
-  """Add vote to post"""
-  votePost(
-    """ID of post to vote (requires ServerPermission.VotePost)"""
-    postId: ID!
-  ): Post!
+  votePost(postId: ID!): Post!
 }
 
 type Post implements BaseEntity {
@@ -420,11 +339,6 @@ type PostCommentResponse {
   postId: ID!
 }
 
-type PostCreatedResponse {
-  post: Post!
-  serverId: ID!
-}
-
 type PostDeletedResponse {
   postId: ID!
   serverId: ID!
@@ -438,62 +352,18 @@ type PostRemovedFromFolderResponse {
 type Query {
   getChannelPermissions(channelId: ID!): GetChannelPermissionsResponse!
   getChannelUsers(channelId: ID!): [ChannelUsersResponse!]!
-
-  """Get comments on a post"""
-  getComments(
-    """Return all comments for given post ID"""
-    postId: ID
-
-    """Sort comments by new or top"""
-    sort: GetCommentsSort = Top
-  ): [Comment!]!
-
-  """Returns the currently logged in user, or null"""
+  getComments(postId: ID, sort: GetCommentsSort = Top): [Comment!]!
   getCurrentUser: User
   getFolder(folderId: ID!): Folder!
-
-  """Get list of groups and DMs, sorted by latest activity (updatedAt)"""
   getGroupsAndDms: [GroupDmUnion!]!
   getJoinedServers: [Server!]!
-
-  """
-  Get messages in a DM, group, or channel (requires ChannelPermission.ViewChannel or ServerPermission.ViewChannels)
-  """
   getMessages(channelId: ID, groupId: ID, initialTime: DateTime, page: Int = 0, pageSize: Int = 100, pinned: Boolean = false, userId: ID): [GetMessagesResponse!]!
   getMutualFriends(userId: ID!): [User!]!
   getMutualServers(userId: ID!): [Server!]!
   getOtherUserFolders(userId: ID!): [Folder!]!
-
-  """Get a specific post (requires ServerPermission.ViewPosts)"""
-  getPost(
-    """ID of post to retrieve"""
-    postId: ID!
-  ): Post!
-
-  """
-  Get posts (requires ServerPermission.ViewPosts if serverId is provided)
-  """
-  getPosts(
-    """If provided, only posts from given folder ID will be returned"""
-    folderId: ID
-    page: Int = 0
-    pageSize: Int = 20
-
-    """If provided, only posts matching given search term will be returned"""
-    search: String
-
-    """If provided, only posts from given server ID will be returned"""
-    serverId: ID
-
-    """Sort by new, hot, top, most comments"""
-    sort: GetPostsSort = Hot
-
-    """Filter by all, hour, day, week, month, year"""
-    time: GetPostsTime = All
-  ): [GetPostsResponse!]!
+  getPost(postId: ID!): Post!
+  getPosts(folderId: ID, page: Int = 0, pageSize: Int = 20, search: String, serverId: ID, sort: GetPostsSort = Hot, time: GetPostsTime = All): [GetPostsResponse!]!
   getPublicServers(category: ServerCategory, sort: GetPublicServersSort = Top): [Server!]!
-
-  """Get all comment replies or only unread comment replies"""
   getReplies: [Reply!]!
   getServerFolders(serverId: ID!): [Folder!]!
   getServerPermissions(serverId: ID!): [ServerPermission!]!
@@ -505,6 +375,11 @@ type Query {
   getUserRelationships: GetUserRelationshipsResponse!
 }
 
+type RemovedFromRoleResponse {
+  roleId: ID!
+  serverId: ID!
+}
+
 type Reply implements BaseEntity {
   comment: Comment!
   createdAt: DateTime!
@@ -513,6 +388,11 @@ type Reply implements BaseEntity {
   isRead: Boolean!
   parentComment: Comment
   post: Post!
+}
+
+type RolesUpdatedResponse {
+  roles: [ServerRole!]!
+  serverId: ID!
 }
 
 type Server implements BaseEntity {
@@ -553,13 +433,8 @@ enum ServerCategory {
   Technology
 }
 
-type ServerFolderDeletedResponse {
-  folderId: ID!
-  serverId: ID!
-}
-
-type ServerFolderResponse {
-  folder: Folder!
+type ServerFoldersUpdatedResponse {
+  folders: [Folder!]!
   serverId: ID!
 }
 
@@ -592,59 +467,60 @@ enum ServerPermission {
   VotePost
 }
 
+type ServerRole implements BaseEntity {
+  channelRoles: [ChannelRole!]!
+  color: String!
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  permissions: [ServerPermission!]!
+}
+
+type ServerRoleResponse {
+  role: ServerRole!
+  serverId: ID!
+}
+
 type Subscription {
+  addedToGroup: Group!
+  addedToRole: ServerRoleResponse!
   allRepliesRead: Boolean!
-  channelCreated: ChannelResponse!
-  channelDeleted: ChannelDeletedResponse!
-  channelRead: Channel!
+  channelRead: ID!
   channelUpdated: Channel!
-  channelsReordered: [Channel!]!
+  channelsUpdated: ChannelResponse!
   commentCreated: PostCommentResponse!
   commentDeleted: CommentDeletedResponse!
   commentUpdated: Comment!
   dmClosed: ID!
   dmOpened: User!
-  dmRead: User!
+  dmRead: ID!
   folderUpdated: Folder!
   friendStatusChanged: FriendStatusChangedResponse!
-  groupRead: Group!
+  groupRead: ID!
   groupUpdated: Group!
-
-  """
-  Published to all users with permission to view message when a message is deleted or removed
-  """
+  joinedServersUpdated: [Server!]!
   messageDeleted: MessageDeletedResponse!
-
-  """
-  Published to all users with permission to view message when a message is sent
-  """
   messageSent: MessageResponse!
-
-  """
-  Published to all users with permission to view message when a message is updated (edited or embeds fetched)
-  """
   messageUpdated: MessageResponse!
   postAddedToFolder: PostAddedToFolderResponse!
-  postCreated: PostCreatedResponse!
+  postCreated: Post!
   postDeleted: PostDeletedResponse!
   postRemovedFromFolder: PostRemovedFromFolderResponse!
   postUpdated: Post!
+  removedFromGroup: ID!
+  removedFromRole: RemovedFromRoleResponse!
   replyRead: Reply!
   replyReceived: Reply!
-  serverFolderCreated: ServerFolderResponse!
-  serverFolderDeleted: ServerFolderDeletedResponse!
-  serverFoldersReordered: [Folder!]!
+  roleUpdated: ServerRoleResponse!
+  rolesUpdated: RolesUpdatedResponse!
+  serverFoldersUpdated: ServerFoldersUpdatedResponse!
   serverUpdated: Server!
-  serversReordered: [Server!]!
-  userFolderCreated: Folder!
-  userFolderDeleted: ID!
-  userFoldersReordered: [Folder!]!
+  userBannedGlobal: Boolean!
+  userFoldersUpdated: [Folder!]!
   userJoinedGroup: UserJoinedGroupResponse!
   userJoinedServer: UserJoinedServerResponse!
   userLeftGroup: UserLeftGroupResponse!
   userLeftServer: UserLeftServerResponse!
-
-  """Published to all users looking at messages when a user starts typing"""
   userStartedTyping(channelId: ID, groupId: ID, userId: ID): String!
   userUpdated: User!
 }
@@ -663,12 +539,12 @@ type User implements BaseEntity {
   lastLoginAt: DateTime
   name: String!
   tag: String!
-  unreadCount: Int!
+  unreadCount: Int
   username: String!
 }
 
 type UserJoinedGroupResponse {
-  group: Group!
+  groupId: ID!
   user: User!
 }
 

@@ -20,5 +20,6 @@ export async function readChannel(
   await em.persistAndFlush(channelUser)
   channel.isUnread = false
   channel.mentionCount = 0
+  await notifyChannelRead({ channelId, userId: user.id })
   return channel
 }

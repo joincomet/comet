@@ -142,3 +142,24 @@ export const GROUP_FRAGMENT = gql`
     unreadCount
   }
 `
+export const REPLY_FRAGMENT = gql`
+  fragment REPLY_FRAGMENT on Reply {
+    id
+    isRead
+    comment {
+      id
+      parentComment {
+        id
+      }
+      text
+      voteCount
+      author {
+        ...USER_FRAGMENT
+      }
+      post {
+        title
+      }
+    }
+  }
+  ${USER_FRAGMENT}
+`

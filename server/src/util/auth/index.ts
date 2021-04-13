@@ -1,4 +1,3 @@
-export * from './middlewares'
-
+export * from './authChecker'
 export * from './createAccessToken'
 export * from './getUserId'

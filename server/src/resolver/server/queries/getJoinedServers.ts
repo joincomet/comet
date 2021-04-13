@@ -1,7 +1,7 @@
 import { Server, ServerUser } from '@/entity'
 import { Context } from '@/types'
 import { QueryOrder } from '@mikro-orm/core'
-import { ServerUserStatus } from '@/resolver/server/types/ServerUserStatus'
+import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
 export async function getJoinedServers({
   em,
@@ -10,7 +10,7 @@ export async function getJoinedServers({
   const joins = await em.find(
     ServerUser,
     { user, status: ServerUserStatus.Joined },
-    ['server'],
+    ['server', 'roles.channelRoles'],
     { position: QueryOrder.ASC }
   )
   return joins.map(j => j.server)

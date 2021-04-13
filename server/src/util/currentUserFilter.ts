@@ -1,8 +1,4 @@
-import {
-  ChannelPermission,
-  ServerPermission,
-  SubscriptionFilter
-} from '@/types'
+import { SubscriptionFilter } from '@/types'
 
 export const currentUserFilter = ({
   payload: { userId },

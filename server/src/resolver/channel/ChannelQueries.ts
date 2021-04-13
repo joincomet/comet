@@ -1,20 +1,16 @@
-import { Arg, Ctx, ID, Query, Resolver } from 'type-graphql'
-import { Channel } from '@/entity'
-import { CheckJoinedChannelServer } from '@/util/auth/middlewares/CheckJoinedChannelServer'
+import { Arg, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
+import { Channel, ServerUser } from '@/entity'
 import { Context } from '@/types'
-import {
-  getChannelPermissions,
-  GetChannelPermissionsResponse
-} from './queries/getChannelPermissions'
+import { getChannelUsers } from '@/resolver/server/queries'
 
 @Resolver(() => Channel)
 export class ChannelQueries {
-  @CheckJoinedChannelServer()
-  @Query(() => GetChannelPermissionsResponse)
-  async getChannelPermissions(
+  @Authorized()
+  @Query(() => [ServerUser])
+  async getChannelUsers(
     @Ctx() ctx: Context,
     @Arg('channelId', () => ID) channelId: string
-  ): Promise<GetChannelPermissionsResponse> {
-    return getChannelPermissions(ctx, channelId)
+  ): Promise<ServerUser[]> {
+    return getChannelUsers(ctx, channelId)
   }
 }

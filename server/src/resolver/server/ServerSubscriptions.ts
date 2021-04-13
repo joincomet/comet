@@ -26,10 +26,10 @@ export class ServerSubscriptions {
 
   @Authorized()
   @Subscription(() => [Server], {
-    topics: SubscriptionTopic.ServersReordered,
+    topics: SubscriptionTopic.JoinedServersUpdated,
     filter: currentUserFilter
   })
-  async serversReordered(@Ctx() ctx: Context): Promise<Server[]> {
+  async joinedServersUpdated(@Ctx() ctx: Context): Promise<Server[]> {
     return getJoinedServers(ctx)
   }
 

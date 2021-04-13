@@ -1,7 +1,6 @@
 import { Field, ObjectType } from 'type-graphql'
-import { FriendData, User } from '@/entity'
+import { Relationship, RelationshipStatus, User } from '@/entity'
 import { Context } from '@/types'
-import { FriendStatus } from '@/resolver/user'
 import { QueryOrder } from '@mikro-orm/core'
 
 @ObjectType()
@@ -28,23 +27,23 @@ export async function getUserRelationships({
 }: Context): Promise<GetUserRelationshipsResponse> {
   const friends = (
     await em.find(
-      FriendData,
+      Relationship,
       {
         user,
-        status: FriendStatus.Friends
+        status: RelationshipStatus.Friends
       },
       ['friend']
     )
   )
-    .map(fd => fd.friend)
+    .map(fd => fd.user)
     .sort((a, b) => b.name.localeCompare(a.name))
 
   const outgoingFriendRequests = (
     await em.find(
-      FriendData,
+      Relationship,
       {
         user,
-        status: FriendStatus.FriendRequestOutgoing
+        status: RelationshipStatus.FriendRequestOutgoing
       },
       ['friend'],
       { updatedAt: QueryOrder.DESC }
@@ -53,10 +52,10 @@ export async function getUserRelationships({
 
   const incomingFriendRequests = (
     await em.find(
-      FriendData,
+      Relationship,
       {
         user,
-        status: FriendStatus.FriendRequestOutgoing
+        status: RelationshipStatus.FriendRequestOutgoing
       },
       ['friend'],
       { updatedAt: QueryOrder.DESC }
@@ -65,27 +64,27 @@ export async function getUserRelationships({
 
   const blockingUsers = (
     await em.find(
-      FriendData,
+      Relationship,
       {
         user,
-        status: FriendStatus.Blocking
+        status: RelationshipStatus.Blocking
       },
       ['friend'],
       { updatedAt: QueryOrder.DESC }
     )
-  ).map(fd => fd.friend)
+  ).map(fd => fd.user)
 
   const blockedByUsers = (
     await em.find(
-      FriendData,
+      Relationship,
       {
         user,
-        status: FriendStatus.Blocked
+        status: RelationshipStatus.Blocked
       },
       ['friend'],
       { updatedAt: QueryOrder.DESC }
     )
-  ).map(fd => fd.friend)
+  ).map(fd => fd.user)
 
   return {
     friends,

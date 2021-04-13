@@ -1,6 +1,7 @@
 import {
   Arg,
   Args,
+  Authorized,
   Ctx,
   ID,
   Mutation,
@@ -8,13 +9,8 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { Context, ServerPermission, SubscriptionTopic } from '@/types'
-import { Comment, CommentVote } from '@/entity'
-import {
-  CheckCommentAuthor,
-  CheckCommentServerPermission,
-  CheckPostServerPermission
-} from '@/util'
+import { Context, SubscriptionTopic } from '@/types'
+import { Comment } from '@/entity'
 import { CreateCommentArgs, createComment } from './mutations/createComment'
 import { deleteComment } from './mutations/deleteComment'
 import { editComment, EditCommentArgs } from './mutations/editComment'
@@ -24,8 +20,8 @@ import { PostCommentPayload } from '@/resolver/comment/subscriptions/PostComment
 
 @Resolver(() => Comment)
 export class CommentMutations {
-  @CheckPostServerPermission(ServerPermission.CreateComment)
-  @Mutation(() => Comment, { description: 'Create a comment on a post' })
+  @Authorized()
+  @Mutation(() => Comment)
   async createComment(
     @Ctx() ctx: Context,
     @Args() args: CreateCommentArgs,
@@ -35,8 +31,8 @@ export class CommentMutations {
     return createComment(ctx, args, notifyCommentCreated)
   }
 
-  @CheckCommentAuthor()
-  @Mutation(() => Boolean, { description: 'Delete a comment' })
+  @Authorized()
+  @Mutation(() => Boolean)
   async deleteComment(
     @Ctx() ctx: Context,
     @Arg('commentId', () => ID) commentId: string,
@@ -46,8 +42,8 @@ export class CommentMutations {
     return deleteComment(ctx, commentId, notifyCommentDeleted)
   }
 
-  @CheckCommentAuthor()
-  @Mutation(() => Comment, { description: 'Update a comment' })
+  @Authorized()
+  @Mutation(() => Comment)
   async editComment(
     @Ctx() ctx: Context,
     @Args() args: EditCommentArgs,
@@ -57,7 +53,7 @@ export class CommentMutations {
     return editComment(ctx, args, notifyCommentUpdated)
   }
 
-  @CheckCommentServerPermission(ServerPermission.VoteComment)
+  @Authorized()
   @Mutation(() => Comment, { description: 'Add vote to a comment' })
   async voteComment(
     @Ctx() ctx: Context,
@@ -69,7 +65,7 @@ export class CommentMutations {
     return voteComment(ctx, commentId, notifyCommentUpdated)
   }
 
-  @CheckCommentServerPermission(ServerPermission.VoteComment)
+  @Authorized()
   @Mutation(() => Comment, { description: 'Remove vote from a comment' })
   async unvoteComment(
     @Ctx() ctx: Context,

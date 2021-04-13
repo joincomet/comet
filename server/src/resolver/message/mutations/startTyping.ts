@@ -2,9 +2,9 @@ import { ArgsType, Field, ID, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 
 export interface TypingPayload {
-  userId: string
-  groupId: string
-  channelId: string
+  userId?: string
+  groupId?: string
+  channelId?: string
   username: string
 }
 

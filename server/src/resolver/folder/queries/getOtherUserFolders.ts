@@ -1,7 +1,11 @@
 import { Context } from '@/types'
-import { Folder, User, UserFolder } from '@/entity'
-import { FriendStatus } from '@/resolver/user'
-import { FolderVisibility } from '@/resolver/folder'
+import {
+  Folder,
+  FolderVisibility,
+  RelationshipStatus,
+  User,
+  UserFolder
+} from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 
 export async function getOtherUserFolders(
@@ -13,7 +17,7 @@ export async function getOtherUserFolders(
   return (
     await em.find(
       UserFolder,
-      myData.status === FriendStatus.Friends
+      myData.status === RelationshipStatus.Friends
         ? {
             user: them,
             folder: {

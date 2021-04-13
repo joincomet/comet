@@ -1,7 +1,7 @@
-import { FriendStatus } from '@/resolver/user'
+import { RelationshipStatus } from '@/entity'
 
 export interface FriendStatusChangedPayload {
   userId: string
   friendId: string
-  status: FriendStatus
+  status: RelationshipStatus
 }

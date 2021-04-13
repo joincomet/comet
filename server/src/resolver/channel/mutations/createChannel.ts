@@ -1,7 +1,6 @@
 import { Context } from '@/types'
-import { ArgsType, Field, ID, ObjectType, Publisher } from 'type-graphql'
-import { Channel, Server } from '@/entity'
-import { ChannelPayload } from '@/resolver/channel/subscriptions/ChannelPayload'
+import { ArgsType, Field, ID, Publisher } from 'type-graphql'
+import { Channel, Server, ServerPermission } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
 
@@ -18,10 +17,16 @@ export class CreateChannelArgs {
 }
 
 export async function createChannel(
-  { em }: Context,
+  { em, user }: Context,
   { serverId, name, isPrivate }: CreateChannelArgs,
-  notifyChannelCreated: Publisher<ChannelPayload>
+  notifyChannelsUpdated: Publisher<{ serverId: string }>
 ): Promise<Channel> {
+  await user.checkServerPermission(
+    em,
+    serverId,
+    ServerPermission.ManageChannels
+  )
+
   const server = await em.findOneOrFail(Server, serverId)
 
   const firstChannel = await em.findOne(
@@ -40,6 +45,6 @@ export async function createChannel(
   })
 
   await em.persistAndFlush(channel)
-  await notifyChannelCreated({ serverId: server.id, channelId: channel.id })
+  await notifyChannelsUpdated({ serverId: server.id })
   return channel
 }

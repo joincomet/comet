@@ -2,7 +2,6 @@ import { Arg, Args, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
 import { LinkMetadata, Post } from '@/entity'
 import { Context } from '@/types'
 import { scrapeMetadata } from '@/util'
-import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 import {
   GetPostsArgs,
   GetPostsResponse,
@@ -12,11 +11,8 @@ import {
 
 @Resolver(() => Post)
 export class PostQueries {
-  @CheckJoinedServer()
-  @Query(() => [GetPostsResponse], {
-    description:
-      'Get posts (requires ServerPermission.ViewPosts if serverId is provided)'
-  })
+  @Authorized()
+  @Query(() => [GetPostsResponse])
   async getPosts(
     @Ctx() ctx: Context,
     @Args()
@@ -25,13 +21,11 @@ export class PostQueries {
     return getPosts(ctx, args)
   }
 
-  @CheckJoinedServer()
-  @Query(() => Post, {
-    description: 'Get a specific post (requires ServerPermission.ViewPosts)'
-  })
+  @Authorized()
+  @Query(() => Post)
   async getPost(
     @Ctx() ctx: Context,
-    @Arg('postId', () => ID, { description: 'ID of post to retrieve' })
+    @Arg('postId', () => ID)
     postId: string
   ): Promise<Post> {
     return getPost(ctx, postId)

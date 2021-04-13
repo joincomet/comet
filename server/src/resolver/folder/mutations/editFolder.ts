@@ -2,10 +2,14 @@ import { Context } from '@/types'
 import { ArgsType, Field, ID, Publisher } from 'type-graphql'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Length } from 'class-validator'
-import { FolderVisibility } from '@/resolver/folder'
-import { Folder, FriendData, UserFolder } from '@/entity'
+import {
+  Folder,
+  FolderVisibility,
+  Relationship,
+  RelationshipStatus,
+  UserFolder
+} from '@/entity'
 import { uploadImageSingle } from '@/util'
-import { FriendStatus } from '@/resolver/user'
 
 @ArgsType()
 export class EditFolderArgs {
@@ -66,10 +70,12 @@ export async function editFolder(
     await em.nativeDelete(UserFolder, { folder, user: { $ne: user } })
   } else if (visibility === FolderVisibility.Friends) {
     const friends = (
-      await em.find(FriendData, { user, status: FriendStatus.Friends }, [
-        'friend'
-      ])
-    ).map(fd => fd.friend)
+      await em.find(
+        Relationship,
+        { owner: user, status: RelationshipStatus.Friends },
+        ['user']
+      )
+    ).map(fd => fd.user)
     await em.nativeDelete(UserFolder, { folder, user: { $nin: friends } })
   }
   await em.persistAndFlush(folder)

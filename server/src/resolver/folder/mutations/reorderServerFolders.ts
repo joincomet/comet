@@ -1,7 +1,7 @@
 import { Context } from '@/types'
 import { ArgsType, Field, ID, Publisher } from 'type-graphql'
-import { Folder, Server, ServerFolder } from '@/entity'
-import { ReorderUtils } from '@/util'
+import { Folder, ServerFolder } from '@/entity'
+import { getReorderPosition } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 import { getServerFolders } from '@/resolver/folder/queries/getServerFolders'
 
@@ -10,44 +10,43 @@ export class ReorderServerFoldersArgs {
   @Field(() => ID)
   serverId: string
 
+  @Field(() => ID, { nullable: true })
+  beforeFolderId?: string
+
   @Field(() => ID)
   folderId: string
-
-  @Field(() => ID, { nullable: true })
-  beforeFolderId: string
 }
 
 export async function reorderServerFolders(
   { em, user }: Context,
-  { serverId, folderId, beforeFolderId }: ReorderServerFoldersArgs,
+  { serverId, beforeFolderId, folderId }: ReorderServerFoldersArgs,
   notifyServerFoldersReordered: Publisher<{ serverId: string }>
 ): Promise<Folder[]> {
-  const server = await em.findOneOrFail(Server, serverId)
-  const serverFolder = await em.findOneOrFail(ServerFolder, {
-    server,
-    folder: folderId
-  })
+  const folders = await em.find(
+    ServerFolder,
+    { server: serverId },
+    ['folder'],
+    {
+      position: QueryOrder.ASC
+    }
+  )
+  const folder = folders.find(f => f.folder.id === folderId)
 
-  const beforeServerFolder = beforeFolderId
-    ? await em.findOneOrFail(ServerFolder, { server, folder: beforeFolderId })
+  const firstFolder = folders[0]
+  const beforeFolder = beforeFolderId
+    ? folders.find(f => f.folder.id === beforeFolderId)
+    : null
+  const afterFolder = beforeFolder
+    ? folders[folders.indexOf(beforeFolder) + 1]
     : null
 
-  if (beforeServerFolder) {
-    serverFolder.position = ReorderUtils.positionAfter(
-      beforeServerFolder.position
-    )
-  } else {
-    const firstServerFolder = await em.findOne(
-      ServerFolder,
-      { server },
-      { orderBy: { position: QueryOrder.ASC } }
-    )
-    serverFolder.position = firstServerFolder
-      ? ReorderUtils.positionBefore(firstServerFolder.position)
-      : ReorderUtils.FIRST_POSITION
-  }
+  folder.position = getReorderPosition(
+    firstFolder?.position,
+    beforeFolder?.position,
+    afterFolder?.position
+  )
 
-  await em.persistAndFlush(serverFolder)
-  await notifyServerFoldersReordered({ serverId: server.id })
+  await em.persistAndFlush(folder)
+  await notifyServerFoldersReordered({ serverId })
   return getServerFolders({ em, user }, serverId)
 }

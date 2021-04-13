@@ -1,39 +1,25 @@
-import { Arg, Authorized, Ctx, ID, Query, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  FieldResolver,
+  ID,
+  Query,
+  Resolver,
+  Root
+} from 'type-graphql'
 import { Context } from '@/types'
-import { User } from '@/entity'
-import {
-  getGroupsAndDms,
-  GroupDmUnion
-} from '@/resolver/user/queries/getGroupsAndDms'
-import {
-  getUserRelationships,
-  GetUserRelationshipsResponse
-} from '@/resolver/user/queries/getUserRelationships'
-import {
-  getCurrentUser,
-  getMutualFriends,
-  getUser
-} from '@/resolver/user/queries'
+import { Folder, Server, User } from '@/entity'
+import { getCurrentUser, getUser } from '@/resolver/user/queries'
+import { folders, servers } from './fields'
 
 @Resolver(() => User)
 export class UserQueries {
   @Query(() => User, {
-    nullable: true,
-    description: 'Returns the currently logged in user, or null'
+    nullable: true
   })
   async getCurrentUser(@Ctx() ctx: Context): Promise<User> {
     return getCurrentUser(ctx)
-  }
-
-  @Authorized()
-  @Query(() => [GroupDmUnion], {
-    description:
-      'Get list of groups and DMs, sorted by latest activity (updatedAt)'
-  })
-  async getGroupsAndDms(
-    @Ctx() ctx: Context
-  ): Promise<Array<typeof GroupDmUnion>> {
-    return getGroupsAndDms(ctx)
   }
 
   /*@FieldResolver(() => Boolean)
@@ -54,19 +40,14 @@ export class UserQueries {
   }
 
   @Authorized()
-  @Query(() => GetUserRelationshipsResponse)
-  async getUserRelationships(
-    @Ctx() ctx: Context
-  ): Promise<GetUserRelationshipsResponse> {
-    return getUserRelationships(ctx)
+  @FieldResolver(() => [Server])
+  async servers(@Ctx() ctx: Context, @Root() user: User): Promise<Server[]> {
+    return servers(ctx, user)
   }
 
   @Authorized()
-  @Query(() => [User])
-  async getMutualFriends(
-    @Ctx() ctx: Context,
-    @Arg('userId', () => ID) userId: string
-  ): Promise<User[]> {
-    return getMutualFriends(ctx, userId)
+  @FieldResolver(() => [Folder])
+  async folders(@Ctx() ctx: Context, @Root() user: User): Promise<Folder[]> {
+    return folders(ctx, user)
   }
 }

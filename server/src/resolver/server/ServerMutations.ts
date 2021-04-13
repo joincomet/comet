@@ -11,9 +11,6 @@ import {
 } from 'type-graphql'
 import { Server } from '@/entity'
 import { Context, SubscriptionTopic } from '@/types'
-import { ServerPermission } from '@/types/ServerPermission'
-import { CheckServerPermission } from '@/util'
-import { CheckJoinedServer } from '@/util/auth/middlewares/CheckJoinedServer'
 import { UserServerPayload } from '@/resolver/server/subscriptions/UserServerPayload'
 import {
   CreateServerArgs,
@@ -36,7 +33,7 @@ import {
 @Resolver()
 export class ServerMutations {
   @Authorized()
-  @Mutation(() => Server, { description: 'Create a server' })
+  @Mutation(() => Server)
   async createServer(
     @Ctx() ctx: Context,
     @Args() args: CreateServerArgs,
@@ -57,11 +54,11 @@ export class ServerMutations {
     return joinServer(ctx, args, notifyUserJoinedServer)
   }
 
-  @CheckJoinedServer()
+  @Authorized()
   @Mutation(() => Boolean)
   async leaveServer(
     @Ctx() { user, em }: Context,
-    @Arg('serverId', () => ID, { description: 'ID of server to leave' })
+    @Arg('serverId', () => ID)
     serverId: string,
     @PubSub(SubscriptionTopic.UserLeftServer)
     notifyUserLeftServer: Publisher<UserServerPayload>
@@ -70,10 +67,8 @@ export class ServerMutations {
     return true
   }
 
-  @CheckServerPermission(ServerPermission.BanUser)
-  @Mutation(() => Boolean, {
-    description: 'Ban a user from a server (requires ServerPermission.BanUser)'
-  })
+  @Authorized()
+  @Mutation(() => Boolean)
   async banUserFromServer(
     @Ctx() ctx: Context,
     @Args() args: UserServerArgs,
@@ -83,7 +78,7 @@ export class ServerMutations {
     return banUserFromServer(ctx, args, notifyUserLeftServer)
   }
 
-  @CheckServerPermission(ServerPermission.BanUser)
+  @Authorized()
   @Mutation(() => Boolean)
   async unbanUserFromServer(
     @Ctx() ctx: Context,
@@ -92,7 +87,7 @@ export class ServerMutations {
     return unbanUserFromServer(ctx, args)
   }
 
-  @CheckServerPermission(ServerPermission.ManageServer)
+  @Authorized()
   @Mutation(() => Server)
   async editServer(
     @Ctx() ctx: Context,
@@ -108,9 +103,9 @@ export class ServerMutations {
   async reorderServers(
     @Ctx() ctx: Context,
     @Args() args: ReorderServersArgs,
-    @PubSub(SubscriptionTopic.ServersReordered)
-    notifyServersReordered: Publisher<{ userId: string }>
+    @PubSub(SubscriptionTopic.JoinedServersUpdated)
+    notifyServersUpdated: Publisher<{ userId: string }>
   ) {
-    return reorderServers(ctx, args, notifyServersReordered)
+    return reorderServers(ctx, args, notifyServersUpdated)
   }
 }

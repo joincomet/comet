@@ -9,46 +9,43 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { CheckServerPermission } from '@/util'
-import { Context, ServerPermission, SubscriptionTopic } from '@/types'
+import { Context, SubscriptionTopic } from '@/types'
 import { Channel } from '@/entity'
 import { CreateChannelArgs } from './mutations/createChannel'
 import { createChannel } from './mutations/createChannel'
 import { deleteChannel } from './mutations/deleteChannel'
 import { EditChannelArgs, editChannel } from './mutations/editChannel'
-import { ChannelPayload } from './subscriptions/ChannelPayload'
 import {
   ReorderChannelArgs,
   reorderChannels
 } from '@/resolver/channel/mutations/reorderChannels'
-import { CheckChannelServerPermission } from '@/util/auth/middlewares/CheckChannelServerPermission'
 import { ChannelUserPayload, readChannel } from '@/resolver/channel/mutations'
 
 @Resolver()
 export class ChannelMutations {
-  @CheckServerPermission(ServerPermission.ManageChannels)
+  @Authorized()
   @Mutation(() => Channel)
   async createChannel(
     @Ctx() ctx: Context,
     @Args() args: CreateChannelArgs,
-    @PubSub(SubscriptionTopic.ChannelCreated)
-    notifyChannelCreated: Publisher<ChannelPayload>
+    @PubSub(SubscriptionTopic.ChannelsUpdated)
+    notifyChannelsUpdated: Publisher<{ serverId: string }>
   ): Promise<Channel> {
-    return createChannel(ctx, args, notifyChannelCreated)
+    return createChannel(ctx, args, notifyChannelsUpdated)
   }
 
-  @CheckServerPermission(ServerPermission.ManageChannels)
+  @Authorized()
   @Mutation(() => Boolean)
   async deleteChannel(
     @Ctx() ctx: Context,
     @Arg('channelId', () => ID) channelId: string,
-    @PubSub(SubscriptionTopic.ChannelDeleted)
-    notifyChannelDeleted: Publisher<ChannelPayload>
+    @PubSub(SubscriptionTopic.ChannelsUpdated)
+    notifyChannelsUpdated: Publisher<{ serverId: string }>
   ): Promise<boolean> {
-    return deleteChannel(ctx, channelId, notifyChannelDeleted)
+    return deleteChannel(ctx, channelId, notifyChannelsUpdated)
   }
 
-  @CheckServerPermission(ServerPermission.ManageChannels)
+  @Authorized()
   @Mutation(() => Channel)
   async editChannel(
     @Ctx() ctx: Context,
@@ -59,15 +56,15 @@ export class ChannelMutations {
     return editChannel(ctx, args, notifyChannelUpdated)
   }
 
-  @CheckChannelServerPermission(ServerPermission.ViewChannels)
+  @Authorized()
   @Mutation(() => [Channel])
   async reorderChannels(
     @Ctx() ctx: Context,
     @Args() args: ReorderChannelArgs,
-    @PubSub(SubscriptionTopic.ChannelsReordered)
-    notifyChannelsReordered: Publisher<{ serverId: string }>
+    @PubSub(SubscriptionTopic.ChannelsUpdated)
+    notifyChannelsUpdated: Publisher<{ serverId: string }>
   ): Promise<Channel[]> {
-    return reorderChannels(ctx, args, notifyChannelsReordered)
+    return reorderChannels(ctx, args, notifyChannelsUpdated)
   }
 
   @Authorized()

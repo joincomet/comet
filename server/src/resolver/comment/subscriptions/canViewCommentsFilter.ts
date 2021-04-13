@@ -1,5 +1,5 @@
-import { ServerPermission, SubscriptionFilter } from '@/types'
-import { Comment } from '@/entity'
+import { SubscriptionFilter } from '@/types'
+import { Comment, ServerPermission } from '@/entity'
 
 export const canViewCommentsFilter = async ({
   payload: { commentId },

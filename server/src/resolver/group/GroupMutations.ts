@@ -11,7 +11,6 @@ import {
 } from 'type-graphql'
 import { Context, SubscriptionTopic } from '@/types'
 import { Group } from '@/entity'
-import { CheckGroupMember } from '@/util'
 import { CreateGroupArgs } from '@/resolver/group/mutations/createGroup'
 import { createGroup } from '@/resolver/group/mutations/createGroup'
 import { GroupUserPayload } from '@/resolver/group/subscriptions/GroupUserPayload'
@@ -23,7 +22,7 @@ import { readGroup } from '@/resolver/group/mutations'
 @Resolver()
 export class GroupMutations {
   @Authorized()
-  @Mutation(() => Group, { description: 'Create group with users' })
+  @Mutation(() => Group)
   async createGroup(
     @Ctx() ctx: Context,
     @Args() args: CreateGroupArgs,
@@ -33,11 +32,11 @@ export class GroupMutations {
     return createGroup(ctx, args, notifyUserJoinedGroup)
   }
 
-  @CheckGroupMember()
-  @Mutation(() => Boolean, { description: 'Leave a group' })
+  @Authorized()
+  @Mutation(() => Boolean)
   async leaveGroup(
     @Ctx() ctx: Context,
-    @Arg('groupId', () => ID, { description: 'ID of group to leave' })
+    @Arg('groupId', () => ID)
     groupId: string,
     @PubSub(SubscriptionTopic.UserLeftGroup)
     notifyUserLeftGroup: Publisher<GroupUserPayload>
@@ -45,8 +44,8 @@ export class GroupMutations {
     return leaveGroup(ctx, groupId, notifyUserLeftGroup)
   }
 
-  @CheckGroupMember()
-  @Mutation(() => Group, { description: 'Rename a group' })
+  @Authorized()
+  @Mutation(() => Group)
   async editGroup(
     @Ctx() ctx: Context,
     @Args() args: EditGroupArgs,

@@ -7,11 +7,11 @@ import { createAccessToken } from '@/util'
 
 @ArgsType()
 export class ChangePasswordArgs {
-  @Field({ description: 'New password' })
+  @Field()
   @Length(6)
   password: string
 
-  @Field({ description: 'Current password for verification' })
+  @Field()
   currentPassword: string
 }
 

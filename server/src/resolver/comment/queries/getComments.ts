@@ -6,13 +6,11 @@ import { Context } from '@/types'
 @ArgsType()
 export class GetCommentsArgs {
   @Field(() => ID, {
-    nullable: true,
-    description: 'Return all comments for given post ID'
+    nullable: true
   })
   postId: string
 
   @Field(() => GetCommentsSort, {
-    description: 'Sort comments by new or top',
     defaultValue: 'TOP'
   })
   sort: GetCommentsSort = GetCommentsSort.Top
@@ -36,7 +34,7 @@ export async function getComments(
   const comments = await em.find(
     Comment,
     { post },
-    ['author', 'votes.user'],
+    ['author', 'serverUser.roles', 'votes.user'],
     sort === GetCommentsSort.Top
       ? { voteCount: QueryOrder.DESC, createdAt: QueryOrder.DESC }
       : { createdAt: QueryOrder.DESC }
@@ -51,6 +49,7 @@ export async function getComments(
     if (comment.isDeleted) {
       comment.text = `<p>[deleted]</p>`
       comment.author = null
+      comment.serverUser = null
     }
   })
 

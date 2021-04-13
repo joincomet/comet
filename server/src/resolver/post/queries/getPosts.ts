@@ -6,12 +6,17 @@ import {
   ObjectType,
   registerEnumType
 } from 'type-graphql'
-import { Folder, Post, Server, ServerUser } from '@/entity'
+import {
+  Folder,
+  FolderVisibility,
+  Post,
+  RelationshipStatus,
+  Server,
+  ServerUser
+} from '@/entity'
 import { Max, Min } from 'class-validator'
 import { Context } from '@/types'
 import { QueryOrder } from '@mikro-orm/core'
-import { FolderVisibility } from '@/resolver/folder'
-import { FriendStatus } from '@/resolver/user'
 import dayjs from 'dayjs'
 
 @ArgsType()
@@ -26,33 +31,27 @@ export class GetPostsArgs {
   pageSize = 20
 
   @Field(() => GetPostsSort, {
-    defaultValue: 'Hot',
-    description: 'Sort by new, hot, top, most comments'
+    defaultValue: 'Hot'
   })
   sort: GetPostsSort = GetPostsSort.Hot
 
   @Field(() => GetPostsTime, {
-    defaultValue: 'All',
-    description: 'Filter by all, hour, day, week, month, year'
+    defaultValue: 'All'
   })
   time: GetPostsTime = GetPostsTime.All
 
   @Field(() => ID, {
-    nullable: true,
-    description: 'If provided, only posts from given server ID will be returned'
+    nullable: true
   })
   serverId?: string
 
   @Field(() => ID, {
-    nullable: true,
-    description: 'If provided, only posts from given folder ID will be returned'
+    nullable: true
   })
   folderId?: string
 
   @Field({
-    nullable: true,
-    description:
-      'If provided, only posts matching given search term will be returned'
+    nullable: true
   })
   search?: string
 }
@@ -105,10 +104,8 @@ export async function getPosts(
 
   let servers = []
   if (joinedOnly) {
-    const joins = await em.find(ServerUser, { user }, ['server'])
-    servers = joins
-      .map(join => join.server)
-      .filter(server => server.isPostsEnabled)
+    const serverJoins = await em.find(ServerUser, { user }, ['server'])
+    servers = serverJoins.map(join => join.server)
   }
   let folder
   if (folderId) {
@@ -122,7 +119,7 @@ export async function getPosts(
       folder.owner !== user
     ) {
       const [myData] = await user.getFriendData(em, folder.owner.id)
-      if (myData.status !== FriendStatus.Friends)
+      if (myData.status !== RelationshipStatus.Friends)
         throw new Error('error.folder.friends')
     }
   }
@@ -146,7 +143,13 @@ export async function getPosts(
         folder ? { folderPosts: { folder } } : {}
       ]
     },
-    ['author', 'server', 'votes', 'folderPosts.addedByUser'],
+    [
+      'author',
+      'serverUser.roles',
+      'server',
+      'votes',
+      'folderPosts.addedByUser'
+    ],
     orderBy,
     pageSize + 1, // get one extra to determine hasMore
     page * pageSize

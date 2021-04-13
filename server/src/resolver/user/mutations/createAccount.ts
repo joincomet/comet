@@ -4,11 +4,10 @@ import { Context } from '@/types'
 import { LoginResponse } from '@/resolver/user'
 import isEmail from 'validator/lib/isEmail'
 import { CustomError } from '@/types/CustomError'
-import { Folder, Server, ServerUser, User } from '@/entity'
+import { Folder, FolderVisibility, Server, ServerUser, User } from '@/entity'
 import { createAccessToken, handleUnderscore, tagGenerator } from '@/util'
 import * as argon2 from 'argon2'
-import { FolderVisibility } from '@/resolver/folder'
-import { ServerUserStatus } from '@/resolver/server/types/ServerUserStatus'
+import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
 @ArgsType()
 export class CreateAccountArgs {

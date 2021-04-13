@@ -2,13 +2,14 @@ import { ArgsType, Field, ID, Publisher } from 'type-graphql'
 import { Server, ServerUser } from '@/entity'
 import { Context } from '@/types'
 import { getJoinedServers } from '@/resolver/server/queries'
-import { ReorderUtils } from '@/util'
+import { getReorderPosition } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
+import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
 @ArgsType()
 export class ReorderServersArgs {
   @Field(() => ID, { nullable: true })
-  beforeServerId: string
+  beforeServerId?: string
 
   @Field(() => ID)
   serverId: string
@@ -17,29 +18,32 @@ export class ReorderServersArgs {
 export async function reorderServers(
   { em, user }: Context,
   { beforeServerId, serverId }: ReorderServersArgs,
-  notifyServersReordered: Publisher<{ userId: string }>
+  notifyServersUpdated: Publisher<{ userId: string }>
 ): Promise<Server[]> {
-  const serverJoin = await em.findOneOrFail(ServerUser, {
-    server: serverId
-  })
-  const beforeServerJoin = beforeServerId
-    ? await em.findOne(ServerUser, { server: beforeServerId })
+  const servers = await em.find(
+    ServerUser,
+    { user, status: ServerUserStatus.Joined },
+    ['server'],
+    {
+      position: QueryOrder.ASC
+    }
+  )
+  const server = servers.find(s => s.server.id === serverId)
+  const firstServer = servers[0]
+  const beforeServer = beforeServerId
+    ? servers.find(s => s.server.id === beforeServerId)
+    : null
+  const afterServer = beforeServer
+    ? servers[servers.indexOf(beforeServer) + 1]
     : null
 
-  if (beforeServerJoin) {
-    serverJoin.position = ReorderUtils.positionAfter(beforeServerJoin.position)
-  } else {
-    const firstServerJoin = await em.findOne(
-      ServerUser,
-      { user },
-      { orderBy: { position: QueryOrder.ASC } }
-    )
-    serverJoin.position = firstServerJoin
-      ? ReorderUtils.positionBefore(firstServerJoin.position)
-      : ReorderUtils.FIRST_POSITION
-  }
+  server.position = getReorderPosition(
+    firstServer?.position,
+    beforeServer?.position,
+    afterServer?.position
+  )
 
-  await em.persistAndFlush(serverJoin)
-  await notifyServersReordered({ userId: user.id })
+  await em.persistAndFlush(server)
+  await notifyServersUpdated({ userId: user.id })
   return getJoinedServers({ em, user })
 }

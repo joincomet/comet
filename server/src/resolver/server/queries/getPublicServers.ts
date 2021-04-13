@@ -1,7 +1,6 @@
 import { ArgsType, Field, registerEnumType } from 'type-graphql'
-import { ServerCategory } from '@/resolver/server'
 import { Context } from '@/types'
-import { Server } from '@/entity'
+import { Server, ServerCategory } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 
 @ArgsType()

@@ -1,14 +1,12 @@
-import { Context, ServerPermission } from '@/types'
+import { Context } from '@/types'
 import { Publisher } from 'type-graphql'
-import { Folder, ServerFolder, UserFolder } from '@/entity'
-import { ServerFolderPayload } from '@/resolver/folder/subscriptions/ServerFolderPayload'
-import { UserFolderPayload } from '@/resolver/folder/subscriptions/UserFolderPayload'
+import { Folder, ServerFolder, ServerPermission, UserFolder } from '@/entity'
 
 export async function deleteFolder(
   { em, user }: Context,
   folderId: string,
-  notifyUserFolderDeleted: Publisher<UserFolderPayload>,
-  notifyServerFolderDeleted: Publisher<ServerFolderPayload>
+  notifyUserFoldersUpdated: Publisher<{ userId: string }>,
+  notifyServerFoldersUpdated: Publisher<{ serverId: string }>
 ): Promise<boolean> {
   const folder = await em.findOneOrFail(Folder, folderId, [
     'owner',
@@ -24,14 +22,13 @@ export async function deleteFolder(
       ServerPermission.ManagePosts
     )
     await em.nativeDelete(ServerFolder, { folder })
-    await notifyServerFolderDeleted({
-      folderId: folder.id,
+    await notifyServerFoldersUpdated({
       serverId: server.id
     })
   }
   folder.isDeleted = true
   await em.nativeDelete(UserFolder, { user, folder })
   await em.persistAndFlush(folder)
-  await notifyUserFolderDeleted({ folderId: folder.id, userId: user.id })
+  await notifyUserFoldersUpdated({ userId: user.id })
   return true
 }

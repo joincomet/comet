@@ -3,30 +3,29 @@ import { SubscriptionTopic } from '@/types'
 import { joinedServerFilter } from '@/util/joinedServerFilter'
 import { Post } from '@/entity'
 import { PostServerPayload } from '@/resolver/post/subscriptions'
-import { PostCreatedResponse } from '@/resolver/post/subscriptions/PostCreatedResponse'
 import { PostDeletedResponse } from '@/resolver/post/subscriptions/PostDeletedResponse'
 
 @Resolver()
 export class PostSubscriptions {
   @Authorized()
-  @Subscription(() => PostCreatedResponse, {
+  @Subscription(() => Post, {
     topics: SubscriptionTopic.PostCreated,
     filter: joinedServerFilter
   })
   async postCreated(
     @Ctx() { em, user },
-    @Root() { postId, serverId }: PostServerPayload
-  ): Promise<PostCreatedResponse> {
+    @Root() { postId }: { postId: string }
+  ): Promise<Post> {
     const post = await em.findOneOrFail(Post, postId, [
       'author',
-      'server.userJoins.user',
+      'server',
       'votes'
     ])
     post.isVoted = post.votes
       .getItems()
       .map(vote => vote.user)
       .includes(user)
-    return { post, serverId }
+    return post
   }
 
   @Authorized()

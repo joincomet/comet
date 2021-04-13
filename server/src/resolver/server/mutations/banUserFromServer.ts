@@ -3,7 +3,7 @@ import { Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { UserServerArgs } from '@/resolver/server/mutations/UserServerArgs'
 import { ServerUser } from '@/entity'
-import { ServerUserStatus } from '@/resolver/server/types/ServerUserStatus'
+import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
 export async function banUserFromServer(
   { em }: Context,

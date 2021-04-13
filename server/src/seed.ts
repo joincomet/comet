@@ -3,21 +3,21 @@ import {
   Channel,
   Comment,
   Folder,
-  FriendData,
+  Relationship,
   Message,
   Post,
   Server,
   ServerFolder,
   ServerUser,
   User,
-  UserFolder
+  UserFolder,
+  FolderVisibility,
+  ServerCategory,
+  RelationshipStatus
 } from '@/entity'
 import { ReorderUtils, tagGenerator } from '@/util'
 import * as argon2 from 'argon2'
 import faker from 'faker'
-import { FriendStatus } from '@/resolver/user'
-import { ServerCategory } from '@/resolver/server'
-import { FolderVisibility } from '@/resolver/folder'
 import { NotificationSetting } from '@/types/NotificationSetting'
 
 const NUM_USERS = 100
@@ -128,28 +128,28 @@ export const seed = async (em: EntityManager) => {
         'All official Comet announcements'
       )
     }),
-    em.create(FriendData, {
-      user: userDan,
-      friend: userMichael,
-      status: FriendStatus.Friends,
-      showChat: true
-    }),
-    em.create(FriendData, {
+    em.create(Relationship, {
+      owner: userDan,
       user: userMichael,
-      friend: userDan,
-      status: FriendStatus.Friends,
+      status: RelationshipStatus.Friends,
       showChat: true
     }),
-    em.create(FriendData, {
+    em.create(Relationship, {
+      owner: userMichael,
       user: userDan,
-      friend: userAdmin,
-      status: FriendStatus.Friends,
+      status: RelationshipStatus.Friends,
       showChat: true
     }),
-    em.create(FriendData, {
-      user: userMichael,
-      friend: userAdmin,
-      status: FriendStatus.Friends,
+    em.create(Relationship, {
+      owner: userDan,
+      user: userAdmin,
+      status: RelationshipStatus.Friends,
+      showChat: true
+    }),
+    em.create(Relationship, {
+      owner: userMichael,
+      user: userAdmin,
+      status: RelationshipStatus.Friends,
       showChat: true
     })
   )

@@ -1,5 +1,5 @@
-import { ChannelPermission, SubscriptionFilter } from '@/types'
-import { Message } from '@/entity'
+import { SubscriptionFilter } from '@/types'
+import { ChannelPermission, Message, ServerPermission } from '@/entity'
 import { MessagePayload } from '@/resolver/message/subscriptions/MessagePayload'
 
 export const canViewMessageFilter = async ({
@@ -17,7 +17,8 @@ export const canViewMessageFilter = async ({
     return user.hasChannelPermission(
       em,
       message.channel.id,
-      ChannelPermission.ViewChannel
+      ChannelPermission.ViewChannel,
+      ServerPermission.ViewChannels
     )
   } else if (message.group) return message.group.users.contains(user)
   else if (message.toUser)

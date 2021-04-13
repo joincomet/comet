@@ -1,5 +1,5 @@
-import { ChannelPermission, SubscriptionFilter } from '@/types'
-import { Channel, Group } from '@/entity'
+import { SubscriptionFilter } from '@/types'
+import { Channel, ChannelPermission, Group, ServerPermission } from '@/entity'
 import { TypingPayload } from '@/resolver/message/mutations'
 
 export const typingFilter = async ({
@@ -16,7 +16,8 @@ export const typingFilter = async ({
     return user.hasChannelPermission(
       em,
       channel.id,
-      ChannelPermission.ViewChannel
+      ChannelPermission.ViewChannel,
+      ServerPermission.ViewChannels
     )
   } else if (typingGroupId && groupId === typingGroupId) {
     const group = await em.findOneOrFail(Group, typingGroupId)

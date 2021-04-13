@@ -9,9 +9,8 @@ import {
   PubSub,
   Resolver
 } from 'type-graphql'
-import { Context, ServerPermission, SubscriptionTopic } from '@/types'
+import { Context, SubscriptionTopic } from '@/types'
 import { Folder } from '@/entity'
-import { CheckFolderServerPermission, CheckServerPermission } from '@/util'
 import { PostFolderArgs } from '@/resolver/folder/mutations/PostFolderArgs'
 import { PostFolderPayload } from '@/resolver/folder/subscriptions/PostFolderPayload'
 import {
@@ -35,8 +34,6 @@ import {
   reorderServerFolders,
   ReorderServerFoldersArgs
 } from '@/resolver/folder/mutations/reorderServerFolders'
-import { UserFolderPayload } from '@/resolver/folder/subscriptions/UserFolderPayload'
-import { ServerFolderPayload } from '@/resolver/folder/subscriptions/ServerFolderPayload'
 
 @Resolver()
 export class FolderMutations {
@@ -62,25 +59,25 @@ export class FolderMutations {
     return removePostFromFolder(ctx, args, notifyPostRemovedFromFolder)
   }
 
-  @CheckServerPermission(ServerPermission.ManageFolders)
+  @Authorized()
   @Mutation(() => Folder)
   async createFolder(
     @Ctx() ctx: Context,
     @Args() args: CreateFolderArgs,
-    @PubSub(SubscriptionTopic.UserFolderCreated)
-    notifyUserFolderCreated: Publisher<UserFolderPayload>,
-    @PubSub(SubscriptionTopic.ServerFolderCreated)
-    notifyServerFolderCreated: Publisher<ServerFolderPayload>
+    @PubSub(SubscriptionTopic.UserFoldersUpdated)
+    notifyUserFoldersUpdated: Publisher<{ userId: string }>,
+    @PubSub(SubscriptionTopic.ServerFoldersUpdated)
+    notifyServerFolderUpdated: Publisher<{ serverId: string }>
   ): Promise<Folder> {
     return createFolder(
       ctx,
       args,
-      notifyUserFolderCreated,
-      notifyServerFolderCreated
+      notifyUserFoldersUpdated,
+      notifyServerFolderUpdated
     )
   }
 
-  @CheckFolderServerPermission(ServerPermission.ManageFolders)
+  @Authorized()
   @Mutation(() => Folder)
   async editFolder(
     @Ctx() ctx: Context,
@@ -91,21 +88,21 @@ export class FolderMutations {
     return editFolder(ctx, args, notifyFolderUpdated)
   }
 
-  @CheckFolderServerPermission(ServerPermission.ManageFolders)
+  @Authorized()
   @Mutation(() => Boolean)
   async deleteFolder(
     @Ctx() ctx: Context,
     @Arg('folderId', () => ID) folderId: string,
-    @PubSub(SubscriptionTopic.UserFolderDeleted)
-    notifyUserFolderDeleted: Publisher<UserFolderPayload>,
-    @PubSub(SubscriptionTopic.ServerFolderDeleted)
-    notifyServerFolderDeleted: Publisher<ServerFolderPayload>
+    @PubSub(SubscriptionTopic.UserFoldersUpdated)
+    notifyUserFoldersUpdated: Publisher<{ userId: string }>,
+    @PubSub(SubscriptionTopic.ServerFoldersUpdated)
+    notifyServerFolderUpdated: Publisher<{ serverId: string }>
   ) {
     return deleteFolder(
       ctx,
       folderId,
-      notifyUserFolderDeleted,
-      notifyServerFolderDeleted
+      notifyUserFoldersUpdated,
+      notifyServerFolderUpdated
     )
   }
 
@@ -114,10 +111,10 @@ export class FolderMutations {
   async followFolder(
     @Ctx() ctx: Context,
     @Arg('folderId', () => ID) folderId: string,
-    @PubSub(SubscriptionTopic.UserFolderCreated)
-    notifyUserFolderCreated: Publisher<UserFolderPayload>
+    @PubSub(SubscriptionTopic.UserFoldersUpdated)
+    notifyUserFoldersUpdated: Publisher<{ userId: string }>
   ): Promise<Folder> {
-    return followFolder(ctx, folderId, notifyUserFolderCreated)
+    return followFolder(ctx, folderId, notifyUserFoldersUpdated)
   }
 
   @Authorized()
@@ -125,10 +122,10 @@ export class FolderMutations {
   async unfollowFolder(
     @Ctx() ctx: Context,
     @Arg('folderId', () => ID) folderId: string,
-    @PubSub(SubscriptionTopic.UserFolderDeleted)
-    notifyUserFolderDeleted: Publisher<UserFolderPayload>
+    @PubSub(SubscriptionTopic.UserFoldersUpdated)
+    notifyUserFoldersUpdated: Publisher<{ userId: string }>
   ): Promise<Folder> {
-    return unfollowFolder(ctx, folderId, notifyUserFolderDeleted)
+    return unfollowFolder(ctx, folderId, notifyUserFoldersUpdated)
   }
 
   @Authorized()
@@ -136,10 +133,10 @@ export class FolderMutations {
   async reorderUserFolders(
     @Ctx() ctx: Context,
     @Args() args: ReorderUserFoldersArgs,
-    @PubSub(SubscriptionTopic.UserFoldersReordered)
-    notifyUserFoldersReordered: Publisher<{ userId: string }>
+    @PubSub(SubscriptionTopic.UserFoldersUpdated)
+    notifyUserFoldersUpdated: Publisher<{ userId: string }>
   ) {
-    return reorderUserFolders(ctx, args, notifyUserFoldersReordered)
+    return reorderUserFolders(ctx, args, notifyUserFoldersUpdated)
   }
 
   @Authorized()
@@ -147,9 +144,9 @@ export class FolderMutations {
   async reorderServerFolders(
     @Ctx() ctx: Context,
     @Args() args: ReorderServerFoldersArgs,
-    @PubSub(SubscriptionTopic.ServerFoldersReordered)
-    notifyServerFoldersReordered: Publisher<{ serverId: string }>
+    @PubSub(SubscriptionTopic.ServerFoldersUpdated)
+    notifyServerFoldersUpdated: Publisher<{ serverId: string }>
   ) {
-    return reorderServerFolders(ctx, args, notifyServerFoldersReordered)
+    return reorderServerFolders(ctx, args, notifyServerFoldersUpdated)
   }
 }

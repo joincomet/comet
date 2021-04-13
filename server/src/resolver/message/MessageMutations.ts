@@ -10,18 +10,7 @@ import {
   Resolver
 } from 'type-graphql'
 import { Message, User } from '@/entity'
-import { scrapeMetadata } from '@/util/metascraper'
-import {
-  ChannelPermission,
-  Context,
-  ServerPermission,
-  SubscriptionTopic
-} from '@/types'
-import {
-  CheckChannelPermission,
-  CheckGroupMember,
-  CheckMessageAuthor
-} from '@/util'
+import { Context, SubscriptionTopic } from '@/types'
 import { DmPayload } from '@/resolver/message/subscriptions/DmPayload'
 import { MessagePayload } from '@/resolver/message/subscriptions/MessagePayload'
 import {
@@ -43,12 +32,8 @@ import { readDm } from '@/resolver/message/mutations/readDm'
 
 @Resolver()
 export class MessageMutations {
-  @CheckChannelPermission(
-    ChannelPermission.SendMessages,
-    ServerPermission.SendMessages
-  )
-  @CheckGroupMember()
-  @Mutation(() => Message, { description: 'Create a chat message' })
+  @Authorized()
+  @Mutation(() => Message)
   async sendMessage(
     @Ctx() ctx: Context,
     @Args() args: SendMessageArgs,
@@ -60,7 +45,7 @@ export class MessageMutations {
     return sendMessage(ctx, args, messageSent, notifyDmOpened)
   }
 
-  @CheckMessageAuthor()
+  @Authorized()
   @Mutation(() => Message)
   async editMessage(
     @Ctx() ctx: Context,
@@ -71,11 +56,11 @@ export class MessageMutations {
     return editMessage(ctx, args, notifyMessageUpdated)
   }
 
-  @CheckMessageAuthor()
-  @Mutation(() => Boolean, { description: 'Delete a message' })
+  @Authorized()
+  @Mutation(() => Boolean)
   async deleteMessage(
     @Ctx() ctx: Context,
-    @Arg('messageId', () => ID, { description: 'ID of message to delete' })
+    @Arg('messageId', () => ID)
     messageId: string,
     @PubSub(SubscriptionTopic.MessageDeleted)
     notifyMessageDeleted: Publisher<MessagePayload>
@@ -94,13 +79,12 @@ export class MessageMutations {
     return closeDm(ctx, userId, notifyDmClosed)
   }
 
-  @CheckChannelPermission(ChannelPermission.SendMessages)
-  @CheckGroupMember()
+  @Authorized()
   @Mutation(() => Boolean)
   async startTyping(
     @Ctx() ctx: Context,
     @Args() args: TypingArgs,
-    @PubSub(SubscriptionTopic.Typing)
+    @PubSub(SubscriptionTopic.UserStartedTyping)
     notifyUserStartedTyping: Publisher<TypingPayload>
   ): Promise<boolean> {
     return startTyping(ctx, args, notifyUserStartedTyping)

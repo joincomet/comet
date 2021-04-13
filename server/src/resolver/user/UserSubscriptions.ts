@@ -18,7 +18,7 @@ export class UserSubscriptions {
 
   @Authorized()
   @Subscription(() => FriendStatusChangedResponse, {
-    topics: SubscriptionTopic.FriendStatusChanged,
+    topics: SubscriptionTopic.RelationshipUpdated,
     filter: currentUserFilter
   })
   async friendStatusChanged(
@@ -29,5 +29,14 @@ export class UserSubscriptions {
       user: await em.findOneOrFail(User, friendId),
       status
     }
+  }
+
+  @Authorized()
+  @Subscription(() => Boolean, {
+    topics: SubscriptionTopic.UserBannedGlobal,
+    filter: currentUserFilter
+  })
+  userBannedGlobal(): boolean {
+    return true
   }
 }

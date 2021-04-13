@@ -12,7 +12,7 @@ export async function readDm(
   myData.lastViewAt = new Date()
   myData.unreadCount = 0
   await em.persistAndFlush(myData)
-  const them = myData.friend
+  const them = myData.user
   them.unreadCount = 0
   await notifyDmRead({ userId: user.id, friendId: userId })
   return them

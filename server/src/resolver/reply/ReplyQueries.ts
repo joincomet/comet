@@ -6,9 +6,7 @@ import { getReplies } from '@/resolver/reply/queries/getReplies'
 @Resolver(() => Reply)
 export class ReplyQueries {
   @Authorized()
-  @Query(() => [Reply], {
-    description: 'Get all comment replies or only unread comment replies'
-  })
+  @Query(() => [Reply])
   async getReplies(@Ctx() ctx: Context): Promise<Reply[]> {
     return getReplies(ctx)
   }

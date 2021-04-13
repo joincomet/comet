@@ -3,14 +3,15 @@ import { Folder, Server, ServerFolder } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 
 export async function getServerFolders(
-  { em }: Context,
+  { em, user }: Context,
   serverId: string
 ): Promise<Folder[]> {
+  await user.checkJoinedServer(em, serverId)
   const server = await em.findOneOrFail(Server, serverId)
   const serverFolders = await em.find(
     ServerFolder,
     { server, folder: { isDeleted: false } },
-    ['folder.serverFolder.server'],
+    ['folder'],
     {
       position: QueryOrder.ASC
     }

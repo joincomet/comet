@@ -25,9 +25,7 @@ export class MessageSubscriptions {
   @Authorized()
   @Subscription(() => MessageResponse, {
     topics: SubscriptionTopic.MessageSent,
-    filter: canViewMessageFilter,
-    description:
-      'Published to all users with permission to view message when a message is sent'
+    filter: canViewMessageFilter
   })
   async messageSent(
     @Ctx() { em, user }: Context,
@@ -58,9 +56,7 @@ export class MessageSubscriptions {
   @Authorized()
   @Subscription(() => MessageResponse, {
     topics: SubscriptionTopic.MessageUpdated,
-    filter: canViewMessageFilter,
-    description:
-      'Published to all users with permission to view message when a message is updated (edited or embeds fetched)'
+    filter: canViewMessageFilter
   })
   async messageUpdated(
     @Ctx() { em, user }: Context,
@@ -83,9 +79,7 @@ export class MessageSubscriptions {
   @Authorized()
   @Subscription(() => MessageDeletedResponse, {
     topics: SubscriptionTopic.MessageDeleted,
-    filter: canViewMessageFilter,
-    description:
-      'Published to all users with permission to view message when a message is deleted or removed'
+    filter: canViewMessageFilter
   })
   messageDeleted(
     @Ctx() { user }: Context,
@@ -107,29 +101,24 @@ export class MessageSubscriptions {
 
   @Authorized()
   @Subscription(() => String, {
-    topics: SubscriptionTopic.Typing,
-    filter: typingFilter,
-    description:
-      'Published to all users looking at messages when a user starts typing'
+    topics: SubscriptionTopic.UserStartedTyping,
+    filter: typingFilter
   })
   userStartedTyping(
     @Root()
     { username }: TypingPayload,
-    @Args() args: TypingArgs
+    @Args() {}: TypingArgs
   ): string {
     return username
   }
 
   @Authorized()
-  @Subscription(() => User, {
+  @Subscription(() => ID, {
     topics: SubscriptionTopic.DmRead,
     filter: currentUserFilter
   })
-  async dmRead(
-    @Ctx() { em }: Context,
-    @Root() { friendId }: DmPayload
-  ): Promise<User> {
-    return em.findOneOrFail(User, friendId)
+  dmRead(@Root() { friendId }: DmPayload): string {
+    return friendId
   }
 
   @Authorized()

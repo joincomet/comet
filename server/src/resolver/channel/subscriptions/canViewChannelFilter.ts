@@ -1,8 +1,5 @@
-import {
-  ChannelPermission,
-  ServerPermission,
-  SubscriptionFilter
-} from '@/types'
+import { SubscriptionFilter } from '@/types'
+import { ChannelPermission, ServerPermission } from '@/entity'
 
 export const canViewChannelFilter = async ({
   payload: { channelId },

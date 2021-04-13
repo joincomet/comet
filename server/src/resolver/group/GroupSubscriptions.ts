@@ -1,12 +1,11 @@
-import { Authorized, Ctx, Resolver, Root, Subscription } from 'type-graphql'
-import { Context, SubscriptionTopic } from '@/types'
+import { Authorized, Ctx, ID, Resolver, Root, Subscription } from 'type-graphql'
+import { SubscriptionTopic } from '@/types'
 import { inGroupFilter } from '@/resolver/group/subscriptions/inGroupFilter'
 import { GroupUserPayload } from '@/resolver/group/subscriptions'
 import { UserJoinedGroupResponse } from '@/resolver/group/subscriptions/UserJoinedGroupResponse'
-import { Channel, Group, User } from '@/entity'
+import { Group, User } from '@/entity'
 import { UserLeftGroupResponse } from '@/resolver/group/subscriptions/UserLeftGroupResponse'
 import { currentUserFilter } from '@/util/currentUserFilter'
-import { ChannelUserPayload } from '@/resolver/channel/mutations'
 
 @Resolver()
 export class GroupSubscriptions {
@@ -21,7 +20,7 @@ export class GroupSubscriptions {
   ): Promise<UserJoinedGroupResponse> {
     return {
       user: await em.findOneOrFail(User, userId),
-      group: await em.findOneOrFail(Group, groupId)
+      groupId
     }
   }
 
@@ -49,14 +48,32 @@ export class GroupSubscriptions {
   }
 
   @Authorized()
-  @Subscription(() => Group, {
+  @Subscription(() => ID, {
     topics: SubscriptionTopic.GroupRead,
     filter: currentUserFilter
   })
-  async groupRead(
-    @Ctx() { em }: Context,
+  groupRead(@Root() { groupId }: GroupUserPayload): string {
+    return groupId
+  }
+
+  @Authorized()
+  @Subscription(() => Group, {
+    topics: SubscriptionTopic.GroupsUpdated,
+    filter: currentUserFilter
+  })
+  async addedToGroup(
+    @Ctx() { em },
     @Root() { groupId }: GroupUserPayload
   ): Promise<Group> {
-    return em.findOneOrFail(Group, groupId)
+    return em.findOneOrFail(Group, groupId, ['users'])
+  }
+
+  @Authorized()
+  @Subscription(() => ID, {
+    topics: SubscriptionTopic.RemovedFromGroup,
+    filter: currentUserFilter
+  })
+  removedFromGroup(@Root() { groupId }: GroupUserPayload): string {
+    return groupId
   }
 }

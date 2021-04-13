@@ -1,5 +1,5 @@
 import { ArgsType, Field, ID, Publisher } from 'type-graphql'
-import { Length, Matches } from 'class-validator'
+import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { Comment, Reply, Post } from '@/entity'
 import { handleText } from '@/util'

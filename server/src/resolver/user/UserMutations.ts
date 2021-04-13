@@ -35,7 +35,7 @@ import { FriendStatusChangedPayload } from '@/resolver/user/subscriptions'
 
 @Resolver()
 export class UserMutations {
-  @Mutation(() => LoginResponse, { description: 'Create an account' })
+  @Mutation(() => LoginResponse)
   async createAccount(
     @Ctx() ctx: Context,
     @Args() args: CreateAccountArgs
@@ -43,9 +43,7 @@ export class UserMutations {
     return createAccount(ctx, args)
   }
 
-  @Mutation(() => LoginResponse, {
-    description: 'Log in with email and password'
-  })
+  @Mutation(() => LoginResponse)
   async login(
     @Ctx() ctx: Context,
     @Args() args: LoginArgs
@@ -54,7 +52,7 @@ export class UserMutations {
   }
 
   @Authorized()
-  @Mutation(() => LoginResponse, { description: 'Change password' })
+  @Mutation(() => LoginResponse)
   async changePassword(
     @Ctx() ctx: Context,
     @Args() args: ChangePasswordArgs
@@ -63,7 +61,7 @@ export class UserMutations {
   }
 
   @Authorized()
-  @Mutation(() => User, { description: 'Update user properties' })
+  @Mutation(() => User)
   async editAccount(
     @Ctx() ctx: Context,
     @Args()
@@ -75,10 +73,7 @@ export class UserMutations {
   }
 
   @Authorized('ADMIN')
-  @Mutation(() => Boolean, {
-    description:
-      'Ban user globally and optionally purge all posts, comments, and messages (requires admin)'
-  })
+  @Mutation(() => Boolean)
   async banUserGlobal(
     @Ctx() ctx: Context,
     @Args() args: BanUserGlobalArgs,
@@ -89,12 +84,10 @@ export class UserMutations {
   }
 
   @Authorized('ADMIN')
-  @Mutation(() => Boolean, {
-    description: 'Unban a user globally (requires admin)'
-  })
+  @Mutation(() => Boolean)
   async unbanUserGlobal(
     @Ctx() ctx: Context,
-    @Arg('userId', () => ID, { description: 'ID of user to unban' })
+    @Arg('userId', () => ID)
     userId: string
   ): Promise<boolean> {
     return unbanUserGlobal(ctx, userId)
@@ -105,7 +98,7 @@ export class UserMutations {
   async changeFriendStatus(
     @Ctx() ctx: Context,
     @Args() args: ChangeFriendStatusArgs,
-    @PubSub(SubscriptionTopic.FriendStatusChanged)
+    @PubSub(SubscriptionTopic.RelationshipUpdated)
     notifyFriendStatusChanged: Publisher<FriendStatusChangedPayload>
   ): Promise<User> {
     return changeFriendStatus(ctx, args, notifyFriendStatusChanged)
