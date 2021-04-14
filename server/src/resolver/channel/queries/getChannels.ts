@@ -3,7 +3,6 @@ import {
   Channel,
   ChannelPermission,
   ChannelUser,
-  Server,
   ServerPermission
 } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
@@ -12,11 +11,11 @@ export async function getChannels(
   { em, user }: Context,
   serverId: string
 ): Promise<Channel[]> {
-  const server = await em.findOneOrFail(Server, serverId)
+  await user.checkJoinedServer(em, serverId)
 
   const channels = await em.find(
     Channel,
-    { server },
+    { server: serverId },
     { orderBy: { position: QueryOrder.ASC } }
   )
 

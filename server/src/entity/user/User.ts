@@ -1,4 +1,4 @@
-import { Authorized, Field, Int, ObjectType, Publisher } from 'type-graphql'
+import { Authorized, Field, ObjectType, Publisher } from 'type-graphql'
 import {
   Collection,
   Entity,
@@ -27,10 +27,9 @@ import {
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { CustomError } from '@/types/CustomError'
-import { UserServerPayload } from '@/resolver/server/subscriptions'
-import { ReorderUtils } from '@/util'
 import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 import { OnlineStatus } from '@/entity/user/OnlineStatus'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -57,52 +56,25 @@ export class User extends BaseEntity {
   @Property({ nullable: true })
   lastLoginAt?: Date
 
+  @Field({ nullable: true })
+  @Property({ nullable: true, columnType: 'text' })
+  avatarUrl?: string
+
+  @Field(() => OnlineStatus)
+  @Enum({
+    items: () => OnlineStatus
+  })
+  onlineStatus: OnlineStatus = OnlineStatus.Online
+
   @Field()
-  get isOnline(): boolean {
-    if (!this.lastLoginAt) return false
-    const timeout = 5 * 60 * 1000 // five minutes
-    return new Date().getTime() - this.lastLoginAt.getTime() < timeout
-  }
+  @Property()
+  isAdmin: boolean = false
 
   @Property({ columnType: 'text' })
   passwordHash: string
 
   @Property()
   isDeleted: boolean = false
-
-  @Field()
-  @Property()
-  isAdmin: boolean = false
-
-  @Field(() => [Folder])
-  folders: Folder[]
-
-  @OneToMany(() => UserFolder, 'user', {
-    orderBy: { position: QueryOrder.ASC }
-  })
-  userFolders = new Collection<UserFolder>(this)
-
-  @Field(() => [Server])
-  servers: Server[]
-
-  @OneToMany(() => ServerUser, 'user', {
-    orderBy: { position: QueryOrder.ASC }
-  })
-  serverJoins = new Collection<ServerUser>(this)
-
-  @Field(() => [Group])
-  @ManyToMany(() => Group, group => group.users, {
-    orderBy: { lastMessageAt: QueryOrder.DESC }
-  })
-  groups = new Collection<Group>(this)
-
-  @Field(() => [Relationship])
-  @OneToMany(() => Relationship, 'owner')
-  relationships = new Collection<Relationship>(this)
-
-  @Field({ nullable: true })
-  @Property({ nullable: true, columnType: 'text' })
-  avatarUrl?: string
 
   @Property()
   isBanned: boolean = false
@@ -113,14 +85,34 @@ export class User extends BaseEntity {
   @Property({ nullable: true })
   purchasedPremiumAt?: Date
 
-  @Field(() => Int, { nullable: true })
-  unreadCount?: number = 0
-
-  @Field(() => OnlineStatus)
-  @Enum({
-    items: () => OnlineStatus
+  @OneToMany(() => UserFolder, 'user', {
+    orderBy: { position: QueryOrder.ASC }
   })
-  onlineStatus: OnlineStatus = OnlineStatus.Online
+  userFolders = new Collection<UserFolder>(this)
+
+  @OneToMany(() => ServerUser, 'user', {
+    orderBy: { position: QueryOrder.ASC }
+  })
+  serverJoins = new Collection<ServerUser>(this)
+
+  @ManyToMany(() => Group, group => group.users, {
+    orderBy: { lastMessageAt: QueryOrder.DESC }
+  })
+  groups = new Collection<Group>(this)
+
+  @OneToMany(() => Relationship, 'owner')
+  relationships = new Collection<Relationship>(this)
+
+  @Authorized('USER')
+  @Field(() => [Folder], { nullable: true })
+  folders?: Folder[]
+
+  @Field()
+  get isOnline(): boolean {
+    if (!this.lastLoginAt) return false
+    const timeout = 5 * 60 * 1000 // five minutes
+    return new Date().getTime() - this.lastLoginAt.getTime() < timeout
+  }
 
   @Field()
   get isPremium(): boolean {
@@ -158,35 +150,10 @@ export class User extends BaseEntity {
       throw new Error('error.server.banned')
   }
 
-  async joinServer(
-    em: EntityManager,
-    serverId: string,
-    notifyUserJoinedServer: Publisher<UserServerPayload>
-  ): Promise<Server> {
-    await this.checkBannedFromServer(em, serverId)
-    const server = await em.findOneOrFail(Server, serverId)
-    const firstServerJoin = await em.findOne(
-      ServerUser,
-      { server, user: this },
-      ['server'],
-      { position: QueryOrder.ASC }
-    )
-    const join = em.create(ServerUser, {
-      server,
-      user: this,
-      position: firstServerJoin
-        ? ReorderUtils.positionBefore(firstServerJoin.position)
-        : ReorderUtils.FIRST_POSITION
-    })
-    await em.persistAndFlush(join)
-    await notifyUserJoinedServer({ userId: this.id, serverId })
-    return server
-  }
-
   async leaveServer(
     em: EntityManager,
     serverId: string,
-    notifyUserLeftServer: Publisher<UserServerPayload>
+    liveQueryStore: InMemoryLiveQueryStore
   ) {
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
     if (server.owner === this) throw new Error('error.server.owner')
@@ -194,7 +161,7 @@ export class User extends BaseEntity {
     server.userCount--
     join.status = ServerUserStatus.None
     await em.persistAndFlush([server, join])
-    await notifyUserLeftServer({ userId: this.id, serverId: server.id })
+    liveQueryStore.invalidate(`Query.getJoinedServers(id:"${this.id}")`)
   }
 
   async hasServerPermission(

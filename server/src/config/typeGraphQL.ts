@@ -1,8 +1,8 @@
 import { authChecker } from '@/util/auth'
-import { getPubSub } from '@/util/subscriptions'
 import { BuildSchemaOptions } from 'type-graphql'
 import path from 'path'
 import * as resolvers from '@/resolver'
+import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query'
 
 export const typeGraphQLConf = {
   resolvers: Object.values(resolvers) as unknown,
@@ -12,5 +12,5 @@ export const typeGraphQLConf = {
       : path.resolve(__dirname, '../../../schema.graphql'),
   validate: true,
   authChecker: authChecker,
-  pubSub: getPubSub()
+  directives: [GraphQLLiveDirective]
 } as BuildSchemaOptions

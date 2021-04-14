@@ -1,14 +1,14 @@
 import { LoginResponse } from '@/resolver/user'
 import { Context } from '@/types'
-import { ArgsType, Field } from 'type-graphql'
+import { ArgsType, Field, InputType } from 'type-graphql'
 import isEmail from 'validator/lib/isEmail'
 import { User } from '@/entity'
 import * as argon2 from 'argon2'
 import { CustomError } from '@/types/CustomError'
 import { createAccessToken } from '@/util'
 
-@ArgsType()
-export class LoginArgs {
+@InputType()
+export class LoginInput {
   @Field()
   email: string
 
@@ -18,7 +18,7 @@ export class LoginArgs {
 
 export async function login(
   { em }: Context,
-  { email, password }: LoginArgs
+  { email, password }: LoginInput
 ): Promise<LoginResponse> {
   email = email.toLowerCase()
   if (!isEmail(email)) throw new Error('error.login.invalidEmail')

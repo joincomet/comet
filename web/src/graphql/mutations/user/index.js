@@ -1,6 +1,4 @@
-export * from './BanUserGlobal'
-export * from './ChangeFriendStatus'
 export * from './ChangePassword'
 export * from './CreateAccount'
 export * from './Login'
-export * from './EditAccount'
+export * from './UpdateUser'

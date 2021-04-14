@@ -1,4 +1,4 @@
-import { ArgsType, Field, ID, Publisher } from 'type-graphql'
+import { ArgsType, Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import {
   Folder,
@@ -9,8 +9,8 @@ import {
 } from '@/entity'
 import { Length } from 'class-validator'
 
-@ArgsType()
-export class CreateFolderArgs {
+@InputType()
+export class CreateFolderInput {
   @Field(() => ID, { nullable: true })
   serverId?: string
 
@@ -19,7 +19,7 @@ export class CreateFolderArgs {
   name: string
 
   @Field({ defaultValue: false })
-  isCollaborative: boolean
+  isCollaborative: boolean = false
 
   @Field(() => FolderVisibility, {
     defaultValue: FolderVisibility.Public
@@ -28,10 +28,8 @@ export class CreateFolderArgs {
 }
 
 export async function createFolder(
-  { em, user }: Context,
-  { serverId, name, isCollaborative, visibility }: CreateFolderArgs,
-  notifyUserFoldersUpdated: Publisher<{ userId: string }>,
-  notifyServerFoldersUpdated: Publisher<{ serverId: string }>
+  { em, user, liveQueryStore }: Context,
+  { serverId, name, isCollaborative, visibility }: CreateFolderInput
 ): Promise<Folder> {
   if (name.length > 100) throw new Error('error.folder.nameTooLong')
   if (name === 'Favorites' || name === 'Read Later')
@@ -48,7 +46,7 @@ export async function createFolder(
       folder
     })
     await em.persistAndFlush([folder, serverFolder])
-    await notifyServerFoldersUpdated({ serverId })
+    liveQueryStore.invalidate(`Server:${serverId}`)
   } else {
     folder = em.create(Folder, {
       owner: user,
@@ -61,7 +59,7 @@ export async function createFolder(
       folder
     })
     await em.persistAndFlush([folder, userFolder])
-    await notifyUserFoldersUpdated({ userId: user.id })
+    liveQueryStore.invalidate(`User:${user.id}`)
   }
   return folder
 }

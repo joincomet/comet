@@ -4,15 +4,6 @@ import { Role, Server, ServerPermission } from '@/entity'
 import { getReorderPosition } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 
-@ArgsType()
-export class ReorderRoleArgs {
-  @Field(() => ID, { nullable: true })
-  beforeRoleId?: string
-
-  @Field(() => ID)
-  roleId: string
-}
-
 export async function reorderRoles(
   { em, user }: Context,
   { beforeRoleId, roleId }: ReorderRoleArgs,

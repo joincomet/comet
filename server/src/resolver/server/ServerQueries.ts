@@ -1,21 +1,23 @@
 import {
+  Arg,
   Args,
   Authorized,
   Ctx,
   FieldResolver,
+  ID,
   Query,
   Resolver,
   Root
 } from 'type-graphql'
-import { Channel, Server, Role, Folder } from '@/entity'
+import { Channel, Server, Role, Folder, ServerUser } from '@/entity'
 import { Context } from '@/types'
 import {
+  getJoinedServers,
+  getMutualServers,
   getPublicServers,
   GetPublicServersArgs
 } from '@/resolver/server/queries'
-import { getChannels } from '@/resolver/channel/queries/getChannels'
 import { myRoles } from '@/resolver/server/fields'
-import { getServerFolders } from '@/resolver/folder/queries/getServerFolders'
 
 @Resolver(() => Server)
 export class ServerQueries {
@@ -29,13 +31,30 @@ export class ServerQueries {
   }
 
   @Authorized()
+  @Query(() => [Server])
+  async getJoinedServers(
+    @Ctx() ctx: Context,
+    @Arg('id', () => ID) id: string
+  ): Promise<Server[]> {
+    return getJoinedServers(ctx)
+  }
+
+  @Authorized()
+  @Query(() => [ServerUser])
+  async getMutualServers(
+    @Ctx() ctx: Context,
+    @Arg('userId', () => ID) userId: string
+  ): Promise<ServerUser[]> {
+    return getMutualServers(ctx, userId)
+  }
+
+  @Authorized()
   @FieldResolver(() => [Channel])
   async channels(
-    @Ctx() { em, user }: Context,
+    @Ctx() { loaders: { channelLoader } }: Context,
     @Root() server: Server
   ): Promise<Channel[]> {
-    await user.checkJoinedServer(em, server.id)
-    return getChannels({ em, user }, server.id)
+    return channelLoader.load(server.id)
   }
 
   @Authorized()
@@ -47,9 +66,9 @@ export class ServerQueries {
   @Authorized()
   @FieldResolver(() => [Folder])
   async folders(
-    @Ctx() ctx: Context,
+    @Ctx() { loaders: { serverFolderLoader } }: Context,
     @Root() server: Server
   ): Promise<Folder[]> {
-    return getServerFolders(ctx, server.id)
+    return serverFolderLoader.load(server.id)
   }
 }

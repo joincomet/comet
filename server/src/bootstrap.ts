@@ -3,16 +3,22 @@ import { mikroOrmConf } from '@/config/mikroOrm'
 import { buildSchema } from 'type-graphql'
 import { typeGraphQLConf } from '@/config/typeGraphQL'
 import express from 'express'
-import cookieParser from 'cookie-parser'
+import { specifiedRules } from 'graphql'
+import {
+  getGraphQLParameters,
+  processRequest,
+  renderGraphiQL,
+  shouldRenderGraphiQL
+} from 'graphql-helix'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express'
 import { getUserId } from '@/util'
 import { User } from '@/entity'
 import { Context } from '@/types'
-import { onConnect } from '@/config/redis'
-import http from 'http'
 import { seed } from '@/seed'
 import { writeSchemaJson } from '@/writeSchemaJson'
+import { createLoaders } from '@/util/loaders/createLoaders'
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -30,62 +36,109 @@ export async function bootstrap() {
   // }
 
   console.log(`Bootstraping schema and server...`)
+  const liveQueryStore = new InMemoryLiveQueryStore()
   const schema = await buildSchema(typeGraphQLConf)
 
   const app = express()
-
-  app.use(cookieParser())
-
+  app.use(express.json())
   app.use(
+    '/graphql',
     graphqlUploadExpress({
       maxFileSize: 8 * 1024 * 1024, // 8MB limit
       maxFiles: 10
-    })
+    }),
+    async (req, res) => {
+      const request = {
+        body: req.body,
+        headers: req.headers,
+        method: req.method,
+        query: req.query
+      }
+
+      if (shouldRenderGraphiQL(request)) {
+        res.send(renderGraphiQL())
+      } else {
+        const { operationName, query, variables } = getGraphQLParameters(
+          request
+        )
+
+        const result = await processRequest({
+          operationName,
+          query,
+          variables,
+          request,
+          schema,
+          validationRules: [...specifiedRules, NoLiveMixedWithDeferStreamRule],
+          contextFactory: async () => {
+            const em = orm.em.fork()
+            const userId = getUserId(request.headers.token as string)
+            const user = userId ? await em.findOne(User, userId) : null
+            return {
+              em,
+              user,
+              liveQueryStore,
+              loaders: createLoaders(em, user)
+            } as Context
+          },
+          execute: liveQueryStore.execute
+        })
+
+        if (result.type === 'RESPONSE') {
+          result.headers.forEach(({ name, value }) =>
+            res.setHeader(name, value)
+          )
+          res.status(result.status)
+          res.json(result.payload)
+        } else if (result.type === 'MULTIPART_RESPONSE') {
+          res.writeHead(200, {
+            Connection: 'keep-alive',
+            'Content-Type': 'multipart/mixed; boundary="-"',
+            'Transfer-Encoding': 'chunked'
+          })
+
+          req.on('close', () => {
+            result.unsubscribe()
+          })
+
+          await result.subscribe(result => {
+            const chunk = Buffer.from(JSON.stringify(result), 'utf8')
+            const data = [
+              '',
+              '---',
+              'Content-Type: application/json; charset=utf-8',
+              'Content-Length: ' + String(chunk.length),
+              '',
+              chunk,
+              ''
+            ].join('\r\n')
+            res.write(data)
+          })
+
+          res.write('\r\n-----\r\n')
+          res.end()
+        } else {
+          res.writeHead(200, {
+            'Content-Type': 'text/event-stream',
+            Connection: 'keep-alive',
+            'Cache-Control': 'no-cache'
+          })
+
+          req.on('close', () => {
+            result.unsubscribe()
+          })
+
+          await result.subscribe(result => {
+            res.write(`data: ${JSON.stringify(result)}\n\n`)
+          })
+        }
+      }
+    }
   )
 
-  const server = new ApolloServer({
-    schema,
-    playground: process.env.NODE_ENV !== 'production',
-    tracing: true,
-    context: async ({ req, connection }) => {
-      const em = orm.em.fork()
-      const userId = connection
-        ? connection.context.userId
-        : getUserId(req.headers.token as string)
-      const user = userId ? await em.findOne(User, userId) : null
-      if (user) {
-        user.lastLoginAt = new Date()
-        await em.persistAndFlush(user)
-      }
-      return {
-        em,
-        user
-      } as Context
-    },
-    uploads: false,
-    introspection: true,
-    subscriptions: {
-      onConnect
-    }
-  } as ApolloServerExpressConfig)
+  const port = process.env.PORT || 4000
 
-  await server.start()
-
-  server.applyMiddleware({
-    app
-  })
-
-  const httpServer = http.createServer(app)
-  server.installSubscriptionHandlers(httpServer)
-
-  const PORT = process.env.PORT ?? 4000
-  httpServer.listen(PORT, () => {
-    console.log(
-      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-    )
-    console.log(
-      `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
-    )
+  app.listen(port, () => {
+    console.log(`GraphQL server is running on port ${port}.`)
   })
 
   if (process.env.NODE_ENV !== 'production') writeSchemaJson()

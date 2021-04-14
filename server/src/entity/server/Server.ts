@@ -85,6 +85,10 @@ export class Server extends BaseEntity {
   @Property()
   isDeleted: boolean = false
 
+  @Field()
+  @Property()
+  sendWelcomeMessage: boolean = true
+
   @Field(() => [Channel])
   @OneToMany(() => Channel, 'server', {
     orderBy: { position: QueryOrder.ASC }

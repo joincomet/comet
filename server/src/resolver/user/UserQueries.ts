@@ -9,9 +9,14 @@ import {
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import { Folder, Server, User } from '@/entity'
-import { getCurrentUser, getUser } from '@/resolver/user/queries'
-import { folders, servers } from './fields'
+import { Folder, ServerUser, User } from '@/entity'
+import {
+  getCurrentUser,
+  getMutualFriends,
+  getUser
+} from '@/resolver/user/queries'
+import { getOtherUserFolders } from '@/resolver/folder/queries/getOtherUserFolders'
+import { getMutualServers } from '@/resolver/server/queries'
 
 @Resolver(() => User)
 export class UserQueries {
@@ -39,15 +44,39 @@ export class UserQueries {
     return getUser(ctx, userId)
   }
 
-  @Authorized()
-  @FieldResolver(() => [Server])
-  async servers(@Ctx() ctx: Context, @Root() user: User): Promise<Server[]> {
-    return servers(ctx, user)
+  @Authorized('USER')
+  @FieldResolver(() => [Folder])
+  async folders(
+    @Ctx() { loaders: { userFolderLoader } }: Context,
+    @Root() user: User
+  ): Promise<Folder[]> {
+    return userFolderLoader.load(user.id)
   }
 
   @Authorized()
-  @FieldResolver(() => [Folder])
-  async folders(@Ctx() ctx: Context, @Root() user: User): Promise<Folder[]> {
-    return folders(ctx, user)
+  @Query(() => [Folder])
+  async getOtherUserFolders(
+    @Ctx() ctx: Context,
+    @Arg('userId', () => ID) userId: string
+  ): Promise<Folder[]> {
+    return getOtherUserFolders(ctx, userId)
+  }
+
+  @Authorized()
+  @Query(() => [User])
+  async getMutualFriends(
+    @Ctx() ctx: Context,
+    @Arg('userId', () => ID) userId: string
+  ): Promise<User[]> {
+    return getMutualFriends(ctx, userId)
+  }
+
+  @Authorized()
+  @Query(() => [ServerUser])
+  async getMutualServers(
+    @Ctx() ctx: Context,
+    @Arg('userId', () => ID) userId: string
+  ): Promise<ServerUser[]> {
+    return getMutualServers(ctx, userId)
   }
 }

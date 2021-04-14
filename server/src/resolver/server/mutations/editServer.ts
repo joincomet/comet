@@ -5,32 +5,6 @@ import { Context } from '@/types'
 import { Server, ServerCategory } from '@/entity'
 import { uploadImageSingle } from '@/util'
 
-@ArgsType()
-export class EditServerArgs {
-  @Field(() => ID)
-  serverId: string
-
-  @Field({ nullable: true })
-  @Length(2, 100)
-  name?: string
-
-  @Field({ nullable: true })
-  @Length(0, 500)
-  description?: string
-
-  @Field({ nullable: true })
-  isPublic?: boolean
-
-  @Field(() => ServerCategory, { nullable: true })
-  category?: ServerCategory
-
-  @Field(() => GraphQLUpload, { nullable: true })
-  avatarFile?: FileUpload
-
-  @Field(() => GraphQLUpload, { nullable: true })
-  bannerFile?: FileUpload
-}
-
 export async function editServer(
   { em }: Context,
   {

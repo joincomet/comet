@@ -2,18 +2,6 @@ import { Context } from '@/types'
 import { ArgsType, Field, ID, Publisher } from 'type-graphql'
 import { Comment, Message, Post, ServerUser, User } from '@/entity'
 
-@ArgsType()
-export class BanUserGlobalArgs {
-  @Field(() => ID)
-  userId: string
-
-  @Field({ defaultValue: false })
-  purge: boolean
-
-  @Field({ nullable: true })
-  reason?: string
-}
-
 export async function banUserGlobal(
   { em }: Context,
   { userId, purge, reason }: BanUserGlobalArgs,

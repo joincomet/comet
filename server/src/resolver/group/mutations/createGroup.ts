@@ -1,20 +1,18 @@
 import { Context } from '@/types'
-import { ArgsType, Field, Publisher } from 'type-graphql'
+import { ArgsType, Field, InputType } from 'type-graphql'
 import { Group, User } from '@/entity'
-import { GroupUserPayload } from '@/resolver/group/subscriptions/GroupUserPayload'
 import { ArrayMaxSize } from 'class-validator'
 
-@ArgsType()
-export class CreateGroupArgs {
+@InputType()
+export class CreateGroupInput {
   @Field(() => [String])
   @ArrayMaxSize(9)
   usernames: string[]
 }
 
 export async function createGroup(
-  { em, user }: Context,
-  { usernames }: CreateGroupArgs,
-  notifyUserJoinedGroup: Publisher<GroupUserPayload>
+  { em, user, liveQueryStore }: Context,
+  { usernames }: CreateGroupInput
 ): Promise<Group> {
   if (usernames.length > 9) throw new Error('error.group.maxSize')
   const users = [user]
@@ -26,7 +24,6 @@ export async function createGroup(
     owner: user
   })
   await em.persistAndFlush(group)
-  for (const u of users)
-    await notifyUserJoinedGroup({ userId: u.id, groupId: group.id })
+  liveQueryStore.invalidate(users.map(user => `User:${user.id}`))
   return group
 }

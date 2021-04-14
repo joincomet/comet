@@ -1,13 +1,13 @@
-import { ArgsType, Field, ID, Publisher } from 'type-graphql'
+import { ArgsType, Field, ID, InputType, Publisher } from 'type-graphql'
 import { ArrayMaxSize, IsOptional, Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { Post, Server } from '@/entity'
-import { PostServerPayload } from '@/resolver/post/subscriptions'
 import { handleText, scrapeMetadata, uploadImageSingle } from '@/util'
+import { ChangePayload, ChangeType } from '@/subscriptions'
 
-@ArgsType()
-export class CreatePostArgs {
+@InputType()
+export class CreatePostInput {
   @Field()
   @Length(1, 300, { message: 'Title must be no longer than 300 characters.' })
   title: string
@@ -35,8 +35,8 @@ export class CreatePostArgs {
 
 export async function createPost(
   { em, user }: Context,
-  { title, linkUrl, text, serverId, images }: CreatePostArgs,
-  notifyPostCreated: Publisher<PostServerPayload>
+  { title, linkUrl, text, serverId, images }: CreatePostInput,
+  notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
   if (text) {
     text = handleText(text)
@@ -69,6 +69,6 @@ export async function createPost(
   await this.votePost({ user, em }, post.id)
   post.isVoted = true
   post.voteCount = 1
-  await notifyPostCreated({ postId: post.id, serverId })
+  await notifyPostChanged({ id: post.id, type: ChangeType.Added })
   return post
 }

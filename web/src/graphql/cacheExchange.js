@@ -12,7 +12,6 @@ import {
 } from '@/graphql/queries'
 import { cacheExchange as ce } from '@urql/exchange-graphcache'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
-import { subscriptionClient } from '@/graphql/urqlClient'
 import schema from '../../../schema.json'
 
 const removePostFromGetPosts = (postId, cache) => {
@@ -151,7 +150,6 @@ export const cacheExchange = ce({
     Mutation: {
       login({ login: { accessToken, user } }, _variables, cache) {
         localStorage.setItem('token', accessToken)
-        subscriptionClient.close()
         cache.updateQuery({ query: GET_CURRENT_USER }, data => {
           data.getCurrentUser = user
           return data
@@ -163,7 +161,6 @@ export const cacheExchange = ce({
         cache
       ) {
         localStorage.setItem('token', accessToken)
-        subscriptionClient.close()
         cache.updateQuery({ query: GET_CURRENT_USER }, data => {
           data.getCurrentUser = user
           return data
@@ -227,8 +224,8 @@ export const cacheExchange = ce({
       }
     },
     Subscription: {
-      messageSent(
-        { messageSent: { userId, groupId, channelId, message } },
+      messageChanged(
+        { messageChanged: { added, updated, deleted } },
         _variables,
         cache
       ) {

@@ -3,15 +3,6 @@ import { ArgsType, Field, ID, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { Relationship, RelationshipStatus, User } from '@/entity'
 
-@ArgsType()
-export class ChangeFriendStatusArgs {
-  @Field(() => ID)
-  userId: string
-
-  @Field(() => RelationshipStatus)
-  status: RelationshipStatus
-}
-
 export async function changeFriendStatus(
   { em, user }: Context,
   { userId, status }: ChangeFriendStatusArgs,

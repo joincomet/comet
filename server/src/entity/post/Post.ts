@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
   Comment,
+  Folder,
   FolderPost,
   LinkMetadata,
   Server,
@@ -104,6 +105,9 @@ export class Post extends BaseEntity {
     orderBy: { addedAt: QueryOrder.DESC }
   })
   folderPosts = new Collection<FolderPost>(this)
+
+  @Field(() => [Folder], { nullable: true })
+  folders?: Folder[]
 
   @Field(() => Int)
   @Property({ unsigned: true })

@@ -23,12 +23,12 @@ import dayjs from 'dayjs'
 export class GetPostsArgs {
   @Field(() => Int, { defaultValue: 0 })
   @Min(0)
-  page = 0
+  page: number = 0
 
   @Field(() => Int, { defaultValue: 20 })
   @Min(1)
   @Max(100)
-  pageSize = 20
+  pageSize: number = 20
 
   @Field(() => GetPostsSort, {
     defaultValue: 'Hot'

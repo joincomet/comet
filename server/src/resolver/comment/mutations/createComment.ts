@@ -1,13 +1,13 @@
-import { ArgsType, Field, ID, Publisher } from 'type-graphql'
+import { ArgsType, Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { Comment, Reply, Post } from '@/entity'
 import { handleText } from '@/util'
-import { PostCommentPayload } from '@/resolver/comment/subscriptions/PostCommentPayload'
 import { voteComment } from '@/resolver/comment/mutations/voteComment'
+import { ChangePayload, ChangeType } from '@/subscriptions'
 
-@ArgsType()
-export class CreateCommentArgs {
+@InputType()
+export class CreateCommentInput {
   @Field()
   @Length(1, 100000, {
     message: 'Text must be between 1 and 100000 characters'
@@ -23,8 +23,9 @@ export class CreateCommentArgs {
 
 export async function createComment(
   { em, user }: Context,
-  { text, postId, parentCommentId }: CreateCommentArgs,
-  notifyCommentCreated: Publisher<PostCommentPayload>
+  { text, postId, parentCommentId }: CreateCommentInput,
+  notifyCommentChanged: Publisher<ChangePayload>,
+  notifyReplyChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
   text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
   if (!text) throw new Error('error.comment.empty')
@@ -77,7 +78,7 @@ export async function createComment(
   comment.isVoted = true
   comment.voteCount = 1
 
-  await notifyCommentCreated({ postId: post.id, commentId: comment.id })
+  await notifyCommentChanged({ id: comment.id, type: ChangeType.Added })
   await voteComment({ user, em }, comment.id)
 
   return comment

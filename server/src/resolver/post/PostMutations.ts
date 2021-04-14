@@ -1,28 +1,20 @@
 import {
   Arg,
-  Args,
   Authorized,
   Ctx,
-  ID,
   Mutation,
   Publisher,
   PubSub,
   Resolver
 } from 'type-graphql'
 import { Post } from '@/entity'
-import { Context, SubscriptionTopic } from '@/types'
+import { Context } from '@/types'
+import { createPost, CreatePostInput } from '@/resolver/post/mutations'
+import { ChangePayload, SubscriptionTopic } from '@/subscriptions'
 import {
-  createPost,
-  CreatePostArgs,
-  editPost,
-  EditPostArgs,
-  deletePost,
-  votePost,
-  unvotePost,
-  pinPost,
-  unpinPost
-} from '@/resolver/post/mutations'
-import { PostServerPayload } from '@/resolver/post/subscriptions'
+  UpdatePostInput,
+  updatePost
+} from '@/resolver/post/mutations/updatePost'
 
 @Resolver()
 export class PostMutations {
@@ -30,81 +22,23 @@ export class PostMutations {
   @Mutation(() => Post)
   async createPost(
     @Ctx() ctx: Context,
-    @Args()
-    args: CreatePostArgs,
-    @PubSub(SubscriptionTopic.PostCreated)
-    notifyPostCreated: Publisher<PostServerPayload>
+    @Arg('input')
+    input: CreatePostInput,
+    @PubSub(SubscriptionTopic.PostChanged)
+    notifyPostChanged: Publisher<ChangePayload>
   ): Promise<Post> {
-    return createPost(ctx, args, notifyPostCreated)
+    return createPost(ctx, input, notifyPostChanged)
   }
 
   @Authorized()
   @Mutation(() => Post)
-  async editPost(
+  async updatePost(
     @Ctx() ctx: Context,
-    @Args() args: EditPostArgs,
-    @PubSub(SubscriptionTopic.PostUpdated)
-    notifyPostUpdated: Publisher<{ postId: string }>
+    @Arg('input')
+    input: UpdatePostInput,
+    @PubSub(SubscriptionTopic.PostChanged)
+    notifyPostChanged: Publisher<ChangePayload>
   ): Promise<Post> {
-    return editPost(ctx, args, notifyPostUpdated)
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async deletePost(
-    @Ctx() ctx: Context,
-    @Arg('postId', () => ID) postId: string,
-    @PubSub(SubscriptionTopic.PostDeleted)
-    notifyPostDeleted: Publisher<PostServerPayload>
-  ): Promise<boolean> {
-    return deletePost(ctx, postId, notifyPostDeleted)
-  }
-
-  @Authorized()
-  @Mutation(() => Post)
-  async votePost(
-    @Ctx() ctx: Context,
-    @Arg('postId', () => ID)
-    postId: string,
-    @PubSub(SubscriptionTopic.PostUpdated)
-    notifyPostUpdated: Publisher<{ postId: string }>
-  ): Promise<Post> {
-    return votePost(ctx, postId, notifyPostUpdated)
-  }
-
-  @Authorized()
-  @Mutation(() => Post)
-  async unvotePost(
-    @Ctx() ctx: Context,
-    @Arg('postId', () => ID)
-    postId: string,
-    @PubSub(SubscriptionTopic.PostUpdated)
-    notifyPostUpdated: Publisher<{ postId: string }>
-  ): Promise<Post> {
-    return unvotePost(ctx, postId, notifyPostUpdated)
-  }
-
-  @Authorized()
-  @Mutation(() => Post)
-  async pinPost(
-    @Ctx() ctx: Context,
-    @Arg('postId', () => ID)
-    postId: string,
-    @PubSub(SubscriptionTopic.PostUpdated)
-    notifyPostUpdated: Publisher<{ postId: string }>
-  ): Promise<Post> {
-    return pinPost(ctx, postId, notifyPostUpdated)
-  }
-
-  @Authorized()
-  @Mutation(() => Post)
-  async unpinPost(
-    @Ctx() ctx: Context,
-    @Arg('postId', () => ID)
-    postId: string,
-    @PubSub(SubscriptionTopic.PostUpdated)
-    notifyPostUpdated: Publisher<{ postId: string }>
-  ): Promise<Post> {
-    return unpinPost(ctx, postId, notifyPostUpdated)
+    return updatePost(ctx, input, notifyPostChanged)
   }
 }

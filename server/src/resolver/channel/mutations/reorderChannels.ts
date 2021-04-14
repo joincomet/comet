@@ -4,15 +4,6 @@ import { Channel, Server } from '@/entity'
 import { getReorderPosition } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 
-@ArgsType()
-export class ReorderChannelArgs {
-  @Field(() => ID, { nullable: true })
-  beforeChannelId?: string
-
-  @Field(() => ID)
-  channelId: string
-}
-
 export async function reorderChannels(
   { em, user }: Context,
   { beforeChannelId, channelId }: ReorderChannelArgs,

@@ -11,14 +11,14 @@ export class GetCommentsArgs {
   postId: string
 
   @Field(() => GetCommentsSort, {
-    defaultValue: 'TOP'
+    defaultValue: 'Top'
   })
   sort: GetCommentsSort = GetCommentsSort.Top
 }
 
 export enum GetCommentsSort {
-  New = 'NEW',
-  Top = 'TOP'
+  New = 'New',
+  Top = 'Top'
 }
 
 registerEnumType(GetCommentsSort, {

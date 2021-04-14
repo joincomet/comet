@@ -1,23 +1,12 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  ID,
-  Mutation,
-  Publisher,
-  PubSub,
-  Resolver
-} from 'type-graphql'
-import { Context, SubscriptionTopic } from '@/types'
+import { Arg, Args, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
+import { Context } from '@/types'
 import { Group } from '@/entity'
-import { CreateGroupArgs } from '@/resolver/group/mutations/createGroup'
+import { CreateGroupInput } from '@/resolver/group/mutations/createGroup'
 import { createGroup } from '@/resolver/group/mutations/createGroup'
-import { GroupUserPayload } from '@/resolver/group/subscriptions/GroupUserPayload'
-import { leaveGroup } from '@/resolver/group/mutations/leaveGroup'
-import { EditGroupArgs } from '@/resolver/group/mutations/editGroup'
-import { editGroup } from '@/resolver/group/mutations/editGroup'
-import { readGroup } from '@/resolver/group/mutations'
+import {
+  UpdateGroupInput,
+  updateGroup
+} from '@/resolver/group/mutations/updateGroup'
 
 @Resolver()
 export class GroupMutations {
@@ -25,44 +14,17 @@ export class GroupMutations {
   @Mutation(() => Group)
   async createGroup(
     @Ctx() ctx: Context,
-    @Args() args: CreateGroupArgs,
-    @PubSub(SubscriptionTopic.UserJoinedGroup)
-    notifyUserJoinedGroup: Publisher<GroupUserPayload>
+    @Arg('input') input: CreateGroupInput
   ): Promise<Group> {
-    return createGroup(ctx, args, notifyUserJoinedGroup)
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async leaveGroup(
-    @Ctx() ctx: Context,
-    @Arg('groupId', () => ID)
-    groupId: string,
-    @PubSub(SubscriptionTopic.UserLeftGroup)
-    notifyUserLeftGroup: Publisher<GroupUserPayload>
-  ): Promise<boolean> {
-    return leaveGroup(ctx, groupId, notifyUserLeftGroup)
+    return createGroup(ctx, input)
   }
 
   @Authorized()
   @Mutation(() => Group)
-  async editGroup(
+  async updateGroup(
     @Ctx() ctx: Context,
-    @Args() args: EditGroupArgs,
-    @PubSub(SubscriptionTopic.GroupUpdated)
-    notifyGroupUpdated: Publisher<{ groupId: string }>
+    @Arg('input') input: UpdateGroupInput
   ): Promise<Group> {
-    return editGroup(ctx, args, notifyGroupUpdated)
-  }
-
-  @Authorized()
-  @Mutation(() => Group)
-  async readGroup(
-    @Ctx() ctx: Context,
-    @Arg('groupId', () => ID) groupId: string,
-    @PubSub(SubscriptionTopic.GroupRead)
-    notifyGroupRead: Publisher<GroupUserPayload>
-  ): Promise<Group> {
-    return readGroup(ctx, groupId, notifyGroupRead)
+    return updateGroup(ctx, input)
   }
 }

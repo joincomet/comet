@@ -6,15 +6,6 @@ import { getReorderPosition } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
-@ArgsType()
-export class ReorderServersArgs {
-  @Field(() => ID, { nullable: true })
-  beforeServerId?: string
-
-  @Field(() => ID)
-  serverId: string
-}
-
 export async function reorderServers(
   { em, user }: Context,
   { beforeServerId, serverId }: ReorderServersArgs,

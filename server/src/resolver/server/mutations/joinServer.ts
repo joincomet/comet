@@ -1,10 +1,11 @@
-import { UserServerPayload } from '@/resolver/server/subscriptions/UserServerPayload'
-import { Server, ServerInvite } from '@/entity'
-import { ArgsType, Field, ID, Publisher } from 'type-graphql'
+import { Server, ServerInvite, ServerUser } from '@/entity'
+import { ArgsType, Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
+import { QueryOrder } from '@mikro-orm/core'
+import { ReorderUtils } from '@/util'
 
-@ArgsType()
-export class JoinServerArgs {
+@InputType()
+export class JoinServerInput {
   @Field(() => ID, { nullable: true })
   serverId: string
 
@@ -13,9 +14,8 @@ export class JoinServerArgs {
 }
 
 export async function joinServer(
-  { em, user }: Context,
-  { serverId, inviteId }: JoinServerArgs,
-  notifyUserJoinedServer: Publisher<UserServerPayload>
+  { em, user, liveQueryStore }: Context,
+  { serverId, inviteId }: JoinServerInput
 ): Promise<Server> {
   if ((!inviteId && !serverId) || (inviteId && serverId))
     throw new Error('Must provide either inviteId or serverId')
@@ -30,7 +30,21 @@ export async function joinServer(
     server = await em.findOneOrFail(Server, serverId)
     if (!server.isPublic) throw new Error('Requires invite to join server')
   }
-  await user.joinServer(em, server.id, notifyUserJoinedServer)
-  await notifyUserJoinedServer({ serverId: server.id, userId: user.id })
+  await user.checkBannedFromServer(em, serverId)
+  const firstServerJoin = await em.findOne(
+    ServerUser,
+    { server, user: this },
+    ['server'],
+    { position: QueryOrder.ASC }
+  )
+  const join = em.create(ServerUser, {
+    server,
+    user: this,
+    position: firstServerJoin
+      ? ReorderUtils.positionBefore(firstServerJoin.position)
+      : ReorderUtils.FIRST_POSITION
+  })
+  await em.persistAndFlush(join)
+  liveQueryStore.invalidate(`Query.getJoinedServers(id:${user.id})`)
   return server
 }

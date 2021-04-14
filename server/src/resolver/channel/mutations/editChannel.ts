@@ -2,18 +2,6 @@ import { Context } from '@/types'
 import { ArgsType, Field, ID, Publisher } from 'type-graphql'
 import { Channel, ServerPermission } from '@/entity'
 
-@ArgsType()
-export class EditChannelArgs {
-  @Field(() => ID)
-  channelId: string
-
-  @Field()
-  name: string
-
-  @Field({ defaultValue: false })
-  isPrivate: boolean
-}
-
 export async function editChannel(
   { em, user }: Context,
   { channelId, name, isPrivate }: EditChannelArgs,

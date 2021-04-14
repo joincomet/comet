@@ -11,31 +11,6 @@ import {
 } from '@/entity'
 import { uploadImageSingle } from '@/util'
 
-@ArgsType()
-export class EditFolderArgs {
-  @Field(() => ID)
-  folderId: string
-
-  @Field()
-  @Length(1, 100)
-  name: string
-
-  @Field()
-  @Length(1, 300)
-  description: string
-
-  @Field(() => GraphQLUpload)
-  avatarFile: FileUpload
-
-  @Field({ defaultValue: false })
-  isCollaborative: boolean
-
-  @Field(() => FolderVisibility, {
-    defaultValue: FolderVisibility.Public
-  })
-  visibility: FolderVisibility = FolderVisibility.Public
-}
-
 export async function editFolder(
   { em, user }: Context,
   {

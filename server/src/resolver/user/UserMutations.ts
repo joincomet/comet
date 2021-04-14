@@ -1,106 +1,56 @@
-import {
-  Arg,
-  Args,
-  Authorized,
-  Ctx,
-  ID,
-  Mutation,
-  Publisher,
-  PubSub,
-  Resolver
-} from 'type-graphql'
-import { Context, SubscriptionTopic } from '@/types'
+import { Arg, Args, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
+import { Context } from '@/types'
 import { User } from '@/entity'
 import { LoginResponse } from '@/resolver/user'
 import {
   changePassword,
-  ChangePasswordArgs
+  ChangePasswordInput
 } from '@/resolver/user/mutations/changePassword'
 import {
-  editAccount,
-  EditAccountArgs
-} from '@/resolver/user/mutations/editAccount'
-import {
-  banUserGlobal,
-  BanUserGlobalArgs,
-  LoginArgs,
+  LoginInput,
   login,
-  unbanUserGlobal,
-  CreateAccountArgs,
-  createAccount,
-  ChangeFriendStatusArgs,
-  changeFriendStatus
+  CreateAccountInput,
+  createAccount
 } from '@/resolver/user/mutations'
-import { FriendStatusChangedPayload } from '@/resolver/user/subscriptions'
+import {
+  UpdateUserInput,
+  updateUser
+} from '@/resolver/user/mutations/updateUser'
 
 @Resolver()
 export class UserMutations {
   @Mutation(() => LoginResponse)
   async createAccount(
     @Ctx() ctx: Context,
-    @Args() args: CreateAccountArgs
+    @Arg('input') input: CreateAccountInput
   ): Promise<LoginResponse> {
-    return createAccount(ctx, args)
+    return createAccount(ctx, input)
   }
 
   @Mutation(() => LoginResponse)
   async login(
     @Ctx() ctx: Context,
-    @Args() args: LoginArgs
+    @Arg('input') input: LoginInput
   ): Promise<LoginResponse> {
-    return login(ctx, args)
+    return login(ctx, input)
   }
 
   @Authorized()
   @Mutation(() => LoginResponse)
   async changePassword(
     @Ctx() ctx: Context,
-    @Args() args: ChangePasswordArgs
+    @Arg('input') input: ChangePasswordInput
   ): Promise<LoginResponse> {
-    return changePassword(ctx, args)
+    return changePassword(ctx, input)
   }
 
   @Authorized()
   @Mutation(() => User)
-  async editAccount(
+  async updateUser(
     @Ctx() ctx: Context,
-    @Args()
-    args: EditAccountArgs,
-    @PubSub(SubscriptionTopic.UserUpdated)
-    notifyUserUpdated: Publisher<{ userId: string }>
+    @Arg('input')
+    input: UpdateUserInput
   ): Promise<User> {
-    return editAccount(ctx, args, notifyUserUpdated)
-  }
-
-  @Authorized('ADMIN')
-  @Mutation(() => Boolean)
-  async banUserGlobal(
-    @Ctx() ctx: Context,
-    @Args() args: BanUserGlobalArgs,
-    @PubSub(SubscriptionTopic.UserBannedGlobal)
-    notifyUserBannedGlobal: Publisher<{ userId: string }>
-  ): Promise<boolean> {
-    return banUserGlobal(ctx, args, notifyUserBannedGlobal)
-  }
-
-  @Authorized('ADMIN')
-  @Mutation(() => Boolean)
-  async unbanUserGlobal(
-    @Ctx() ctx: Context,
-    @Arg('userId', () => ID)
-    userId: string
-  ): Promise<boolean> {
-    return unbanUserGlobal(ctx, userId)
-  }
-
-  @Authorized()
-  @Mutation(() => User)
-  async changeFriendStatus(
-    @Ctx() ctx: Context,
-    @Args() args: ChangeFriendStatusArgs,
-    @PubSub(SubscriptionTopic.RelationshipUpdated)
-    notifyFriendStatusChanged: Publisher<FriendStatusChangedPayload>
-  ): Promise<User> {
-    return changeFriendStatus(ctx, args, notifyFriendStatusChanged)
+    return updateUser(ctx, input)
   }
 }

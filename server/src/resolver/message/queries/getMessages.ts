@@ -2,7 +2,6 @@ import { ArgsType, Field, ID, Int, ObjectType, Publisher } from 'type-graphql'
 import { Max, Min } from 'class-validator'
 import { Channel, Group, Message, User } from '@/entity'
 import { Context } from '@/types'
-import { DmPayload } from '@/resolver/message/subscriptions/DmPayload'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
 
 @ArgsType()
@@ -17,7 +16,7 @@ export class GetMessagesArgs {
   userId?: string
 
   @Field({ defaultValue: false })
-  pinned: boolean
+  pinned: boolean = false
 
   @Field({ nullable: true })
   initialTime: Date
@@ -25,11 +24,11 @@ export class GetMessagesArgs {
   @Field(() => Int, { defaultValue: 100 })
   @Min(1)
   @Max(100)
-  pageSize = 100
+  pageSize: number = 100
 
   @Field(() => Int, { defaultValue: 0 })
   @Min(0)
-  page = 0
+  page: number = 0
 }
 
 @ObjectType()

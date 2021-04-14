@@ -5,20 +5,6 @@ import { Context } from '@/types'
 import { Group } from '@/entity'
 import { uploadImageSingle } from '@/util'
 
-@ArgsType()
-export class EditGroupArgs {
-  @Field(() => ID)
-  groupId: string
-
-  @Field({ nullable: true })
-  @Length(1, 100)
-  @IsOptional()
-  name?: string
-
-  @Field(() => GraphQLUpload, { nullable: true })
-  avatarFile?: FileUpload
-}
-
 export async function editGroup(
   { em, user }: Context,
   { groupId, name, avatarFile }: EditGroupArgs,

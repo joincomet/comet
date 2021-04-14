@@ -1,11 +1,11 @@
 import { Context } from '@/types'
-import { ArgsType, Field, ID, Publisher } from 'type-graphql'
+import { ArgsType, Field, ID, InputType, Publisher } from 'type-graphql'
 import { Channel, Server, ServerPermission } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
 
-@ArgsType()
-export class CreateChannelArgs {
+@InputType()
+export class CreateChannelInput {
   @Field(() => ID)
   serverId: string
 
@@ -13,13 +13,12 @@ export class CreateChannelArgs {
   name: string
 
   @Field({ defaultValue: false })
-  isPrivate: boolean
+  isPrivate: boolean = false
 }
 
 export async function createChannel(
-  { em, user }: Context,
-  { serverId, name, isPrivate }: CreateChannelArgs,
-  notifyChannelsUpdated: Publisher<{ serverId: string }>
+  { em, user, liveQueryStore }: Context,
+  { serverId, name, isPrivate }: CreateChannelInput
 ): Promise<Channel> {
   await user.checkServerPermission(
     em,
@@ -45,6 +44,6 @@ export async function createChannel(
   })
 
   await em.persistAndFlush(channel)
-  await notifyChannelsUpdated({ serverId: server.id })
+  liveQueryStore.invalidate(`Query.getJoinedServers(id:"${user.id}")`)
   return channel
 }

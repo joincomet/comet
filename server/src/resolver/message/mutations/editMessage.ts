@@ -5,16 +5,6 @@ import { Context } from '@/types'
 import { Message } from '@/entity'
 import { getLinkMetas } from '@/util/getLinkMetas'
 
-@ArgsType()
-export class EditMessageArgs {
-  @Field(() => ID)
-  messageId: string
-
-  @Field()
-  @Length(1, 10000)
-  text: string
-}
-
 export async function editMessage(
   { em, user }: Context,
   { messageId, text }: EditMessageArgs,

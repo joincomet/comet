@@ -3,100 +3,44 @@ import {
   Args,
   Authorized,
   Ctx,
-  ID,
   Mutation,
   Publisher,
   PubSub,
   Resolver
 } from 'type-graphql'
-import { Message, User } from '@/entity'
-import { Context, SubscriptionTopic } from '@/types'
-import { DmPayload } from '@/resolver/message/subscriptions/DmPayload'
-import { MessagePayload } from '@/resolver/message/subscriptions/MessagePayload'
+import { Message } from '@/entity'
+import { Context } from '@/types'
 import {
-  TypingArgs,
-  TypingPayload
-} from '@/resolver/message/mutations/startTyping'
+  CreateMessageInput,
+  createMessage
+} from '@/resolver/message/mutations/createMessage'
+import { ChangePayload, SubscriptionTopic } from '@/subscriptions'
 import {
-  SendMessageArgs,
-  sendMessage
-} from '@/resolver/message/mutations/sendMessage'
-import {
-  EditMessageArgs,
-  editMessage
-} from '@/resolver/message/mutations/editMessage'
-import { deleteMessage } from '@/resolver/message/mutations/deleteMessage'
-import { closeDm } from '@/resolver/message/mutations/closeDm'
-import { startTyping } from '@/resolver/message/mutations/startTyping'
-import { readDm } from '@/resolver/message/mutations/readDm'
+  UpdateMessageInput,
+  updateMessage
+} from '@/resolver/message/mutations/updateMessage'
 
 @Resolver()
 export class MessageMutations {
   @Authorized()
   @Mutation(() => Message)
-  async sendMessage(
+  async createMessage(
     @Ctx() ctx: Context,
-    @Args() args: SendMessageArgs,
-    @PubSub(SubscriptionTopic.MessageSent)
-    messageSent: Publisher<MessagePayload>,
-    @PubSub(SubscriptionTopic.DmOpened)
-    notifyDmOpened: Publisher<DmPayload>
+    @Arg('input') input: CreateMessageInput,
+    @PubSub(SubscriptionTopic.MessageChanged)
+    notifyMessageChanged: Publisher<ChangePayload>
   ): Promise<Message> {
-    return sendMessage(ctx, args, messageSent, notifyDmOpened)
+    return createMessage(ctx, input, notifyMessageChanged)
   }
 
   @Authorized()
   @Mutation(() => Message)
-  async editMessage(
+  async updateMessage(
     @Ctx() ctx: Context,
-    @Args() args: EditMessageArgs,
-    @PubSub(SubscriptionTopic.MessageUpdated)
-    notifyMessageUpdated: Publisher<MessagePayload>
+    @Arg('input') input: UpdateMessageInput,
+    @PubSub(SubscriptionTopic.MessageChanged)
+    notifyMessageChanged: Publisher<ChangePayload>
   ): Promise<Message> {
-    return editMessage(ctx, args, notifyMessageUpdated)
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async deleteMessage(
-    @Ctx() ctx: Context,
-    @Arg('messageId', () => ID)
-    messageId: string,
-    @PubSub(SubscriptionTopic.MessageDeleted)
-    notifyMessageDeleted: Publisher<MessagePayload>
-  ): Promise<boolean> {
-    return deleteMessage(ctx, messageId, notifyMessageDeleted)
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async closeDm(
-    @Ctx() ctx: Context,
-    @Arg('userId', () => ID) userId: string,
-    @PubSub(SubscriptionTopic.DmClosed)
-    notifyDmClosed: Publisher<DmPayload>
-  ): Promise<boolean> {
-    return closeDm(ctx, userId, notifyDmClosed)
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
-  async startTyping(
-    @Ctx() ctx: Context,
-    @Args() args: TypingArgs,
-    @PubSub(SubscriptionTopic.UserStartedTyping)
-    notifyUserStartedTyping: Publisher<TypingPayload>
-  ): Promise<boolean> {
-    return startTyping(ctx, args, notifyUserStartedTyping)
-  }
-
-  @Authorized()
-  @Mutation(() => User)
-  async readDm(
-    @Ctx() ctx: Context,
-    @Arg('userId', () => ID) userId: string,
-    @PubSub(SubscriptionTopic.DmRead) notifyDmRead: Publisher<DmPayload>
-  ): Promise<User> {
-    return readDm(ctx, userId, notifyDmRead)
+    return updateMessage(ctx, input, notifyMessageChanged)
   }
 }

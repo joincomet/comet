@@ -77,8 +77,16 @@ export const POST_FRAGMENT = gql`
     linkMetadata {
       ...METADATA_FRAGMENT
     }
+    author {
+      ...USER_FRAGMENT
+    }
+    server {
+      ...SERVER_FRAGMENT
+    }
   }
   ${METADATA_FRAGMENT}
+  ${USER_FRAGMENT}
+  ${SERVER_FRAGMENT}
 `
 
 export const MESSAGE_FRAGMENT = gql`
@@ -106,8 +114,12 @@ export const MESSAGE_FRAGMENT = gql`
     linkMetadatas {
       ...METADATA_FRAGMENT
     }
+    author {
+      ...USER_FRAGMENT
+    }
   }
   ${METADATA_FRAGMENT}
+  ${USER_FRAGMENT}
 `
 
 export const FOLDER_FRAGMENT = gql`

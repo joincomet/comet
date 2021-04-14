@@ -31,9 +31,7 @@ export class Folder extends BaseEntity {
   serverFolder?: ServerFolder
 
   @Field(() => Server, { nullable: true })
-  get server(): Server | null {
-    return this.serverFolder?.server
-  }
+  server?: Server
 
   @Property()
   isDeleted: boolean = false

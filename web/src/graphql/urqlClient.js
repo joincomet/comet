@@ -6,31 +6,21 @@ import {
 } from 'urql'
 import { retryExchange } from '@urql/exchange-retry'
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch'
-import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { devtoolsExchange } from '@urql/devtools'
 import toast from 'react-hot-toast'
 import { cacheExchange } from '@/graphql/cacheExchange'
 import i18n from '@/locales/i18n'
+import { createApplyLiveQueryPatch } from '@n1ru4l/graphql-live-query-patch'
+import { applyAsyncIterableIteratorToSink } from '@n1ru4l/push-pull-async-iterable-iterator'
+import { Subscription } from 'sse-z'
 
-export const subscriptionClient = new SubscriptionClient(
-  import.meta.env.PROD
-    ? `wss://${import.meta.env.VITE_API_DOMAIN}/graphql`
-    : 'ws://localhost:4000/graphql',
-  {
-    reconnect: true,
-    connectionParams: () => {
-      const token = localStorage.getItem('token')
-      return {
-        token
-      }
-    }
-  }
-)
+const applyLiveQueryPatch = createApplyLiveQueryPatch()
+const url = import.meta.env.PROD
+  ? `https://${import.meta.env.VITE_API_DOMAIN}/graphql`
+  : 'http://localhost:4000/graphql'
 
 export const urqlClient = createClient({
-  url: import.meta.env.PROD
-    ? `https://${import.meta.env.VITE_API_DOMAIN}/graphql`
-    : 'http://localhost:4000/graphql',
+  url,
   requestPolicy: 'cache-and-network',
   fetchOptions: () => {
     const token = localStorage.getItem('token')
@@ -71,7 +61,35 @@ export const urqlClient = createClient({
     }),
     multipartFetchExchange,
     subscriptionExchange({
-      forwardSubscription: operation => subscriptionClient.request(operation)
+      forwardSubscription: operation => ({
+        subscribe: sink => ({
+          unsubscribe: applyAsyncIterableIteratorToSink(
+            applyLiveQueryPatch(
+              /*networkInterface.execute({
+                operation: operation.query,
+                variables: operation.variables,
+              })*/
+              new Subscription({
+                url: url,
+                searchParams: {
+                  operationName: operation.key,
+                  query: operation.query,
+                  variables: JSON.stringify(operation.variables)
+                },
+                eventSourceOptions: {
+                  // Ensure cookies are included with the request
+                  withCredentials: true
+                },
+                onNext: data => {
+                  sink.next(JSON.parse(data))
+                }
+              })
+            ),
+            sink
+          )
+        })
+      }),
+      enableAllOperations: true
     })
   ]
 })

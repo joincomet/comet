@@ -1,12 +1,12 @@
 import { Role, ServerPermission } from '@/entity'
-import { ArgsType, Field, ID, Publisher } from 'type-graphql'
+import { ArgsType, Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { IsHexColor, IsOptional, Length } from 'class-validator'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
 
-@ArgsType()
-export class CreateRoleArgs {
+@InputType()
+export class CreateRoleInput {
   @Field(() => ID)
   serverId: string
 
@@ -24,9 +24,8 @@ export class CreateRoleArgs {
 }
 
 export async function createRole(
-  { em, user }: Context,
-  { serverId, name, color, permissions }: CreateRoleArgs,
-  notifyRolesUpdated: Publisher<{ serverId: string }>
+  { em, user, liveQueryStore }: Context,
+  { serverId, name, color, permissions }: CreateRoleInput
 ): Promise<Role> {
   await user.checkServerPermission(em, serverId, ServerPermission.ManageRoles)
   const roles = await em.find(
@@ -56,6 +55,6 @@ export async function createRole(
     position
   })
   await em.persistAndFlush(role)
-  await notifyRolesUpdated({ serverId })
+  liveQueryStore.invalidate(`Server:${serverId}`)
   return role
 }

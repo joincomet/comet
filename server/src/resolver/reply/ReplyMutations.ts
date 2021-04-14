@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Authorized,
   Ctx,
   ID,
@@ -9,31 +10,30 @@ import {
   Resolver
 } from 'type-graphql'
 import { Reply } from '@/entity'
-import { Context, SubscriptionTopic } from '@/types'
-import { markReplyRead } from '@/resolver/reply/mutations/markReplyRead'
-import { UserReplyPayload } from '@/resolver/reply/subscriptions/UserReplyPayload'
+import { Context } from '@/types'
 import { markAllRepliesRead } from '@/resolver/reply/mutations/markAllRepliesRead'
+import { ChangePayload, SubscriptionTopic } from '@/subscriptions'
+import {
+  UpdateReplyInput,
+  updateReply
+} from '@/resolver/reply/mutations/updateReply'
 
 @Resolver()
 export class ReplyMutations {
   @Authorized()
   @Mutation(() => Reply)
-  async markReplyRead(
+  async updateReply(
     @Ctx() ctx: Context,
-    @Arg('replyId', () => ID) replyId: string,
-    @PubSub(SubscriptionTopic.ReplyRead)
-    notifyReplyRead: Publisher<UserReplyPayload>
+    @Arg('input') input: UpdateReplyInput,
+    @PubSub(SubscriptionTopic.ReplyChanged)
+    notifyReplyChanged: Publisher<ChangePayload>
   ): Promise<Reply> {
-    return markReplyRead(ctx, replyId, notifyReplyRead)
+    return updateReply(ctx, input, notifyReplyChanged)
   }
 
   @Authorized()
-  @Mutation(() => [Reply])
-  async markAllRepliesRead(
-    @Ctx() ctx: Context,
-    @PubSub(SubscriptionTopic.AllRepliesRead)
-    notifyAllRepliesRead: Publisher<{ userId: string }>
-  ): Promise<Reply[]> {
-    return markAllRepliesRead(ctx, notifyAllRepliesRead)
+  @Mutation(() => Boolean)
+  async markAllRepliesRead(@Ctx() ctx: Context): Promise<boolean> {
+    return markAllRepliesRead(ctx)
   }
 }

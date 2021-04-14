@@ -1,16 +1,25 @@
 import { Context } from '@/types'
-import { Server, ServerUser, User } from '@/entity'
+import { ServerUser, User } from '@/entity'
 
 export async function getMutualServers(
   { em, user }: Context,
   userId: string
-): Promise<Server[]> {
+): Promise<ServerUser[]> {
   const them = await em.findOneOrFail(User, userId)
-  const myServers = (await em.find(ServerUser, { user }, ['server'])).map(
-    j => j.server
+  const theirServerUsers = await em.find(ServerUser, { user: them }, ['server'])
+  const theirServerIds = theirServerUsers.map(
+    serverUser => serverUser.server.id
   )
-  const theirServers = (
-    await em.find(ServerUser, { user: them }, ['server'])
-  ).map(j => j.server.id)
-  return myServers.filter(s => theirServers.includes(s.id))
+  const myServerUsers = await em.find(ServerUser, { user }, ['server'])
+
+  return myServerUsers
+    .map(serverUser =>
+      theirServerIds.includes(serverUser.server.id)
+        ? theirServerUsers.find(
+            theirServerUser =>
+              theirServerUser.server.id === serverUser.server.id
+          )
+        : null
+    )
+    .filter(serverUser => !!serverUser)
 }

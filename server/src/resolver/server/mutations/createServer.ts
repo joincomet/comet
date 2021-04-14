@@ -1,31 +1,29 @@
-import { ArgsType, Field, Publisher } from 'type-graphql'
+import { ArgsType, Field, InputType } from 'type-graphql'
 import { Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import { UserServerPayload } from '@/resolver/server/subscriptions/UserServerPayload'
 import { Channel, Server, ServerCategory, ServerUser } from '@/entity'
 import { uploadImageSingle } from '@/util'
 
-@ArgsType()
-export class CreateServerArgs {
+@InputType()
+export class CreateServerInput {
   @Field()
   @Length(2, 100)
   name: string
 
   @Field({ defaultValue: false })
-  isPublic: boolean
+  isPublic: boolean = false
 
-  @Field(() => ServerCategory, { nullable: true })
-  category?: ServerCategory
+  @Field(() => ServerCategory, { defaultValue: ServerCategory.Other })
+  category: ServerCategory = ServerCategory.Other
 
   @Field(() => GraphQLUpload, { nullable: true })
   avatarFile?: FileUpload
 }
 
 export async function createServer(
-  { em, user }: Context,
-  { name, isPublic, category, avatarFile }: CreateServerArgs,
-  notifyUserJoinedServer: Publisher<UserServerPayload>
+  { em, user, liveQueryStore }: Context,
+  { name, isPublic, category, avatarFile }: CreateServerInput
 ): Promise<Server> {
   if ((await em.count(ServerUser, { user })) >= 100)
     throw new Error('error.server.joinLimit')
@@ -58,6 +56,6 @@ export async function createServer(
     systemMessagesChannel: channel
   })
   await em.persistAndFlush([server])
-  await user.joinServer(em, server.id, notifyUserJoinedServer)
+  liveQueryStore.invalidate(`Query.getJoinedServers(id:"${user.id}")`)
   return server
 }

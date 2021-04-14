@@ -1,6 +1,6 @@
-import {AuthChecker} from 'type-graphql'
-import {Context} from '@/types'
-import {User} from '@/entity'
+import { AuthChecker } from 'type-graphql'
+import { Context } from '@/types'
+import { User } from '@/entity'
 
 /*
 @Authorized(): must be logged in
@@ -8,10 +8,10 @@ import {User} from '@/entity'
 @Authorized('USER'): must be same user as user being queried (i.e. email)
  */
 
-export const authChecker: AuthChecker<Context> = async (
+export const authChecker: AuthChecker<Context> = (
   { root, context: { user } },
   roles
-): Promise<boolean> => {
+): boolean => {
   if (!user) return false
   if (!roles || roles.length === 0) return true
 

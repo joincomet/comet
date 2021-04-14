@@ -82,7 +82,6 @@ export function DataProvider({ children }) {
       Notification.permission === 'granted' &&
       message.author.id !== currentUser.id
     ) {
-      console.log({ windowOpen })
       if (
         (!window.electron || (window.electron && windowOpen)) &&
         ((currentGroupId &&

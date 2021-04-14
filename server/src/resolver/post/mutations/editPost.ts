@@ -4,19 +4,6 @@ import { Post } from '@/entity'
 import { Context } from '@/types'
 import { handleText } from '@/util'
 
-@ArgsType()
-export class EditPostArgs {
-  @Field(() => ID)
-  postId: string
-
-  @Field({ nullable: true })
-  @IsOptional()
-  @Length(1, 100000, {
-    message: 'Text must be between 1 and 100000 characters'
-  })
-  text?: string
-}
-
 export async function editPost(
   { em }: Context,
   { postId, text }: EditPostArgs,

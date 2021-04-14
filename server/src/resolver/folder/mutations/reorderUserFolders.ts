@@ -5,15 +5,6 @@ import { getReorderPosition } from '@/util'
 import { QueryOrder } from '@mikro-orm/core'
 import { getUserFolders } from '@/resolver/folder/queries/getUserFolders'
 
-@ArgsType()
-export class ReorderUserFoldersArgs {
-  @Field(() => ID, { nullable: true })
-  beforeFolderId?: string
-
-  @Field(() => ID)
-  folderId: string
-}
-
 export async function reorderUserFolders(
   { em, user }: Context,
   { folderId, beforeFolderId }: ReorderUserFoldersArgs,

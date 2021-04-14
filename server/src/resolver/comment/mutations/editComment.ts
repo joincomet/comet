@@ -4,18 +4,6 @@ import { Context } from '@/types'
 import { Comment } from '@/entity'
 import { handleText } from '@/util'
 
-@ArgsType()
-export class EditCommentArgs {
-  @Field(() => ID)
-  commentId: string
-
-  @Field()
-  @Length(1, 100000, {
-    message: 'Text must be between 1 and 100000 characters'
-  })
-  text: string
-}
-
 export async function editComment(
   { em, user }: Context,
   { commentId, text }: EditCommentArgs,

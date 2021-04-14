@@ -1,4 +1,4 @@
-import { ArgsType, Field } from 'type-graphql'
+import { ArgsType, Field, InputType } from 'type-graphql'
 import { IsEmail, Length } from 'class-validator'
 import { Context } from '@/types'
 import { LoginResponse } from '@/resolver/user'
@@ -9,8 +9,8 @@ import { createAccessToken, handleUnderscore, tagGenerator } from '@/util'
 import * as argon2 from 'argon2'
 import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
-@ArgsType()
-export class CreateAccountArgs {
+@InputType()
+export class CreateAccountInput {
   @Field()
   @Length(2, 32)
   name: string
@@ -26,7 +26,7 @@ export class CreateAccountArgs {
 
 export async function createAccount(
   { em }: Context,
-  { name, email, password }: CreateAccountArgs
+  { name, email, password }: CreateAccountInput
 ): Promise<LoginResponse> {
   email = email.toLowerCase()
   if (!isEmail(email)) throw new Error('error.login.invalidEmail')

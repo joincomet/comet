@@ -16,7 +16,7 @@ import { DragItemTypes } from '@/types/DragItemTypes'
 import toast from 'react-hot-toast'
 import { VectorLogo } from '@/components/ui/vectors'
 import { useGroupsAndDms } from '@/providers/DataProvider'
-import { CLOSE_DM, SEND_MESSAGE } from '@/graphql/mutations'
+import { CLOSE_DM, CREATE_MESSAGE } from '@/graphql/mutations'
 import { useMutation } from 'urql'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
@@ -84,7 +84,7 @@ function DirectMessage({ user }) {
   const { push } = useHistory()
   const { pathname } = useLocation()
 
-  const [_sendMessageRes, sendMessage] = useMutation(SEND_MESSAGE)
+  const [_sendMessageRes, sendMessage] = useMutation(CREATE_MESSAGE)
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,

@@ -1,7 +1,2 @@
-export * from './AddPostToFolder'
 export * from './CreateFolder'
-export * from './DeleteFolder'
-export * from './FollowFolder'
-export * from './RemovePostFromFolder'
-export * from './UnfollowFolder'
 export * from './UpdateFolder'

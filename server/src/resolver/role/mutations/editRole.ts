@@ -4,24 +4,6 @@ import { Context } from '@/types'
 import { IsHexColor, IsOptional, Length } from 'class-validator'
 import { ServerRolePayload } from '@/resolver/role/subscriptions'
 
-@ArgsType()
-export class EditRoleArgs {
-  @Field(() => ID)
-  roleId: string
-
-  @Field()
-  @Length(1, 100)
-  name: string
-
-  @Field({ nullable: true })
-  @IsOptional()
-  @IsHexColor()
-  color?: string
-
-  @Field(() => [ServerPermission])
-  permissions: ServerPermission[]
-}
-
 export async function editRole(
   { em, user }: Context,
   { roleId, name, color, permissions }: EditRoleArgs,

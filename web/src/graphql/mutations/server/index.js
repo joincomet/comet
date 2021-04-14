@@ -1,6 +1,3 @@
 export * from './CreateServer'
 export * from './UpdateServer'
-export * from './DeleteServer'
 export * from './JoinServer'
-export * from './LeaveServer'
-export * from './BanUserFromServer'
