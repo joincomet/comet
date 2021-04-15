@@ -1521,12 +1521,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:dev":
-  version: 0.3.2-5ff5225
-  resolution: "@headlessui/react@npm:0.3.2-5ff5225"
+"@headlessui/react@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@headlessui/react@npm:1.0.0"
   peerDependencies:
     react: ">=16"
-  checksum: ecbd336096bc9c41edbdc81b85eaa7535bb67ff0a3f18abae81b3dbdafaf9692cc258b42cd5399e0b0dcf3e937a2e71ce5e71e02a95d5ca2768972ae78c3d9f8
+  checksum: ba256475913a3d54bc95b774f64e89495e623e2031805135b2ed604e8490ca46c2c88d2049d38365f1269cf3e47a17cbf5aed20931bc888f39a1dcbd10221dd2
   languageName: node
   linkType: hard
 
@@ -2560,7 +2560,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.37, @types/node@npm:^14.6.2":
+"@types/node@npm:^14.14.39":
+  version: 14.14.39
+  resolution: "@types/node@npm:14.14.39"
+  checksum: b4d729f65ae350b9c49a5a5eaa5fd2e73913bb69cad7a9e3802e9d94574228436b74deb1fa415b147bd0b6e31ce5d2da601e9fdf497542c11e304fb0b60c38b3
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^14.6.2":
   version: 14.14.37
   resolution: "@types/node@npm:14.14.37"
   checksum: 5e2d9baf7594ebacaf016716515f30de0765169412787f981481c2fb8b468923149bb9e2e3219ee672399811672ceddc339a7372a61cf15bc656836a5494d991
@@ -3679,9 +3686,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.886.0":
-  version: 2.886.0
-  resolution: "aws-sdk@npm:2.886.0"
+"aws-sdk@npm:^2.887.0":
+  version: 2.887.0
+  resolution: "aws-sdk@npm:2.887.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -3692,7 +3699,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: e8d4b1769f5bced6958a50c354206565bf0f445a701373778d5e50d7b15eba43488f367eaa9d58aad189db21de5d3626de6ac89c441acc91a0669002f023d8ff
+  checksum: 87d79a98e7300cb69d7134c3419c89f944be2b098bded9802dac34c447b6ec9e7171ddacbc4e41207b20cce0522fb770f63dd0143cc00cb24f78ad368befce24
   languageName: node
   linkType: hard
 
@@ -4879,10 +4886,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.20.3":
-  version: 2.20.3
-  resolution: "date-fns@npm:2.20.3"
-  checksum: 308e3e3bbc40ad2f15f3babecc3a89fa77beea779e0077ed9db7f928a425fa6548f167c6d69b857b4adb96ab6d521f917a8089b89ed0d9b5f3612749a9fdbce4
+"date-fns@npm:^2.21.0":
+  version: 2.21.0
+  resolution: "date-fns@npm:2.21.0"
+  checksum: 1f9d9ca83dbb525c83f749f4b286dbb4efb09a1ab337f8fecb92552a351accec439a298c4bc63a55dfcfff863d42ba303d0ccd74d5fcd199fdfb43fd0698449b
   languageName: node
   linkType: hard
 
@@ -5550,16 +5557,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:12.0.3":
-  version: 12.0.3
-  resolution: "electron@npm:12.0.3"
+"electron@npm:12.0.4":
+  version: 12.0.4
+  resolution: "electron@npm:12.0.4"
   dependencies:
     "@electron/get": ^1.0.1
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 243cca079a485e993612750b6cdd476549337e573d5603e082473ea9cd57f56d9d0b4f41dd5c88ec2c4c797ad5f3ec89383ee28ca0ee905e25052ee9bccd1ac0
+  checksum: 262f2408951afda1923d85c85a1c1e7dbe3ea94b8f1c57cb17677732b797f117c3ef9c70606b4ef759a4db20f4cfe9077482a605c5a7c6dce5f463065cfe84ce
   languageName: node
   linkType: hard
 
@@ -5793,9 +5800,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "eslint-plugin-prettier@npm:3.3.1"
+"eslint-plugin-prettier@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "eslint-plugin-prettier@npm:3.4.0"
   dependencies:
     prettier-linter-helpers: ^1.0.0
   peerDependencies:
@@ -5804,7 +5811,7 @@ __metadata:
   peerDependenciesMeta:
     eslint-config-prettier:
       optional: true
-  checksum: cf35b0f0e9ef30782fe82913db92f6874181723d77f0c4613f9d69c87069f73d0dc420ef850ebc844613c00a8e87eb9762a36b7d028334c5c7b091763118347b
+  checksum: 322be1af8c7a6b7f1c718d912090722b65da072fda05bbc0a9d94523e6c3dfda49a7f62fd411126f1909c12bbc63e827ee6459163b2ce3458adb292541decf66
   languageName: node
   linkType: hard
 
@@ -6976,12 +6983,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql-helix@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "graphql-helix@npm:1.2.3"
+"graphql-helix@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "graphql-helix@npm:1.3.0"
   peerDependencies:
     graphql: ^15.3.0
-  checksum: d92c198978fde60a9b4dda7d87d761ec90a719aae45d561b0296c8dc606240dd932c2847b40c582f6e48a3a25735366108c378bb51410388361548c794f3c75e
+  checksum: 4f37df30c88504ef01be58e1629c643a129eb6ae245b9e00a359e437bc087ec586a52ca30ba0a3aa8c6db293fbb8677610d0fe18944c178be798e4f10f8970a9
   languageName: node
   linkType: hard
 
@@ -10903,12 +10910,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.0.7":
-  version: 7.0.7
-  resolution: "react-hook-form@npm:7.0.7"
+"react-hook-form@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "react-hook-form@npm:7.1.0"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: cecb675514dd481bf72406f0032ea58d9327677b6e89963bc75f8870d74f2264603ef1b9b5c1fc10b6364729313904ba3373dcf0d2b2936d61e2043431ed73a0
+  checksum: c60813744ecd0ab609bddf401cd4c914baea6ffcf69e40d56c6b833c275e19760438ee5a86e3f517d825a2386304b11b75fb8369e15f53ea376c4decf6079432
   languageName: node
   linkType: hard
 
@@ -11094,15 +11101,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-virtual@npm:^2.6.2":
-  version: 2.6.2
-  resolution: "react-virtual@npm:2.6.2"
+"react-virtual@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "react-virtual@npm:2.7.0"
   dependencies:
     "@reach/observe-rect": ^1.1.0
     ts-toolbelt: ^6.4.2
   peerDependencies:
     react: ^16.6.3 || ^17.0.0
-  checksum: cc7dd2337e4e4719e1a336685516f82d06a19a8fac3c7272aa0d8a2506b7da5a080a0b851cd91435424bd3c514dc1be9d5f36d5fc8f6ec86972df6e0c37f55d1
+  checksum: fa61a48c37b26c47bb5a8ba12bcdb8bf99f9bbd6400dc3bc453630da793c722f8494a2bc45848596e8b2401c72a235820fec6c1b19af2bc776b4e3046fa590ac
   languageName: node
   linkType: hard
 
@@ -11934,13 +11941,13 @@ resolve@^2.0.0-next.3:
     "@types/graphql-upload": ^8.0.4
     "@types/jsonwebtoken": ^8.5.1
     "@types/mime": ^2.0.3
-    "@types/node": ^14.14.37
+    "@types/node": ^14.14.39
     "@types/sharp": ^0.28.0
     "@typescript-eslint/eslint-plugin": ^4.22.0
     "@typescript-eslint/parser": ^4.22.0
     "@urql/introspection": ^0.2.0
     argon2: ^0.27.2
-    aws-sdk: ^2.886.0
+    aws-sdk: ^2.887.0
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cross-env: ^7.0.3
@@ -11948,13 +11955,13 @@ resolve@^2.0.0-next.3:
     dayjs: ^1.10.4
     eslint: ^7.24.0
     eslint-config-prettier: ^8.2.0
-    eslint-plugin-prettier: ^3.3.1
+    eslint-plugin-prettier: ^3.4.0
     express: ^4.17.1
     faker: ^5.5.3
     file-type: ^16.3.0
     got: ^11.8.2
     graphql: ^15.4.0-experimental-stream-defer.1
-    graphql-helix: ^1.2.3
+    graphql-helix: ^1.3.0
     graphql-upload: ^11.0.0
     jsonwebtoken: ^8.5.1
     metascraper: ^5.21.5
@@ -13796,9 +13803,9 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"vite-plugin-pwa@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "vite-plugin-pwa@npm:0.7.0"
+"vite-plugin-pwa@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "vite-plugin-pwa@npm:0.7.1"
   dependencies:
     debug: ^4.3.2
     fast-glob: ^3.2.5
@@ -13808,7 +13815,7 @@ typescript@^4.2.4:
     workbox-window: ^6.1.2
   peerDependencies:
     vite: ^2.0.0
-  checksum: 89c39c88366075aef8f746e0c4c01a54681e3770c013dcce4749d78ba1a79c1fd3be679f08c75a67e6046041aae6c3f1cdfe3a6a42223e98fb663653a54a281f
+  checksum: bb1f7982dc466fcb1fe671162accd470b2769ea720e66b5eb1f68c4ffd5cace9c7c421348c605f8ad753c58da378f64d49ce7ceabec72ad7e65c9b743751aeec
   languageName: node
   linkType: hard
 
@@ -13876,7 +13883,7 @@ typescript@^4.2.4:
   resolution: "web@workspace:web"
   dependencies:
     "@electron/remote": ^1.1.0
-    "@headlessui/react": dev
+    "@headlessui/react": ^1.0.0
     "@n1ru4l/graphql-live-query-patch": ^0.3.1
     "@n1ru4l/push-pull-async-iterable-iterator": ^2.1.2
     "@netlify/classnames-template-literals": ^1.0.0
@@ -13893,7 +13900,7 @@ typescript@^4.2.4:
     "@tiptap/extension-underline": ^2.0.0-beta.2
     "@tiptap/react": ^2.0.0-beta.19
     "@tiptap/starter-kit": ^2.0.0-beta.25
-    "@types/node": ^14.14.37
+    "@types/node": ^14.14.39
     "@types/react": ^17.0.3
     "@types/react-dom": ^17.0.3
     "@types/react-router-dom": ^5.1.7
@@ -13908,11 +13915,11 @@ typescript@^4.2.4:
     autoprefixer: ^10.2.5
     babel-eslint: ^10.1.0
     cross-env: ^7.0.3
-    date-fns: ^2.20.3
+    date-fns: ^2.21.0
     dayjs: ^1.10.4
     dayjs-twitter: ^0.4.0
     discord-rpc: ^3.2.0
-    electron: 12.0.3
+    electron: 12.0.4
     electron-builder: ^22.10.5
     electron-context-menu: ^2.5.0
     electron-is-dev: ^2.0.0
@@ -13921,7 +13928,7 @@ typescript@^4.2.4:
     electron-updater: ^4.3.8
     eslint: ^7.24.0
     eslint-config-prettier: ^8.2.0
-    eslint-plugin-prettier: ^3.3.1
+    eslint-plugin-prettier: ^3.4.0
     eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
     framer-motion: ^4.1.3
@@ -13939,7 +13946,7 @@ typescript@^4.2.4:
     react-dom: ^17.0.2
     react-dropzone: ^11.3.2
     react-helmet-async: ^1.0.9
-    react-hook-form: ^7.0.7
+    react-hook-form: ^7.1.0
     react-hot-toast: ^1.0.2
     react-i18next: ^11.8.13
     react-icons: ^4.2.0
@@ -13950,7 +13957,7 @@ typescript@^4.2.4:
     react-twemoji: ^0.3.0
     react-twitter-widgets: ^1.10.0
     react-use: ^17.2.3
-    react-virtual: ^2.6.2
+    react-virtual: ^2.7.0
     react-virtuoso: ^1.8.1
     sass: ^1.32.8
     sse-z: ^0.3.0
@@ -13963,7 +13970,7 @@ typescript@^4.2.4:
     use-dark-mode: ^2.3.1
     validator: ^13.5.2
     vite: ^2.1.5
-    vite-plugin-pwa: ^0.7.0
+    vite-plugin-pwa: ^0.7.1
     zustand: ^3.4.1
   languageName: unknown
   linkType: soft

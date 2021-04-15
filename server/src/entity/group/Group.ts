@@ -1,4 +1,5 @@
-import { BaseEntity, Message, User } from '@/entity'
+import { Message, User } from '@/entity'
+import { BaseEntity } from '@/entity/BaseEntity'
 import { Field, Int, ObjectType } from 'type-graphql'
 import {
   Collection,

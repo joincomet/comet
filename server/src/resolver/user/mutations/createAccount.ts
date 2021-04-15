@@ -1,4 +1,4 @@
-import { ArgsType, Field, InputType } from 'type-graphql'
+import { Field, InputType } from 'type-graphql'
 import { IsEmail, Length } from 'class-validator'
 import { Context } from '@/types'
 import { LoginResponse } from '@/resolver/user'

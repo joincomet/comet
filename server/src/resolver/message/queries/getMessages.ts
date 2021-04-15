@@ -41,7 +41,7 @@ export class GetMessagesResponse {
 }
 
 export async function getMessages(
-  { em, user }: Context,
+  { em, user, liveQueryStore }: Context,
   {
     channelId,
     groupId,
@@ -50,8 +50,7 @@ export async function getMessages(
     initialTime,
     pageSize,
     page
-  }: GetMessagesArgs,
-  notifyDmOpened: Publisher<DmPayload>
+  }: GetMessagesArgs
 ): Promise<GetMessagesResponse[]> {
   const channel = channelId ? await em.findOneOrFail(Channel, channelId) : null
   const group = groupId ? await em.findOneOrFail(Group, groupId) : null
@@ -72,7 +71,7 @@ export async function getMessages(
     const [myData, theirData] = await user.getFriendData(em, userId)
     myData.showChat = true
     await em.persistAndFlush([myData, theirData])
-    await notifyDmOpened({ userId: user.id, friendId: toUser.id })
+    liveQueryStore.invalidate(`User:${toUser.id}`)
 
     where['$or'] = [
       { author: user, toUser },

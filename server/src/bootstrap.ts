@@ -72,7 +72,7 @@ export async function bootstrap() {
           contextFactory: async () => {
             const em = orm.em.fork()
             const userId = getUserId(request.headers.token as string)
-            const user = userId ? await em.findOne(User, userId) : null
+            const user: User = userId ? await em.findOne(User, userId) : null
             return {
               em,
               user,

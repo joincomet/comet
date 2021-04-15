@@ -1,4 +1,4 @@
-import { Authorized, Field, ObjectType, Publisher } from 'type-graphql'
+import { Authorized, Field, ObjectType } from 'type-graphql'
 import {
   Collection,
   Entity,
@@ -10,20 +10,20 @@ import {
   QueryOrder,
   Unique
 } from '@mikro-orm/core'
+import { BaseEntity } from '@/entity/BaseEntity'
 import {
-  BaseEntity,
   Channel,
+  ChannelPermission,
   ChannelRole,
   Folder,
-  Relationship,
-  Group,
-  Server,
-  ServerUser,
-  UserFolder,
-  ServerPermission,
   FolderVisibility,
+  Group,
+  Relationship,
   RelationshipStatus,
-  ChannelPermission
+  Server,
+  ServerPermission,
+  ServerUser,
+  UserFolder
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { CustomError } from '@/types/CustomError'
@@ -157,7 +157,11 @@ export class User extends BaseEntity {
   ) {
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
     if (server.owner === this) throw new Error('error.server.owner')
-    const join = await em.findOneOrFail(ServerUser, { server, user: this })
+    const join = await em.findOneOrFail(ServerUser, {
+      server,
+      user: this,
+      status: ServerUserStatus.Joined
+    })
     server.userCount--
     join.status = ServerUserStatus.None
     await em.persistAndFlush([server, join])
@@ -172,12 +176,14 @@ export class User extends BaseEntity {
     if (this.isAdmin) return true
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
     if (server.owner === this) return true
-    const serverUser = await em.findOne(ServerUser, { server, user: this }, [
-      'roles'
-    ])
+    const serverUser = await em.findOne(
+      ServerUser,
+      { server, user: this, status: ServerUserStatus.Joined },
+      ['roles']
+    )
     if (!serverUser) return false
     const roles = serverUser.roles.getItems()
-    return roles[0].hasPermission(permission)
+    return !!roles.find(r => r.hasPermission(permission))
   }
 
   async checkServerPermission(
@@ -201,7 +207,7 @@ export class User extends BaseEntity {
     if (channel.server.owner === this) return true
     const serverUser = await em.findOne(
       ServerUser,
-      { server: channel.server, user: this },
+      { server: channel.server, user: this, status: ServerUserStatus.Joined },
       ['roles']
     )
     if (!serverUser) return false

@@ -1,6 +1,7 @@
 import { Field, ObjectType } from 'type-graphql'
-import { BaseEntity, Comment, Post, User } from '@/entity'
+import { Comment, Post, User } from '@/entity'
 import { Entity, ManyToOne, Property } from '@mikro-orm/core'
+import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

@@ -1,10 +1,10 @@
-import { Arg, Args, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
-import { CreateRoleInput, createRole } from '@/resolver/role/mutations'
+import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
+import { createRole, CreateRoleInput } from '@/resolver/role/mutations'
 import { Role } from '@/entity'
 import { Context } from '@/types'
 import {
-  UpdateRoleInput,
-  updateRole
+  updateRole,
+  UpdateRoleInput
 } from '@/resolver/role/mutations/updateRole'
 
 @Resolver()

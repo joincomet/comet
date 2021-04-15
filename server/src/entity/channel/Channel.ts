@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { BaseEntity, Message, Server } from '@/entity'
+import { Message, Server } from '@/entity'
 import {
   Collection,
   Entity,
@@ -8,6 +8,7 @@ import {
   Property
 } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util/ReorderUtils'
+import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

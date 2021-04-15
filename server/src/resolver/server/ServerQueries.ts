@@ -9,7 +9,7 @@ import {
   Resolver,
   Root
 } from 'type-graphql'
-import { Channel, Server, Role, Folder, ServerUser } from '@/entity'
+import { Channel, Folder, Role, Server, ServerUser } from '@/entity'
 import { Context } from '@/types'
 import {
   getJoinedServers,
@@ -66,9 +66,9 @@ export class ServerQueries {
   @Authorized()
   @FieldResolver(() => [Folder])
   async folders(
-    @Ctx() { loaders: { serverFolderLoader } }: Context,
+    @Ctx() { loaders: { serverFoldersLoader } }: Context,
     @Root() server: Server
   ): Promise<Folder[]> {
-    return serverFolderLoader.load(server.id)
+    return serverFoldersLoader.load(server.id)
   }
 }

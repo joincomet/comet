@@ -1,6 +1,6 @@
 import { LoginResponse } from '@/resolver/user'
 import { Context } from '@/types'
-import { ArgsType, Field, InputType } from 'type-graphql'
+import { Field, InputType } from 'type-graphql'
 import isEmail from 'validator/lib/isEmail'
 import { User } from '@/entity'
 import * as argon2 from 'argon2'

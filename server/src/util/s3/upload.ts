@@ -5,7 +5,7 @@ import s3 from '@/config/s3'
 import { FileUpload } from 'graphql-upload'
 import got from 'got'
 import FileType from 'file-type'
-import { Image, File } from '@/entity'
+import { File, Image } from '@/entity'
 import { Readable } from 'stream'
 
 const Bucket = process.env.BUCKET

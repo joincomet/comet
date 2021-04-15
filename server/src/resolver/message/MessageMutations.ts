@@ -1,6 +1,5 @@
 import {
   Arg,
-  Args,
   Authorized,
   Ctx,
   Mutation,
@@ -11,13 +10,13 @@ import {
 import { Message } from '@/entity'
 import { Context } from '@/types'
 import {
-  CreateMessageInput,
-  createMessage
+  createMessage,
+  CreateMessageInput
 } from '@/resolver/message/mutations/createMessage'
-import { ChangePayload, SubscriptionTopic } from '@/subscriptions'
+import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 import {
-  UpdateMessageInput,
-  updateMessage
+  updateMessage,
+  UpdateMessageInput
 } from '@/resolver/message/mutations/updateMessage'
 
 @Resolver()

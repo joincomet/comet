@@ -1,6 +1,5 @@
 import { Field, Int, ObjectType } from 'type-graphql'
 import {
-  BaseEntity,
   Channel,
   Folder,
   Post,
@@ -9,6 +8,7 @@ import {
   ServerInvite,
   User
 } from '@/entity'
+import { BaseEntity } from '@/entity/BaseEntity'
 import {
   Collection,
   Entity,

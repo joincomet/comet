@@ -1,11 +1,6 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import {
-  BaseEntity,
-  FolderVisibility,
-  Server,
-  ServerFolder,
-  User
-} from '@/entity'
+import { FolderVisibility, Server, ServerFolder, User } from '@/entity'
+import { BaseEntity } from '@/entity/BaseEntity'
 import { Entity, Enum, ManyToOne, OneToOne, Property } from '@mikro-orm/core'
 
 @ObjectType({ implements: BaseEntity })
@@ -40,11 +35,8 @@ export class Folder extends BaseEntity {
   @Property()
   isCollaborative: boolean = false
 
-  @Property({ nullable: true })
-  updatedAt?: Date
-
   @Field(() => Int)
-  @Property()
+  @Property({ unsigned: true })
   postCount: number = 0
 
   @Field(() => Int)

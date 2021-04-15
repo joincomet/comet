@@ -1,6 +1,5 @@
 import {
   Arg,
-  Args,
   Authorized,
   Ctx,
   Mutation,
@@ -10,12 +9,13 @@ import {
 } from 'type-graphql'
 import { Context } from '@/types'
 import { Comment } from '@/entity'
-import { CreateCommentInput, createComment } from './mutations/createComment'
+import { createComment, CreateCommentInput } from './mutations/createComment'
 import {
-  UpdateCommentInput,
-  updateComment
+  updateComment,
+  UpdateCommentInput
 } from '@/resolver/comment/mutations/updateComment'
-import { ChangePayload, SubscriptionTopic } from '@/subscriptions'
+import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
+import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 
 @Resolver(() => Comment)
 export class CommentMutations {
@@ -26,10 +26,10 @@ export class CommentMutations {
     @Arg('input') input: CreateCommentInput,
     @PubSub(SubscriptionTopic.CommentChanged)
     notifyCommentChanged: Publisher<ChangePayload>,
-    @PubSub(SubscriptionTopic.ReplyChanged)
-    notifyReplyChanged: Publisher<ChangePayload>
+    @PubSub(SubscriptionTopic.RepliesChanged)
+    notifyRepliesChanged: Publisher<BulkChangePayload>
   ): Promise<Comment> {
-    return createComment(ctx, input, notifyCommentChanged, notifyReplyChanged)
+    return createComment(ctx, input, notifyCommentChanged, notifyRepliesChanged)
   }
 
   @Authorized()
@@ -39,9 +39,9 @@ export class CommentMutations {
     @Arg('input') input: UpdateCommentInput,
     @PubSub(SubscriptionTopic.CommentChanged)
     notifyCommentChanged: Publisher<ChangePayload>,
-    @PubSub(SubscriptionTopic.ReplyChanged)
-    notifyReplyChanged: Publisher<ChangePayload>
+    @PubSub(SubscriptionTopic.RepliesChanged)
+    notifyRepliesChanged: Publisher<BulkChangePayload>
   ): Promise<Comment> {
-    return updateComment(ctx, input, notifyCommentChanged, notifyReplyChanged)
+    return updateComment(ctx, input, notifyCommentChanged, notifyRepliesChanged)
   }
 }

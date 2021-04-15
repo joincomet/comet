@@ -1,4 +1,4 @@
-import { Arg, Args, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
+import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
 import { User } from '@/entity'
 import { LoginResponse } from '@/resolver/user'
@@ -7,14 +7,14 @@ import {
   ChangePasswordInput
 } from '@/resolver/user/mutations/changePassword'
 import {
-  LoginInput,
-  login,
+  createAccount,
   CreateAccountInput,
-  createAccount
+  login,
+  LoginInput
 } from '@/resolver/user/mutations'
 import {
-  UpdateUserInput,
-  updateUser
+  updateUser,
+  UpdateUserInput
 } from '@/resolver/user/mutations/updateUser'
 
 @Resolver()

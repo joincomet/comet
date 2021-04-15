@@ -8,7 +8,7 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
-import { Server, Role, User } from '@/entity'
+import { Role, Server, User } from '@/entity'
 import { ReorderUtils } from '@/util/ReorderUtils'
 import { Field, ObjectType } from 'type-graphql'
 import { NotificationSetting } from '@/types/NotificationSetting'

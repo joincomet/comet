@@ -1,14 +1,14 @@
-import { Arg, Args, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
+import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
 import { Server } from '@/entity'
 import { Context } from '@/types'
 import {
-  CreateServerInput,
-  createServer
+  createServer,
+  CreateServerInput
 } from '@/resolver/server/mutations/createServer'
-import { JoinServerInput, joinServer } from '@/resolver/server/mutations'
+import { joinServer, JoinServerInput } from '@/resolver/server/mutations'
 import {
-  UpdateServerInput,
-  updateServer
+  updateServer,
+  UpdateServerInput
 } from '@/resolver/server/mutations/updateServer'
 
 @Resolver()

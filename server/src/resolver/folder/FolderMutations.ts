@@ -1,14 +1,23 @@
-import { Arg, Args, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  Mutation,
+  Publisher,
+  PubSub,
+  Resolver
+} from 'type-graphql'
 import { Context } from '@/types'
 import { Folder } from '@/entity'
 import {
-  CreateFolderInput,
-  createFolder
+  createFolder,
+  CreateFolderInput
 } from '@/resolver/folder/mutations/createFolder'
 import {
-  UpdateFolderInput,
-  updateFolder
+  updateFolder,
+  UpdateFolderInput
 } from '@/resolver/folder/mutations/updateFolder'
+import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 
 @Resolver()
 export class FolderMutations {
@@ -25,8 +34,10 @@ export class FolderMutations {
   @Mutation(() => Folder)
   async updateFolder(
     @Ctx() ctx: Context,
-    @Arg('input') input: UpdateFolderInput
+    @Arg('input') input: UpdateFolderInput,
+    @PubSub(SubscriptionTopic.PostChanged)
+    notifyPostChanged: Publisher<ChangePayload>
   ): Promise<Folder> {
-    return updateFolder(ctx, input)
+    return updateFolder(ctx, input, notifyPostChanged)
   }
 }

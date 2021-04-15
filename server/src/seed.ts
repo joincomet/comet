@@ -3,17 +3,17 @@ import {
   Channel,
   Comment,
   Folder,
-  Relationship,
+  FolderVisibility,
   Message,
   Post,
+  Relationship,
+  RelationshipStatus,
   Server,
+  ServerCategory,
   ServerFolder,
   ServerUser,
   User,
-  UserFolder,
-  FolderVisibility,
-  ServerCategory,
-  RelationshipStatus
+  UserFolder
 } from '@/entity'
 import { ReorderUtils, tagGenerator } from '@/util'
 import * as argon2 from 'argon2'
@@ -47,8 +47,6 @@ export const seed = async (em: EntityManager) => {
       folder: createFolder('Read Later', user, FolderVisibility.Private)
     })
   ]
-
-  const entities = []
 
   const passwordHash = await argon2.hash('password')
 
@@ -95,8 +93,9 @@ export const seed = async (em: EntityManager) => {
   })
 
   serverComet.systemMessagesChannel = channelGeneral
+  em.persist([userAdmin, userDan, userMichael, serverComet, channelGeneral])
 
-  entities.push(
+  em.persist([
     userAdmin,
     userDan,
     userMichael,
@@ -152,9 +151,8 @@ export const seed = async (em: EntityManager) => {
       status: RelationshipStatus.Friends,
       showChat: true
     })
-  )
+  ])
 
-  const users: User[] = []
   for (let i = 0; i < NUM_USERS; i++) {
     const user = em.create(User, {
       name: faker.name.firstName(),
@@ -166,15 +164,9 @@ export const seed = async (em: EntityManager) => {
           ? faker.image.imageUrl(80, 80, undefined, false, true)
           : null
     })
-    if (
-      users.filter(
-        u =>
-          u.email === user.email || (u.name === user.name && u.tag === user.tag)
-      ).length > 0
-    )
-      continue
-    users.push(user)
-    entities.push(em.create(ServerUser, { user, server: serverComet }))
+    em.persist(user)
+    const serverUser = em.create(ServerUser, { user, server: serverComet })
+    em.persist(serverUser)
     const numMessages = rand(1, MAX_MESSAGES_PER_USER)
     const createdAt = faker.date.recent()
     for (let j = 0; j < numMessages; j++) {
@@ -184,7 +176,7 @@ export const seed = async (em: EntityManager) => {
         createdAt: new Date(createdAt.getTime() + j * 1000),
         text: faker.lorem.paragraph()
       })
-      entities.push(message)
+      em.persist(message)
     }
 
     const n = rand(1, 3)
@@ -248,9 +240,8 @@ export const seed = async (em: EntityManager) => {
       voteCount: 1
     })
 
-    entities.push(post, comment1, comment2)
+    em.persist([post, comment1, comment2])
   }
 
-  entities.push(...users)
-  await em.persistAndFlush(entities)
+  await em.flush()
 }

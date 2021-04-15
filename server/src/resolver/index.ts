@@ -1,22 +1,11 @@
-export {
-  ChannelMutations,
-  ChannelQueries,
-  ChannelSubscriptions
-} from './channel'
-export {
-  CommentQueries,
-  CommentMutations,
-  CommentSubscriptions
-} from './comment'
-export { FolderQueries, FolderMutations, FolderSubscriptions } from './folder'
-export { GroupMutations, GroupSubscriptions } from './group'
-export {
-  MessageMutations,
-  MessageQueries,
-  MessageSubscriptions
-} from './message'
-export { ReplySubscriptions, ReplyQueries, ReplyMutations } from './reply'
-export { RoleSubscriptions, RoleQueries, RoleMutations } from './role'
-export { PostQueries, PostMutations, PostSubscriptions } from './post'
-export { ServerSubscriptions, ServerQueries, ServerMutations } from './server'
-export { UserQueries, UserMutations, UserSubscriptions } from './user'
+export { ChannelMutations, ChannelQueries } from './channel'
+export { CommentQueries, CommentMutations } from './comment'
+export { FolderQueries, FolderMutations } from './folder'
+export { GroupMutations } from './group'
+export { MessageMutations, MessageQueries } from './message'
+export { ReplyQueries, ReplyMutations } from './reply'
+export { RoleQueries, RoleMutations } from './role'
+export { PostQueries, PostMutations } from './post'
+export { ServerQueries, ServerMutations } from './server'
+export { UserQueries, UserMutations } from './user'
+export { SubscriptionResolver } from './subscriptions'

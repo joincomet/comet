@@ -1,7 +1,5 @@
 import { Context } from '@/types'
-import { Publisher } from 'type-graphql'
 import { Reply } from '@/entity'
-import { getReplies } from '@/resolver/reply/queries/getReplies'
 
 export async function markAllRepliesRead({
   em,

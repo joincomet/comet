@@ -47,10 +47,10 @@ export class UserQueries {
   @Authorized('USER')
   @FieldResolver(() => [Folder])
   async folders(
-    @Ctx() { loaders: { userFolderLoader } }: Context,
+    @Ctx() { loaders: { userFoldersLoader } }: Context,
     @Root() user: User
   ): Promise<Folder[]> {
-    return userFolderLoader.load(user.id)
+    return userFoldersLoader.load(user.id)
   }
 
   @Authorized()

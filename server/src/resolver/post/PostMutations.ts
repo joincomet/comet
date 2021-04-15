@@ -10,10 +10,10 @@ import {
 import { Post } from '@/entity'
 import { Context } from '@/types'
 import { createPost, CreatePostInput } from '@/resolver/post/mutations'
-import { ChangePayload, SubscriptionTopic } from '@/subscriptions'
+import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 import {
-  UpdatePostInput,
-  updatePost
+  updatePost,
+  UpdatePostInput
 } from '@/resolver/post/mutations/updatePost'
 
 @Resolver()

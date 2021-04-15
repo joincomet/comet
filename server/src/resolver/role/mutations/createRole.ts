@@ -1,5 +1,5 @@
 import { Role, ServerPermission } from '@/entity'
-import { ArgsType, Field, ID, InputType } from 'type-graphql'
+import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { IsHexColor, IsOptional, Length } from 'class-validator'
 import { QueryOrder } from '@mikro-orm/core'
@@ -27,7 +27,7 @@ export async function createRole(
   { em, user, liveQueryStore }: Context,
   { serverId, name, color, permissions }: CreateRoleInput
 ): Promise<Role> {
-  await user.checkServerPermission(em, serverId, ServerPermission.ManageRoles)
+  await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
   const roles = await em.find(
     Role,
     { server: serverId },

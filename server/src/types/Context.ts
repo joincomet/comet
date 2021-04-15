@@ -9,7 +9,7 @@ export interface Context {
   liveQueryStore: InMemoryLiveQueryStore
   loaders: {
     channelLoader: DataLoader<string, Channel[]>
-    serverFolderLoader: DataLoader<string, Folder[]>
-    userFolderLoader: DataLoader<string, Folder[]>
+    serverFoldersLoader: DataLoader<string, Folder[]>
+    userFoldersLoader: DataLoader<string, Folder[]>
   }
 }

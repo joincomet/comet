@@ -1,6 +1,5 @@
 import { Field, Int, ObjectType } from 'type-graphql'
 import {
-  BaseEntity,
   Comment,
   Folder,
   FolderPost,
@@ -23,6 +22,7 @@ import {
   QueryOrder
 } from '@mikro-orm/core'
 import { PostVote } from '@/entity/post/PostVote'
+import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -76,9 +76,8 @@ export class Post extends BaseEntity {
   @ManyToOne(() => User)
   author?: User
 
-  @Field(() => ServerUser, { nullable: true })
-  @ManyToOne(() => ServerUser)
-  serverUser?: ServerUser
+  @Field(() => ServerUser)
+  serverUser: ServerUser
 
   @Field(() => User, { nullable: true })
   addedByUser?: User

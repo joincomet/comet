@@ -1,4 +1,4 @@
-import { ArgsType, Field, InputType } from 'type-graphql'
+import { Field, InputType } from 'type-graphql'
 import { Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'

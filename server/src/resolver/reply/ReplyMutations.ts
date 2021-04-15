@@ -1,9 +1,7 @@
 import {
   Arg,
-  Args,
   Authorized,
   Ctx,
-  ID,
   Mutation,
   Publisher,
   PubSub,
@@ -12,11 +10,12 @@ import {
 import { Reply } from '@/entity'
 import { Context } from '@/types'
 import { markAllRepliesRead } from '@/resolver/reply/mutations/markAllRepliesRead'
-import { ChangePayload, SubscriptionTopic } from '@/subscriptions'
+import { SubscriptionTopic } from '@/resolver/subscriptions'
 import {
-  UpdateReplyInput,
-  updateReply
+  updateReply,
+  UpdateReplyInput
 } from '@/resolver/reply/mutations/updateReply'
+import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 
 @Resolver()
 export class ReplyMutations {
@@ -25,10 +24,10 @@ export class ReplyMutations {
   async updateReply(
     @Ctx() ctx: Context,
     @Arg('input') input: UpdateReplyInput,
-    @PubSub(SubscriptionTopic.ReplyChanged)
-    notifyReplyChanged: Publisher<ChangePayload>
+    @PubSub(SubscriptionTopic.RepliesChanged)
+    notifyRepliesChanged: Publisher<BulkChangePayload>
   ): Promise<Reply> {
-    return updateReply(ctx, input, notifyReplyChanged)
+    return updateReply(ctx, input, notifyRepliesChanged)
   }
 
   @Authorized()

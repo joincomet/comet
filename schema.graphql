@@ -3,9 +3,22 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""
+Instruction for establishing a live connection that is updated once the underlying data changes.
+"""
+directive @live(
+  """Whether the query should be live or not."""
+  if: Boolean = true
+) on QUERY
+
 interface BaseEntity {
   createdAt: DateTime!
   id: ID!
+}
+
+input ChangePasswordInput {
+  currentPassword: String!
+  password: String!
 }
 
 type Channel implements BaseEntity {
@@ -19,30 +32,14 @@ type Channel implements BaseEntity {
 }
 
 enum ChannelPermission {
-  AttachFiles
-  EmbedLinks
-  ManageChannel
-  ManageMessages
-  ManagePermissions
-  Mention
   SendMessages
   ViewChannel
-}
-
-type ChannelResponse {
-  channel: Channel!
-  serverId: ID!
 }
 
 type ChannelRole {
   allowedPermissions: [ChannelPermission!]!
   channel: Channel!
   deniedPermissions: [ChannelPermission!]!
-}
-
-type ChannelUsersResponse {
-  role: String!
-  users: [User!]!
 }
 
 type Comment implements BaseEntity {
@@ -57,13 +54,74 @@ type Comment implements BaseEntity {
   parentComment: Comment
   pinPosition: String
   post: Post!
+  serverUser: ServerUser!
   text: String!
   voteCount: Int!
 }
 
-type CommentDeletedResponse {
-  commentId: ID!
+type CommentChangedResponse {
+  added: Comment
+  deleted: Comment
+  updated: Comment
+}
+
+input CreateAccountInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
+input CreateChannelInput {
+  isPrivate: Boolean = false
+  name: String!
+  serverId: ID!
+}
+
+input CreateCommentInput {
+  parentCommentId: ID
   postId: ID!
+  text: String!
+}
+
+input CreateFolderInput {
+  isCollaborative: Boolean = false
+  name: String!
+  serverId: ID
+  visibility: FolderVisibility = Public
+}
+
+input CreateGroupInput {
+  usernames: [String!]!
+}
+
+input CreateMessageInput {
+  channelId: ID
+  file: Upload
+  groupId: ID
+  text: String
+  userId: ID
+}
+
+input CreatePostInput {
+  images: [Upload!]
+  linkUrl: String
+  serverId: ID!
+  text: String
+  title: String!
+}
+
+input CreateRoleInput {
+  color: String
+  name: String!
+  permissions: [ServerPermission!]!
+  serverId: ID!
+}
+
+input CreateServerInput {
+  avatarFile: Upload
+  category: ServerCategory = Other
+  isPublic: Boolean = false
+  name: String!
 }
 
 """
@@ -97,25 +155,6 @@ enum FolderVisibility {
   Private
   Public
   Unlisted
-}
-
-enum FriendStatus {
-  Blocked
-  Blocking
-  FriendRequestIncoming
-  FriendRequestOutgoing
-  Friends
-  None
-}
-
-type FriendStatusChangedResponse {
-  status: FriendStatus!
-  user: User!
-}
-
-type GetChannelPermissionsResponse {
-  allowedPermissions: [ChannelPermission!]!
-  deniedPermissions: [ChannelPermission!]!
 }
 
 enum GetCommentsSort {
@@ -155,26 +194,17 @@ enum GetPublicServersSort {
   Top
 }
 
-type GetUserRelationshipsResponse {
-  blockedByUsers: [User!]!
-  blockingUsers: [User!]!
-  friends: [User!]!
-  incomingFriendRequests: [User!]!
-  outgoingFriendRequests: [User!]!
-}
-
 type Group implements BaseEntity {
   avatarUrl: String
   createdAt: DateTime!
   displayName: String!
   id: ID!
+  lastMessageAt: DateTime!
   name: String!
   owner: User!
   unreadCount: Int!
   users: [User!]!
 }
-
-union GroupDmUnion = Group | User
 
 type Image {
   originalHeight: Int!
@@ -188,6 +218,11 @@ type Image {
   smallWidth: Int!
 }
 
+input JoinServerInput {
+  inviteId: ID
+  serverId: ID
+}
+
 type LinkMetadata {
   author: String
   date: DateTime
@@ -198,6 +233,11 @@ type LinkMetadata {
   title: String
   twitterCard: String
   url: String
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
 
 type LoginResponse {
@@ -215,23 +255,15 @@ type Message implements BaseEntity {
   isDeleted: Boolean!
   isPinned: Boolean!
   linkMetadatas: [LinkMetadata!]!
+  serverUser: ServerUser
   text: String
   type: MessageType!
 }
 
-type MessageDeletedResponse {
-  channelId: ID
-  groupId: ID
-  messageId: ID!
-  userId: ID
-}
-
-type MessageResponse {
-  channelId: ID
-  groupId: ID
-  message: Message!
-  serverId: ID
-  userId: ID
+type MessageChangedResponse {
+  added: Message
+  deleted: Message
+  updated: Message
 }
 
 enum MessageType {
@@ -240,68 +272,43 @@ enum MessageType {
 }
 
 type Mutation {
-  addPostToFolder(folderId: ID!, postId: ID!): Folder!
-  banUserFromServer(serverId: ID!, userId: ID!): Boolean!
-  banUserGlobal(purge: Boolean = false, reason: String, userId: ID!): Boolean!
-  changeFriendStatus(status: FriendStatus!, userId: ID!): User!
-  changePassword(currentPassword: String!, password: String!): LoginResponse!
-  closeDm(userId: ID!): Boolean!
-  createAccount(email: String!, name: String!, password: String!): LoginResponse!
-  createChannel(isPrivate: Boolean = false, name: String!, serverId: ID!): Channel!
-  createComment(parentCommentId: ID, postId: ID!, text: String!): Comment!
-  createFolder(isCollaborative: Boolean = false, name: String!, serverId: ID, visibility: FolderVisibility = Public): Folder!
-  createGroup(usernames: [String!]!): Group!
-  createPost(images: [Upload!], linkUrl: String, serverId: ID!, text: String, title: String!): Post!
-  createServer(avatarFile: Upload, category: ServerCategory, isPublic: Boolean = false, name: String!): Server!
-  deleteChannel(channelId: ID!): Boolean!
-  deleteComment(commentId: ID!): Boolean!
-  deleteFolder(folderId: ID!): Boolean!
-  deleteMessage(messageId: ID!): Boolean!
-  deletePost(postId: ID!): Boolean!
-  editAccount(avatarFile: Upload, email: String, name: String): User!
-  editChannel(channelId: ID!, isPrivate: Boolean = false, name: String!): Channel!
-  editComment(commentId: ID!, text: String!): Comment!
-  editFolder(avatarFile: Upload!, description: String!, folderId: ID!, isCollaborative: Boolean = false, name: String!, visibility: FolderVisibility = Public): Folder!
-  editGroup(avatarFile: Upload, groupId: ID!, name: String): Group!
-  editMessage(messageId: ID!, text: String!): Message!
-  editPost(postId: ID!, text: String): Post!
-  editServer(avatarFile: Upload, bannerFile: Upload, category: ServerCategory, description: String, isPublic: Boolean, name: String, serverId: ID!): Server!
-  followFolder(folderId: ID!): Folder!
-  joinServer(inviteId: ID, serverId: ID): Server!
-  leaveGroup(groupId: ID!): Boolean!
-  leaveServer(serverId: ID!): Boolean!
-  login(email: String!, password: String!): LoginResponse!
-  markAllRepliesRead: [Reply!]!
-  markReplyRead(replyId: ID!): Reply!
-  pinPost(postId: ID!): Post!
-  readChannel(channelId: ID!): Channel!
-  readDm(userId: ID!): User!
-  readGroup(groupId: ID!): Group!
-  removePostFromFolder(folderId: ID!, postId: ID!): Folder!
-  reorderChannels(beforeChannelId: ID, channelId: ID!): [Channel!]!
-  reorderServerFolders(beforeFolderId: ID, folderId: ID!, serverId: ID!): [Folder!]!
-  reorderServers(beforeServerId: ID, serverId: ID!): [Server!]!
-  reorderUserFolders(beforeFolderId: ID, folderId: ID!): [Folder!]!
-  sendMessage(channelId: ID, file: Upload, groupId: ID, text: String, userId: ID): Message!
+  changePassword(input: ChangePasswordInput!): LoginResponse!
+  createAccount(input: CreateAccountInput!): LoginResponse!
+  createChannel(input: CreateChannelInput!): Channel!
+  createComment(input: CreateCommentInput!): Comment!
+  createFolder(input: CreateFolderInput!): Folder!
+  createGroup(input: CreateGroupInput!): Group!
+  createMessage(input: CreateMessageInput!): Message!
+  createPost(input: CreatePostInput!): Post!
+  createRole(input: CreateRoleInput!): Role!
+  createServer(input: CreateServerInput!): Server!
+  joinServer(input: JoinServerInput!): Server!
+  login(input: LoginInput!): LoginResponse!
+  markAllRepliesRead: Boolean!
   startTyping(channelId: ID, groupId: ID, userId: ID): Boolean!
-  unbanUserFromServer(serverId: ID!, userId: ID!): Boolean!
-  unbanUserGlobal(userId: ID!): Boolean!
-  unfollowFolder(folderId: ID!): Folder!
-  unpinPost(postId: ID!): Post!
+  updateChannel(input: UpdateChannelInput!): Channel!
+  updateComment(input: UpdateCommentInput!): Comment!
+  updateFolder(input: UpdateFolderInput!): Folder!
+  updateGroup(input: UpdateGroupInput!): Group!
+  updateMessage(input: UpdateMessageInput!): Message!
+  updatePost(input: UpdatePostInput!): Post!
+  updateReply(input: UpdateReplyInput!): Reply!
+  updateRole(input: UpdateRoleInput!): Role!
+  updateServer(input: UpdateServerInput!): Server!
+  updateUser(input: UpdateUserInput!): User!
+}
 
-  """Remove vote from a comment"""
-  unvoteComment(
-    """ID of comment to remove vote"""
-    commentId: ID!
-  ): Comment!
-  unvotePost(postId: ID!): Post!
+enum NotificationSetting {
+  All
+  Mentions
+  None
+}
 
-  """Add vote to a comment"""
-  voteComment(
-    """ID of comment to vote"""
-    commentId: ID!
-  ): Comment!
-  votePost(postId: ID!): Post!
+enum OnlineStatus {
+  Away
+  DoNotDisturb
+  Offline
+  Online
 }
 
 type Post implements BaseEntity {
@@ -312,6 +319,7 @@ type Post implements BaseEntity {
   createdAt: DateTime!
   domain: String
   editedAt: DateTime
+  folders: [Folder!]
   id: ID!
   imageUrls: [String!]!
   isDeleted: Boolean!
@@ -323,61 +331,53 @@ type Post implements BaseEntity {
   pinPosition: String
   relativeUrl: String!
   server: Server!
+  serverUser: ServerUser!
   text: String
   thumbnailUrl: String
   title: String!
   voteCount: Int!
 }
 
-type PostAddedToFolderResponse {
-  folderId: ID!
-  post: Post!
-}
-
-type PostCommentResponse {
-  comment: Comment!
-  postId: ID!
-}
-
-type PostDeletedResponse {
-  postId: ID!
-  serverId: ID!
-}
-
-type PostRemovedFromFolderResponse {
-  folderId: ID!
-  postId: ID!
+type PostChangedResponse {
+  added: Post
+  deleted: Post
+  updated: Post
 }
 
 type Query {
-  getChannelPermissions(channelId: ID!): GetChannelPermissionsResponse!
-  getChannelUsers(channelId: ID!): [ChannelUsersResponse!]!
+  getChannelUsers(channelId: ID!): [ServerUser!]!
   getComments(postId: ID, sort: GetCommentsSort = Top): [Comment!]!
   getCurrentUser: User
   getFolder(folderId: ID!): Folder!
-  getGroupsAndDms: [GroupDmUnion!]!
-  getJoinedServers: [Server!]!
+  getJoinedServers(id: ID!): [Server!]!
   getMessages(channelId: ID, groupId: ID, initialTime: DateTime, page: Int = 0, pageSize: Int = 100, pinned: Boolean = false, userId: ID): [GetMessagesResponse!]!
   getMutualFriends(userId: ID!): [User!]!
-  getMutualServers(userId: ID!): [Server!]!
+  getMutualServers(userId: ID!): [ServerUser!]!
   getOtherUserFolders(userId: ID!): [Folder!]!
   getPost(postId: ID!): Post!
   getPosts(folderId: ID, page: Int = 0, pageSize: Int = 20, search: String, serverId: ID, sort: GetPostsSort = Hot, time: GetPostsTime = All): [GetPostsResponse!]!
   getPublicServers(category: ServerCategory, sort: GetPublicServersSort = Top): [Server!]!
-  getReplies: [Reply!]!
-  getServerFolders(serverId: ID!): [Folder!]!
-  getServerPermissions(serverId: ID!): [ServerPermission!]!
+  getReplies(id: ID!): [Reply!]!
+  getRoleUsers(roleId: ID!): [ServerUser!]!
 
   """Get LinkMetadata for a URL (requires admin)"""
   getUrlEmbed(url: String!): LinkMetadata! @deprecated(reason: "For testing only")
   getUser(userId: ID!): User!
-  getUserFolders: [Folder!]!
-  getUserRelationships: GetUserRelationshipsResponse!
 }
 
-type RemovedFromRoleResponse {
-  roleId: ID!
-  serverId: ID!
+enum RelationshipStatus {
+  Blocked
+  Blocking
+  FriendRequestIncoming
+  FriendRequestOutgoing
+  Friends
+  None
+}
+
+type RepliesChangedResponse {
+  added: [Reply!]!
+  deleted: [Reply!]!
+  updated: [Reply!]!
 }
 
 type Reply implements BaseEntity {
@@ -390,9 +390,13 @@ type Reply implements BaseEntity {
   post: Post!
 }
 
-type RolesUpdatedResponse {
-  roles: [ServerRole!]!
-  serverId: ID!
+type Role implements BaseEntity {
+  channelRoles: [ChannelRole!]!
+  color: String!
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  permissions: [ServerPermission!]!
 }
 
 type Server implements BaseEntity {
@@ -402,13 +406,17 @@ type Server implements BaseEntity {
   channels: [Channel!]!
   createdAt: DateTime!
   description: String
+  folders: [Folder!]!
   id: ID!
   isBanned: Boolean!
-  isChatEnabled: Boolean!
+  isDeleted: Boolean!
   isFeatured: Boolean!
-  isPostsEnabled: Boolean!
   isPublic: Boolean!
+  myRoles: [Role!]!
   name: String!
+  roles: [Role!]!
+  sendWelcomeMessage: Boolean!
+  systemMessagesChannel: Channel!
   userCount: Int!
 }
 
@@ -433,31 +441,21 @@ enum ServerCategory {
   Technology
 }
 
-type ServerFoldersUpdatedResponse {
-  folders: [Folder!]!
-  serverId: ID!
-}
-
 enum ServerPermission {
   AddPostToFolder
   Admin
-  AttachFiles
-  BanUser
   ChangeNickname
   CreateComment
   CreateInvite
   CreatePost
   DisplayRoleSeparately
-  EmbedLinks
-  KickUser
   ManageChannels
   ManageComments
   ManageFolders
   ManageMessages
-  ManageNicknames
   ManagePosts
-  ManageRoles
   ManageServer
+  ManageUsers
   Mention
   Mentionable
   SendMessages
@@ -467,62 +465,135 @@ enum ServerPermission {
   VotePost
 }
 
-type ServerRole implements BaseEntity {
-  channelRoles: [ChannelRole!]!
-  color: String!
-  createdAt: DateTime!
-  id: ID!
+type ServerUser {
+  color: String
   name: String!
-  permissions: [ServerPermission!]!
-}
-
-type ServerRoleResponse {
-  role: ServerRole!
-  serverId: ID!
+  nickname: String
+  notificationSetting: NotificationSetting!
+  roles: [Role!]!
 }
 
 type Subscription {
-  addedToGroup: Group!
-  addedToRole: ServerRoleResponse!
-  allRepliesRead: Boolean!
-  channelRead: ID!
-  channelUpdated: Channel!
-  channelsUpdated: ChannelResponse!
-  commentCreated: PostCommentResponse!
-  commentDeleted: CommentDeletedResponse!
-  commentUpdated: Comment!
-  dmClosed: ID!
-  dmOpened: User!
-  dmRead: ID!
-  folderUpdated: Folder!
-  friendStatusChanged: FriendStatusChangedResponse!
-  groupRead: ID!
-  groupUpdated: Group!
-  joinedServersUpdated: [Server!]!
-  messageDeleted: MessageDeletedResponse!
-  messageSent: MessageResponse!
-  messageUpdated: MessageResponse!
-  postAddedToFolder: PostAddedToFolderResponse!
-  postCreated: Post!
-  postDeleted: PostDeletedResponse!
-  postRemovedFromFolder: PostRemovedFromFolderResponse!
-  postUpdated: Post!
-  removedFromGroup: ID!
-  removedFromRole: RemovedFromRoleResponse!
-  replyRead: Reply!
-  replyReceived: Reply!
-  roleUpdated: ServerRoleResponse!
-  rolesUpdated: RolesUpdatedResponse!
-  serverFoldersUpdated: ServerFoldersUpdatedResponse!
-  serverUpdated: Server!
-  userBannedGlobal: Boolean!
-  userFoldersUpdated: [Folder!]!
-  userJoinedGroup: UserJoinedGroupResponse!
-  userJoinedServer: UserJoinedServerResponse!
-  userLeftGroup: UserLeftGroupResponse!
-  userLeftServer: UserLeftServerResponse!
+  commentChanged: CommentChangedResponse!
+  messageChanged: MessageChangedResponse!
+  postChanged: PostChangedResponse!
+  repliesChanged: RepliesChangedResponse!
   userStartedTyping(channelId: ID, groupId: ID, userId: ID): String!
-  userUpdated: User!
+}
+
+input UpdateChannelInput {
+  beforeChannelId: ID
+  channelId: ID!
+  isDeleted: Boolean = false
+  isPrivate: Boolean
+  isRead: Boolean
+  name: String
+}
+
+input UpdateChannelRoleInput {
+  allowedPermissions: [ChannelPermission!]!
+  channelId: ID!
+  deniedPermissions: [ChannelPermission!]!
+}
+
+input UpdateCommentInput {
+  commentId: ID!
+  isDeleted: Boolean = false
+  isPinned: Boolean
+  isVoted: Boolean
+  text: String
+}
+
+input UpdateFolderInput {
+  addedPostId: ID
+  beforeFolderId: ID
+  folderId: ID!
+  isCollaborative: Boolean
+  isDeleted: Boolean = false
+  isFollowing: Boolean
+  name: String
+  removedPostId: ID
+  visibility: FolderVisibility
+}
+
+input UpdateGroupInput {
+  addedUserId: ID
+  avatarFile: Upload
+  groupId: ID!
+  isRead: Boolean
+  name: String
+  removedUserId: ID
+}
+
+input UpdateMessageInput {
+  isDeleted: Boolean = false
+  isPinned: Boolean
+  messageId: ID!
+  text: String
+}
+
+input UpdatePostInput {
+  isDeleted: Boolean = false
+  isPinned: Boolean
+  isVoted: Boolean
+  postId: ID!
+  text: String
+}
+
+input UpdateReplyInput {
+  isRead: Boolean
+  replyId: ID!
+}
+
+input UpdateRoleInput {
+  addedUserId: ID
+  beforeRoleId: ID
+  color: String
+  isDeleted: Boolean = false
+  name: String
+  permissions: [ServerPermission!]
+  removedUserId: ID
+  roleId: ID!
+  updateChannelRole: UpdateChannelRoleInput
+}
+
+input UpdateServerInput {
+  avatarFile: Upload
+  banUserId: ID
+  bannerFile: Upload
+  beforeServerId: ID
+  category: ServerCategory
+  description: String
+  featuredPosition: Int
+  isDeleted: Boolean = false
+  isFeatured: Boolean
+  isPublic: Boolean
+  isRead: Boolean = false
+  kickUserId: ID
+  name: String
+  nickname: String
+  notificationSetting: NotificationSetting
+  ownerId: ID
+  purge: Boolean = false
+  sendWelcomeMessage: Boolean
+  serverId: ID!
+  systemMessagesChannelId: ID
+  unbanUserId: ID
+}
+
+input UpdateUserInput {
+  avatarFile: Upload
+  banGlobalReason: String
+  email: String
+  isBannedGlobal: Boolean = false
+  isDeleted: Boolean = false
+  isRead: Boolean
+  isUnbannedGlobal: Boolean = false
+  name: String
+  purge: Boolean = false
+  relationshipStatus: RelationshipStatus
+  showChat: Boolean
+  userId: ID!
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -532,33 +603,14 @@ type User implements BaseEntity {
   avatarUrl: String
   createdAt: DateTime!
   email: String!
+  folders: [Folder!]
   id: ID!
   isAdmin: Boolean!
   isOnline: Boolean!
   isPremium: Boolean!
   lastLoginAt: DateTime
   name: String!
+  onlineStatus: OnlineStatus!
   tag: String!
-  unreadCount: Int
   username: String!
-}
-
-type UserJoinedGroupResponse {
-  groupId: ID!
-  user: User!
-}
-
-type UserJoinedServerResponse {
-  serverId: ID!
-  user: User!
-}
-
-type UserLeftGroupResponse {
-  groupId: ID!
-  userId: ID!
-}
-
-type UserLeftServerResponse {
-  serverId: ID!
-  userId: ID!
 }

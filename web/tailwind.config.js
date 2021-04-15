@@ -34,7 +34,7 @@ module.exports = {
         }
       },
       fontFamily: {
-        sans: ['Inter var', 'Inter', ...defaultTheme.fontFamily.sans]
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans]
       },
       fontSize: {
         base: '.9375rem',

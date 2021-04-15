@@ -6,11 +6,11 @@ export async function getRoleUsers(
   { em, user }: Context,
   roleId: string
 ): Promise<ServerUser[]> {
-  const role = await em.findOneOrFail(Role, roleId, ['server'])
+  const role = await em.findOneOrFail(Role, { id: roleId }, ['server'])
   await user.checkServerPermission(
     em,
     role.server.id,
-    ServerPermission.ManageRoles
+    ServerPermission.ManageServer
   )
   return em.find(ServerUser, { server: role.server, roles: role }, ['user'], {
     username: QueryOrder.ASC

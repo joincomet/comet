@@ -1,6 +1,5 @@
 import { Field, ObjectType } from 'type-graphql'
 import {
-  BaseEntity,
   Channel,
   Group,
   Image,
@@ -20,6 +19,7 @@ import {
   Property
 } from '@mikro-orm/core'
 import { File } from '@/entity/File'
+import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -29,7 +29,6 @@ export class Message extends BaseEntity {
   author: User
 
   @Field(() => ServerUser, { nullable: true })
-  @ManyToOne(() => ServerUser, { nullable: true })
   serverUser?: ServerUser
 
   @ManyToOne(() => Channel, { nullable: true })
@@ -52,7 +51,7 @@ export class Message extends BaseEntity {
   @Property({ columnType: 'text', nullable: true })
   text?: string
 
-  @Field({ nullable: true })
+  @Field(() => Image, { nullable: true })
   @Embedded(() => Image, { object: true, nullable: true })
   image?: Image
 

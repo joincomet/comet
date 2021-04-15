@@ -1,5 +1,5 @@
 import { Context } from '@/types'
-import { ArgsType, Field, ID, InputType, Publisher } from 'type-graphql'
+import { Field, ID, InputType } from 'type-graphql'
 import { Channel, Server, ServerPermission } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
@@ -44,6 +44,6 @@ export async function createChannel(
   })
 
   await em.persistAndFlush(channel)
-  liveQueryStore.invalidate(`Query.getJoinedServers(id:"${user.id}")`)
+  liveQueryStore.invalidate(`Server:${serverId}`)
   return channel
 }

@@ -6,15 +6,17 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  PrimaryKeyType,
   Property
 } from '@mikro-orm/core'
-import { BaseEntity, ChannelRole, Server, ServerUser } from '@/entity'
+import { ChannelRole, Server, ServerUser } from '@/entity'
 import {
   defaultServerPermissions,
   ServerPermission
 } from '@/entity/server/ServerPermission'
 import { ReorderUtils } from '@/util/ReorderUtils'
 import { Field, ObjectType } from 'type-graphql'
+import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -24,7 +26,9 @@ export class Role extends BaseEntity {
   name: string
 
   @ManyToOne({ entity: () => Server, inversedBy: 'roles' })
-  server: Server
+  server: Server;
+
+  [PrimaryKeyType]: [string, string]
 
   @ManyToMany({ entity: () => ServerUser })
   serverUsers = new Collection<ServerUser>(this)
@@ -52,6 +56,9 @@ export class Role extends BaseEntity {
   permissions: ServerPermission[] = defaultServerPermissions
 
   hasPermission(permission: ServerPermission) {
-    return this.permissions.includes(permission)
+    return (
+      this.permissions.includes(permission) ||
+      this.permissions.includes(ServerPermission.Admin)
+    )
   }
 }

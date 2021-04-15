@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { BaseEntity, LinkMetadata, Post, ServerUser, User } from '@/entity'
+import { LinkMetadata, Post, ServerUser, User } from '@/entity'
 import {
   Collection,
   Embedded,
@@ -9,6 +9,7 @@ import {
   Property
 } from '@mikro-orm/core'
 import { CommentVote } from '@/entity/comment/CommentVote'
+import { BaseEntity } from '@/entity/BaseEntity'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -17,9 +18,8 @@ export class Comment extends BaseEntity {
   @ManyToOne(() => User)
   author: User
 
-  @Field(() => ServerUser, { nullable: true })
-  @ManyToOne(() => ServerUser)
-  serverUser?: ServerUser
+  @Field(() => ServerUser)
+  serverUser: ServerUser
 
   @Field(() => Post)
   @ManyToOne(() => Post)

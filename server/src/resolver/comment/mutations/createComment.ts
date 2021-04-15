@@ -1,10 +1,10 @@
-import { ArgsType, Field, ID, InputType, Publisher } from 'type-graphql'
+import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
-import { Comment, Reply, Post } from '@/entity'
+import { Comment, CommentVote, Post, Reply, ServerPermission } from '@/entity'
 import { handleText } from '@/util'
-import { voteComment } from '@/resolver/comment/mutations/voteComment'
-import { ChangePayload, ChangeType } from '@/subscriptions'
+import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 
 @InputType()
 export class CreateCommentInput {
@@ -25,12 +25,18 @@ export async function createComment(
   { em, user }: Context,
   { text, postId, parentCommentId }: CreateCommentInput,
   notifyCommentChanged: Publisher<ChangePayload>,
-  notifyReplyChanged: Publisher<ChangePayload>
+  notifyRepliesChanged: Publisher<BulkChangePayload>
 ): Promise<Comment> {
   text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
   if (!text) throw new Error('error.comment.empty')
 
   const post = await em.findOneOrFail(Post, postId)
+  await user.checkServerPermission(
+    em,
+    post.server.id,
+    ServerPermission.CreateComment
+  )
+
   const parentComment = parentCommentId
     ? await em.findOneOrFail(Comment, parentCommentId, ['author'])
     : null
@@ -43,43 +49,50 @@ export async function createComment(
     post,
     author: user
   })
+
+  if (
+    await user.hasServerPermission(
+      em,
+      post.server.id,
+      ServerPermission.VoteComment
+    )
+  ) {
+    comment.voteCount = 1
+    comment.isVoted = true
+    const vote = em.create(CommentVote, { comment, user })
+    em.persist(vote)
+  }
+
   post.commentCount++
 
   em.persist([comment, post])
 
+  let reply: Reply
   if (parentComment) {
     if (parentComment.author !== user) {
-      em.persist(
-        em.create(Reply, {
-          post,
-          comment,
-          parentComment,
-          toUser: parentComment.author,
-          fromUser: user
-        })
-      )
+      reply = em.create(Reply, {
+        post,
+        comment,
+        parentComment,
+        toUser: parentComment.author,
+        fromUser: user
+      })
     }
   } else {
     await em.populate(post, ['author'])
     if (post.author !== user) {
-      em.persist(
-        em.create(Reply, {
-          post,
-          comment,
-          toUser: post.author,
-          fromUser: user
-        })
-      )
+      reply = em.create(Reply, {
+        post,
+        comment,
+        toUser: post.author,
+        fromUser: user
+      })
     }
   }
-
-  await em.flush()
-
-  comment.isVoted = true
-  comment.voteCount = 1
-
   await notifyCommentChanged({ id: comment.id, type: ChangeType.Added })
-  await voteComment({ user, em }, comment.id)
-
+  if (reply) {
+    await em.persistAndFlush(reply)
+    await notifyRepliesChanged({ ids: [reply.id], type: ChangeType.Added })
+  }
   return comment
 }

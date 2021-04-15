@@ -1,6 +1,6 @@
-import { AuthChecker } from 'type-graphql'
-import { Context } from '@/types'
-import { User } from '@/entity'
+import {AuthChecker} from 'type-graphql'
+import {Context} from '@/types'
+import {User} from '@/entity'
 
 /*
 @Authorized(): must be logged in

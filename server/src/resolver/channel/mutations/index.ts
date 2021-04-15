@@ -1,5 +1,2 @@
 export * from './createChannel'
-export * from './deleteChannel'
-export * from './editChannel'
-export * from './readChannel'
-export * from './reorderChannels'
+export * from './updateChannel'

@@ -1,11 +1,13 @@
-import { Arg, Args, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
+import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
 import { Group } from '@/entity'
-import { CreateGroupInput } from '@/resolver/group/mutations/createGroup'
-import { createGroup } from '@/resolver/group/mutations/createGroup'
 import {
-  UpdateGroupInput,
-  updateGroup
+  createGroup,
+  CreateGroupInput
+} from '@/resolver/group/mutations/createGroup'
+import {
+  updateGroup,
+  UpdateGroupInput
 } from '@/resolver/group/mutations/updateGroup'
 
 @Resolver()

@@ -1,5 +1,5 @@
 import { Context } from '@/types'
-import { ArgsType, Field, InputType } from 'type-graphql'
+import { Field, InputType } from 'type-graphql'
 import { Group, User } from '@/entity'
 import { ArrayMaxSize } from 'class-validator'
 

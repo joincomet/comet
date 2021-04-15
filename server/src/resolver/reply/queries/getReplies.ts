@@ -1,6 +1,5 @@
 import { Context } from '@/types'
 import { Reply } from '@/entity'
-import { QueryOrder } from '@mikro-orm/core'
 
 export async function getReplies({ em, user }: Context): Promise<Reply[]> {
   return em.find(
@@ -13,6 +12,6 @@ export async function getReplies({ em, user }: Context): Promise<Reply[]> {
       'post.server',
       'post.author'
     ],
-    { createdAt: QueryOrder.DESC }
+    { createdAt: 'DESC' }
   )
 }

@@ -3,10 +3,10 @@ import { LinkMetadata, Post } from '@/entity'
 import { Context } from '@/types'
 import { scrapeMetadata } from '@/util'
 import {
-  GetPostsArgs,
-  GetPostsResponse,
   getPost,
-  getPosts
+  getPosts,
+  GetPostsArgs,
+  GetPostsResponse
 } from '@/resolver/post/queries'
 
 @Resolver(() => Post)

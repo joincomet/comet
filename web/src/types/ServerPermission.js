@@ -2,7 +2,6 @@ export const ServerPermission = {
   ManageChannels: 'ManageChannels',
   Mention: 'Mention',
 
-  ManageRoles: 'ManageRoles',
   ManageServer: 'ManageServer',
   CreateInvite: 'CreateInvite',
 

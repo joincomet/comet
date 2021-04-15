@@ -1,5 +1,5 @@
 import { Server, ServerInvite, ServerUser } from '@/entity'
-import { ArgsType, Field, ID, InputType } from 'type-graphql'
+import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
@@ -45,6 +45,6 @@ export async function joinServer(
       : ReorderUtils.FIRST_POSITION
   })
   await em.persistAndFlush(join)
-  liveQueryStore.invalidate(`Query.getJoinedServers(id:${user.id})`)
+  liveQueryStore.invalidate(`Query.getJoinedServers(id:"${user.id}")`)
   return server
 }

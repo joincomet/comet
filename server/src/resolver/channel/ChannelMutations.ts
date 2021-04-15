@@ -1,11 +1,10 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
 import { Context } from '@/types'
 import { Channel } from '@/entity'
-import { CreateChannelInput } from './mutations/createChannel'
-import { createChannel } from './mutations/createChannel'
+import { createChannel, CreateChannelInput } from './mutations/createChannel'
 import {
-  UpdateChannelInput,
-  updateChannel
+  updateChannel,
+  UpdateChannelInput
 } from '@/resolver/channel/mutations/updateChannel'
 
 @Resolver()
