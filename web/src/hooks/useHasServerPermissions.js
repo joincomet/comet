@@ -1,7 +1,6 @@
-import {useMemo} from 'react'
-import {GET_SERVER_PERMISSIONS} from '@/graphql/queries'
-import {useCurrentUser} from '@/providers/UserProvider'
-import {useQuery} from 'urql'
+import { useMemo } from 'react'
+import { useCurrentUser } from '@/providers/UserProvider'
+import { useQuery } from 'urql'
 
 /**
  * @param serverId The ID of the server to check permissions

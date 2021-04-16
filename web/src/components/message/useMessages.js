@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { GET_MESSAGES } from '@/graphql/queries'
 import { useQuery } from 'urql'
 

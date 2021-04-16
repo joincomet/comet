@@ -1,12 +1,6 @@
 import { useMutation } from 'urql'
-import {
-  BAN_USER_FROM_SERVER,
-  CLOSE_DM,
-  CHANGE_FRIEND_STATUS
-} from '@/graphql/mutations'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { KICK_USER_FROM_SERVER } from '@/graphql/mutations/server/KickUserFromServer'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useCurrentUser } from '@/providers/UserProvider'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
@@ -14,7 +8,6 @@ import { useUserRelationships } from '@/providers/DataProvider'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useStore } from '@/hooks/useStore'
 import { useHistory } from 'react-router-dom'
-import { READ_DM } from '@/graphql/mutations/dm/ReadDm'
 import { FriendStatus } from '@/types/FriendStatus'
 
 export default function UserContextMenu({

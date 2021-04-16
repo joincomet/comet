@@ -7,7 +7,7 @@ import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'
 import { useQuery } from 'urql'
 import { GET_PUBLIC_SERVERS } from '@/graphql/queries'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function ExplorePage() {
   const [page, setPage] = useState(0)

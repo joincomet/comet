@@ -3,11 +3,6 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useCopyToClipboard } from 'react-use'
 import { useMutation, useQuery } from 'urql'
-import {
-  ADD_POST_TO_FOLDER,
-  DELETE_POST,
-  REMOVE_POST_FROM_FOLDER
-} from '@/graphql/mutations'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import { useTogglePostPin } from '@/components/post/useTogglePostPin'
 import { useCurrentUser } from '@/providers/UserProvider'
@@ -15,7 +10,6 @@ import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import toast from 'react-hot-toast'
 import { useUserFolders, useUserRelationships } from '@/providers/DataProvider'
 import { matchPath, useLocation } from 'react-router-dom'
-import { GET_SERVER_FOLDERS } from '@/graphql/queries'
 
 export default function PostContextMenu({ post, ContextMenuItem }) {
   const { pathname } = useLocation()

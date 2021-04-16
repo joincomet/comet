@@ -1,5 +1,4 @@
 import { createContext, useContext } from 'react'
-import { GET_SERVER_FOLDERS, GET_SERVER_PERMISSIONS } from '@/graphql/queries'
 import { useParams } from 'react-router-dom'
 import { useQuery, useSubscription } from 'urql'
 import { useJoinedServers } from '@/providers/DataProvider'

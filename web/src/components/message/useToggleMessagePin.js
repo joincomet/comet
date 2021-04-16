@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useMutation } from 'urql'
-import { PIN_MESSAGE, UNPIN_MESSAGE } from '@/graphql/mutations'
 
 export const useToggleMessagePin = message => {
   const [_pinRes, pin] = useMutation(PIN_MESSAGE)

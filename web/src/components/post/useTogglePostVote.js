@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useMutation } from 'urql'
-import { UNVOTE_POST, VOTE_POST } from '@/graphql/mutations'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import toast from 'react-hot-toast'
 import { ServerPermission } from '@/types/ServerPermission'

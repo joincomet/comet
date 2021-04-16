@@ -9,8 +9,6 @@ import { useShouldForceScrollToBottom } from '@/components/message/useShouldForc
 import MessagesStart from '@/components/message/MessagesStart'
 import { usePrevious } from 'react-use'
 import { useMutation } from 'urql'
-import { READ_DM } from '@/graphql/mutations/dm/ReadDm'
-import { READ_CHANNEL, READ_GROUP } from '@/graphql/mutations'
 import { useLocation } from 'react-router-dom'
 
 const PREPEND_OFFSET = 10 ** 7

@@ -1,15 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import {
-  GET_GROUPS_AND_DMS,
-  GET_JOINED_SERVERS,
-  GET_USER_FOLDERS,
-  GET_USER_RELATIONSHIPS
-} from '@/graphql/queries'
-import {
-  MESSAGE_DELETED,
-  MESSAGE_SENT,
-  MESSAGE_UPDATED
-} from '@/graphql/subscriptions'
+import { GET_JOINED_SERVERS } from '@/graphql/queries'
 import { useCurrentUser } from '@/providers/UserProvider'
 import { useClient, useQuery, useSubscription } from 'urql'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'

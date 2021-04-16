@@ -4,14 +4,9 @@ import { buildSchema } from 'type-graphql'
 import { typeGraphQLConf } from '@/config/typeGraphQL'
 import express from 'express'
 import { specifiedRules } from 'graphql'
-import {
-  getGraphQLParameters,
-  processRequest,
-  renderGraphiQL,
-  shouldRenderGraphiQL
-} from 'graphql-helix'
-import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
+import { getGraphQLParameters, processRequest } from 'graphql-helix'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { getUserId } from '@/util'
 import { User } from '@/entity'
@@ -19,6 +14,7 @@ import { Context } from '@/types'
 import { seed } from '@/seed'
 import { writeSchemaJson } from '@/writeSchemaJson'
 import { createLoaders } from '@/util/loaders/createLoaders'
+import cors from 'cors'
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -40,6 +36,7 @@ export async function bootstrap() {
   const schema = await buildSchema(typeGraphQLConf)
 
   const app = express()
+  app.use(cors({ origin: true, credentials: true }))
   app.use(express.json())
   app.use(
     '/graphql',
@@ -54,83 +51,74 @@ export async function bootstrap() {
         method: req.method,
         query: req.query
       }
+      const { operationName, query, variables } = getGraphQLParameters(request)
 
-      if (shouldRenderGraphiQL(request)) {
-        res.send(renderGraphiQL())
-      } else {
-        const { operationName, query, variables } = getGraphQLParameters(
-          request
-        )
+      const result = await processRequest({
+        operationName,
+        query,
+        variables,
+        request,
+        schema,
+        validationRules: [...specifiedRules, NoLiveMixedWithDeferStreamRule],
+        contextFactory: async () => {
+          const em = orm.em.fork()
+          const userId = getUserId(request.headers.token as string)
+          const user: User = userId ? await em.findOne(User, userId) : null
+          return {
+            em,
+            user,
+            liveQueryStore,
+            loaders: createLoaders(em, user)
+          } as Context
+        },
+        execute: liveQueryStore.execute
+      })
 
-        const result = await processRequest({
-          operationName,
-          query,
-          variables,
-          request,
-          schema,
-          validationRules: [...specifiedRules, NoLiveMixedWithDeferStreamRule],
-          contextFactory: async () => {
-            const em = orm.em.fork()
-            const userId = getUserId(request.headers.token as string)
-            const user: User = userId ? await em.findOne(User, userId) : null
-            return {
-              em,
-              user,
-              liveQueryStore,
-              loaders: createLoaders(em, user)
-            } as Context
-          },
-          execute: liveQueryStore.execute
+      if (result.type === 'RESPONSE') {
+        result.headers.forEach(({ name, value }) => res.setHeader(name, value))
+        res.status(result.status)
+        res.json(result.payload)
+      } else if (result.type === 'MULTIPART_RESPONSE') {
+        res.writeHead(200, {
+          Connection: 'keep-alive',
+          'Content-Type': 'multipart/mixed; boundary="-"',
+          'Transfer-Encoding': 'chunked'
         })
 
-        if (result.type === 'RESPONSE') {
-          result.headers.forEach(({ name, value }) =>
-            res.setHeader(name, value)
-          )
-          res.status(result.status)
-          res.json(result.payload)
-        } else if (result.type === 'MULTIPART_RESPONSE') {
-          res.writeHead(200, {
-            Connection: 'keep-alive',
-            'Content-Type': 'multipart/mixed; boundary="-"',
-            'Transfer-Encoding': 'chunked'
-          })
+        req.on('close', () => {
+          result.unsubscribe()
+        })
 
-          req.on('close', () => {
-            result.unsubscribe()
-          })
+        await result.subscribe(result => {
+          const chunk = Buffer.from(JSON.stringify(result), 'utf8')
+          const data = [
+            '',
+            '---',
+            'Content-Type: application/json; charset=utf-8',
+            'Content-Length: ' + String(chunk.length),
+            '',
+            chunk,
+            ''
+          ].join('\r\n')
+          res.write(data)
+        })
 
-          await result.subscribe(result => {
-            const chunk = Buffer.from(JSON.stringify(result), 'utf8')
-            const data = [
-              '',
-              '---',
-              'Content-Type: application/json; charset=utf-8',
-              'Content-Length: ' + String(chunk.length),
-              '',
-              chunk,
-              ''
-            ].join('\r\n')
-            res.write(data)
-          })
+        res.write('\r\n-----\r\n')
+        res.end()
+      } else {
+        res.writeHead(200, {
+          'Content-Type': 'text/event-stream',
+          Connection: 'keep-alive',
+          'Cache-Control': 'no-cache'
+        })
 
-          res.write('\r\n-----\r\n')
-          res.end()
-        } else {
-          res.writeHead(200, {
-            'Content-Type': 'text/event-stream',
-            Connection: 'keep-alive',
-            'Cache-Control': 'no-cache'
-          })
+        req.on('close', () => {
+          result.unsubscribe()
+        })
 
-          req.on('close', () => {
-            result.unsubscribe()
-          })
-
-          await result.subscribe(result => {
-            res.write(`data: ${JSON.stringify(result)}\n\n`)
-          })
-        }
+        await result.subscribe(result => {
+          res.write(`data: ${JSON.stringify(result)}\n\n`)
+        })
       }
     }
   )

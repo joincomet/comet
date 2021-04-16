@@ -8,17 +8,17 @@ import {
   IconFolder,
   IconReadLaterFolder
 } from '@/components/ui/icons/Icons'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useMutation } from 'urql'
-import { ADD_POST_TO_FOLDER } from '@/graphql/mutations'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/types/ServerPermission'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useFolderName } from '@/components/folder/useFolderName'
+import { UPDATE_FOLDER } from '@/graphql/mutations'
 
 export default function SidebarFolder({ folder, serverId }) {
-  const [_addPostRes, addPostToFolder] = useMutation(ADD_POST_TO_FOLDER)
+  const [_addPostRes, addPostToFolder] = useMutation(UPDATE_FOLDER)
   const [canAddPosts] = useHasServerPermissions({
     serverId,
     permissions: [ServerPermission.AddPostToFolder]

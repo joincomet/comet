@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useCurrentUser } from '@/providers/UserProvider'
 import { useMutation, useSubscription } from 'urql'
-import { USER_STARTED_TYPING } from '@/graphql/subscriptions'
 import { START_TYPING } from '@/graphql/mutations'
 import { useTranslation } from 'react-i18next'
 
