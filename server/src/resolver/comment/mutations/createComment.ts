@@ -30,7 +30,7 @@ export async function createComment(
   text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
   if (!text) throw new Error('error.comment.empty')
 
-  const post = await em.findOneOrFail(Post, postId)
+  const post = await em.findOneOrFail(Post, postId, ['author.user'])
   await user.checkServerPermission(
     em,
     post.server.id,
@@ -38,7 +38,7 @@ export async function createComment(
   )
 
   const parentComment = parentCommentId
-    ? await em.findOneOrFail(Comment, parentCommentId, ['author'])
+    ? await em.findOneOrFail(Comment, parentCommentId, ['author.user'])
     : null
 
   text = handleText(text)
@@ -69,7 +69,7 @@ export async function createComment(
 
   let reply: Reply
   if (parentComment) {
-    if (parentComment.author !== user) {
+    if (parentComment.author.user !== user) {
       reply = em.create(Reply, {
         post,
         comment,
@@ -80,7 +80,7 @@ export async function createComment(
     }
   } else {
     await em.populate(post, ['author'])
-    if (post.author !== user) {
+    if (post.author.user !== user) {
       reply = em.create(Reply, {
         post,
         comment,

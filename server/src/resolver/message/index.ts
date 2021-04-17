@@ -1,2 +1,2 @@
-export * from './MessageMutations'
+export * from './MessageResolver'
 export * from './MessageQueries'

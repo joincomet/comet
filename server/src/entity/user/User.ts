@@ -14,10 +14,11 @@ import { BaseEntity } from '@/entity/BaseEntity'
 import {
   Channel,
   ChannelPermission,
-  ChannelRole,
+  ChannelPermissions,
   Folder,
   FolderVisibility,
   Group,
+  GroupUser,
   Relationship,
   RelationshipStatus,
   Server,
@@ -70,6 +71,9 @@ export class User extends BaseEntity {
   @Property()
   isAdmin: boolean = false
 
+  @Field()
+  isCurrentUser: boolean
+
   @Property({ columnType: 'text' })
   passwordHash: string
 
@@ -93,17 +97,20 @@ export class User extends BaseEntity {
   @OneToMany(() => ServerUser, 'user', {
     orderBy: { position: QueryOrder.ASC }
   })
-  serverJoins = new Collection<ServerUser>(this)
+  servers = new Collection<ServerUser>(this)
 
-  @ManyToMany(() => Group, group => group.users, {
+  @OneToMany(() => GroupUser, 'user', {
     orderBy: { lastMessageAt: QueryOrder.DESC }
   })
-  groups = new Collection<Group>(this)
+  groupUsers = new Collection<GroupUser>(this)
+
+  @Field(() => [Group])
+  @ManyToMany(() => Group, 'users')
+  groups: Group[]
 
   @OneToMany(() => Relationship, 'owner')
   relationships = new Collection<Relationship>(this)
 
-  @Authorized('USER')
   @Field(() => [Folder], { nullable: true })
   folders?: Folder[]
 
@@ -165,7 +172,7 @@ export class User extends BaseEntity {
     server.userCount--
     join.status = ServerUserStatus.None
     await em.persistAndFlush([server, join])
-    liveQueryStore.invalidate(`Query.getJoinedServers(id:"${this.id}")`)
+    liveQueryStore.invalidate(`Server:${serverId}`)
   }
 
   async hasServerPermission(
@@ -212,8 +219,8 @@ export class User extends BaseEntity {
     )
     if (!serverUser) return false
     const userRoles = serverUser.roles.getItems()
-    const channelRoles = await em.find(
-      ChannelRole,
+    const channelPerms = await em.find(
+      ChannelPermissions,
       {
         channel,
         role: userRoles
@@ -223,13 +230,13 @@ export class User extends BaseEntity {
     const hasServerPerm =
       !!serverPermission &&
       !!userRoles.find(role => role.hasPermission(serverPermission))
-    const channelRole = channelRoles.find(
-      channelRole =>
-        channelRole.deniedPermissions.includes(channelPermission) ||
-        channelRole.allowedPermissions.includes(channelPermission)
+    const channelPerm = channelPerms.find(
+      perm =>
+        perm.deniedPermissions.includes(channelPermission) ||
+        perm.allowedPermissions.includes(channelPermission)
     )
-    if (!channelRole) return hasServerPerm
-    return channelRole.allowedPermissions.includes(channelPermission)
+    if (!channelPerm) return hasServerPerm
+    return channelPerm.allowedPermissions.includes(channelPermission)
   }
 
   async checkChannelPermission(
@@ -259,11 +266,13 @@ export class User extends BaseEntity {
   }
 
   async checkInGroup(em: EntityManager, groupId: string) {
-    if (!(await this.isInGroup(em, groupId)))
-      throw new Error('error.group.notJoined')
+    if (!(await this.isInGroup(em, groupId))) throw new Error('Not in group')
   }
 
-  async getFriendData(em: EntityManager, userId: string) {
+  async getFriendData(
+    em: EntityManager,
+    userId: string
+  ): Promise<[Relationship, Relationship]> {
     const user = await em.findOneOrFail(User, userId)
     let myData = await em.findOne(Relationship, { owner: this, user })
     let theirData = await em.findOne(Relationship, {
@@ -287,31 +296,48 @@ export class User extends BaseEntity {
     return [myData, theirData]
   }
 
-  async checkCanModifyFolder(em: EntityManager, folder: Folder) {
-    if (folder.owner) {
-      if (folder.owner !== this && !folder.isCollaborative)
-        throw new Error('error.folder.notCollaborative')
-      if (
-        folder.visibility === FolderVisibility.Private &&
-        folder.owner !== this
-      )
-        throw new Error('error.folder.private')
+  async checkCanAddToFolder(
+    em: EntityManager,
+    folderId: string
+  ): Promise<void> {
+    const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
+    if (folder.owner && folder.owner !== this) {
+      if (!folder.isCollaborative)
+        throw new Error('That folder is not collaborative')
+      if (folder.visibility === FolderVisibility.Private)
+        throw new Error('That folder is private')
       if (folder.visibility === FolderVisibility.Friends) {
-        const friends = (
-          await em.find(Relationship, {
-            user: this,
-            status: RelationshipStatus.Friends
-          })
-        ).map(f => f.user)
-        if (!friends.includes(folder.owner))
-          throw new Error('error.folder.notFriends')
+        const relationship = await em.findOne(Relationship, {
+          owner: this,
+          user: folder.owner
+        })
+        if (relationship?.status !== RelationshipStatus.Friends)
+          throw new Error('That folder is visible to friends only')
       }
-    } else {
+    } else if (folder.server) {
       await this.checkServerPermission(
         em,
-        folder.serverFolder.server.id,
+        folder.server.id,
         ServerPermission.AddPostToFolder
       )
+    }
+  }
+
+  async checkCanViewFolder(em: EntityManager, folderId: string): Promise<void> {
+    const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
+    if (folder.owner && folder.owner !== this) {
+      if (folder.visibility === FolderVisibility.Private)
+        throw new Error('That folder is private')
+      if (folder.visibility === FolderVisibility.Friends) {
+        const relationship = await em.findOne(Relationship, {
+          owner: this,
+          user: folder.owner
+        })
+        if (relationship?.status !== RelationshipStatus.Friends)
+          throw new Error('That folder is visible to friends only')
+      }
+    } else if (folder.server) {
+      await this.checkJoinedServer(em, folder.server.id)
     }
   }
 }

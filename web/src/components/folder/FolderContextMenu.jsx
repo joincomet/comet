@@ -5,12 +5,11 @@ import { UPDATE_FOLDER } from '@/graphql/mutations'
 import { useMutation } from 'urql'
 import { FolderVisibility } from '@/types/FolderVisibility'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
-import { useUserFolders } from '@/providers/DataProvider'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const { t } = useTranslation()
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
   const userFolders = useUserFolders()
   const isFollowing = userFolders
     .filter(f => f.owner.id !== currentUser.id)

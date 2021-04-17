@@ -1,2 +1,2 @@
 export * from './markAllRepliesRead'
-export * from './updateReply'
+export * from './markReplyRead'

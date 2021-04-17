@@ -1,13 +1,13 @@
 import { IconSettings } from '@/components/ui/icons/Icons'
 
 import Tippy from '@tippyjs/react'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import UserAvatar from '@/components/user/UserAvatar'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 export function CurrentUserInfo() {
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
   const { t } = useTranslation()
 
   if (!currentUser) return null

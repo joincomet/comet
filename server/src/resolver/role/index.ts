@@ -1,2 +1,1 @@
-export * from './RoleMutations'
-export * from './RoleQueries'
+export * from './RoleResolver'

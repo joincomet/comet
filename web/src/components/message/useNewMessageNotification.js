@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export function useNewMessageNotification(messages) {
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
   const [newMessagesNotification, setNewMessagesNotification] = useState(false)
 
   const lastMessageId = useRef('')

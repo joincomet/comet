@@ -45,6 +45,6 @@ export async function joinServer(
       : ReorderUtils.FIRST_POSITION
   })
   await em.persistAndFlush(join)
-  liveQueryStore.invalidate(`Query.getJoinedServers(id:"${user.id}")`)
+  liveQueryStore.invalidate(`Query.getJoinedServers(userId:"${user.id}")`)
   return server
 }

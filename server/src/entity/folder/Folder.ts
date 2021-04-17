@@ -31,10 +31,6 @@ export class Folder extends BaseEntity {
   @Property()
   isDeleted: boolean = false
 
-  @Field()
-  @Property()
-  isCollaborative: boolean = false
-
   @Field(() => Int)
   @Property({ unsigned: true })
   postCount: number = 0
@@ -42,6 +38,10 @@ export class Folder extends BaseEntity {
   @Field(() => Int)
   @Property()
   followerCount: number = 0
+
+  @Field()
+  @Property()
+  isCollaborative: boolean = false
 
   @Field(() => FolderVisibility)
   @Enum({ items: () => FolderVisibility })

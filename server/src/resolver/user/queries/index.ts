@@ -1,4 +1,3 @@
-export * from './getCurrentUser'
-export * from './getMutualFriends'
-export * from './getUser'
-export * from './getUserRelationships'
+export * from './channelUsers'
+export * from './roleUsers'
+export * from './user'

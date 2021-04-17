@@ -45,7 +45,7 @@ type ChannelRole {
 type Comment implements BaseEntity {
   author: User
   createdAt: DateTime!
-  editedAt: DateTime
+  updatedAt: DateTime
   id: ID!
   isDeleted: Boolean!
   isPinned: Boolean!
@@ -248,7 +248,7 @@ type LoginResponse {
 type Message implements BaseEntity {
   author: User!
   createdAt: DateTime!
-  editedAt: DateTime
+  updatedAt: DateTime
   file: File
   id: ID!
   image: Image
@@ -318,7 +318,7 @@ type Post implements BaseEntity {
   commentCount: Int!
   createdAt: DateTime!
   domain: String
-  editedAt: DateTime
+  updatedAt: DateTime
   folders: [Folder!]
   id: ID!
   imageUrls: [String!]!
@@ -349,7 +349,7 @@ type Query {
   getComments(postId: ID, sort: GetCommentsSort = Top): [Comment!]!
   getCurrentUser: User
   getFolder(folderId: ID!): Folder!
-  getJoinedServers(id: ID!): [Server!]!
+  getJoinedServers(userId: ID!): [Server!]!
   getMessages(channelId: ID, groupId: ID, initialTime: DateTime, page: Int = 0, pageSize: Int = 100, pinned: Boolean = false, userId: ID): [GetMessagesResponse!]!
   getMutualFriends(userId: ID!): [User!]!
   getMutualServers(userId: ID!): [ServerUser!]!

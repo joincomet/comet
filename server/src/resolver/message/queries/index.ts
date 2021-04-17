@@ -1,1 +1,1 @@
-export * from './getMessages'
+export * from './messages'

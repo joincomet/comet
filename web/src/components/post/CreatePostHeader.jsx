@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import UserAvatar from '@/components/user/UserAvatar'
 import { useTranslation } from 'react-i18next'
 import PostEditor from '@/components/post/PostEditor'
 
 export default function CreatePostHeader() {
   const [open, setOpen] = useState(false)
-  const user = useCurrentUser()
+  const [user] = useCurrentUser()
   const { t } = useTranslation()
 
   return (

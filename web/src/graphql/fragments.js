@@ -48,7 +48,7 @@ export const COMMENT_FRAGMENT = gql`
     isVoted
     isDeleted
     createdAt
-    editedAt
+    updatedAt
     linkMetadatas {
       ...METADATA_FRAGMENT
     }
@@ -72,7 +72,7 @@ export const POST_FRAGMENT = gql`
     domain
     isDeleted
     createdAt
-    editedAt
+    updatedAt
     addedAt
     linkMetadata {
       ...METADATA_FRAGMENT
@@ -94,7 +94,7 @@ export const MESSAGE_FRAGMENT = gql`
     id
     text
     createdAt
-    editedAt
+    updatedAt
     type
     image {
       originalUrl

@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { Link } from 'react-router-dom'
-import { useCurrentUser } from '@/providers/UserProvider'
 import {
   VectorGrass,
   VectorLogo,
@@ -18,13 +17,14 @@ import { getOS } from '@/utils/getOS'
 import Page from '@/components/ui/page/Page'
 import { useMemo } from 'react'
 import { version } from '../../package.json'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
   'p-3 hover:bg-gray-700 transition rounded-full cursor-pointer'
 
 export default function LandingPage() {
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
 
   const os = getOS()
   const downloadLink = useMemo(() => {

@@ -1,2 +1,3 @@
-export * from './CommentMutations'
-export * from './CommentQueries'
+export * from './CommentResolver'
+export * from './mutations'
+export * from './queries'

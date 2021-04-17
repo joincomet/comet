@@ -6,11 +6,9 @@ import { urqlClient } from '@/graphql/urqlClient'
 import ResponsiveToaster from '@/components/ui/ResponsiveToaster'
 import CustomDragLayer from '@/components/ui/CustomDragLayer'
 import { BrowserRouter, HashRouter } from 'react-router-dom'
-import { UserProvider } from '@/providers/UserProvider'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 import { getOS } from '@/utils/getOS'
-import UserDialog from '@/components/user/UserDialog'
 
 export default function App() {
   const AppRouter = window.electron ? HashRouter : BrowserRouter
@@ -26,26 +24,24 @@ export default function App() {
 
       <AppRouter>
         <UrqlProvider value={urqlClient}>
-          <UserProvider>
-            <DndProvider
-              backend={TouchBackend}
-              options={{ enableTouchEvents: false, enableMouseEvents: true }}
+          <DndProvider
+            backend={TouchBackend}
+            options={{ enableTouchEvents: false, enableMouseEvents: true }}
+          >
+            <ResponsiveToaster />
+            <CustomDragLayer />
+            {window.electron && getOS() !== 'Mac OS' && <TitleBar />}
+            <div
+              style={
+                window.electron
+                  ? { height: 'calc(100% - 1.375rem)' }
+                  : { height: '100%' }
+              }
+              className="flex"
             >
-              <ResponsiveToaster />
-              <CustomDragLayer />
-              {window.electron && getOS() !== 'Mac OS' && <TitleBar />}
-              <div
-                style={
-                  window.electron
-                    ? { height: 'calc(100% - 1.375rem)' }
-                    : { height: '100%' }
-                }
-                className="flex"
-              >
-                <Routes />
-              </div>
-            </DndProvider>
-          </UserProvider>
+              <Routes />
+            </div>
+          </DndProvider>
         </UrqlProvider>
       </AppRouter>
     </HelmetProvider>

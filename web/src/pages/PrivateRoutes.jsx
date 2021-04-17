@@ -21,20 +21,18 @@ import ServerPostsPage from '@/pages/server/ServerPostsPage'
 import PostPage from '@/pages/post/PostPage'
 import ChannelPage from '@/pages/server/channel/ChannelPage'
 import ServerFolderPage from '@/pages/server/ServerFolderPage'
-import { DataProvider, useDataLoading } from '@/providers/DataProvider'
-import { ServerProvider, useServerLoading } from '@/providers/ServerProvider'
-import { useCurrentUser, useCurrentUserLoading } from '@/providers/UserProvider'
 import { AnimatePresence } from 'framer-motion'
 import LoadingScreen from '@/pages/LoadingScreen'
 import ServerLoadingScreen from '@/pages/ServerLoadingScreen'
 import { useStore } from '@/hooks/useStore'
 import { usePrevious } from 'react-use'
 import UserDialog from '@/components/user/UserDialog'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function PrivateRoutes() {
-  const dataLoading = useDataLoading()
-  const user = useCurrentUser()
-  const userLoading = useCurrentUserLoading()
+  const [user, userLoading] = useCurrentUser()
+  const data = {}
+  const dataLoading = false
 
   const setCanGoBack = useStore(s => s.setCanGoBack)
   const [path, setPath] = useState(null)
@@ -89,9 +87,7 @@ export default function PrivateRoutes() {
             <ExplorePage />
           </PrivateRoute>
           <PrivateRoute path="/server/:serverId">
-            <ServerProvider>
-              <ServerRoutes />
-            </ServerProvider>
+            <ServerRoutes />
           </PrivateRoute>
         </PrivateRoute>
       </Switch>
@@ -101,7 +97,7 @@ export default function PrivateRoutes() {
 
 function ServerRoutes() {
   const { serverId } = useParams()
-  const loading = useServerLoading()
+  const loading = false
   return (
     <>
       <AnimatePresence>{loading && <ServerLoadingScreen />}</AnimatePresence>
@@ -130,9 +126,8 @@ function ServerRoutes() {
 }
 
 function PrivateRoute({ children, ...rest }) {
-  const user = useCurrentUser()
-  const userLoading = useCurrentUserLoading()
-  const dataLoading = useDataLoading()
+  const [user, userLoading] = useCurrentUser()
+  const dataLoading = false
   return (
     <Route
       {...rest}
@@ -145,10 +140,9 @@ function PrivateRoute({ children, ...rest }) {
 }
 
 function ServerRoute({ children, ...rest }) {
-  const user = useCurrentUser()
-  const userLoading = useCurrentUserLoading()
-  const dataLoading = useDataLoading()
-  const serverLoading = useServerLoading()
+  const [user, userLoading] = useCurrentUser()
+  const dataLoading = false
+  const serverLoading = false
   return (
     <Route
       {...rest}

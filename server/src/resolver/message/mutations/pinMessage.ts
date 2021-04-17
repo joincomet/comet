@@ -1,0 +1,31 @@
+import { Field, ID, InputType, Publisher } from 'type-graphql'
+import { Context } from '@/types'
+import { ChannelPermission, Message, ServerPermission } from '@/entity'
+import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+
+@InputType()
+export class PinMessageInput {
+  @Field(() => ID)
+  messageId: string
+}
+
+export async function pinMessage(
+  { em, user }: Context,
+  { messageId }: PinMessageInput,
+  notifyMessageChanged: Publisher<ChangePayload>
+): Promise<Message> {
+  const message = await em.findOneOrFail(Message, messageId, ['channel'])
+  if (message.channel) {
+    await user.checkChannelPermission(
+      em,
+      message.channel.id,
+      ChannelPermission.ManageMessages,
+      ServerPermission.ManageMessages
+    )
+  }
+  message.isPinned = true
+  message.pinnedAt = new Date()
+  await em.persistAndFlush(message)
+  await notifyMessageChanged({ id: messageId, type: ChangeType.Updated })
+  return message
+}

@@ -5,6 +5,7 @@ export enum ServerPermission {
   ManageChannels = 'ManageChannels',
 
   ManageServer = 'ManageServer',
+  ManageRoles = 'ManageRoles',
   CreateInvite = 'CreateInvite',
 
   ChangeNickname = 'ChangeNickname',

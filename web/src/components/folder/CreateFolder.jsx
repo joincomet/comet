@@ -9,7 +9,6 @@ import Button from '@/components/ui/Button'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'urql'
-import { useJoinedServers } from '@/providers/DataProvider'
 
 export default function CreateFolder({ serverId }) {
   const { t } = useTranslation()

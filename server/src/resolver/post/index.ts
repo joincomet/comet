@@ -1,2 +1,2 @@
-export * from './PostMutations'
+export * from './PostResolver'
 export * from './PostQueries'

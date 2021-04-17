@@ -1,17 +1,6 @@
-import { useDrop } from 'react-dnd'
-import { DragItemTypes } from '@/types/DragItemTypes'
-import toast from 'react-hot-toast'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
-import {
-  IconFavoritesFolder,
-  IconFolder,
-  IconReadLaterFolder
-} from '@/components/ui/icons/Icons'
-import SidebarItem from '@/components/ui/sidebar/SidebarItem'
-import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
-import { useUserFolders } from '@/providers/DataProvider'
 import SidebarFolder from '@/components/folder/SidebarFolder'
 import CreateFolder from '@/components/folder/CreateFolder'
 

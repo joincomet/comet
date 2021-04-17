@@ -2,8 +2,8 @@ import { gql } from '@urql/core'
 import { CHANNEL_FRAGMENT, SERVER_FRAGMENT } from '@/graphql/fragments'
 
 export const GET_JOINED_SERVERS = gql`
-  query GetJoinedServers {
-    getJoinedServers {
+  query GetJoinedServers($id: ID!) @live {
+    getJoinedServers(id: $id) {
       ...SERVER_FRAGMENT
       channels {
         ...CHANNEL_FRAGMENT

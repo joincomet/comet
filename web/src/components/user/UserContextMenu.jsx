@@ -2,9 +2,8 @@ import { useMutation } from 'urql'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { ServerPermission } from '@/types/ServerPermission'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { useUserRelationships } from '@/providers/DataProvider'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useStore } from '@/hooks/useStore'
 import { useHistory } from 'react-router-dom'
@@ -17,7 +16,7 @@ export default function UserContextMenu({
   ContextMenuItem
 }) {
   const { t } = useTranslation()
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
 
   const [
     canBanUser,

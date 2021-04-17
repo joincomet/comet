@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useQuery } from 'urql'
 
 /**
@@ -8,7 +8,7 @@ import { useQuery } from 'urql'
  * @return {boolean[]} Array of booleans representing if user has permission, same length and order as input permissions
  */
 export const useHasServerPermissions = ({ serverId, permissions }) => {
-  const user = useCurrentUser()
+  const [user] = useCurrentUser()
   const [{ data }] = useQuery({
     query: GET_SERVER_PERMISSIONS,
     variables: { serverId },

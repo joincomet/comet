@@ -72,12 +72,9 @@ export class Post extends BaseEntity {
     return null
   }
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne(() => User)
-  author?: User
-
-  @Field(() => ServerUser)
-  serverUser: ServerUser
+  @Field(() => ServerUser, { nullable: true })
+  @ManyToOne(() => ServerUser)
+  author?: ServerUser
 
   @Field(() => User, { nullable: true })
   addedByUser?: User
@@ -91,7 +88,7 @@ export class Post extends BaseEntity {
 
   @Field({ nullable: true })
   @Property({ nullable: true })
-  pinPosition?: string
+  pinnedAt?: Date
 
   @OneToMany(() => Comment, 'post')
   comments = new Collection<Comment>(this)
@@ -143,7 +140,7 @@ export class Post extends BaseEntity {
 
   @Field({ nullable: true })
   @Property({ nullable: true })
-  editedAt?: Date
+  updatedAt?: Date
 
   @Field()
   @Property()

@@ -3,7 +3,7 @@ import { useCopyToClipboard } from 'react-use'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { ServerPermission } from '@/types/ServerPermission'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { ChannelPermission } from '@/types/ChannelPermission'
 import { useParams } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
@@ -24,7 +24,7 @@ export default function MessageContextMenu({ message, ContextMenuItem }) {
   const [_unpinRes, unpinMessage] = useMutation(UNPIN_MESSAGE)
   const togglePin = useToggleMessagePin(message)
   const { t } = useTranslation()
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
 
   const isAuthor = message.author.id === currentUser.id
   const canDelete = canManageMessages || isAuthor

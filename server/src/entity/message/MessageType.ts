@@ -2,7 +2,8 @@ import { registerEnumType } from 'type-graphql'
 
 export enum MessageType {
   Normal = 'Normal',
-  Join = 'Join'
+  Join = 'Join',
+  Left = 'Left'
 }
 
 registerEnumType(MessageType, { name: 'MessageType' })

@@ -20,6 +20,7 @@ export class ServerUser {
   @ManyToOne({ entity: () => User, primary: true })
   user: User
 
+  @Field(() => Server)
   @ManyToOne({ entity: () => Server, primary: true })
   server: Server;
 

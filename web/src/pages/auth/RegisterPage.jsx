@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
 import { useMutation } from 'urql'
 import { CREATE_ACCOUNT } from '@/graphql/mutations'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +15,7 @@ export default function RegisterPage() {
   const [{ fetching }, createAccount] = useMutation(CREATE_ACCOUNT)
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
-  const user = useCurrentUser()
+  const [user] = useCurrentUser()
 
   useEffect(() => {
     if (user) push('/me')

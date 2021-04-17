@@ -4,13 +4,13 @@ import { IconChevronDown, IconUsers } from '@/components/ui/icons/Icons'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { useTranslation } from 'react-i18next'
-import { useServer } from '@/providers/ServerProvider'
+import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
 import SidebarChannel from '@/components/channel/SidebarChannel'
 import CreateChannel from '@/components/channel/CreateChannel'
 
 export default function ServerSidebar() {
   const { t } = useTranslation()
-  const server = useServer()
+  const [server] = useCurrentServer()
 
   return (
     <Sidebar>

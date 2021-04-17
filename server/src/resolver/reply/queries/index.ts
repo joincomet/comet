@@ -1,1 +1,1 @@
-export * from './getReplies'
+export * from './replies'

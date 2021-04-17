@@ -1,5 +1,4 @@
 export * from './getChannelUsers'
 export * from './getJoinedServers'
-export * from './getMutualServers'
-export * from './getPublicServers'
-export * from './getServerPermissions'
+export * from './publicServers'
+export * from './old/getServerPermissions'

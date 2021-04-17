@@ -4,16 +4,14 @@ import AuthLayout from '@/pages/auth/AuthLayout'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
 import NotFound from '@/pages/NotFound'
-import { useCurrentUser, useCurrentUserLoading } from '@/providers/UserProvider'
 import PrivateRoutes from '@/pages/PrivateRoutes'
-import { DataProvider } from '@/providers/DataProvider'
 import { Helmet } from 'react-helmet-async'
 import LoadingScreen from '@/pages/LoadingScreen'
 import ContextMenuProvider from '@/providers/ContextMenuProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function Routes() {
-  const user = useCurrentUser()
-  const userLoading = useCurrentUserLoading()
+  const [user, userLoading] = useCurrentUser()
 
   return (
     <Switch>
@@ -64,11 +62,9 @@ export default function Routes() {
           </AuthLayout>
         </Route>
 
-        <DataProvider>
-          <ContextMenuProvider>
-            <PrivateRoutes />
-          </ContextMenuProvider>
-        </DataProvider>
+        <ContextMenuProvider>
+          <PrivateRoutes />
+        </ContextMenuProvider>
       </Route>
 
       <Route>

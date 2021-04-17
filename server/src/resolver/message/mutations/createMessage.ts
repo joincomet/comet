@@ -47,11 +47,11 @@ export async function createMessage(
   const toUser = userId ? await em.findOneOrFail(User, userId) : null
 
   if (toUser) {
-    const [myData, theirData] = await user.getFriendData(em, userId)
+    const [myData] = await user.getFriendData(em, userId)
     if (myData.status === RelationshipStatus.Blocked)
-      throw new Error('error.user.blocked')
+      throw new Error('That user is blocking you')
     if (myData.status === RelationshipStatus.Blocking)
-      throw new Error('error.user.blocking')
+      throw new Error('You are blocking that user')
   }
 
   let upload: File | Image | null = null

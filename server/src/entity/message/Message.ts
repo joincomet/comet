@@ -29,6 +29,7 @@ export class Message extends BaseEntity {
   author: User
 
   @Field(() => ServerUser, { nullable: true })
+  @ManyToOne(() => ServerUser, { nullable: true })
   serverUser?: ServerUser
 
   @ManyToOne(() => Channel, { nullable: true })
@@ -72,7 +73,11 @@ export class Message extends BaseEntity {
 
   @Field({ nullable: true })
   @Property({ nullable: true })
-  editedAt?: Date
+  updatedAt?: Date
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  pinnedAt?: Date
 
   @Field()
   @Property()

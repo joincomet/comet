@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
 import AuthLayout from '@/pages/auth/AuthLayout'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function NotFound() {
-  const user = useCurrentUser()
+  const [user] = useCurrentUser()
   return (
     <AuthLayout>
       <div className="text-center space-y-3">

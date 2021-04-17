@@ -1,5 +1,5 @@
 import UserAvatar from '@/components/user/UserAvatar'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import { IconX } from '@/components/ui/icons/Icons'
@@ -10,7 +10,7 @@ import Page from '@/components/ui/page/Page'
 
 export default function SettingsPage() {
   const { t } = useTranslation()
-  const user = useCurrentUser()
+  const [user] = useCurrentUser()
   return (
     <>
       <Helmet>

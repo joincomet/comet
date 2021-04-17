@@ -14,12 +14,9 @@ import { BaseEntity } from '@/entity/BaseEntity'
 @ObjectType({ implements: BaseEntity })
 @Entity()
 export class Comment extends BaseEntity {
-  @Field(() => User, { nullable: true })
-  @ManyToOne(() => User)
-  author: User
-
-  @Field(() => ServerUser)
-  serverUser: ServerUser
+  @Field(() => ServerUser, { nullable: true })
+  @ManyToOne(() => ServerUser)
+  author?: ServerUser
 
   @Field(() => Post)
   @ManyToOne(() => Post)
@@ -49,11 +46,11 @@ export class Comment extends BaseEntity {
 
   @Field({ nullable: true })
   @Property({ nullable: true })
-  pinPosition?: string
+  pinnedAt?: Date
 
   @Field({ nullable: true })
   @Property({ nullable: true })
-  editedAt?: Date
+  updatedAt?: Date
 
   @Field()
   @Property()

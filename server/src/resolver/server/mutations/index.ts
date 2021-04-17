@@ -1,3 +1,3 @@
 export * from './createServer'
 export * from './joinServer'
-export * from './updateServer'
+export * from './old/updateServer'

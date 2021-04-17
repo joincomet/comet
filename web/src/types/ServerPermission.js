@@ -1,20 +1,17 @@
 export const ServerPermission = {
+  ViewChannels: 'ViewChannels',
   ManageChannels: 'ManageChannels',
-  Mention: 'Mention',
 
   ManageServer: 'ManageServer',
+  ManageRoles: 'ManageRoles',
   CreateInvite: 'CreateInvite',
 
   ChangeNickname: 'ChangeNickname',
-  ManageNicknames: 'ManageNicknames',
-
-  KickUser: 'KickUser',
-  BanUser: 'BanUser',
+  ManageUsers: 'ManageUsers',
 
   SendMessages: 'SendMessages',
-  EmbedLinks: 'EmbedLinks',
-  AttachFiles: 'AttachFiles',
   ManageMessages: 'ManageMessages',
+  Mention: 'Mention',
 
   CreatePost: 'CreatePost',
   VotePost: 'VotePost',

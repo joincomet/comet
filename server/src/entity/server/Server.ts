@@ -33,6 +33,7 @@ export class Server extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   description?: string
 
+  @Field(() => User)
   @ManyToOne(() => User)
   owner: User
 
@@ -89,7 +90,6 @@ export class Server extends BaseEntity {
   @Property()
   sendWelcomeMessage: boolean = true
 
-  @Field(() => [Channel])
   @OneToMany(() => Channel, 'server', {
     orderBy: { position: QueryOrder.ASC }
   })

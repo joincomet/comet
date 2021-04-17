@@ -5,10 +5,9 @@ import { useCopyToClipboard } from 'react-use'
 import { useMutation, useQuery } from 'urql'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import { useTogglePostPin } from '@/components/post/useTogglePostPin'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import toast from 'react-hot-toast'
-import { useUserFolders, useUserRelationships } from '@/providers/DataProvider'
 import { matchPath, useLocation } from 'react-router-dom'
 
 export default function PostContextMenu({ post, ContextMenuItem }) {
@@ -37,7 +36,7 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
   const toggleVote = useTogglePostVote(post)
   const togglePin = useTogglePostPin(post)
 
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
   const isAuthor = post?.author?.id === currentUser.id
   const canDelete = isAuthor || canManagePosts
 

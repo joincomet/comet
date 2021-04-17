@@ -1,1 +1,1 @@
-export * from './GroupMutations'
+export * from './GroupResolver'

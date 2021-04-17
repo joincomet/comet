@@ -4,14 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useStore } from '@/hooks/useStore'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { useUserFolders } from '@/providers/DataProvider'
-import { useServerFolders } from '@/providers/ServerProvider'
 import SidebarFolder from '@/components/folder/SidebarFolder'
 import CreateFolder from '@/components/folder/CreateFolder'
 
 export default function ServerFoldersSidebar({ serverId }) {
-  const userFolders = useUserFolders()
-  const serverFolders = useServerFolders(serverId)
+  const userFolders = []
+  const serverFolders = []
 
   const [canManageFolders] = useHasServerPermissions({
     serverId,

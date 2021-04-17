@@ -3,7 +3,7 @@ import { useCopyToClipboard } from 'react-use'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { ServerPermission } from '@/types/ServerPermission'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useParams } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
@@ -13,7 +13,7 @@ import { useStore } from '@/hooks/useStore'
 
 export default function CommentContextMenu({ comment, ContextMenuItem }) {
   const { t } = useTranslation()
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
   const { serverId } = useParams()
   const setReplyingCommentId = useStore(s => s.setReplyingCommentId)
   const [canManageComments, canVote, canComment] = useHasServerPermissions({

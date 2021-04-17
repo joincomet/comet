@@ -1,2 +1,6 @@
+export * from './addUserToGroup'
 export * from './createGroup'
+export * from './leaveGroup'
+export * from './readGroup'
+export * from './removeUserFromGroup'
 export * from './updateGroup'

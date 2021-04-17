@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'urql'
 
@@ -17,7 +17,7 @@ export const useHasChannelPermissions = ({
   serverPermissions
 }) => {
   const { t } = useTranslation()
-  const user = useCurrentUser()
+  const [user] = useCurrentUser()
   const pause = !channelId || !serverId
   const [{ data: serverData }] = useQuery({
     query: GET_SERVER_PERMISSIONS,

@@ -62,11 +62,6 @@ export const cacheExchange = ce({
     GetPostsResponse: () => null,
     GetMessagesResponse: () => null,
     LinkMetadata: () => null,
-    MessageResponse: () => null,
-    MessageDeletedResponse: () => null,
-    ChannelUsersResponse: () => null,
-    GetUserRelationshipsResponse: () => null,
-    GetChannelPermissionsResponse: () => null,
     Image: i => i.originalUrl,
     File: f => f.url
   },
@@ -82,68 +77,6 @@ export const cacheExchange = ce({
         limitArgument: 'pageSize',
         mergeMode: 'after'
       })
-    }
-  },
-  optimistic: {
-    pinPost: ({ postId: id }) => {
-      return {
-        __typename: 'Post',
-        id,
-        isPinned: true
-      }
-    },
-    unpinPost: ({ postId: id }) => {
-      return {
-        __typename: 'Post',
-        id,
-        isPinned: false
-      }
-    },
-    deletePost: ({ postId: id }, cache) => {
-      removePostFromGetPosts(id, cache)
-      return {
-        __typename: 'Post',
-        id,
-        isPinned: false,
-        isDeleted: true,
-        text: '[deleted]'
-      }
-    },
-    votePost: ({ postId: id }, cache) => {
-      const post = cache.readFragment(POST_FRAGMENT, { id })
-      return {
-        __typename: 'Post',
-        ...post,
-        isVoted: true,
-        voteCount: post.voteCount + 1
-      }
-    },
-    unvotePost: ({ postId: id }, cache) => {
-      const post = cache.readFragment(POST_FRAGMENT, { id })
-      return {
-        __typename: 'Post',
-        ...post,
-        isVoted: false,
-        voteCount: post.voteCount - 1
-      }
-    },
-    voteComment: ({ commentId: id }, cache) => {
-      const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
-      return {
-        __typename: 'Comment',
-        ...comment,
-        isVoted: true,
-        voteCount: comment.voteCount + 1
-      }
-    },
-    unvoteComment: ({ commentId: id }, cache) => {
-      const comment = cache.readFragment(COMMENT_FRAGMENT, { id })
-      return {
-        __typename: 'Comment',
-        ...comment,
-        isVoted: false,
-        voteCount: comment.voteCount - 1
-      }
     }
   },
   updates: {
@@ -229,65 +162,59 @@ export const cacheExchange = ce({
         _variables,
         cache
       ) {
-        let variables
-        if (userId) {
-          variables = { userId }
-        }
-        if (groupId) {
-          variables = { groupId }
-        }
-        if (channelId) {
-          variables = { channelId }
-          const channel = cache.readFragment(CHANNEL_FRAGMENT, {
-            id: channelId
-          })
-          cache.writeFragment(CHANNEL_FRAGMENT, {
-            ...channel,
-            isUnread: true
-          })
-        }
-
-        const fields = cache
-          .inspectFields('Query')
-          .filter(field => field.fieldName === 'getMessages')
-        if (!fields?.length) return
-        const field = fields[fields.length - 1]
-
-        cache.updateQuery(
-          {
-            query: GET_MESSAGES,
-            variables: {
-              ...variables,
-              pageSize: 100,
-              page: 0,
-              initialTime: field.arguments.initialTime
-            }
-          },
-          data => {
-            if (data !== null) {
-              data.getMessages[data.getMessages.length - 1].messages.push(
-                message
-              )
-              return data
-            } else {
-              return null
-            }
+        if (added) {
+          const message = added
+          const [userId, groupId, channelId] = [
+            message.toUser.id,
+            message.group.id,
+            message.channel.id
+          ]
+          let variables
+          if (userId) {
+            variables = { userId }
           }
-        )
-      },
-      messageUpdated(
-        { messageUpdated: { userId, groupId, channelId, message } },
-        _variables,
-        cache
-      ) {
-        // TODO
-      },
-      messageDeleted(
-        { messageDeleted: { userId, groupId, channelId, messageId } },
-        _variables,
-        cache
-      ) {
-        // TODO
+          if (groupId) {
+            variables = { groupId }
+          }
+          if (channelId) {
+            variables = { channelId }
+            const channel = cache.readFragment(CHANNEL_FRAGMENT, {
+              id: channelId
+            })
+            cache.writeFragment(CHANNEL_FRAGMENT, {
+              ...channel,
+              isUnread: true
+            })
+          }
+
+          const fields = cache
+            .inspectFields('Query')
+            .filter(field => field.fieldName === 'getMessages')
+          if (!fields?.length) return
+          const field = fields[fields.length - 1]
+
+          cache.updateQuery(
+            {
+              query: GET_MESSAGES,
+              variables: {
+                ...variables,
+                pageSize: 100,
+                page: 0,
+                initialTime: field.arguments.initialTime
+              }
+            },
+            data => {
+              if (data !== null) {
+                data.getMessages[data.getMessages.length - 1].messages.push(
+                  message
+                )
+                return data
+              } else {
+                return null
+              }
+            }
+          )
+        }
       }
     }
   }

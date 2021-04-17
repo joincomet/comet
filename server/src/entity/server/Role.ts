@@ -9,7 +9,7 @@ import {
   PrimaryKeyType,
   Property
 } from '@mikro-orm/core'
-import { ChannelRole, Server, ServerUser } from '@/entity'
+import { ChannelPermissions, Server, ServerUser } from '@/entity'
 import {
   defaultServerPermissions,
   ServerPermission
@@ -26,20 +26,18 @@ export class Role extends BaseEntity {
   name: string
 
   @ManyToOne({ entity: () => Server, inversedBy: 'roles' })
-  server: Server;
-
-  [PrimaryKeyType]: [string, string]
+  server: Server
 
   @ManyToMany({ entity: () => ServerUser })
   serverUsers = new Collection<ServerUser>(this)
 
-  @Field(() => [ChannelRole])
+  @Field(() => [ChannelPermissions])
   @OneToMany({
-    entity: () => ChannelRole,
+    entity: () => ChannelPermissions,
     mappedBy: 'role',
     cascade: [Cascade.ALL]
   })
-  channelRoles = new Collection<ChannelRole>(this)
+  channelPermissions = new Collection<ChannelPermissions>(this)
 
   @Property({ columnType: 'text' })
   position: string = ReorderUtils.FIRST_POSITION

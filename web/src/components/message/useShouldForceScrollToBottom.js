@@ -1,8 +1,8 @@
-import { useCurrentUser } from '@/providers/UserProvider'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useEffect, useRef } from 'react'
 
 export function useShouldForceScrollToBottom(messages) {
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
   const lastFocusedOwnMessage = useRef('')
   const initialFocusRegistered = useRef(false)
 
