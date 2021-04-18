@@ -3,33 +3,60 @@ import {
   Args,
   Authorized,
   Ctx,
+  FieldResolver,
   Mutation,
   Query,
-  Resolver
+  Resolver,
+  Root
 } from 'type-graphql'
-import { Server, ServerUser } from '@/entity'
+import { Channel, Folder, Server, ServerUser } from '@/entity'
 import { Context } from '@/types'
-import { publicServers, PublicServersArgs } from '@/resolver/server/queries'
+import { publicServers, PublicServersArgs } from './queries'
 import {
-  CreateServerInput,
-  JoinServerInput,
-  UpdateServerInput,
+  banUserFromServer,
+  BanUserFromServerInput,
+  changeNickname,
+  ChangeNicknameInput,
+  changeNotificationSetting,
+  ChangeNotificationSettingInput,
   createServer,
+  CreateServerInput,
+  deleteServer,
+  DeleteServerInput,
   joinServer,
-  updateServer
-} from '@/resolver/server/mutations'
-import { DeleteServerInput } from '@/resolver/server/mutations/deleteServer'
-import { LeaveServerInput } from '@/resolver/server/mutations/leaveServer'
-import { MoveServerInput } from '@/resolver/server/mutations/moveServer'
-import { ReadServerInput } from '@/resolver/server/mutations/readServer'
-import { ChangeNicknameInput } from '@/resolver/server/mutations/changeNickname'
-import { ChangeNotificationSettingInput } from '@/resolver/server/mutations/changeNotificationSetting'
-import { BanUserFromServerInput } from '@/resolver/server/mutations/banUserFromServer'
-import { UnbanUserFromServerInput } from '@/resolver/server/mutations/unbanUserFromServer'
-import { KickUserFromServerInput } from '@/resolver/server/mutations/kickUserFromServer'
+  JoinServerInput,
+  kickUserFromServer,
+  KickUserFromServerInput,
+  leaveServer,
+  LeaveServerInput,
+  moveServer,
+  MoveServerInput,
+  readServer,
+  ReadServerInput,
+  unbanUserFromServer,
+  UnbanUserFromServerInput,
+  updateServer,
+  UpdateServerInput
+} from './mutations'
 
 @Resolver(() => Server)
 export class ServerResolver {
+  @FieldResolver(() => [Channel])
+  async channels(
+    @Ctx() { em, user, loaders: { channelLoader } }: Context,
+    @Root() server: Server
+  ): Promise<Channel[]> {
+    return channelLoader.load(server.id)
+  }
+
+  @FieldResolver(() => [Folder])
+  async folders(
+    @Ctx() { em, user, loaders: { serverFoldersLoader } }: Context,
+    @Root() server: Server
+  ): Promise<Folder[]> {
+    return serverFoldersLoader.load(server.id)
+  }
+
   // --- Queries ---
   @Authorized()
   @Query(() => [Server])
@@ -60,11 +87,11 @@ export class ServerResolver {
   }
 
   @Authorized()
-  @Mutation(() => Server)
+  @Mutation(() => Boolean)
   async deleteServer(
     @Ctx() ctx: Context,
     @Arg('input') input: DeleteServerInput
-  ): Promise<Server> {
+  ): Promise<boolean> {
     return deleteServer(ctx, input)
   }
 
@@ -78,47 +105,47 @@ export class ServerResolver {
   }
 
   @Authorized()
-  @Mutation(() => Server)
+  @Mutation(() => Boolean)
   async leaveServer(
     @Ctx() ctx: Context,
     @Arg('input') input: LeaveServerInput
-  ): Promise<Server> {
+  ): Promise<boolean> {
     return leaveServer(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Server)
+  @Mutation(() => ServerUser)
   async moveServer(
     @Ctx() ctx: Context,
     @Arg('input') input: MoveServerInput
-  ): Promise<Server> {
+  ): Promise<ServerUser> {
     return moveServer(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Server)
+  @Mutation(() => ServerUser)
   async readServer(
     @Ctx() ctx: Context,
     @Arg('input') input: ReadServerInput
-  ): Promise<Server> {
+  ): Promise<ServerUser> {
     return readServer(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Server)
+  @Mutation(() => ServerUser)
   async changeNickname(
     @Ctx() ctx: Context,
     @Arg('input') input: ChangeNicknameInput
-  ): Promise<Server> {
+  ): Promise<ServerUser> {
     return changeNickname(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Server)
+  @Mutation(() => ServerUser)
   async changeNotificationSetting(
     @Ctx() ctx: Context,
     @Arg('input') input: ChangeNotificationSettingInput
-  ): Promise<Server> {
+  ): Promise<ServerUser> {
     return changeNotificationSetting(ctx, input)
   }
 
@@ -127,7 +154,7 @@ export class ServerResolver {
   async banUserFromServer(
     @Ctx() ctx: Context,
     @Arg('input') input: BanUserFromServerInput
-  ): Promise<Server> {
+  ): Promise<boolean> {
     return banUserFromServer(ctx, input)
   }
 
@@ -136,7 +163,7 @@ export class ServerResolver {
   async unbanUserFromServer(
     @Ctx() ctx: Context,
     @Arg('input') input: UnbanUserFromServerInput
-  ): Promise<Server> {
+  ): Promise<boolean> {
     return unbanUserFromServer(ctx, input)
   }
 
@@ -145,7 +172,7 @@ export class ServerResolver {
   async kickUserFromServer(
     @Ctx() ctx: Context,
     @Arg('input') input: KickUserFromServerInput
-  ): Promise<Server> {
+  ): Promise<boolean> {
     return kickUserFromServer(ctx, input)
   }
 }

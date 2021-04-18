@@ -5,12 +5,16 @@ import toast from 'react-hot-toast'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import {
+  useUnvoteCommentMutation,
+  useVoteCommentMutation
+} from '@/graphql/hooks'
 
 export const useToggleCommentVote = comment => {
   const { t } = useTranslation()
   const { serverId } = useParams()
-  const [_voteRes, vote] = useMutation(VOTE_COMMENT)
-  const [_unvoteRes, unvote] = useMutation(UNVOTE_COMMENT)
+  const [_voteRes, vote] = useVoteCommentMutation()
+  const [_unvoteRes, unvote] = useUnvoteCommentMutation()
   const [canVote] = useHasServerPermissions({
     serverId,
     permissions: [ServerPermission.VoteComment]

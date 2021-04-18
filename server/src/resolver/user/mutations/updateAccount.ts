@@ -1,12 +1,12 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { IsEmail, Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
+import { Context } from '@/types'
+import { User } from '@/entity'
+import { tagGenerator, uploadImageSingle } from '@/util'
 
 @InputType()
 export class UpdateAccountInput {
-  @Field(() => ID)
-  userId: string
-
   @Field({ nullable: true })
   @Length(2, 32)
   name?: string
@@ -17,4 +17,29 @@ export class UpdateAccountInput {
 
   @Field(() => GraphQLUpload, { nullable: true })
   avatarFile?: FileUpload
+}
+
+export async function updateAccount(
+  { em, user, liveQueryStore }: Context,
+  { name, email, avatarFile }: UpdateAccountInput
+): Promise<User> {
+  em.assign(user, {
+    name: name ?? user.name,
+    email: email ?? user.email,
+    avatarUrl: avatarFile
+      ? await uploadImageSingle(avatarFile, { width: 256, height: 256 })
+      : user.avatarUrl
+  })
+  while (
+    await em.findOne(User, {
+      name: user.name,
+      tag: user.tag,
+      email: { $ne: user.email }
+    })
+  ) {
+    user.tag = tagGenerator()
+  }
+  await em.persistAndFlush(user)
+  liveQueryStore.invalidate(`User:${user.id}`)
+  return user
 }

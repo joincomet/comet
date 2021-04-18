@@ -10,14 +10,14 @@ import {
 import Button from '@/components/ui/Button'
 import { readURL } from '@/utils/readURL'
 import { useMutation } from 'urql'
-import { CREATE_SERVER } from '@/graphql/mutations'
 import { useTranslation } from 'react-i18next'
 import ServerListItem from '@/components/server/list/ServerListItem'
 import Switch from '@/components/ui/Switch'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'
+import { useCreateServerMutation } from '@/graphql/hooks'
 
 export default function CreateServerDialog() {
-  const [{ fetching }, createServer] = useMutation(CREATE_SERVER)
+  const [{ fetching }, createServer] = useCreateServerMutation()
   const [isOpen, setIsOpen] = useState(false)
   const [privateServer, setPrivate] = useState(true)
 
@@ -42,12 +42,12 @@ export default function CreateServerDialog() {
   const { push } = useHistory()
 
   const onSubmit = ({ name }) => {
-    createServer({ name, avatarFile: avatarFile ? avatarFile[0] : null }).then(
-      ({ data: { createServer } }) => {
-        setIsOpen(false)
-        push(`/server/${createServer.id}`)
-      }
-    )
+    createServer({
+      input: { name, avatarFile: avatarFile ? avatarFile[0] : null }
+    }).then(({ data: { createServer } }) => {
+      setIsOpen(false)
+      push(`/server/${createServer.id}`)
+    })
   }
 
   const { t } = useTranslation()

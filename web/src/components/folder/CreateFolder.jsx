@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/types/ServerPermission'
-import { CREATE_FOLDER } from '@/graphql/mutations'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import Dialog from '@/components/ui/dialog/Dialog'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'
 import Button from '@/components/ui/Button'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
-import { useMutation } from 'urql'
+import { useCreateFolderMutation } from '@/graphql/hooks'
+import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
 
 export default function CreateFolder({ serverId }) {
   const { t } = useTranslation()
@@ -29,7 +29,7 @@ export default function CreateFolder({ serverId }) {
     reset()
   }, [isOpen, reset])
 
-  const [{ fetching }, createFolder] = useMutation(CREATE_FOLDER)
+  const [{ fetching }, createFolder] = useCreateFolderMutation()
 
   const onSubmit = ({ name }) => {
     createFolder({ name, serverId }).then(({ data: { createFolder } }) => {

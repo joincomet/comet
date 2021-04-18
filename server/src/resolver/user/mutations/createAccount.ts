@@ -1,13 +1,25 @@
 import { Field, InputType } from 'type-graphql'
 import { IsEmail, Length } from 'class-validator'
 import { Context } from '@/types'
-import { LoginResponse } from '@/resolver/user'
 import isEmail from 'validator/lib/isEmail'
 import { CustomError } from '@/types/CustomError'
-import { Folder, FolderVisibility, Server, ServerUser, User } from '@/entity'
-import { createAccessToken, handleUnderscore, tagGenerator } from '@/util'
+import {
+  Folder,
+  FolderVisibility,
+  Server,
+  ServerUser,
+  User,
+  UserFolder
+} from '@/entity'
+import {
+  createAccessToken,
+  handleUnderscore,
+  ReorderUtils,
+  tagGenerator
+} from '@/util'
 import * as argon2 from 'argon2'
 import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
+import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
 
 @InputType()
 export class CreateAccountInput {
@@ -25,7 +37,7 @@ export class CreateAccountInput {
 }
 
 export async function createAccount(
-  { em }: Context,
+  { em, res }: Context,
   { name, email, password }: CreateAccountInput
 ): Promise<LoginResponse> {
   email = email.toLowerCase()
@@ -69,28 +81,38 @@ export async function createAccount(
     email
   })
 
-  const favoritesFolder = em.create(Folder, {
-    name: 'Favorites',
-    owner: user,
-    visibility: FolderVisibility.Private
-  })
+  em.persist(
+    em.create(UserFolder, {
+      user,
+      folder: em.create(Folder, {
+        name: 'Favorites',
+        owner: user,
+        visibility: FolderVisibility.Private
+      }),
+      position: ReorderUtils.FIRST_POSITION
+    })
+  )
 
-  const readLaterFolder = em.create(Folder, {
-    name: 'Read Later',
-    owner: user,
-    visibility: FolderVisibility.Private
-  })
+  em.persist(
+    em.create(UserFolder, {
+      user,
+      folder: em.create(Folder, {
+        name: 'Read Later',
+        owner: user,
+        visibility: FolderVisibility.Private
+      }),
+      position: ReorderUtils.positionAfter(ReorderUtils.FIRST_POSITION)
+    })
+  )
 
-  const cometServer = await em.findOne(Server, { name: 'Comet' })
-  const join = await em.create(ServerUser, {
-    user,
-    server: cometServer,
-    status: ServerUserStatus.Joined
-  })
-
-  await em.persistAndFlush([user, favoritesFolder, readLaterFolder, join])
+  await em.persistAndFlush(user)
   user.username = `${user.name}#${user.tag}`
   const accessToken = createAccessToken(user)
+  res.cookie('token', accessToken, {
+    maxAge: 2592000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production'
+  })
   return {
     accessToken,
     user

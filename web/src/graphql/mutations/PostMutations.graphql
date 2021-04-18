@@ -1,0 +1,62 @@
+mutation createPost($input: CreatePostInput!) {
+  createPost(input: $input) {
+    ...Post
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation updatePost($input: UpdatePostInput!) {
+  updatePost(input: $input) {
+    ...Post
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation deletePost($input: DeletePostInput!) {
+  deletePost(input: $input) {
+    ...Post
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation votePost($input: VotePostInput!) {
+  votePost(input: $input) {
+    ...Post
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation unvotePost($input: UnvotePostInput!) {
+  unvotePost(input: $input) {
+    ...Post
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation pinPost($input: PinPostInput!) {
+  pinPost(input: $input) {
+    ...Post
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation unpinPost($input: UnpinPostInput!) {
+  unpinPost(input: $input) {
+    ...Post
+    author {
+      ...ServerUser
+    }
+  }
+}

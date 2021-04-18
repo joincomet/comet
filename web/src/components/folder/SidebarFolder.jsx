@@ -15,10 +15,10 @@ import { ServerPermission } from '@/types/ServerPermission'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useFolderName } from '@/components/folder/useFolderName'
-import { UPDATE_FOLDER } from '@/graphql/mutations'
+import { useAddPostToFolderMutation } from '@/graphql/hooks'
 
 export default function SidebarFolder({ folder, serverId }) {
-  const [_addPostRes, addPostToFolder] = useMutation(UPDATE_FOLDER)
+  const [_addPostRes, addPostToFolder] = useAddPostToFolderMutation()
   const [canAddPosts] = useHasServerPermissions({
     serverId,
     permissions: [ServerPermission.AddPostToFolder]

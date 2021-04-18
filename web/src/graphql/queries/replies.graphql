@@ -1,0 +1,5 @@
+query replies($userId: ID!) {
+  replies(userId: $userId) {
+    ...Reply
+  }
+}

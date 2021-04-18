@@ -19,8 +19,29 @@
 		"build": "yarn workspace web run build",
 		"preview": "yarn workspace web run preview",
 		"start": "yarn workspace server start",
+		"generate": "graphql-codegen",
 		"dev:web": "yarn workspace web run dev",
-		"dev:server": "yarn workspace server run dev",
+		"dev:server": "concurrently \"yarn workspace server run dev\" \"yarn generate --watch\"",
 		"dev:electron": "yarn workspace web run dev:electron"
+	},
+	"dependencies": {
+		"graphql": "^15.4.0-experimental-stream-defer.1"
+	},
+	"devDependencies": {
+		"@graphql-codegen/cli": "^1.21.3",
+		"@graphql-codegen/core": "^1.17.9",
+		"@graphql-codegen/typed-document-node": "^1.18.4",
+		"@graphql-codegen/typescript": "^1.21.1",
+		"@graphql-codegen/typescript-operations": "^1.17.15",
+		"@graphql-codegen/typescript-urql": "^2.0.5",
+		"@graphql-typed-document-node/core": "^3.1.0",
+		"@typescript-eslint/eslint-plugin": "^4.22.0",
+		"@typescript-eslint/parser": "^4.22.0",
+		"concurrently": "^6.0.2",
+		"eslint": "^7.24.0",
+		"eslint-config-prettier": "^8.2.0",
+		"eslint-plugin-prettier": "^3.4.0",
+		"prettier": "^2.2.1",
+		"typescript": "^4.2.4"
 	}
 }

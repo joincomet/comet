@@ -1,0 +1,22 @@
+query user($id: ID) @live {
+  user(id: $id) {
+    ...User
+    folders {
+      ...Folder
+    }
+    relationships {
+      user {
+        ...User
+      }
+    }
+    servers {
+      nickname
+      server {
+        id
+        avatarUrl
+        name
+      }
+    }
+  }
+}
+

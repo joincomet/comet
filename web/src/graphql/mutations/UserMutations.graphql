@@ -1,0 +1,37 @@
+mutation createAccount($input: CreateAccountInput!) {
+  createAccount(input: $input) {
+    accessToken
+  }
+}
+
+mutation updateAccount($input: UpdateAccountInput!) {
+  updateAccount(input: $input) {
+    ...User
+  }
+}
+
+mutation deleteAccount {
+  deleteAccount
+}
+
+mutation login($input: LoginInput!) {
+  login(input: $input) {
+    accessToken
+  }
+}
+
+mutation changePassword($input: ChangePasswordInput!) {
+  changePassword(input: $input) {
+    accessToken
+  }
+}
+
+mutation changeOnlineStatus($input: ChangeOnlineStatusInput!) {
+  changeOnlineStatus(input: $input) {
+    ...User
+  }
+}
+
+mutation globalBan($input: GlobalBanInput!) {
+  globalBan(input: $input)
+}

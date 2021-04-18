@@ -1,9 +1,9 @@
 import { Field, InputType } from 'type-graphql'
 import { Length } from 'class-validator'
-import { LoginResponse } from '@/resolver/user'
 import { Context } from '@/types'
 import * as argon2 from 'argon2'
 import { createAccessToken } from '@/util'
+import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
 
 @InputType()
 export class ChangePasswordInput {

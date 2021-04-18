@@ -9,6 +9,7 @@ export enum ServerPermission {
   CreateInvite = 'CreateInvite',
 
   ChangeNickname = 'ChangeNickname',
+  ManageNicknames = 'ManageNicknames',
   ManageUsers = 'ManageUsers',
 
   SendMessages = 'SendMessages',

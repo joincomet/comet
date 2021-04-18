@@ -1,8 +1,8 @@
 module.exports = {
   plugins: ['react'],
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 7,
+    ecmaVersion: 2020,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true
@@ -14,6 +14,7 @@ module.exports = {
     es6: true
   },
   extends: [
+    'plugin:@typescript-eslint/recommended',
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended'
@@ -27,6 +28,15 @@ module.exports = {
     'react/no-unescaped-entities': 0,
     'react/display-name': 0,
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn'
-  }
+    'react-hooks/exhaustive-deps': 'warn',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-this-alias': 'off',
+    '@typescript-eslint/no-inferrable-types': 'off'
+  },
+  ignorePatterns: ['hooks.ts']
 }

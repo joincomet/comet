@@ -1,12 +1,8 @@
 import { useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { useQuery } from 'urql'
-import { GET_JOINED_SERVERS } from '@/graphql/queries'
 
 export default function ServerSelect() {
-  const [{ data }] = useQuery({ query: GET_JOINED_SERVERS })
-  const servers = data ? data.getJoinedServers : []
-
+  const servers = []
   const [selectedServer, setSelectedServer] = useState(servers[0])
 
   return (

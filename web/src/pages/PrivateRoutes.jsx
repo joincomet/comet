@@ -31,8 +31,6 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function PrivateRoutes() {
   const [user, userLoading] = useCurrentUser()
-  const data = {}
-  const dataLoading = false
 
   const setCanGoBack = useStore(s => s.setCanGoBack)
   const [path, setPath] = useState(null)
@@ -46,10 +44,10 @@ export default function PrivateRoutes() {
   return (
     <>
       <AnimatePresence>
-        {((user && dataLoading) || (!user && userLoading)) && <LoadingScreen />}
+        {!user && userLoading && <LoadingScreen />}
       </AnimatePresence>
 
-      {user && !dataLoading && <UserDialog />}
+      {user && <UserDialog />}
 
       <Switch>
         <PrivateRoute path="/settings">

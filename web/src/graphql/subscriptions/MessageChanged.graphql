@@ -1,0 +1,37 @@
+subscription MessageChanged {
+  messageChanged {
+    added {
+      ...Message
+      channel {
+        id
+        name
+      }
+      group {
+        id
+        displayName
+      }
+      toUser {
+        id
+        name
+      }
+    }
+    updated {
+      ...Message
+    }
+    deleted {
+      ...Message
+      channel {
+        id
+        name
+      }
+      group {
+        id
+        displayName
+      }
+      toUser {
+        id
+        name
+      }
+    }
+  }
+}

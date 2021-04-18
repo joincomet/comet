@@ -15,7 +15,6 @@ const httpMultipartFetcher = async (graphQLParams, { headers }) => {
 
   const parsedDocument = parse(graphQLParams.query)
   const operationName = graphQLParams.operationName
-
   const documentNode = getOperationAST(parsedDocument, operationName)
   if (
     documentNode.operation === 'subscription' ||

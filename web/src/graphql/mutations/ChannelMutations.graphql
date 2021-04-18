@@ -1,0 +1,33 @@
+mutation createChannel($input: CreateChannelInput!) {
+  createChannel(input: $input) {
+    ...Channel
+  }
+}
+
+mutation updateChannel($input: UpdateChannelInput!) {
+  updateChannel(input: $input) {
+    ...Channel
+  }
+}
+
+mutation deleteChannel($input: DeleteChannelInput!) {
+  deleteChannel(input: $input)
+}
+
+mutation moveChannel($input: MoveChannelInput!) {
+  moveChannel(input: $input) {
+    ...Channel
+  }
+}
+
+mutation readChannel($input: ReadChannelInput!) {
+  readChannel(input: $input) {
+    ...Channel
+  }
+}
+
+mutation updateChannelPermissions($input: UpdateChannelPermissionsInput!) {
+  updateChannelPermissions(input: $input) {
+    ...Role
+  }
+}

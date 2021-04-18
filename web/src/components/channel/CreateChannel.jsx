@@ -11,6 +11,7 @@ import Switch from '@/components/ui/Switch'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'urql'
+import { useCreateChannelMutation } from '@/graphql/hooks'
 
 export default function CreateChannel({ serverId }) {
   const { t } = useTranslation()
@@ -33,10 +34,10 @@ export default function CreateChannel({ serverId }) {
 
   const { push } = useHistory()
 
-  const [{ fetching }, createChannel] = useMutation(CREATE_CHANNEL)
+  const [{ fetching }, createChannel] = useCreateChannelMutation()
 
   const onSubmit = ({ name }) => {
-    createChannel({ name, serverId, isPrivate }).then(
+    createChannel({ input: { name, serverId, isPrivate } }).then(
       ({ data: { createChannel } }) => {
         setIsOpen(false)
         push(`/server/${serverId}/channel/${createChannel.id}`)

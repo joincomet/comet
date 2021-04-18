@@ -1,0 +1,10 @@
+fragment Folder on Folder {
+  id
+  name
+  avatarUrl
+  description
+  postCount
+  followerCount
+  isCollaborative
+  visibility
+}

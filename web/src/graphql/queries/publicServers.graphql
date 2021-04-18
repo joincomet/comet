@@ -1,0 +1,5 @@
+query publicServers($sort: PublicServersSort, $category: ServerCategory) {
+  publicServers(sort: $sort, category: $category) {
+    ...Server
+  }
+}

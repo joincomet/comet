@@ -5,21 +5,24 @@ import {
   ServerUserStatus,
   User
 } from '@/entity'
+import { Field, ObjectType } from 'type-graphql'
 
 export async function user(
   { em, user: currentUser }: Context,
   userId: string
 ): Promise<User> {
   let user: User
-  await em.populate(currentUser, ['relationships.user', 'servers.server'])
-  if (!userId || currentUser?.id === userId) {
+  if (currentUser)
+    await em.populate(currentUser, ['relationships.user', 'servers.server'])
+  if (!userId || userId === currentUser?.id) {
     // Current user
-    user = await em.findOneOrFail(User, userId, [
+    if (!currentUser) return null
+    user = await em.findOneOrFail(User, currentUser.id, [
       'relationships.user',
       'groups.users',
       'servers.roles.channelPermissions.channel',
-      'servers.server.channels',
-      'servers.server.folders',
+      'servers.server',
+      'servers.server.serverFolders.folder',
       'servers.server.owner',
       'servers.server.roles',
       'userFolders.folder'
@@ -30,6 +33,7 @@ export async function user(
       .filter(f => !f.isDeleted)
   } else {
     // Other user
+    if (!currentUser) throw new Error('Must be authorized')
     user = await em.findOneOrFail(User, userId, [
       'relationships.user',
       'servers.server',
@@ -45,13 +49,13 @@ export async function user(
 
     user.folders = user.userFolders
       .getItems()
-      .filter(
-        uf =>
-          uf.visibility === FolderVisibility.Public ||
-          (isFriends ? uf.visibility === FolderVisibility.Friends : false)
-      )
       .map(uf => uf.folder)
-      .filter(f => !f.isDeleted)
+      .filter(
+        f =>
+          !f.isDeleted &&
+          (f.visibility === FolderVisibility.Public ||
+            (isFriends ? f.visibility === FolderVisibility.Friends : false))
+      )
 
     const currentFriends = currentUser.relationships
       .getItems()

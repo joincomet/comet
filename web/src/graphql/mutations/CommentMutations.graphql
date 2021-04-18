@@ -1,0 +1,62 @@
+mutation createComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    ...Comment
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation updateComment($input: UpdateCommentInput!) {
+  updateComment(input: $input) {
+    ...Comment
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation deleteComment($input: DeleteCommentInput!) {
+  deleteComment(input: $input) {
+    ...Comment
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation voteComment($input: VoteCommentInput!) {
+  voteComment(input: $input) {
+    ...Comment
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation unvoteComment($input: UnvoteCommentInput!) {
+  unvoteComment(input: $input) {
+    ...Comment
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation pinComment($input: PinCommentInput!) {
+  pinComment(input: $input) {
+    ...Comment
+    author {
+      ...ServerUser
+    }
+  }
+}
+
+mutation unpinComment($input: UnpinCommentInput!) {
+  unpinComment(input: $input) {
+    ...Comment
+    author {
+      ...ServerUser
+    }
+  }
+}

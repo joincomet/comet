@@ -10,25 +10,43 @@ import {
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import { ServerUser, User } from '@/entity'
+import { Folder, ServerUser, User } from '@/entity'
 import {
-  ChangePasswordInput,
-  CreateAccountInput,
-  LoginInput,
-  UpdateAccountInput,
-  LoginResponse,
-  createAccount,
-  updateAccount,
+  changeOnlineStatus,
+  ChangeOnlineStatusInput,
   changePassword,
-  login
+  ChangePasswordInput,
+  createAccount,
+  CreateAccountInput,
+  deleteAccount,
+  globalBan,
+  GlobalBanInput,
+  login,
+  LoginInput,
+  LoginResponse,
+  updateAccount,
+  UpdateAccountInput
 } from '@/resolver/user/mutations'
 import { channelUsers, roleUsers, user } from '@/resolver/user/queries'
-import { ChangeOnlineStatusInput } from '@/resolver/user/mutations/changeOnlineStatus'
-import { GlobalBanInput } from '@/resolver/user/mutations/globalBan'
 
 @Resolver(() => User)
 export class UserResolver {
   // --- Fields --- //
+  @FieldResolver(() => [Folder])
+  async folders(
+    @Ctx() { loaders: { userFoldersLoader } }: Context,
+    @Root() user: User
+  ): Promise<Folder[]> {
+    return userFoldersLoader.load(user.id)
+  }
+
+  @FieldResolver(() => [ServerUser])
+  async servers(
+    @Ctx() { loaders: { serversLoader } }: Context,
+    @Root() user: User
+  ): Promise<ServerUser[]> {
+    return serversLoader.load(user.id)
+  }
 
   @FieldResolver()
   isCurrentUser(
@@ -40,13 +58,12 @@ export class UserResolver {
 
   // --- Queries --- //
 
-  @Authorized()
-  @Query(() => User)
+  @Query(() => User, { nullable: true })
   async user(
     @Ctx() ctx: Context,
-    @Arg('userId', () => ID, { nullable: true }) userId?: string
+    @Arg('id', () => ID, { nullable: true }) id?: string
   ): Promise<User> {
-    return user(ctx, userId)
+    return user(ctx, id)
   }
 
   @Authorized()
@@ -120,11 +137,11 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => User)
+  @Mutation(() => Boolean)
   async globalBan(
     @Ctx() ctx: Context,
     @Arg('input') input: GlobalBanInput
-  ): Promise<User> {
+  ): Promise<boolean> {
     return globalBan(ctx, input)
   }
 }

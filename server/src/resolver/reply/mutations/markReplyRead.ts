@@ -25,7 +25,7 @@ export async function markReplyRead(
     'post.server',
     'post.author'
   ])
-  if (reply.toUser !== user) throw new Error('Not your reply')
+  if (reply.user !== user) throw new Error('Not your reply')
   if (isRead != null) {
     reply.isRead = isRead
   }

@@ -16,44 +16,35 @@ export const useHasChannelPermissions = ({
   channelPermissions,
   serverPermissions
 }) => {
-  const { t } = useTranslation()
   const [user] = useCurrentUser()
-  const pause = !channelId || !serverId
-  const [{ data: serverData }] = useQuery({
-    query: GET_SERVER_PERMISSIONS,
-    variables: { serverId },
-    pause
-  })
-  const [{ data: channelData }] = useQuery({
-    query: GET_CHANNEL_PERMISSIONS,
-    variables: { channelId },
-    pause
-  })
-  if (channelPermissions.length !== serverPermissions.length)
-    throw new Error(t('error.channelPermissions'))
+
   return useMemo(() => {
-    const serverPerms = serverData?.getServerPermissions ?? []
-    const channelPerms = channelData?.getChannelPermissions ?? {
-      allowedPermissions: [],
-      deniedPermissions: []
-    }
-    if (user.isAdmin) return channelPermissions.map(_ => true)
+    const allTrue = channelPermissions.map(_ => true)
+    const allFalse = channelPermissions.map(_ => false)
+    if (!user) return allFalse
+    if (user?.isAdmin) return allTrue
+    const server = user?.servers.find(s => s.server.id === serverId)
+    if (!server) return allFalse
+    if (server.owner.id === user.id) return allTrue
+    const roles = server.roles
+    const channelPerms = roles.map(role =>
+      role.channelPermissions.find(c => c.channel.id === channelId)
+    )
     const res = []
     for (let i = 0; i < channelPermissions.length; i++) {
-      const channelPerm = channelPermissions[i]
-      const serverPerm = serverPermissions[i]
-      if (channelPerms.allowedPermissions.includes(channelPerm)) res.push(true)
-      else if (channelPerms.deniedPermissions.includes(channelPerm))
-        res.push(false)
-      else if (serverPerms.includes(serverPerm)) res.push(true)
-      else res.push(false)
+      const channelPermission = channelPermissions[i]
+      const serverPermission = serverPermissions[i]
+      const hasServerPerm =
+        !!serverPermission &&
+        !!roles.find(role => role.hasPermission(serverPermission))
+      const channelPerm = channelPerms.find(
+        perm =>
+          perm.deniedPermissions.includes(channelPermission) ||
+          perm.allowedPermissions.includes(channelPermission)
+      )
+      if (!channelPerm) return hasServerPerm
+      res[i] = channelPerm.allowedPermissions.includes(channelPermission)
     }
     return res
-  }, [
-    serverData?.getServerPermissions,
-    channelData?.getChannelPermissions,
-    user.isAdmin,
-    channelPermissions,
-    serverPermissions
-  ])
+  }, [channelPermissions, user, serverId, channelId, serverPermissions])
 }

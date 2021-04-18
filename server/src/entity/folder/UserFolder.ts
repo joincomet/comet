@@ -1,13 +1,6 @@
-import {
-  Entity,
-  Enum,
-  ManyToOne,
-  PrimaryKeyType,
-  Property
-} from '@mikro-orm/core'
-import { Folder, FolderVisibility, User } from '@/entity'
+import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
+import { Folder, User } from '@/entity'
 import { ReorderUtils } from '@/util'
-import { Field } from 'type-graphql'
 
 @Entity()
 export class UserFolder {

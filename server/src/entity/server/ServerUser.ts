@@ -17,6 +17,7 @@ import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 @ObjectType()
 @Entity()
 export class ServerUser {
+  @Field(() => User)
   @ManyToOne({ entity: () => User, primary: true })
   user: User
 

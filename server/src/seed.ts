@@ -184,7 +184,7 @@ export const seed = async (em: EntityManager) => {
     const postData = {
       createdAt: faker.date.recent(),
       title: faker.hacker.phrase(),
-      author: user,
+      author: serverUser,
       server: serverComet,
       voteCount: rand(1, 100),
       commentCount: 2
@@ -228,13 +228,13 @@ export const seed = async (em: EntityManager) => {
 
     const comment1 = em.create(Comment, {
       post,
-      author: user,
+      author: serverUser,
       text: faker.lorem.sentences(),
       voteCount: 1
     })
     const comment2 = em.create(Comment, {
       post,
-      author: user,
+      author: serverUser,
       text: faker.lorem.sentences(),
       parentComment: comment1,
       voteCount: 1

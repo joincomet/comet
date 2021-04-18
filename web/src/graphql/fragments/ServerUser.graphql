@@ -1,0 +1,11 @@
+fragment ServerUser on ServerUser {
+  name
+  color
+  roles {
+    ...Role
+  }
+  user {
+    ...User
+  }
+}
+

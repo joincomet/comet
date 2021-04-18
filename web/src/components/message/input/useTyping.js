@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useMutation, useSubscription } from 'urql'
-import { START_TYPING } from '@/graphql/mutations'
+import { useSubscription } from 'urql'
 import { useTranslation } from 'react-i18next'
+import {
+  useStartTypingMutation,
+  useUserStartedTypingSubscription
+} from '@/graphql/hooks'
 
 const TYPING_TIMEOUT = 3000
 
@@ -10,7 +13,7 @@ export const useTyping = ({ channel, group, user }) => {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
   const [typingNames, setTypingNames] = useState(new Set())
-  const [_startTypingRes, startTyping] = useMutation(START_TYPING)
+  const [_startTypingRes, startTyping] = useStartTypingMutation()
 
   const variables = {
     userId: user?.id,
@@ -18,9 +21,8 @@ export const useTyping = ({ channel, group, user }) => {
     channelId: channel?.id
   }
 
-  useSubscription(
+  useUserStartedTypingSubscription(
     {
-      query: USER_STARTED_TYPING,
       variables,
       pause: !channel && !group && !user
     },

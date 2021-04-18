@@ -2,10 +2,10 @@ import { useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
 import Editor from '@/components/ui/editor/Editor'
 import { useMutation } from 'urql'
-import { CREATE_POST } from '@/graphql/mutations'
 import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useHistory, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useCreatePostMutation } from '@/graphql/hooks'
 
 const postBtnClass = ctl(`
   text-base
@@ -34,7 +34,7 @@ const cancelBtnClass = ctl(`
 
 export default function PostEditor({ setOpen }) {
   const [text, setText] = useState('')
-  const [{ fetching }, createPost] = useMutation(CREATE_POST)
+  const [{ fetching }, createPost] = useCreatePostMutation()
   const { t } = useTranslation()
   const { push } = useHistory()
   const { serverId: sId } = useParams()

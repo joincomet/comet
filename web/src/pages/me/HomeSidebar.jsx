@@ -15,11 +15,11 @@ import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
 import toast from 'react-hot-toast'
 import { VectorLogo } from '@/components/ui/vectors'
-import { CREATE_MESSAGE } from '@/graphql/mutations'
-import { useMutation } from 'urql'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import CountBadge from '@/components/ui/CountBadge'
+import { useCloseDmMutation, useCreateMessageMutation } from '@/graphql/hooks'
+import { useGroupsAndDms } from '@/hooks/graphql/useGroupsAndDms'
 
 export default function HomeSidebar() {
   const groupsAndDms = useGroupsAndDms()
@@ -78,12 +78,12 @@ export default function HomeSidebar() {
 function DirectMessage({ user }) {
   const { t } = useTranslation()
 
-  const [_, hideDm] = useMutation(CLOSE_DM)
+  const [_, hideDm] = useCloseDmMutation()
 
   const { push } = useHistory()
   const { pathname } = useLocation()
 
-  const [_sendMessageRes, sendMessage] = useMutation(CREATE_MESSAGE)
+  const [_sendMessageRes, sendMessage] = useCreateMessageMutation()
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,

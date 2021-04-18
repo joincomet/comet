@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { GET_POSTS } from '@/graphql/queries'
 import { useStore } from '@/hooks/useStore'
-import { useQuery } from 'urql'
+import { usePostsQuery } from '@/graphql/hooks'
 
 export function usePosts({ serverId, folderId }) {
   const [postsSort, postsTime, folderSort] = useStore(s => [
@@ -11,8 +10,7 @@ export function usePosts({ serverId, folderId }) {
   ])
   const [page, setPage] = useState(0)
 
-  const [{ data, fetching }] = useQuery({
-    query: GET_POSTS,
+  const [{ data, fetching }] = usePostsQuery({
     variables: {
       pageSize: 20,
       page,
@@ -24,11 +22,11 @@ export function usePosts({ serverId, folderId }) {
   })
 
   return [
-    data?.getPosts.flatMap(res => res.posts),
+    data?.posts.flatMap(res => res.posts),
     fetching,
     () => setPage(page + 1),
-    data && data.getPosts.length > 0
-      ? data.getPosts[data.getPosts.length - 1].hasMore
-      : true
+    data && data.posts.length > 0
+      ? data.posts[data.posts.length - 1].hasMore
+      : false
   ]
 }

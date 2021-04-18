@@ -1,0 +1,3 @@
+subscription userStartedTyping($userId: ID, $groupId: ID, $channelId: ID) {
+  userStartedTyping(userId: $userId, groupId: $groupId, channelId: $channelId)
+}

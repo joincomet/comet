@@ -1,20 +1,18 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
-import { useQuery } from 'urql'
-import { GET_CHANNEL_USERS } from '@/graphql/queries'
 import SidebarUser from '@/components/ui/sidebar/SidebarUser'
 import { useVirtual } from 'react-virtual'
 import { useCallback, useRef } from 'react'
 import { useStore } from '@/hooks/useStore'
+import { useChannelUsersQuery } from '@/graphql/hooks'
 
 export default function ChannelUsersSidebar({ channel }) {
-  const [{ data }] = useQuery({
-    query: GET_CHANNEL_USERS,
+  const [{ data }] = useChannelUsersQuery({
     variables: { channelId: channel?.id },
     pause: !channel
   })
 
-  const roles = data?.getChannelUsers ?? []
+  const roles = data?.channelUsers ?? []
 
   const parentRef = useRef()
 

@@ -11,9 +11,53 @@ directive @live(
   if: Boolean = true
 ) on QUERY
 
+input AddPostToFolderInput {
+  folderId: ID!
+  postId: ID!
+}
+
+input AddUserToGroupInput {
+  groupId: ID!
+  userId: ID!
+}
+
+input AddUserToRoleInput {
+  roleId: ID!
+  userId: ID!
+}
+
+input AnswerFriendRequestInput {
+  accept: Boolean!
+  userId: ID!
+}
+
+input BanUserFromServerInput {
+  serverId: ID!
+  userId: ID!
+}
+
 interface BaseEntity {
   createdAt: DateTime!
   id: ID!
+}
+
+input BlockUserInput {
+  userId: ID!
+}
+
+input ChangeNicknameInput {
+  nickname: String
+  serverId: ID!
+  userId: ID
+}
+
+input ChangeNotificationSettingInput {
+  notificationSetting: NotificationSetting!
+  serverId: ID!
+}
+
+input ChangeOnlineStatusInput {
+  onlineStatus: OnlineStatus!
 }
 
 input ChangePasswordInput {
@@ -32,30 +76,35 @@ type Channel implements BaseEntity {
 }
 
 enum ChannelPermission {
+  ManageMessages
+  ManagePermissions
   SendMessages
   ViewChannel
 }
 
-type ChannelRole {
+type ChannelPermissions {
   allowedPermissions: [ChannelPermission!]!
   channel: Channel!
   deniedPermissions: [ChannelPermission!]!
 }
 
+input CloseDmInput {
+  userId: ID!
+}
+
 type Comment implements BaseEntity {
-  author: User
+  author: ServerUser
   createdAt: DateTime!
-  updatedAt: DateTime
   id: ID!
   isDeleted: Boolean!
   isPinned: Boolean!
   isVoted: Boolean!
   linkMetadatas: [LinkMetadata!]!
   parentComment: Comment
-  pinPosition: String
+  pinnedAt: DateTime
   post: Post!
-  serverUser: ServerUser!
   text: String!
+  updatedAt: DateTime
   voteCount: Int!
 }
 
@@ -63,6 +112,11 @@ type CommentChangedResponse {
   added: Comment
   deleted: Comment
   updated: Comment
+}
+
+enum CommentsSort {
+  New
+  Top
 }
 
 input CreateAccountInput {
@@ -88,6 +142,10 @@ input CreateFolderInput {
   name: String!
   serverId: ID
   visibility: FolderVisibility = Public
+}
+
+input CreateFriendRequestInput {
+  userId: ID!
 }
 
 input CreateGroupInput {
@@ -129,6 +187,38 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+input DeleteChannelInput {
+  channelId: ID!
+}
+
+input DeleteCommentInput {
+  commentId: ID!
+}
+
+input DeleteFolderInput {
+  folderId: ID!
+}
+
+input DeleteFriendRequestInput {
+  userId: ID!
+}
+
+input DeleteMessageInput {
+  messageId: ID!
+}
+
+input DeletePostInput {
+  postId: ID!
+}
+
+input DeleteRoleInput {
+  roleId: ID!
+}
+
+input DeleteServerInput {
+  serverId: ID!
+}
+
 type File {
   filename: String!
   mime: String!
@@ -157,41 +247,13 @@ enum FolderVisibility {
   Unlisted
 }
 
-enum GetCommentsSort {
-  New
-  Top
+input FollowFolderInput {
+  folderId: ID!
 }
 
-type GetMessagesResponse {
-  hasMore: Boolean!
-  messages: [Message!]!
-}
-
-type GetPostsResponse {
-  hasMore: Boolean!
-  posts: [Post!]!
-}
-
-enum GetPostsSort {
-  Added
-  Hot
-  New
-  Top
-}
-
-enum GetPostsTime {
-  All
-  Day
-  Hour
-  Month
-  Week
-  Year
-}
-
-enum GetPublicServersSort {
-  Featured
-  New
-  Top
+input GlobalBanInput {
+  reason: String
+  userId: ID!
 }
 
 type Group implements BaseEntity {
@@ -223,6 +285,19 @@ input JoinServerInput {
   serverId: ID
 }
 
+input KickUserFromServerInput {
+  serverId: ID!
+  userId: ID!
+}
+
+input LeaveGroupInput {
+  groupId: ID!
+}
+
+input LeaveServerInput {
+  serverId: ID!
+}
+
 type LinkMetadata {
   author: String
   date: DateTime
@@ -245,19 +320,28 @@ type LoginResponse {
   user: User!
 }
 
+input MarkReplyReadInput {
+  isRead: Boolean
+  replyId: ID!
+}
+
 type Message implements BaseEntity {
   author: User!
+  channel: Channel!
   createdAt: DateTime!
-  updatedAt: DateTime
   file: File
+  group: Group!
   id: ID!
   image: Image
   isDeleted: Boolean!
   isPinned: Boolean!
   linkMetadatas: [LinkMetadata!]!
+  pinnedAt: DateTime
   serverUser: ServerUser
   text: String
+  toUser: User!
   type: MessageType!
+  updatedAt: DateTime
 }
 
 type MessageChangedResponse {
@@ -268,34 +352,118 @@ type MessageChangedResponse {
 
 enum MessageType {
   Join
+  Left
   Normal
 }
 
+type MessagesResponse {
+  hasMore: Boolean!
+  messages: [Message!]!
+}
+
+input MoveChannelInput {
+  beforeChannelId: ID
+  channelId: ID!
+}
+
+input MoveRoleInput {
+  beforeRoleId: ID
+  roleId: ID!
+}
+
+input MoveServerFolderInput {
+  beforeFolderId: ID
+  folderId: ID!
+}
+
+input MoveServerInput {
+  beforeServerId: ID
+  serverId: ID!
+}
+
+input MoveUserFolderInput {
+  beforeFolderId: ID
+  folderId: ID!
+}
+
 type Mutation {
+  addPostToFolder(input: AddPostToFolderInput!): Folder!
+  addUserToGroup(input: AddUserToGroupInput!): Group!
+  addUserToRole(input: AddUserToRoleInput!): ServerUser!
+  answerFriendRequest(input: AnswerFriendRequestInput!): Relationship!
+  banUserFromServer(input: BanUserFromServerInput!): Boolean!
+  blockUser(input: BlockUserInput!): Relationship!
+  changeNickname(input: ChangeNicknameInput!): ServerUser!
+  changeNotificationSetting(input: ChangeNotificationSettingInput!): ServerUser!
+  changeOnlineStatus(input: ChangeOnlineStatusInput!): User!
   changePassword(input: ChangePasswordInput!): LoginResponse!
+  closeDm(input: CloseDmInput!): Relationship!
   createAccount(input: CreateAccountInput!): LoginResponse!
   createChannel(input: CreateChannelInput!): Channel!
   createComment(input: CreateCommentInput!): Comment!
   createFolder(input: CreateFolderInput!): Folder!
+  createFriendRequest(input: CreateFriendRequestInput!): Relationship!
   createGroup(input: CreateGroupInput!): Group!
   createMessage(input: CreateMessageInput!): Message!
   createPost(input: CreatePostInput!): Post!
   createRole(input: CreateRoleInput!): Role!
   createServer(input: CreateServerInput!): Server!
+  deleteAccount: Boolean!
+  deleteChannel(input: DeleteChannelInput!): Boolean!
+  deleteComment(input: DeleteCommentInput!): Comment!
+  deleteFolder(input: DeleteFolderInput!): Boolean!
+  deleteFriendRequest(input: DeleteFriendRequestInput!): Relationship!
+  deleteMessage(input: DeleteMessageInput!): Boolean!
+  deletePost(input: DeletePostInput!): Post!
+  deleteRole(input: DeleteRoleInput!): Boolean!
+  deleteServer(input: DeleteServerInput!): Boolean!
+  followFolder(input: FollowFolderInput!): Folder!
+  globalBan(input: GlobalBanInput!): Boolean!
   joinServer(input: JoinServerInput!): Server!
+  kickUserFromServer(input: KickUserFromServerInput!): Boolean!
+  leaveGroup(input: LeaveGroupInput!): Boolean!
+  leaveServer(input: LeaveServerInput!): Boolean!
   login(input: LoginInput!): LoginResponse!
   markAllRepliesRead: Boolean!
+  markReplyRead(input: MarkReplyReadInput!): Reply!
+  moveChannel(input: MoveChannelInput!): Channel!
+  moveRole(input: MoveRoleInput!): Role!
+  moveServer(input: MoveServerInput!): ServerUser!
+  moveServerFolder(input: MoveServerFolderInput!): Folder!
+  moveUserFolder(input: MoveUserFolderInput!): Folder!
+  openDm(input: OpenDmInput!): Relationship!
+  pinComment(input: PinCommentInput!): Comment!
+  pinMessage(input: PinMessageInput!): Message!
+  pinPost(input: PinPostInput!): Post!
+  readChannel(input: ReadChannelInput!): Channel!
+  readDm(input: ReadDmInput!): Relationship!
+  readGroup(input: ReadGroupInput!): Group!
+  readServer(input: ReadServerInput!): ServerUser!
+  removeFriend(input: RemoveFriendInput!): Relationship!
+  removePostFromFolder(input: RemovePostFromFolderInput!): Folder!
+  removeUserFromGroup(input: RemoveUserFromGroupInput!): Group!
+  removeUserFromRole(input: RemoveUserFromRoleInput!): ServerUser!
   startTyping(channelId: ID, groupId: ID, userId: ID): Boolean!
+  unbanUserFromServer(input: UnbanUserFromServerInput!): Boolean!
+  unblockUser(input: UnblockUserInput!): Relationship!
+  unfollowFolder(input: UnfollowFolderInput!): Folder!
+  unpinComment(input: UnpinCommentInput!): Comment!
+  unpinMessage(input: UnpinMessageInput!): Message!
+  unpinPost(input: UnpinPostInput!): Post!
+  unvoteComment(input: UnvoteCommentInput!): Comment!
+  unvotePost(input: UnvotePostInput!): Post!
+  updateAccount(input: UpdateAccountInput!): User!
   updateChannel(input: UpdateChannelInput!): Channel!
+  updateChannelPermissions(input: UpdateChannelPermissionsInput!): Role!
   updateComment(input: UpdateCommentInput!): Comment!
   updateFolder(input: UpdateFolderInput!): Folder!
   updateGroup(input: UpdateGroupInput!): Group!
   updateMessage(input: UpdateMessageInput!): Message!
   updatePost(input: UpdatePostInput!): Post!
-  updateReply(input: UpdateReplyInput!): Reply!
   updateRole(input: UpdateRoleInput!): Role!
   updateServer(input: UpdateServerInput!): Server!
-  updateUser(input: UpdateUserInput!): User!
+  voteComment(input: VoteCommentInput!): Comment!
+  votePost(input: VotePostInput!): Post!
 }
 
 enum NotificationSetting {
@@ -311,14 +479,29 @@ enum OnlineStatus {
   Online
 }
 
+input OpenDmInput {
+  userId: ID!
+}
+
+input PinCommentInput {
+  commentId: ID!
+}
+
+input PinMessageInput {
+  messageId: ID!
+}
+
+input PinPostInput {
+  postId: ID!
+}
+
 type Post implements BaseEntity {
   addedAt: DateTime
   addedByUser: User
-  author: User
+  author: ServerUser
   commentCount: Int!
   createdAt: DateTime!
   domain: String
-  updatedAt: DateTime
   folders: [Folder!]
   id: ID!
   imageUrls: [String!]!
@@ -328,13 +511,13 @@ type Post implements BaseEntity {
   linkMetadata: LinkMetadata
   linkMetadatas: [LinkMetadata!]!
   linkUrl: String
-  pinPosition: String
+  pinnedAt: DateTime
   relativeUrl: String!
   server: Server!
-  serverUser: ServerUser!
   text: String
   thumbnailUrl: String
   title: String!
+  updatedAt: DateTime
   voteCount: Int!
 }
 
@@ -344,25 +527,69 @@ type PostChangedResponse {
   updated: Post
 }
 
-type Query {
-  getChannelUsers(channelId: ID!): [ServerUser!]!
-  getComments(postId: ID, sort: GetCommentsSort = Top): [Comment!]!
-  getCurrentUser: User
-  getFolder(folderId: ID!): Folder!
-  getJoinedServers(userId: ID!): [Server!]!
-  getMessages(channelId: ID, groupId: ID, initialTime: DateTime, page: Int = 0, pageSize: Int = 100, pinned: Boolean = false, userId: ID): [GetMessagesResponse!]!
-  getMutualFriends(userId: ID!): [User!]!
-  getMutualServers(userId: ID!): [ServerUser!]!
-  getOtherUserFolders(userId: ID!): [Folder!]!
-  getPost(postId: ID!): Post!
-  getPosts(folderId: ID, page: Int = 0, pageSize: Int = 20, search: String, serverId: ID, sort: GetPostsSort = Hot, time: GetPostsTime = All): [GetPostsResponse!]!
-  getPublicServers(category: ServerCategory, sort: GetPublicServersSort = Top): [Server!]!
-  getReplies(id: ID!): [Reply!]!
-  getRoleUsers(roleId: ID!): [ServerUser!]!
+type PostsResponse {
+  hasMore: Boolean!
+  posts: [Post!]!
+}
 
-  """Get LinkMetadata for a URL (requires admin)"""
-  getUrlEmbed(url: String!): LinkMetadata! @deprecated(reason: "For testing only")
-  getUser(userId: ID!): User!
+enum PostsSort {
+  Added
+  Hot
+  New
+  Top
+}
+
+enum PostsTime {
+  All
+  Day
+  Hour
+  Month
+  Week
+  Year
+}
+
+enum PublicServersSort {
+  Featured
+  New
+  Top
+}
+
+type Query {
+  channelUsers(channelId: ID!): [ServerUser!]!
+  comments(postId: ID, sort: CommentsSort = Top): [Comment!]!
+  folder(id: ID!): Folder!
+  messages(channelId: ID, groupId: ID, initialTime: DateTime, page: Int = 0, pageSize: Int = 100, pinned: Boolean = false, userId: ID): [MessagesResponse!]!
+  post(id: ID!): Post!
+  posts(folderId: ID, page: Int = 0, pageSize: Int = 20, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): [PostsResponse!]!
+  publicServers(category: ServerCategory, sort: PublicServersSort = Top): [Server!]!
+  replies(userId: ID!): [Reply!]!
+  roleUsers(roleId: ID!): [ServerUser!]!
+  user(id: ID): User
+}
+
+input ReadChannelInput {
+  channelId: ID!
+}
+
+input ReadDmInput {
+  userId: ID!
+}
+
+input ReadGroupInput {
+  groupId: ID!
+}
+
+input ReadServerInput {
+  serverId: ID!
+}
+
+type Relationship {
+  lastMessageAt: DateTime!
+  showChat: Boolean!
+  status: RelationshipStatus!
+  unreadCount: Int!
+  updatedAt: DateTime!
+  user: User!
 }
 
 enum RelationshipStatus {
@@ -374,6 +601,25 @@ enum RelationshipStatus {
   None
 }
 
+input RemoveFriendInput {
+  userId: ID!
+}
+
+input RemovePostFromFolderInput {
+  folderId: ID!
+  postId: ID!
+}
+
+input RemoveUserFromGroupInput {
+  groupId: ID!
+  userId: ID!
+}
+
+input RemoveUserFromRoleInput {
+  roleId: ID!
+  userId: ID!
+}
+
 type RepliesChangedResponse {
   added: [Reply!]!
   deleted: [Reply!]!
@@ -383,15 +629,12 @@ type RepliesChangedResponse {
 type Reply implements BaseEntity {
   comment: Comment!
   createdAt: DateTime!
-  fromUser: User!
   id: ID!
   isRead: Boolean!
-  parentComment: Comment
-  post: Post!
 }
 
 type Role implements BaseEntity {
-  channelRoles: [ChannelRole!]!
+  channelPermissions: [ChannelPermissions!]!
   color: String!
   createdAt: DateTime!
   id: ID!
@@ -414,6 +657,7 @@ type Server implements BaseEntity {
   isPublic: Boolean!
   myRoles: [Role!]!
   name: String!
+  owner: User!
   roles: [Role!]!
   sendWelcomeMessage: Boolean!
   systemMessagesChannel: Channel!
@@ -453,7 +697,9 @@ enum ServerPermission {
   ManageComments
   ManageFolders
   ManageMessages
+  ManageNicknames
   ManagePosts
+  ManageRoles
   ManageServer
   ManageUsers
   Mention
@@ -471,6 +717,8 @@ type ServerUser {
   nickname: String
   notificationSetting: NotificationSetting!
   roles: [Role!]!
+  server: Server!
+  user: User!
 }
 
 type Subscription {
@@ -481,119 +729,107 @@ type Subscription {
   userStartedTyping(channelId: ID, groupId: ID, userId: ID): String!
 }
 
-input UpdateChannelInput {
-  beforeChannelId: ID
-  channelId: ID!
-  isDeleted: Boolean = false
-  isPrivate: Boolean
-  isRead: Boolean
+input UnbanUserFromServerInput {
+  serverId: ID!
+  userId: ID!
+}
+
+input UnblockUserInput {
+  userId: ID!
+}
+
+input UnfollowFolderInput {
+  folderId: ID!
+}
+
+input UnpinCommentInput {
+  commentId: ID!
+}
+
+input UnpinMessageInput {
+  messageId: ID!
+}
+
+input UnpinPostInput {
+  postId: ID!
+}
+
+input UnvoteCommentInput {
+  commentId: ID!
+}
+
+input UnvotePostInput {
+  postId: ID!
+}
+
+input UpdateAccountInput {
+  avatarFile: Upload
+  email: String
   name: String
 }
 
-input UpdateChannelRoleInput {
+input UpdateChannelInput {
+  channelId: ID!
+  isPrivate: Boolean
+  name: String
+}
+
+input UpdateChannelPermissionsInput {
   allowedPermissions: [ChannelPermission!]!
   channelId: ID!
   deniedPermissions: [ChannelPermission!]!
+  roleId: ID!
 }
 
 input UpdateCommentInput {
   commentId: ID!
-  isDeleted: Boolean = false
-  isPinned: Boolean
-  isVoted: Boolean
-  text: String
+  text: String!
 }
 
 input UpdateFolderInput {
-  addedPostId: ID
-  beforeFolderId: ID
+  avatarFile: Upload
   folderId: ID!
   isCollaborative: Boolean
-  isDeleted: Boolean = false
-  isFollowing: Boolean
   name: String
-  removedPostId: ID
   visibility: FolderVisibility
 }
 
 input UpdateGroupInput {
-  addedUserId: ID
   avatarFile: Upload
   groupId: ID!
-  isRead: Boolean
   name: String
-  removedUserId: ID
 }
 
 input UpdateMessageInput {
-  isDeleted: Boolean = false
-  isPinned: Boolean
   messageId: ID!
-  text: String
+  text: String!
 }
 
 input UpdatePostInput {
-  isDeleted: Boolean = false
-  isPinned: Boolean
-  isVoted: Boolean
   postId: ID!
-  text: String
-}
-
-input UpdateReplyInput {
-  isRead: Boolean
-  replyId: ID!
+  text: String!
 }
 
 input UpdateRoleInput {
-  addedUserId: ID
-  beforeRoleId: ID
   color: String
-  isDeleted: Boolean = false
   name: String
   permissions: [ServerPermission!]
-  removedUserId: ID
   roleId: ID!
-  updateChannelRole: UpdateChannelRoleInput
 }
 
 input UpdateServerInput {
   avatarFile: Upload
-  banUserId: ID
   bannerFile: Upload
-  beforeServerId: ID
   category: ServerCategory
   description: String
   featuredPosition: Int
-  isDeleted: Boolean = false
   isFeatured: Boolean
   isPublic: Boolean
-  isRead: Boolean = false
-  kickUserId: ID
   name: String
-  nickname: String
-  notificationSetting: NotificationSetting
   ownerId: ID
-  purge: Boolean = false
   sendWelcomeMessage: Boolean
   serverId: ID!
   systemMessagesChannelId: ID
-  unbanUserId: ID
-}
-
-input UpdateUserInput {
-  avatarFile: Upload
-  banGlobalReason: String
-  email: String
-  isBannedGlobal: Boolean = false
-  isDeleted: Boolean = false
-  isRead: Boolean
-  isUnbannedGlobal: Boolean = false
-  name: String
-  purge: Boolean = false
-  relationshipStatus: RelationshipStatus
-  showChat: Boolean
-  userId: ID!
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -604,13 +840,25 @@ type User implements BaseEntity {
   createdAt: DateTime!
   email: String!
   folders: [Folder!]
+  groups: [Group!]!
   id: ID!
   isAdmin: Boolean!
+  isCurrentUser: Boolean!
   isOnline: Boolean!
   isPremium: Boolean!
   lastLoginAt: DateTime
   name: String!
   onlineStatus: OnlineStatus!
+  relationships: [Relationship!]!
+  servers: [ServerUser!]!
   tag: String!
   username: String!
+}
+
+input VoteCommentInput {
+  commentId: ID!
+}
+
+input VotePostInput {
+  postId: ID!
 }

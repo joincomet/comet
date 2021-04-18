@@ -1,0 +1,33 @@
+query posts(
+  $sort: PostsSort
+  $page: Int
+  $pageSize: Int
+  $time: PostsTime
+  $folderId: ID
+  $serverId: ID
+  $search: String
+) {
+  posts(
+    sort: $sort
+    time: $time
+    folderId: $folderId
+    serverId: $serverId
+    search: $search
+    page: $page
+    pageSize: $pageSize
+  ) {
+    hasMore
+    posts {
+      ...Post
+      author {
+        ...ServerUser
+      }
+      server {
+        ...Server
+      }
+      addedByUser {
+        ...User
+      }
+    }
+  }
+}

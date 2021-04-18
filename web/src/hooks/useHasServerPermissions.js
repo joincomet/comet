@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useQuery } from 'urql'
 
 /**
  * @param serverId The ID of the server to check permissions
@@ -9,14 +8,16 @@ import { useQuery } from 'urql'
  */
 export const useHasServerPermissions = ({ serverId, permissions }) => {
   const [user] = useCurrentUser()
-  const [{ data }] = useQuery({
-    query: GET_SERVER_PERMISSIONS,
-    variables: { serverId },
-    pause: !serverId
-  })
+
   return useMemo(() => {
-    if (user.isAdmin) return permissions.map(_ => true)
-    const perms = data?.getServerPermissions ?? []
-    return permissions.map(p => perms.includes(p))
-  }, [user.isAdmin, permissions, data?.getServerPermissions])
+    const allTrue = permissions.map(_ => true)
+    const allFalse = permissions.map(_ => false)
+    if (!user) return allFalse
+    if (user?.isAdmin) return allTrue
+    const server = user?.servers.find(s => s.server.id === serverId)
+    if (!server) return allFalse
+    if (server.owner.id === user.id) return allTrue
+    const roles = server.roles
+    return permissions.map(p => !!roles.find(r => r.permissions.includes(p)))
+  }, [permissions, user, serverId])
 }

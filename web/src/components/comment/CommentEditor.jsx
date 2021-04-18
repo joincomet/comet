@@ -2,9 +2,9 @@ import { useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
 import Editor from '@/components/ui/editor/Editor'
 import { useMutation } from 'urql'
-import { CREATE_COMMENT } from '@/graphql/mutations'
 import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useTranslation } from 'react-i18next'
+import { useCreateCommentMutation } from '@/graphql/hooks'
 
 const commentBtnClass = ctl(`
   text-base
@@ -33,7 +33,7 @@ const cancelBtnClass = ctl(`
 
 export default function CommentEditor({ postId, parentCommentId, setOpen }) {
   const [text, setText] = useState('')
-  const [{ fetching }, createComment] = useMutation(CREATE_COMMENT)
+  const [{ fetching }, createComment] = useCreateCommentMutation()
   const { t } = useTranslation()
 
   return (

@@ -9,6 +9,11 @@ import { useParams } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasChannelPermissions } from '@/hooks/useHasChannelPermissions'
 import { useToggleMessagePin } from '@/components/message/useToggleMessagePin'
+import {
+  useDeleteMessageMutation,
+  usePinMessageMutation,
+  useUnpinMessageMutation
+} from '@/graphql/hooks'
 
 export default function MessageContextMenu({ message, ContextMenuItem }) {
   const { serverId, channelId, userId, groupId } = useParams()
@@ -19,9 +24,9 @@ export default function MessageContextMenu({ message, ContextMenuItem }) {
     serverPermissions: [ServerPermission.ManageMessages]
   })
   const copyToClipboard = useCopyToClipboard()[1]
-  const [_deleteRes, deleteMessage] = useMutation(DELETE_MESSAGE)
-  const [_pinRes, pinMessage] = useMutation(PIN_MESSAGE)
-  const [_unpinRes, unpinMessage] = useMutation(UNPIN_MESSAGE)
+  const [_deleteRes, deleteMessage] = useDeleteMessageMutation()
+  const [_pinRes, pinMessage] = usePinMessageMutation()
+  const [_unpinRes, unpinMessage] = useUnpinMessageMutation()
   const togglePin = useToggleMessagePin(message)
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()

@@ -12,7 +12,8 @@ import {
   Post,
   RelationshipStatus,
   Server,
-  ServerUser
+  ServerUser,
+  ServerUserStatus
 } from '@/entity'
 import { Max, Min } from 'class-validator'
 import { Context } from '@/types'
@@ -100,11 +101,18 @@ export async function posts(
 
   const joinedOnly = !folderId && !serverId
   let server
-  if (serverId) server = await em.findOneOrFail(Server, serverId)
+  if (serverId) {
+    await user.checkJoinedServer(em, serverId)
+    server = await em.findOneOrFail(Server, serverId)
+  }
 
   let servers = []
   if (joinedOnly) {
-    const serverJoins = await em.find(ServerUser, { user }, ['server'])
+    const serverJoins = await em.find(
+      ServerUser,
+      { user, status: ServerUserStatus.Joined },
+      ['server']
+    )
     servers = serverJoins.map(join => join.server)
   }
   let folder
@@ -144,8 +152,8 @@ export async function posts(
       ]
     },
     [
-      'author',
-      'serverUser.roles',
+      'author.roles',
+      'author.user',
       'server',
       'votes',
       'folderPosts.addedByUser'

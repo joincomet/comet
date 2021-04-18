@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMutation } from 'urql'
-import { CREATE_MESSAGE } from '@/graphql/mutations'
 import { IconFormatEmoji, IconUpload } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +9,7 @@ import MessageUploadDialog from '@/components/message/input/MessageUploadDialog'
 import { useTyping } from '@/components/message/input/useTyping'
 import { useMessagePlaceholder } from '@/components/message/input/useMessagePlaceholder'
 import { useMessageInput } from '@/components/message/input/useMessageInput'
+import { useCreateMessageMutation } from '@/graphql/hooks'
 
 export default function MessageInput({ channel, group, user }) {
   const { t } = useTranslation()
@@ -21,7 +21,7 @@ export default function MessageInput({ channel, group, user }) {
   const [files, setFiles] = useState(null)
   const [currentFile, setCurrentFile] = useState(null)
   const [currentFileIndex, setCurrentFileIndex] = useState(0)
-  const [{ fetching }, sendMessage] = useMutation(CREATE_MESSAGE)
+  const [{ fetching }, sendMessage] = useCreateMessageMutation()
 
   const variables = {
     channelId: channel?.id,

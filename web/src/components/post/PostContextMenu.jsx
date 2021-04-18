@@ -9,6 +9,11 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import toast from 'react-hot-toast'
 import { matchPath, useLocation } from 'react-router-dom'
+import {
+  useAddPostToFolderMutation,
+  useDeletePostMutation,
+  useRemovePostFromFolderMutation
+} from '@/graphql/hooks'
 
 export default function PostContextMenu({ post, ContextMenuItem }) {
   const { pathname } = useLocation()
@@ -27,11 +32,9 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
     permissions: [ServerPermission.ManagePosts]
   })
 
-  const { friends } = useUserRelationships()
-
   const copyToClipboard = useCopyToClipboard()[1]
 
-  const [_deletePostRes, deletePost] = useMutation(DELETE_POST)
+  const [_deletePostRes, deletePost] = useDeletePostMutation()
 
   const toggleVote = useTogglePostVote(post)
   const togglePin = useTogglePostPin(post)
@@ -40,19 +43,18 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
   const isAuthor = post?.author?.id === currentUser.id
   const canDelete = isAuthor || canManagePosts
 
-  const userFolders = useUserFolders().filter(f => f.id !== folderId)
-  const [{ data: serverFoldersData }] = useQuery({
-    query: GET_SERVER_FOLDERS,
-    variables: { serverId: post?.server.id },
-    pause: !post
-  })
+  const userFolders = currentUser.folders
   const serverFolders =
-    serverFoldersData?.getServerFolders.filter(f => f.id !== folderId) ?? []
+    currentUser.servers.find(s => s.server.id === post.server.id)?.folders ?? []
+  const friends = currentUser.relationships
+    .filter(rel => rel.status === 'Friends')
+    .map(rel => rel.user)
 
-  const [_addPostRes, addPostToFolder] = useMutation(ADD_POST_TO_FOLDER)
-  const [_removePostRes, removePostFromFolder] = useMutation(
-    REMOVE_POST_FROM_FOLDER
-  )
+  const [_addPostRes, addPostToFolder] = useAddPostToFolderMutation()
+  const [
+    _removePostRes,
+    removePostFromFolder
+  ] = useRemovePostFromFolderMutation()
 
   if (!post) return null
   return (

@@ -1,6 +1,4 @@
 import { useMemo } from 'react'
-import { useQuery } from 'urql'
-import { GET_COMMENTS, GET_POST } from '@/graphql/queries'
 import Post from '@/components/post/Post'
 import { useParams } from 'react-router-dom'
 import PostUsersSidebar from '@/pages/post/PostUsersSidebar'
@@ -13,6 +11,7 @@ import { ServerPermission } from '@/types/ServerPermission'
 import { useTranslation } from 'react-i18next'
 import PostHeader from '@/pages/post/PostHeader'
 import Page from '@/components/ui/page/Page'
+import { useCommentsQuery, usePostQuery } from '@/graphql/hooks'
 
 export default function PostPage() {
   const { t } = useTranslation()
@@ -23,21 +22,19 @@ export default function PostPage() {
     permissions: [ServerPermission.ViewComments, ServerPermission.CreateComment]
   })
 
-  const [{ data }] = useQuery({
-    query: GET_POST,
+  const [{ data }] = usePostQuery({
     variables: {
       postId
     }
   })
-  const post = data?.getPost
+  const post = data?.post
 
-  const [{ data: commentsData }] = useQuery({
-    query: GET_COMMENTS,
+  const [{ data: commentsData }] = useCommentsQuery({
     variables: { postId }
   })
   const comments = useMemo(
-    () => createCommentTree(commentsData?.getComments ?? []),
-    [commentsData?.getComments]
+    () => createCommentTree(commentsData?.comments ?? []),
+    [commentsData?.comments]
   )
   const users = useMemo(() => getParticipants(comments), [comments])
   const showUsers = useStore(s => s.showUsers)

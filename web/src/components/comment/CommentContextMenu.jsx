@@ -10,6 +10,7 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useToggleCommentVote } from '@/components/comment/useToggleCommentVote'
 import { useToggleCommentPin } from '@/components/comment/useToggleCommentPin'
 import { useStore } from '@/hooks/useStore'
+import { useDeleteCommentMutation } from '@/graphql/hooks'
 
 export default function CommentContextMenu({ comment, ContextMenuItem }) {
   const { t } = useTranslation()
@@ -25,7 +26,7 @@ export default function CommentContextMenu({ comment, ContextMenuItem }) {
     ]
   })
   const copyToClipboard = useCopyToClipboard()[1]
-  const [_deleteRes, deleteComment] = useMutation(DELETE_COMMENT)
+  const [_deleteRes, deleteComment] = useDeleteCommentMutation()
   const toggleVote = useToggleCommentVote(comment)
   const togglePin = useToggleCommentPin(comment)
 

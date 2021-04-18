@@ -1,0 +1,9 @@
+mutation markReplyRead($input: MarkReplyReadInput!) {
+  markReplyRead(input: $input) {
+    ...Reply
+  }
+}
+
+mutation markAllRepliesRead {
+  markAllRepliesRead
+}

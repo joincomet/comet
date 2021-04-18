@@ -1,0 +1,33 @@
+mutation createGroup($input: CreateGroupInput!) {
+  createGroup(input: $input) {
+    ...Group
+  }
+}
+
+mutation updateGroup($input: UpdateGroupInput!) {
+  updateGroup(input: $input) {
+    ...Group
+  }
+}
+
+mutation leaveGroup($input: LeaveGroupInput!) {
+  leaveGroup(input: $input)
+}
+
+mutation readGroup($input: ReadGroupInput!) {
+  readGroup(input: $input) {
+    ...Group
+  }
+}
+
+mutation addUserToGroup($input: AddUserToGroupInput!) {
+  addUserToGroup(input: $input) {
+    ...Group
+  }
+}
+
+mutation removeUserFromGroup($input: RemoveUserFromGroupInput!) {
+  removeUserFromGroup(input: $input) {
+    ...Group
+  }
+}

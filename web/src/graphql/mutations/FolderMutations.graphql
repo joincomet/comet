@@ -1,0 +1,51 @@
+mutation createFolder($input: CreateFolderInput!) {
+  createFolder(input: $input) {
+    ...Folder
+  }
+}
+
+mutation updateFolder($input: UpdateFolderInput!) {
+  updateFolder(input: $input) {
+    ...Folder
+  }
+}
+
+mutation deleteFolder($input: DeleteFolderInput!) {
+  deleteFolder(input: $input)
+}
+
+mutation moveServerFolder($input: MoveServerFolderInput!) {
+  moveServerFolder(input: $input) {
+    ...Folder
+  }
+}
+
+mutation moveUserFolder($input: MoveUserFolderInput!) {
+  moveUserFolder(input: $input) {
+    ...Folder
+  }
+}
+
+mutation followFolder($input: FollowFolderInput!) {
+  followFolder(input: $input) {
+    ...Folder
+  }
+}
+
+mutation unfollowFolder($input: UnfollowFolderInput!) {
+  unfollowFolder(input: $input) {
+    ...Folder
+  }
+}
+
+mutation addPostToFolder($input: AddPostToFolderInput!) {
+  addPostToFolder(input: $input) {
+    ...Folder
+  }
+}
+
+mutation removePostFromFolder($input: RemovePostFromFolderInput!) {
+  removePostFromFolder(input: $input) {
+    ...Folder
+  }
+}

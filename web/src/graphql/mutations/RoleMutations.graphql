@@ -1,0 +1,33 @@
+mutation createRole($input: CreateRoleInput!) {
+  createRole(input: $input) {
+    ...Role
+  }
+}
+
+mutation updateRole($input: UpdateRoleInput!) {
+  updateRole(input: $input) {
+    ...Role
+  }
+}
+
+mutation deleteRole($input: DeleteRoleInput!) {
+  deleteRole(input: $input)
+}
+
+mutation moveRole($input: MoveRoleInput!) {
+  moveRole(input: $input) {
+    ...Role
+  }
+}
+
+mutation addUserToRole($input: AddUserToRoleInput!) {
+  addUserToRole(input: $input) {
+    ...ServerUser
+  }
+}
+
+mutation removeUserFromRole($input: RemoveUserFromRoleInput!) {
+  removeUserFromRole(input: $input) {
+    ...ServerUser
+  }
+}

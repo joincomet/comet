@@ -15,6 +15,7 @@ import { seed } from '@/seed'
 import { writeSchemaJson } from '@/writeSchemaJson'
 import { createLoaders } from '@/util/loaders/createLoaders'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -24,11 +25,11 @@ export async function bootstrap() {
   // if (process.env.NODE_ENV !== 'production') {
   console.log(`Setting up the database...`)
   const generator = orm.getSchemaGenerator()
-  await generator.dropSchema(false)
-  await generator.createSchema(false)
+  // await generator.dropSchema(false)
+  // await generator.createSchema(false)
   await generator.updateSchema(false)
 
-  await seed(orm.em.fork())
+  //await seed(orm.em.fork())
   // }
 
   console.log(`Bootstraping schema and server...`)
@@ -36,6 +37,7 @@ export async function bootstrap() {
   const schema = await buildSchema(typeGraphQLConf)
 
   const app = express()
+  app.use(cookieParser())
   app.use(cors({ origin: true, credentials: true }))
   app.use(express.json())
   app.use(
@@ -62,12 +64,16 @@ export async function bootstrap() {
         validationRules: [...specifiedRules, NoLiveMixedWithDeferStreamRule],
         contextFactory: async () => {
           const em = orm.em.fork()
-          const userId = getUserId(request.headers.token as string)
+          const userId = getUserId(
+            (req.cookies.token || request.headers.token) as string
+          )
           const user: User = userId ? await em.findOne(User, userId) : null
           return {
             em,
             user,
             liveQueryStore,
+            req,
+            res,
             loaders: createLoaders(em, user)
           } as Context
         },

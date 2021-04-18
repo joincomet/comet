@@ -2,7 +2,13 @@ import { Field, InputType } from 'type-graphql'
 import { Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import { Channel, Server, ServerCategory, ServerUser } from '@/entity'
+import {
+  Channel,
+  Server,
+  ServerCategory,
+  ServerUser,
+  ServerUserStatus
+} from '@/entity'
 import { ReorderUtils, uploadImageSingle } from '@/util'
 
 @InputType()
@@ -60,14 +66,15 @@ export async function createServer(
     { user },
     { orderBy: { position: 'ASC' } }
   )
-  const join = em.create(ServerUser, {
+  const serverUser = em.create(ServerUser, {
     server,
     user,
+    status: ServerUserStatus.Joined,
     position: firstServer
       ? ReorderUtils.positionBefore(firstServer.position)
       : ReorderUtils.FIRST_POSITION
   })
-  await em.persistAndFlush([server, join])
-  liveQueryStore.invalidate(`Query.getJoinedServers(userId:"${user.id}")`)
+  await em.persistAndFlush([server, serverUser])
+  liveQueryStore.invalidate(`User:${user.id}`)
   return server
 }

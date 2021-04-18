@@ -1,0 +1,21 @@
+fragment Post on Post {
+  id
+  title
+  isPinned
+  text
+  linkUrl
+  imageUrls
+  relativeUrl
+  commentCount
+  voteCount
+  isVoted
+  thumbnailUrl
+  domain
+  isDeleted
+  createdAt
+  updatedAt
+  addedAt
+  linkMetadata {
+    ...Metadata
+  }
+}

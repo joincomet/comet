@@ -1,0 +1,25 @@
+fragment Message on Message {
+  id
+  text
+  createdAt
+  updatedAt
+  type
+  image {
+    originalUrl
+    popupUrl
+    popupWidth
+    popupHeight
+    smallUrl
+    smallWidth
+    smallHeight
+  }
+  file {
+    url
+    mime
+    filename
+    size
+  }
+  linkMetadatas {
+    ...Metadata
+  }
+}

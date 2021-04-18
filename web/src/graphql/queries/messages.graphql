@@ -1,0 +1,32 @@
+query messages(
+  $channelId: ID
+  $userId: ID
+  $groupId: ID
+  $pageSize: Int
+  $page: Int
+  $initialTime: DateTime
+) {
+  messages(
+    channelId: $channelId
+    userId: $userId
+    groupId: $groupId
+    pageSize: $pageSize
+    page: $page
+    initialTime: $initialTime
+  ) {
+    hasMore
+    messages {
+      ...Message
+      author {
+        ...User
+      }
+      serverUser {
+        name
+        color
+        roles {
+          ...Role
+        }
+      }
+    }
+  }
+}

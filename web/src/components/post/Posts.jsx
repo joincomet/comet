@@ -1,6 +1,5 @@
 import { Virtuoso } from 'react-virtuoso'
 import { usePosts } from '@/components/post/usePosts'
-import CreatePostHeader from '@/components/post/CreatePostHeader'
 import Post from '@/components/post/Post'
 import { IconSpinner } from '@/components/ui/icons/IconSpinner'
 import { useCallback, useRef } from 'react'
@@ -34,7 +33,11 @@ export default function Posts({ folderId, serverId, showServerName, header }) {
               <div className="flex items-center justify-center h-20">
                 <IconSpinner />
               </div>
-            ) : null
+            ) : (
+              <div className="flex items-center justify-center h-20 text-primary">
+                No posts :(
+              </div>
+            )
         }}
         endReached={() => {
           if (!fetching && hasMore) {

@@ -27,7 +27,7 @@ export class RepliesResolver {
   @Query(() => [Reply])
   async replies(
     @Ctx() ctx: Context,
-    @Arg('id', () => ID) id: string
+    @Arg('userId', () => ID) userId: string
   ): Promise<Reply[]> {
     return replies(ctx)
   }

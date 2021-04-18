@@ -10,13 +10,18 @@ import MessagesStart from '@/components/message/MessagesStart'
 import { usePrevious } from 'react-use'
 import { useMutation } from 'urql'
 import { useLocation } from 'react-router-dom'
+import {
+  useReadChannelMutation,
+  useReadDmMutation,
+  useReadGroupMutation
+} from '@/graphql/hooks'
 
 const PREPEND_OFFSET = 10 ** 7
 
 export default function Messages({ channel, user, group }) {
-  const [_viewDmRes, viewDm] = useMutation(READ_DM)
-  const [_viewGroupRes, viewGroup] = useMutation(READ_GROUP)
-  const [_viewChannelRes, viewChannel] = useMutation(READ_CHANNEL)
+  const [_viewDmRes, viewDm] = useReadDmMutation()
+  const [_viewGroupRes, viewGroup] = useReadGroupMutation()
+  const [_viewChannelRes, viewChannel] = useReadChannelMutation()
   const [initialTime, setInitialTime] = useState(() => new Date())
 
   const { pathname } = useLocation()

@@ -4,11 +4,12 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import toast from 'react-hot-toast'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useTranslation } from 'react-i18next'
+import { useUnvotePostMutation, useVotePostMutation } from '@/graphql/hooks'
 
 export const useTogglePostVote = post => {
   const { t } = useTranslation()
-  const [_voteRes, vote] = useMutation(VOTE_POST)
-  const [_unvoteRes, unvote] = useMutation(UNVOTE_POST)
+  const [_voteRes, vote] = useVotePostMutation()
+  const [_unvoteRes, unvote] = useUnvotePostMutation()
   const [canVote] = useHasServerPermissions({
     serverId: post?.server.id,
     permissions: [ServerPermission.VotePost]

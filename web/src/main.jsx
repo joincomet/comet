@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
-import { EventSourcePolyfill } from 'event-source-polyfill'
-window.EventSource = EventSourcePolyfill
+/*import { EventSourcePolyfill } from 'event-source-polyfill'
+window.EventSource = EventSourcePolyfill*/
 
 import './locales/i18n'
 

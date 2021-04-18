@@ -1,0 +1,53 @@
+mutation createFriendRequest($input: CreateFriendRequestInput!) {
+  createFriendRequest(input: $input) {
+    ...Relationship
+  }
+}
+
+mutation deleteFriendRequest($input: DeleteFriendRequestInput!) {
+  deleteFriendRequest(input: $input) {
+    ...Relationship
+  }
+}
+
+mutation answerFriendRequest($input: AnswerFriendRequestInput!) {
+  answerFriendRequest(input: $input) {
+    ...Relationship
+  }
+}
+
+mutation blockUser($input: BlockUserInput!) {
+  blockUser(input: $input) {
+    ...Relationship
+  }
+}
+
+mutation unblockUser($input: UnblockUserInput!) {
+  unblockUser(input: $input) {
+    ...Relationship
+  }
+}
+
+mutation removeFriend($input: RemoveFriendInput!) {
+  removeFriend(input: $input) {
+    ...Relationship
+  }
+}
+
+mutation readDm($input: ReadDmInput!) {
+  readDm(input: $input) {
+    ...Relationship
+  }
+}
+
+mutation openDm($input: OpenDmInput!) {
+  openDm(input: $input) {
+    ...Relationship
+  }
+}
+
+mutation closeDm($input: CloseDmInput!) {
+  closeDm(input: $input) {
+    ...Relationship
+  }
+}

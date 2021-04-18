@@ -3,16 +3,15 @@ import AuthCard from '@/pages/auth/AuthCard'
 import isEmail from 'validator/es/lib/isEmail'
 import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
-import { useMutation } from 'urql'
-import { CREATE_ACCOUNT } from '@/graphql/mutations'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
+import { useCreateAccountMutation } from '@/graphql/hooks'
 
 export default function RegisterPage() {
   const { t } = useTranslation()
-  const [{ fetching }, createAccount] = useMutation(CREATE_ACCOUNT)
+  const [{ fetching }, createAccount] = useCreateAccountMutation()
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
   const [user] = useCurrentUser()
@@ -21,7 +20,7 @@ export default function RegisterPage() {
     if (user) push('/me')
   }, [user])
 
-  const onSubmit = variables => createAccount(variables)
+  const onSubmit = input => createAccount({ input })
 
   return (
     <>

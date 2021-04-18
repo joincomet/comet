@@ -1,0 +1,5 @@
+query channelUsers($channelId: ID!) @live {
+  channelUsers(channelId: $channelId) {
+    ...ServerUser
+  }
+}

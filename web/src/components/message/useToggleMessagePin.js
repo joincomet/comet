@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 import { useMutation } from 'urql'
+import { usePinMessageMutation, useUnpinMessageMutation } from '@/graphql/hooks'
 
 export const useToggleMessagePin = message => {
-  const [_pinRes, pin] = useMutation(PIN_MESSAGE)
-  const [_unpinRes, unpin] = useMutation(UNPIN_MESSAGE)
+  const [_pinRes, pin] = usePinMessageMutation()
+  const [_unpinRes, unpin] = useUnpinMessageMutation()
 
   return useCallback(() => {
     const vars = { messageId: message.id }

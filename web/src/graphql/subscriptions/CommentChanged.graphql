@@ -1,0 +1,19 @@
+subscription CommentChanged {
+  commentChanged {
+    added {
+      ...Comment
+      post {
+        id
+      }
+    }
+    updated {
+      ...Comment
+    }
+    deleted {
+      ...Comment
+      post {
+        id
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+query folder($id: ID!) @live {
+  folder(id: $id) {
+    ...Folder
+    postCount
+    owner {
+      ...User
+    }
+    server {
+      ...Server
+    }
+  }
+}

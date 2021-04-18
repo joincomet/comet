@@ -6,6 +6,6 @@ export async function RepliesSubscriptionFilter({
   payload: { ids },
   context: { user, em }
 }: SubscriptionFilter<BulkChangePayload>): Promise<boolean> {
-  const replies = await em.find(Reply, { id: ids, toUser: user })
+  const replies = await em.find(Reply, { id: ids, user })
   return !!replies.length
 }

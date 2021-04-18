@@ -8,6 +8,12 @@ import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useStore } from '@/hooks/useStore'
 import { useHistory } from 'react-router-dom'
 import { FriendStatus } from '@/types/FriendStatus'
+import {
+  useBanUserFromServerMutation,
+  useCloseDmMutation,
+  useKickUserFromServerMutation,
+  useReadDmMutation
+} from '@/graphql/hooks'
 
 export default function UserContextMenu({
   user,
@@ -33,15 +39,13 @@ export default function UserContextMenu({
     ]
   })
 
-  const [_hideRes, hideDm] = useMutation(CLOSE_DM)
-  const [_viewRes, viewDm] = useMutation(READ_DM)
-  const [_banRes, banUser] = useMutation(BAN_USER_FROM_SERVER)
-  const [_kickRes, kickUser] = useMutation(KICK_USER_FROM_SERVER)
-  const [_statusRes, changeFriendStatus] = useMutation(CHANGE_FRIEND_STATUS)
+  const [_hideRes, hideDm] = useCloseDmMutation()
+  const [_viewRes, viewDm] = useReadDmMutation()
+  const [_banRes, banUser] = useBanUserFromServerMutation()
+  const [_kickRes, kickUser] = useKickUserFromServerMutation()
 
-  const { friends, outgoingFriendRequests } = useUserRelationships()
-  const isFriend = friends.map(f => f.id).includes(user?.id)
-  const hasSentFriendRequest = outgoingFriendRequests.includes(user?.id)
+  const isFriend = false // friends.map(f => f.id).includes(user?.id)
+  const hasSentFriendRequest = false // outgoingFriendRequests.includes(user?.id)
   const setDialogUser = useStore(s => s.setDialogUser)
   const { push } = useHistory()
 
@@ -81,16 +85,7 @@ export default function UserContextMenu({
         {user.id !== currentUser.id ? (
           <>
             {isFriend ? (
-              <ContextMenuItem
-                label={t('user.context.removeFriend')}
-                onClick={() =>
-                  changeFriendStatus({
-                    userId: user.id,
-                    status: FriendStatus.None
-                  })
-                }
-                red
-              />
+              <ContextMenuItem label={t('user.context.removeFriend')} red />
             ) : (
               <ContextMenuItem
                 label={t('user.context.addFriend')}

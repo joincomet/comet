@@ -9,8 +9,8 @@ export async function markAllRepliesRead({
   await em
     .createQueryBuilder(Reply)
     .update({ isRead: true })
-    .where({ toUser: user })
+    .where({ user })
     .execute()
-  liveQueryStore.invalidate(`Query.getReplies(id:"${user.id}")`)
+  liveQueryStore.invalidate(`Query.replies(userId:"${user.id}")`)
   return true
 }

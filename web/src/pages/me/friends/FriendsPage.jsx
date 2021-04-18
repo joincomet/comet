@@ -7,6 +7,7 @@ import FriendRequestListItem from '@/pages/me/friends/FriendRequestListItem'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
 import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'
+import { useUserRelationships } from '@/hooks/useUserRelationships'
 
 const label = ctl(`
   px-2
@@ -24,7 +25,7 @@ export default function FriendsPage() {
     friends,
     outgoingFriendRequests,
     incomingFriendRequests,
-    blockingUsers
+    blocking
   } = useUserRelationships()
   const onlineFriends = friends.filter(f => f.isOnline)
   const friendRequests = outgoingFriendRequests.concat(incomingFriendRequests)
@@ -68,7 +69,7 @@ export default function FriendsPage() {
         )}
         {friendsPage === 'Blocked' && (
           <>
-            <div className={label}>Blocked Users - {blockingUsers.length}</div>
+            <div className={label}>Blocked Users - {blocking.length}</div>
           </>
         )}
 

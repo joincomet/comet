@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
 import SidebarFolder from '@/components/folder/SidebarFolder'
 import CreateFolder from '@/components/folder/CreateFolder'
+import { useUserFolders } from '@/hooks/graphql/useUserFolders'
 
 export default function UserFoldersSidebar() {
   const { t } = useTranslation()

@@ -1,0 +1,7 @@
+fragment Group on Group {
+  id
+  name
+  displayName
+  avatarUrl
+  unreadCount
+}

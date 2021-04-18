@@ -48,10 +48,10 @@ export class PostResolver {
   @Query(() => Post)
   async post(
     @Ctx() ctx: Context,
-    @Arg('postId', () => ID)
-    postId: string
+    @Arg('id', () => ID)
+    id: string
   ): Promise<Post> {
-    return post(ctx, postId)
+    return post(ctx, id)
   }
 
   // --- Mutations ---

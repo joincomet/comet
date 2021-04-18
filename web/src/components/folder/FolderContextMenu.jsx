@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useState } from 'react'
-import { UPDATE_FOLDER } from '@/graphql/mutations'
 import { useMutation } from 'urql'
 import { FolderVisibility } from '@/types/FolderVisibility'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useUpdateFolderMutation } from '@/graphql/hooks'
 
 export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const { t } = useTranslation()
@@ -17,7 +17,7 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
     .includes(folder.id)
   const editable = folder.name !== 'Read Later' && folder.name !== 'Favorites'
   const [c, setC] = useState(false)
-  const [_updateFolderRes, updateFolder] = useMutation(UPDATE_FOLDER)
+  const [_updateFolderRes, updateFolder] = useUpdateFolderMutation()
   const { push } = useHistory()
   const { pathname } = useLocation()
   const matched = matchPath(pathname, { path: '/server/:serverId' })

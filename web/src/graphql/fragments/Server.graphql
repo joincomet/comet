@@ -1,0 +1,9 @@
+fragment Server on Server {
+  id
+  name
+  description
+  avatarUrl
+  bannerUrl
+  userCount
+  isPublic
+}

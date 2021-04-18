@@ -10,6 +10,7 @@ import { useStore } from '@/hooks/useStore'
 import { getOS } from '@/utils/getOS'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
+import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
 
 export default function ServerList() {
   const servers = useJoinedServers()

@@ -1,0 +1,24 @@
+fragment Reply on Reply {
+  id
+  isRead
+  comment {
+    id
+    text
+    voteCount
+    author {
+      ...ServerUser
+    }
+    post {
+      id
+      title
+    }
+    parentComment {
+      id
+      text
+      voteCount
+      author {
+        ...ServerUser
+      }
+    }
+  }
+}

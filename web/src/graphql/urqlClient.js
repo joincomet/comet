@@ -5,7 +5,6 @@ import {
   subscriptionExchange
 } from 'urql'
 import { retryExchange } from '@urql/exchange-retry'
-import { multipartFetchExchange } from '@urql/exchange-multipart-fetch'
 import { devtoolsExchange } from '@urql/devtools'
 import toast from 'react-hot-toast'
 import { cacheExchange } from '@/graphql/cacheExchange'
@@ -13,6 +12,8 @@ import i18n from '@/locales/i18n'
 import { createApplyLiveQueryPatch } from '@n1ru4l/graphql-live-query-patch'
 import { applyAsyncIterableIteratorToSink } from '@n1ru4l/push-pull-async-iterable-iterator'
 import { Subscription } from 'sse-z'
+import { getOperationAST, parse } from 'graphql'
+import { multipartFetchExchange } from '@/graphql/multipartFetchExchange'
 
 const applyLiveQueryPatch = createApplyLiveQueryPatch()
 const url = import.meta.env.PROD
@@ -27,7 +28,8 @@ export const urqlClient = createClient({
     return {
       headers: {
         token
-      }
+      },
+      credentials: 'include'
     }
   },
   exchanges: [
@@ -62,32 +64,42 @@ export const urqlClient = createClient({
     multipartFetchExchange,
     subscriptionExchange({
       forwardSubscription: operation => ({
-        subscribe: sink => ({
-          unsubscribe: applyAsyncIterableIteratorToSink(
-            applyLiveQueryPatch(
-              /*networkInterface.execute({
-                operation: operation.query,
-                variables: operation.variables,
-              })*/
-              new Subscription({
-                url: url,
-                searchParams: {
-                  operationName: operation.key,
-                  query: operation.query,
-                  variables: JSON.stringify(operation.variables)
-                },
-                eventSourceOptions: {
-                  // Ensure cookies are included with the request
-                  withCredentials: true
-                },
-                onNext: data => {
-                  sink.next(JSON.parse(data))
-                }
-              })
-            ),
-            sink
-          )
-        })
+        subscribe: sink => {
+          const parsedDocument = parse(operation.query)
+          const documentNode = getOperationAST(parsedDocument)
+          const searchParams = {
+            operationName: documentNode.name.value,
+            query: operation.query
+          }
+          if (operation.variables) {
+            searchParams.variables = JSON.stringify(operation.variables)
+          }
+          const token = localStorage.getItem('token')
+          const headers = token ? { token } : null
+          return {
+            unsubscribe: applyAsyncIterableIteratorToSink(
+              applyLiveQueryPatch(
+                /*networkInterface.execute({
+                  operation: operation.query,
+                  variables: operation.variables,
+                })*/
+                new Subscription({
+                  url,
+                  searchParams,
+                  eventSourceOptions: {
+                    // Ensure cookies are included with the request
+                    withCredentials: true
+                    // headers
+                  },
+                  onNext: data => {
+                    sink.next(JSON.parse(data))
+                  }
+                })
+              ),
+              sink
+            )
+          }
+        }
       }),
       enableAllOperations: true
     })

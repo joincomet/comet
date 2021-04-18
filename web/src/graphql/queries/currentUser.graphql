@@ -1,0 +1,42 @@
+query currentUser @live {
+  user {
+    ...User
+    isAdmin
+    servers {
+      server {
+        ...Server
+        channels {
+          ...Channel
+        }
+        roles {
+          ...Role
+          channelPermissions {
+            channel {
+              id
+            }
+            allowedPermissions
+            deniedPermissions
+          }
+        }
+      }
+    }
+    relationships {
+      ...Relationship
+      user {
+        ...User
+      }
+    }
+    groups {
+      ...Group
+      owner {
+        id
+      }
+      users {
+        ...User
+      }
+    }
+    folders {
+      ...Folder
+    }
+  }
+}

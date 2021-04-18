@@ -5,9 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
 import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'
-import { useQuery } from 'urql'
-import { GET_PUBLIC_SERVERS } from '@/graphql/queries'
 import { useState } from 'react'
+import { usePublicServersQuery } from '@/graphql/hooks'
 
 export default function ExplorePage() {
   const [page, setPage] = useState(0)
@@ -26,8 +25,7 @@ export default function ExplorePage() {
 
   const { t } = useTranslation()
 
-  const [{ data }] = useQuery({
-    query: GET_PUBLIC_SERVERS,
+  const [{ data }] = usePublicServersQuery({
     variables: {
       sort: exploreSort,
       category: exploreCategory,
@@ -35,7 +33,7 @@ export default function ExplorePage() {
       pageSize: 20
     }
   })
-  const servers = data?.getPublicServers ?? []
+  const servers = data?.publicServers ?? []
 
   return (
     <Page leftSidebar={<ExploreSidebar />}>

@@ -1,0 +1,55 @@
+mutation createMessage($input: CreateMessageInput!) {
+  createMessage(input: $input) {
+    ...Message
+    author {
+      ...User
+    }
+    serverUser {
+      ...ServerUser
+    }
+  }
+}
+
+mutation updateMessage($input: UpdateMessageInput!) {
+  updateMessage(input: $input) {
+    ...Message
+    author {
+      ...User
+    }
+    serverUser {
+      ...ServerUser
+    }
+  }
+}
+
+mutation deleteMessage($input: DeleteMessageInput!) {
+  deleteMessage(input: $input)
+}
+
+mutation pinMessage($input: PinMessageInput!) {
+  pinMessage(input: $input) {
+    ...Message
+    author {
+      ...User
+    }
+    serverUser {
+      ...ServerUser
+    }
+  }
+}
+
+mutation unpinMessage($input: UnpinMessageInput!) {
+  unpinMessage(input: $input) {
+    ...Message
+    author {
+      ...User
+    }
+    serverUser {
+      ...ServerUser
+    }
+  }
+}
+
+mutation startTyping($userId: ID, $groupId: ID, $channelId: ID) {
+  startTyping(userId: $userId, groupId: $groupId, channelId: $channelId)
+}

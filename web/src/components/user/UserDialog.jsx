@@ -4,13 +4,11 @@ import UserAvatar from '@/components/user/UserAvatar'
 import { IconDotsVertical, IconFolder } from '@/components/ui/icons/Icons'
 import ctl from '@netlify/classnames-template-literals'
 import { useTranslation } from 'react-i18next'
-import { GET_MUTUAL_SERVERS } from '@/graphql/queries/server/GetMutualServers'
-import { useQuery } from 'urql'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { Link } from 'react-router-dom'
-import { GET_MUTUAL_FRIENDS } from '@/graphql/queries/user/GetMutualFriends'
 import { useStore } from '@/hooks/useStore'
-import { GET_OTHER_USER_FOLDERS } from '@/graphql/queries/folder/GetOtherUserFolders'
+import { useUserQuery } from '@/graphql/hooks'
+import { useUserRelationships } from '@/hooks/useUserRelationships'
 
 const tabClass = active =>
   ctl(`
@@ -75,33 +73,21 @@ export default memo(function UserDialog() {
   const { t } = useTranslation()
   const [currentTab, setCurrentTab] = useState(tab.MutualServers)
 
-  const [{ data: mutualServersData }] = useQuery({
-    query: GET_MUTUAL_SERVERS,
-    variables: { userId: user?.id },
+  const [{ data: userData }] = useUserQuery({
+    variables: { id: user?.id },
     pause: !user
   })
-  const mutualServers = mutualServersData?.getMutualServers ?? []
 
-  const [{ data: mutualFriendsData }] = useQuery({
-    query: GET_MUTUAL_FRIENDS,
-    variables: { userId: user?.id },
-    pause: !user
-  })
-  const mutualFriends = mutualFriendsData?.getMutualFriends ?? []
-
-  const [{ data: foldersData }] = useQuery({
-    query: GET_OTHER_USER_FOLDERS,
-    variables: { userId: user?.id },
-    pause: !user
-  })
-  const folders = foldersData?.getOtherUserFolders ?? []
+  const mutualFriends = userData?.user?.relationships.map(r => r.user) ?? []
+  const mutualServers = userData?.user?.servers ?? []
+  const folders = userData?.user?.folders ?? []
 
   const {
     outgoingFriendRequests,
     incomingFriendRequests,
     friends,
-    blockingUsers,
-    blockedByUsers
+    blocking,
+    blockedBy
   } = useUserRelationships()
   const isFriendRequestSent = outgoingFriendRequests
     .map(u => u.id)
@@ -110,8 +96,8 @@ export default memo(function UserDialog() {
     .map(u => u.id)
     .includes(user?.id)
   const isFriend = friends.map(u => u.id).includes(user?.id)
-  const isBlocking = blockingUsers.map(u => u.id).includes(user?.id)
-  const isBlocked = blockedByUsers.map(u => u.id).includes(user?.id)
+  const isBlocking = blocking.map(u => u.id).includes(user?.id)
+  const isBlocked = blockedBy.map(u => u.id).includes(user?.id)
 
   const buttons = useMemo(() => {
     if (isFriendRequestReceived)
@@ -225,16 +211,16 @@ export default memo(function UserDialog() {
         </div>
         <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar">
           {currentTab === tab.MutualServers &&
-            mutualServers.map(server => (
+            mutualServers.map(serverUser => (
               <Link
-                to={`/server/${server.id}`}
-                key={server.id}
+                to={`/server/${serverUser.server.id}`}
+                key={serverUser.server.id}
                 className={itemClass}
                 onClick={() => close()}
               >
-                <ServerAvatar server={server} size={10} />
+                <ServerAvatar server={serverUser.server} size={10} />
                 <div className="pl-2.5 text-base text-secondary font-medium">
-                  {server.name}
+                  {serverUser.server.name}
                 </div>
               </Link>
             ))}

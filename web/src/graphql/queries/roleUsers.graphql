@@ -1,0 +1,6 @@
+query roleUsers($roleId: ID!) @live {
+  roleUsers(roleId: $roleId) {
+    nickname
+    ...ServerUser
+  }
+}

@@ -7,6 +7,7 @@ export const ServerPermission = {
   CreateInvite: 'CreateInvite',
 
   ChangeNickname: 'ChangeNickname',
+  ManageNicknames: 'ManageNicknames',
   ManageUsers: 'ManageUsers',
 
   SendMessages: 'SendMessages',

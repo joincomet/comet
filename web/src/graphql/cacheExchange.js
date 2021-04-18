@@ -1,78 +1,30 @@
-import {
-  CHANNEL_FRAGMENT,
-  COMMENT_FRAGMENT,
-  POST_FRAGMENT
-} from '@/graphql/fragments'
-import {
-  GET_COMMENTS,
-  GET_CURRENT_USER,
-  GET_JOINED_SERVERS,
-  GET_MESSAGES,
-  GET_POSTS
-} from '@/graphql/queries'
 import { cacheExchange as ce } from '@urql/exchange-graphcache'
 import { simplePagination } from '@urql/exchange-graphcache/extras'
 import schema from '../../../schema.json'
-
-const removePostFromGetPosts = (postId, cache) => {
-  cache
-    .inspectFields('Query')
-    .filter(field => field.fieldName === 'getPosts')
-    .forEach(field => {
-      cache.updateQuery(
-        {
-          query: GET_POSTS,
-          variables: { ...field.arguments }
-        },
-        data => {
-          data.getPosts.forEach(res => {
-            res.post = res.posts.filter(post => post.id !== postId)
-          })
-          return data
-        }
-      )
-    })
-}
-
-const removeMessageFromGetMessages = (messageId, cache) => {
-  cache
-    .inspectFields('Query')
-    .filter(field => field.fieldName === 'getMessages')
-    .forEach(field => {
-      cache.updateQuery(
-        {
-          query: GET_MESSAGES,
-          variables: { ...field.arguments }
-        },
-        data => {
-          data.getMessages.forEach(res => {
-            res.message = res.messages.filter(
-              message => message.id !== messageId
-            )
-          })
-          return data
-        }
-      )
-    })
-}
+import {
+  ChannelFragmentDoc,
+  CommentsDocument,
+  CurrentUserDocument,
+  MessagesDocument
+} from '@/graphql/hooks'
 
 export const cacheExchange = ce({
   schema,
   keys: {
-    GetPostsResponse: () => null,
-    GetMessagesResponse: () => null,
+    PostsResponse: () => null,
+    MessagesResponse: () => null,
     LinkMetadata: () => null,
     Image: i => i.originalUrl,
     File: f => f.url
   },
   resolvers: {
     Query: {
-      getMessages: simplePagination({
+      messages: simplePagination({
         offsetArgument: 'page',
         limitArgument: 'pageSize',
         mergeMode: 'before'
       }),
-      getPosts: simplePagination({
+      posts: simplePagination({
         offsetArgument: 'page',
         limitArgument: 'pageSize',
         mergeMode: 'after'
@@ -83,7 +35,7 @@ export const cacheExchange = ce({
     Mutation: {
       login({ login: { accessToken, user } }, _variables, cache) {
         localStorage.setItem('token', accessToken)
-        cache.updateQuery({ query: GET_CURRENT_USER }, data => {
+        cache.updateQuery({ query: CurrentUserDocument }, data => {
           data.getCurrentUser = user
           return data
         })
@@ -94,7 +46,7 @@ export const cacheExchange = ce({
         cache
       ) {
         localStorage.setItem('token', accessToken)
-        cache.updateQuery({ query: GET_CURRENT_USER }, data => {
+        cache.updateQuery({ query: CurrentUserDocument }, data => {
           data.getCurrentUser = user
           return data
         })
@@ -106,7 +58,7 @@ export const cacheExchange = ce({
           .forEach(field => {
             cache.updateQuery(
               {
-                query: GET_COMMENTS,
+                query: CommentsDocument,
                 variables: {
                   postId,
                   sort: field.arguments.sort
@@ -126,12 +78,12 @@ export const cacheExchange = ce({
       createChannel({ createChannel: channel }, { serverId }, cache) {
         cache.updateQuery(
           {
-            query: GET_JOINED_SERVERS
+            query: CurrentUserDocument
           },
           data => {
             if (data) {
-              data.getJoinedServers
-                .find(s => s.id === serverId)
+              data.servers
+                .find(s => s.server.id === serverId)
                 .channels.unshift(channel)
               return data
             } else {
@@ -143,11 +95,11 @@ export const cacheExchange = ce({
       createServer({ createServer: server }, _variables, cache) {
         cache.updateQuery(
           {
-            query: GET_JOINED_SERVERS
+            query: CurrentUserDocument
           },
           data => {
             if (data) {
-              data.getJoinedServers.unshift(server)
+              data.servers.unshift(server)
               return data
             } else {
               return null
@@ -178,10 +130,10 @@ export const cacheExchange = ce({
           }
           if (channelId) {
             variables = { channelId }
-            const channel = cache.readFragment(CHANNEL_FRAGMENT, {
+            const channel = cache.readFragment(ChannelFragmentDoc, {
               id: channelId
             })
-            cache.writeFragment(CHANNEL_FRAGMENT, {
+            cache.writeFragment(ChannelFragmentDoc, {
               ...channel,
               isUnread: true
             })
@@ -195,7 +147,7 @@ export const cacheExchange = ce({
 
           cache.updateQuery(
             {
-              query: GET_MESSAGES,
+              query: MessagesDocument,
               variables: {
                 ...variables,
                 pageSize: 100,
@@ -205,9 +157,7 @@ export const cacheExchange = ce({
             },
             data => {
               if (data !== null) {
-                data.getMessages[data.getMessages.length - 1].messages.push(
-                  message
-                )
+                data.messages[data.messages.length - 1].messages.push(message)
                 return data
               } else {
                 return null

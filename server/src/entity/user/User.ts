@@ -94,6 +94,7 @@ export class User extends BaseEntity {
   })
   userFolders = new Collection<UserFolder>(this)
 
+  @Field(() => [ServerUser])
   @OneToMany(() => ServerUser, 'user', {
     orderBy: { position: QueryOrder.ASC }
   })
@@ -108,6 +109,7 @@ export class User extends BaseEntity {
   @ManyToMany(() => Group, 'users')
   groups: Group[]
 
+  @Field(() => [Relationship])
   @OneToMany(() => Relationship, 'owner')
   relationships = new Collection<Relationship>(this)
 

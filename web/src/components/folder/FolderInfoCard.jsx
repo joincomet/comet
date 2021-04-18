@@ -13,9 +13,9 @@ import ServerPopup from '@/components/server/ServerPopup'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation } from 'urql'
-import { UPDATE_FOLDER } from '@/graphql/mutations'
 import UserPopup from '@/components/user/UserPopup'
 import UserAvatar from '@/components/user/UserAvatar'
+import { useUpdateFolderMutation } from '@/graphql/hooks'
 
 export default function FolderInfoCard({ folder }) {
   const { t } = useTranslation()
@@ -32,7 +32,7 @@ export default function FolderInfoCard({ folder }) {
 
   const editable = folder?.name !== 'Favorites' && folder?.name !== 'Read Later'
 
-  const [_updateFolderRes, updateFolder] = useMutation(UPDATE_FOLDER)
+  const [_updateFolderRes, updateFolder] = useUpdateFolderMutation()
 
   const [avatarFile, setAvatarFile] = useState(null)
 

@@ -41,9 +41,9 @@ export class FolderResolver {
   @Query(() => Folder)
   async folder(
     @Ctx() ctx: Context,
-    @Arg('folderId', () => ID) folderId: string
+    @Arg('id', () => ID) id: string
   ): Promise<Folder> {
-    return folder(ctx, folderId)
+    return folder(ctx, id)
   }
 
   // --- Mutations ---

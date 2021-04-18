@@ -1,4 +1,3 @@
-import { LoginResponse } from '@/resolver/user'
 import { Context } from '@/types'
 import { Field, InputType } from 'type-graphql'
 import isEmail from 'validator/lib/isEmail'
@@ -6,6 +5,7 @@ import { User } from '@/entity'
 import * as argon2 from 'argon2'
 import { CustomError } from '@/types/CustomError'
 import { createAccessToken } from '@/util'
+import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
 
 @InputType()
 export class LoginInput {
@@ -17,7 +17,7 @@ export class LoginInput {
 }
 
 export async function login(
-  { em }: Context,
+  { em, res }: Context,
   { email, password }: LoginInput
 ): Promise<LoginResponse> {
   email = email.toLowerCase()
@@ -33,8 +33,14 @@ export async function login(
     )
   user.lastLoginAt = new Date()
   await em.persistAndFlush(user)
+  const accessToken = createAccessToken(user)
+  res.cookie('token', accessToken, {
+    maxAge: 2592000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production'
+  })
   return {
-    accessToken: createAccessToken(user),
+    accessToken,
     user
   } as LoginResponse
 }

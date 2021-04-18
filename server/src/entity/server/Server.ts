@@ -90,6 +90,7 @@ export class Server extends BaseEntity {
   @Property()
   sendWelcomeMessage: boolean = true
 
+  @Field(() => [Channel])
   @OneToMany(() => Channel, 'server', {
     orderBy: { position: QueryOrder.ASC }
   })

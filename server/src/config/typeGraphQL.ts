@@ -4,49 +4,33 @@ import path from 'path'
 import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query'
 import {
   ChannelResolver,
-  ChannelQueries,
   CommentResolver,
-  CommentQueries,
-  FolderMutations,
   FolderResolver,
   GroupResolver,
   MessageResolver,
-  MessageQueries,
   PostResolver,
-  PostQueries,
-  ReplyMutations,
+  RelationshipsResolver,
   RepliesResolver,
   RoleResolver,
-  RoleResolver,
-  ServerMutations,
   ServerResolver,
   SubscriptionResolver,
-  UserMutations,
   UserResolver
 } from '@/resolver'
 
 export const typeGraphQLConf = {
   resolvers: [
-    ChannelQueries,
     ChannelResolver,
-    CommentQueries,
     CommentResolver,
     FolderResolver,
-    FolderMutations,
     GroupResolver,
-    MessageQueries,
     MessageResolver,
-    PostQueries,
     PostResolver,
+    RelationshipsResolver,
     RepliesResolver,
-    ReplyMutations,
-    RoleResolver,
     RoleResolver,
     ServerResolver,
-    ServerMutations,
     SubscriptionResolver,
-    UserResolver,
-    UserMutations
+    UserResolver
   ],
   emitSchemaFile:
     process.env.NODE_ENV === 'production'

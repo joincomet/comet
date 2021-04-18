@@ -1,7 +1,9 @@
 import { Field, ID, InputType, Int } from 'type-graphql'
 import { Length } from 'class-validator'
-import { ServerCategory } from '@/entity'
+import { Server, ServerCategory, ServerPermission } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
+import { Context } from '@/types'
+import { uploadImageSingle } from '@/util'
 
 @InputType()
 export class UpdateServerInput {
@@ -42,4 +44,49 @@ export class UpdateServerInput {
 
   @Field({ nullable: true })
   sendWelcomeMessage: boolean
+}
+
+export async function updateServer(
+  { em, user, liveQueryStore }: Context,
+  {
+    serverId,
+    name,
+    description,
+    isPublic,
+    isFeatured,
+    featuredPosition,
+    category,
+    avatarFile,
+    bannerFile,
+    ownerId,
+    systemMessagesChannelId,
+    sendWelcomeMessage
+  }: UpdateServerInput
+): Promise<Server> {
+  const server = await em.findOneOrFail(Server, serverId, ['owner'])
+  if ((isFeatured || featuredPosition) && !user.isAdmin)
+    throw new Error('Must be global admin to set featured servers')
+  if (ownerId && server.owner !== user)
+    throw new Error('Must be server owner to change owner')
+  await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
+  em.assign(server, {
+    name: name ?? server.name,
+    description: description ?? server.description,
+    isFeatured: isFeatured ?? server.isFeatured,
+    featuredPosition: featuredPosition ?? server.featuredPosition,
+    category: category ?? server.category,
+    avatarUrl: avatarFile
+      ? await uploadImageSingle(avatarFile, { width: 256, height: 256 })
+      : server.avatarUrl,
+    bannerUrl: bannerFile
+      ? await uploadImageSingle(bannerFile, { width: 920, height: 540 })
+      : server.bannerUrl,
+    isPublic: isPublic ?? server.isPublic,
+    systemMessagesChannel:
+      systemMessagesChannelId ?? server.systemMessagesChannel,
+    sendWelcomeMessage: sendWelcomeMessage ?? server.sendWelcomeMessage
+  })
+  await em.persistAndFlush(server)
+  liveQueryStore.invalidate(`Server:${serverId}`)
+  return server
 }

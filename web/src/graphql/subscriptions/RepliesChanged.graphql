@@ -1,0 +1,13 @@
+subscription RepliesChanged {
+  repliesChanged {
+    added {
+      ...Reply
+    }
+    updated {
+      ...Reply
+    }
+    deleted {
+      ...Reply
+    }
+  }
+}

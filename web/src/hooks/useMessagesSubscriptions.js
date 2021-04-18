@@ -1,7 +1,5 @@
 import { useClient, useSubscription } from 'urql'
-import { GET_JOINED_SERVERS } from '@/graphql/queries'
 import { useEffect, useState } from 'react'
-import { MESSAGE_CHANGED } from '@/graphql/subscriptions'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 

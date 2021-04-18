@@ -2,16 +2,15 @@ import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
-import { useMutation } from 'urql'
-import { LOGIN } from '@/graphql/mutations'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
+import { useLoginMutation } from '@/graphql/hooks'
 
 export default function LoginPage() {
   const { t } = useTranslation()
-  const [{ fetching }, login] = useMutation(LOGIN)
+  const [{ fetching }, login] = useLoginMutation()
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
   const [user] = useCurrentUser()
@@ -20,7 +19,7 @@ export default function LoginPage() {
     if (user) push('/me')
   }, [user])
 
-  const onSubmit = variables => login(variables)
+  const onSubmit = input => login({ input })
 
   return (
     <>

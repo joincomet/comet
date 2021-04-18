@@ -116,7 +116,7 @@ export class SubscriptionResolver {
   ): Promise<RepliesChangedResponse> {
     const entities = await em.find(
       Reply,
-      { id: ids, toUser: user },
+      { id: ids, user },
       [
         'fromUser',
         'comment.author',
