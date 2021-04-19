@@ -125,6 +125,9 @@ export async function bootstrap() {
           const forked = result.context.em.fork()
           result.context.em = forked
           result.context.loaders = createLoaders(forked, result.context.userId)
+          /*Object.values(result.context.loaders).forEach(loader =>
+            loader.clearAll()
+          )*/
         })
       }
     }

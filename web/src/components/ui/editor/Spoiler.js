@@ -1,5 +1,4 @@
-import { Mark, markPasteRule, mergeAttributes } from '@tiptap/core'
-import { Plugin, PluginKey } from 'prosemirror-state'
+import { Mark, mergeAttributes } from '@tiptap/core'
 
 export const Spoiler = Mark.create({
   name: 'spoiler',
