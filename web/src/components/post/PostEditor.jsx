@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
 import Editor from '@/components/ui/editor/Editor'
-import { useMutation } from 'urql'
 import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useHistory, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -34,7 +33,7 @@ const cancelBtnClass = ctl(`
 
 export default function PostEditor({ setOpen }) {
   const [text, setText] = useState('')
-  const [{ fetching }, createPost] = useCreatePostMutation()
+  const [createPost, { loading }] = useCreatePostMutation()
   const { t } = useTranslation()
   const { push } = useHistory()
   const { serverId: sId } = useParams()
@@ -62,12 +61,16 @@ export default function PostEditor({ setOpen }) {
         </button>
         <button
           className={postBtnClass}
-          disabled={!title || !serverId || fetching}
+          disabled={!title || !serverId || loading}
           onClick={() => {
             createPost({
-              title,
-              text: text ? text : null,
-              serverId
+              variables: {
+                input: {
+                  title,
+                  text: text ? text : null,
+                  serverId
+                }
+              }
             }).then(({ data }) => {
               const post = data?.createPost
               if (!post) return
@@ -79,7 +82,7 @@ export default function PostEditor({ setOpen }) {
           }}
         >
           {t('post.create.submit')}
-          {fetching && <IconSpinner className="w-5 h-5 text-primary ml-3" />}
+          {loading && <IconSpinner className="w-5 h-5 text-primary ml-3" />}
         </button>
       </div>
     </div>

@@ -12,7 +12,6 @@ import { getUserId } from '@/util'
 import { User } from '@/entity'
 import { Context } from '@/types'
 import { seed } from '@/seed'
-import { writeSchemaJson } from '@/writeSchemaJson'
 import { createLoaders } from '@/util/loaders/createLoaders'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -67,14 +66,13 @@ export async function bootstrap() {
           const userId = getUserId(
             (req.cookies.token || request.headers.token) as string
           )
-          const user: User = userId ? await em.findOne(User, userId) : null
           return {
             em,
-            user,
+            userId,
             liveQueryStore,
             req,
             res,
-            loaders: createLoaders(em, user)
+            loaders: createLoaders(em, userId)
           } as Context
         },
         execute: liveQueryStore.execute
@@ -122,8 +120,11 @@ export async function bootstrap() {
           result.unsubscribe()
         })
 
-        await result.subscribe(result => {
-          res.write(`data: ${JSON.stringify(result)}\n\n`)
+        await result.subscribe(async data => {
+          res.write(`data: ${JSON.stringify(data)}\n\n`)
+          const forked = result.context.em.fork()
+          result.context.em = forked
+          result.context.loaders = createLoaders(forked, result.context.userId)
         })
       }
     }
@@ -134,6 +135,4 @@ export async function bootstrap() {
   app.listen(port, () => {
     console.log(`GraphQL server is running on port ${port}.`)
   })
-
-  if (process.env.NODE_ENV !== 'production') writeSchemaJson()
 }

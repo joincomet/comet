@@ -6,7 +6,6 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  PrimaryKeyType,
   Property
 } from '@mikro-orm/core'
 import { ChannelPermissions, Server, ServerUser } from '@/entity'
@@ -31,7 +30,6 @@ export class Role extends BaseEntity {
   @ManyToMany({ entity: () => ServerUser })
   serverUsers = new Collection<ServerUser>(this)
 
-  @Field(() => [ChannelPermissions])
   @OneToMany({
     entity: () => ChannelPermissions,
     mappedBy: 'role',

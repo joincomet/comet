@@ -76,12 +76,6 @@ export class Post extends BaseEntity {
   @ManyToOne(() => ServerUser)
   author?: ServerUser
 
-  @Field(() => User, { nullable: true })
-  addedByUser?: User
-
-  @Field({ nullable: true })
-  addedAt?: Date
-
   @Field()
   @Property()
   isPinned: boolean = false

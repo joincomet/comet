@@ -6,6 +6,7 @@ import {
   ServerCategory,
   ServerFolder,
   ServerInvite,
+  ServerPermission,
   User
 } from '@/entity'
 import { BaseEntity } from '@/entity/BaseEntity'
@@ -21,6 +22,7 @@ import {
 } from '@mikro-orm/core'
 import { ServerUser } from '@/entity/server/ServerUser'
 import { Role } from '@/entity/server/Role'
+import { NotificationSetting } from '@/types'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -95,6 +97,15 @@ export class Server extends BaseEntity {
     orderBy: { position: QueryOrder.ASC }
   })
   channels = new Collection<Channel>(this)
+
+  @Field({ nullable: true })
+  nickname?: string
+
+  @Field(() => NotificationSetting)
+  notificationSetting: NotificationSetting
+
+  @Field(() => [ServerPermission])
+  permissions: ServerPermission[]
 
   @Field(() => Channel)
   @OneToOne(() => Channel, undefined, { nullable: true })

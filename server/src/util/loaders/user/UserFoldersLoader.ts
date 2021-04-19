@@ -9,35 +9,36 @@ import {
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 
-export const createUserFoldersLoader = (
-  em: EntityManager,
-  currentUser: User
-) => {
+export const userFoldersLoader = (em: EntityManager, currentUserId: string) => {
   return new DataLoader<string, Folder[]>(async (userIds: string[]) => {
     const userFolders = await em.find(
       UserFolder,
       { user: userIds },
       ['folder'],
-      { orderBy: { position: 'ASC' } }
+      { position: 'DESC' }
     )
     const relationships = await em.find(Relationship, {
-      owner: currentUser,
+      owner: currentUserId,
       user: userIds
     })
     const map: Record<string, Folder[]> = {}
     userIds.forEach(userId => {
-      if (userId === currentUser.id) {
+      if (userId === currentUserId) {
         map[userId] = userFolders
-          .filter(userFolder => userFolder.user.id === userId)
+          .filter(
+            userFolder => userFolder.user === em.getReference(User, userId)
+          )
           .map(userFolder => userFolder.folder)
       } else {
         const isFriends = !!relationships.find(
-          r => r.user.id === userId && r.status === RelationshipStatus.Friends
+          r =>
+            r.user === em.getReference(User, userId) &&
+            r.status === RelationshipStatus.Friends
         )
         map[userId] = userFolders
           .filter(
             userFolder =>
-              userFolder.user.id === userId &&
+              userFolder.user === em.getReference(User, userId) &&
               (userFolder.folder.visibility === FolderVisibility.Public ||
                 (isFriends &&
                   userFolder.folder.visibility === FolderVisibility.Friends))

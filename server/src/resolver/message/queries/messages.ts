@@ -41,7 +41,7 @@ export class MessagesResponse {
 }
 
 export async function messages(
-  { em, user, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   {
     channelId,
     groupId,
@@ -69,8 +69,8 @@ export async function messages(
     where.group = group
   } else if (toUser) {
     where['$or'] = [
-      { author: user, toUser },
-      { author: toUser, toUser: user }
+      { author: currentUserId, toUser },
+      { author: toUser, toUser: currentUserId }
     ]
   }
 

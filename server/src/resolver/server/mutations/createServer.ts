@@ -28,10 +28,10 @@ export class CreateServerInput {
 }
 
 export async function createServer(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { name, isPublic, category, avatarFile }: CreateServerInput
 ): Promise<Server> {
-  if ((await em.count(ServerUser, { user })) >= 100)
+  if ((await em.count(ServerUser, { user: userId })) >= 100)
     throw new Error('error.server.joinLimit')
 
   const channel = em.create(Channel, {
@@ -54,7 +54,7 @@ export async function createServer(
 
   const server = em.create(Server, {
     name,
-    owner: user,
+    owner: userId,
     channels: [channel],
     avatarUrl,
     category,
@@ -63,18 +63,18 @@ export async function createServer(
   })
   const firstServer = await em.findOne(
     ServerUser,
-    { user },
+    { user: userId },
     { orderBy: { position: 'ASC' } }
   )
   const serverUser = em.create(ServerUser, {
     server,
-    user,
+    user: userId,
     status: ServerUserStatus.Joined,
     position: firstServer
       ? ReorderUtils.positionBefore(firstServer.position)
       : ReorderUtils.FIRST_POSITION
   })
   await em.persistAndFlush([server, serverUser])
-  liveQueryStore.invalidate(`User:${user.id}`)
+  liveQueryStore.invalidate(`User:${userId}`)
   return server
 }

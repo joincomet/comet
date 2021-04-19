@@ -1,6 +1,12 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Role, ServerPermission, ServerUser, ServerUserStatus } from '@/entity'
+import {
+  Role,
+  ServerPermission,
+  ServerUser,
+  ServerUserStatus,
+  User
+} from '@/entity'
 
 @InputType()
 export class AddUserToRoleInput {
@@ -12,10 +18,11 @@ export class AddUserToRoleInput {
 }
 
 export async function addUserToRole(
-  { em, user: currentUser, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { roleId, userId }: AddUserToRoleInput
 ): Promise<ServerUser> {
   const role = await em.findOneOrFail(Role, roleId, ['server'])
+  const currentUser = await em.findOneOrFail(User, currentUserId)
   await currentUser.checkServerPermission(
     em,
     role.server.id,

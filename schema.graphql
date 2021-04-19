@@ -69,10 +69,12 @@ type Channel implements BaseEntity {
   createdAt: DateTime!
   description: String
   id: ID!
-  isUnread: Boolean!
   mentionCount: Int!
   name: String
+  permissions: [ChannelPermission!]!
+  rolePermissions: [ChannelPermissions!]!
   server: Server!
+  unreadCount: Int!
 }
 
 enum ChannelPermission {
@@ -84,8 +86,8 @@ enum ChannelPermission {
 
 type ChannelPermissions {
   allowedPermissions: [ChannelPermission!]!
-  channel: Channel!
   deniedPermissions: [ChannelPermission!]!
+  role: Role!
 }
 
 input CloseDmInput {
@@ -233,6 +235,7 @@ type Folder implements BaseEntity {
   followerCount: Int!
   id: ID!
   isCollaborative: Boolean!
+  isFollowing: Boolean!
   name: String!
   owner: User
   postCount: Int!
@@ -496,8 +499,6 @@ input PinPostInput {
 }
 
 type Post implements BaseEntity {
-  addedAt: DateTime
-  addedByUser: User
   author: ServerUser
   commentCount: Int!
   createdAt: DateTime!
@@ -634,7 +635,6 @@ type Reply implements BaseEntity {
 }
 
 type Role implements BaseEntity {
-  channelPermissions: [ChannelPermissions!]!
   color: String!
   createdAt: DateTime!
   id: ID!
@@ -657,7 +657,10 @@ type Server implements BaseEntity {
   isPublic: Boolean!
   myRoles: [Role!]!
   name: String!
+  nickname: String
+  notificationSetting: NotificationSetting!
   owner: User!
+  permissions: [ServerPermission!]!
   roles: [Role!]!
   sendWelcomeMessage: Boolean!
   systemMessagesChannel: Channel!
@@ -715,9 +718,7 @@ type ServerUser {
   color: String
   name: String!
   nickname: String
-  notificationSetting: NotificationSetting!
   roles: [Role!]!
-  server: Server!
   user: User!
 }
 
@@ -839,7 +840,7 @@ type User implements BaseEntity {
   avatarUrl: String
   createdAt: DateTime!
   email: String!
-  folders: [Folder!]
+  folders: [Folder!]!
   groups: [Group!]!
   id: ID!
   isAdmin: Boolean!
@@ -849,9 +850,11 @@ type User implements BaseEntity {
   lastLoginAt: DateTime
   name: String!
   onlineStatus: OnlineStatus!
-  relationships: [Relationship!]!
-  servers: [ServerUser!]!
+  relatedUsers: [User!]!
+  relationshipStatus: RelationshipStatus!
+  servers: [Server!]!
   tag: String!
+  unreadCount: Int!
   username: String!
 }
 

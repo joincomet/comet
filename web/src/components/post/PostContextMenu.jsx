@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/types/ServerPermission'
 import { useCopyToClipboard } from 'react-use'
-import { useMutation, useQuery } from 'urql'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import { useTogglePostPin } from '@/components/post/useTogglePostPin'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
@@ -34,7 +33,7 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
 
   const copyToClipboard = useCopyToClipboard()[1]
 
-  const [_deletePostRes, deletePost] = useDeletePostMutation()
+  const [deletePost] = useDeletePostMutation()
 
   const toggleVote = useTogglePostVote(post)
   const togglePin = useTogglePostPin(post)
@@ -50,11 +49,8 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
     .filter(rel => rel.status === 'Friends')
     .map(rel => rel.user)
 
-  const [_addPostRes, addPostToFolder] = useAddPostToFolderMutation()
-  const [
-    _removePostRes,
-    removePostFromFolder
-  ] = useRemovePostFromFolderMutation()
+  const [addPostToFolder] = useAddPostToFolderMutation()
+  const [removePostFromFolder] = useRemovePostFromFolderMutation()
 
   if (!post) return null
   return (
@@ -75,8 +71,12 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
                 label={folder.name}
                 onClick={() =>
                   addPostToFolder({
-                    folderId: folder.id,
-                    postId: post.id
+                    variables: {
+                      input: {
+                        folderId: folder.id,
+                        postId: post.id
+                      }
+                    }
                   }).then(res => {
                     if (!res.error)
                       toast.success(t('folder.added', { name: folder.name }))
@@ -95,8 +95,12 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
                 label={folder.name}
                 onClick={() =>
                   addPostToFolder({
-                    folderId: folder.id,
-                    postId: post.id
+                    variables: {
+                      input: {
+                        folderId: folder.id,
+                        postId: post.id
+                      }
+                    }
                   }).then(res => {
                     if (!res.error)
                       toast.success(t('folder.added', { name: folder.name }))
@@ -135,7 +139,11 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
           <ContextMenuItem
             label={t('post.context.removeFromFolder')}
             red
-            onClick={() => removePostFromFolder({ folderId, postId: post.id })}
+            onClick={() =>
+              removePostFromFolder({
+                variables: { input: { folderId, postId: post.id } }
+              })
+            }
           />
         )}
 
@@ -143,7 +151,7 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
           <ContextMenuItem
             red
             onClick={() => {
-              deletePost({ postId: post.id })
+              deletePost({ variables: { input: { postId: post.id } } })
               toast.success(t('post.context.deleted'))
             }}
             label={t('post.context.delete')}

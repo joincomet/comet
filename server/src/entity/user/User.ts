@@ -1,4 +1,4 @@
-import { Authorized, Field, ObjectType } from 'type-graphql'
+import { Authorized, Field, Int, ObjectType } from 'type-graphql'
 import {
   Collection,
   Entity,
@@ -94,11 +94,10 @@ export class User extends BaseEntity {
   })
   userFolders = new Collection<UserFolder>(this)
 
-  @Field(() => [ServerUser])
   @OneToMany(() => ServerUser, 'user', {
     orderBy: { position: QueryOrder.ASC }
   })
-  servers = new Collection<ServerUser>(this)
+  serverUsers = new Collection<ServerUser>(this)
 
   @OneToMany(() => GroupUser, 'user', {
     orderBy: { lastMessageAt: QueryOrder.DESC }
@@ -109,12 +108,23 @@ export class User extends BaseEntity {
   @ManyToMany(() => Group, 'users')
   groups: Group[]
 
-  @Field(() => [Relationship])
   @OneToMany(() => Relationship, 'owner')
   relationships = new Collection<Relationship>(this)
 
-  @Field(() => [Folder], { nullable: true })
-  folders?: Folder[]
+  @Field(() => [User])
+  relatedUsers: User[]
+
+  @Field(() => [Folder])
+  folders: Folder[]
+
+  @Field(() => [Server])
+  servers: Server[]
+
+  @Field(() => Int)
+  unreadCount: number
+
+  @Field(() => RelationshipStatus)
+  relationshipStatus: RelationshipStatus
 
   @Field()
   get isOnline(): boolean {
@@ -212,7 +222,7 @@ export class User extends BaseEntity {
     serverPermission: ServerPermission = null
   ): Promise<boolean> {
     if (this.isAdmin) return true
-    const channel = await em.findOneOrFail(Channel, ['server.owner'])
+    const channel = await em.findOneOrFail(Channel, channelId, ['server.owner'])
     if (channel.server.owner === this) return true
     const serverUser = await em.findOne(
       ServerUser,

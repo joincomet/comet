@@ -1,14 +1,13 @@
 import { useCallback } from 'react'
-import { useMutation } from 'urql'
 import { usePinCommentMutation, useUnpinCommentMutation } from '@/graphql/hooks'
 
 export const useToggleCommentPin = comment => {
-  const [_pinRes, pin] = usePinCommentMutation()
-  const [_unpinRes, unpin] = useUnpinCommentMutation()
+  const [pin] = usePinCommentMutation()
+  const [unpin] = useUnpinCommentMutation()
 
   return useCallback(() => {
-    const vars = { commentId: comment.id }
-    if (comment.isPinned) unpin(vars)
-    else pin(vars)
+    const variables = { commentId: comment.id }
+    if (comment.isPinned) unpin({ variables })
+    else pin({ variables })
   }, [comment, pin, unpin])
 }

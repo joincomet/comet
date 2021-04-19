@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Channel, ServerPermission } from '@/entity'
+import { Channel, ServerPermission, User } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 import { getReorderPosition } from '@/util'
 
@@ -14,9 +14,10 @@ export class MoveChannelInput {
 }
 
 export async function moveChannel(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { channelId, beforeChannelId }: MoveChannelInput
 ): Promise<Channel> {
+  const user = await em.findOneOrFail(User, userId)
   const channel = await em.findOneOrFail(Channel, channelId, ['server'])
   await user.checkServerPermission(
     em,
@@ -27,7 +28,7 @@ export async function moveChannel(
   const channels = await em.find(
     Channel,
     { server: channel.server },
-    { orderBy: { position: QueryOrder.ASC } }
+    { orderBy: { position: QueryOrder.DESC } }
   )
   const firstChannel = channels[0]
   const beforeChannel = beforeChannelId

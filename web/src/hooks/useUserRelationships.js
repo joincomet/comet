@@ -4,24 +4,18 @@ export const useUserRelationships = () => {
   const [user] = useCurrentUser()
   return {
     friends:
-      user?.relationships
-        .filter(r => r.status === 'Friends')
-        .map(r => r.user) ?? [],
+      user?.relatedUsers.filter(u => u.relationshipStatus === 'Friends') ?? [],
     blocking:
-      user?.relationships
-        .filter(r => r.status === 'Blocking')
-        .map(r => r.user) ?? [],
+      user?.relatedUsers.filter(u => u.relationshipStatus === 'Blocking') ?? [],
     blockedBy:
-      user?.relationships
-        .filter(r => r.status === 'Blocked')
-        .map(r => r.user) ?? [],
+      user?.relatedUsers.filter(u => u.relationshipStatus === 'Blocked') ?? [],
     outgoingFriendRequests:
-      user?.relationships
-        .filter(r => r.status === 'FriendRequestOutgoing')
-        .map(r => r.user) ?? [],
+      user?.relatedUsers.filter(
+        u => u.relationshipStatus === 'FriendRequestOutgoing'
+      ) ?? [],
     incomingFriendRequests:
-      user?.relationships
-        .filter(r => r.status === 'FriendRequestIncoming')
-        .map(r => r.user) ?? []
+      user?.relatedUsers.filter(
+        u => u.relationshipStatus === 'FriendRequestIncoming'
+      ) ?? []
   }
 }

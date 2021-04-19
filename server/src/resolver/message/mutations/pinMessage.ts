@@ -1,6 +1,6 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
-import { ChannelPermission, Message, ServerPermission } from '@/entity'
+import { ChannelPermission, Message, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -10,10 +10,11 @@ export class PinMessageInput {
 }
 
 export async function pinMessage(
-  { em, user }: Context,
+  { em, userId }: Context,
   { messageId }: PinMessageInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<Message> {
+  const user = await em.findOneOrFail(User, userId)
   const message = await em.findOneOrFail(Message, messageId, ['channel'])
   if (message.channel) {
     await user.checkChannelPermission(

@@ -7,8 +7,8 @@ import { useUserQuery } from '@/graphql/hooks'
 
 export default function DmPage() {
   const { userId } = useParams()
-  const [{ data: userData }] = useUserQuery({
-    variables: { userId }
+  const { data: userData } = useUserQuery({
+    variables: { id: userId }
   })
   const user = userData?.user
   useSetHomePage(`dm/${userId}`)

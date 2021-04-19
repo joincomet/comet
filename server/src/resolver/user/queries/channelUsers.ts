@@ -18,8 +18,8 @@ export async function channelUsers(
       server: channel.server,
       status: ServerUserStatus.Joined
     },
-    ['user', 'roles', 'channelPermissions'],
-    { user: { username: 'ASC' } }
+    ['user', 'roles'],
+    { user: { name: 'ASC', tag: 'ASC' } }
   )
 
   return users.filter(su =>

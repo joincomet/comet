@@ -12,9 +12,9 @@ const dotClass = active =>
   items-center
   justify-center
   hover:rounded-2xl
-  ${active ? 'rounded-2xl' : 'rounded-full'}
+  ${active ? 'rounded-2xl' : 'rounded-3xl'}
   transform
-  transition
+  transition-all
   relative
   group
   cursor-pointer

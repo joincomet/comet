@@ -20,6 +20,7 @@
     "pack": "electron-builder --dir"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.15",
     "@electron/remote": "^1.1.0",
     "@headlessui/react": "^1.0.0",
     "@n1ru4l/graphql-live-query-patch": "^0.3.1",
@@ -34,12 +35,6 @@
     "@tiptap/extension-underline": "^2.0.0-beta.4",
     "@tiptap/react": "^2.0.0-beta.21",
     "@tiptap/starter-kit": "^2.0.0-beta.28",
-    "@urql/core": "^2.0.0",
-    "@urql/devtools": "^2.0.3",
-    "@urql/exchange-auth": "^0.1.2",
-    "@urql/exchange-graphcache": "^4.0.0",
-    "@urql/exchange-multipart-fetch": "^0.1.11",
-    "@urql/exchange-retry": "^0.2.0",
     "cross-env": "^7.0.3",
     "date-fns": "^2.21.1",
     "dayjs": "^1.10.4",
@@ -75,7 +70,6 @@
     "sse-z": "^0.3.0",
     "tippy.js": "^6.3.1",
     "twemoji": "^13.0.2",
-    "urql": "^2.0.2",
     "use-dark-mode": "^2.3.1",
     "validator": "^13.5.2",
     "zustand": "^3.4.1"
@@ -106,7 +100,7 @@
     "react-dom": "^17.0.2",
     "sass": "^1.32.10",
     "string-hash": "^1.1.3",
-    "tailwind-scrollbar": "^1.2.4",
+    "tailwind-scrollbar": "^1.3.0",
     "tailwindcss": "^2.1.1",
     "vite": "^2.1.5",
     "vite-plugin-pwa": "^0.7.2"

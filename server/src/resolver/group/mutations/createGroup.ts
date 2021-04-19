@@ -11,10 +11,11 @@ export class CreateGroupInput {
 }
 
 export async function createGroup(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { usernames }: CreateGroupInput
 ): Promise<Group> {
   if (usernames.length > 9) throw new Error('error.group.maxSize')
+  const user = await em.findOneOrFail(User, userId)
   const users = [user]
   for (const username of usernames) {
     users.push(await em.findOneOrFail(User, { username }))

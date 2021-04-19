@@ -1,10 +1,10 @@
 import { Context } from '@/types'
 import { Reply } from '@/entity'
 
-export async function replies({ em, user }: Context): Promise<Reply[]> {
+export async function replies({ em, userId }: Context): Promise<Reply[]> {
   return em.find(
     Reply,
-    { user },
+    { user: userId },
     [
       'user',
       'comment.author.user',

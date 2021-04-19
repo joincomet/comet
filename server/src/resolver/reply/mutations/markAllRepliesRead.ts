@@ -3,14 +3,14 @@ import { Reply } from '@/entity'
 
 export async function markAllRepliesRead({
   em,
-  user,
+  userId,
   liveQueryStore
 }: Context): Promise<boolean> {
   await em
     .createQueryBuilder(Reply)
     .update({ isRead: true })
-    .where({ user })
+    .where({ user: userId })
     .execute()
-  liveQueryStore.invalidate(`Query.replies(userId:"${user.id}")`)
+  liveQueryStore.invalidate(`Query.replies(userId:"${userId}")`)
   return true
 }

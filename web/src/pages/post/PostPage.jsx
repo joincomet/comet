@@ -22,14 +22,14 @@ export default function PostPage() {
     permissions: [ServerPermission.ViewComments, ServerPermission.CreateComment]
   })
 
-  const [{ data }] = usePostQuery({
+  const { data } = usePostQuery({
     variables: {
       postId
     }
   })
   const post = data?.post
 
-  const [{ data: commentsData }] = useCommentsQuery({
+  const { data: commentsData } = useCommentsQuery({
     variables: { postId }
   })
   const comments = useMemo(

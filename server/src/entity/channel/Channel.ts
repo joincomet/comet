@@ -1,5 +1,10 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { Message, Server } from '@/entity'
+import {
+  ChannelPermission,
+  ChannelPermissions,
+  Message,
+  Server
+} from '@/entity'
 import {
   Collection,
   Entity,
@@ -40,9 +45,15 @@ export class Channel extends BaseEntity {
   @Property()
   lastMessageAt: Date = new Date()
 
-  @Field()
-  isUnread: boolean = false
-
   @Field(() => Int)
   mentionCount: number = 0
+
+  @Field(() => Int)
+  unreadCount: number = 0
+
+  @Field(() => [ChannelPermission])
+  permissions: ChannelPermission[]
+
+  @Field(() => [ChannelPermissions])
+  rolePermissions: ChannelPermissions[]
 }

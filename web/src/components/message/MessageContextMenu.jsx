@@ -1,4 +1,3 @@
-import { useMutation } from 'urql'
 import { useCopyToClipboard } from 'react-use'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
@@ -24,9 +23,9 @@ export default function MessageContextMenu({ message, ContextMenuItem }) {
     serverPermissions: [ServerPermission.ManageMessages]
   })
   const copyToClipboard = useCopyToClipboard()[1]
-  const [_deleteRes, deleteMessage] = useDeleteMessageMutation()
-  const [_pinRes, pinMessage] = usePinMessageMutation()
-  const [_unpinRes, unpinMessage] = useUnpinMessageMutation()
+  const [deleteMessage] = useDeleteMessageMutation()
+  const [pinMessage] = usePinMessageMutation()
+  const [unpinMessage] = useUnpinMessageMutation()
   const togglePin = useToggleMessagePin(message)
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()

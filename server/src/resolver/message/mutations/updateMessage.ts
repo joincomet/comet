@@ -1,7 +1,7 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
-import { Message } from '@/entity'
+import { Message, User } from '@/entity'
 import { handleText } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
@@ -16,12 +16,13 @@ export class UpdateMessageInput {
 }
 
 export async function updateMessage(
-  { em, user }: Context,
+  { em, userId }: Context,
   { messageId, text }: UpdateMessageInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<Message> {
   const message = await em.findOneOrFail(Message, messageId, ['author'])
-  if (message.author !== user) throw new Error('Must be author to edit')
+  if (message.author !== em.getReference(User, userId))
+    throw new Error('Must be author to edit')
   message.text = handleText(text)
   await em.persistAndFlush(message)
   await notifyMessageChanged({ id: messageId, type: ChangeType.Updated })

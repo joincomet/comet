@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Channel, ServerPermission } from '@/entity'
+import { Channel, ServerPermission, User } from '@/entity'
 
 @InputType()
 export class UpdateChannelInput {
@@ -15,9 +15,10 @@ export class UpdateChannelInput {
 }
 
 export async function updateChannel(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { channelId, name, isPrivate }: UpdateChannelInput
 ): Promise<Channel> {
+  const user = await em.findOneOrFail(User, userId)
   const channel = await em.findOneOrFail(Channel, channelId, ['server'])
   await user.checkServerPermission(
     em,

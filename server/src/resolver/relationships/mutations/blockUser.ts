@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Relationship, RelationshipStatus } from '@/entity'
+import { Relationship, RelationshipStatus, User } from '@/entity'
 
 @InputType()
 export class BlockUserInput {
@@ -9,9 +9,10 @@ export class BlockUserInput {
 }
 
 export async function blockUser(
-  { em, user, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: BlockUserInput
 ): Promise<Relationship> {
+  const user = await em.findOneOrFail(User, currentUserId)
   const [myData, theirData] = await user.getFriendData(em, userId)
   if (myData.status === RelationshipStatus.Blocking)
     throw new Error('Already blocking that user')

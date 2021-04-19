@@ -7,10 +7,10 @@ import { Field, ObjectType } from 'type-graphql'
 @ObjectType()
 @Entity()
 export class ChannelPermissions {
-  @Field(() => Channel)
   @ManyToOne({ entity: () => Channel, primary: true })
   channel: Channel
 
+  @Field(() => Role)
   @ManyToOne({ entity: () => Role, primary: true })
   role: Role;
 

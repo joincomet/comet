@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useSubscription } from 'urql'
 import { useTranslation } from 'react-i18next'
 import {
   useStartTypingMutation,
@@ -13,7 +12,7 @@ export const useTyping = ({ channel, group, user }) => {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
   const [typingNames, setTypingNames] = useState(new Set())
-  const [_startTypingRes, startTyping] = useStartTypingMutation()
+  const [startTyping] = useStartTypingMutation()
 
   const variables = {
     userId: user?.id,
@@ -21,23 +20,21 @@ export const useTyping = ({ channel, group, user }) => {
     channelId: channel?.id
   }
 
-  useUserStartedTypingSubscription(
-    {
-      variables,
-      pause: !channel && !group && !user
-    },
-    (_, { userStartedTyping: username }) => {
-      setTypingNames(prev => new Set(prev.add(username)))
-      const timeoutId = setTimeout(
-        () =>
-          setTypingNames(
-            prev => new Set([...prev].filter(u => u !== username))
-          ),
-        TYPING_TIMEOUT
-      )
-      return () => clearTimeout(timeoutId)
-    }
-  )
+  const { data: username } = useUserStartedTypingSubscription({
+    variables,
+    skip: !channel && !group && !user
+  })
+
+  useEffect(() => {
+    if (!username) return
+    setTypingNames(prev => new Set(prev.add(username)))
+    const timeoutId = setTimeout(
+      () =>
+        setTypingNames(prev => new Set([...prev].filter(u => u !== username))),
+      TYPING_TIMEOUT
+    )
+    return () => clearTimeout(timeoutId)
+  }, [username])
 
   const typingNamesDisplay = useMemo(() => {
     const names = [...typingNames]
@@ -62,7 +59,7 @@ export const useTyping = ({ channel, group, user }) => {
     else return t('message.typing.several')
   }, [typingNames, currentUser.username, t])
 
-  const typingFn = () => startTyping(variables)
+  const typingFn = () => startTyping({ variables })
 
   return [typingFn, typingNamesDisplay]
 }

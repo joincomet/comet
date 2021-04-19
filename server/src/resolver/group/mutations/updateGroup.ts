@@ -2,7 +2,7 @@ import { Field, ID, InputType } from 'type-graphql'
 import { Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import { Group } from '@/entity'
+import { Group, User } from '@/entity'
 import { uploadImageSingle } from '@/util'
 
 @InputType()
@@ -19,11 +19,12 @@ export class UpdateGroupInput {
 }
 
 export async function updateGroup(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { groupId, name, avatarFile }: UpdateGroupInput
 ): Promise<Group> {
-  const group = await em.findOneOrFail(Group, groupId)
-  await user.checkInGroup(em, groupId)
+  const group = await em.findOneOrFail(Group, groupId, ['users'])
+  if (group.users.contains(em.getReference(User, userId)))
+    throw new Error('Not in group')
   em.assign(group, {
     name: name ?? group.name,
     avatarUrl: avatarFile

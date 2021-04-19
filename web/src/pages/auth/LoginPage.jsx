@@ -6,11 +6,14 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { useLoginMutation } from '@/graphql/hooks'
+import { CurrentUserDocument, useLoginMutation } from '@/graphql/hooks'
 
 export default function LoginPage() {
   const { t } = useTranslation()
-  const [{ fetching }, login] = useLoginMutation()
+  const [login, { loading }] = useLoginMutation({
+    refetchQueries: [{ query: CurrentUserDocument }],
+    awaitRefetchQueries: true
+  })
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
   const [user] = useCurrentUser()
@@ -19,7 +22,7 @@ export default function LoginPage() {
     if (user) push('/me')
   }, [user])
 
-  const onSubmit = input => login({ input })
+  const onSubmit = input => login({ variables: { input } })
 
   return (
     <>
@@ -53,7 +56,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <Button loading={fetching}>Log In</Button>
+          <Button loading={loading}>Log In</Button>
           <div className="pt-3 text-mid text-sm">
             {t('auth.needAccount')}{' '}
             <Link to="/register" className="text-accent hover:underline">

@@ -10,7 +10,7 @@ import CreateChannel from '@/components/channel/CreateChannel'
 
 export default function ServerSidebar() {
   const { t } = useTranslation()
-  const [server] = useCurrentServer()
+  const server = useCurrentServer()
 
   return (
     <Sidebar>

@@ -13,7 +13,8 @@ import {
   RelationshipStatus,
   Server,
   ServerUser,
-  ServerUserStatus
+  ServerUserStatus,
+  User
 } from '@/entity'
 import { Max, Min } from 'class-validator'
 import { Context } from '@/types'
@@ -91,9 +92,10 @@ export class PostsResponse {
 }
 
 export async function posts(
-  { em, user }: Context,
+  { em, userId }: Context,
   { page, pageSize, sort, time, folderId, serverId, search }: PostsArgs
 ): Promise<PostsResponse[]> {
+  const user = await em.findOneOrFail(User, userId)
   let orderBy = {}
   if (sort === PostsSort.New) orderBy = { createdAt: QueryOrder.DESC }
   else if (sort === PostsSort.Hot) orderBy = { hotRank: QueryOrder.DESC }
@@ -151,31 +153,11 @@ export async function posts(
         folder ? { folderPosts: { folder } } : {}
       ]
     },
-    [
-      'author.roles',
-      'author.user',
-      'server',
-      'votes',
-      'folderPosts.addedByUser'
-    ],
+    ['author.roles', 'author.user', 'server', 'votes'],
     orderBy,
     pageSize + 1, // get one extra to determine hasMore
     page * pageSize
   )
-
-  posts.forEach(post => {
-    post.isVoted = post.votes
-      .getItems()
-      .map(vote => vote.user)
-      .includes(user)
-    if (folder) {
-      const folderPost = post.folderPosts
-        .getItems()
-        .find(fp => fp.folder === folder)
-      post.addedByUser = folderPost.addedByUser
-      post.addedAt = folderPost.addedAt
-    }
-  })
 
   const hasMore = posts.length > pageSize
   return [

@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { ServerPermission, ServerUser, ServerUserStatus } from '@/entity'
+import { ServerPermission, ServerUser, ServerUserStatus, User } from '@/entity'
 
 @InputType()
 export class UnbanUserFromServerInput {
@@ -12,9 +12,10 @@ export class UnbanUserFromServerInput {
 }
 
 export async function unbanUserFromServer(
-  { em, user, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { serverId, userId }: UnbanUserFromServerInput
 ): Promise<boolean> {
+  const user = await em.findOneOrFail(User, currentUserId)
   await user.checkServerPermission(em, serverId, ServerPermission.ManageUsers)
   const serverUser = await em.findOneOrFail(ServerUser, {
     user: userId,

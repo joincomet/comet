@@ -1,14 +1,13 @@
 import { useCallback } from 'react'
-import { useMutation } from 'urql'
 import { usePinPostMutation, useUnpinPostMutation } from '@/graphql/hooks'
 
 export const useTogglePostPin = post => {
-  const [_pinRes, pin] = usePinPostMutation()
-  const [_unpinRes, unpin] = useUnpinPostMutation()
+  const [pin] = usePinPostMutation()
+  const [unpin] = useUnpinPostMutation()
 
   return useCallback(() => {
-    const vars = { postId: post.id }
-    if (post.isPinned) unpin(vars)
-    else pin(vars)
+    const variables = { postId: post.id }
+    if (post.isPinned) unpin({ variables })
+    else pin({ variables })
   }, [post, pin, unpin])
 }

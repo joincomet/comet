@@ -9,15 +9,25 @@ import {
 } from '@/components/ui/icons/Icons'
 import Button from '@/components/ui/Button'
 import { readURL } from '@/utils/readURL'
-import { useMutation } from 'urql'
 import { useTranslation } from 'react-i18next'
 import ServerListItem from '@/components/server/list/ServerListItem'
 import Switch from '@/components/ui/Switch'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'
-import { useCreateServerMutation } from '@/graphql/hooks'
+import { CurrentUserDocument, useCreateServerMutation } from '@/graphql/hooks'
 
 export default function CreateServerDialog() {
-  const [{ fetching }, createServer] = useCreateServerMutation()
+  const [createServer, { loading }] = useCreateServerMutation({
+    update(cache, { data: { createServer } }) {
+      /*const data = cache.readQuery({ query: CurrentUserDocument })
+      console.log(data)
+      cache.writeQuery({
+        query: CurrentUserDocument,
+        data: {
+          user: { ...data.user, servers: [createServer, ...data.user.servers] }
+        }
+      })*/
+    }
+  })
   const [isOpen, setIsOpen] = useState(false)
   const [privateServer, setPrivate] = useState(true)
 
@@ -43,10 +53,12 @@ export default function CreateServerDialog() {
 
   const onSubmit = ({ name }) => {
     createServer({
-      input: { name, avatarFile: avatarFile ? avatarFile[0] : null }
+      variables: {
+        input: { name, avatarFile: avatarFile ? avatarFile[0] : null }
+      }
     }).then(({ data: { createServer } }) => {
       setIsOpen(false)
-      push(`/server/${createServer.id}`)
+      // push(`/server/${createServer.id}`)
     })
   }
 
@@ -127,7 +139,7 @@ export default function CreateServerDialog() {
             </div>
 
             <div className="pb-4 w-full">
-              <Button loading={fetching}>{t('continue')}</Button>
+              <Button loading={loading}>{t('continue')}</Button>
             </div>
 
             <Switch

@@ -1,6 +1,6 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
-import { Comment, CommentVote, ServerPermission } from '@/entity'
+import { Comment, CommentVote, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -10,10 +10,11 @@ export class VoteCommentInput {
 }
 
 export async function voteComment(
-  { em, user }: Context,
+  { em, userId }: Context,
   { commentId }: VoteCommentInput,
   notifyCommentChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
+  const user = await em.findOneOrFail(User, userId)
   const comment = await em.findOneOrFail(Comment, commentId, ['post.server'])
   let vote = await em.findOne(CommentVote, { comment, user })
   if (vote) throw new Error('Already voted this comment')

@@ -1,6 +1,6 @@
 import { Context } from '@/types'
 import { Field, ID, InputType } from 'type-graphql'
-import { Channel, Server, ServerPermission } from '@/entity'
+import { Channel, Server, ServerPermission, User } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
 
@@ -17,9 +17,10 @@ export class CreateChannelInput {
 }
 
 export async function createChannel(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { serverId, name, isPrivate }: CreateChannelInput
 ): Promise<Channel> {
+  const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(
     em,
     serverId,
@@ -31,7 +32,7 @@ export async function createChannel(
   const firstChannel = await em.findOne(
     Channel,
     { server },
-    { orderBy: { position: QueryOrder.ASC } }
+    { orderBy: { position: 'DESC' } }
   )
 
   const channel = em.create(Channel, {

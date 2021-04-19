@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Group, GroupUser } from '@/entity'
+import { Group, GroupUser, User } from '@/entity'
 
 @InputType()
 export class ReadGroupInput {
@@ -9,11 +9,12 @@ export class ReadGroupInput {
 }
 
 export async function readGroup(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { groupId }: ReadGroupInput
 ): Promise<Group> {
   const group = await em.findOneOrFail(Group, groupId, ['users'])
-  await user.checkInGroup(em, group.id)
+  const user = em.getReference(User, userId)
+  if (!group.users.contains(user)) throw new Error('Not group member')
   let groupUser = await em.findOne(GroupUser, { user, group })
   if (!groupUser) groupUser = em.create(GroupUser, { user, group })
   groupUser.lastViewAt = new Date()

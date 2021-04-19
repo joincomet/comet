@@ -2,14 +2,16 @@ import {
   Arg,
   Authorized,
   Ctx,
+  FieldResolver,
   ID,
   Mutation,
   Publisher,
   PubSub,
   Query,
-  Resolver
+  Resolver,
+  Root
 } from 'type-graphql'
-import { Folder } from '@/entity'
+import { Folder, Server, User } from '@/entity'
 import { Context } from '@/types'
 import { folder } from './queries'
 import {
@@ -36,6 +38,31 @@ import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 
 @Resolver(() => Folder)
 export class FolderResolver {
+  // --- Fields ---
+  @FieldResolver(() => Boolean)
+  async isFollowing(
+    @Ctx() { loaders: { folderFollowingLoader } }: Context,
+    @Root() folder: Folder
+  ): Promise<boolean> {
+    return folderFollowingLoader.load(folder.id)
+  }
+
+  @FieldResolver(() => User, { nullable: true })
+  async owner(
+    @Ctx() { loaders: { folderOwnerLoader } }: Context,
+    @Root() folder: Folder
+  ): Promise<User> {
+    return folderOwnerLoader.load(folder.id)
+  }
+
+  @FieldResolver(() => Server, { nullable: true })
+  async server(
+    @Ctx() { loaders: { folderServerLoader } }: Context,
+    @Root() folder: Folder
+  ): Promise<Server> {
+    return folderServerLoader.load(folder.id)
+  }
+
   // --- Queries ---
   @Authorized()
   @Query(() => Folder)

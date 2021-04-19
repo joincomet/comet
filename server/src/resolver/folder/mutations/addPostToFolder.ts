@@ -1,6 +1,6 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
-import { Folder, FolderPost, Post } from '@/entity'
+import { Folder, FolderPost, Post, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -13,12 +13,13 @@ export class AddPostToFolderInput {
 }
 
 export async function addPostToFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { postId, folderId }: AddPostToFolderInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Folder> {
   const post = await em.findOneOrFail(Post, postId)
   const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
+  const user = await em.findOneOrFail(User, userId)
   await user.checkCanAddToFolder(em, folderId)
   let folderPost = await em.findOne(FolderPost, { folder, post })
   if (folderPost) throw new Error('error.folder.alreadyAdded')

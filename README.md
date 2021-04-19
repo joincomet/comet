@@ -10,12 +10,13 @@ All-in-one chat and forums for communities.
 - [Tailwind CSS](https://tailwindcss.com/)
 - [urql](https://formidable.com/open-source/urql/docs/)
 - [Vite](https://vitejs.dev/guide/introduction.html)
+- [GraphQL Code Generator](https://www.graphql-code-generator.com/)
 
 ### Backend
 - [Node.js](https://nodejs.org/en/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [PostgreSQL](https://www.postgresql.org/)
-- [Apollo GraphQL Server](https://www.apollographql.com/docs/apollo-server/)
+- [GraphQL Helix](https://github.com/contrawork/graphql-helix)
 - [TypeGraphQL](https://typegraphql.com/)
 - [MikroORM](https://mikro-orm.io/)
 

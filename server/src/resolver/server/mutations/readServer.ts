@@ -9,16 +9,16 @@ export class ReadServerInput {
 }
 
 export async function readServer(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { serverId }: ReadServerInput
 ): Promise<ServerUser> {
   await em
     .createQueryBuilder(ChannelUser)
-    .where({ user, channel: { server: serverId } })
+    .where({ user: userId, channel: { server: serverId } })
     .update({ mentionCount: 0, lastViewAt: new Date() })
     .execute()
   const serverUser = await em.findOneOrFail(ServerUser, {
-    user,
+    user: userId,
     server: serverId,
     status: ServerUserStatus.Joined
   })

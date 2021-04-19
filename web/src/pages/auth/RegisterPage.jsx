@@ -7,11 +7,14 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { useCreateAccountMutation } from '@/graphql/hooks'
+import { CurrentUserDocument, useCreateAccountMutation } from '@/graphql/hooks'
 
 export default function RegisterPage() {
   const { t } = useTranslation()
-  const [{ fetching }, createAccount] = useCreateAccountMutation()
+  const [createAccount, { loading }] = useCreateAccountMutation({
+    refetchQueries: [{ query: CurrentUserDocument }],
+    awaitRefetchQueries: true
+  })
   const { register, handleSubmit } = useForm()
   const { push } = useHistory()
   const [user] = useCurrentUser()
@@ -20,7 +23,7 @@ export default function RegisterPage() {
     if (user) push('/me')
   }, [user])
 
-  const onSubmit = input => createAccount({ input })
+  const onSubmit = input => createAccount({ variables: { input } })
 
   return (
     <>
@@ -66,7 +69,7 @@ export default function RegisterPage() {
             />
           </div>
 
-          <Button loading={fetching}>Continue</Button>
+          <Button loading={loading}>Continue</Button>
           <div className="pt-3 text-mid text-sm">
             <Link to="/login" className="text-accent hover:underline">
               {t('auth.alreadyHaveAccount')}

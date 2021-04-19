@@ -3,11 +3,13 @@ import {
   Args,
   Authorized,
   Ctx,
+  FieldResolver,
   Mutation,
   Publisher,
   PubSub,
   Query,
-  Resolver
+  Resolver,
+  Root
 } from 'type-graphql'
 import { Context } from '@/types'
 import { Comment } from '@/entity'
@@ -33,6 +35,14 @@ import { CommentsArgs, comments } from '@/resolver/comment/queries/comments'
 
 @Resolver(() => Comment)
 export class CommentResolver {
+  @FieldResolver()
+  async isVoted(
+    @Ctx() { loaders: { commentVoteLoader } }: Context,
+    @Root() comment: Comment
+  ): Promise<boolean> {
+    return commentVoteLoader.load(comment.id)
+  }
+
   // --- Queries ---
   @Authorized()
   @Query(() => [Comment])

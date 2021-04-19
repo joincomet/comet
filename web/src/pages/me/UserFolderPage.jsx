@@ -12,8 +12,8 @@ export default function UserFolderPage() {
   const { folderId } = useParams()
   const showFolders = useStore(s => s.showFolders)
 
-  const [{ data }] = useFolderQuery({ variables: { folderId } })
-  const folder = data?.getFolder
+  const { data } = useFolderQuery({ variables: { id: folderId } })
+  const folder = data?.folder
 
   useSetHomePage(`folder/${folderId}`)
 

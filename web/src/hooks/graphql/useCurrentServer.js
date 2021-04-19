@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
 
 export const useCurrentServer = () => {
   const { serverId } = useParams()
-  const [user] = useCurrentUser()
-  return user?.servers.find(server => server.id === serverId)
+  const servers = useJoinedServers()
+  return servers.find(server => server.id === serverId)
 }

@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Role, ServerPermission } from '@/entity'
+import { Role, ServerPermission, User } from '@/entity'
 
 @InputType()
 export class DeleteRoleInput {
@@ -9,9 +9,10 @@ export class DeleteRoleInput {
 }
 
 export async function deleteRole(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { roleId }: DeleteRoleInput
 ): Promise<boolean> {
+  const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId, ['server'])
   await user.checkServerPermission(
     em,

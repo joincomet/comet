@@ -5,7 +5,7 @@ export function useMessages({ channel, group, user, initialTime }) {
   // const initialTime = useRef(new Date())
   const [page, setPage] = useState(0)
 
-  const [{ data, fetching }] = useMessagesQuery({
+  const { data, loading } = useMessagesQuery({
     variables: {
       channelId: channel?.id,
       groupId: group?.id,
@@ -14,12 +14,12 @@ export function useMessages({ channel, group, user, initialTime }) {
       pageSize: 100,
       page
     },
-    pause: !channel && !group && !user
+    skip: !channel && !group && !user
   })
 
   return [
     data?.messages.flatMap(res => res.messages),
-    fetching,
+    loading,
     () => {
       // Wait 3 seconds before fetching because of bug where messages sometimes starts at top and immediately loads more
       if (

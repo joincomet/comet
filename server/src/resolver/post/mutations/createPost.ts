@@ -2,7 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { ArrayMaxSize, IsOptional, Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import { Post, Server } from '@/entity'
+import { Post, Server, ServerPermission, User } from '@/entity'
 import { handleText, scrapeMetadata, uploadImageSingle } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
@@ -34,7 +34,7 @@ export class CreatePostInput {
 }
 
 export async function createPost(
-  { em, user }: Context,
+  { em, userId }: Context,
   { title, linkUrl, text, serverId, images }: CreatePostInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
@@ -44,6 +44,8 @@ export async function createPost(
   }
 
   const server = await em.findOne(Server, serverId)
+  const user = await em.findOneOrFail(User, userId)
+  await user.checkServerPermission(em, serverId, ServerPermission.CreatePost)
 
   const imageUrls = []
 

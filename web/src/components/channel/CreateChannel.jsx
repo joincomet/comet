@@ -10,8 +10,7 @@ import Button from '@/components/ui/Button'
 import Switch from '@/components/ui/Switch'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
-import { useMutation } from 'urql'
-import { useCreateChannelMutation } from '@/graphql/hooks'
+import { CurrentUserDocument, useCreateChannelMutation } from '@/graphql/hooks'
 
 export default function CreateChannel({ serverId }) {
   const { t } = useTranslation()
@@ -34,15 +33,23 @@ export default function CreateChannel({ serverId }) {
 
   const { push } = useHistory()
 
-  const [{ fetching }, createChannel] = useCreateChannelMutation()
+  const [createChannel, { loading }] = useCreateChannelMutation({
+    update(cache, { data: { createChannel } }) {
+      const data = cache.readQuery({ query: CurrentUserDocument })
+      data.user.servers
+        .find(server => server.id === serverId)
+        ?.channels.unshift(createChannel)
+      cache.writeQuery({ query: CurrentUserDocument, data })
+    }
+  })
 
   const onSubmit = ({ name }) => {
-    createChannel({ input: { name, serverId, isPrivate } }).then(
-      ({ data: { createChannel } }) => {
-        setIsOpen(false)
-        push(`/server/${serverId}/channel/${createChannel.id}`)
-      }
-    )
+    createChannel({
+      variables: { input: { name, serverId, isPrivate } }
+    }).then(({ data: { createChannel } }) => {
+      setIsOpen(false)
+      push(`/server/${serverId}/channel/${createChannel.id}`)
+    })
   }
 
   if (!canManageChannels)
@@ -109,7 +116,7 @@ export default function CreateChannel({ serverId }) {
               </div>
             </div>
 
-            <Button loading={fetching}>{t('continue')}</Button>
+            <Button loading={loading}>{t('continue')}</Button>
 
             <div className="pt-4">
               <Switch

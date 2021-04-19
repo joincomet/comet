@@ -3,28 +3,17 @@ query currentUser @live {
     ...User
     isAdmin
     servers {
-      server {
-        ...Server
-        channels {
-          ...Channel
-        }
-        roles {
-          ...Role
-          channelPermissions {
-            channel {
-              id
-            }
-            allowedPermissions
-            deniedPermissions
-          }
-        }
+      ...Server
+      permissions
+      channels {
+        ...Channel
+      }
+      roles {
+        ...Role
       }
     }
-    relationships {
-      ...Relationship
-      user {
-        ...User
-      }
+    relatedUsers {
+      ...User
     }
     groups {
       ...Group

@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Channel, ServerPermission } from '@/entity'
+import { Channel, ServerPermission, User } from '@/entity'
 
 @InputType()
 export class DeleteChannelInput {
@@ -9,10 +9,11 @@ export class DeleteChannelInput {
 }
 
 export async function deleteChannel(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { channelId }: DeleteChannelInput
 ): Promise<boolean> {
   const channel = await em.findOneOrFail(Channel, channelId, ['server'])
+  const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(
     em,
     channel.server.id,

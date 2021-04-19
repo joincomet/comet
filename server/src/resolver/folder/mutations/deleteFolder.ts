@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Folder, ServerPermission, UserFolder } from '@/entity'
+import { Folder, ServerPermission, User, UserFolder } from '@/entity'
 
 @InputType()
 export class DeleteFolderInput {
@@ -9,9 +9,10 @@ export class DeleteFolderInput {
 }
 
 export async function deleteFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { folderId }: DeleteFolderInput
 ): Promise<boolean> {
+  const user = await em.findOneOrFail(User, userId)
   const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
   if (folder.isDeleted) throw new Error('Folder already deleted')
   if (folder.owner && folder.owner !== user)

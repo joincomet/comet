@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from 'type-graphql'
-import { Folder, UserFolder } from '@/entity'
+import { Folder, User, UserFolder } from '@/entity'
 import { Context } from '@/types'
 import { ReorderUtils } from '@/util'
 
@@ -10,16 +10,21 @@ export class FollowFolderInput {
 }
 
 export async function followFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { folderId }: FollowFolderInput
 ): Promise<Folder> {
+  const user = await em.findOneOrFail(User, userId)
   const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
   if (folder.owner === user) throw new Error('Cannot follow your own folder')
   if (folder.server) await user.checkJoinedServer(em, folder.server.id)
   let userFolder = await em.findOne(UserFolder, { user, folder })
   if (userFolder) throw new Error('Already following this folder')
   await user.checkCanViewFolder(em, folderId)
-  const firstFolder = await em.findOne(UserFolder, { user })
+  const firstFolder = await em.findOne(
+    UserFolder,
+    { user },
+    { orderBy: { position: 'DESC' } }
+  )
   userFolder = em.create(UserFolder, {
     user,
     folder,

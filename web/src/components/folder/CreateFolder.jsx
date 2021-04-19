@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { useCreateFolderMutation } from '@/graphql/hooks'
 import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
+import { useServer } from '@/hooks/graphql/useServer'
 
 export default function CreateFolder({ serverId }) {
   const { t } = useTranslation()
@@ -29,22 +30,24 @@ export default function CreateFolder({ serverId }) {
     reset()
   }, [isOpen, reset])
 
-  const [{ fetching }, createFolder] = useCreateFolderMutation()
+  const [createFolder, { loading }] = useCreateFolderMutation()
 
   const onSubmit = ({ name }) => {
-    createFolder({ name, serverId }).then(({ data: { createFolder } }) => {
-      setIsOpen(false)
-    })
+    createFolder({ variables: { input: { name, serverId } } }).then(
+      ({ data: { createFolder } }) => {
+        setIsOpen(false)
+      }
+    )
   }
 
-  const server = useJoinedServers().find(s => s.id === serverId)
+  const server = useServer(serverId)
 
   const title = serverId
     ? t('folder.server.title', { name: server?.name })
     : t('folder.user.title')
   const create = serverId ? t('folder.server.create') : t('folder.user.create')
 
-  if (!canManagePosts) return <SidebarLabel>{title}</SidebarLabel>
+  if (serverId && !canManagePosts) return <SidebarLabel>{title}</SidebarLabel>
 
   return (
     <>
@@ -81,7 +84,7 @@ export default function CreateFolder({ serverId }) {
             </div>
 
             <Button
-              loading={fetching}
+              loading={loading}
               disabled={name === 'Read Later' || name === 'Favorites'}
             >
               {t('continue')}

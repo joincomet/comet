@@ -1,4 +1,4 @@
-import { Server, ServerInvite, ServerUser } from '@/entity'
+import { Server, ServerInvite, ServerUser, User } from '@/entity'
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { QueryOrder } from '@mikro-orm/core'
@@ -14,9 +14,10 @@ export class JoinServerInput {
 }
 
 export async function joinServer(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { serverId, inviteId }: JoinServerInput
 ): Promise<Server> {
+  const user = await em.findOneOrFail(User, userId)
   if ((!inviteId && !serverId) || (inviteId && serverId))
     throw new Error('Must provide either inviteId or serverId')
   let server: Server
@@ -35,7 +36,7 @@ export async function joinServer(
     ServerUser,
     { server, user: this },
     ['server'],
-    { position: QueryOrder.ASC }
+    { position: 'DESC' }
   )
   const join = em.create(ServerUser, {
     server,

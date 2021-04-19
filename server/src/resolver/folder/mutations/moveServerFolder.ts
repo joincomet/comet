@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Folder, ServerFolder, ServerPermission } from '@/entity'
+import { Folder, ServerFolder, ServerPermission, User } from '@/entity'
 import { getReorderPosition } from '@/util'
 
 @InputType()
@@ -13,9 +13,10 @@ export class MoveServerFolderInput {
 }
 
 export async function moveServerFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { folderId, beforeFolderId }: MoveServerFolderInput
 ): Promise<Folder> {
+  const user = await em.findOneOrFail(User, userId)
   const folder = await em.findOneOrFail(Folder, folderId, ['server'])
   if (!folder.server) throw new Error('Not a server folder')
   await user.checkServerPermission(
@@ -28,7 +29,7 @@ export async function moveServerFolder(
     { server: folder.server.id },
     ['folder'],
     {
-      position: 'ASC'
+      position: 'DESC'
     }
   )
   const serverFolder = serverFolders.find(f => f.folder.id === folderId)

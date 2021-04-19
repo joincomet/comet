@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Role, ServerPermission } from '@/entity'
+import { Role, ServerPermission, User } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 import { getReorderPosition } from '@/util'
 
@@ -14,9 +14,10 @@ export class MoveRoleInput {
 }
 
 export async function moveRole(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { roleId, beforeRoleId }: MoveRoleInput
 ): Promise<Role> {
+  const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId, ['server'])
   await user.checkServerPermission(
     em,
@@ -26,7 +27,7 @@ export async function moveRole(
   const roles = await em.find(
     Role,
     { server: role.server },
-    { orderBy: { position: QueryOrder.ASC } }
+    { orderBy: { position: 'DESC' } }
   )
   const firstRole = roles[0]
   const beforeRole = beforeRoleId

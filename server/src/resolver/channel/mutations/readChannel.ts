@@ -9,15 +9,17 @@ export class ReadChannelInput {
 }
 
 export async function readChannel(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { channelId }: ReadChannelInput
 ): Promise<Channel> {
   const channel = await em.findOneOrFail(Channel, channelId, ['server'])
-  let channelUser = await em.findOne(ChannelUser, { user, channel })
-  if (!channelUser) channelUser = em.create(ChannelUser, { user, channel })
+  let channelUser = await em.findOne(ChannelUser, { user: userId, channel })
+  if (!channelUser)
+    channelUser = em.create(ChannelUser, { user: userId, channel })
   channelUser.lastViewAt = new Date()
   channelUser.mentionCount = 0
-  channel.isUnread = false
+  channelUser.unreadCount = 0
+  channel.unreadCount = 0
   channel.mentionCount = 0
   await em.persistAndFlush(channelUser)
   liveQueryStore.invalidate(`Channel:${channelId}`)

@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { IsHexColor, Length } from 'class-validator'
-import { Role, ServerPermission } from '@/entity'
+import { Role, ServerPermission, User } from '@/entity'
 import { Context } from '@/types'
 
 @InputType()
@@ -21,9 +21,10 @@ export class UpdateRoleInput {
 }
 
 export async function updateRole(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { roleId, name, color, permissions }: UpdateRoleInput
 ): Promise<Role> {
+  const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId, ['server'])
   await user.checkServerPermission(
     em,

@@ -1,11 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useState } from 'react'
-import { useMutation } from 'urql'
 import { FolderVisibility } from '@/types/FolderVisibility'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useUpdateFolderMutation } from '@/graphql/hooks'
+import {
+  useDeleteFolderMutation,
+  useFollowFolderMutation,
+  useUnfollowFolderMutation,
+  useUpdateFolderMutation
+} from '@/graphql/hooks'
+import { useUserFolders } from '@/hooks/graphql/useUserFolders'
 
 export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const { t } = useTranslation()
@@ -17,7 +22,10 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
     .includes(folder.id)
   const editable = folder.name !== 'Read Later' && folder.name !== 'Favorites'
   const [c, setC] = useState(false)
-  const [_updateFolderRes, updateFolder] = useUpdateFolderMutation()
+  const [updateFolder] = useUpdateFolderMutation()
+  const [followFolder] = useFollowFolderMutation()
+  const [unfollowFolder] = useUnfollowFolderMutation()
+  const [deleteFolder] = useDeleteFolderMutation()
   const { push } = useHistory()
   const { pathname } = useLocation()
   const matched = matchPath(pathname, { path: '/server/:serverId' })
@@ -33,12 +41,20 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
             {isFollowing ? (
               <ContextMenuItem
                 label={t('folder.context.unfollow')}
-                onClick={() => unfollowFolder({ folderId: folder.id })}
+                onClick={() =>
+                  unfollowFolder({
+                    variables: { input: { folderId: folder.id } }
+                  })
+                }
               />
             ) : (
               <ContextMenuItem
                 label={t('folder.context.follow')}
-                onClick={() => followFolder({ folderId: folder.id })}
+                onClick={() =>
+                  followFolder({
+                    variables: { input: { folderId: folder.id } }
+                  })
+                }
               />
             )}
           </>
@@ -53,8 +69,12 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
                 checked={folder.isCollaborative}
                 onClick={() =>
                   updateFolder({
-                    folderId: folder.id,
-                    isCollaborative: !folder.isCollaborative
+                    variables: {
+                      input: {
+                        folderId: folder.id,
+                        isCollaborative: !folder.isCollaborative
+                      }
+                    }
                   })
                 }
               />
@@ -66,8 +86,12 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
                 checked={folder.visibility === FolderVisibility.Public}
                 onClick={() =>
                   updateFolder({
-                    folderId: folder.id,
-                    visibility: FolderVisibility.Public
+                    variables: {
+                      input: {
+                        folderId: folder.id,
+                        visibility: FolderVisibility.Public
+                      }
+                    }
                   })
                 }
               />
@@ -76,8 +100,12 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
                 checked={folder.visibility === FolderVisibility.Friends}
                 onClick={() =>
                   updateFolder({
-                    folderId: folder.id,
-                    visibility: FolderVisibility.Friends
+                    variables: {
+                      input: {
+                        folderId: folder.id,
+                        visibility: FolderVisibility.Friends
+                      }
+                    }
                   })
                 }
               />
@@ -86,8 +114,12 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
                 checked={folder.visibility === FolderVisibility.Unlisted}
                 onClick={() =>
                   updateFolder({
-                    folderId: folder.id,
-                    visibility: FolderVisibility.Unlisted
+                    variables: {
+                      input: {
+                        folderId: folder.id,
+                        visibility: FolderVisibility.Unlisted
+                      }
+                    }
                   })
                 }
               />
@@ -96,8 +128,12 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
                 checked={folder.visibility === FolderVisibility.Private}
                 onClick={() =>
                   updateFolder({
-                    folderId: folder.id,
-                    visibility: FolderVisibility.Private
+                    variables: {
+                      input: {
+                        folderId: folder.id,
+                        visibility: FolderVisibility.Private
+                      }
+                    }
                   })
                 }
               />
@@ -107,7 +143,7 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
               label={t('folder.context.delete')}
               red
               onClick={() => {
-                deleteFolder({ folderId: folder.id })
+                deleteFolder({ variables: { input: { folderId: folder.id } } })
                 if (pathname.startsWith('/me/folder')) {
                   push('/me')
                 } else if (pathname.startsWith(`/server/${serverId}/folder`)) {

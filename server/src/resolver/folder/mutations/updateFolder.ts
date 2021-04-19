@@ -5,6 +5,7 @@ import {
   Folder,
   FolderVisibility,
   ServerPermission,
+  User,
   UserFolder
 } from '@/entity'
 import { Context } from '@/types'
@@ -30,9 +31,10 @@ export class UpdateFolderInput {
 }
 
 export async function updateFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { folderId, name, avatarFile, isCollaborative, visibility }: UpdateFolderInput
 ): Promise<Folder> {
+  const user = await em.findOneOrFail(User, userId)
   const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
 
   if (folder.server) {

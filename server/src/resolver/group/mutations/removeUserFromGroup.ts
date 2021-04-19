@@ -12,13 +12,12 @@ export class RemoveUserFromGroupInput {
 }
 
 export async function removeUserFromGroup(
-  { em, user: currentUser, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { groupId, userId }: RemoveUserFromGroupInput
 ): Promise<Group> {
   const group = await em.findOneOrFail(Group, groupId, ['users', 'owner'])
   const user = await em.findOneOrFail(User, userId)
-  await currentUser.checkInGroup(em, group.id)
-  if (group.owner !== currentUser)
+  if (group.owner !== em.getReference(User, currentUserId))
     throw new Error('Must be group owner to remove users')
   group.users.remove(user)
   const message = em.create(Message, {

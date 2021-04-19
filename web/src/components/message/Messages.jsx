@@ -8,7 +8,6 @@ import MessageInput from '@/components/message/input/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import MessagesStart from '@/components/message/MessagesStart'
 import { usePrevious } from 'react-use'
-import { useMutation } from 'urql'
 import { useLocation } from 'react-router-dom'
 import {
   useReadChannelMutation,
@@ -19,9 +18,9 @@ import {
 const PREPEND_OFFSET = 10 ** 7
 
 export default function Messages({ channel, user, group }) {
-  const [_viewDmRes, viewDm] = useReadDmMutation()
-  const [_viewGroupRes, viewGroup] = useReadGroupMutation()
-  const [_viewChannelRes, viewChannel] = useReadChannelMutation()
+  const [readDm] = useReadDmMutation()
+  const [readGroup] = useReadGroupMutation()
+  const [readChannel] = useReadChannelMutation()
   const [initialTime, setInitialTime] = useState(() => new Date())
 
   const { pathname } = useLocation()
@@ -42,9 +41,10 @@ export default function Messages({ channel, user, group }) {
     setLength(messages?.length || 0)
     if (prevLength === 0) virtuoso.current.scrollBy({ top: PREPEND_OFFSET })
 
-    if (channel) viewChannel({ channelId: channel.id })
-    if (group) viewGroup({ groupId: group.id })
-    if (user) viewDm({ userId: user.id })
+    if (channel)
+      readChannel({ variables: { input: { channelId: channel.id } } })
+    if (group) readGroup({ variables: { input: { groupId: group.id } } })
+    if (user) readDm({ variables: { input: { userId: user.id } } })
   }, [messages?.length])
 
   const {

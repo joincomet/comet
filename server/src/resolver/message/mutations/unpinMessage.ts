@@ -1,6 +1,6 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
-import { ChannelPermission, Message, ServerPermission } from '@/entity'
+import { ChannelPermission, Message, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -10,11 +10,12 @@ export class UnpinMessageInput {
 }
 
 export async function unpinMessage(
-  { em, user }: Context,
+  { em, userId }: Context,
   { messageId }: UnpinMessageInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<Message> {
   const message = await em.findOneOrFail(Message, messageId, ['channel'])
+  const user = await em.findOneOrFail(User, userId)
   if (message.channel) {
     await user.checkChannelPermission(
       em,

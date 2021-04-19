@@ -1,7 +1,7 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
-import { Folder, FolderPost, Post } from '@/entity'
+import { Folder, FolderPost, Post, User } from '@/entity'
 
 @InputType()
 export class RemovePostFromFolderInput {
@@ -13,10 +13,11 @@ export class RemovePostFromFolderInput {
 }
 
 export async function removePostFromFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { postId, folderId }: RemovePostFromFolderInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Folder> {
+  const user = await em.findOneOrFail(User, userId)
   const post = await em.findOneOrFail(Post, postId)
   const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
   await user.checkCanAddToFolder(em, folderId)

@@ -9,9 +9,10 @@ export class ChangeOnlineStatusInput {
 }
 
 export async function changeOnlineStatus(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { onlineStatus }: ChangeOnlineStatusInput
 ): Promise<User> {
+  const user = await em.findOneOrFail(User, userId)
   user.onlineStatus = onlineStatus
   await em.persistAndFlush(user)
   liveQueryStore.invalidate(`User:${user.id}`)

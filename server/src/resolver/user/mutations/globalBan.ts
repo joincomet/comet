@@ -14,9 +14,10 @@ export class GlobalBanInput {
 }
 
 export async function globalBan(
-  { em, user: currentUser }: Context,
+  { em, userId: currentUserId }: Context,
   { userId, reason }: GlobalBanInput
 ): Promise<boolean> {
+  const currentUser = await em.findOneOrFail(User, currentUserId)
   if (!currentUser.isAdmin) throw new Error('Must be admin to global ban')
   const user = await em.findOneOrFail(User, userId)
   user.isBanned = true

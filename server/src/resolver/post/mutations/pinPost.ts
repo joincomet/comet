@@ -1,6 +1,6 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
-import { Post, ServerPermission } from '@/entity'
+import { Post, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -10,10 +10,11 @@ export class PinPostInput {
 }
 
 export async function pinPost(
-  { em, user }: Context,
+  { em, userId }: Context,
   { postId }: PinPostInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
+  const user = await em.findOneOrFail(User, userId)
   const post = await em.findOneOrFail(Post, postId, ['post.server'])
   if (post.isPinned) throw new Error('Post already pinned')
   await user.checkServerPermission(

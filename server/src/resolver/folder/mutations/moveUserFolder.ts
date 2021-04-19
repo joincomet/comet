@@ -13,12 +13,12 @@ export class MoveUserFolderInput {
 }
 
 export async function moveUserFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { folderId, beforeFolderId }: MoveUserFolderInput
 ): Promise<Folder> {
   const folder = await em.findOneOrFail(Folder, folderId, ['server'])
-  const userFolders = await em.find(UserFolder, { user }, ['folder'], {
-    position: 'ASC'
+  const userFolders = await em.find(UserFolder, { user: userId }, ['folder'], {
+    position: 'DESC'
   })
   const userFolder = userFolders.find(f => f.folder.id === folderId)
 

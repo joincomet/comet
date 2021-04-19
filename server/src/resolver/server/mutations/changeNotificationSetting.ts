@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context, NotificationSetting } from '@/types'
-import { ServerUser, ServerUserStatus } from '@/entity'
+import { ServerUser, ServerUserStatus, User } from '@/entity'
 
 @InputType()
 export class ChangeNotificationSettingInput {
@@ -12,11 +12,11 @@ export class ChangeNotificationSettingInput {
 }
 
 export async function changeNotificationSetting(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { serverId, notificationSetting }: ChangeNotificationSettingInput
 ): Promise<ServerUser> {
   const serverUser = await em.findOneOrFail(ServerUser, {
-    user,
+    user: userId,
     server: serverId,
     status: ServerUserStatus.Joined
   })

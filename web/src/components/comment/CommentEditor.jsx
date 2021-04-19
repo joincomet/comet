@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
 import Editor from '@/components/ui/editor/Editor'
-import { useMutation } from 'urql'
 import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useTranslation } from 'react-i18next'
 import { useCreateCommentMutation } from '@/graphql/hooks'
@@ -33,7 +32,7 @@ const cancelBtnClass = ctl(`
 
 export default function CommentEditor({ postId, parentCommentId, setOpen }) {
   const [text, setText] = useState('')
-  const [{ fetching }, createComment] = useCreateCommentMutation()
+  const [createComment, { loading }] = useCreateCommentMutation()
   const { t } = useTranslation()
 
   return (
@@ -51,16 +50,18 @@ export default function CommentEditor({ postId, parentCommentId, setOpen }) {
         </button>
         <button
           className={commentBtnClass}
-          disabled={!text || fetching}
+          disabled={!text || loading}
           onClick={() => {
-            createComment({ postId, text, parentCommentId }).then(() => {
+            createComment({
+              variables: { input: { postId, text, parentCommentId } }
+            }).then(() => {
               setOpen(false)
               setText('')
             })
           }}
         >
           {t('comment.create.submit')}
-          {fetching && <IconSpinner className="w-5 h-5 text-primary ml-3" />}
+          {loading && <IconSpinner className="w-5 h-5 text-primary ml-3" />}
         </button>
       </div>
     </div>

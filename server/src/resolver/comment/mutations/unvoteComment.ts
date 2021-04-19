@@ -1,6 +1,6 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
-import { Comment, CommentVote, ServerPermission } from '@/entity'
+import { Comment, CommentVote, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -10,11 +10,12 @@ export class UnvoteCommentInput {
 }
 
 export async function unvoteComment(
-  { em, user }: Context,
+  { em, userId }: Context,
   { commentId }: UnvoteCommentInput,
   notifyCommentChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
   const comment = await em.findOneOrFail(Comment, commentId, ['post.server'])
+  const user = await em.findOneOrFail(User, userId)
   const vote = await em.findOneOrFail(CommentVote, { comment, user })
   await user.checkServerPermission(
     em,

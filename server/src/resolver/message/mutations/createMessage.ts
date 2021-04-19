@@ -34,7 +34,7 @@ export class CreateMessageInput {
 }
 
 export async function createMessage(
-  { em, user, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { text, file, userId, groupId, channelId }: CreateMessageInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<Message> {
@@ -45,6 +45,7 @@ export async function createMessage(
     : null
   const group = groupId ? await em.findOneOrFail(Group, groupId) : null
   const toUser = userId ? await em.findOneOrFail(User, userId) : null
+  const user = await em.findOneOrFail(User, currentUserId)
 
   if (toUser) {
     const [myData] = await user.getFriendData(em, userId)

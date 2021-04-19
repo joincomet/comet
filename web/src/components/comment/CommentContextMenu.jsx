@@ -1,4 +1,3 @@
-import { useMutation } from 'urql'
 import { useCopyToClipboard } from 'react-use'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +25,7 @@ export default function CommentContextMenu({ comment, ContextMenuItem }) {
     ]
   })
   const copyToClipboard = useCopyToClipboard()[1]
-  const [_deleteRes, deleteComment] = useDeleteCommentMutation()
+  const [deleteComment] = useDeleteCommentMutation()
   const toggleVote = useToggleCommentVote(comment)
   const togglePin = useToggleCommentPin(comment)
 

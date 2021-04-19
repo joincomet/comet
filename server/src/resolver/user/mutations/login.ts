@@ -17,7 +17,7 @@ export class LoginInput {
 }
 
 export async function login(
-  { em, res }: Context,
+  { em, res, liveQueryStore }: Context,
   { email, password }: LoginInput
 ): Promise<LoginResponse> {
   email = email.toLowerCase()
@@ -35,10 +35,11 @@ export async function login(
   await em.persistAndFlush(user)
   const accessToken = createAccessToken(user)
   res.cookie('token', accessToken, {
-    maxAge: 2592000,
+    maxAge: 2592000000,
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production'
   })
+  liveQueryStore.invalidate(`Query.user`)
   return {
     accessToken,
     user

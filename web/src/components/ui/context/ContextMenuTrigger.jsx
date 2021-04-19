@@ -1,11 +1,11 @@
-import { useContextTrigger } from '@/providers/ContextMenuProvider'
+import { useContextMenuTrigger } from '@/providers/ContextMenuProvider'
 
 export default function ContextMenuTrigger({
   data,
   leftClick = false,
   children
 }) {
-  const [bindTrigger] = useContextTrigger(data, leftClick)
+  const [bindTrigger] = useContextMenuTrigger(data, leftClick)
 
   return <div {...bindTrigger}>{children}</div>
 }

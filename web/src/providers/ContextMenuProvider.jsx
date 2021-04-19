@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useState } from 'react'
 import useContextMenu from '@/hooks/use-context-menu'
 import ContextMenu from '@/components/ui/context/ContextMenu'
 import { MOUSE_BUTTON } from '@/hooks/use-context-menu/buildUseContextMenuTrigger'
@@ -31,7 +31,7 @@ export default function ContextMenuProvider({ children }) {
   )
 }
 
-export const useContextTrigger = (data, leftClick = false) => {
+export const useContextMenuTrigger = (data, leftClick = false) => {
   const { useContextTrigger } = useContext(ContextMenuContext)
   return useContextTrigger({
     collect: () => data,

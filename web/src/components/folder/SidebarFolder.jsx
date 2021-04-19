@@ -9,7 +9,6 @@ import {
   IconReadLaterFolder
 } from '@/components/ui/icons/Icons'
 import { useMemo } from 'react'
-import { useMutation } from 'urql'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/types/ServerPermission'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
@@ -18,7 +17,7 @@ import { useFolderName } from '@/components/folder/useFolderName'
 import { useAddPostToFolderMutation } from '@/graphql/hooks'
 
 export default function SidebarFolder({ folder, serverId }) {
-  const [_addPostRes, addPostToFolder] = useAddPostToFolderMutation()
+  const [addPostToFolder] = useAddPostToFolderMutation()
   const [canAddPosts] = useHasServerPermissions({
     serverId,
     permissions: [ServerPermission.AddPostToFolder]
@@ -31,7 +30,9 @@ export default function SidebarFolder({ folder, serverId }) {
         toast.error(t('folder.noPermission'))
         return
       }
-      addPostToFolder({ folderId: folder.id, postId: post.id }).then(res => {
+      addPostToFolder({
+        variables: { input: { folderId: folder.id, postId: post.id } }
+      }).then(res => {
         if (!res.error) toast.success(t('folder.added', { name: folder.name }))
       })
     },

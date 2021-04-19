@@ -105,8 +105,8 @@ interface IOrdering<T> {
 }
 
 export const ReorderUtils: IOrdering<string> = {
-  positionBefore,
-  positionAfter,
+  positionBefore: positionAfter,
+  positionAfter: positionBefore,
   positionBetween,
   positionsEqual: (a, b) => a === b,
   comparePositions: (a, b) => -comparePositions(a, b),

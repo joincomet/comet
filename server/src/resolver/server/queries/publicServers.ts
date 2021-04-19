@@ -31,11 +31,11 @@ export async function publicServers(
 
   if (sort === PublicServersSort.Featured) {
     where = { isFeatured: true }
-    orderBy = { featuredPosition: QueryOrder.ASC }
+    orderBy = { featuredPosition: 'DESC' }
   } else if (sort === PublicServersSort.New) {
-    orderBy = { createdAt: QueryOrder.DESC }
+    orderBy = { createdAt: 'DESC' }
   } else if (sort === PublicServersSort.Top) {
-    orderBy = { userCount: QueryOrder.DESC }
+    orderBy = { userCount: 'DESC' }
   }
 
   if (category) {

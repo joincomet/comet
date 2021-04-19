@@ -10,7 +10,7 @@ export function usePosts({ serverId, folderId }) {
   ])
   const [page, setPage] = useState(0)
 
-  const [{ data, fetching }] = usePostsQuery({
+  const { data, loading } = usePostsQuery({
     variables: {
       pageSize: 20,
       page,
@@ -23,7 +23,7 @@ export function usePosts({ serverId, folderId }) {
 
   return [
     data?.posts.flatMap(res => res.posts),
-    fetching,
+    loading,
     () => setPage(page + 1),
     data && data.posts.length > 0
       ? data.posts[data.posts.length - 1].hasMore

@@ -78,20 +78,24 @@ export default function HomeSidebar() {
 function DirectMessage({ user }) {
   const { t } = useTranslation()
 
-  const [_, hideDm] = useCloseDmMutation()
+  const [closeDm] = useCloseDmMutation()
 
   const { push } = useHistory()
   const { pathname } = useLocation()
 
-  const [_sendMessageRes, sendMessage] = useCreateMessageMutation()
+  const [sendMessage] = useCreateMessageMutation()
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,
     drop: (post, monitor) => {
       push(`/me/dm/${user.id}`)
       sendMessage({
-        userId: user.id,
-        text: `${location.origin}${post.relativeUrl}`
+        variables: {
+          input: {
+            userId: user.id,
+            text: `${location.origin}${post.relativeUrl}`
+          }
+        }
       })
     },
     collect: monitor => ({
@@ -130,7 +134,7 @@ function DirectMessage({ user }) {
             onClick={e => {
               e.stopPropagation()
               e.preventDefault()
-              hideDm({ userId: user.id })
+              closeDm({ variables: { input: { userId: user.id } } })
               if (pathname === `/me/dm/${user.id}`) push('/me/friends')
             }}
             className="group-hover:visible invisible w-5 h-5 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"

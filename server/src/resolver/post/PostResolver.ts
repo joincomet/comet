@@ -3,12 +3,15 @@ import {
   Args,
   Authorized,
   Ctx,
+  FieldResolver,
   ID,
   Mutation,
   Publisher,
   PubSub,
   Query,
-  Resolver
+  Resolver,
+  ResolverInterface,
+  Root
 } from 'type-graphql'
 import { Post } from '@/entity'
 import { Context } from '@/types'
@@ -33,6 +36,15 @@ import { PostsArgs, PostsResponse, posts, post } from '@/resolver/post/queries'
 
 @Resolver(() => Post)
 export class PostResolver {
+  // --- Fields ---
+  @FieldResolver()
+  async isVoted(
+    @Ctx() { loaders: { postVoteLoader } }: Context,
+    @Root() post: Post
+  ) {
+    return postVoteLoader.load(post.id)
+  }
+
   // --- Queries ---
   @Authorized()
   @Query(() => [PostsResponse])

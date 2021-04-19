@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from 'type-graphql'
-import { FolderVisibility, Server, ServerFolder, User } from '@/entity'
+import { FolderVisibility, Server, User } from '@/entity'
 import { BaseEntity } from '@/entity/BaseEntity'
-import { Entity, Enum, ManyToOne, OneToOne, Property } from '@mikro-orm/core'
+import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -22,10 +22,8 @@ export class Folder extends BaseEntity {
   @ManyToOne(() => User, { nullable: true })
   owner?: User
 
-  @OneToOne(() => ServerFolder, 'folder', { nullable: true })
-  serverFolder?: ServerFolder
-
   @Field(() => Server, { nullable: true })
+  @ManyToOne({ entity: () => Server, nullable: true })
   server?: Server
 
   @Property()
@@ -38,6 +36,9 @@ export class Folder extends BaseEntity {
   @Field(() => Int)
   @Property()
   followerCount: number = 0
+
+  @Field()
+  isFollowing: boolean
 
   @Field()
   @Property()

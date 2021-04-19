@@ -11,9 +11,9 @@ export default function ServerFolderPage() {
   const { serverId, folderId } = useParams()
   useSetServerPage(`folder/${folderId}`)
 
-  const [{ data }] = useFolderQuery({
+  const { data } = useFolderQuery({
     variables: { id: folderId },
-    pause: !folderId
+    skip: !folderId
   })
   const folder = data?.folder
 

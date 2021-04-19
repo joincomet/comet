@@ -1,7 +1,14 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
-import { Comment, CommentVote, Post, Reply, ServerPermission } from '@/entity'
+import {
+  Comment,
+  CommentVote,
+  Post,
+  Reply,
+  ServerPermission,
+  User
+} from '@/entity'
 import { handleText } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
@@ -22,7 +29,7 @@ export class CreateCommentInput {
 }
 
 export async function createComment(
-  { em, user }: Context,
+  { em, userId }: Context,
   { text, postId, parentCommentId }: CreateCommentInput,
   notifyCommentChanged: Publisher<ChangePayload>,
   notifyRepliesChanged: Publisher<BulkChangePayload>
@@ -31,6 +38,7 @@ export async function createComment(
   if (!text) throw new Error('error.comment.empty')
 
   const post = await em.findOneOrFail(Post, postId, ['author.user'])
+  const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(
     em,
     post.server.id,

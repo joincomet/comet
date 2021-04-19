@@ -9,8 +9,15 @@ import {
   Resolver,
   Root
 } from 'type-graphql'
-import { Channel, Folder, Server, ServerUser } from '@/entity'
-import { Context } from '@/types'
+import {
+  Channel,
+  Folder,
+  Role,
+  Server,
+  ServerPermission,
+  ServerUser
+} from '@/entity'
+import { Context, NotificationSetting } from '@/types'
 import { publicServers, PublicServersArgs } from './queries'
 import {
   banUserFromServer,
@@ -43,18 +50,66 @@ import {
 export class ServerResolver {
   @FieldResolver(() => [Channel])
   async channels(
-    @Ctx() { em, user, loaders: { channelLoader } }: Context,
+    @Ctx() { loaders: { serverChannelsLoader } }: Context,
     @Root() server: Server
   ): Promise<Channel[]> {
-    return channelLoader.load(server.id)
+    return serverChannelsLoader.load(server.id)
   }
 
   @FieldResolver(() => [Folder])
   async folders(
-    @Ctx() { em, user, loaders: { serverFoldersLoader } }: Context,
+    @Ctx() { loaders: { serverFoldersLoader } }: Context,
     @Root() server: Server
   ): Promise<Folder[]> {
     return serverFoldersLoader.load(server.id)
+  }
+
+  @FieldResolver(() => [Role])
+  async myRoles(
+    @Ctx() { loaders: { serverMyRolesLoader } }: Context,
+    @Root() server: Server
+  ): Promise<Role[]> {
+    return serverMyRolesLoader.load(server.id)
+  }
+
+  @FieldResolver(() => [Role])
+  async roles(
+    @Ctx() { loaders: { serverRolesLoader } }: Context,
+    @Root() server: Server
+  ): Promise<Role[]> {
+    return serverRolesLoader.load(server.id)
+  }
+
+  @FieldResolver()
+  async nickname(
+    @Ctx() { loaders: { serverNicknameLoader } }: Context,
+    @Root() server: Server
+  ): Promise<string> {
+    return serverNicknameLoader.load(server.id)
+  }
+
+  @FieldResolver(() => NotificationSetting)
+  async notificationSetting(
+    @Ctx() { loaders: { serverNotificationSettingLoader } }: Context,
+    @Root() server: Server
+  ): Promise<NotificationSetting> {
+    return serverNotificationSettingLoader.load(server.id)
+  }
+
+  @FieldResolver(() => [ServerPermission])
+  async permissions(
+    @Ctx() { loaders: { serverPermissionsLoader } }: Context,
+    @Root() server: Server
+  ): Promise<ServerPermission[]> {
+    return serverPermissionsLoader.load(server.id)
+  }
+
+  @FieldResolver(() => Channel)
+  async systemMessagesChannel(
+    @Ctx() { loaders: { serverSystemMessagesChannelLoader } }: Context,
+    @Root() server: Server
+  ): Promise<Channel> {
+    return serverSystemMessagesChannelLoader.load(server.id)
   }
 
   // --- Queries ---

@@ -73,12 +73,12 @@ export default memo(function UserDialog() {
   const { t } = useTranslation()
   const [currentTab, setCurrentTab] = useState(tab.MutualServers)
 
-  const [{ data: userData }] = useUserQuery({
+  const { data: userData } = useUserQuery({
     variables: { id: user?.id },
-    pause: !user
+    skip: !user
   })
 
-  const mutualFriends = userData?.user?.relationships.map(r => r.user) ?? []
+  const mutualFriends = userData?.user?.relatedUsers ?? []
   const mutualServers = userData?.user?.servers ?? []
   const folders = userData?.user?.folders ?? []
 
@@ -211,16 +211,16 @@ export default memo(function UserDialog() {
         </div>
         <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar">
           {currentTab === tab.MutualServers &&
-            mutualServers.map(serverUser => (
+            mutualServers.map(server => (
               <Link
-                to={`/server/${serverUser.server.id}`}
-                key={serverUser.server.id}
+                to={`/server/${server.id}`}
+                key={server.id}
                 className={itemClass}
                 onClick={() => close()}
               >
-                <ServerAvatar server={serverUser.server} size={10} />
+                <ServerAvatar server={server} size={10} />
                 <div className="pl-2.5 text-base text-secondary font-medium">
-                  {serverUser.server.name}
+                  {server.name}
                 </div>
               </Link>
             ))}

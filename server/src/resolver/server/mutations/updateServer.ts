@@ -1,6 +1,6 @@
 import { Field, ID, InputType, Int } from 'type-graphql'
 import { Length } from 'class-validator'
-import { Server, ServerCategory, ServerPermission } from '@/entity'
+import { Server, ServerCategory, ServerPermission, User } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { uploadImageSingle } from '@/util'
@@ -47,7 +47,7 @@ export class UpdateServerInput {
 }
 
 export async function updateServer(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   {
     serverId,
     name,
@@ -63,6 +63,7 @@ export async function updateServer(
     sendWelcomeMessage
   }: UpdateServerInput
 ): Promise<Server> {
+  const user = await em.findOneOrFail(User, userId)
   const server = await em.findOneOrFail(Server, serverId, ['owner'])
   if ((isFeatured || featuredPosition) && !user.isAdmin)
     throw new Error('Must be global admin to set featured servers')

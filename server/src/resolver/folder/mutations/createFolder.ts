@@ -5,6 +5,8 @@ import {
   FolderVisibility,
   Server,
   ServerFolder,
+  ServerPermission,
+  User,
   UserFolder
 } from '@/entity'
 import { Length } from 'class-validator'
@@ -28,7 +30,7 @@ export class CreateFolderInput {
 }
 
 export async function createFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { serverId, name, isCollaborative, visibility }: CreateFolderInput
 ): Promise<Folder> {
   if (name.length > 100) throw new Error('error.folder.nameTooLong')
@@ -36,6 +38,12 @@ export async function createFolder(
     throw new Error('error.folder.cannotCreate')
   let folder
   if (serverId) {
+    const user = await em.findOneOrFail(User, userId)
+    await user.checkServerPermission(
+      em,
+      serverId,
+      ServerPermission.ManageFolders
+    )
     const server = await em.findOneOrFail(Server, serverId)
     folder = em.create(Folder, {
       name,
@@ -49,17 +57,17 @@ export async function createFolder(
     liveQueryStore.invalidate(`Server:${serverId}`)
   } else {
     folder = em.create(Folder, {
-      owner: user,
+      owner: userId,
       name,
       visibility,
       isCollaborative
     })
     const userFolder = em.create(UserFolder, {
-      user,
+      user: userId,
       folder
     })
     await em.persistAndFlush([folder, userFolder])
-    liveQueryStore.invalidate(`User:${user.id}`)
+    liveQueryStore.invalidate(`User:${userId}`)
   }
   return folder
 }

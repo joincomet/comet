@@ -26,7 +26,7 @@ registerEnumType(CommentsSort, {
 })
 
 export async function comments(
-  { em, user }: Context,
+  { em }: Context,
   { postId, sort }: CommentsArgs
 ): Promise<Comment[]> {
   const post = await em.findOneOrFail(Post, postId)
@@ -41,11 +41,6 @@ export async function comments(
   )
 
   comments.forEach(comment => {
-    comment.isVoted = comment.votes
-      .getItems()
-      .map(vote => vote.user)
-      .includes(user)
-
     if (comment.isDeleted) {
       comment.text = `<p>[deleted]</p>`
       comment.author = null

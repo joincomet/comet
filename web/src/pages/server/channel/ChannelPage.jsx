@@ -4,12 +4,11 @@ import Messages from '@/components/message/Messages'
 import { useSetServerPage } from '@/hooks/useSetServerPage'
 import Page from '@/components/ui/page/Page'
 import ChannelHeader from '@/pages/server/channel/ChannelHeader'
-import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
+import { useChannel } from '@/hooks/graphql/useChannel'
 
 export default function ChannelPage() {
   const { channelId } = useParams()
-  const [server] = useCurrentServer()
-  const channel = server?.channels.find(c => c.id === channelId)
+  const channel = useChannel(channelId)
   useSetServerPage(`channel/${channelId}`)
 
   return (

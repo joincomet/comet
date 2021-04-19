@@ -20,9 +20,10 @@ export class UpdateAccountInput {
 }
 
 export async function updateAccount(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { name, email, avatarFile }: UpdateAccountInput
 ): Promise<User> {
+  const user = await em.findOneOrFail(User, userId)
   em.assign(user, {
     name: name ?? user.name,
     email: email ?? user.email,

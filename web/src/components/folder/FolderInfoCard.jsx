@@ -12,7 +12,6 @@ import { useStore } from '@/hooks/useStore'
 import ServerPopup from '@/components/server/ServerPopup'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { useEffect, useMemo, useState } from 'react'
-import { useMutation } from 'urql'
 import UserPopup from '@/components/user/UserPopup'
 import UserAvatar from '@/components/user/UserAvatar'
 import { useUpdateFolderMutation } from '@/graphql/hooks'
@@ -32,13 +31,13 @@ export default function FolderInfoCard({ folder }) {
 
   const editable = folder?.name !== 'Favorites' && folder?.name !== 'Read Later'
 
-  const [_updateFolderRes, updateFolder] = useUpdateFolderMutation()
+  const [updateFolder] = useUpdateFolderMutation()
 
   const [avatarFile, setAvatarFile] = useState(null)
 
   useEffect(() => {
     if (!avatarFile) return null
-    updateFolder({ avatarFile, folderId: folder.id })
+    updateFolder({ variables: { input: { avatarFile, folderId: folder.id } } })
   }, [avatarFile, updateFolder])
 
   if (!folder) return null

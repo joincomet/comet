@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useServer } from '@/hooks/graphql/useServer'
 
 /**
  * @param serverId The ID of the server to check permissions
@@ -7,17 +7,10 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
  * @return {boolean[]} Array of booleans representing if user has permission, same length and order as input permissions
  */
 export const useHasServerPermissions = ({ serverId, permissions }) => {
-  const [user] = useCurrentUser()
+  const server = useServer(serverId)
 
   return useMemo(() => {
-    const allTrue = permissions.map(_ => true)
-    const allFalse = permissions.map(_ => false)
-    if (!user) return allFalse
-    if (user?.isAdmin) return allTrue
-    const server = user?.servers.find(s => s.server.id === serverId)
-    if (!server) return allFalse
-    if (server.owner.id === user.id) return allTrue
-    const roles = server.roles
-    return permissions.map(p => !!roles.find(r => r.permissions.includes(p)))
-  }, [permissions, user, serverId])
+    if (!server) return permissions.map(_ => false)
+    return permissions.map(perm => server.permissions.includes(perm))
+  }, [permissions, server])
 }

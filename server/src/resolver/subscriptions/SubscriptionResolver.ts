@@ -15,7 +15,7 @@ import { SubscriptionTopic } from '@/resolver/subscriptions/SubscriptionTopic'
 import { Context } from '@/types'
 import { ChangePayload } from '@/resolver/subscriptions/ChangePayload'
 import { ChangeType } from '@/resolver/subscriptions/ChangeType'
-import { Comment, Message, Post, Reply } from '@/entity'
+import { Comment, Message, Post, Reply, User } from '@/entity'
 import ChangeResponse from '@/resolver/subscriptions/ChangeResponse'
 import { TypingFilter } from '@/resolver/subscriptions/typing/TypingFilter'
 import { TypingPayload } from '@/resolver/subscriptions/typing/TypingPayload'
@@ -111,12 +111,12 @@ export class SubscriptionResolver {
     filter: RepliesSubscriptionFilter
   })
   async repliesChanged(
-    @Ctx() { em, user }: Context,
+    @Ctx() { em, userId }: Context,
     @Root() { ids, type }: BulkChangePayload
   ): Promise<RepliesChangedResponse> {
     const entities = await em.find(
       Reply,
-      { id: ids, user },
+      { id: ids, user: userId },
       [
         'fromUser',
         'comment.author',
@@ -145,11 +145,12 @@ export class SubscriptionResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async startTyping(
-    @Ctx() { user }: Context,
+    @Ctx() { userId: currentUserId, em }: Context,
     @Args() { channelId, groupId, userId }: TypingArgs,
     @PubSub(SubscriptionTopic.UserStartedTyping)
     notifyUserStartedTyping: Publisher<TypingPayload>
   ): Promise<boolean> {
+    const user = await em.findOneOrFail(User, currentUserId)
     await notifyUserStartedTyping({
       username: user.username,
       userId,

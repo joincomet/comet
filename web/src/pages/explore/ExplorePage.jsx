@@ -25,7 +25,7 @@ export default function ExplorePage() {
 
   const { t } = useTranslation()
 
-  const [{ data }] = usePublicServersQuery({
+  const { data } = usePublicServersQuery({
     variables: {
       sort: exploreSort,
       category: exploreCategory,

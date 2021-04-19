@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useMutation } from 'urql'
 import { IconFormatEmoji, IconUpload } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +20,7 @@ export default function MessageInput({ channel, group, user }) {
   const [files, setFiles] = useState(null)
   const [currentFile, setCurrentFile] = useState(null)
   const [currentFileIndex, setCurrentFileIndex] = useState(0)
-  const [{ fetching }, sendMessage] = useCreateMessageMutation()
+  const [sendMessage] = useCreateMessageMutation()
 
   const variables = {
     channelId: channel?.id,

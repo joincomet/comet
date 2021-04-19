@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Relationship, RelationshipStatus } from '@/entity'
+import { Relationship, RelationshipStatus, User } from '@/entity'
 
 @InputType()
 export class CreateFriendRequestInput {
@@ -9,9 +9,10 @@ export class CreateFriendRequestInput {
 }
 
 export async function createFriendRequest(
-  { em, user, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: CreateFriendRequestInput
 ): Promise<Relationship> {
+  const user = await em.findOneOrFail(User, currentUserId)
   const [myData, theirData] = await user.getFriendData(em, userId)
   if (
     !(

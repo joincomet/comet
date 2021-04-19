@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
-import { ServerPermission, ServerUser, ServerUserStatus } from '@/entity'
+import { ServerPermission, ServerUser, ServerUserStatus, User } from '@/entity'
 
 @InputType()
 export class ChangeNicknameInput {
@@ -17,7 +17,7 @@ export class ChangeNicknameInput {
 }
 
 export async function changeNickname(
-  { em, user, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { serverId, userId, nickname }: ChangeNicknameInput
 ): Promise<ServerUser> {
   const serverUser = await em.findOneOrFail(ServerUser, {
@@ -25,6 +25,7 @@ export async function changeNickname(
     server: serverId,
     status: ServerUserStatus.Joined
   })
+  const user = await em.findOneOrFail(User, currentUserId)
   if (!userId || user.id === userId)
     await user.checkServerPermission(
       em,

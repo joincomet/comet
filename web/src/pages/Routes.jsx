@@ -7,7 +7,6 @@ import NotFound from '@/pages/NotFound'
 import PrivateRoutes from '@/pages/PrivateRoutes'
 import { Helmet } from 'react-helmet-async'
 import LoadingScreen from '@/pages/LoadingScreen'
-import ContextMenuProvider from '@/providers/ContextMenuProvider'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function Routes() {
@@ -62,9 +61,7 @@ export default function Routes() {
           </AuthLayout>
         </Route>
 
-        <ContextMenuProvider>
-          <PrivateRoutes />
-        </ContextMenuProvider>
+        <PrivateRoutes />
       </Route>
 
       <Route>

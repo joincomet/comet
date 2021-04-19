@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import { useMutation } from 'urql'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import toast from 'react-hot-toast'
 import { ServerPermission } from '@/types/ServerPermission'
@@ -13,20 +12,20 @@ import {
 export const useToggleCommentVote = comment => {
   const { t } = useTranslation()
   const { serverId } = useParams()
-  const [_voteRes, vote] = useVoteCommentMutation()
-  const [_unvoteRes, unvote] = useUnvoteCommentMutation()
+  const [vote] = useVoteCommentMutation()
+  const [unvote] = useUnvoteCommentMutation()
   const [canVote] = useHasServerPermissions({
     serverId,
     permissions: [ServerPermission.VoteComment]
   })
 
   return useCallback(() => {
-    const vars = { commentId: comment.id }
+    const variables = { commentId: comment.id }
     if (!canVote) {
       toast.error(t('comment.context.votePermission'))
       return
     }
-    if (comment.isVoted) unvote(vars)
-    else vote(vars)
+    if (comment.isVoted) unvote({ variables })
+    else vote({ variables })
   }, [comment, canVote, vote, unvote, t])
 }

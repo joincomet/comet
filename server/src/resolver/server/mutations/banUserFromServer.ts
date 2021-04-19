@@ -4,7 +4,8 @@ import {
   Server,
   ServerPermission,
   ServerUser,
-  ServerUserStatus
+  ServerUserStatus,
+  User
 } from '@/entity'
 
 @InputType()
@@ -17,12 +18,13 @@ export class BanUserFromServerInput {
 }
 
 export async function banUserFromServer(
-  { em, user, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { serverId, userId }: BanUserFromServerInput
 ): Promise<boolean> {
-  if (user.id === userId) throw new Error('Cannot ban yourself')
+  if (currentUserId === userId) throw new Error('Cannot ban yourself')
   const server = await em.findOneOrFail(Server, serverId, ['owner'])
   if (server.owner.id === userId) throw new Error('Cannot ban server owner')
+  const user = await em.findOneOrFail(User, currentUserId)
   await user.checkServerPermission(em, serverId, ServerPermission.ManageUsers)
   const serverUser = await em.findOneOrFail(ServerUser, {
     user: userId,

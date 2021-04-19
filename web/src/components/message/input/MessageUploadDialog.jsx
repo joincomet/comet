@@ -57,7 +57,9 @@ export default function MessageUploadDialog({
 
   const send = useCallback(() => {
     setSending(true)
-    sendMessage({ text: text ? text : null, file, ...variables }).then(() => {
+    sendMessage({
+      variables: { input: { text: text ? text : null, file, ...variables } }
+    }).then(() => {
       setSending(false)
       close()
     })

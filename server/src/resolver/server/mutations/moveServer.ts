@@ -13,15 +13,15 @@ export class MoveServerInput {
 }
 
 export async function moveServer(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { serverId, beforeServerId }: MoveServerInput
 ): Promise<ServerUser> {
   const serverUsers = await em.find(
     ServerUser,
-    { user, status: ServerUserStatus.Joined },
+    { user: userId, status: ServerUserStatus.Joined },
     ['server'],
     {
-      position: 'ASC'
+      position: 'DESC'
     }
   )
   const serverUser = serverUsers.find(s => s.server.id === serverId)

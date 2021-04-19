@@ -12,11 +12,12 @@ export class AddUserToGroupInput {
 }
 
 export async function addUserToGroup(
-  { em, user: currentUser, liveQueryStore }: Context,
+  { em, userId: currentUserId, liveQueryStore }: Context,
   { groupId, userId }: AddUserToGroupInput
 ): Promise<Group> {
   const group = await em.findOneOrFail(Group, groupId, ['users', 'owner'])
   const user = await em.findOneOrFail(User, userId)
+  const currentUser = await em.findOneOrFail(User, currentUserId)
   await currentUser.checkInGroup(em, group.id)
   group.users.add(user)
   const message = em.create(Message, {

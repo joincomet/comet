@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Group } from '@/entity'
+import { Group, User } from '@/entity'
 
 @InputType()
 export class LeaveGroupInput {
@@ -9,9 +9,10 @@ export class LeaveGroupInput {
 }
 
 export async function leaveGroup(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { groupId }: LeaveGroupInput
 ): Promise<boolean> {
+  const user = await em.findOneOrFail(User, userId)
   const group = await em.findOneOrFail(Group, groupId, ['users', 'owner'])
   await user.checkInGroup(em, group.id)
   group.users.remove(user)

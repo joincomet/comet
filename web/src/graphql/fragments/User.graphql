@@ -6,4 +6,5 @@ fragment User on User {
   avatarUrl
   onlineStatus
   isCurrentUser
+  relationshipStatus
 }

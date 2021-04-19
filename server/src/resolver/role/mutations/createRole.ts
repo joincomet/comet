@@ -1,4 +1,4 @@
-import { Role, ServerPermission } from '@/entity'
+import { Role, ServerPermission, User } from '@/entity'
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { IsHexColor, IsOptional, Length } from 'class-validator'
@@ -24,10 +24,11 @@ export class CreateRoleInput {
 }
 
 export async function createRole(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { serverId, name, color, permissions }: CreateRoleInput
 ): Promise<Role> {
-  await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
+  const user = await em.findOneOrFail(User, userId)
+  await user.checkServerPermission(em, serverId, ServerPermission.ManageRoles)
   const roles = await em.find(
     Role,
     { server: serverId },

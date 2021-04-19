@@ -11,6 +11,7 @@ import { getOS } from '@/utils/getOS'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
+import { useEffect } from 'react'
 
 export default function ServerList() {
   const servers = useJoinedServers()
@@ -24,7 +25,7 @@ export default function ServerList() {
   return (
     <>
       <div
-        className={`flex flex-col items-center min-w-[4.5rem] w-18 bg-white dark:bg-gray-900`}
+        className={`flex flex-col items-center min-w-[4.5rem] w-18 bg-white dark:bg-gray-900 overflow-y-auto scrollbar-none`}
       >
         {isMac && <div className="h-5" />}
         <div className="h-full flex flex-col items-center w-full divide-y dark:divide-gray-800 divide-gray-200">
@@ -93,7 +94,7 @@ function ServerListServer({ server }) {
   const serverId = matched?.params?.serverId
   const serverPages = useStore(s => s.serverPages)
 
-  const unread = !!server.channels.find(c => c.isUnread)
+  const unread = !!server.channels.find(c => c.unreadCount > 0)
 
   return (
     <ContextMenuTrigger data={{ type: ContextMenuType.Server, server }}>
@@ -110,7 +111,7 @@ function ServerListServer({ server }) {
           server={server}
           size={12}
           style={{ opacity }}
-          className="bg-gray-200 dark:bg-gray-800"
+          className="bg-gray-200 dark:bg-gray-800 rounded-3xl"
         />
       </ServerListItem>
     </ContextMenuTrigger>

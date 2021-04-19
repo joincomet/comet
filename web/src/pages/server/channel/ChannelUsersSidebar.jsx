@@ -7,36 +7,21 @@ import { useStore } from '@/hooks/useStore'
 import { useChannelUsersQuery } from '@/graphql/hooks'
 
 export default function ChannelUsersSidebar({ channel }) {
-  const [{ data }] = useChannelUsersQuery({
+  const { data } = useChannelUsersQuery({
     variables: { channelId: channel?.id },
-    pause: !channel
+    skip: !channel
   })
 
-  const roles = data?.channelUsers ?? []
+  const users = data?.channelUsers ?? []
 
   const parentRef = useRef()
 
-  const items = []
-
-  for (const role of roles) {
-    items.push(role.role)
-    items.push(...role.users)
-  }
-
   const rowVirtualizer = useVirtual({
-    size: items.length,
+    size: users.length,
     parentRef,
-    estimateSize: useCallback(
-      i => (typeof items[i] === 'string' ? 36 : 46),
-      []
-    ),
+    estimateSize: useCallback(i => 46, []),
     overscan: 10
   })
-
-  const userCount = useCallback(
-    roleName => roles.find(role => role.role === roleName).users.length,
-    [roles]
-  )
 
   const showUsers = useStore(s => s.showUsers)
 
@@ -57,7 +42,7 @@ export default function ChannelUsersSidebar({ channel }) {
           className="relative w-full"
         >
           {rowVirtualizer.virtualItems.map(virtualRow => {
-            const item = items[virtualRow.index]
+            const item = users[virtualRow.index]
 
             return (
               <div
@@ -67,15 +52,9 @@ export default function ChannelUsersSidebar({ channel }) {
                   transform: `translateY(${virtualRow.start}px)`
                 }}
               >
-                {typeof item === 'string' ? (
-                  <SidebarLabel>
-                    {item} — {userCount(item)}
-                  </SidebarLabel>
-                ) : (
-                  <div className="pb-0.5">
-                    <SidebarUser user={item} />
-                  </div>
-                )}
+                <div className="pb-0.5">
+                  <SidebarUser user={item} />
+                </div>
               </div>
             )
           })}

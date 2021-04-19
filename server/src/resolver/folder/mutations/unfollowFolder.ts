@@ -9,11 +9,14 @@ export class UnfollowFolderInput {
 }
 
 export async function unfollowFolder(
-  { em, user, liveQueryStore }: Context,
+  { em, userId, liveQueryStore }: Context,
   { folderId }: UnfollowFolderInput
 ): Promise<Folder> {
   const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
-  const userFolder = await em.findOneOrFail(UserFolder, { user, folder })
+  const userFolder = await em.findOneOrFail(UserFolder, {
+    user: userId,
+    folder
+  })
   folder.followerCount--
   await em.remove(userFolder).persistAndFlush(folder)
   liveQueryStore.invalidate(`Folder:${folderId}`)

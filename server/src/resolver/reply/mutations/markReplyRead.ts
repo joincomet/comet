@@ -1,7 +1,7 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { ChangeType } from '@/resolver/subscriptions'
 import { Context } from '@/types'
-import { Reply } from '@/entity'
+import { Reply, User } from '@/entity'
 import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 
 @InputType()
@@ -14,7 +14,7 @@ export class MarkReplyReadInput {
 }
 
 export async function markReplyRead(
-  { em, user }: Context,
+  { em, userId }: Context,
   { replyId, isRead }: MarkReplyReadInput,
   notifyRepliesChanged: Publisher<BulkChangePayload>
 ): Promise<Reply> {
@@ -25,7 +25,8 @@ export async function markReplyRead(
     'post.server',
     'post.author'
   ])
-  if (reply.user !== user) throw new Error('Not your reply')
+  if (reply.user !== em.getReference(User, userId))
+    throw new Error('Not your reply')
   if (isRead != null) {
     reply.isRead = isRead
   }

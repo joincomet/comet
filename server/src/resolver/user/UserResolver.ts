@@ -4,13 +4,21 @@ import {
   Ctx,
   FieldResolver,
   ID,
+  Int,
   Mutation,
   Query,
   Resolver,
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import { Folder, ServerUser, User } from '@/entity'
+import {
+  Folder,
+  Group,
+  RelationshipStatus,
+  Server,
+  ServerUser,
+  User
+} from '@/entity'
 import {
   changeOnlineStatus,
   ChangeOnlineStatusInput,
@@ -40,20 +48,49 @@ export class UserResolver {
     return userFoldersLoader.load(user.id)
   }
 
-  @FieldResolver(() => [ServerUser])
+  @FieldResolver(() => [Server])
   async servers(
-    @Ctx() { loaders: { serversLoader } }: Context,
+    @Ctx() { loaders: { userServersLoader } }: Context,
     @Root() user: User
-  ): Promise<ServerUser[]> {
-    return serversLoader.load(user.id)
+  ): Promise<Server[]> {
+    return userServersLoader.load(user.id)
+  }
+
+  @FieldResolver(() => [Group])
+  async groups(
+    @Ctx() { loaders: { userGroupsLoader } }: Context,
+    @Root() user: User
+  ): Promise<Group[]> {
+    return userGroupsLoader.load(user.id)
+  }
+
+  @FieldResolver(() => [User])
+  async relatedUsers(
+    @Ctx() { loaders: { relatedUsersLoader } }: Context,
+    @Root() user: User
+  ): Promise<User[]> {
+    return relatedUsersLoader.load(user.id)
+  }
+
+  @FieldResolver(() => RelationshipStatus)
+  async relationshipStatus(
+    @Ctx() { loaders: { relationshipStatusLoader } }: Context,
+    @Root() user: User
+  ): Promise<RelationshipStatus> {
+    return relationshipStatusLoader.load(user.id)
+  }
+
+  @FieldResolver(() => Int)
+  async unreadCount(
+    @Ctx() { loaders: { userUnreadCountLoader } }: Context,
+    @Root() user: User
+  ): Promise<number> {
+    return userUnreadCountLoader.load(user.id)
   }
 
   @FieldResolver()
-  isCurrentUser(
-    @Ctx() { user: currentUser }: Context,
-    @Root() user: User
-  ): boolean {
-    return currentUser && user.id === currentUser.id
+  isCurrentUser(@Ctx() { userId }: Context, @Root() user: User): boolean {
+    return userId && user.id === userId
   }
 
   // --- Queries --- //

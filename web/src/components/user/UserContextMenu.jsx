@@ -1,4 +1,3 @@
-import { useMutation } from 'urql'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { ServerPermission } from '@/types/ServerPermission'
@@ -7,10 +6,10 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useStore } from '@/hooks/useStore'
 import { useHistory } from 'react-router-dom'
-import { FriendStatus } from '@/types/FriendStatus'
 import {
   useBanUserFromServerMutation,
   useCloseDmMutation,
+  useCreateFriendRequestMutation,
   useKickUserFromServerMutation,
   useReadDmMutation
 } from '@/graphql/hooks'
@@ -25,24 +24,23 @@ export default function UserContextMenu({
   const [currentUser] = useCurrentUser()
 
   const [
-    canBanUser,
-    canKickUser,
+    canManageUsers,
     canChangeNickname,
     canManageNicknames
   ] = useHasServerPermissions({
     serverId: server?.id,
     permissions: [
-      ServerPermission.BanUser,
-      ServerPermission.KickUser,
+      ServerPermission.ManageUsers,
       ServerPermission.ChangeNickname,
       ServerPermission.ManageNicknames
     ]
   })
 
-  const [_hideRes, hideDm] = useCloseDmMutation()
-  const [_viewRes, viewDm] = useReadDmMutation()
-  const [_banRes, banUser] = useBanUserFromServerMutation()
-  const [_kickRes, kickUser] = useKickUserFromServerMutation()
+  const [closeDm] = useCloseDmMutation()
+  const [readDm] = useReadDmMutation()
+  const [banUser] = useBanUserFromServerMutation()
+  const [kickUser] = useKickUserFromServerMutation()
+  const [createFriendRequest] = useCreateFriendRequestMutation()
 
   const isFriend = false // friends.map(f => f.id).includes(user?.id)
   const hasSentFriendRequest = false // outgoingFriendRequests.includes(user?.id)
@@ -69,7 +67,7 @@ export default function UserContextMenu({
               <ContextMenuItem
                 label={t('user.context.markRead')}
                 onClick={() => {
-                  viewDm({ userId: user.id })
+                  readDm({ variables: { input: { userId: user.id } } })
                 }}
               />
             )}
@@ -77,7 +75,7 @@ export default function UserContextMenu({
             <ContextMenuItem
               label={t('user.context.closeDm')}
               onClick={() => {
-                hideDm({ userId: user.id })
+                closeDm({ variables: { input: { userId: user.id } } })
               }}
             />
           </>
@@ -90,9 +88,12 @@ export default function UserContextMenu({
               <ContextMenuItem
                 label={t('user.context.addFriend')}
                 onClick={() =>
-                  changeFriendStatus({
-                    userId: user.id,
-                    status: FriendStatus.FriendRequestOutgoing
+                  createFriendRequest({
+                    variables: {
+                      input: {
+                        userId: user.id
+                      }
+                    }
                   })
                 }
               />
@@ -101,36 +102,45 @@ export default function UserContextMenu({
         ) : (
           <></>
         )}
-        {!!server && (canManageNicknames || canBanUser || canKickUser) && (
+        {!!server && (canManageNicknames || canManageUsers) && (
           <>
             {canManageNicknames && (
               <ContextMenuItem label={t('user.context.changeNickname')} />
             )}
-            {canKickUser && (
-              <ContextMenuItem
-                label={t('user.context.kickUser', { user: user })}
-                red
-                onClick={() => {
-                  kickUser({ serverId: server.id, userId: user.id })
-                  toast.success(t('user.context.kickedUser', { user: user }))
-                }}
-              />
-            )}
-            {canBanUser && (
-              <ContextMenuItem
-                label={t('user.context.banUser', { user: user })}
-                red
-                onClick={() => {
-                  const reason = window.prompt(t('user.context.banPrompt'))
-                  if (reason === null) return
-                  banUser({
-                    serverId: server.id,
-                    userId: user.id,
-                    reason
-                  })
-                  toast.success(t('user.context.bannedUser', { user: user }))
-                }}
-              />
+            {canManageUsers && (
+              <>
+                <ContextMenuItem
+                  label={t('user.context.kickUser', { user: user })}
+                  red
+                  onClick={() => {
+                    kickUser({
+                      variables: {
+                        input: { serverId: server.id, userId: user.id }
+                      }
+                    })
+                    toast.success(t('user.context.kickedUser', { user: user }))
+                  }}
+                />
+
+                <ContextMenuItem
+                  label={t('user.context.banUser', { user: user })}
+                  red
+                  onClick={() => {
+                    const reason = window.prompt(t('user.context.banPrompt'))
+                    if (reason === null) return
+                    banUser({
+                      variables: {
+                        input: {
+                          serverId: server.id,
+                          userId: user.id,
+                          reason
+                        }
+                      }
+                    })
+                    toast.success(t('user.context.bannedUser', { user: user }))
+                  }}
+                />
+              </>
             )}
           </>
         )}

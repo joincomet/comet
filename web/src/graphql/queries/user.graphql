@@ -4,18 +4,14 @@ query user($id: ID) @live {
     folders {
       ...Folder
     }
-    relationships {
-      user {
-        ...User
-      }
+    relatedUsers {
+      ...User
     }
     servers {
       nickname
-      server {
-        id
-        avatarUrl
-        name
-      }
+      id
+      avatarUrl
+      name
     }
   }
 }

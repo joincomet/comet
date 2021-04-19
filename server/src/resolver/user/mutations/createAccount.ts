@@ -37,7 +37,7 @@ export class CreateAccountInput {
 }
 
 export async function createAccount(
-  { em, res }: Context,
+  { em, res, liveQueryStore }: Context,
   { name, email, password }: CreateAccountInput
 ): Promise<LoginResponse> {
   email = email.toLowerCase()
@@ -109,10 +109,11 @@ export async function createAccount(
   user.username = `${user.name}#${user.tag}`
   const accessToken = createAccessToken(user)
   res.cookie('token', accessToken, {
-    maxAge: 2592000,
+    maxAge: 2592000000,
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production'
   })
+  liveQueryStore.invalidate(`Query.user`)
   return {
     accessToken,
     user
