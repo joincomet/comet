@@ -19,7 +19,10 @@ import { Comment, Message, Post, Reply, User } from '@/entity'
 import ChangeResponse from '@/resolver/subscriptions/ChangeResponse'
 import { TypingFilter } from '@/resolver/subscriptions/typing/TypingFilter'
 import { TypingPayload } from '@/resolver/subscriptions/typing/TypingPayload'
-import { TypingArgs } from '@/resolver/subscriptions/typing/TypingArgs'
+import {
+  TypingArgs,
+  TypingInput
+} from '@/resolver/subscriptions/typing/TypingInput'
 import { CommentSubscriptionFilter } from '@/resolver/subscriptions/filters/CommentSubscriptionFilter'
 import { PostSubscriptionFilter } from '@/resolver/subscriptions/filters/PostSubscriptionFilter'
 import { MessageSubscriptionFilter } from '@/resolver/subscriptions/filters/MessageSubscriptionFilter'
@@ -146,7 +149,7 @@ export class SubscriptionResolver {
   @Mutation(() => Boolean)
   async startTyping(
     @Ctx() { userId: currentUserId, em }: Context,
-    @Args() { channelId, groupId, userId }: TypingArgs,
+    @Arg('input') { channelId, groupId, userId }: TypingInput,
     @PubSub(SubscriptionTopic.UserStartedTyping)
     notifyUserStartedTyping: Publisher<TypingPayload>
   ): Promise<boolean> {

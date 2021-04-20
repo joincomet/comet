@@ -1,3 +1,3 @@
-export * from './TypingArgs'
+export * from './TypingInput'
 export * from './TypingFilter'
 export * from './TypingPayload'

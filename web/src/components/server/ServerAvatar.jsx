@@ -17,8 +17,8 @@ export default forwardRef(
         style={style}
       >
         {!server.avatarUrl && (
-          <div className="truncate w-10 text-xs text-center font-medium text-tertiary">
-            {server.name}
+          <div className="truncate w-10 text-lg text-center font-medium text-tertiary">
+            {server.initials}
           </div>
         )}
       </Avatar>

@@ -32,11 +32,11 @@ export class Message extends BaseEntity {
   @ManyToOne(() => ServerUser, { nullable: true })
   serverUser?: ServerUser
 
-  @Field(() => Channel)
+  @Field(() => Channel, { nullable: true })
   @ManyToOne(() => Channel, { nullable: true })
   channel?: Channel
 
-  @Field(() => Group)
+  @Field(() => Group, { nullable: true })
   @ManyToOne({
     entity: () => Group,
     nullable: true,
@@ -44,7 +44,7 @@ export class Message extends BaseEntity {
   })
   group?: Group
 
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   @ManyToOne({
     entity: () => User,
     nullable: true

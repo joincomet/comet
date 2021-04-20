@@ -4,8 +4,12 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import {
   Channel,
+  defaultServerPermissions,
+  Folder,
+  Role,
   Server,
   ServerCategory,
+  ServerFolder,
   ServerUser,
   ServerUserStatus
 } from '@/entity'
@@ -61,6 +65,10 @@ export async function createServer(
     isPublic,
     systemMessagesChannel: channel
   })
+  const serverFolder = em.create(ServerFolder, {
+    server,
+    folder: em.create(Folder, { server, name: 'Announcements' })
+  })
   const firstServer = await em.findOne(
     ServerUser,
     { user: userId },
@@ -74,7 +82,13 @@ export async function createServer(
       ? ReorderUtils.positionBefore(firstServer.position)
       : ReorderUtils.FIRST_POSITION
   })
-  await em.persistAndFlush([server, serverUser])
+  const role = em.create(Role, {
+    server,
+    name: '@everyone',
+    permissions: defaultServerPermissions,
+    serverUsers: [serverUser]
+  })
+  await em.persistAndFlush([server, serverUser, serverFolder, role])
   liveQueryStore.invalidate(`User:${userId}`)
   return server
 }

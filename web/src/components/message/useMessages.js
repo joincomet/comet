@@ -1,20 +1,23 @@
 import { useState } from 'react'
 import { useMessagesQuery } from '@/graphql/hooks'
+import { useStore } from '@/hooks/useStore'
 
-export function useMessages({ channel, group, user, initialTime }) {
-  // const initialTime = useRef(new Date())
+export function useMessages({ channel, group, user }) {
+  const initialTime = useStore(s => s.initialTime)
   const [page, setPage] = useState(0)
 
-  const { data, loading } = useMessagesQuery({
-    variables: {
-      channelId: channel?.id,
-      groupId: group?.id,
-      userId: user?.id,
-      initialTime: initialTime.toString(),
-      pageSize: 100,
-      page
-    },
-    skip: !channel && !group && !user
+  const variables = {
+    channelId: channel?.id,
+    groupId: group?.id,
+    userId: user?.id,
+    initialTime: initialTime?.toString(),
+    pageSize: 100,
+    page
+  }
+
+  const { data, loading, fetchMore } = useMessagesQuery({
+    variables,
+    skip: (!channel && !group && !user) || !initialTime
   })
 
   return [
@@ -29,6 +32,7 @@ export function useMessages({ channel, group, user, initialTime }) {
       )
         return
       setPage(page + 1)
+      fetchMore({ variables })
     },
     data && data.messages.length > 0 ? data.messages[0].hasMore : true
   ]

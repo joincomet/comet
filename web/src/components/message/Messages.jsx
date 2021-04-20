@@ -14,6 +14,7 @@ import {
   useReadDmMutation,
   useReadGroupMutation
 } from '@/graphql/hooks'
+import { useStore } from '@/hooks/useStore'
 
 const PREPEND_OFFSET = 10 ** 7
 
@@ -21,7 +22,7 @@ export default function Messages({ channel, user, group }) {
   const [readDm] = useReadDmMutation()
   const [readGroup] = useReadGroupMutation()
   const [readChannel] = useReadChannelMutation()
-  const [initialTime, setInitialTime] = useState(() => new Date())
+  const setInitialTime = useStore(s => s.setInitialTime)
 
   const { pathname } = useLocation()
   useEffect(() => setInitialTime(new Date()), [pathname])
@@ -31,8 +32,7 @@ export default function Messages({ channel, user, group }) {
   const [messages, fetching, fetchMore, hasMore] = useMessages({
     channel,
     user,
-    group,
-    initialTime
+    group
   })
 
   const [length, setLength] = useState(messages?.length || 0)

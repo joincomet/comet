@@ -18,14 +18,13 @@ import { CurrentUserDocument, useCreateServerMutation } from '@/graphql/hooks'
 export default function CreateServerDialog() {
   const [createServer, { loading }] = useCreateServerMutation({
     update(cache, { data: { createServer } }) {
-      /*const data = cache.readQuery({ query: CurrentUserDocument })
-      console.log(data)
+      const data = cache.readQuery({ query: CurrentUserDocument })
       cache.writeQuery({
         query: CurrentUserDocument,
         data: {
           user: { ...data.user, servers: [createServer, ...data.user.servers] }
         }
-      })*/
+      })
     }
   })
   const [isOpen, setIsOpen] = useState(false)
@@ -34,6 +33,7 @@ export default function CreateServerDialog() {
   const { handleSubmit, register, watch, reset } = useForm()
 
   const avatarFile = watch('avatarFile')
+  const name = watch('name')
 
   const [avatarSrc, setAvatarSrc] = useState(null)
 
@@ -58,7 +58,7 @@ export default function CreateServerDialog() {
       }
     }).then(({ data: { createServer } }) => {
       setIsOpen(false)
-      // push(`/server/${createServer.id}`)
+      push(`/server/${createServer.id}`)
     })
   }
 
@@ -139,7 +139,9 @@ export default function CreateServerDialog() {
             </div>
 
             <div className="pb-4 w-full">
-              <Button loading={loading}>{t('continue')}</Button>
+              <Button loading={loading} disabled={!name || name.length < 2}>
+                {t('continue')}
+              </Button>
             </div>
 
             <Switch

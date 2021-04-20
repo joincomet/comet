@@ -129,7 +129,7 @@ export default function MessageInput({ channel, group, user }) {
             html={text}
             data-placeholder={`${t('message.message')} ${placeholder}`}
             onChange={e => {
-              startTyping(variables)
+              startTyping()
               setText(e.target.value)
               if (text === '<br>') setText('')
             }}
@@ -138,8 +138,7 @@ export default function MessageInput({ channel, group, user }) {
                 if (text && !e.shiftKey) {
                   e.preventDefault()
                   sendMessage({
-                    text,
-                    ...variables
+                    variables: { input: { text, ...variables } }
                   })
                   setText('')
                 } else if (!text) {

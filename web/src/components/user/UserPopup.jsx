@@ -2,7 +2,13 @@ import Popup from '@/components/ui/Popup'
 import UserAvatar from '@/components/user/UserAvatar'
 import { useStore } from '@/hooks/useStore'
 
-export default function UserPopup({ user, children, placement = 'right' }) {
+export default function UserPopup({
+  name,
+  user,
+  roles = [],
+  children,
+  placement = 'right'
+}) {
   const setDialogUser = useStore(s => s.setDialogUser)
   return (
     <>

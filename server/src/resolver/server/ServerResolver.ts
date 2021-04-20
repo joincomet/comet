@@ -45,6 +45,7 @@ import {
   updateServer,
   UpdateServerInput
 } from './mutations'
+import { GraphQLVoid } from 'graphql-scalars'
 
 @Resolver(() => Server)
 export class ServerResolver {
@@ -169,20 +170,20 @@ export class ServerResolver {
   }
 
   @Authorized()
-  @Mutation(() => ServerUser)
+  @Mutation(() => GraphQLVoid)
   async moveServer(
     @Ctx() ctx: Context,
     @Arg('input') input: MoveServerInput
-  ): Promise<ServerUser> {
+  ): Promise<void> {
     return moveServer(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => ServerUser)
+  @Mutation(() => Server)
   async readServer(
     @Ctx() ctx: Context,
     @Arg('input') input: ReadServerInput
-  ): Promise<ServerUser> {
+  ): Promise<Server> {
     return readServer(ctx, input)
   }
 

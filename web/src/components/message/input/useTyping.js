@@ -20,11 +20,11 @@ export const useTyping = ({ channel, group, user }) => {
     channelId: channel?.id
   }
 
-  const { data: username } = useUserStartedTypingSubscription({
+  const { data: userStartedTypingData } = useUserStartedTypingSubscription({
     variables,
     skip: !channel && !group && !user
   })
-
+  const username = userStartedTypingData?.userStartedTyping
   useEffect(() => {
     if (!username) return
     setTypingNames(prev => new Set(prev.add(username)))
@@ -59,7 +59,7 @@ export const useTyping = ({ channel, group, user }) => {
     else return t('message.typing.several')
   }, [typingNames, currentUser.username, t])
 
-  const typingFn = () => startTyping({ variables })
+  const typingFn = () => startTyping({ variables: { input: variables } })
 
   return [typingFn, typingNamesDisplay]
 }

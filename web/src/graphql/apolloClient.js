@@ -51,5 +51,24 @@ const finalLink = from([errorLink, splitLink])
 
 export const apolloClient = new ApolloClient({
   link: finalLink,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          messages: {
+            keyArgs: false,
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming]
+            }
+          },
+          posts: {
+            keyArgs: false,
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming]
+            }
+          }
+        }
+      }
+    }
+  })
 })

@@ -1,12 +1,32 @@
 mutation createServer($input: CreateServerInput!) {
   createServer(input: $input) {
     ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
 
 mutation updateServer($input: UpdateServerInput!) {
   updateServer(input: $input) {
     ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
 
@@ -15,14 +35,22 @@ mutation deleteServer($input: DeleteServerInput!) {
 }
 
 mutation moveServer($input: MoveServerInput!) {
-  moveServer(input: $input) {
-    ...ServerUser
-  }
+  moveServer(input: $input)
 }
 
 mutation joinServer($input: JoinServerInput!) {
   joinServer(input: $input) {
     ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
 
@@ -32,7 +60,16 @@ mutation leaveServer($input: LeaveServerInput!) {
 
 mutation readServer($input: ReadServerInput!) {
   readServer(input: $input) {
-    ...ServerUser
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
 

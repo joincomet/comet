@@ -28,6 +28,8 @@ export type Scalars = {
   URL: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: any;
+  /** Represents NULL values */
+  Void: any;
 };
 
 
@@ -360,10 +362,10 @@ export type MarkReplyReadInput = {
 export type Message = BaseEntity & {
   __typename?: 'Message';
   author: User;
-  channel: Channel;
+  channel?: Maybe<Channel>;
   createdAt: Scalars['DateTime'];
   file?: Maybe<File>;
-  group: Group;
+  group?: Maybe<Group>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   isDeleted: Scalars['Boolean'];
@@ -372,7 +374,7 @@ export type Message = BaseEntity & {
   pinnedAt?: Maybe<Scalars['DateTime']>;
   serverUser?: Maybe<ServerUser>;
   text?: Maybe<Scalars['String']>;
-  toUser: User;
+  toUser?: Maybe<User>;
   type: MessageType;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
@@ -464,7 +466,7 @@ export type Mutation = {
   markReplyRead: Reply;
   moveChannel: Channel;
   moveRole: Role;
-  moveServer: ServerUser;
+  moveServer: Scalars['Void'];
   moveServerFolder: Folder;
   moveUserFolder: Folder;
   openDm: Relationship;
@@ -474,7 +476,7 @@ export type Mutation = {
   readChannel: Channel;
   readDm: Relationship;
   readGroup: Group;
-  readServer: ServerUser;
+  readServer: Server;
   removeFriend: Relationship;
   removePostFromFolder: Folder;
   removeUserFromGroup: Group;
@@ -774,9 +776,7 @@ export type MutationRemoveUserFromRoleArgs = {
 
 
 export type MutationStartTypingArgs = {
-  channelId?: Maybe<Scalars['ID']>;
-  groupId?: Maybe<Scalars['ID']>;
-  userId?: Maybe<Scalars['ID']>;
+  input: TypingInput;
 };
 
 
@@ -1119,7 +1119,7 @@ export type Reply = BaseEntity & {
 
 export type Role = BaseEntity & {
   __typename?: 'Role';
-  color: Scalars['String'];
+  color?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -1136,6 +1136,7 @@ export type Server = BaseEntity & {
   description?: Maybe<Scalars['String']>;
   folders: Array<Folder>;
   id: Scalars['ID'];
+  initials: Scalars['String'];
   isBanned: Scalars['Boolean'];
   isDeleted: Scalars['Boolean'];
   isFeatured: Scalars['Boolean'];
@@ -1219,6 +1220,12 @@ export type Subscription = {
 
 
 export type SubscriptionUserStartedTypingArgs = {
+  channelId?: Maybe<Scalars['ID']>;
+  groupId?: Maybe<Scalars['ID']>;
+  userId?: Maybe<Scalars['ID']>;
+};
+
+export type TypingInput = {
   channelId?: Maybe<Scalars['ID']>;
   groupId?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['ID']>;
@@ -1352,6 +1359,7 @@ export type User = BaseEntity & {
   username: Scalars['String'];
 };
 
+
 export type VoteCommentInput = {
   commentId: Scalars['ID'];
 };
@@ -1451,7 +1459,7 @@ export type RoleFragment = (
 
 export type ServerFragment = (
   { __typename?: 'Server' }
-  & Pick<Server, 'id' | 'name' | 'description' | 'avatarUrl' | 'bannerUrl' | 'userCount' | 'isPublic'>
+  & Pick<Server, 'id' | 'name' | 'description' | 'avatarUrl' | 'bannerUrl' | 'userCount' | 'isPublic' | 'initials'>
 );
 
 export type ServerUserFragment = (
@@ -1945,9 +1953,7 @@ export type UnpinMessageMutation = (
 );
 
 export type StartTypingMutationVariables = Exact<{
-  userId?: Maybe<Scalars['ID']>;
-  groupId?: Maybe<Scalars['ID']>;
-  channelId?: Maybe<Scalars['ID']>;
+  input: TypingInput;
 }>;
 
 
@@ -2297,6 +2303,17 @@ export type CreateServerMutation = (
   { __typename?: 'Mutation' }
   & { createServer: (
     { __typename?: 'Server' }
+    & Pick<Server, 'permissions'>
+    & { channels: Array<(
+      { __typename?: 'Channel' }
+      & ChannelFragment
+    )>, roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )> }
     & ServerFragment
   ) }
 );
@@ -2310,6 +2327,17 @@ export type UpdateServerMutation = (
   { __typename?: 'Mutation' }
   & { updateServer: (
     { __typename?: 'Server' }
+    & Pick<Server, 'permissions'>
+    & { channels: Array<(
+      { __typename?: 'Channel' }
+      & ChannelFragment
+    )>, roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )> }
     & ServerFragment
   ) }
 );
@@ -2331,10 +2359,7 @@ export type MoveServerMutationVariables = Exact<{
 
 export type MoveServerMutation = (
   { __typename?: 'Mutation' }
-  & { moveServer: (
-    { __typename?: 'ServerUser' }
-    & ServerUserFragment
-  ) }
+  & Pick<Mutation, 'moveServer'>
 );
 
 export type JoinServerMutationVariables = Exact<{
@@ -2346,6 +2371,17 @@ export type JoinServerMutation = (
   { __typename?: 'Mutation' }
   & { joinServer: (
     { __typename?: 'Server' }
+    & Pick<Server, 'permissions'>
+    & { channels: Array<(
+      { __typename?: 'Channel' }
+      & ChannelFragment
+    )>, roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )> }
     & ServerFragment
   ) }
 );
@@ -2368,8 +2404,18 @@ export type ReadServerMutationVariables = Exact<{
 export type ReadServerMutation = (
   { __typename?: 'Mutation' }
   & { readServer: (
-    { __typename?: 'ServerUser' }
-    & ServerUserFragment
+    { __typename?: 'Server' }
+    & Pick<Server, 'permissions'>
+    & { channels: Array<(
+      { __typename?: 'Channel' }
+      & ChannelFragment
+    )>, roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )> }
   ) }
 );
 
@@ -2534,6 +2580,9 @@ export type CurrentUserQuery = (
       )>, roles: Array<(
         { __typename?: 'Role' }
         & RoleFragment
+      )>, folders: Array<(
+        { __typename?: 'Folder' }
+        & FolderFragment
       )> }
       & ServerFragment
     )>, relatedUsers: Array<(
@@ -2762,32 +2811,71 @@ export type MessageChangedSubscription = (
     { __typename?: 'MessageChangedResponse' }
     & { added?: Maybe<(
       { __typename?: 'Message' }
-      & { channel: (
+      & { author: (
+        { __typename?: 'User' }
+        & UserFragment
+      ), serverUser?: Maybe<(
+        { __typename?: 'ServerUser' }
+        & Pick<ServerUser, 'name' | 'color'>
+        & { roles: Array<(
+          { __typename?: 'Role' }
+          & RoleFragment
+        )> }
+      )>, channel?: Maybe<(
         { __typename?: 'Channel' }
         & Pick<Channel, 'id' | 'name'>
-      ), group: (
+        & { server: (
+          { __typename?: 'Server' }
+          & Pick<Server, 'id'>
+        ) }
+      )>, group?: Maybe<(
         { __typename?: 'Group' }
         & Pick<Group, 'id' | 'displayName'>
-      ), toUser: (
+      )>, toUser?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'name'>
-      ) }
+      )> }
       & MessageFragment
     )>, updated?: Maybe<(
       { __typename?: 'Message' }
+      & { author: (
+        { __typename?: 'User' }
+        & UserFragment
+      ), serverUser?: Maybe<(
+        { __typename?: 'ServerUser' }
+        & Pick<ServerUser, 'name' | 'color'>
+        & { roles: Array<(
+          { __typename?: 'Role' }
+          & RoleFragment
+        )> }
+      )> }
       & MessageFragment
     )>, deleted?: Maybe<(
       { __typename?: 'Message' }
-      & { channel: (
-        { __typename?: 'Channel' }
-        & Pick<Channel, 'id' | 'name'>
-      ), group: (
-        { __typename?: 'Group' }
-        & Pick<Group, 'id' | 'displayName'>
-      ), toUser: (
+      & { author: (
         { __typename?: 'User' }
-        & Pick<User, 'id' | 'name'>
-      ) }
+        & UserFragment
+      ), serverUser?: Maybe<(
+        { __typename?: 'ServerUser' }
+        & Pick<ServerUser, 'name' | 'color'>
+        & { roles: Array<(
+          { __typename?: 'Role' }
+          & RoleFragment
+        )> }
+      )>, channel?: Maybe<(
+        { __typename?: 'Channel' }
+        & Pick<Channel, 'id'>
+        & { server: (
+          { __typename?: 'Server' }
+          & Pick<Server, 'id'>
+        ) }
+      )>, group?: Maybe<(
+        { __typename?: 'Group' }
+        & Pick<Group, 'id'>
+      )>, toUser?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id'>
+      )> }
       & MessageFragment
     )> }
   ) }
@@ -3039,6 +3127,7 @@ export const ServerFragmentDoc = gql`
   bannerUrl
   userCount
   isPublic
+  initials
 }
     `;
 export const CreateChannelDocument = gql`
@@ -4183,8 +4272,8 @@ export type UnpinMessageMutationHookResult = ReturnType<typeof useUnpinMessageMu
 export type UnpinMessageMutationResult = Apollo.MutationResult<UnpinMessageMutation>;
 export type UnpinMessageMutationOptions = Apollo.BaseMutationOptions<UnpinMessageMutation, UnpinMessageMutationVariables>;
 export const StartTypingDocument = gql`
-    mutation startTyping($userId: ID, $groupId: ID, $channelId: ID) {
-  startTyping(userId: $userId, groupId: $groupId, channelId: $channelId)
+    mutation startTyping($input: TypingInput!) {
+  startTyping(input: $input)
 }
     `;
 export type StartTypingMutationFn = Apollo.MutationFunction<StartTypingMutation, StartTypingMutationVariables>;
@@ -4202,9 +4291,7 @@ export type StartTypingMutationFn = Apollo.MutationFunction<StartTypingMutation,
  * @example
  * const [startTypingMutation, { data, loading, error }] = useStartTypingMutation({
  *   variables: {
- *      userId: // value for 'userId'
- *      groupId: // value for 'groupId'
- *      channelId: // value for 'channelId'
+ *      input: // value for 'input'
  *   },
  * });
  */
@@ -5034,9 +5121,22 @@ export const CreateServerDocument = gql`
     mutation createServer($input: CreateServerInput!) {
   createServer(input: $input) {
     ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
-    ${ServerFragmentDoc}`;
+    ${ServerFragmentDoc}
+${ChannelFragmentDoc}
+${RoleFragmentDoc}
+${FolderFragmentDoc}`;
 export type CreateServerMutationFn = Apollo.MutationFunction<CreateServerMutation, CreateServerMutationVariables>;
 
 /**
@@ -5067,9 +5167,22 @@ export const UpdateServerDocument = gql`
     mutation updateServer($input: UpdateServerInput!) {
   updateServer(input: $input) {
     ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
-    ${ServerFragmentDoc}`;
+    ${ServerFragmentDoc}
+${ChannelFragmentDoc}
+${RoleFragmentDoc}
+${FolderFragmentDoc}`;
 export type UpdateServerMutationFn = Apollo.MutationFunction<UpdateServerMutation, UpdateServerMutationVariables>;
 
 /**
@@ -5129,11 +5242,9 @@ export type DeleteServerMutationResult = Apollo.MutationResult<DeleteServerMutat
 export type DeleteServerMutationOptions = Apollo.BaseMutationOptions<DeleteServerMutation, DeleteServerMutationVariables>;
 export const MoveServerDocument = gql`
     mutation moveServer($input: MoveServerInput!) {
-  moveServer(input: $input) {
-    ...ServerUser
-  }
+  moveServer(input: $input)
 }
-    ${ServerUserFragmentDoc}`;
+    `;
 export type MoveServerMutationFn = Apollo.MutationFunction<MoveServerMutation, MoveServerMutationVariables>;
 
 /**
@@ -5164,9 +5275,22 @@ export const JoinServerDocument = gql`
     mutation joinServer($input: JoinServerInput!) {
   joinServer(input: $input) {
     ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
-    ${ServerFragmentDoc}`;
+    ${ServerFragmentDoc}
+${ChannelFragmentDoc}
+${RoleFragmentDoc}
+${FolderFragmentDoc}`;
 export type JoinServerMutationFn = Apollo.MutationFunction<JoinServerMutation, JoinServerMutationVariables>;
 
 /**
@@ -5227,10 +5351,21 @@ export type LeaveServerMutationOptions = Apollo.BaseMutationOptions<LeaveServerM
 export const ReadServerDocument = gql`
     mutation readServer($input: ReadServerInput!) {
   readServer(input: $input) {
-    ...ServerUser
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
-    ${ServerUserFragmentDoc}`;
+    ${ChannelFragmentDoc}
+${RoleFragmentDoc}
+${FolderFragmentDoc}`;
 export type ReadServerMutationFn = Apollo.MutationFunction<ReadServerMutation, ReadServerMutationVariables>;
 
 /**
@@ -5665,6 +5800,9 @@ export const CurrentUserDocument = gql`
       roles {
         ...Role
       }
+      folders {
+        ...Folder
+      }
     }
     relatedUsers {
       ...User
@@ -5687,8 +5825,8 @@ export const CurrentUserDocument = gql`
 ${ServerFragmentDoc}
 ${ChannelFragmentDoc}
 ${RoleFragmentDoc}
-${GroupFragmentDoc}
-${FolderFragmentDoc}`;
+${FolderFragmentDoc}
+${GroupFragmentDoc}`;
 
 /**
  * __useCurrentUserQuery__
@@ -6128,9 +6266,22 @@ export const MessageChangedDocument = gql`
   messageChanged {
     added {
       ...Message
+      author {
+        ...User
+      }
+      serverUser {
+        name
+        color
+        roles {
+          ...Role
+        }
+      }
       channel {
         id
         name
+        server {
+          id
+        }
       }
       group {
         id
@@ -6143,25 +6294,47 @@ export const MessageChangedDocument = gql`
     }
     updated {
       ...Message
+      author {
+        ...User
+      }
+      serverUser {
+        name
+        color
+        roles {
+          ...Role
+        }
+      }
     }
     deleted {
       ...Message
+      author {
+        ...User
+      }
+      serverUser {
+        name
+        color
+        roles {
+          ...Role
+        }
+      }
       channel {
         id
-        name
+        server {
+          id
+        }
       }
       group {
         id
-        displayName
       }
       toUser {
         id
-        name
       }
     }
   }
 }
-    ${MessageFragmentDoc}`;
+    ${MessageFragmentDoc}
+${UserFragmentDoc}
+${RoleFragmentDoc}`;
 
 /**
  * __useMessageChangedSubscription__

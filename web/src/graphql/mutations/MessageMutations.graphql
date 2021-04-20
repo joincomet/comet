@@ -50,6 +50,6 @@ mutation unpinMessage($input: UnpinMessageInput!) {
   }
 }
 
-mutation startTyping($userId: ID, $groupId: ID, $channelId: ID) {
-  startTyping(userId: $userId, groupId: $groupId, channelId: $channelId)
+mutation startTyping($input: TypingInput!) {
+  startTyping(input: $input)
 }

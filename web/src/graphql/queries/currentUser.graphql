@@ -11,6 +11,9 @@ query currentUser @live {
       roles {
         ...Role
       }
+      folders {
+        ...Folder
+      }
     }
     relatedUsers {
       ...User

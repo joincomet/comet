@@ -345,10 +345,10 @@ input MarkReplyReadInput {
 
 type Message implements BaseEntity {
   author: User!
-  channel: Channel!
+  channel: Channel
   createdAt: DateTime!
   file: File
-  group: Group!
+  group: Group
   id: ID!
   image: Image
   isDeleted: Boolean!
@@ -357,7 +357,7 @@ type Message implements BaseEntity {
   pinnedAt: DateTime
   serverUser: ServerUser
   text: String
-  toUser: User!
+  toUser: User
   type: MessageType!
   updatedAt: DateTime
 }
@@ -446,7 +446,7 @@ type Mutation {
   markReplyRead(input: MarkReplyReadInput!): Reply!
   moveChannel(input: MoveChannelInput!): Channel!
   moveRole(input: MoveRoleInput!): Role!
-  moveServer(input: MoveServerInput!): ServerUser!
+  moveServer(input: MoveServerInput!): Void!
   moveServerFolder(input: MoveServerFolderInput!): Folder!
   moveUserFolder(input: MoveUserFolderInput!): Folder!
   openDm(input: OpenDmInput!): Relationship!
@@ -456,12 +456,12 @@ type Mutation {
   readChannel(input: ReadChannelInput!): Channel!
   readDm(input: ReadDmInput!): Relationship!
   readGroup(input: ReadGroupInput!): Group!
-  readServer(input: ReadServerInput!): ServerUser!
+  readServer(input: ReadServerInput!): Server!
   removeFriend(input: RemoveFriendInput!): Relationship!
   removePostFromFolder(input: RemovePostFromFolderInput!): Folder!
   removeUserFromGroup(input: RemoveUserFromGroupInput!): Group!
   removeUserFromRole(input: RemoveUserFromRoleInput!): ServerUser!
-  startTyping(channelId: ID, groupId: ID, userId: ID): Boolean!
+  startTyping(input: TypingInput!): Boolean!
   unbanUserFromServer(input: UnbanUserFromServerInput!): Boolean!
   unblockUser(input: UnblockUserInput!): Relationship!
   unfollowFolder(input: UnfollowFolderInput!): Folder!
@@ -656,7 +656,7 @@ type Reply implements BaseEntity {
 }
 
 type Role implements BaseEntity {
-  color: String!
+  color: String
   createdAt: DateTime!
   id: ID!
   name: String!
@@ -672,6 +672,7 @@ type Server implements BaseEntity {
   description: String
   folders: [Folder!]!
   id: ID!
+  initials: String!
   isBanned: Boolean!
   isDeleted: Boolean!
   isFeatured: Boolean!
@@ -749,6 +750,12 @@ type Subscription {
   postChanged: PostChangedResponse!
   repliesChanged: RepliesChangedResponse!
   userStartedTyping(channelId: ID, groupId: ID, userId: ID): String!
+}
+
+input TypingInput {
+  channelId: ID
+  groupId: ID
+  userId: ID
 }
 
 """
@@ -883,6 +890,9 @@ type User implements BaseEntity {
   unreadCount: NonNegativeInt!
   username: String!
 }
+
+"""Represents NULL values"""
+scalar Void
 
 input VoteCommentInput {
   commentId: ID!

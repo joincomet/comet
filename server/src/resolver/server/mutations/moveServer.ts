@@ -15,7 +15,7 @@ export class MoveServerInput {
 export async function moveServer(
   { em, userId, liveQueryStore }: Context,
   { serverId, beforeServerId }: MoveServerInput
-): Promise<ServerUser> {
+): Promise<void> {
   const serverUsers = await em.find(
     ServerUser,
     { user: userId, status: ServerUserStatus.Joined },
@@ -39,5 +39,4 @@ export async function moveServer(
   )
   await em.persistAndFlush(serverUser)
   liveQueryStore.invalidate(`Server:${serverId}`)
-  return serverUser
 }

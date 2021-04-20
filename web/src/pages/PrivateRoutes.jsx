@@ -28,9 +28,11 @@ import { useStore } from '@/hooks/useStore'
 import { usePrevious } from 'react-use'
 import UserDialog from '@/components/user/UserDialog'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useMessagesSubscriptions } from '@/hooks/useMessagesSubscriptions'
 
 export default function PrivateRoutes() {
   const [user, userLoading] = useCurrentUser()
+  useMessagesSubscriptions()
 
   const setCanGoBack = useStore(s => s.setCanGoBack)
   const [path, setPath] = useState(null)

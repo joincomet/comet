@@ -125,4 +125,12 @@ export class Server extends BaseEntity {
 
   @OneToMany(() => ServerInvite, 'server')
   invites = new Collection<ServerInvite>(this)
+
+  @Field()
+  get initials(): string {
+    return this.name
+      .split(' ')
+      .map(word => word[0])
+      .join()
+  }
 }

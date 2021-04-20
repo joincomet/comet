@@ -2347,20 +2347,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@n1ru4l/in-memory-live-query-store@npm:^0.6.3":
-  version: 0.6.3
-  resolution: "@n1ru4l/in-memory-live-query-store@npm:0.6.3"
+"@n1ru4l/in-memory-live-query-store@npm:^0.6.4":
+  version: 0.6.4
+  resolution: "@n1ru4l/in-memory-live-query-store@npm:0.6.4"
   dependencies:
     "@graphql-tools/utils": ^7.7.1
     "@n1ru4l/graphql-live-query": 0.7.1
-    "@n1ru4l/push-pull-async-iterable-iterator": ^2.0.0
+    "@n1ru4l/push-pull-async-iterable-iterator": ^2.1.4
   peerDependencies:
     graphql: ^15.4.0
-  checksum: 85f32b93fed509c86fbb9b60286db215e785f4e441d9510f7be7bdb2b29205e8191bfe006113eede17b0d78894368a277ad2cdcf80663530f984ea6927796a0b
+  checksum: 767650371c94816307fb73faa40f44dfd1d6b39dda1bf1fb4063501850f4844ffe1ae8991663e69785813ed12ba3583d4e1d73f6bd71f288cbb2ed7b73fc8de2
   languageName: node
   linkType: hard
 
-"@n1ru4l/push-pull-async-iterable-iterator@npm:^2.0.0, @n1ru4l/push-pull-async-iterable-iterator@npm:^2.0.1":
+"@n1ru4l/push-pull-async-iterable-iterator@npm:^2.0.1":
   version: 2.1.2
   resolution: "@n1ru4l/push-pull-async-iterable-iterator@npm:2.1.2"
   checksum: d494d8b49be695db37d610653a14c0224b26d33584af05d874ad631abb494efa763f9e3b665df93f3215992dcaf577ab50e4c9760f9db62d342aeb9e109c0423
@@ -13900,7 +13900,7 @@ resolve@^2.0.0-next.3:
     "@mikro-orm/postgresql": ^4.5.3
     "@mikro-orm/sql-highlighter": ^1.0.1
     "@n1ru4l/graphql-live-query": ^0.7.1
-    "@n1ru4l/in-memory-live-query-store": ^0.6.3
+    "@n1ru4l/in-memory-live-query-store": ^0.6.4
     "@types/async": ^3.2.6
     "@types/cookie-parser": ^1.4.2
     "@types/express": ^4.17.11

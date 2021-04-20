@@ -6,4 +6,5 @@ fragment Server on Server {
   bannerUrl
   userCount
   isPublic
+  initials
 }

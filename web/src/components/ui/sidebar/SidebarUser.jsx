@@ -4,7 +4,7 @@ import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 
-export default function SidebarUser({ user }) {
+export default function SidebarUser({ name, user, roles = [] }) {
   return (
     <ContextMenuTrigger data={{ type: ContextMenuType.User, user }}>
       <UserPopup user={user} placement="left">
@@ -15,7 +15,7 @@ export default function SidebarUser({ user }) {
             showOnline
             dotClassName="w-2.5 h-2.5 ring-3 dark:ring-gray-800"
           />
-          <div className="ml-3 font-medium text-tertiary">{user.name}</div>
+          <div className="ml-3 font-medium text-tertiary">{name}</div>
         </SidebarItem>
       </UserPopup>
     </ContextMenuTrigger>

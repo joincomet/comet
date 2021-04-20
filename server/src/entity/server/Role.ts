@@ -40,7 +40,7 @@ export class Role extends BaseEntity {
   @Property({ columnType: 'text' })
   position: string = ReorderUtils.FIRST_POSITION
 
-  @Field()
+  @Field({ nullable: true })
   @Property({ nullable: true })
   color?: string
 

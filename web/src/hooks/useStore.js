@@ -46,5 +46,8 @@ export const useStore = create((set, get) => ({
   setFolderSort: sort => set({ folderSort: sort }),
 
   updateAvailable: false,
-  setUpdateAvailable: updateAvailable => set({ updateAvailable })
+  setUpdateAvailable: updateAvailable => set({ updateAvailable }),
+
+  initialTime: null,
+  setInitialTime: initialTime => set({ initialTime })
 }))

@@ -2,9 +2,22 @@ subscription MessageChanged {
   messageChanged {
     added {
       ...Message
+      author {
+        ...User
+      }
+      serverUser {
+        name
+        color
+        roles {
+          ...Role
+        }
+      }
       channel {
         id
         name
+        server {
+          id
+        }
       }
       group {
         id
@@ -17,20 +30,40 @@ subscription MessageChanged {
     }
     updated {
       ...Message
+      author {
+        ...User
+      }
+      serverUser {
+        name
+        color
+        roles {
+          ...Role
+        }
+      }
     }
     deleted {
       ...Message
+      author {
+        ...User
+      }
+      serverUser {
+        name
+        color
+        roles {
+          ...Role
+        }
+      }
       channel {
         id
-        name
+        server {
+          id
+        }
       }
       group {
         id
-        displayName
       }
       toUser {
         id
-        name
       }
     }
   }
