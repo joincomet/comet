@@ -32,7 +32,7 @@ export async function createChannel(
   const firstChannel = await em.findOne(
     Channel,
     { server },
-    { orderBy: { position: 'DESC' } }
+    { orderBy: { position: 'ASC' } }
   )
 
   const channel = em.create(Channel, {

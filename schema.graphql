@@ -69,12 +69,12 @@ type Channel implements BaseEntity {
   createdAt: DateTime!
   description: String
   id: ID!
-  mentionCount: Int!
+  mentionCount: NonNegativeInt!
   name: String
   permissions: [ChannelPermission!]!
   rolePermissions: [ChannelPermissions!]!
   server: Server!
-  unreadCount: Int!
+  unreadCount: NonNegativeInt!
 }
 
 enum ChannelPermission {
@@ -107,7 +107,7 @@ type Comment implements BaseEntity {
   post: Post!
   text: String!
   updatedAt: DateTime
-  voteCount: Int!
+  voteCount: NonNegativeInt!
 }
 
 type CommentChangedResponse {
@@ -122,7 +122,7 @@ enum CommentsSort {
 }
 
 input CreateAccountInput {
-  email: String!
+  email: EmailAddress!
   name: String!
   password: String!
 }
@@ -164,14 +164,14 @@ input CreateMessageInput {
 
 input CreatePostInput {
   images: [Upload!]
-  linkUrl: String
+  linkUrl: URL
   serverId: ID!
   text: String
   title: String!
 }
 
 input CreateRoleInput {
-  color: String
+  color: HexColorCode
   name: String!
   permissions: [ServerPermission!]!
   serverId: ID!
@@ -221,24 +221,29 @@ input DeleteServerInput {
   serverId: ID!
 }
 
+"""
+A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
+"""
+scalar EmailAddress
+
 type File {
   filename: String!
   mime: String!
   size: Float!
-  url: String!
+  url: URL!
 }
 
 type Folder implements BaseEntity {
-  avatarUrl: String
+  avatarUrl: URL
   createdAt: DateTime!
   description: String
-  followerCount: Int!
+  followerCount: NonNegativeInt!
   id: ID!
   isCollaborative: Boolean!
   isFollowing: Boolean!
   name: String!
   owner: User
-  postCount: Int!
+  postCount: NonNegativeInt!
   server: Server
   visibility: FolderVisibility!
 }
@@ -260,28 +265,38 @@ input GlobalBanInput {
 }
 
 type Group implements BaseEntity {
-  avatarUrl: String
+  avatarUrl: URL
   createdAt: DateTime!
   displayName: String!
   id: ID!
   lastMessageAt: DateTime!
   name: String!
   owner: User!
-  unreadCount: Int!
+  unreadCount: NonNegativeInt!
   users: [User!]!
 }
 
+"""
+A field whose value is a hex color code: https://en.wikipedia.org/wiki/Web_colors.
+"""
+scalar HexColorCode
+
 type Image {
-  originalHeight: Int!
-  originalUrl: String!
-  originalWidth: Int!
-  popupHeight: Int!
-  popupUrl: String
-  popupWidth: Int!
-  smallHeight: Int!
-  smallUrl: String
-  smallWidth: Int!
+  originalHeight: PositiveInt!
+  originalUrl: URL!
+  originalWidth: PositiveInt!
+  popupHeight: PositiveInt!
+  popupUrl: URL
+  popupWidth: PositiveInt!
+  smallHeight: PositiveInt!
+  smallUrl: URL
+  smallWidth: PositiveInt!
 }
+
+"""
+A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
+"""
+scalar JWT
 
 input JoinServerInput {
   inviteId: ID
@@ -305,12 +320,12 @@ type LinkMetadata {
   author: String
   date: DateTime
   description: String
-  image: String
-  logo: String
+  image: URL
+  logo: URL
   publisher: String
   title: String
   twitterCard: String
-  url: String
+  url: URL
 }
 
 input LoginInput {
@@ -319,7 +334,7 @@ input LoginInput {
 }
 
 type LoginResponse {
-  accessToken: String!
+  accessToken: JWT!
   user: User!
 }
 
@@ -469,6 +484,9 @@ type Mutation {
   votePost(input: VotePostInput!): Post!
 }
 
+"""Integers that will have a value of 0 or more."""
+scalar NonNegativeInt
+
 enum NotificationSetting {
   All
   Mentions
@@ -498,9 +516,12 @@ input PinPostInput {
   postId: ID!
 }
 
+"""Integers that will have a value greater than 0."""
+scalar PositiveInt
+
 type Post implements BaseEntity {
   author: ServerUser
-  commentCount: Int!
+  commentCount: NonNegativeInt!
   createdAt: DateTime!
   domain: String
   folders: [Folder!]
@@ -511,7 +532,7 @@ type Post implements BaseEntity {
   isVoted: Boolean!
   linkMetadata: LinkMetadata
   linkMetadatas: [LinkMetadata!]!
-  linkUrl: String
+  linkUrl: URL
   pinnedAt: DateTime
   relativeUrl: String!
   server: Server!
@@ -519,7 +540,7 @@ type Post implements BaseEntity {
   thumbnailUrl: String
   title: String!
   updatedAt: DateTime
-  voteCount: Int!
+  voteCount: NonNegativeInt!
 }
 
 type PostChangedResponse {
@@ -559,9 +580,9 @@ type Query {
   channelUsers(channelId: ID!): [ServerUser!]!
   comments(postId: ID, sort: CommentsSort = Top): [Comment!]!
   folder(id: ID!): Folder!
-  messages(channelId: ID, groupId: ID, initialTime: DateTime, page: Int = 0, pageSize: Int = 100, pinned: Boolean = false, userId: ID): [MessagesResponse!]!
+  messages(channelId: ID, groupId: ID, initialTime: DateTime, page: NonNegativeInt = 0, pageSize: PositiveInt = 100, pinned: Boolean = false, userId: ID): [MessagesResponse!]!
   post(id: ID!): Post!
-  posts(folderId: ID, page: Int = 0, pageSize: Int = 20, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): [PostsResponse!]!
+  posts(folderId: ID, page: NonNegativeInt = 0, pageSize: PositiveInt = 20, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): [PostsResponse!]!
   publicServers(category: ServerCategory, sort: PublicServersSort = Top): [Server!]!
   replies(userId: ID!): [Reply!]!
   roleUsers(roleId: ID!): [ServerUser!]!
@@ -588,7 +609,7 @@ type Relationship {
   lastMessageAt: DateTime!
   showChat: Boolean!
   status: RelationshipStatus!
-  unreadCount: Int!
+  unreadCount: NonNegativeInt!
   updatedAt: DateTime!
   user: User!
 }
@@ -643,8 +664,8 @@ type Role implements BaseEntity {
 }
 
 type Server implements BaseEntity {
-  avatarUrl: String
-  bannerUrl: String
+  avatarUrl: URL
+  bannerUrl: URL
   category: ServerCategory!
   channels: [Channel!]!
   createdAt: DateTime!
@@ -664,7 +685,7 @@ type Server implements BaseEntity {
   roles: [Role!]!
   sendWelcomeMessage: Boolean!
   systemMessagesChannel: Channel!
-  userCount: Int!
+  userCount: NonNegativeInt!
 }
 
 enum ServerCategory {
@@ -730,6 +751,11 @@ type Subscription {
   userStartedTyping(channelId: ID, groupId: ID, userId: ID): String!
 }
 
+"""
+A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
+"""
+scalar URL
+
 input UnbanUserFromServerInput {
   serverId: ID!
   userId: ID!
@@ -765,7 +791,7 @@ input UnvotePostInput {
 
 input UpdateAccountInput {
   avatarFile: Upload
-  email: String
+  email: EmailAddress
   name: String
 }
 
@@ -812,7 +838,7 @@ input UpdatePostInput {
 }
 
 input UpdateRoleInput {
-  color: String
+  color: HexColorCode
   name: String
   permissions: [ServerPermission!]
   roleId: ID!
@@ -823,7 +849,7 @@ input UpdateServerInput {
   bannerFile: Upload
   category: ServerCategory
   description: String
-  featuredPosition: Int
+  featuredPosition: String
   isFeatured: Boolean
   isPublic: Boolean
   name: String
@@ -837,9 +863,9 @@ input UpdateServerInput {
 scalar Upload
 
 type User implements BaseEntity {
-  avatarUrl: String
+  avatarUrl: URL
   createdAt: DateTime!
-  email: String!
+  email: EmailAddress!
   folders: [Folder!]!
   groups: [Group!]!
   id: ID!
@@ -854,7 +880,7 @@ type User implements BaseEntity {
   relationshipStatus: RelationshipStatus!
   servers: [Server!]!
   tag: String!
-  unreadCount: Int!
+  unreadCount: NonNegativeInt!
   username: String!
 }
 

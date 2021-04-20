@@ -20,14 +20,15 @@ import { Max, Min } from 'class-validator'
 import { Context } from '@/types'
 import { QueryOrder } from '@mikro-orm/core'
 import dayjs from 'dayjs'
+import { GraphQLNonNegativeInt, GraphQLPositiveInt } from 'graphql-scalars'
 
 @ArgsType()
 export class PostsArgs {
-  @Field(() => Int, { defaultValue: 0 })
+  @Field(() => GraphQLNonNegativeInt, { defaultValue: 0 })
   @Min(0)
   page: number = 0
 
-  @Field(() => Int, { defaultValue: 20 })
+  @Field(() => GraphQLPositiveInt, { defaultValue: 20 })
   @Min(1)
   @Max(100)
   pageSize: number = 20

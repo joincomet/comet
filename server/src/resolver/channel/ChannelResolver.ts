@@ -24,11 +24,12 @@ import {
   updateChannelPermissions,
   UpdateChannelPermissionsInput
 } from './mutations'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @Resolver(() => Channel)
 export class ChannelResolver {
   // --- Fields ---
-  @FieldResolver(() => Int)
+  @FieldResolver(() => GraphQLNonNegativeInt)
   async mentionCount(
     @Ctx() { loaders: { channelMentionCountLoader } }: Context,
     @Root() channel: Channel
@@ -36,7 +37,7 @@ export class ChannelResolver {
     return channelMentionCountLoader.load(channel.id)
   }
 
-  @FieldResolver(() => Int)
+  @FieldResolver(() => GraphQLNonNegativeInt)
   async unreadCount(
     @Ctx() { loaders: { channelUnreadCountLoader } }: Context,
     @Root() channel: Channel

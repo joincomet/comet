@@ -23,7 +23,7 @@ export async function followFolder(
   const firstFolder = await em.findOne(
     UserFolder,
     { user },
-    { orderBy: { position: 'DESC' } }
+    { orderBy: { position: 'ASC' } }
   )
   userFolder = em.create(UserFolder, {
     user,

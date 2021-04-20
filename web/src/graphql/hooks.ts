@@ -14,6 +14,18 @@ export type Scalars = {
   Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any;
+  /** A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/. */
+  EmailAddress: any;
+  /** A field whose value is a hex color code: https://en.wikipedia.org/wiki/Web_colors. */
+  HexColorCode: any;
+  /** A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction. */
+  JWT: any;
+  /** Integers that will have a value of 0 or more. */
+  NonNegativeInt: any;
+  /** Integers that will have a value greater than 0. */
+  PositiveInt: any;
+  /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
+  URL: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
@@ -78,12 +90,12 @@ export type Channel = BaseEntity & {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  mentionCount: Scalars['Int'];
+  mentionCount: Scalars['NonNegativeInt'];
   name?: Maybe<Scalars['String']>;
   permissions: Array<ChannelPermission>;
   rolePermissions: Array<ChannelPermissions>;
   server: Server;
-  unreadCount: Scalars['Int'];
+  unreadCount: Scalars['NonNegativeInt'];
 };
 
 export enum ChannelPermission {
@@ -118,7 +130,7 @@ export type Comment = BaseEntity & {
   post: Post;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
-  voteCount: Scalars['Int'];
+  voteCount: Scalars['NonNegativeInt'];
 };
 
 export type CommentChangedResponse = {
@@ -134,7 +146,7 @@ export enum CommentsSort {
 }
 
 export type CreateAccountInput = {
-  email: Scalars['String'];
+  email: Scalars['EmailAddress'];
   name: Scalars['String'];
   password: Scalars['String'];
 };
@@ -176,14 +188,14 @@ export type CreateMessageInput = {
 
 export type CreatePostInput = {
   images?: Maybe<Array<Scalars['Upload']>>;
-  linkUrl?: Maybe<Scalars['String']>;
+  linkUrl?: Maybe<Scalars['URL']>;
   serverId: Scalars['ID'];
   text?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
 
 export type CreateRoleInput = {
-  color?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['HexColorCode']>;
   name: Scalars['String'];
   permissions: Array<ServerPermission>;
   serverId: Scalars['ID'];
@@ -229,26 +241,27 @@ export type DeleteServerInput = {
   serverId: Scalars['ID'];
 };
 
+
 export type File = {
   __typename?: 'File';
   filename: Scalars['String'];
   mime: Scalars['String'];
   size: Scalars['Float'];
-  url: Scalars['String'];
+  url: Scalars['URL'];
 };
 
 export type Folder = BaseEntity & {
   __typename?: 'Folder';
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['URL']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
-  followerCount: Scalars['Int'];
+  followerCount: Scalars['NonNegativeInt'];
   id: Scalars['ID'];
   isCollaborative: Scalars['Boolean'];
   isFollowing: Scalars['Boolean'];
   name: Scalars['String'];
   owner?: Maybe<User>;
-  postCount: Scalars['Int'];
+  postCount: Scalars['NonNegativeInt'];
   server?: Maybe<Server>;
   visibility: FolderVisibility;
 };
@@ -271,29 +284,31 @@ export type GlobalBanInput = {
 
 export type Group = BaseEntity & {
   __typename?: 'Group';
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['URL']>;
   createdAt: Scalars['DateTime'];
   displayName: Scalars['String'];
   id: Scalars['ID'];
   lastMessageAt: Scalars['DateTime'];
   name: Scalars['String'];
   owner: User;
-  unreadCount: Scalars['Int'];
+  unreadCount: Scalars['NonNegativeInt'];
   users: Array<User>;
 };
 
+
 export type Image = {
   __typename?: 'Image';
-  originalHeight: Scalars['Int'];
-  originalUrl: Scalars['String'];
-  originalWidth: Scalars['Int'];
-  popupHeight: Scalars['Int'];
-  popupUrl?: Maybe<Scalars['String']>;
-  popupWidth: Scalars['Int'];
-  smallHeight: Scalars['Int'];
-  smallUrl?: Maybe<Scalars['String']>;
-  smallWidth: Scalars['Int'];
+  originalHeight: Scalars['PositiveInt'];
+  originalUrl: Scalars['URL'];
+  originalWidth: Scalars['PositiveInt'];
+  popupHeight: Scalars['PositiveInt'];
+  popupUrl?: Maybe<Scalars['URL']>;
+  popupWidth: Scalars['PositiveInt'];
+  smallHeight: Scalars['PositiveInt'];
+  smallUrl?: Maybe<Scalars['URL']>;
+  smallWidth: Scalars['PositiveInt'];
 };
+
 
 export type JoinServerInput = {
   inviteId?: Maybe<Scalars['ID']>;
@@ -318,12 +333,12 @@ export type LinkMetadata = {
   author?: Maybe<Scalars['String']>;
   date?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  logo?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['URL']>;
+  logo?: Maybe<Scalars['URL']>;
   publisher?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   twitterCard?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['URL']>;
 };
 
 export type LoginInput = {
@@ -333,7 +348,7 @@ export type LoginInput = {
 
 export type LoginResponse = {
   __typename?: 'LoginResponse';
-  accessToken: Scalars['String'];
+  accessToken: Scalars['JWT'];
   user: User;
 };
 
@@ -864,6 +879,7 @@ export type MutationVotePostArgs = {
   input: VotePostInput;
 };
 
+
 export enum NotificationSetting {
   All = 'All',
   Mentions = 'Mentions',
@@ -893,10 +909,11 @@ export type PinPostInput = {
   postId: Scalars['ID'];
 };
 
+
 export type Post = BaseEntity & {
   __typename?: 'Post';
   author?: Maybe<ServerUser>;
-  commentCount: Scalars['Int'];
+  commentCount: Scalars['NonNegativeInt'];
   createdAt: Scalars['DateTime'];
   domain?: Maybe<Scalars['String']>;
   folders?: Maybe<Array<Folder>>;
@@ -907,7 +924,7 @@ export type Post = BaseEntity & {
   isVoted: Scalars['Boolean'];
   linkMetadata?: Maybe<LinkMetadata>;
   linkMetadatas: Array<LinkMetadata>;
-  linkUrl?: Maybe<Scalars['String']>;
+  linkUrl?: Maybe<Scalars['URL']>;
   pinnedAt?: Maybe<Scalars['DateTime']>;
   relativeUrl: Scalars['String'];
   server: Server;
@@ -915,7 +932,7 @@ export type Post = BaseEntity & {
   thumbnailUrl?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
-  voteCount: Scalars['Int'];
+  voteCount: Scalars['NonNegativeInt'];
 };
 
 export type PostChangedResponse = {
@@ -988,8 +1005,8 @@ export type QueryMessagesArgs = {
   channelId?: Maybe<Scalars['ID']>;
   groupId?: Maybe<Scalars['ID']>;
   initialTime?: Maybe<Scalars['DateTime']>;
-  page?: Maybe<Scalars['Int']>;
-  pageSize?: Maybe<Scalars['Int']>;
+  page?: Maybe<Scalars['NonNegativeInt']>;
+  pageSize?: Maybe<Scalars['PositiveInt']>;
   pinned?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['ID']>;
 };
@@ -1002,8 +1019,8 @@ export type QueryPostArgs = {
 
 export type QueryPostsArgs = {
   folderId?: Maybe<Scalars['ID']>;
-  page?: Maybe<Scalars['Int']>;
-  pageSize?: Maybe<Scalars['Int']>;
+  page?: Maybe<Scalars['NonNegativeInt']>;
+  pageSize?: Maybe<Scalars['PositiveInt']>;
   search?: Maybe<Scalars['String']>;
   serverId?: Maybe<Scalars['ID']>;
   sort?: Maybe<PostsSort>;
@@ -1052,7 +1069,7 @@ export type Relationship = {
   lastMessageAt: Scalars['DateTime'];
   showChat: Scalars['Boolean'];
   status: RelationshipStatus;
-  unreadCount: Scalars['Int'];
+  unreadCount: Scalars['NonNegativeInt'];
   updatedAt: Scalars['DateTime'];
   user: User;
 };
@@ -1111,8 +1128,8 @@ export type Role = BaseEntity & {
 
 export type Server = BaseEntity & {
   __typename?: 'Server';
-  avatarUrl?: Maybe<Scalars['String']>;
-  bannerUrl?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['URL']>;
+  bannerUrl?: Maybe<Scalars['URL']>;
   category: ServerCategory;
   channels: Array<Channel>;
   createdAt: Scalars['DateTime'];
@@ -1132,7 +1149,7 @@ export type Server = BaseEntity & {
   roles: Array<Role>;
   sendWelcomeMessage: Scalars['Boolean'];
   systemMessagesChannel: Channel;
-  userCount: Scalars['Int'];
+  userCount: Scalars['NonNegativeInt'];
 };
 
 export enum ServerCategory {
@@ -1207,6 +1224,7 @@ export type SubscriptionUserStartedTypingArgs = {
   userId?: Maybe<Scalars['ID']>;
 };
 
+
 export type UnbanUserFromServerInput = {
   serverId: Scalars['ID'];
   userId: Scalars['ID'];
@@ -1242,7 +1260,7 @@ export type UnvotePostInput = {
 
 export type UpdateAccountInput = {
   avatarFile?: Maybe<Scalars['Upload']>;
-  email?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['EmailAddress']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -1289,7 +1307,7 @@ export type UpdatePostInput = {
 };
 
 export type UpdateRoleInput = {
-  color?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['HexColorCode']>;
   name?: Maybe<Scalars['String']>;
   permissions?: Maybe<Array<ServerPermission>>;
   roleId: Scalars['ID'];
@@ -1300,7 +1318,7 @@ export type UpdateServerInput = {
   bannerFile?: Maybe<Scalars['Upload']>;
   category?: Maybe<ServerCategory>;
   description?: Maybe<Scalars['String']>;
-  featuredPosition?: Maybe<Scalars['Int']>;
+  featuredPosition?: Maybe<Scalars['String']>;
   isFeatured?: Maybe<Scalars['Boolean']>;
   isPublic?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
@@ -1313,9 +1331,9 @@ export type UpdateServerInput = {
 
 export type User = BaseEntity & {
   __typename?: 'User';
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['URL']>;
   createdAt: Scalars['DateTime'];
-  email: Scalars['String'];
+  email: Scalars['EmailAddress'];
   folders: Array<Folder>;
   groups: Array<Group>;
   id: Scalars['ID'];
@@ -1330,7 +1348,7 @@ export type User = BaseEntity & {
   relationshipStatus: RelationshipStatus;
   servers: Array<Server>;
   tag: Scalars['String'];
-  unreadCount: Scalars['Int'];
+  unreadCount: Scalars['NonNegativeInt'];
   username: Scalars['String'];
 };
 
@@ -2564,8 +2582,8 @@ export type MessagesQueryVariables = Exact<{
   channelId?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['ID']>;
   groupId?: Maybe<Scalars['ID']>;
-  pageSize?: Maybe<Scalars['Int']>;
-  page?: Maybe<Scalars['Int']>;
+  pageSize?: Maybe<Scalars['PositiveInt']>;
+  page?: Maybe<Scalars['NonNegativeInt']>;
   initialTime?: Maybe<Scalars['DateTime']>;
 }>;
 
@@ -2615,8 +2633,8 @@ export type PostQuery = (
 
 export type PostsQueryVariables = Exact<{
   sort?: Maybe<PostsSort>;
-  page?: Maybe<Scalars['Int']>;
-  pageSize?: Maybe<Scalars['Int']>;
+  page?: Maybe<Scalars['NonNegativeInt']>;
+  pageSize?: Maybe<Scalars['PositiveInt']>;
   time?: Maybe<PostsTime>;
   folderId?: Maybe<Scalars['ID']>;
   serverId?: Maybe<Scalars['ID']>;
@@ -5743,7 +5761,7 @@ export type FolderQueryHookResult = ReturnType<typeof useFolderQuery>;
 export type FolderLazyQueryHookResult = ReturnType<typeof useFolderLazyQuery>;
 export type FolderQueryResult = Apollo.QueryResult<FolderQuery, FolderQueryVariables>;
 export const MessagesDocument = gql`
-    query messages($channelId: ID, $userId: ID, $groupId: ID, $pageSize: Int, $page: Int, $initialTime: DateTime) {
+    query messages($channelId: ID, $userId: ID, $groupId: ID, $pageSize: PositiveInt, $page: NonNegativeInt, $initialTime: DateTime) {
   messages(
     channelId: $channelId
     userId: $userId
@@ -5848,7 +5866,7 @@ export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
 export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
 export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
 export const PostsDocument = gql`
-    query posts($sort: PostsSort, $page: Int, $pageSize: Int, $time: PostsTime, $folderId: ID, $serverId: ID, $search: String) {
+    query posts($sort: PostsSort, $page: NonNegativeInt, $pageSize: PositiveInt, $time: PostsTime, $folderId: ID, $serverId: ID, $search: String) {
   posts(
     sort: $sort
     time: $time

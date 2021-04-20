@@ -22,7 +22,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import { defaultExtensions } from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Underline from '@tiptap/extension-underline'
-// import { Spoiler } from './Spoiler'
+import { Spoiler } from './Spoiler'
 import { useEffect } from 'react'
 
 export default function Editor({ text, setText }) {
@@ -34,8 +34,8 @@ export default function Editor({ text, setText }) {
         }
       }).filter(extension => extension.config.name !== 'hardBreak'),
       Link,
-      Underline
-      // Spoiler
+      Underline,
+      Spoiler
     ],
     content: text,
     editorProps: {

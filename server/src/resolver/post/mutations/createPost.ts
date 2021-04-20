@@ -1,10 +1,11 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
-import { ArrayMaxSize, IsOptional, Length } from 'class-validator'
+import { ArrayMaxSize, Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { Post, Server, ServerPermission, User } from '@/entity'
 import { handleText, scrapeMetadata, uploadImageSingle } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+import { GraphQLURL } from 'graphql-scalars'
 
 @InputType()
 export class CreatePostInput {
@@ -12,13 +13,11 @@ export class CreatePostInput {
   @Length(1, 300, { message: 'Title must be no longer than 300 characters.' })
   title: string
 
-  @Field({ nullable: true })
-  @IsOptional()
+  @Field(() => GraphQLURL, { nullable: true })
   @Length(1, 5000, { message: 'URL must be no longer than 5000 characters.' })
   linkUrl?: string
 
   @Field({ nullable: true })
-  @IsOptional()
   @Length(1, 100000, {
     message: 'Text must be between 1 and 100000 characters'
   })
@@ -28,7 +27,6 @@ export class CreatePostInput {
   serverId: string
 
   @Field(() => [GraphQLUpload], { nullable: true })
-  @IsOptional()
   @ArrayMaxSize(10, { message: 'Cannot upload more than 10 images' })
   images?: FileUpload[]
 }

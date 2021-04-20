@@ -23,6 +23,7 @@ import {
 import { ServerUser } from '@/entity/server/ServerUser'
 import { Role } from '@/entity/server/Role'
 import { NotificationSetting } from '@/types'
+import { GraphQLNonNegativeInt, GraphQLURL } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -68,15 +69,15 @@ export class Server extends BaseEntity {
   @Enum({ items: () => ServerCategory })
   category: ServerCategory = ServerCategory.Other
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   @Property({ unsigned: true })
   userCount: number = 0
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   bannerUrl?: string
 

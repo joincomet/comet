@@ -21,7 +21,7 @@ export async function moveServer(
     { user: userId, status: ServerUserStatus.Joined },
     ['server'],
     {
-      position: 'DESC'
+      position: 'ASC'
     }
   )
   const serverUser = serverUsers.find(s => s.server.id === serverId)

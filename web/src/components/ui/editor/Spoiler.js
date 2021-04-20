@@ -1,4 +1,4 @@
-import { Mark, mergeAttributes } from '@tiptap/core'
+import { Mark, mergeAttributes } from '@tiptap/react'
 
 export const Spoiler = Mark.create({
   name: 'spoiler',

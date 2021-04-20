@@ -18,7 +18,7 @@ export async function moveUserFolder(
 ): Promise<Folder> {
   const folder = await em.findOneOrFail(Folder, folderId, ['server'])
   const userFolders = await em.find(UserFolder, { user: userId }, ['folder'], {
-    position: 'DESC'
+    position: 'ASC'
   })
   const userFolder = userFolders.find(f => f.folder.id === folderId)
 

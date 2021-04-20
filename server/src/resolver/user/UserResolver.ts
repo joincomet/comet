@@ -36,6 +36,7 @@ import {
   UpdateAccountInput
 } from '@/resolver/user/mutations'
 import { channelUsers, roleUsers, user } from '@/resolver/user/queries'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -80,7 +81,7 @@ export class UserResolver {
     return relationshipStatusLoader.load(user.id)
   }
 
-  @FieldResolver(() => Int)
+  @FieldResolver(() => GraphQLNonNegativeInt)
   async unreadCount(
     @Ctx() { loaders: { userUnreadCountLoader } }: Context,
     @Root() user: User

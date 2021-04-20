@@ -10,6 +10,7 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
+import { GraphQLNonNegativeInt, GraphQLURL } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -22,9 +23,9 @@ export class Group extends BaseEntity {
   @Property({ columnType: 'text' })
   name: string
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   @Property({ nullable: true, columnType: 'text' })
-  avatarUrl: string
+  avatarUrl?: string
 
   @Field()
   @Property()
@@ -51,6 +52,6 @@ export class Group extends BaseEntity {
     return this.id
   }
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   unreadCount: number = 0
 }

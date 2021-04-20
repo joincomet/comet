@@ -3,6 +3,7 @@ import { Max, Min } from 'class-validator'
 import { Channel, Group, Message, User } from '@/entity'
 import { Context } from '@/types'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
+import { GraphQLNonNegativeInt, GraphQLPositiveInt } from 'graphql-scalars'
 
 @ArgsType()
 export class MessagesArgs {
@@ -21,12 +22,12 @@ export class MessagesArgs {
   @Field({ nullable: true })
   initialTime: Date
 
-  @Field(() => Int, { defaultValue: 100 })
+  @Field(() => GraphQLPositiveInt, { defaultValue: 100 })
   @Min(1)
   @Max(100)
   pageSize: number = 100
 
-  @Field(() => Int, { defaultValue: 0 })
+  @Field(() => GraphQLNonNegativeInt, { defaultValue: 0 })
   @Min(0)
   page: number = 0
 }

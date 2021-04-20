@@ -10,6 +10,7 @@ import {
 } from '@mikro-orm/core'
 import { CommentVote } from '@/entity/comment/CommentVote'
 import { BaseEntity } from '@/entity/BaseEntity'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -30,7 +31,7 @@ export class Comment extends BaseEntity {
   @ManyToOne({ entity: () => Comment, nullable: true })
   parentComment?: Comment
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   @Property({ unsigned: true })
   voteCount: number = 0
 

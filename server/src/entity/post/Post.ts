@@ -23,6 +23,7 @@ import {
 } from '@mikro-orm/core'
 import { PostVote } from '@/entity/post/PostVote'
 import { BaseEntity } from '@/entity/BaseEntity'
+import { GraphQLNonNegativeInt, GraphQLURL } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -35,7 +36,7 @@ export class Post extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   text?: string
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   linkUrl?: string
 
@@ -99,7 +100,7 @@ export class Post extends BaseEntity {
   @Field(() => [Folder], { nullable: true })
   folders?: Folder[]
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   @Property({ unsigned: true })
   voteCount: number = 0
 
@@ -109,7 +110,7 @@ export class Post extends BaseEntity {
   @OneToMany(() => PostVote, 'post')
   votes = new Collection<PostVote>(this)
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   @Property({ unsigned: true })
   commentCount: number = 0
 

@@ -2,8 +2,8 @@ query messages(
   $channelId: ID
   $userId: ID
   $groupId: ID
-  $pageSize: Int
-  $page: Int
+  $pageSize: PositiveInt
+  $page: NonNegativeInt
   $initialTime: DateTime
 ) {
   messages(

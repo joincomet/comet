@@ -1,9 +1,10 @@
 import { Role, ServerPermission, User } from '@/entity'
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { IsHexColor, IsOptional, Length } from 'class-validator'
+import { IsHexColor, Length } from 'class-validator'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
+import { GraphQLHexColorCode } from 'graphql-scalars'
 
 @InputType()
 export class CreateRoleInput {
@@ -14,8 +15,7 @@ export class CreateRoleInput {
   @Length(1, 100)
   name: string
 
-  @Field({ nullable: true })
-  @IsOptional()
+  @Field(() => GraphQLHexColorCode, { nullable: true })
   @IsHexColor()
   color?: string
 

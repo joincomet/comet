@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from 'type-graphql'
 import { FolderVisibility, Server, User } from '@/entity'
 import { BaseEntity } from '@/entity/BaseEntity'
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core'
+import { GraphQLNonNegativeInt, GraphQLURL } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -14,7 +15,7 @@ export class Folder extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   description?: string
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
@@ -29,11 +30,11 @@ export class Folder extends BaseEntity {
   @Property()
   isDeleted: boolean = false
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   @Property({ unsigned: true })
   postCount: number = 0
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   @Property()
   followerCount: number = 0
 

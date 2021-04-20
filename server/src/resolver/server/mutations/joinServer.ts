@@ -36,7 +36,7 @@ export async function joinServer(
     ServerUser,
     { server, user: this },
     ['server'],
-    { position: 'DESC' }
+    { position: 'ASC' }
   )
   const join = em.create(ServerUser, {
     server,

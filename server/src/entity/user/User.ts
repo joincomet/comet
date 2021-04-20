@@ -31,6 +31,11 @@ import { CustomError } from '@/types/CustomError'
 import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 import { OnlineStatus } from '@/entity/user/OnlineStatus'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+import {
+  GraphQLEmailAddress,
+  GraphQLNonNegativeInt,
+  GraphQLURL
+} from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -48,7 +53,7 @@ export class User extends BaseEntity {
   username: string
 
   @Authorized('USER')
-  @Field()
+  @Field(() => GraphQLEmailAddress)
   @Property({ columnType: 'text' })
   @Unique()
   email: string
@@ -57,7 +62,7 @@ export class User extends BaseEntity {
   @Property({ nullable: true })
   lastLoginAt?: Date
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
@@ -120,7 +125,7 @@ export class User extends BaseEntity {
   @Field(() => [Server])
   servers: Server[]
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   unreadCount: number
 
   @Field(() => RelationshipStatus)

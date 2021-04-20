@@ -14,6 +14,7 @@ import {
 } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util/ReorderUtils'
 import { BaseEntity } from '@/entity/BaseEntity'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -45,10 +46,10 @@ export class Channel extends BaseEntity {
   @Property()
   lastMessageAt: Date = new Date()
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   mentionCount: number = 0
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   unreadCount: number = 0
 
   @Field(() => [ChannelPermission])

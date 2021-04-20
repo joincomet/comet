@@ -7,6 +7,7 @@ import {
 } from '@mikro-orm/core'
 import { RelationshipStatus, User } from '@/entity'
 import { Field, Int, ObjectType } from 'type-graphql'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @ObjectType()
 @Entity()
@@ -48,7 +49,7 @@ export class Relationship {
   @Property()
   updatedAt: Date = new Date()
 
-  @Field(() => Int)
+  @Field(() => GraphQLNonNegativeInt)
   @Property()
   unreadCount: number = 0
 }

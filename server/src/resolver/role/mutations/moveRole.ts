@@ -27,7 +27,7 @@ export async function moveRole(
   const roles = await em.find(
     Role,
     { server: role.server },
-    { orderBy: { position: 'DESC' } }
+    { orderBy: { position: 'ASC' } }
   )
   const firstRole = roles[0]
   const beforeRole = beforeRoleId

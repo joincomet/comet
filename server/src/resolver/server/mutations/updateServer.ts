@@ -24,8 +24,8 @@ export class UpdateServerInput {
   @Field({ nullable: true })
   isFeatured?: boolean
 
-  @Field(() => Int, { nullable: true })
-  featuredPosition?: number
+  @Field({ nullable: true })
+  featuredPosition?: string
 
   @Field(() => ServerCategory, { nullable: true })
   category?: ServerCategory

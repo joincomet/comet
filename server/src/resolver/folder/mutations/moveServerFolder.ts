@@ -29,7 +29,7 @@ export async function moveServerFolder(
     { server: folder.server.id },
     ['folder'],
     {
-      position: 'DESC'
+      position: 'ASC'
     }
   )
   const serverFolder = serverFolders.find(f => f.folder.id === folderId)

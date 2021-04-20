@@ -2,6 +2,7 @@ import { Field, ID, InputType } from 'type-graphql'
 import { IsHexColor, Length } from 'class-validator'
 import { Role, ServerPermission, User } from '@/entity'
 import { Context } from '@/types'
+import { GraphQLHexColorCode } from 'graphql-scalars'
 
 @InputType()
 export class UpdateRoleInput {
@@ -12,7 +13,7 @@ export class UpdateRoleInput {
   @Length(1, 100)
   name?: string
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLHexColorCode, { nullable: true })
   @IsHexColor()
   color?: string
 

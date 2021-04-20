@@ -20,6 +20,7 @@ import {
 import * as argon2 from 'argon2'
 import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
+import { GraphQLEmailAddress } from 'graphql-scalars'
 
 @InputType()
 export class CreateAccountInput {
@@ -27,7 +28,7 @@ export class CreateAccountInput {
   @Length(2, 32)
   name: string
 
-  @Field()
+  @Field(() => GraphQLEmailAddress)
   @IsEmail()
   email: string
 

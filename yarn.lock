@@ -2360,10 +2360,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@n1ru4l/push-pull-async-iterable-iterator@npm:^2.0.0, @n1ru4l/push-pull-async-iterable-iterator@npm:^2.0.1, @n1ru4l/push-pull-async-iterable-iterator@npm:^2.1.2":
+"@n1ru4l/push-pull-async-iterable-iterator@npm:^2.0.0, @n1ru4l/push-pull-async-iterable-iterator@npm:^2.0.1":
   version: 2.1.2
   resolution: "@n1ru4l/push-pull-async-iterable-iterator@npm:2.1.2"
   checksum: d494d8b49be695db37d610653a14c0224b26d33584af05d874ad631abb494efa763f9e3b665df93f3215992dcaf577ab50e4c9760f9db62d342aeb9e109c0423
+  languageName: node
+  linkType: hard
+
+"@n1ru4l/push-pull-async-iterable-iterator@npm:^2.1.4":
+  version: 2.1.4
+  resolution: "@n1ru4l/push-pull-async-iterable-iterator@npm:2.1.4"
+  checksum: 92fc368a1a883d33b8004c3142226be1cbe277da5378faa90fead3a66305dac9bf9c0082901ec4e1093bf2b73109b31dd8ab7a8e75b34f2c8bff60f4992a864c
   languageName: node
   linkType: hard
 
@@ -3889,17 +3896,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv-formats@npm:^1.5.1":
-  version: 1.6.1
-  resolution: "ajv-formats@npm:1.6.1"
+"ajv-formats@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "ajv-formats@npm:2.0.2"
   dependencies:
-    ajv: ^7.0.0
+    ajv: ^8.0.0
   peerDependencies:
-    ajv: ^7.0.0
+    ajv: ^8.0.0
   peerDependenciesMeta:
     ajv:
       optional: true
-  checksum: 78f59607f9d724738056f720c565e53f2496a8410c4c06bc756e4a287a32cf506cee4522127a757b35c86cf8f76fbbc43877e5c4006751c987781124a548dc51
+  checksum: 75d45f2b3858156ec8f2285470473f786faae24e5934983feb2b20c80f094e490a2f3690c3dedc3d8d83623cb2fa31e665173d538acce8b06450735f38f203fd
   languageName: node
   linkType: hard
 
@@ -3924,18 +3931,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^7.0.0, ajv@npm:^7.0.3":
-  version: 7.2.4
-  resolution: "ajv@npm:7.2.4"
-  dependencies:
-    fast-deep-equal: ^3.1.1
-    json-schema-traverse: ^1.0.0
-    require-from-string: ^2.0.2
-    uri-js: ^4.2.2
-  checksum: 17be02b9a6c72317acc62fb15dde885d3d9e15ac44b025923697a44787cc69cceacf4c7e4ed43769eb313a64a3fd35ba7d308f36ef2eba136f4495d1cf513001
-  languageName: node
-  linkType: hard
-
 "ajv@npm:^7.0.2":
   version: 7.0.4
   resolution: "ajv@npm:7.0.4"
@@ -3945,6 +3940,18 @@ __metadata:
     require-from-string: ^2.0.2
     uri-js: ^4.2.2
   checksum: 959acf9a337746a0cc0fb954a94d8146734ff72796a0adf06c97f33412626c0dc5cf71f14558b6c0e352b2c19eda32bf5e2ef36ab6d5a8b06f6ee0eab850813f
+  languageName: node
+  linkType: hard
+
+"ajv@npm:^8.0.0, ajv@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "ajv@npm:8.1.0"
+  dependencies:
+    fast-deep-equal: ^3.1.1
+    json-schema-traverse: ^1.0.0
+    require-from-string: ^2.0.2
+    uri-js: ^4.2.2
+  checksum: d946a17d0f44418863d23282868ce79c51ba3a3ca9cca4eb9a0e66151c9f8cf790febb4a1ffe5a831a52d21639d3e140586736406cdde177a804aebacd45f2ca
   languageName: node
   linkType: hard
 
@@ -4395,9 +4402,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.888.0":
-  version: 2.888.0
-  resolution: "aws-sdk@npm:2.888.0"
+"aws-sdk@npm:^2.889.0":
+  version: 2.889.0
+  resolution: "aws-sdk@npm:2.889.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4408,7 +4415,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: c1e6a066b5a3a00b3b070e30edc0c049434ca1b072551aeb0882ef608ca3a012a49391e04a71a62bbc5c0e2b80aea9878ab07f9e7c4bdf9d7a79f6bbc16b4877
+  checksum: a8d8cffb0cdd8282742ff172dda48aca3f5addab02dfa35a6a671b8f348ba8638db3bdc048a3a51632a07f8bd4441dde71b4d5aa54b080d53b62ccfe80ad2d2e
   languageName: node
   linkType: hard
 
@@ -5511,22 +5518,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conf@npm:^9.0.0":
-  version: 9.0.2
-  resolution: "conf@npm:9.0.2"
+"conf@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "conf@npm:10.0.0"
   dependencies:
-    ajv: ^7.0.3
-    ajv-formats: ^1.5.1
+    ajv: ^8.1.0
+    ajv-formats: ^2.0.2
     atomically: ^1.7.0
     debounce-fn: ^4.0.0
     dot-prop: ^6.0.1
-    env-paths: ^2.2.0
+    env-paths: ^2.2.1
     json-schema-typed: ^7.0.3
-    make-dir: ^3.1.0
     onetime: ^5.1.2
     pkg-up: ^3.1.0
-    semver: ^7.3.4
-  checksum: da16e2eb2632d7b3b4f1a56239a61fe4dcf17e1b1bcb6d221c061b036b57c3293a0943d30dfb0033d9bf958df83dc2e102e59b658a9516b400ea219194a51228
+    semver: ^7.3.5
+  checksum: bd3fe73847548a1664628efbe25fbfcf08667180ba3bc32a8ce4651b8dfc43a437ed6c6e00c2136af85676d3119c65aa79b58525e737404bfbfeb6965055e6ae
   languageName: node
   linkType: hard
 
@@ -6592,13 +6598,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-store@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "electron-store@npm:7.0.3"
+"electron-store@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "electron-store@npm:8.0.0"
   dependencies:
-    conf: ^9.0.0
-    type-fest: ^0.20.2
-  checksum: 0c178dd8e5a794edc21f5f829ef508ff72d5e61a36589f41668d5d92522951347a2a6e6401eb80b69b4c3530ed00261d2e5407327aeed8b115ad870612a7ad6e
+    conf: ^10.0.0
+    type-fest: ^1.0.2
+  checksum: b8683bf9993868b2ec6ba8cec4f58bfba150f1b65bb0dedc2e7791bcc97825da352164fa81c831746b150cc0156b980d5771d2136e915700050bdbff3a5dcf8a
   languageName: node
   linkType: hard
 
@@ -6708,6 +6714,13 @@ __metadata:
   version: 2.2.0
   resolution: "env-paths@npm:2.2.0"
   checksum: 09de4fd1c068d5965aa8aede852a764b7fb6fa8f1299ba7789bc29c22840ab1985e0c9c55bc6bf40b4276834b8adfa1baf82ec9bc58445d9e75800dc32d78a4f
+  languageName: node
+  linkType: hard
+
+"env-paths@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "env-paths@npm:2.2.1"
+  checksum: 9579868bc73526de31682625d89aa08c83f3c87850218f9251f953bf4242428a1020e75cb201ca16b42f2874c3ca175ffc8aa47a88423b546711b7dbf86f79a8
   languageName: node
   linkType: hard
 
@@ -8313,6 +8326,17 @@ fsevents@~2.3.1:
   peerDependencies:
     graphql: 14.x || 15.x
   checksum: d564874ff42ad63f1555ec18f582bfef5a0ca36160cfc4bf20e22211eca6cf5beabb65961ef734817db441508eee81a9332d4d88fe19c335e39342e20f9f303a
+  languageName: node
+  linkType: hard
+
+"graphql-scalars@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "graphql-scalars@npm:1.9.0"
+  dependencies:
+    tslib: ~2.1.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 8b287771004c00fcdc95e42e81b7b95f254c3ba70bbac75ea775140df8e94dc083a48b071233547936d8eaec61b56b96f800392374e2961226131badded6b704
   languageName: node
   linkType: hard
 
@@ -10978,6 +11002,13 @@ fsevents@~2.3.1:
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: 6e721e648a544154d5de4c114b32f573d8027ca8ec505cf6c1105e505986d6ac46934a1256735aa0eece8eb2f5b2a1230503b2dddd3b100f9f016fd8a4f15f33
+  languageName: node
+  linkType: hard
+
+"mudder@npm:^1.0.10":
+  version: 1.0.10
+  resolution: "mudder@npm:1.0.10"
+  checksum: dcfab21c9cab5f91c08899c1db51668a702d5339aa23fc6e501be8d9b03f8d5a6bbf80d39f4f7e674845c40cd0447498af2707416cfe86501786c4f2d9c477b2
   languageName: node
   linkType: hard
 
@@ -13676,14 +13707,14 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.32.10":
-  version: 1.32.10
-  resolution: "sass@npm:1.32.10"
+"sass@npm:^1.32.11":
+  version: 1.32.11
+  resolution: "sass@npm:1.32.11"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
   bin:
     sass: sass.js
-  checksum: dc310c9d4f73fc9fd39c7c3cb7adc481f1d3a7cbd51704ed94972738b181b3db1e485864497edf2d2954340a34b49bfccac61b792e2609431227a6ab521997db
+  checksum: a56ca780febc1f4c5c015f2fbd5dacd780297371456197424bce7e48d54cef8ae564fb8927076ef61e6fcd34f69556d0a3dd8e157ff06081729066ad595e97bf
   languageName: node
   linkType: hard
 
@@ -13880,7 +13911,7 @@ resolve@^2.0.0-next.3:
     "@types/node": ^14.14.41
     "@types/sharp": ^0.28.0
     argon2: ^0.27.2
-    aws-sdk: ^2.888.0
+    aws-sdk: ^2.889.0
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cors: ^2.8.5
@@ -13892,6 +13923,7 @@ resolve@^2.0.0-next.3:
     file-type: ^16.3.0
     got: ^11.8.2
     graphql-helix: ^1.3.0
+    graphql-scalars: ^1.9.0
     graphql-upload: ^11.0.0
     jsonwebtoken: ^8.5.1
     metascraper: ^5.21.5
@@ -13906,6 +13938,7 @@ resolve@^2.0.0-next.3:
     metascraper-url: ^5.21.5
     metascraper-youtube: ^5.21.5
     mime: ^2.5.2
+    mudder: ^1.0.10
     nanoid: ^3.1.22
     node-fetch: ^2.6.1
     reflect-metadata: ^0.1.13
@@ -15458,6 +15491,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"type-fest@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "type-fest@npm:1.0.2"
+  checksum: 5e9696dd0e6903ad5fa8413a83ddab375ca9a3529d14ca156e1ef47d54dfc5606da038485f849fcb9153fa35a52b1134e5235232cbf5f2c6837c35cc5ae62448
+  languageName: node
+  linkType: hard
+
 "type-graphql@npm:^1.1.1":
   version: 1.1.1
   resolution: "type-graphql@npm:1.1.1"
@@ -15951,9 +15991,9 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "vite@npm:2.2.0"
+"vite@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "vite@npm:2.2.1"
   dependencies:
     esbuild: ^0.9.3
     fsevents: ~2.3.1
@@ -15965,7 +16005,7 @@ typescript@^4.2.4:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 5f72894fca2a7557711345aae9cae59af8c677b40a967400b4f96ba06abfef9c0a466e8a1c20db8e169974c9d16a4d0efcb53d11a101801c528d26a76d45084b
+  checksum: 0c297aabe47ad9aab5ac02478db2bb765e7fb67bb36eeba2a6c41ddea24c98799815005423c5ca8d1648ab2ecd5b7246c9364f867709b2dd53b5b476450ce3c3
   languageName: node
   linkType: hard
 
@@ -16026,7 +16066,7 @@ typescript@^4.2.4:
     "@headlessui/react": ^1.0.0
     "@n1ru4l/graphql-live-query": ^0.7.1
     "@n1ru4l/graphql-live-query-patch": ^0.3.1
-    "@n1ru4l/push-pull-async-iterable-iterator": ^2.1.2
+    "@n1ru4l/push-pull-async-iterable-iterator": ^2.1.4
     "@netlify/classnames-template-literals": ^1.0.0
     "@popperjs/core": ^2.9.2
     "@reach/observe-rect": ^1.2.0
@@ -16035,7 +16075,6 @@ typescript@^4.2.4:
     "@tailwindcss/line-clamp": ^0.2.0
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.5
-    "@tiptap/core": ^2.0.0-beta.32
     "@tiptap/extension-link": ^2.0.0-beta.5
     "@tiptap/extension-mention": ^2.0.0-beta.33
     "@tiptap/extension-underline": ^2.0.0-beta.4
@@ -16058,7 +16097,7 @@ typescript@^4.2.4:
     electron-context-menu: ^2.5.1
     electron-is-dev: ^2.0.0
     electron-log: ^4.3.4
-    electron-store: ^7.0.3
+    electron-store: ^8.0.0
     electron-updater: ^4.3.8
     eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
@@ -16091,7 +16130,7 @@ typescript@^4.2.4:
     react-use: ^17.2.3
     react-virtual: ^2.7.1
     react-virtuoso: ^1.8.2
-    sass: ^1.32.10
+    sass: ^1.32.11
     sse-z: ^0.3.0
     string-hash: ^1.1.3
     tailwind-scrollbar: ^1.3.0
@@ -16100,7 +16139,7 @@ typescript@^4.2.4:
     twemoji: ^13.0.2
     use-dark-mode: ^2.3.1
     validator: ^13.5.2
-    vite: ^2.2.0
+    vite: ^2.2.1
     vite-plugin-pwa: ^0.7.2
     zustand: ^3.4.1
   languageName: unknown

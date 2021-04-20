@@ -28,7 +28,7 @@ export async function moveChannel(
   const channels = await em.find(
     Channel,
     { server: channel.server },
-    { orderBy: { position: QueryOrder.DESC } }
+    { orderBy: { position: 'ASC' } }
   )
   const firstChannel = channels[0]
   const beforeChannel = beforeChannelId

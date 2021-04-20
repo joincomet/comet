@@ -1,5 +1,6 @@
 import { Field, ObjectType } from 'type-graphql'
 import { Embeddable, Property } from '@mikro-orm/core'
+import { GraphQLURL } from 'graphql-scalars'
 
 @Embeddable()
 @ObjectType()
@@ -25,15 +26,15 @@ export class LinkMetadata {
   publisher?: string
 
   @Property({ nullable: true, columnType: 'text' })
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   image?: string
 
   @Property({ nullable: true, columnType: 'text' })
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   logo?: string
 
   @Property({ nullable: true, columnType: 'text' })
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   url?: string
 
   @Property({ nullable: true, columnType: 'text' })

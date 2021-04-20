@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from 'type-graphql'
 import { Embeddable, Property } from '@mikro-orm/core'
+import { GraphQLPositiveInt, GraphQLURL } from 'graphql-scalars'
 
 const calculateDimensions = ({
   width,
@@ -36,22 +37,22 @@ const SMALL_MAX_HEIGHT = 300
 @ObjectType()
 export class Image {
   @Property({ columnType: 'text' })
-  @Field()
+  @Field(() => GraphQLURL)
   originalUrl: string
 
   @Property()
-  @Field(() => Int)
+  @Field(() => GraphQLPositiveInt)
   originalWidth: number
 
   @Property()
-  @Field(() => Int)
+  @Field(() => GraphQLPositiveInt)
   originalHeight: number
 
   @Property({ columnType: 'text', nullable: true })
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   smallUrl?: string
 
-  @Field(() => Int)
+  @Field(() => GraphQLPositiveInt)
   get smallWidth(): number {
     return calculateDimensions({
       width: this.originalWidth,
@@ -61,7 +62,7 @@ export class Image {
     })[0]
   }
 
-  @Field(() => Int)
+  @Field(() => GraphQLPositiveInt)
   get smallHeight(): number {
     return calculateDimensions({
       width: this.originalWidth,
@@ -72,10 +73,10 @@ export class Image {
   }
 
   @Property({ columnType: 'text', nullable: true })
-  @Field({ nullable: true })
+  @Field(() => GraphQLURL, { nullable: true })
   popupUrl: string
 
-  @Field(() => Int)
+  @Field(() => GraphQLPositiveInt)
   get popupWidth(): number {
     return calculateDimensions({
       width: this.originalWidth,
@@ -85,7 +86,7 @@ export class Image {
     })[0]
   }
 
-  @Field(() => Int)
+  @Field(() => GraphQLPositiveInt)
   get popupHeight(): number {
     return calculateDimensions({
       width: this.originalWidth,
