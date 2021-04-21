@@ -11,7 +11,10 @@ export {
 
 export {
   HiAtSymbol as IconAt,
-  HiHashtag as IconChannel,
+  HiHashtag as IconHashtag,
+  HiBell as IconBell,
+  // HiHashtag as IconChannel,
+  // HiChat as IconChannel,
   HiStar as IconFavoritesFolder,
   HiArchive as IconReadLaterFolder,
   HiPlus as IconPlus,
@@ -47,6 +50,8 @@ export {
   HiPlusCircle as IconUpload,
   HiUsers as IconUsers,
   HiArrowLeft as IconBack,
+  HiUserAdd as IconUserAdd,
+  HiViewGrid as IconHub,
   // EDITOR
   HiCode as IconFormatCodeInline,
   HiEmojiHappy as IconFormatEmoji,
@@ -124,3 +129,4 @@ export * from './IconCategoryScience'
 export * from './IconCategoryTechnology'
 export * from './IconCreateServer'
 export * from './IconSpinner'
+export * from './IconChannel'

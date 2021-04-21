@@ -1,9 +1,13 @@
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
-import { IconChannel, IconSettings } from '@/components/ui/icons/Icons'
+import {
+  IconChannel,
+  IconHashtag,
+  IconSettings
+} from '@/components/ui/icons/Icons'
 import { useTranslation } from 'react-i18next'
 import Tippy from '@tippyjs/react'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ServerPermission } from '@/graphql/hooks'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import CountBadge from '@/components/ui/CountBadge'

@@ -10,6 +10,8 @@ import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 import { getOS } from '@/utils/getOS'
 import { apolloClient } from '@/graphql/apolloClient'
 import ContextMenuProvider from '@/providers/ContextMenuProvider'
+import UserAvatar from '@/components/user/UserAvatar'
+import { IconBell, IconFolder, IconSearch } from '@/components/ui/icons/Icons'
 
 export default function App() {
   const AppRouter = window.electron ? HashRouter : BrowserRouter
@@ -46,6 +48,18 @@ export default function App() {
                 className="flex"
               >
                 <Routes />
+              </div>
+
+              {/*<div className="fixed inset-x-0 bottom-4 h-0.5 bg-gradient-to-r from-red-400 to-blue-500" />*/}
+              <div className="flex items-center px-5 fixed right-0 left-18 bottom-0 h-5.5 bg-gray-650">
+                <UserAvatar size={4} className="dark:bg-gray-500 mr-2" />
+                <div className="text-white text-13 font-medium">Dan</div>
+                <div className="w-2 h-2 rounded-full bg-green-500 ml-1" />
+                <div className="ml-auto flex items-center space-x-3 text-primary">
+                  <IconSearch className="w-4 h-4" />
+                  <IconFolder className="w-4 h-4" />
+                  <IconBell className="w-4 h-4" />
+                </div>
               </div>
             </DndProvider>
           </ContextMenuProvider>

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/icons/Icons'
 import { useMemo } from 'react'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ServerPermission } from '@/graphql/hooks'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useFolderName } from '@/components/folder/useFolderName'

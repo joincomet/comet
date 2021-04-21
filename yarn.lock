@@ -2622,9 +2622,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/core@npm:^2.0.0-beta.32":
-  version: 2.0.0-beta.32
-  resolution: "@tiptap/core@npm:2.0.0-beta.32"
+"@tiptap/core@npm:^2.0.0-beta.34":
+  version: 2.0.0-beta.34
+  resolution: "@tiptap/core@npm:2.0.0-beta.34"
   dependencies:
     "@types/prosemirror-commands": ^1.0.4
     "@types/prosemirror-inputrules": ^1.0.4
@@ -2642,7 +2642,7 @@ __metadata:
     prosemirror-state: ^1.3.4
     prosemirror-transform: ^1.3.2
     prosemirror-view: ^1.18.2
-  checksum: d114529d90a7a10a7f3a1cbb9e5506c12bbb1f4480aeb6af104722ff99d7ff9793b9e5dcccc2b0c533662c0a1720fad82044237bd589f99c87189b655e66d937
+  checksum: fdca8d695ce3aaab805ab08fd7f8dd0d97e0f63cf053c415f9184ea494f55aac9f298cf0da92f79bb9cb90fe9a0b80c6151c2132626fb80247fcf42aefd7ebec
   languageName: node
   linkType: hard
 
@@ -2829,14 +2829,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-mention@npm:^2.0.0-beta.33":
-  version: 2.0.0-beta.33
-  resolution: "@tiptap/extension-mention@npm:2.0.0-beta.33"
+"@tiptap/extension-mention@npm:^2.0.0-beta.35":
+  version: 2.0.0-beta.35
+  resolution: "@tiptap/extension-mention@npm:2.0.0-beta.35"
   dependencies:
-    "@tiptap/suggestion": ^2.0.0-beta.33
+    "@tiptap/suggestion": ^2.0.0-beta.35
   peerDependencies:
     "@tiptap/core": ^2.0.0-beta.1
-  checksum: 87863e440af37916d621cbf64f49cd7676ef85509793288e6c90bb54da515fd4b9f48e56e39948535907f2bbcbaabf0fa76ad39cf279c8cf96d4e631c62871ed
+  checksum: 1a385d775717744cbd68453ff8bc70fe955610da2090207c1967ee4cd166da60bec7eea194e8f7b52367606baa85e6eacc99fe5fc3e5b0b3048d546244435eba
   languageName: node
   linkType: hard
 
@@ -2902,11 +2902,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/starter-kit@npm:^2.0.0-beta.28":
-  version: 2.0.0-beta.28
-  resolution: "@tiptap/starter-kit@npm:2.0.0-beta.28"
+"@tiptap/starter-kit@npm:^2.0.0-beta.30":
+  version: 2.0.0-beta.30
+  resolution: "@tiptap/starter-kit@npm:2.0.0-beta.30"
   dependencies:
-    "@tiptap/core": ^2.0.0-beta.32
+    "@tiptap/core": ^2.0.0-beta.34
     "@tiptap/extension-blockquote": ^2.0.0-beta.3
     "@tiptap/extension-bold": ^2.0.0-beta.3
     "@tiptap/extension-bullet-list": ^2.0.0-beta.3
@@ -2925,19 +2925,19 @@ __metadata:
     "@tiptap/extension-paragraph": ^2.0.0-beta.4
     "@tiptap/extension-strike": ^2.0.0-beta.4
     "@tiptap/extension-text": ^2.0.0-beta.3
-  checksum: 8012e4d2e94c7f2b600a9dc844d6cf75fe211d108c65c08d06c7843c63241c470ac8b8d51fd596196c571101452f590f0dcc9c99cd2e5b7be1ac522a657e840e
+  checksum: ea4fd0144153803cd126c45fa8cbacfb38215702811723bc91c1dfb37c08e2157859fee424308f21679a9a414bdce4c0fafa24fdb2f2bffc9e64333eb772a4aa
   languageName: node
   linkType: hard
 
-"@tiptap/suggestion@npm:^2.0.0-beta.33":
-  version: 2.0.0-beta.33
-  resolution: "@tiptap/suggestion@npm:2.0.0-beta.33"
+"@tiptap/suggestion@npm:^2.0.0-beta.35":
+  version: 2.0.0-beta.35
+  resolution: "@tiptap/suggestion@npm:2.0.0-beta.35"
   dependencies:
-    "@tiptap/core": ^2.0.0-beta.32
+    "@tiptap/core": ^2.0.0-beta.34
     prosemirror-model: ^1.14.0
     prosemirror-state: ^1.3.4
     prosemirror-view: ^1.18.2
-  checksum: f0c6bfad804329ab1bc7311f8aaca38ffd959820d77a2901526295411df13f629c5353c41b5d2fe459128119ed643cd6942b7d2b129f56b0fff409b9fb8afd52
+  checksum: 746fa4822750f1c7f1a4b7e7762b61365028cf386c90b23146b35adb9537fefe182d95e867dedd0c1db78c310acc3bdf4371b210ebda52fa3308be8d22d0cc39
   languageName: node
   linkType: hard
 
@@ -4370,6 +4370,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"attr-accept@npm:^2.2.1":
+  version: 2.2.2
+  resolution: "attr-accept@npm:2.2.2"
+  checksum: e9c5d3580f6cae9c5c25c5c9c8660d344dd8bed25e77df7515c046864fe1aa4bb245e743ad46f55b85443ff53c95e378b3203c3e83f2168a2557e94d0552d458
+  languageName: node
+  linkType: hard
+
 "audio-extensions@npm:0.0.0":
   version: 0.0.0
   resolution: "audio-extensions@npm:0.0.0"
@@ -5419,6 +5426,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^4.22.0
     "@typescript-eslint/parser": ^4.22.0
     concurrently: ^6.0.2
+    cross-env: ^7.0.3
     eslint: ^7.24.0
     eslint-config-prettier: ^8.2.0
     eslint-plugin-prettier: ^3.4.0
@@ -7474,6 +7482,15 @@ __metadata:
   version: 4.0.5
   resolution: "file-extension@npm:4.0.5"
   checksum: d78573810f4af09d655353f87353d9d5610c7a0e98f86d20261ef06492f39efa39c23892f2bb8de0dfe1f33b019caf1b6aa5dabff8ee633169c01fa63552b37e
+  languageName: node
+  linkType: hard
+
+"file-selector@npm:^0.2.2":
+  version: 0.2.4
+  resolution: "file-selector@npm:0.2.4"
+  dependencies:
+    tslib: ^2.0.3
+  checksum: 45258fb1218ba9362e1fd0fdfd25e40b18fd2473adf8a45436245a78310dc76d2fdde95463afe1f4e9e8c0ef178837eb0e5335978c0db348bc1dec425e510429
   languageName: node
   linkType: hard
 
@@ -12709,6 +12726,19 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"react-dropzone@npm:^11.3.2":
+  version: 11.3.2
+  resolution: "react-dropzone@npm:11.3.2"
+  dependencies:
+    attr-accept: ^2.2.1
+    file-selector: ^0.2.2
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ">= 16.8"
+  checksum: 805c53808fbd3040edccdc3fef8418e0bc3d3bafe79ab47335de25fc419b9b93ba14d375795f7cc9ae418c175b1c7f26dc784550be1087375cf67171a5cc4053
+  languageName: node
+  linkType: hard
+
 "react-fast-compare@npm:^3.0.1, react-fast-compare@npm:^3.2.0":
   version: 3.2.0
   resolution: "react-fast-compare@npm:3.2.0"
@@ -12934,9 +12964,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^1.8.2":
-  version: 1.8.2
-  resolution: "react-virtuoso@npm:1.8.2"
+"react-virtuoso@npm:^1.8.3":
+  version: 1.8.3
+  resolution: "react-virtuoso@npm:1.8.3"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.5
     "@virtuoso.dev/urx": ^0.2.5
@@ -12944,7 +12974,7 @@ fsevents@~2.3.1:
     resize-observer-polyfill: ^1.5.1
   peerDependencies:
     react: ">=16"
-  checksum: 4430e031d381d3eace1ff973685a6bef26e5d4d1a66a49d8f000c36f337b821cf6f3271f426fa9d07a83ce83f21519aadd1c6786c07cc7ba970bc836e440fad4
+  checksum: d3eb0869f1ddd1c50682ed81a5133d7e953201c0b1fa110af71e7cfcd0af8318d3f4ac2f5fe3b3993e79996df503de33d32c02064e701f96ab149289a22a393e
   languageName: node
   linkType: hard
 
@@ -13915,7 +13945,6 @@ resolve@^2.0.0-next.3:
     class-validator: ^0.13.1
     cookie-parser: ^1.4.5
     cors: ^2.8.5
-    cross-env: ^7.0.3
     dataloader: ^2.0.0
     dayjs: ^1.10.4
     express: ^4.17.1
@@ -13940,14 +13969,13 @@ resolve@^2.0.0-next.3:
     mime: ^2.5.2
     mudder: ^1.0.10
     nanoid: ^3.1.22
-    node-fetch: ^2.6.1
     reflect-metadata: ^0.1.13
     sharp: ^0.28.1
     ts-node: ^9.1.1
     ts-node-dev: ^1.1.6
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
-    validator: ^13.5.2
+    validator: ^13.6.0
     xss: ^1.0.8
   languageName: unknown
   linkType: soft
@@ -15927,6 +15955,13 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
+"validator@npm:^13.6.0":
+  version: 13.6.0
+  resolution: "validator@npm:13.6.0"
+  checksum: 6ae43bfd47ae7e3ed5803c6fff949c5cbabb4d248af38fce0ccafb637c85db8c0c5cee2a91817242865de4f5970d61de809f0975910ec78282307ffd23249466
+  languageName: node
+  linkType: hard
+
 "value-equal@npm:^1.0.1":
   version: 1.0.1
   resolution: "value-equal@npm:1.0.1"
@@ -16076,10 +16111,10 @@ typescript@^4.2.4:
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.5
     "@tiptap/extension-link": ^2.0.0-beta.5
-    "@tiptap/extension-mention": ^2.0.0-beta.33
+    "@tiptap/extension-mention": ^2.0.0-beta.35
     "@tiptap/extension-underline": ^2.0.0-beta.4
     "@tiptap/react": ^2.0.0-beta.21
-    "@tiptap/starter-kit": ^2.0.0-beta.28
+    "@tiptap/starter-kit": ^2.0.0-beta.30
     "@types/node": ^14.14.41
     "@types/react": ^17.0.3
     "@types/react-dom": ^17.0.3
@@ -16087,7 +16122,6 @@ typescript@^4.2.4:
     "@types/react-virtualized": ^9.21.11
     "@vitejs/plugin-react-refresh": ^1.3.2
     autoprefixer: ^10.2.5
-    cross-env: ^7.0.3
     date-fns: ^2.21.1
     dayjs: ^1.10.4
     dayjs-twitter: ^0.4.0
@@ -16116,6 +16150,7 @@ typescript@^4.2.4:
     react-dnd-html5-backend: ^14.0.0
     react-dnd-touch-backend: ^14.0.0
     react-dom: ^17.0.2
+    react-dropzone: ^11.3.2
     react-helmet-async: ^1.0.9
     react-hook-form: ^7.2.1
     react-hot-toast: ^1.0.2
@@ -16129,7 +16164,7 @@ typescript@^4.2.4:
     react-twitter-widgets: ^1.10.0
     react-use: ^17.2.3
     react-virtual: ^2.7.1
-    react-virtuoso: ^1.8.2
+    react-virtuoso: ^1.8.3
     sass: ^1.32.11
     sse-z: ^0.3.0
     string-hash: ^1.1.3
@@ -16138,7 +16173,7 @@ typescript@^4.2.4:
     tippy.js: ^6.3.1
     twemoji: ^13.0.2
     use-dark-mode: ^2.3.1
-    validator: ^13.5.2
+    validator: ^13.6.0
     vite: ^2.2.1
     vite-plugin-pwa: ^0.7.2
     zustand: ^3.4.1

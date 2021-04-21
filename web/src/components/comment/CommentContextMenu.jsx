@@ -1,7 +1,7 @@
 import { useCopyToClipboard } from 'react-use'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ServerPermission } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useParams } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'

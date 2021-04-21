@@ -7,7 +7,7 @@ import { useSetHomePage } from '@/hooks/useSetHomePage'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import Page from '@/components/ui/page/Page'
-import CreatePostHeader from '@/components/post/CreatePostHeader'
+import CreatePostHeader from '@/components/post/create/CreatePostHeader'
 
 export default function FeedPage() {
   const { t } = useTranslation()

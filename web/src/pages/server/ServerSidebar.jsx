@@ -1,6 +1,11 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
-import { IconChevronDown, IconUsers } from '@/components/ui/icons/Icons'
+import {
+  IconChevronDown,
+  IconHub,
+  IconUserAdd,
+  IconUsers
+} from '@/components/ui/icons/Icons'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +26,11 @@ export default function ServerSidebar() {
 
       <div className="px-1.5 pt-4">
         <SidebarItem>
-          <IconUsers className="mr-3 w-5 h-5" />
+          <IconHub className="mr-3 w-5 h-5" />
+          Hub
+        </SidebarItem>
+        <SidebarItem>
+          <IconUserAdd className="mr-3 w-5 h-5" />
           {t('server.invitePeople')}
         </SidebarItem>
 

@@ -5,7 +5,7 @@ import Posts from '@/components/post/Posts'
 import ServerFoldersSidebar from '@/pages/server/ServerFoldersSidebar'
 import { useSetServerPage } from '@/hooks/useSetServerPage'
 import Page from '@/components/ui/page/Page'
-import CreatePostHeader from '@/components/post/CreatePostHeader'
+import CreatePostHeader from '@/components/post/create/CreatePostHeader'
 
 export default function ServerPostsPage() {
   const { serverId } = useParams()

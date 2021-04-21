@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useState } from 'react'
-import { FolderVisibility } from '@/types/FolderVisibility'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import {
+  FolderVisibility,
   useDeleteFolderMutation,
   useFollowFolderMutation,
   useUnfollowFolderMutation,

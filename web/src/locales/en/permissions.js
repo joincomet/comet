@@ -1,5 +1,5 @@
-import { ServerPermission } from '@/types/ServerPermission'
-import { ChannelPermission } from '@/types/ChannelPermission'
+import { ServerPermission } from '@/graphql/hooks'
+import { ChannelPermission } from '@/graphql/hooks'
 
 export const permissions = {
   server: {
@@ -33,31 +33,11 @@ export const permissions = {
       title: 'Manage Nicknames',
       description: 'Allows members to change the nicknames of other members.'
     },
-    [ServerPermission.KickUser]: {
-      title: 'Kick Members',
-      description:
-        'Allows members to remove other members from this planet. Kicked members will be able to rejoin if they have' +
-        ' another invite, or the planet is public.'
-    },
-    [ServerPermission.BanUser]: {
-      title: 'Ban Members',
-      description:
-        'Allows members to permanently ban other members from this planet.'
-    },
 
     // Channels
     [ServerPermission.SendMessages]: {
       title: 'Send Messages',
       description: 'Allows members to send messages in text channels.'
-    },
-    [ServerPermission.EmbedLinks]: {
-      title: 'Embed Links',
-      description:
-        'Allows links that members share to show embedded content in text channels.'
-    },
-    [ServerPermission.AttachFiles]: {
-      title: 'Attach Files',
-      description: 'Allows members to upload files or media in text channels.'
     },
     [ServerPermission.Mention]: {
       title: 'Mention @everyone, @here, and All Roles',
@@ -131,10 +111,6 @@ export const permissions = {
       description:
         'Allows members to view this channel by default. Disabling this for @everyone will make this channel private.'
     },
-    [ChannelPermission.ManageChannel]: {
-      title: 'Manage Channel',
-      description: `Allows users to change this channel's name and description.`
-    },
     [ChannelPermission.ManagePermissions]: {
       title: 'Manage Permissions',
       description: `Allows users to change this channel's permissions.`
@@ -142,18 +118,6 @@ export const permissions = {
     [ChannelPermission.SendMessages]: {
       title: 'Send Messages',
       description: `Allows members to send messages in this channel.`
-    },
-    [ChannelPermission.EmbedLinks]: {
-      title: 'Embed Links',
-      description: `Allows links that members share to show embedded content in this channel.`
-    },
-    [ChannelPermission.AttachFiles]: {
-      title: 'Attach Files',
-      description: `Allows members to upload files or media in this channel.`
-    },
-    [ChannelPermission.Mention]: {
-      title: 'Mention @everyone, @here, and All Roles',
-      description: `Allows members to use @everyone or @here (only online members) in this channel. They can also @mention all roles in this channel, even if the role's "Allow anyone to mention this role" permission is disabled.`
     },
     [ChannelPermission.ManageMessages]: {
       title: 'Manage Messages',

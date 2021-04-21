@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ServerPermission } from '@/graphql/hooks'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import Dialog from '@/components/ui/dialog/Dialog'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useParams } from 'react-router-dom'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ServerPermission } from '@/graphql/hooks'
 
 export default function ChannelContextMenu({ channel, ContextMenuItem }) {
   const { t } = useTranslation()

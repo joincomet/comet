@@ -41,11 +41,10 @@
     "mime": "^2.5.2",
     "mudder": "^1.0.10",
     "nanoid": "^3.1.22",
-    "node-fetch": "^2.6.1",
     "reflect-metadata": "^0.1.13",
     "sharp": "^0.28.1",
     "type-graphql": "^1.1.1",
-    "validator": "^13.5.2",
+    "validator": "^13.6.0",
     "xss": "^1.0.8"
   },
   "devDependencies": {
@@ -58,7 +57,6 @@
     "@types/mime": "^2.0.3",
     "@types/node": "^14.14.41",
     "@types/sharp": "^0.28.0",
-    "cross-env": "^7.0.3",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0"

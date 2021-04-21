@@ -10,7 +10,7 @@ export default function Sidebar({ children, right = false, show = true }) {
       }`}
     >
       <div className="relative h-full w-full scrollbar-dark">{children}</div>
-      {!right && <CurrentUserInfo />}
+      {/*{!right && <CurrentUserInfo />}*/}
     </div>
   )
 }

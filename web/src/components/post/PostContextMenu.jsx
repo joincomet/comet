@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ServerPermission } from '@/graphql/hooks'
 import { useCopyToClipboard } from 'react-use'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import { useTogglePostPin } from '@/components/post/useTogglePostPin'

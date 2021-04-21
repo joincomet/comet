@@ -1,6 +1,6 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import { useTranslation } from 'react-i18next'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ServerPermission } from '@/graphql/hooks'
 import { useStore } from '@/hooks/useStore'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import SidebarFolder from '@/components/folder/SidebarFolder'

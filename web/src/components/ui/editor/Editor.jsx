@@ -54,7 +54,7 @@ export default function Editor({ text, setText }) {
   }, [editor, html, setText])
 
   return (
-    <div className="dark:bg-gray-700 rounded">
+    <div className="dark:bg-gray-750 rounded">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
       {/*<ContentEditable
@@ -108,7 +108,7 @@ function MenuBar({ editor }) {
   if (!editor) return null
 
   return (
-    <div className="min-h-[2.25rem] border-b dark:border-gray-650 flex flex-wrap items-center divide-x dark:divide-gray-650">
+    <div className="min-h-[2.25rem] border-b dark:border-gray-700 flex flex-wrap items-center divide-x dark:divide-gray-700">
       <FormatGroup>
         <FormatButton
           label="Bold (Ctrl+B)"
@@ -170,7 +170,6 @@ function MenuBar({ editor }) {
           />
         )}
 
-        <FormatButton label="Image" icon={IconFormatImage} />
         <FormatButton
           label="Divider"
           icon={IconFormatDivider}

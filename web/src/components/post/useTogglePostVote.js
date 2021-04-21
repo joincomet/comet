@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import toast from 'react-hot-toast'
-import { ServerPermission } from '@/types/ServerPermission'
+import { ServerPermission } from '@/graphql/hooks'
 import { useTranslation } from 'react-i18next'
 import { useUnvotePostMutation, useVotePostMutation } from '@/graphql/hooks'
 
