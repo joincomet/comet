@@ -16,24 +16,27 @@ export default function PostEmbed({ linkUrl, metadata }) {
   return (
     <div className="rounded-md flex">
       <div
-        className="rounded-l-md dark:bg-gray-750 flex flex-shrink-0 items-center justify-center h-24 w-24"
+        className="rounded-l-md dark:bg-gray-750 flex flex-shrink-0 items-center justify-center h-24 w-24 bg-contain bg-center"
         style={
           metadata?.image ? { backgroundImage: `url(${metadata?.image})` } : {}
         }
       >
         {!metadata?.image && <IconLinkWeb className="w-1/2 h-1/2 text-mid" />}
       </div>
-      <div className="dark:bg-gray-775 flex-grow rounded-r-md pl-4 flex flex-col py-2">
-        <div className="text-base text-primary">
+      <div className="dark:bg-gray-775 flex-grow rounded-r-md pl-4 pr-4 max-h-24 flex flex-col py-2">
+        <div className="text-base text-primary line-clamp-1">
           {metadata?.title ?? 'Title'}
         </div>
-        <div className="text-13 text-secondary pt-1">
-          {metadata?.description ?? 'Description'}
-        </div>
+        <div
+          className="text-13 text-secondary pt-0.5 line-clamp-2"
+          dangerouslySetInnerHTML={{
+            __html: metadata?.description ?? 'Description'
+          }}
+        />
         <div className="mt-auto text-11 text-tertiary flex items-center">
           {(!metadata || metadata?.logo) && (
             <div
-              className="h-4 w-4 mr-2 dark:bg-gray-725"
+              className="h-4 w-4 mr-2 dark:bg-gray-725 bg-contain bg-center"
               style={
                 metadata?.logo
                   ? { backgroundImage: `url(${metadata?.logo})` }

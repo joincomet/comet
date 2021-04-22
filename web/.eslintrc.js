@@ -23,6 +23,7 @@ module.exports = {
     'comma-dangle': 0,
     'no-unused-vars': 'off',
     'no-empty-catch-statements': 'off',
+    'prefer-const': 'off',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/no-unescaped-entities': 0,

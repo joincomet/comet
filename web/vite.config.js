@@ -33,14 +33,16 @@ export default defineConfig(({ command }) => ({
   plugins: [reactRefresh(), pwa],
   resolve: {
     alias: {
-      '@': resolve(__dirname, '/src')
+      '@': resolve(__dirname, '/src'),
+      'tailwind.config.js': resolve(__dirname, 'tailwind.config.js')
     }
   },
   server: {
     port: process.env.PORT ? +process.env.PORT : 3000
   },
   optimizeDeps: {
-    exclude: ['path']
+    exclude: ['path'],
+    include: ['tailwind.config.js']
   },
   css: {
     modules: {

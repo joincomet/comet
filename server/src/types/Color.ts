@@ -1,13 +1,13 @@
 import { registerEnumType } from 'type-graphql'
 
 export enum Color {
-  Red = 'red',
-  Yellow = 'yellow',
-  Green = 'green',
-  Blue = 'blue',
-  Indigo = 'indigo',
-  Purple = 'purple',
-  Pink = 'pink'
+  Red = 'Red',
+  Yellow = 'Yellow',
+  Green = 'Green',
+  Blue = 'Blue',
+  Indigo = 'Indigo',
+  Purple = 'Purple',
+  Pink = 'Pink'
 }
 
 registerEnumType(Color, { name: 'Color' })

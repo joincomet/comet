@@ -29,6 +29,8 @@ import { usePrevious } from 'react-use'
 import UserDialog from '@/components/user/UserDialog'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useMessagesSubscriptions } from '@/hooks/useMessagesSubscriptions'
+import BottomBar from '@/components/BottomBar'
+import { DndProvider } from 'react-dnd'
 
 export default function PrivateRoutes() {
   const [user, userLoading] = useCurrentUser()
@@ -56,39 +58,46 @@ export default function PrivateRoutes() {
           <SettingsPage />
         </PrivateRoute>
         <PrivateRoute path={['/me', '/explore', '/server']}>
-          <ServerList />
-          <PrivateRoute path="/me">
-            <HomeSidebar />
-            <Switch>
-              <PrivateRoute path="/me" exact>
-                <Redirect to="/me/feed" />
-              </PrivateRoute>
-              <PrivateRoute path="/me/feed">
-                <FeedPage />
-              </PrivateRoute>
-              <PrivateRoute path="/me/friends">
-                <FriendsPage />
-              </PrivateRoute>
-              <PrivateRoute path="/me/inbox">
-                <InboxPage />
-              </PrivateRoute>
-              <PrivateRoute path="/me/folder/:folderId">
-                <UserFolderPage />
-              </PrivateRoute>
-              <PrivateRoute path="/me/group/:groupId">
-                <GroupPage />
-              </PrivateRoute>
-              <PrivateRoute path="/me/dm/:userId">
-                <DmPage />
-              </PrivateRoute>
-            </Switch>
-          </PrivateRoute>
-          <PrivateRoute path="/explore">
-            <ExplorePage />
-          </PrivateRoute>
-          <PrivateRoute path="/server/:serverId">
-            <ServerRoutes />
-          </PrivateRoute>
+          <div className="flex flex-grow">
+            <ServerList />
+            <div className="flex-grow">
+              <div className="flex" style={{ height: 'calc(100% - 1.375rem)' }}>
+                <PrivateRoute path="/me">
+                  <HomeSidebar />
+                  <Switch>
+                    <PrivateRoute path="/me" exact>
+                      <Redirect to="/me/feed" />
+                    </PrivateRoute>
+                    <PrivateRoute path="/me/feed">
+                      <FeedPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/me/friends">
+                      <FriendsPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/me/inbox">
+                      <InboxPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/me/folder/:folderId">
+                      <UserFolderPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/me/group/:groupId">
+                      <GroupPage />
+                    </PrivateRoute>
+                    <PrivateRoute path="/me/dm/:userId">
+                      <DmPage />
+                    </PrivateRoute>
+                  </Switch>
+                </PrivateRoute>
+                <PrivateRoute path="/explore">
+                  <ExplorePage />
+                </PrivateRoute>
+                <PrivateRoute path="/server/:serverId">
+                  <ServerRoutes />
+                </PrivateRoute>
+              </div>
+              <BottomBar />
+            </div>
+          </div>
         </PrivateRoute>
       </Switch>
     </>

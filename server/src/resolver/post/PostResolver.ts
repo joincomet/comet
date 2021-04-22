@@ -10,10 +10,9 @@ import {
   PubSub,
   Query,
   Resolver,
-  ResolverInterface,
   Root
 } from 'type-graphql'
-import { Post } from '@/entity'
+import { LinkMetadata, Post } from '@/entity'
 import { Context } from '@/types'
 import {
   createPost,
@@ -33,6 +32,8 @@ import {
 } from './mutations'
 import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 import { PostsArgs, PostsResponse, posts, post } from '@/resolver/post/queries'
+import { scrapeMetadata } from '@/util'
+import { GraphQLURL } from 'graphql-scalars'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -149,5 +150,14 @@ export class PostResolver {
     notifyPostChanged: Publisher<ChangePayload>
   ): Promise<Post> {
     return unpinPost(ctx, input, notifyPostChanged)
+  }
+
+  @Authorized()
+  @Query(() => LinkMetadata)
+  async getLinkMeta(
+    @Ctx() ctx: Context,
+    @Arg('linkUrl', () => GraphQLURL) linkUrl: string
+  ): Promise<LinkMetadata> {
+    return scrapeMetadata(linkUrl)
   }
 }

@@ -28,7 +28,7 @@ export default function CreateServerDialog() {
     }
   })
   const [isOpen, setIsOpen] = useState(false)
-  const [privateServer, setPrivate] = useState(true)
+  const [isPublic, setPublic] = useState(true)
 
   const { handleSubmit, register, watch, reset } = useForm()
 
@@ -41,7 +41,7 @@ export default function CreateServerDialog() {
     if (!isOpen) return
     reset()
     setAvatarSrc(null)
-    setPrivate(true)
+    setPublic(true)
   }, [isOpen])
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function CreateServerDialog() {
 
   const { push } = useHistory()
 
-  const onSubmit = ({ name }) => {
+  const onSubmit = ({ name, avatarFile }) => {
     createServer({
       variables: {
         input: { name, avatarFile: avatarFile ? avatarFile[0] : null }
@@ -97,7 +97,7 @@ export default function CreateServerDialog() {
               {...register('avatarFile')}
               className="hidden"
               id="avatarFile"
-              accept="image/png, image/jpeg"
+              accept="image/png,image/jpeg,image/webp,image/gif"
             />
 
             {!avatarSrc ? (
@@ -144,11 +144,8 @@ export default function CreateServerDialog() {
               </Button>
             </div>
 
-            <Switch
-              checked={privateServer}
-              onChange={() => setPrivate(!privateServer)}
-            >
-              {t('server.create.requireInvite')}
+            <Switch checked={isPublic} onChange={() => setPublic(!isPublic)}>
+              Public Planet
             </Switch>
           </form>
         </div>

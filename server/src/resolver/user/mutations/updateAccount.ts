@@ -3,7 +3,7 @@ import { IsEmail, Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { User } from '@/entity'
-import { tagGenerator, uploadImageSingle } from '@/util'
+import { tagGenerator, uploadImageFileSingle } from '@/util'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 
 @InputType()
@@ -29,7 +29,7 @@ export async function updateAccount(
     name: name ?? user.name,
     email: email ?? user.email,
     avatarUrl: avatarFile
-      ? await uploadImageSingle(avatarFile, { width: 256, height: 256 })
+      ? await uploadImageFileSingle(avatarFile, { width: 256, height: 256 })
       : user.avatarUrl
   })
   while (

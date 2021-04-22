@@ -13,7 +13,7 @@ import {
   ServerUser,
   ServerUserStatus
 } from '@/entity'
-import { ReorderUtils, uploadImageSingle } from '@/util'
+import { ReorderUtils, uploadImageFileSingle } from '@/util'
 
 @InputType()
 export class CreateServerInput {
@@ -46,7 +46,7 @@ export async function createServer(
 
   let avatarUrl = null
   if (avatarFile) {
-    avatarUrl = await uploadImageSingle(
+    avatarUrl = await uploadImageFileSingle(
       avatarFile,
       {
         width: 256,

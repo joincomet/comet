@@ -1,6 +1,6 @@
 import got from 'got'
 import { LinkMetadata } from '@/entity'
-import { uploadImageSingle } from '@/util/s3'
+import { uploadImageUrl } from '@/util/s3'
 import { isUrl } from '@/util/isUrl'
 
 const metascraperTwitterCard = () => ({
@@ -55,6 +55,8 @@ export const scrapeMetadata = async (
   if (meta.description)
     meta.description = meta.description.replace(/(<([^>]+)>)/gi, '')
 
+  if (meta.date) meta.date = new Date(meta.date)
+
   const { image, logo } = meta
 
   const resize = {
@@ -64,16 +66,18 @@ export const scrapeMetadata = async (
 
   if (image) {
     try {
-      meta.image = await uploadImageSingle(image, resize)
-    } catch {
+      meta.image = await uploadImageUrl(image, resize)
+    } catch (e) {
+      console.error(e)
       delete meta.image
     }
   }
 
   if (logo) {
     try {
-      meta.logo = await uploadImageSingle(logo, resize)
-    } catch {
+      meta.logo = await uploadImageUrl(logo, resize)
+    } catch (e) {
+      console.error(e)
       delete meta.logo
     }
   }

@@ -8,4 +8,5 @@ fragment Metadata on LinkMetadata {
   title
   twitterCard
   url
+  domain
 }

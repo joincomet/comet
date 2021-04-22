@@ -118,6 +118,16 @@ export type CloseDmInput = {
   userId: Scalars['ID'];
 };
 
+export enum Color {
+  Blue = 'Blue',
+  Green = 'Green',
+  Indigo = 'Indigo',
+  Pink = 'Pink',
+  Purple = 'Purple',
+  Red = 'Red',
+  Yellow = 'Yellow'
+}
+
 export type Comment = BaseEntity & {
   __typename?: 'Comment';
   author?: Maybe<ServerUser>;
@@ -335,6 +345,7 @@ export type LinkMetadata = {
   author?: Maybe<Scalars['String']>;
   date?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
+  domain?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['URL']>;
   logo?: Maybe<Scalars['URL']>;
   publisher?: Maybe<Scalars['String']>;
@@ -975,6 +986,7 @@ export type Query = {
   channelUsers: Array<ServerUser>;
   comments: Array<Comment>;
   folder: Folder;
+  getLinkMeta: LinkMetadata;
   messages: Array<MessagesResponse>;
   post: Post;
   posts: Array<PostsResponse>;
@@ -998,6 +1010,11 @@ export type QueryCommentsArgs = {
 
 export type QueryFolderArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryGetLinkMetaArgs = {
+  linkUrl: Scalars['URL'];
 };
 
 
@@ -1339,6 +1356,7 @@ export type UpdateServerInput = {
 export type User = BaseEntity & {
   __typename?: 'User';
   avatarUrl?: Maybe<Scalars['URL']>;
+  color: Color;
   createdAt: Scalars['DateTime'];
   email: Scalars['EmailAddress'];
   folders: Array<Folder>;
@@ -1412,7 +1430,7 @@ export type MessageFragment = (
 
 export type MetadataFragment = (
   { __typename?: 'LinkMetadata' }
-  & Pick<LinkMetadata, 'author' | 'date' | 'description' | 'image' | 'logo' | 'publisher' | 'title' | 'twitterCard' | 'url'>
+  & Pick<LinkMetadata, 'author' | 'date' | 'description' | 'image' | 'logo' | 'publisher' | 'title' | 'twitterCard' | 'url' | 'domain'>
 );
 
 export type PostFragment = (
@@ -1476,7 +1494,7 @@ export type ServerUserFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'tag' | 'username' | 'avatarUrl' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus'>
+  & Pick<User, 'id' | 'name' | 'tag' | 'username' | 'avatarUrl' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus' | 'color'>
 );
 
 export type CreateChannelMutationVariables = Exact<{
@@ -2627,6 +2645,19 @@ export type FolderQuery = (
   ) }
 );
 
+export type GetLinkMetaQueryVariables = Exact<{
+  linkUrl: Scalars['URL'];
+}>;
+
+
+export type GetLinkMetaQuery = (
+  { __typename?: 'Query' }
+  & { getLinkMeta: (
+    { __typename?: 'LinkMetadata' }
+    & MetadataFragment
+  ) }
+);
+
 export type MessagesQueryVariables = Exact<{
   channelId?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['ID']>;
@@ -2961,6 +2992,7 @@ export const MetadataFragmentDoc = gql`
   title
   twitterCard
   url
+  domain
 }
     `;
 export const CommentFragmentDoc = gql`
@@ -3077,6 +3109,7 @@ export const UserFragmentDoc = gql`
   onlineStatus
   isCurrentUser
   relationshipStatus
+  color
 }
     `;
 export const ServerUserFragmentDoc = gql`
@@ -5898,6 +5931,41 @@ export function useFolderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Fol
 export type FolderQueryHookResult = ReturnType<typeof useFolderQuery>;
 export type FolderLazyQueryHookResult = ReturnType<typeof useFolderLazyQuery>;
 export type FolderQueryResult = Apollo.QueryResult<FolderQuery, FolderQueryVariables>;
+export const GetLinkMetaDocument = gql`
+    query getLinkMeta($linkUrl: URL!) {
+  getLinkMeta(linkUrl: $linkUrl) {
+    ...Metadata
+  }
+}
+    ${MetadataFragmentDoc}`;
+
+/**
+ * __useGetLinkMetaQuery__
+ *
+ * To run a query within a React component, call `useGetLinkMetaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLinkMetaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLinkMetaQuery({
+ *   variables: {
+ *      linkUrl: // value for 'linkUrl'
+ *   },
+ * });
+ */
+export function useGetLinkMetaQuery(baseOptions: Apollo.QueryHookOptions<GetLinkMetaQuery, GetLinkMetaQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLinkMetaQuery, GetLinkMetaQueryVariables>(GetLinkMetaDocument, options);
+      }
+export function useGetLinkMetaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLinkMetaQuery, GetLinkMetaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLinkMetaQuery, GetLinkMetaQueryVariables>(GetLinkMetaDocument, options);
+        }
+export type GetLinkMetaQueryHookResult = ReturnType<typeof useGetLinkMetaQuery>;
+export type GetLinkMetaLazyQueryHookResult = ReturnType<typeof useGetLinkMetaLazyQuery>;
+export type GetLinkMetaQueryResult = Apollo.QueryResult<GetLinkMetaQuery, GetLinkMetaQueryVariables>;
 export const MessagesDocument = gql`
     query messages($channelId: ID, $userId: ID, $groupId: ID, $pageSize: PositiveInt, $page: NonNegativeInt, $initialTime: DateTime) {
   messages(

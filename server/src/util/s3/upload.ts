@@ -21,7 +21,7 @@ export const uploadFileOrImage = async (
   const { createReadStream, mimetype, filename } = await file
   const ext = mime.getExtension(mimetype)
   if (imageMimeTypes.includes(mimetype)) {
-    return uploadImage(createReadStream, ext)
+    return uploadImageFile(createReadStream, ext)
   } else {
     const stream = createReadStream()
     let size = 0
@@ -38,16 +38,24 @@ export const uploadFileOrImage = async (
   }
 }
 
-export const uploadImageUrl = async (linkUrl: string): Promise<Image> => {
+export const uploadImageUrl = async (
+  linkUrl: string,
+  resize: ResizeOptions | null = null
+): Promise<string> => {
   const createStream = () => got.stream(linkUrl)
   const fileType = await FileType.fromStream(createStream())
   if (!imageMimeTypes.includes(fileType.mime))
     throw new Error('error.upload.invalidMime')
   const ext = fileType.ext
-  return uploadImage(createStream, ext)
+  const s = initSharp()
+  const body = createStream().pipe(s)
+  if (resize) {
+    s.resize(resize)
+  }
+  return s3upload(ext, body, fileType.mime)
 }
 
-export const uploadImage = async (
+export const uploadImageFile = async (
   createStream: () => any,
   ext: string
 ): Promise<Image> => {
@@ -97,7 +105,7 @@ export const uploadImage = async (
   }
 }
 
-export const uploadImageSingle = async (
+export const uploadImageFileSingle = async (
   file: FileUpload,
   resize: ResizeOptions | null = null,
   allowGif: boolean = false

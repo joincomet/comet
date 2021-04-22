@@ -3,7 +3,7 @@ import { ArrayMaxSize, Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { Post, Server, ServerPermission, User } from '@/entity'
-import { handleText, scrapeMetadata, uploadImageSingle } from '@/util'
+import { handleText, scrapeMetadata, uploadImageFileSingle } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { GraphQLURL } from 'graphql-scalars'
 
@@ -49,7 +49,7 @@ export async function createPost(
 
   if (images && images.length > 0) {
     for (const image of images) {
-      const imageUrl = await uploadImageSingle(image)
+      const imageUrl = await uploadImageFileSingle(image)
       imageUrls.push(imageUrl)
     }
   }

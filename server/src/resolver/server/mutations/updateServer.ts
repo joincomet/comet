@@ -3,7 +3,7 @@ import { Length } from 'class-validator'
 import { Server, ServerCategory, ServerPermission, User } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import { uploadImageSingle } from '@/util'
+import { uploadImageFileSingle } from '@/util'
 
 @InputType()
 export class UpdateServerInput {
@@ -77,10 +77,10 @@ export async function updateServer(
     featuredPosition: featuredPosition ?? server.featuredPosition,
     category: category ?? server.category,
     avatarUrl: avatarFile
-      ? await uploadImageSingle(avatarFile, { width: 256, height: 256 })
+      ? await uploadImageFileSingle(avatarFile, { width: 256, height: 256 })
       : server.avatarUrl,
     bannerUrl: bannerFile
-      ? await uploadImageSingle(bannerFile, { width: 920, height: 540 })
+      ? await uploadImageFileSingle(bannerFile, { width: 920, height: 540 })
       : server.bannerUrl,
     isPublic: isPublic ?? server.isPublic,
     systemMessagesChannel:

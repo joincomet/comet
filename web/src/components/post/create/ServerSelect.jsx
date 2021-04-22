@@ -1,7 +1,5 @@
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import ctl from '@netlify/classnames-template-literals'
-import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
-import { ServerPermission } from '@/graphql/hooks'
 import { Listbox, Transition } from '@headlessui/react'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { IconChevronDown } from '@/components/ui/icons/Icons'
@@ -26,6 +24,7 @@ const listboxClass = ctl(`
 `)
 
 const listboxOptionsClass = ctl(`
+  scrollbar-dark
   absolute
   w-full
   py-1

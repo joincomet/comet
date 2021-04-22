@@ -36,6 +36,8 @@ import {
   GraphQLNonNegativeInt,
   GraphQLURL
 } from 'graphql-scalars'
+import { Color } from '@/types'
+import { randomEnum } from '@/util'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -75,6 +77,10 @@ export class User extends BaseEntity {
   @Field()
   @Property()
   isAdmin: boolean = false
+
+  @Field(() => Color)
+  @Enum({ items: () => Color })
+  color: Color = randomEnum(Color)
 
   @Field()
   isCurrentUser: boolean

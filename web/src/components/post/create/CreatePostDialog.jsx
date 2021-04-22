@@ -1,23 +1,29 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
 import Editor from '@/components/ui/editor/Editor'
 import {
   IconFormatImage,
   IconLinkChain,
-  IconLinkWeb,
+  IconPlus,
   IconSpinner,
-  IconText
+  IconText,
+  IconX
 } from '@/components/ui/icons/Icons'
 import { useHistory, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ServerPermission, useCreatePostMutation } from '@/graphql/hooks'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import UserAvatar from '@/components/user/UserAvatar'
+import {
+  ServerPermission,
+  useCreatePostMutation,
+  useGetLinkMetaQuery
+} from '@/graphql/hooks'
 import Dialog from '@/components/ui/dialog/Dialog'
 import { useForm } from 'react-hook-form'
 import ServerSelect from '@/components/post/create/ServerSelect'
 import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
 import PostEmbed from '@/components/post/PostEmbed'
+import { useDropzone } from 'react-dropzone'
+import { isUrl } from '@/utils/isUrl'
+import { useDataUrls } from '@/hooks/useDataUrls'
 
 const labelClass = ctl(`
   block
@@ -41,6 +47,7 @@ const postBtnClass = ctl(`
   items-center
   disabled:cursor-not-allowed
   focus:outline-none
+  select-none
 `)
 
 const cancelBtnClass = ctl(`
@@ -51,6 +58,7 @@ const cancelBtnClass = ctl(`
   h-9
   flex
   items-center
+  select-none
 `)
 
 const tabClass = active =>
@@ -90,8 +98,23 @@ export default function CreatePostDialog({ open, setOpen }) {
   )
   const [server, setServer] = useState(servers?.find(s => s.id === serverId))
   const [currentTab, setCurrentTab] = useState(Tab.Text)
-  const { register, handleSubmit, reset, formState, watch } = useForm()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState,
+    watch,
+    setValue
+  } = useForm()
   const linkUrl = watch('linkUrl')
+  const title = watch('title')
+  const { data: linkMetaData, loading: loadingMeta } = useGetLinkMetaQuery({
+    variables: {
+      linkUrl
+    },
+    skip: !linkUrl || !isUrl(linkUrl)
+  })
+  const linkMeta = linkMetaData?.getLinkMeta
 
   const onSubmit = ({ title, linkUrl, text }) => {
     createPost({
@@ -110,6 +133,20 @@ export default function CreatePostDialog({ open, setOpen }) {
       push(post.relativeUrl)
     })
   }
+
+  const [files, setFiles] = useState([])
+  const onDrop = useCallback(acceptedFiles => {
+    if (!acceptedFiles || !acceptedFiles.length) return
+    setFiles(Array.from(acceptedFiles))
+  }, [])
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: ['image/gif', 'image/jpeg', 'image/png', 'image/webp'],
+    multiple: true
+  })
+  const dataUrls = useDataUrls(files)
+  useEffect(() => console.log({ files, dataUrls }), [dataUrls, files])
+  const [selectedImage, setSelectedImage] = useState(0)
 
   return (
     <Dialog isOpen={open} close={() => setOpen(false)}>
@@ -166,10 +203,15 @@ export default function CreatePostDialog({ open, setOpen }) {
 
           {currentTab === Tab.Link && (
             <>
-              <div className="pb-5 pt-0.5">
-                <span className="text-xs text-blue-500 hover:underline cursor-pointer">
-                  Use 'Example Title'
-                </span>
+              <div className="pb-5 pt-1.5">
+                {linkMeta?.title && title !== linkMeta?.title && (
+                  <span
+                    className="text-xs text-blue-500 hover:underline cursor-pointer line-clamp-1"
+                    onClick={() => setValue('title', linkMeta?.title)}
+                  >
+                    {linkMeta?.title}
+                  </span>
+                )}
               </div>
 
               <label
@@ -190,8 +232,69 @@ export default function CreatePostDialog({ open, setOpen }) {
                 />
               </div>
 
-              <PostEmbed linkUrl={linkUrl} />
+              <PostEmbed linkUrl={linkUrl} metadata={linkMeta} />
             </>
+          )}
+
+          {currentTab === Tab.Image && (
+            <div className="mt-5">
+              {dataUrls && dataUrls.length > 0 ? (
+                <div className="flex">
+                  <div className="flex scrollbar items-center space-x-3 overflow-x-auto border dark:border-gray-700 rounded-md h-31 px-3 max-w-full w-full">
+                    {dataUrls.map((url, i) => (
+                      <div
+                        key={i}
+                        onClick={() => setSelectedImage(i)}
+                        className={`cursor-pointer group relative rounded ${
+                          selectedImage === i
+                            ? 'border' + ' dark:border-gray-500'
+                            : ''
+                        }`}
+                      >
+                        <div
+                          className={`max-w-25 max-h-25 min-w-[6.25rem] min-h-[6.25rem] transform ${
+                            selectedImage === i ? 'scale-85' : ''
+                          }`}
+                        >
+                          <div
+                            className="absolute top-1 right-1 rounded-full bg-black p-0.5 hidden group-hover:block z-10"
+                            onClick={() => setFiles(files.splice(i, 1))}
+                          >
+                            <IconX className="w-4.5 h-4.5 text-white" />
+                          </div>
+                          <div className="absolute inset-0 bg-black rounded bg-opacity-0 group-hover:bg-opacity-50" />
+                          <div
+                            style={{ backgroundImage: `url(${url})` }}
+                            className={`max-w-25 max-h-25 min-w-[6.25rem] min-h-[6.25rem] bg-cover bg-center select-none rounded`}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <div className="w-25 h-25 rounded relative flex items-center justify-center border dark:border-gray-700 border-dashed cursor-pointer transition dark:hover:bg-gray-775">
+                      <input
+                        type="file"
+                        id="file"
+                        accept="image/png,image/jpeg,image/webp,image/gif"
+                        hidden
+                        onChange={e => setFiles([...files, e.target.files[0]])}
+                      />
+                      <label
+                        htmlFor="file"
+                        className="absolute inset-0 block"
+                      />
+                      <IconPlus className="w-1/2 h-1/2 text-tertiary" />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div {...getRootProps({})}>
+                  <input {...getInputProps()} />
+                  <div className="cursor-pointer flex items-center justify-center text-base text-tertiary h-30 border border-dashed dark:border-gray-700 rounded-md">
+                    Drag 'n' drop some images here, or click to select images
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           <div className="flex items-center pt-5">

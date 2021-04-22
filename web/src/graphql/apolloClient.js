@@ -5,6 +5,7 @@ import { onError } from '@apollo/client/link/error'
 import { RetryLink } from '@apollo/client/link/retry'
 import toast from 'react-hot-toast'
 import { isLiveQueryOperationDefinitionNode } from '@n1ru4l/graphql-live-query'
+import { UploadLink } from '@/graphql/upload'
 
 const url = import.meta.env.PROD
   ? `https://${import.meta.env.VITE_API_DOMAIN}/graphql`
@@ -32,7 +33,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 })
 
-const httpLink = new HttpLink({ uri: url, credentials: 'include' })
+const httpLink = new UploadLink({ uri: url, credentials: 'include' })
 
 const splitLink = new RetryLink().split(
   ({ query }) => {

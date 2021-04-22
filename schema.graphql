@@ -94,6 +94,16 @@ input CloseDmInput {
   userId: ID!
 }
 
+enum Color {
+  Blue
+  Green
+  Indigo
+  Pink
+  Purple
+  Red
+  Yellow
+}
+
 type Comment implements BaseEntity {
   author: ServerUser
   createdAt: DateTime!
@@ -320,6 +330,7 @@ type LinkMetadata {
   author: String
   date: DateTime
   description: String
+  domain: String
   image: URL
   logo: URL
   publisher: String
@@ -580,6 +591,7 @@ type Query {
   channelUsers(channelId: ID!): [ServerUser!]!
   comments(postId: ID, sort: CommentsSort = Top): [Comment!]!
   folder(id: ID!): Folder!
+  getLinkMeta(linkUrl: URL!): LinkMetadata!
   messages(channelId: ID, groupId: ID, initialTime: DateTime, page: NonNegativeInt = 0, pageSize: PositiveInt = 100, pinned: Boolean = false, userId: ID): [MessagesResponse!]!
   post(id: ID!): Post!
   posts(folderId: ID, page: NonNegativeInt = 0, pageSize: PositiveInt = 20, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): [PostsResponse!]!
@@ -871,6 +883,7 @@ scalar Upload
 
 type User implements BaseEntity {
   avatarUrl: URL
+  color: Color!
   createdAt: DateTime!
   email: EmailAddress!
   folders: [Folder!]!

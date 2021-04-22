@@ -9,7 +9,7 @@ import {
   UserFolder
 } from '@/entity'
 import { Context } from '@/types'
-import { uploadImageSingle } from '@/util'
+import { uploadImageFileSingle } from '@/util'
 
 @InputType()
 export class UpdateFolderInput {
@@ -57,7 +57,7 @@ export async function updateFolder(
     isCollaborative: isCollaborative ?? folder.isCollaborative,
     visibility: visibility ?? folder.visibility,
     avatarUrl: avatarFile
-      ? await uploadImageSingle(avatarFile, { width: 256, height: 256 })
+      ? await uploadImageFileSingle(avatarFile, { width: 256, height: 256 })
       : folder.avatarUrl
   })
 

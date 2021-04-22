@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import { IconUser } from '@/components/ui/icons/Icons'
 import Avatar from '@/components/ui/Avatar'
+import { colorsMap } from '@/utils/colorsMap'
 
 export default forwardRef(
   (
@@ -20,8 +21,11 @@ export default forwardRef(
         ref={ref}
         avatarUrl={user?.avatarUrl}
         loading={loading}
-        className={`${className} bg-gray-200 dark:bg-gray-650 cursor-pointer`}
+        className={`${className} cursor-pointer`}
         size={size}
+        style={
+          !user?.avatarUrl ? { backgroundColor: colorsMap[user?.color] } : {}
+        }
       >
         {showOnline && (
           <div
@@ -30,7 +34,7 @@ export default forwardRef(
             }`}
           />
         )}
-        {!user?.avatarUrl && <IconUser className="text-mid w-2/3 h-2/3" />}
+        {!user?.avatarUrl && <IconUser className="text-primary w-2/3 h-2/3" />}
       </Avatar>
     )
   }

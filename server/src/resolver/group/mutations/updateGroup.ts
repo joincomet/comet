@@ -3,7 +3,7 @@ import { Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { Group, User } from '@/entity'
-import { uploadImageSingle } from '@/util'
+import { uploadImageFileSingle } from '@/util'
 
 @InputType()
 export class UpdateGroupInput {
@@ -28,7 +28,7 @@ export async function updateGroup(
   em.assign(group, {
     name: name ?? group.name,
     avatarUrl: avatarFile
-      ? await uploadImageSingle(avatarFile, { width: 256, height: 256 })
+      ? await uploadImageFileSingle(avatarFile, { width: 256, height: 256 })
       : group.avatarUrl
   })
   await em.persistAndFlush(group)
