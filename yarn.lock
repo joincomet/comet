@@ -4639,6 +4639,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^2.2.4
     "@typescript-eslint/eslint-plugin": ^4.22.0
     "@typescript-eslint/parser": ^4.22.0
+    concurrently: ^6.0.2
     eslint: ^7.24.0
     eslint-config-prettier: ^8.2.0
     eslint-plugin-prettier: ^3.4.0
@@ -13077,7 +13078,6 @@ resolve@^2.0.0-next.3:
     argon2: ^0.27.2
     aws-sdk: ^2.891.0
     class-validator: ^0.13.1
-    concurrently: ^6.0.2
     cookie-parser: ^1.4.5
     cors: ^2.8.5
     cross-env: ^7.0.3

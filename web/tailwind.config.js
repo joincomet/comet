@@ -1,6 +1,11 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
 import colors from 'tailwindcss/colors'
 import plugin from 'tailwindcss/plugin'
+import formsPlugin from '@tailwindcss/forms'
+import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
+import typographyPlugin from '@tailwindcss/typography'
+import lineClampPlugin from '@tailwindcss/line-clamp'
+import scrollbarPlugin from 'tailwind-scrollbar'
 
 export default {
   mode: 'jit',
@@ -186,11 +191,11 @@ export default {
   },
   darkMode: 'class',
   plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/line-clamp'),
-    require('tailwind-scrollbar'),
+    formsPlugin,
+    aspectRatioPlugin,
+    typographyPlugin,
+    lineClampPlugin,
+    scrollbarPlugin,
     plugin(function ({ addVariant, e }) {
       addVariant('electron', ({ modifySelectors, separator }) => {
         const modified = modifySelectors(({ className }) => {

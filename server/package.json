@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
@@ -15,7 +15,6 @@
     "argon2": "^0.27.2",
     "aws-sdk": "^2.891.0",
     "class-validator": "^0.13.1",
-    "concurrently": "^6.0.2",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
