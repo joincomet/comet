@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
@@ -13,7 +13,7 @@
     "@n1ru4l/graphql-live-query": "^0.7.1",
     "@n1ru4l/in-memory-live-query-store": "^0.6.4",
     "argon2": "^0.27.2",
-    "aws-sdk": "^2.891.0",
+    "aws-sdk": "^2.892.0",
     "class-validator": "^0.13.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
