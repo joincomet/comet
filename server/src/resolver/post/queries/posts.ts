@@ -154,7 +154,7 @@ export async function posts(
         folder ? { folderPosts: { folder } } : {}
       ]
     },
-    ['author.roles', 'author.user', 'server', 'votes'],
+    ['author.roles', 'author.user', 'server'],
     orderBy,
     pageSize + 1, // get one extra to determine hasMore
     page * pageSize

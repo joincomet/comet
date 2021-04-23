@@ -12,6 +12,7 @@ query user($id: ID) @live {
       id
       avatarUrl
       name
+      initials
     }
   }
 }

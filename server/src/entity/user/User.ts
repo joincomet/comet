@@ -64,7 +64,7 @@ export class User extends BaseEntity {
   @Property({ nullable: true })
   lastLoginAt?: Date
 
-  @Field(() => GraphQLURL, { nullable: true })
+  @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 

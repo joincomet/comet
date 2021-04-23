@@ -20,6 +20,7 @@ import { userGroupsLoader } from '@/util/loaders/user/UserGroupsLoader'
 import { userUnreadCountLoader } from '@/util/loaders/user/UserUnreadCountLoader'
 import { channelRolePermissionsLoader } from '@/util/loaders/channel/ChannelRolePermissionsLoader'
 import { serverSystemMessagesChannelLoader } from '@/util/loaders/server'
+import { serverOnlineCountLoader } from '@/util/loaders/server'
 import {
   folderFollowingLoader,
   folderOwnerLoader,
@@ -46,6 +47,7 @@ export const createLoaders = (em: EntityManager, userId: string) => ({
   serverPermissionsLoader: serverPermissionsLoader(em, userId),
   serverRolesLoader: serverRolesLoader(em),
   serverSystemMessagesChannelLoader: serverSystemMessagesChannelLoader(em),
+  serverOnlineCountLoader: serverOnlineCountLoader(em),
 
   relatedUsersLoader: relatedUsersLoader(em, userId),
   relationshipStatusLoader: relationshipStatusLoader(em, userId),

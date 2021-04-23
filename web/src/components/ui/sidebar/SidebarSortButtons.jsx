@@ -17,6 +17,8 @@ function SortItem({ name, icon }) {
     postsSort === name &&
     (pathname === '/me/feed' || pathname === `/server/${serverId}/posts`)
 
+  const Icon = icon
+
   return (
     <SidebarItem
       onClick={() => {
@@ -25,7 +27,7 @@ function SortItem({ name, icon }) {
       }}
       active={active}
     >
-      {icon}
+      <Icon className="w-5 h-5 mr-3 text-tertiary" />
       {name}
     </SidebarItem>
   )
@@ -35,18 +37,9 @@ export default function SidebarSortButtons() {
   const { t } = useTranslation()
   return (
     <div className="space-y-0.5">
-      <SortItem
-        name={t('post.feed.sort.hot')}
-        icon={<IconHot className="w-5 h-5 mr-3" />}
-      />
-      <SortItem
-        name={t('post.feed.sort.new')}
-        icon={<IconNew className="w-5 h-5 mr-3" />}
-      />
-      <SortItem
-        name={t('post.feed.sort.top')}
-        icon={<IconTop className="w-5 h-5 mr-3" />}
-      />
+      <SortItem name={t('post.feed.sort.hot')} icon={IconHot} />
+      <SortItem name={t('post.feed.sort.new')} icon={IconNew} />
+      <SortItem name={t('post.feed.sort.top')} icon={IconTop} />
     </div>
   )
 }

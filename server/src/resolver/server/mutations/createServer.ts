@@ -63,7 +63,8 @@ export async function createServer(
     avatarUrl,
     category,
     isPublic,
-    systemMessagesChannel: channel
+    systemMessagesChannel: channel,
+    userCount: 1
   })
   const serverFolder = em.create(ServerFolder, {
     server,

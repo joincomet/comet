@@ -10,12 +10,16 @@ export class VotePostInput {
 }
 
 export async function votePost(
-  { em, userId }: Context,
+  { em, userId }: Partial<Context>,
   { postId }: VotePostInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
   const user = await em.findOneOrFail(User, userId)
-  const post = await em.findOneOrFail(Post, postId, ['server'])
+  const post = await em.findOneOrFail(Post, postId, [
+    'author.roles',
+    'author.user',
+    'server'
+  ])
   let vote = await em.findOne(PostVote, { post, user })
   if (vote) throw new Error('Already voted this post')
   await user.checkServerPermission(

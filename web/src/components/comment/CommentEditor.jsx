@@ -3,7 +3,11 @@ import ctl from '@netlify/classnames-template-literals'
 import Editor from '@/components/ui/editor/Editor'
 import { IconSpinner } from '@/components/ui/icons/Icons'
 import { useTranslation } from 'react-i18next'
-import { useCreateCommentMutation } from '@/graphql/hooks'
+import {
+  CommentsDocument,
+  CurrentUserDocument,
+  useCreateCommentMutation
+} from '@/graphql/hooks'
 
 const commentBtnClass = ctl(`
   text-base
@@ -32,7 +36,22 @@ const cancelBtnClass = ctl(`
 
 export default function CommentEditor({ postId, parentCommentId, setOpen }) {
   const [text, setText] = useState('')
-  const [createComment, { loading }] = useCreateCommentMutation()
+  const [createComment, { loading }] = useCreateCommentMutation({
+    update(cache, { data: { createComment } }) {
+      const data = cache.readQuery({
+        query: CommentsDocument,
+        variables: { postId }
+      })
+      console.log(data)
+      cache.writeQuery({
+        query: CommentsDocument,
+        variables: { postId },
+        data: {
+          comments: [createComment, ...data.comments]
+        }
+      })
+    }
+  })
   const { t } = useTranslation()
 
   return (

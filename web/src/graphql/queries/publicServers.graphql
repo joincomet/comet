@@ -1,5 +1,6 @@
-query publicServers($sort: PublicServersSort, $category: ServerCategory) {
-  publicServers(sort: $sort, category: $category) {
+query publicServers($sort: PublicServersSort, $category: ServerCategory, $featured: Boolean) {
+  publicServers(sort: $sort, category: $category, featured: $featured) {
     ...Server
+    onlineCount
   }
 }

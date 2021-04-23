@@ -12,20 +12,36 @@ import {
 export const useToggleCommentVote = comment => {
   const { t } = useTranslation()
   const { serverId } = useParams()
-  const [vote] = useVoteCommentMutation()
-  const [unvote] = useUnvoteCommentMutation()
+  const [vote] = useVoteCommentMutation({
+    optimisticResponse: {
+      voteComment: {
+        ...comment,
+        isVoted: true,
+        voteCount: comment.voteCount + 1
+      }
+    }
+  })
+  const [unvote] = useUnvoteCommentMutation({
+    optimisticResponse: {
+      unvoteComment: {
+        ...comment,
+        isVoted: false,
+        voteCount: comment.voteCount - 1
+      }
+    }
+  })
   const [canVote] = useHasServerPermissions({
     serverId,
     permissions: [ServerPermission.VoteComment]
   })
 
   return useCallback(() => {
-    const variables = { commentId: comment.id }
+    const input = { commentId: comment.id }
     if (!canVote) {
       toast.error(t('comment.context.votePermission'))
       return
     }
-    if (comment.isVoted) unvote({ variables })
-    else vote({ variables })
+    if (comment.isVoted) unvote({ variables: { input } })
+    else vote({ variables: { input } })
   }, [comment, canVote, vote, unvote, t])
 }

@@ -3,8 +3,8 @@ import UserAvatar from '@/components/user/UserAvatar'
 import { useStore } from '@/hooks/useStore'
 
 export default function UserPopup({
-  name,
   user,
+  nickname,
   roles = [],
   children,
   placement = 'right'
@@ -38,9 +38,17 @@ export default function UserPopup({
             </div>
 
             <div className="mt-3 text-base">
-              <span className="font-semibold text-primary">{user.name}</span>
-              <span className="text-tertiary">#{user.tag}</span>
+              <span className="font-semibold text-primary">
+                {nickname || user.name}
+              </span>
+              {!nickname && <span className="text-tertiary">#{user.tag}</span>}
             </div>
+
+            {nickname && (
+              <div className="text-13 text-tertiary font-semibold">
+                {user.name}
+              </div>
+            )}
           </div>
         )}
       >

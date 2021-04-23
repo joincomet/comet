@@ -11,8 +11,17 @@ export default function PostUsersSidebar({ post, users = [] }) {
   return (
     <Sidebar right show={showUsers}>
       <div className="px-1">
-        <SidebarLabel>{t('post.creator')}</SidebarLabel>
-        {post && <SidebarUser user={post.author} />}
+        {post?.author && (
+          <>
+            <SidebarLabel>{t('post.creator')}</SidebarLabel>
+            <SidebarUser
+              user={post.author?.user}
+              color={post.author?.color}
+              roles={post.author?.roles}
+              nickname={post.author?.nickname}
+            />
+          </>
+        )}
 
         {users && users.length > 0 && (
           <>
@@ -20,7 +29,13 @@ export default function PostUsersSidebar({ post, users = [] }) {
               {t('post.participantCount', { count: users.length })}
             </SidebarLabel>
             {users.map(user => (
-              <SidebarUser key={user.id} user={user} />
+              <SidebarUser
+                key={user.user.id}
+                user={user.user}
+                color={user.color}
+                roles={user.roles}
+                nickname={user.nickname}
+              />
             ))}
           </>
         )}

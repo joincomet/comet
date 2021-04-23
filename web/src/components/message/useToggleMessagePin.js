@@ -6,8 +6,8 @@ export const useToggleMessagePin = message => {
   const [unpin] = useUnpinMessageMutation()
 
   return useCallback(() => {
-    const variables = { messageId: message.id }
-    if (message.isPinned) unpin({ variables })
-    else pin({ variables })
+    const input = { messageId: message.id }
+    if (message.isPinned) unpin({ variables: { input } })
+    else pin({ variables: { input } })
   }, [message, pin, unpin])
 }

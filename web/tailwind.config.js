@@ -23,7 +23,8 @@ module.exports = {
         46: '11.5rem',
         55: '13.75rem',
         76: '19rem',
-        78: '19.5rem'
+        78: '19.5rem',
+        81: '20.25rem'
       },
       colors: {
         gray: {
@@ -64,7 +65,8 @@ module.exports = {
         grabbing: 'grabbing'
       },
       opacity: {
-        33: '0.333'
+        33: '0.333',
+        35: '0.35'
       },
       ringWidth: {
         3: '3px',

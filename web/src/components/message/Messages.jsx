@@ -83,7 +83,7 @@ export default function Messages({ channel, user, group }) {
     <>
       <div className="relative flex-1 overflow-x-hidden overflow-y-auto dark:bg-gray-750 w-full h-full">
         <Virtuoso
-          className="scrollbar"
+          className="scrollbar-custom"
           alignToBottom
           atBottomStateChange={isAtBottom => {
             atBottom.current = isAtBottom

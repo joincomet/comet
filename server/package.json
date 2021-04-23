@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
@@ -42,8 +42,10 @@
     "mudder": "^1.0.10",
     "nanoid": "^3.1.22",
     "reflect-metadata": "^0.1.13",
+    "sanitize-html": "^2.3.3",
     "sharp": "^0.28.1",
     "type-graphql": "^1.1.1",
+    "user-agents": "^1.0.630",
     "validator": "^13.6.0",
     "xss": "^1.0.8"
   },
@@ -56,7 +58,9 @@
     "@types/jsonwebtoken": "^8.5.1",
     "@types/mime": "^2.0.3",
     "@types/node": "^14.14.41",
+    "@types/sanitize-html": "^2.3.1",
     "@types/sharp": "^0.28.0",
+    "@types/user-agents": "^1.0.1",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0"

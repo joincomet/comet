@@ -37,7 +37,7 @@ const SMALL_MAX_HEIGHT = 300
 @ObjectType()
 export class Image {
   @Property({ columnType: 'text' })
-  @Field(() => GraphQLURL)
+  @Field()
   originalUrl: string
 
   @Property()
@@ -49,7 +49,7 @@ export class Image {
   originalHeight: number
 
   @Property({ columnType: 'text', nullable: true })
-  @Field(() => GraphQLURL, { nullable: true })
+  @Field({ nullable: true })
   smallUrl?: string
 
   @Field(() => GraphQLPositiveInt)
@@ -73,7 +73,7 @@ export class Image {
   }
 
   @Property({ columnType: 'text', nullable: true })
-  @Field(() => GraphQLURL, { nullable: true })
+  @Field({ nullable: true })
   popupUrl: string
 
   @Field(() => GraphQLPositiveInt)

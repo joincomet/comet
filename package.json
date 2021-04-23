@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.28",
+	"version": "0.0.29",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -25,7 +25,8 @@
 		"dev:electron": "yarn workspace web run dev:electron"
 	},
 	"dependencies": {
-		"graphql": "^15.4.0-experimental-stream-defer.1"
+		"graphql": "^15.4.0-experimental-stream-defer.1",
+		"validator": "^13.6.0"
 	},
 	"devDependencies": {
 		"@graphql-codegen/cli": "^1.21.4",

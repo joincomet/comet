@@ -4,20 +4,16 @@ import { GraphQLURL } from 'graphql-scalars'
 
 @Embeddable()
 @ObjectType()
-export class File {
+export class PostImage {
   @Property({ columnType: 'text' })
   @Field()
   url: string
 
-  @Property({ columnType: 'text' })
-  @Field()
-  mime: string
+  @Property({ nullable: true, columnType: 'text' })
+  @Field({ nullable: true })
+  linkUrl?: string
 
-  @Property({ columnType: 'text' })
-  @Field()
-  filename: string
-
-  @Property()
-  @Field()
-  size: number
+  @Property({ nullable: true, columnType: 'text' })
+  @Field({ nullable: true })
+  caption?: string
 }

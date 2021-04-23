@@ -15,7 +15,7 @@ export class Folder extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   description?: string
 
-  @Field(() => GraphQLURL, { nullable: true })
+  @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 

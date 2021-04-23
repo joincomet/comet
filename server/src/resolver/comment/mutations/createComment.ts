@@ -7,6 +7,7 @@ import {
   Post,
   Reply,
   ServerPermission,
+  ServerUser,
   User
 } from '@/entity'
 import { handleText } from '@/util'
@@ -39,6 +40,10 @@ export async function createComment(
 
   const post = await em.findOneOrFail(Post, postId, ['author.user'])
   const user = await em.findOneOrFail(User, userId)
+  const serverUser = await em.findOneOrFail(ServerUser, {
+    user,
+    server: post.server
+  })
   await user.checkServerPermission(
     em,
     post.server.id,
@@ -55,7 +60,7 @@ export async function createComment(
     text: text,
     parentComment,
     post,
-    author: user
+    author: serverUser
   })
 
   if (
@@ -73,7 +78,7 @@ export async function createComment(
 
   post.commentCount++
 
-  em.persist([comment, post])
+  await em.persistAndFlush([comment, post])
 
   let reply: Reply
   if (parentComment) {

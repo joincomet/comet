@@ -73,11 +73,14 @@ export class Server extends BaseEntity {
   @Property({ unsigned: true })
   userCount: number = 0
 
-  @Field(() => GraphQLURL, { nullable: true })
+  @Field(() => GraphQLNonNegativeInt)
+  onlineCount: number = 0
+
+  @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 
-  @Field(() => GraphQLURL, { nullable: true })
+  @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   bannerUrl?: string
 
@@ -114,7 +117,7 @@ export class Server extends BaseEntity {
 
   @Field()
   @Property()
-  isPublic: boolean = false
+  isPublic: boolean = true
 
   @Field()
   @Property()
@@ -131,6 +134,6 @@ export class Server extends BaseEntity {
     return this.name
       .split(' ')
       .map(word => word[0])
-      .join()
+      .join('')
   }
 }

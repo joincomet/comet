@@ -32,7 +32,8 @@ export async function banUserFromServer(
     status: ServerUserStatus.Joined
   })
   serverUser.status = ServerUserStatus.Banned
-  await em.persistAndFlush(serverUser)
+  server.userCount--
+  await em.persistAndFlush([serverUser, server])
   liveQueryStore.invalidate(`User:${userId}`)
   return true
 }

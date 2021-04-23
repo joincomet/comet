@@ -2,9 +2,11 @@ import { forwardRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import ctl from '@netlify/classnames-template-literals'
 
-const className = large =>
+const className = (large, small) =>
   ctl(`
-  ${large ? 'h-11' : 'h-9'}
+  ${large && 'h-11'}
+  ${small && 'h-9'}
+  ${!large && !small && 'h-9'}
   group
   rounded
   cursor-pointer
@@ -21,6 +23,8 @@ const className = large =>
   select-none
   focus:outline-none
   relative
+  hover:text-gray-700
+  dark:hover:text-gray-300
 `)
 
 const activeClassName = ctl(`
@@ -32,7 +36,15 @@ const activeClassName = ctl(`
 
 export default forwardRef(
   (
-    { children, large = false, to, onClick, active = false, exact = false },
+    {
+      children,
+      large = false,
+      small = false,
+      to,
+      onClick,
+      active = false,
+      exact = false
+    },
     ref
   ) => {
     if (to)
@@ -40,7 +52,9 @@ export default forwardRef(
         <NavLink
           ref={ref}
           to={to}
-          className={`${className(large)} ${active ? activeClassName : ''}`}
+          className={`${className(large, small)} ${
+            active ? activeClassName : ''
+          }`}
           activeClassName={activeClassName}
           exact={exact}
         >
@@ -52,7 +66,9 @@ export default forwardRef(
       <button
         ref={ref}
         onClick={onClick}
-        className={`${className(large)} ${active ? activeClassName : ''}`}
+        className={`${className(large, small)} ${
+          active ? activeClassName : ''
+        }`}
       >
         {children}
       </button>

@@ -7,6 +7,7 @@ import { ServerCategory } from '@/graphql/hooks'
 import { useCategoryIcon } from '@/hooks/useCategoryIcon'
 import { useTranslation } from 'react-i18next'
 import { VectorLogoIcon } from '@/components/ui/vectors/VectorLogoIcon'
+import { useMemo } from 'react'
 
 function Category({ category }) {
   const { t } = useTranslation()
@@ -47,7 +48,13 @@ function Sort({ sort, label, icon }) {
 
 export default function ExploreSidebar() {
   const { t } = useTranslation()
-  const categories = Object.keys(ServerCategory)
+  const categories = useMemo(() => {
+    let c = Object.keys(ServerCategory)
+    // Make 'Other' last
+    const removed = c.splice(c.indexOf(ServerCategory.Other), 1)
+    c.push(...removed)
+    return c
+  }, [])
 
   return (
     <Sidebar>
@@ -55,9 +62,8 @@ export default function ExploreSidebar() {
         <VectorLogoIcon className="w-5 h-5 mr-3" />
         {t('explore.title')}
       </div>
-      <div className="px-1.5 pb-6">
+      <div className="px-1.5">
         <div className="space-y-0.5">
-          <Sort label="Featured" sort="Featured" icon={IconFeatured} />
           <Sort label="Most Popular" sort="Top" icon={IconTop} />
           <Sort label="Recently Created" sort="New" icon={IconNew} />
         </div>
@@ -65,6 +71,7 @@ export default function ExploreSidebar() {
         <SidebarLabel>{t('explore.categories')}</SidebarLabel>
 
         <div className="space-y-0.5">
+          <Category category="Featured" />
           <Category category={null} />
           {categories.map(category => (
             <Category key={category} category={category} />

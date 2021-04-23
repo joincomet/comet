@@ -1,4 +1,5 @@
 export const category = {
+  Featured: 'Featured',
   Arts: 'Arts',
   Business: 'Business',
   Culture: 'Culture',

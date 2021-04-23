@@ -7,7 +7,6 @@ export default forwardRef(
   (
     {
       user,
-      server,
       loading = 'eager',
       size = 12,
       showOnline = false,

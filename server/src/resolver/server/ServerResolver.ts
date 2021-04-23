@@ -45,7 +45,7 @@ import {
   updateServer,
   UpdateServerInput
 } from './mutations'
-import { GraphQLVoid } from 'graphql-scalars'
+import { GraphQLNonNegativeInt, GraphQLVoid } from 'graphql-scalars'
 
 @Resolver(() => Server)
 export class ServerResolver {
@@ -111,6 +111,14 @@ export class ServerResolver {
     @Root() server: Server
   ): Promise<Channel> {
     return serverSystemMessagesChannelLoader.load(server.id)
+  }
+
+  @FieldResolver(() => GraphQLNonNegativeInt)
+  async onlineCount(
+    @Ctx() { loaders: { serverOnlineCountLoader } }: Context,
+    @Root() server: Server
+  ): Promise<number> {
+    return serverOnlineCountLoader.load(server.id)
   }
 
   // --- Queries ---

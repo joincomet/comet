@@ -59,11 +59,15 @@ export default function Comment({
           <ContextMenuTrigger
             data={{ type: ContextMenuType.User, user: comment.author }}
           >
-            <UserPopup user={comment.author}>
+            <UserPopup
+              user={comment.author?.user}
+              nickname={comment.author?.nickname}
+              roles={comment.author?.roles}
+            >
               <UserAvatar
                 size={7}
                 className="cursor-pointer transition hover:opacity-90"
-                user={comment.author}
+                user={comment.author?.user}
               />
             </UserPopup>
           </ContextMenuTrigger>

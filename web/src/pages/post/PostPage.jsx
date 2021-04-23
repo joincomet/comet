@@ -24,7 +24,7 @@ export default function PostPage() {
 
   const { data } = usePostQuery({
     variables: {
-      postId
+      id: postId
     }
   })
   const post = data?.post
@@ -37,14 +37,13 @@ export default function PostPage() {
     [commentsData?.comments]
   )
   const users = useMemo(() => getParticipants(comments), [comments])
-  const showUsers = useStore(s => s.showUsers)
 
   return (
     <Page
       header={<PostHeader post={post} />}
       rightSidebar={<PostUsersSidebar post={post} users={users} />}
     >
-      <div className="max-h-full h-full scrollbar dark:bg-gray-750">
+      <div className="max-h-full h-full scrollbar-custom dark:bg-gray-750">
         <div className="pt-4 px-4">
           {!!post && <Post post={post} isPostPage />}
         </div>

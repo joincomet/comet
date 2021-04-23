@@ -23,7 +23,7 @@ export class Group extends BaseEntity {
   @Property({ columnType: 'text' })
   name: string
 
-  @Field(() => GraphQLURL, { nullable: true })
+  @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   avatarUrl?: string
 

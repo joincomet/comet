@@ -1,7 +1,6 @@
 import ExploreSidebar from '@/pages/explore/ExploreSidebar'
 import { IconSearch } from '@/components/ui/icons/Icons'
 import ServerInfoCard from '@/components/server/ServerInfoCard'
-import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
 import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'
@@ -11,24 +10,19 @@ import { usePublicServersQuery } from '@/graphql/hooks'
 export default function ExplorePage() {
   const [page, setPage] = useState(0)
 
-  const [
-    exploreCategory,
-    setExploreCategory,
-    exploreSort,
-    setExploreSort
-  ] = useStore(s => [
+  const [exploreCategory, exploreSort] = useStore(s => [
     s.exploreCategory,
-    s.setExploreCategory,
-    s.exploreSort,
-    s.setExploreSort
+    s.exploreSort
   ])
-
-  const { t } = useTranslation()
 
   const { data } = usePublicServersQuery({
     variables: {
       sort: exploreSort,
-      category: exploreCategory,
+      category:
+        exploreCategory && exploreCategory !== 'Featured'
+          ? exploreCategory
+          : null,
+      featured: exploreCategory === 'Featured',
       page,
       pageSize: 20
     }

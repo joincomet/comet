@@ -32,7 +32,8 @@ export async function kickUserFromServer(
     status: ServerUserStatus.Joined
   })
   serverUser.status = ServerUserStatus.None
-  await em.persistAndFlush(serverUser)
+  server.userCount--
+  await em.persistAndFlush([serverUser, server])
   liveQueryStore.invalidate(`User:${userId}`)
   return true
 }

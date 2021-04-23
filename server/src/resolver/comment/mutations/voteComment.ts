@@ -15,7 +15,11 @@ export async function voteComment(
   notifyCommentChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
   const user = await em.findOneOrFail(User, userId)
-  const comment = await em.findOneOrFail(Comment, commentId, ['post.server'])
+  const comment = await em.findOneOrFail(Comment, commentId, [
+    'author.user',
+    'author.roles',
+    'post.server'
+  ])
   let vote = await em.findOne(CommentVote, { comment, user })
   if (vote) throw new Error('Already voted this comment')
   await user.checkServerPermission(

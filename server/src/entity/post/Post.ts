@@ -1,17 +1,15 @@
-import { Field, Int, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql'
 import {
   Comment,
   Folder,
   FolderPost,
   LinkMetadata,
+  PostImage,
   Server,
-  ServerUser,
-  User
+  ServerUser
 } from '@/entity'
 import { URL } from 'url'
-import { isUrl } from '@/util/isUrl'
 import {
-  ArrayType,
   Collection,
   Embedded,
   Entity,
@@ -23,7 +21,8 @@ import {
 } from '@mikro-orm/core'
 import { PostVote } from '@/entity/post/PostVote'
 import { BaseEntity } from '@/entity/BaseEntity'
-import { GraphQLNonNegativeInt, GraphQLURL } from 'graphql-scalars'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
+import isURL from 'validator/lib/isURL'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -36,7 +35,7 @@ export class Post extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   text?: string
 
-  @Field(() => GraphQLURL, { nullable: true })
+  @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   linkUrl?: string
 
@@ -48,9 +47,13 @@ export class Post extends BaseEntity {
   @Embedded(() => LinkMetadata, { object: true, array: true })
   linkMetadatas: LinkMetadata[] = []
 
+  @Field(() => [PostImage])
+  @Embedded(() => PostImage, { object: true, array: true })
+  images: PostImage[] = []
+
   @Field({ nullable: true })
   get thumbnailUrl(): string | null {
-    if (this.imageUrls && this.imageUrls.length > 0) return this.imageUrls[0]
+    if (this.images && this.images.length > 0) return this.images[0].url
     if (!this.linkUrl) return null
     if (this.linkMetadata && this.linkMetadata.image)
       return this.linkMetadata.image
@@ -59,13 +62,10 @@ export class Post extends BaseEntity {
     return null
   }
 
-  @Field(() => [String])
-  @Property({ type: ArrayType })
-  imageUrls: string[] = []
-
   @Field({ nullable: true })
   get domain(): string | null {
-    if (isUrl(this.linkUrl)) {
+    if (!this.linkUrl) return null
+    if (isURL(this.linkUrl)) {
       let domain = new URL(this.linkUrl).hostname
       if (domain.startsWith('www.')) domain = domain.substring(4)
       return domain

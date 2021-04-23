@@ -10,7 +10,7 @@ export function useMessages({ channel, group, user }) {
     channelId: channel?.id,
     groupId: group?.id,
     userId: user?.id,
-    initialTime: initialTime?.toString(),
+    initialTime: initialTime ? new Date(initialTime) : null,
     pageSize: 100,
     page
   }

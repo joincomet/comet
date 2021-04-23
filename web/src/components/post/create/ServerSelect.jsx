@@ -68,7 +68,7 @@ export default function ServerSelect({ servers = [], server, setServer }) {
                     <span className="block truncate pl-2">{server.name}</span>
                   </>
                 ) : (
-                  <span className="block truncate text-tertiary">
+                  <span className="block truncate text-red-400">
                     Select a planet
                   </span>
                 )}

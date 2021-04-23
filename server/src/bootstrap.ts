@@ -3,7 +3,7 @@ import { mikroOrmConf } from '@/config/mikroOrm'
 import { buildSchema } from 'type-graphql'
 import { typeGraphQLConf } from '@/config/typeGraphQL'
 import express from 'express'
-import { specifiedRules } from 'graphql'
+import { specifiedRules, validate as graphqlValidate } from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
 import { getGraphQLParameters, processRequest } from 'graphql-helix'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
@@ -24,8 +24,8 @@ export async function bootstrap() {
   // if (process.env.NODE_ENV !== 'production') {
   console.log(`Setting up the database...`)
   const generator = orm.getSchemaGenerator()
-  // await generator.dropSchema(false)
-  // await generator.createSchema(false)
+  await generator.dropSchema(false)
+  await generator.createSchema(false)
   await generator.updateSchema(false)
 
   //await seed(orm.em.fork())
@@ -75,7 +75,12 @@ export async function bootstrap() {
             loaders: createLoaders(em, userId)
           } as Context
         },
-        execute: liveQueryStore.execute
+        execute: liveQueryStore.execute,
+        formatPayload: ({ payload, document }) => {
+          if (payload.errors && payload.errors.length)
+            console.log(payload.errors)
+          return payload
+        }
       })
 
       if (result.type === 'RESPONSE') {

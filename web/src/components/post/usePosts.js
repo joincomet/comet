@@ -9,22 +9,26 @@ export function usePosts({ serverId, folderId }) {
     s.folderSort
   ])
   const [page, setPage] = useState(0)
-
-  const { data, loading } = usePostsQuery({
-    variables: {
-      pageSize: 20,
-      page,
-      sort: folderId ? folderSort : postsSort,
-      time: folderId ? null : postsTime,
-      serverId,
-      folderId
-    }
+  const variables = {
+    pageSize: 20,
+    page,
+    sort: folderId ? folderSort : postsSort,
+    time: folderId ? null : postsTime,
+    serverId,
+    folderId
+  }
+  const { data, loading, fetchMore } = usePostsQuery({
+    variables,
+    fetchPolicy: 'cache-and-network'
   })
 
   return [
     data?.posts.flatMap(res => res.posts),
     loading,
-    () => setPage(page + 1),
+    () => {
+      setPage(page + 1)
+      fetchMore({ variables })
+    },
     data && data.posts.length > 0
       ? data.posts[data.posts.length - 1].hasMore
       : false

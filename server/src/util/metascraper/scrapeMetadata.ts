@@ -1,7 +1,9 @@
 import got from 'got'
 import { LinkMetadata } from '@/entity'
 import { uploadImageUrl } from '@/util/s3'
-import { isUrl } from '@/util/isUrl'
+import isURL from 'validator/lib/isURL'
+import sanitizeHtml from 'sanitize-html'
+import UserAgent from 'user-agents'
 
 const metascraperTwitterCard = () => ({
   twitterCard: [
@@ -32,28 +34,37 @@ const timeout = 5000
 export const scrapeMetadata = async (
   targetUrl: string
 ): Promise<LinkMetadata> => {
-  if (!isUrl(targetUrl)) return null
+  if (!isURL(targetUrl)) return null
 
+  const userAgent = new UserAgent().toString()
   let res
   try {
-    res = await got(targetUrl, { timeout })
-  } catch {
+    res = await got(targetUrl, {
+      timeout,
+      headers: {
+        'user-agent': userAgent
+      }
+    })
+  } catch (e) {
     return null
   }
 
   const { body: html, url } = res
-  if (!isUrl(url)) return null
+  if (!isURL(url)) return null
 
   let meta
   try {
     meta = (await metascraper({ html, url })) as LinkMetadata
-  } catch {
+  } catch (e) {
     return null
   }
 
   // Strip HTML tags
   if (meta.description)
-    meta.description = meta.description.replace(/(<([^>]+)>)/gi, '')
+    meta.description = sanitizeHtml(meta.description, {
+      allowedTags: [],
+      allowedAttributes: {}
+    })
 
   if (meta.date) meta.date = new Date(meta.date)
 
@@ -68,7 +79,6 @@ export const scrapeMetadata = async (
     try {
       meta.image = await uploadImageUrl(image, resize)
     } catch (e) {
-      console.error(e)
       delete meta.image
     }
   }
@@ -77,7 +87,6 @@ export const scrapeMetadata = async (
     try {
       meta.logo = await uploadImageUrl(logo, resize)
     } catch (e) {
-      console.error(e)
       delete meta.logo
     }
   }

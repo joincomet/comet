@@ -42,6 +42,7 @@ export interface Context {
     serverPermissionsLoader: DataLoader<string, ServerPermission[]>
     serverRolesLoader: DataLoader<string, Role[]>
     serverSystemMessagesChannelLoader: DataLoader<string, Channel>
+    serverOnlineCountLoader: DataLoader<string, number>
 
     relatedUsersLoader: DataLoader<string, User[]>
     relationshipStatusLoader: DataLoader<string, RelationshipStatus>

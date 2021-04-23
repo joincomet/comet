@@ -34,7 +34,7 @@ export async function comments(
   const comments = await em.find(
     Comment,
     { post },
-    ['author', 'serverUser.roles', 'votes.user'],
+    ['author.user', 'author.roles'],
     sort === CommentsSort.Top
       ? { voteCount: QueryOrder.DESC, createdAt: QueryOrder.DESC }
       : { createdAt: QueryOrder.DESC }

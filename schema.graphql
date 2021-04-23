@@ -172,9 +172,15 @@ input CreateMessageInput {
   userId: ID
 }
 
+input CreatePostImagesInput {
+  caption: String
+  file: Upload!
+  linkUrl: String
+}
+
 input CreatePostInput {
-  images: [Upload!]
-  linkUrl: URL
+  images: [CreatePostImagesInput!]
+  linkUrl: String
   serverId: ID!
   text: String
   title: String!
@@ -240,11 +246,11 @@ type File {
   filename: String!
   mime: String!
   size: Float!
-  url: URL!
+  url: String!
 }
 
 type Folder implements BaseEntity {
-  avatarUrl: URL
+  avatarUrl: String
   createdAt: DateTime!
   description: String
   followerCount: NonNegativeInt!
@@ -275,7 +281,7 @@ input GlobalBanInput {
 }
 
 type Group implements BaseEntity {
-  avatarUrl: URL
+  avatarUrl: String
   createdAt: DateTime!
   displayName: String!
   id: ID!
@@ -293,13 +299,13 @@ scalar HexColorCode
 
 type Image {
   originalHeight: PositiveInt!
-  originalUrl: URL!
+  originalUrl: String!
   originalWidth: PositiveInt!
   popupHeight: PositiveInt!
-  popupUrl: URL
+  popupUrl: String
   popupWidth: PositiveInt!
   smallHeight: PositiveInt!
-  smallUrl: URL
+  smallUrl: String
   smallWidth: PositiveInt!
 }
 
@@ -331,12 +337,12 @@ type LinkMetadata {
   date: DateTime
   description: String
   domain: String
-  image: URL
-  logo: URL
+  image: String
+  logo: String
   publisher: String
   title: String
   twitterCard: String
-  url: URL
+  url: String
 }
 
 input LoginInput {
@@ -537,13 +543,13 @@ type Post implements BaseEntity {
   domain: String
   folders: [Folder!]
   id: ID!
-  imageUrls: [String!]!
+  images: [PostImage!]!
   isDeleted: Boolean!
   isPinned: Boolean!
   isVoted: Boolean!
   linkMetadata: LinkMetadata
   linkMetadatas: [LinkMetadata!]!
-  linkUrl: URL
+  linkUrl: String
   pinnedAt: DateTime
   relativeUrl: String!
   server: Server!
@@ -558,6 +564,12 @@ type PostChangedResponse {
   added: Post
   deleted: Post
   updated: Post
+}
+
+type PostImage {
+  caption: String
+  linkUrl: String
+  url: String!
 }
 
 type PostsResponse {
@@ -582,7 +594,6 @@ enum PostsTime {
 }
 
 enum PublicServersSort {
-  Featured
   New
   Top
 }
@@ -591,11 +602,11 @@ type Query {
   channelUsers(channelId: ID!): [ServerUser!]!
   comments(postId: ID, sort: CommentsSort = Top): [Comment!]!
   folder(id: ID!): Folder!
-  getLinkMeta(linkUrl: URL!): LinkMetadata!
+  getLinkMeta(linkUrl: String!): LinkMetadata
   messages(channelId: ID, groupId: ID, initialTime: DateTime, page: NonNegativeInt = 0, pageSize: PositiveInt = 100, pinned: Boolean = false, userId: ID): [MessagesResponse!]!
   post(id: ID!): Post!
   posts(folderId: ID, page: NonNegativeInt = 0, pageSize: PositiveInt = 20, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): [PostsResponse!]!
-  publicServers(category: ServerCategory, sort: PublicServersSort = Top): [Server!]!
+  publicServers(category: ServerCategory, featured: Boolean = false, sort: PublicServersSort = Top): [Server!]!
   replies(userId: ID!): [Reply!]!
   roleUsers(roleId: ID!): [ServerUser!]!
   user(id: ID): User
@@ -676,8 +687,8 @@ type Role implements BaseEntity {
 }
 
 type Server implements BaseEntity {
-  avatarUrl: URL
-  bannerUrl: URL
+  avatarUrl: String
+  bannerUrl: String
   category: ServerCategory!
   channels: [Channel!]!
   createdAt: DateTime!
@@ -693,6 +704,7 @@ type Server implements BaseEntity {
   name: String!
   nickname: String
   notificationSetting: NotificationSetting!
+  onlineCount: NonNegativeInt!
   owner: User!
   permissions: [ServerPermission!]!
   roles: [Role!]!
@@ -769,11 +781,6 @@ input TypingInput {
   groupId: ID
   userId: ID
 }
-
-"""
-A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
-"""
-scalar URL
 
 input UnbanUserFromServerInput {
   serverId: ID!
@@ -882,7 +889,7 @@ input UpdateServerInput {
 scalar Upload
 
 type User implements BaseEntity {
-  avatarUrl: URL
+  avatarUrl: String
   color: Color!
   createdAt: DateTime!
   email: EmailAddress!

@@ -24,8 +24,6 @@ export type Scalars = {
   NonNegativeInt: any;
   /** Integers that will have a value greater than 0. */
   PositiveInt: any;
-  /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
-  URL: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: any;
   /** Represents NULL values */
@@ -198,9 +196,15 @@ export type CreateMessageInput = {
   userId?: Maybe<Scalars['ID']>;
 };
 
+export type CreatePostImagesInput = {
+  caption?: Maybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  linkUrl?: Maybe<Scalars['String']>;
+};
+
 export type CreatePostInput = {
-  images?: Maybe<Array<Scalars['Upload']>>;
-  linkUrl?: Maybe<Scalars['URL']>;
+  images?: Maybe<Array<CreatePostImagesInput>>;
+  linkUrl?: Maybe<Scalars['String']>;
   serverId: Scalars['ID'];
   text?: Maybe<Scalars['String']>;
   title: Scalars['String'];
@@ -259,12 +263,12 @@ export type File = {
   filename: Scalars['String'];
   mime: Scalars['String'];
   size: Scalars['Float'];
-  url: Scalars['URL'];
+  url: Scalars['String'];
 };
 
 export type Folder = BaseEntity & {
   __typename?: 'Folder';
-  avatarUrl?: Maybe<Scalars['URL']>;
+  avatarUrl?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   followerCount: Scalars['NonNegativeInt'];
@@ -296,7 +300,7 @@ export type GlobalBanInput = {
 
 export type Group = BaseEntity & {
   __typename?: 'Group';
-  avatarUrl?: Maybe<Scalars['URL']>;
+  avatarUrl?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   displayName: Scalars['String'];
   id: Scalars['ID'];
@@ -311,13 +315,13 @@ export type Group = BaseEntity & {
 export type Image = {
   __typename?: 'Image';
   originalHeight: Scalars['PositiveInt'];
-  originalUrl: Scalars['URL'];
+  originalUrl: Scalars['String'];
   originalWidth: Scalars['PositiveInt'];
   popupHeight: Scalars['PositiveInt'];
-  popupUrl?: Maybe<Scalars['URL']>;
+  popupUrl?: Maybe<Scalars['String']>;
   popupWidth: Scalars['PositiveInt'];
   smallHeight: Scalars['PositiveInt'];
-  smallUrl?: Maybe<Scalars['URL']>;
+  smallUrl?: Maybe<Scalars['String']>;
   smallWidth: Scalars['PositiveInt'];
 };
 
@@ -346,12 +350,12 @@ export type LinkMetadata = {
   date?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
   domain?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['URL']>;
-  logo?: Maybe<Scalars['URL']>;
+  image?: Maybe<Scalars['String']>;
+  logo?: Maybe<Scalars['String']>;
   publisher?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   twitterCard?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['URL']>;
+  url?: Maybe<Scalars['String']>;
 };
 
 export type LoginInput = {
@@ -929,13 +933,13 @@ export type Post = BaseEntity & {
   domain?: Maybe<Scalars['String']>;
   folders?: Maybe<Array<Folder>>;
   id: Scalars['ID'];
-  imageUrls: Array<Scalars['String']>;
+  images: Array<PostImage>;
   isDeleted: Scalars['Boolean'];
   isPinned: Scalars['Boolean'];
   isVoted: Scalars['Boolean'];
   linkMetadata?: Maybe<LinkMetadata>;
   linkMetadatas: Array<LinkMetadata>;
-  linkUrl?: Maybe<Scalars['URL']>;
+  linkUrl?: Maybe<Scalars['String']>;
   pinnedAt?: Maybe<Scalars['DateTime']>;
   relativeUrl: Scalars['String'];
   server: Server;
@@ -951,6 +955,13 @@ export type PostChangedResponse = {
   added?: Maybe<Post>;
   deleted?: Maybe<Post>;
   updated?: Maybe<Post>;
+};
+
+export type PostImage = {
+  __typename?: 'PostImage';
+  caption?: Maybe<Scalars['String']>;
+  linkUrl?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
 };
 
 export type PostsResponse = {
@@ -976,7 +987,6 @@ export enum PostsTime {
 }
 
 export enum PublicServersSort {
-  Featured = 'Featured',
   New = 'New',
   Top = 'Top'
 }
@@ -986,7 +996,7 @@ export type Query = {
   channelUsers: Array<ServerUser>;
   comments: Array<Comment>;
   folder: Folder;
-  getLinkMeta: LinkMetadata;
+  getLinkMeta?: Maybe<LinkMetadata>;
   messages: Array<MessagesResponse>;
   post: Post;
   posts: Array<PostsResponse>;
@@ -1014,7 +1024,7 @@ export type QueryFolderArgs = {
 
 
 export type QueryGetLinkMetaArgs = {
-  linkUrl: Scalars['URL'];
+  linkUrl: Scalars['String'];
 };
 
 
@@ -1047,6 +1057,7 @@ export type QueryPostsArgs = {
 
 export type QueryPublicServersArgs = {
   category?: Maybe<ServerCategory>;
+  featured?: Maybe<Scalars['Boolean']>;
   sort?: Maybe<PublicServersSort>;
 };
 
@@ -1145,8 +1156,8 @@ export type Role = BaseEntity & {
 
 export type Server = BaseEntity & {
   __typename?: 'Server';
-  avatarUrl?: Maybe<Scalars['URL']>;
-  bannerUrl?: Maybe<Scalars['URL']>;
+  avatarUrl?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
   category: ServerCategory;
   channels: Array<Channel>;
   createdAt: Scalars['DateTime'];
@@ -1162,6 +1173,7 @@ export type Server = BaseEntity & {
   name: Scalars['String'];
   nickname?: Maybe<Scalars['String']>;
   notificationSetting: NotificationSetting;
+  onlineCount: Scalars['NonNegativeInt'];
   owner: User;
   permissions: Array<ServerPermission>;
   roles: Array<Role>;
@@ -1247,7 +1259,6 @@ export type TypingInput = {
   groupId?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['ID']>;
 };
-
 
 export type UnbanUserFromServerInput = {
   serverId: Scalars['ID'];
@@ -1355,7 +1366,7 @@ export type UpdateServerInput = {
 
 export type User = BaseEntity & {
   __typename?: 'User';
-  avatarUrl?: Maybe<Scalars['URL']>;
+  avatarUrl?: Maybe<Scalars['String']>;
   color: Color;
   createdAt: Scalars['DateTime'];
   email: Scalars['EmailAddress'];
@@ -1435,10 +1446,13 @@ export type MetadataFragment = (
 
 export type PostFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'title' | 'isPinned' | 'text' | 'linkUrl' | 'imageUrls' | 'relativeUrl' | 'commentCount' | 'voteCount' | 'isVoted' | 'thumbnailUrl' | 'domain' | 'isDeleted' | 'createdAt' | 'updatedAt'>
+  & Pick<Post, 'id' | 'title' | 'isPinned' | 'text' | 'linkUrl' | 'relativeUrl' | 'commentCount' | 'voteCount' | 'isVoted' | 'thumbnailUrl' | 'domain' | 'isDeleted' | 'createdAt' | 'updatedAt'>
   & { linkMetadata?: Maybe<(
     { __typename?: 'LinkMetadata' }
     & MetadataFragment
+  )>, images: Array<(
+    { __typename?: 'PostImage' }
+    & Pick<PostImage, 'url' | 'linkUrl' | 'caption'>
   )> }
 );
 
@@ -2646,16 +2660,16 @@ export type FolderQuery = (
 );
 
 export type GetLinkMetaQueryVariables = Exact<{
-  linkUrl: Scalars['URL'];
+  linkUrl: Scalars['String'];
 }>;
 
 
 export type GetLinkMetaQuery = (
   { __typename?: 'Query' }
-  & { getLinkMeta: (
+  & { getLinkMeta?: Maybe<(
     { __typename?: 'LinkMetadata' }
     & MetadataFragment
-  ) }
+  )> }
 );
 
 export type MessagesQueryVariables = Exact<{
@@ -2744,6 +2758,7 @@ export type PostsQuery = (
 export type PublicServersQueryVariables = Exact<{
   sort?: Maybe<PublicServersSort>;
   category?: Maybe<ServerCategory>;
+  featured?: Maybe<Scalars['Boolean']>;
 }>;
 
 
@@ -2751,6 +2766,7 @@ export type PublicServersQuery = (
   { __typename?: 'Query' }
   & { publicServers: Array<(
     { __typename?: 'Server' }
+    & Pick<Server, 'onlineCount'>
     & ServerFragment
   )> }
 );
@@ -2799,7 +2815,7 @@ export type UserQuery = (
       & UserFragment
     )>, servers: Array<(
       { __typename?: 'Server' }
-      & Pick<Server, 'nickname' | 'id' | 'avatarUrl' | 'name'>
+      & Pick<Server, 'nickname' | 'id' | 'avatarUrl' | 'name' | 'initials'>
     )> }
     & UserFragment
   )> }
@@ -3067,7 +3083,6 @@ export const PostFragmentDoc = gql`
   isPinned
   text
   linkUrl
-  imageUrls
   relativeUrl
   commentCount
   voteCount
@@ -3079,6 +3094,11 @@ export const PostFragmentDoc = gql`
   updatedAt
   linkMetadata {
     ...Metadata
+  }
+  images {
+    url
+    linkUrl
+    caption
   }
 }
     ${MetadataFragmentDoc}`;
@@ -5932,7 +5952,7 @@ export type FolderQueryHookResult = ReturnType<typeof useFolderQuery>;
 export type FolderLazyQueryHookResult = ReturnType<typeof useFolderLazyQuery>;
 export type FolderQueryResult = Apollo.QueryResult<FolderQuery, FolderQueryVariables>;
 export const GetLinkMetaDocument = gql`
-    query getLinkMeta($linkUrl: URL!) {
+    query getLinkMeta($linkUrl: String!) {
   getLinkMeta(linkUrl: $linkUrl) {
     ...Metadata
   }
@@ -6132,9 +6152,10 @@ export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
 export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
 export const PublicServersDocument = gql`
-    query publicServers($sort: PublicServersSort, $category: ServerCategory) {
-  publicServers(sort: $sort, category: $category) {
+    query publicServers($sort: PublicServersSort, $category: ServerCategory, $featured: Boolean) {
+  publicServers(sort: $sort, category: $category, featured: $featured) {
     ...Server
+    onlineCount
   }
 }
     ${ServerFragmentDoc}`;
@@ -6153,6 +6174,7 @@ export const PublicServersDocument = gql`
  *   variables: {
  *      sort: // value for 'sort'
  *      category: // value for 'category'
+ *      featured: // value for 'featured'
  *   },
  * });
  */
@@ -6253,6 +6275,7 @@ export const UserDocument = gql`
       id
       avatarUrl
       name
+      initials
     }
   }
 }

@@ -209,7 +209,7 @@ export default memo(function UserDialog() {
             <div className="transform translate-y-0.5">Folders</div>
           </button>
         </div>
-        <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar">
+        <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar-custom">
           {currentTab === tab.MutualServers &&
             mutualServers.map(server => (
               <Link
@@ -218,7 +218,11 @@ export default memo(function UserDialog() {
                 className={itemClass}
                 onClick={() => close()}
               >
-                <ServerAvatar server={server} size={10} />
+                <ServerAvatar
+                  server={server}
+                  size={10}
+                  className="dark:bg-gray-800"
+                />
                 <div className="pl-2.5 text-base text-secondary font-medium">
                   {server.name}
                 </div>

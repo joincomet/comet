@@ -17,9 +17,7 @@ export default function MessageContextMenu({ message, ContextMenuItem }) {
   const { serverId, channelId, userId, groupId } = useParams()
   const [canManageMessages] = useHasChannelPermissions({
     channelId,
-    serverId,
-    channelPermissions: [ChannelPermission.ManageMessages],
-    serverPermissions: [ServerPermission.ManageMessages]
+    permissions: [ChannelPermission.ManageMessages]
   })
   const copyToClipboard = useCopyToClipboard()[1]
   const [deleteMessage] = useDeleteMessageMutation()

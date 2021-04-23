@@ -1,8 +1,10 @@
 import {
   Arg,
   Args,
+  ArgsType,
   Authorized,
   Ctx,
+  Field,
   FieldResolver,
   ID,
   Mutation,
@@ -34,6 +36,16 @@ import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 import { PostsArgs, PostsResponse, posts, post } from '@/resolver/post/queries'
 import { scrapeMetadata } from '@/util'
 import { GraphQLURL } from 'graphql-scalars'
+import { URL } from 'url'
+import { IsUrl, MaxLength } from 'class-validator'
+
+@ArgsType()
+class GetLinkMetaArgs {
+  @Field()
+  @MaxLength(2000)
+  @IsUrl()
+  linkUrl: string
+}
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -153,11 +165,11 @@ export class PostResolver {
   }
 
   @Authorized()
-  @Query(() => LinkMetadata)
+  @Query(() => LinkMetadata, { nullable: true })
   async getLinkMeta(
     @Ctx() ctx: Context,
-    @Arg('linkUrl', () => GraphQLURL) linkUrl: string
+    @Args() { linkUrl }: GetLinkMetaArgs
   ): Promise<LinkMetadata> {
-    return scrapeMetadata(linkUrl)
+    return scrapeMetadata(linkUrl.toString())
   }
 }

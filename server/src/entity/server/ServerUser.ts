@@ -35,7 +35,6 @@ export class ServerUser {
   @Field(() => [Role])
   @ManyToMany({
     entity: () => Role,
-    owner: true,
     mappedBy: 'serverUsers',
     orderBy: { position: QueryOrder.ASC }
   })
@@ -56,7 +55,7 @@ export class ServerUser {
   @Field()
   get name(): string {
     if (this.nickname) return this.nickname
-    return this.user.name
+    return this.user?.name ?? ''
   }
 
   @Field({ nullable: true })

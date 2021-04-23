@@ -1,7 +1,6 @@
 import { ArgsType, Field, registerEnumType } from 'type-graphql'
 import { Context } from '@/types'
 import { Server, ServerCategory } from '@/entity'
-import { QueryOrder } from '@mikro-orm/core'
 
 @ArgsType()
 export class PublicServersArgs {
@@ -10,12 +9,14 @@ export class PublicServersArgs {
 
   @Field(() => ServerCategory, { nullable: true })
   category?: ServerCategory
+
+  @Field({ defaultValue: false })
+  featured: boolean = false
 }
 
 export enum PublicServersSort {
   New = 'New',
-  Top = 'Top',
-  Featured = 'Featured'
+  Top = 'Top'
 }
 
 registerEnumType(PublicServersSort, {
@@ -24,18 +25,20 @@ registerEnumType(PublicServersSort, {
 
 export async function publicServers(
   { em }: Context,
-  { sort, category }: PublicServersArgs
+  { sort, category, featured }: PublicServersArgs
 ): Promise<Server[]> {
   let where: any = {}
   let orderBy = {}
 
-  if (sort === PublicServersSort.Featured) {
-    where = { isFeatured: true }
-    orderBy = { featuredPosition: 'DESC' }
-  } else if (sort === PublicServersSort.New) {
+  if (sort === PublicServersSort.New) {
     orderBy = { createdAt: 'DESC' }
   } else if (sort === PublicServersSort.Top) {
-    orderBy = { userCount: 'DESC' }
+    orderBy = { userCount: 'DESC', createdAt: 'DESC' }
+  }
+
+  if (featured) {
+    where = { isFeatured: true }
+    orderBy = { featuredPosition: 'ASC' }
   }
 
   if (category) {

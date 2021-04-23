@@ -32,7 +32,7 @@ export const useStore = create((set, get) => ({
   canGoBack: false,
   setCanGoBack: canGoBack => set({ canGoBack }),
 
-  exploreSort: 'Featured',
+  exploreSort: 'Top',
   setExploreSort: exploreSort => set({ exploreSort }),
   exploreCategory: null,
   setExploreCategory: exploreCategory => set({ exploreCategory }),

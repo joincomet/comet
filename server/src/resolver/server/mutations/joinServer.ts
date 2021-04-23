@@ -1,7 +1,6 @@
 import { Server, ServerInvite, ServerUser, User } from '@/entity'
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
 
 @InputType()
@@ -45,7 +44,8 @@ export async function joinServer(
       ? ReorderUtils.positionBefore(firstServerJoin.position)
       : ReorderUtils.FIRST_POSITION
   })
-  await em.persistAndFlush(join)
+  server.userCount++
+  await em.persistAndFlush([join, server])
   liveQueryStore.invalidate(`User:${user.id}`)
   return server
 }

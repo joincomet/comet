@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
@@ -9,6 +9,8 @@ import UserPopup from '@/components/user/UserPopup'
 import { calendarDate } from '@/utils/timeUtils'
 import {
   IconChat,
+  IconChevrownLeft,
+  IconChevrownRight,
   IconDotsHorizontal,
   IconLinkWeb,
   IconText,
@@ -16,8 +18,8 @@ import {
 } from '@/components/ui/icons/Icons'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
-import useContextMenu from '@/hooks/use-context-menu'
 import { ContextMenuType } from '@/types/ContextMenuType'
+import PostEmbed from '@/components/post/PostEmbed'
 
 export default memo(function Post({
   post,
@@ -35,32 +37,30 @@ export default memo(function Post({
     })
   })
 
-  let type = ''
-  if (post.text) type = 'Text'
-  else if (post.linkUrl) type = post.domain
-  else if (post.imageUrls.length === 1) type = 'Image'
-  else if (post.imageUrls.length > 1) type = 'Image Album'
+  const type = useMemo(() => {
+    if (post.text) return 'Text'
+    else if (post.linkUrl) return post.domain
+    else if (post.images?.length === 1) return 'Image'
+    else if (post.images?.length > 1) return 'Image Album'
+  }, [post.domain, post.images?.length, post.linkUrl, post.text])
 
   const onClick = e => {
     e.stopPropagation()
     e.preventDefault()
   }
 
-  const contextMenu = useContextMenu()
-  const nameContextMenu = useContextMenu()
-  const avatarContextMenu = useContextMenu()
+  const [currentImage, setCurrentImage] = useState(0)
 
   return (
     <ContextMenuTrigger data={{ type: ContextMenuType.Post, post }}>
-      <Link
-        to={post.relativeUrl}
+      <div
         ref={dragRef}
         style={{ opacity }}
         className={`${className} cursor-pointer relative transition dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
       >
         {!isPostPage && (
           <div
-            className="w-28 h-18 flex-shrink-0 rounded dark:bg-gray-700 mr-3 flex items-center justify-center bg-center bg-cover bg-no-repeat"
+            className="w-26 flex-shrink-0 rounded dark:bg-gray-700 mr-3 flex items-center justify-center bg-center bg-cover bg-no-repeat"
             style={
               post.thumbnailUrl
                 ? { backgroundImage: `url(${post.thumbnailUrl})` }
@@ -78,20 +78,27 @@ export default memo(function Post({
           <ContextMenuTrigger
             data={{ type: ContextMenuType.User, user: post.author }}
           >
-            <UserPopup user={post.author}>
-              <UserAvatar user={post.author} size={7} />
+            <UserPopup
+              user={post.author?.user}
+              nickname={post.author?.nickname}
+              roles={post.author?.roles}
+            >
+              <UserAvatar user={post.author?.user} size={7} />
             </UserPopup>
           </ContextMenuTrigger>
         </div>
 
         <div className="pl-3 flex-grow">
-          <div className="flex items-end pb-2">
+          <div className="flex items-end pb-1">
             <div onClick={onClick}>
               <ContextMenuTrigger
                 data={{ type: ContextMenuType.User, user: post.author }}
               >
                 <UserPopup user={post.author}>
-                  <div className="hover:underline cursor-pointer text-sm font-medium text-accent leading-none">
+                  <div
+                    className="hover:underline cursor-pointer text-sm font-medium leading-none"
+                    style={{ color: post.author?.color }}
+                  >
                     {post.author.name}
                   </div>
                 </UserPopup>
@@ -103,22 +110,100 @@ export default memo(function Post({
             </div>
           </div>
 
-          <div className="text-primary text-base">{post.title}</div>
+          <Link to={post.relativeUrl} className="text-primary text-base">
+            {post.title}
+          </Link>
 
           {isPostPage && type && (
-            <div className="border-t dark:border-gray-750 mt-2 pt-2">
+            <div className="border-b dark:border-gray-750 mt-0.5 pb-2">
               {!!post.text && (
                 <div
                   dangerouslySetInnerHTML={{ __html: post.text }}
-                  className="prose prose-sm dark:prose-dark max-w-none"
+                  className="prose prose-sm dark:prose-dark max-w-none pt-0.5"
                 />
               )}
-              {post.imageUrls.length >= 1 && (
-                <img
-                  alt=""
-                  src={post.imageUrls[0]}
-                  className="max-w-screen-lg"
-                />
+
+              {!!post.linkUrl && (
+                <>
+                  {post.linkMetadata ? (
+                    <div className="max-w-screen-md w-full mt-2">
+                      <PostEmbed
+                        linkUrl={post.linkUrl}
+                        metadata={post.linkMetadata}
+                      />
+                    </div>
+                  ) : (
+                    <a
+                      href={post.linkUrl}
+                      target="_blank"
+                      rel="noopener nofollow noreferrer"
+                      className="text-sm text-blue-400 hover:underline cursor-pointer pt-0.5"
+                    >
+                      {post.linkUrl}
+                    </a>
+                  )}
+                </>
+              )}
+
+              {post.images?.length >= 1 && (
+                <div className="max-w-screen-md w-full mt-2">
+                  <div className="flex relative">
+                    <div className="aspect-h-9 aspect-w-16 relative flex w-full dark:bg-gray-775">
+                      {post.images.map((image, i) => (
+                        <img
+                          key={i}
+                          alt=""
+                          src={image.url}
+                          className={`w-full h-full object-contain select-none ${
+                            i === currentImage ? 'block' : 'hidden'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    {post.images.length > 1 && (
+                      <>
+                        {currentImage > 0 && (
+                          <div
+                            onClick={() => setCurrentImage(currentImage - 1)}
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 rounded-full shadow flex items-center justify-center w-10 h-10 dark:bg-white"
+                          >
+                            <IconChevrownLeft className="w-5 h-5 dark:text-black" />
+                          </div>
+                        )}
+
+                        {currentImage < post.images.length - 1 && (
+                          <div
+                            onClick={() => setCurrentImage(currentImage + 1)}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full shadow flex items-center justify-center w-10 h-10 dark:bg-white"
+                          >
+                            <IconChevrownRight className="w-5 h-5 dark:text-black" />
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  <div className="h-12 dark:bg-gray-750 flex items-center px-5 text-13 select-none">
+                    {post.images[currentImage].caption && (
+                      <div
+                        className="text-primary truncate pr-3"
+                        title={post.images[currentImage].caption}
+                      >
+                        {post.images[currentImage].caption}
+                      </div>
+                    )}
+
+                    {post.images[currentImage].linkUrl && (
+                      <a
+                        href={post.images[currentImage].linkUrl}
+                        target="_blank"
+                        rel="noopener nofollow noreferrer"
+                        className="ml-auto text-blue-400 hover:underline cursor-pointer"
+                      >
+                        {post.images[currentImage].linkUrl}
+                      </a>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           )}
@@ -173,7 +258,7 @@ export default memo(function Post({
             )}
           </div>
         </div>
-      </Link>
+      </div>
     </ContextMenuTrigger>
   )
 })

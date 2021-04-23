@@ -6,8 +6,8 @@ export const useTogglePostPin = post => {
   const [unpin] = useUnpinPostMutation()
 
   return useCallback(() => {
-    const variables = { postId: post.id }
-    if (post.isPinned) unpin({ variables })
-    else pin({ variables })
+    const input = { postId: post.id }
+    if (post.isPinned) unpin({ variables: { input } })
+    else pin({ variables: { input } })
   }, [post, pin, unpin])
 }

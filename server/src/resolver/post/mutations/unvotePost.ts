@@ -14,7 +14,11 @@ export async function unvotePost(
   { postId }: UnvotePostInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
-  const post = await em.findOneOrFail(Post, postId, ['server'])
+  const post = await em.findOneOrFail(Post, postId, [
+    'author.roles',
+    'author.user',
+    'server'
+  ])
   const user = await em.findOneOrFail(User, userId)
   const vote = await em.findOneOrFail(PostVote, { post, user })
   await user.checkServerPermission(

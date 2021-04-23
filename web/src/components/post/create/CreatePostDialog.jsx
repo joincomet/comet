@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import ctl from '@netlify/classnames-template-literals'
 import Editor from '@/components/ui/editor/Editor'
 import {
@@ -21,9 +21,10 @@ import { useForm } from 'react-hook-form'
 import ServerSelect from '@/components/post/create/ServerSelect'
 import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
 import PostEmbed from '@/components/post/PostEmbed'
-import { useDropzone } from 'react-dropzone'
-import { isUrl } from '@/utils/isUrl'
-import { useDataUrls } from '@/hooks/useDataUrls'
+import ContentEditable from '@/components/ui/editor/ContentEditable'
+import isURL from 'validator/es/lib/isURL'
+import { useDebounce } from 'react-use'
+import { canEmbed } from '@/components/ui/CustomEmbed'
 
 const labelClass = ctl(`
   block
@@ -81,6 +82,18 @@ const tabClass = active =>
   last:rounded-tr-xl
 `)
 
+const titleClass = ctl(`
+  px-4
+  h-10
+  placeholder-tertiary
+  dark:bg-gray-750
+  rounded
+  text-sm
+  text-primary
+  w-full
+  focus:outline-none
+`)
+
 const Tab = {
   Text: 'Text',
   Link: 'Link',
@@ -96,7 +109,9 @@ export default function CreatePostDialog({ open, setOpen }) {
   const servers = useJoinedServers().filter(s =>
     s.permissions.includes(ServerPermission.CreatePost)
   )
-  const [server, setServer] = useState(servers?.find(s => s.id === serverId))
+  const [server, setServer] = useState(
+    serverId ? servers?.find(s => s.id === serverId) : null
+  )
   const [currentTab, setCurrentTab] = useState(Tab.Text)
   const {
     register,
@@ -104,25 +119,118 @@ export default function CreatePostDialog({ open, setOpen }) {
     reset,
     formState,
     watch,
-    setValue
-  } = useForm()
+    setValue,
+    trigger
+  } = useForm({ mode: 'onChange' })
   const linkUrl = watch('linkUrl')
+  const [debouncedLinkUrl, setDebouncedLinkUrl] = useState('')
+  useDebounce(
+    () => {
+      setDebouncedLinkUrl(linkUrl)
+    },
+    500,
+    [linkUrl]
+  )
   const title = watch('title')
   const { data: linkMetaData, loading: loadingMeta } = useGetLinkMetaQuery({
     variables: {
-      linkUrl
+      linkUrl: debouncedLinkUrl
     },
-    skip: !linkUrl || !isUrl(linkUrl)
+    skip: !debouncedLinkUrl || !isURL(debouncedLinkUrl)
   })
   const linkMeta = linkMetaData?.getLinkMeta
 
-  const onSubmit = ({ title, linkUrl, text }) => {
+  const [images, setImages] = useState([])
+  function readFileAsDataURL(file) {
+    return new Promise(function (resolve, reject) {
+      let fr = new FileReader()
+
+      fr.onload = function () {
+        resolve(fr.result)
+      }
+
+      fr.onerror = function () {
+        reject(fr)
+      }
+
+      fr.readAsDataURL(file)
+    })
+  }
+
+  const onChangeImages = e => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      setImages(
+        Array.from(files).map(file => ({ file, caption: '', linkUrl: '' }))
+      )
+      let readers = []
+      for (let i = 0; i < files.length; i++) {
+        readers.push(readFileAsDataURL(files[i]))
+      }
+      Promise.all(readers).then(values =>
+        setImages(
+          values.map((data, i) => ({
+            file: files[i],
+            caption: '',
+            linkUrl: '',
+            data
+          }))
+        )
+      )
+    }
+  }
+  const onAddImages = e => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      setImages([
+        ...images,
+        ...Array.from(files).map(file => ({ file, caption: '', linkUrl: '' }))
+      ])
+      let readers = []
+      for (let i = 0; i < files.length; i++) {
+        readers.push(readFileAsDataURL(files[i]))
+      }
+      Promise.all(readers).then(values => {
+        setImages([
+          ...images,
+          ...values.map((data, i) => ({
+            file: files[i],
+            caption: '',
+            linkUrl: '',
+            data
+          }))
+        ])
+      })
+    }
+  }
+  const [selectedImage, setSelectedImage] = useState(0)
+
+  const close = () => {
+    setOpen(false)
+    setTimeout(() => {
+      setSelectedImage(0)
+      setImages([])
+      setCurrentTab(Tab.Text)
+      reset()
+    }, 300)
+  }
+
+  const onSubmit = ({ title, linkUrl }) => {
     createPost({
       variables: {
         input: {
           title,
-          text: text ? text : null,
-          serverId
+          text: text && currentTab === Tab.Text ? text : null,
+          linkUrl: linkUrl && currentTab === Tab.Link ? linkUrl : null,
+          serverId: server.id,
+          images:
+            images && images.length > 0 && currentTab === Tab.Image
+              ? images.map(({ file, caption, linkUrl }) => ({
+                  file,
+                  caption,
+                  linkUrl
+                }))
+              : null
         }
       }
     }).then(({ data }) => {
@@ -134,22 +242,8 @@ export default function CreatePostDialog({ open, setOpen }) {
     })
   }
 
-  const [files, setFiles] = useState([])
-  const onDrop = useCallback(acceptedFiles => {
-    if (!acceptedFiles || !acceptedFiles.length) return
-    setFiles(Array.from(acceptedFiles))
-  }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: ['image/gif', 'image/jpeg', 'image/png', 'image/webp'],
-    multiple: true
-  })
-  const dataUrls = useDataUrls(files)
-  useEffect(() => console.log({ files, dataUrls }), [dataUrls, files])
-  const [selectedImage, setSelectedImage] = useState(0)
-
   return (
-    <Dialog isOpen={open} close={() => setOpen(false)}>
+    <Dialog isOpen={open} close={close}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="max-w-screen-md w-full dark:bg-gray-800 text-left rounded-xl"
@@ -162,21 +256,34 @@ export default function CreatePostDialog({ open, setOpen }) {
           />
           <div
             className={tabClass(currentTab === Tab.Text)}
-            onClick={() => setCurrentTab(Tab.Text)}
+            onClick={() => {
+              setCurrentTab(Tab.Text)
+              setValue('linkUrl', '')
+              setImages([])
+            }}
           >
             <IconText className="mr-2 w-5 h-5" />
             Text
           </div>
           <div
             className={tabClass(currentTab === Tab.Link)}
-            onClick={() => setCurrentTab(Tab.Link)}
+            onClick={() => {
+              setCurrentTab(Tab.Link)
+              setText('')
+              setImages([])
+            }}
           >
             <IconLinkChain className="mr-2 w-5 h-5" />
             Link
           </div>
           <div
             className={tabClass(currentTab === Tab.Image)}
-            onClick={() => setCurrentTab(Tab.Image)}
+            onClick={() => {
+              setCurrentTab(Tab.Image)
+              setValue('linkUrl', '')
+              trigger('linkUrl')
+              setText('')
+            }}
           >
             <IconFormatImage className="mr-2 w-5 h-5" />
             Images
@@ -187,10 +294,14 @@ export default function CreatePostDialog({ open, setOpen }) {
           <div className="relative">
             <label htmlFor="title" className={labelClass}>
               Title
+              {title?.length > 0 && ` (${title?.length}/300)`}
             </label>
             <input
-              className="px-4 h-10 placeholder-tertiary dark:bg-gray-750 rounded text-sm text-primary w-full focus:outline-none"
-              {...register('title')}
+              maxLength={300}
+              className={titleClass}
+              {...register('title', {
+                required: true
+              })}
               id="title"
             />
           </div>
@@ -207,7 +318,10 @@ export default function CreatePostDialog({ open, setOpen }) {
                 {linkMeta?.title && title !== linkMeta?.title && (
                   <span
                     className="text-xs text-blue-500 hover:underline cursor-pointer line-clamp-1"
-                    onClick={() => setValue('title', linkMeta?.title)}
+                    onClick={() => {
+                      setValue('title', linkMeta?.title)
+                      trigger('title')
+                    }}
                   >
                     {linkMeta?.title}
                   </span>
@@ -220,78 +334,184 @@ export default function CreatePostDialog({ open, setOpen }) {
               >
                 Link URL
               </label>
-              <div className="relative h-10 mb-5">
+              <div className="relative h-10">
                 <IconLinkChain
                   className={`top-1/2 left-2.5 transform -translate-y-1/2 absolute w-5 h-5 text-mid`}
                 />
 
                 <input
-                  className="pl-10 pr-4 h-10 dark:bg-gray-750 rounded text-sm text-primary w-full focus:outline-none"
-                  {...register('linkUrl')}
+                  maxLength={2000}
+                  className="px-10 h-10 dark:bg-gray-750 rounded text-sm text-primary w-full focus:outline-none"
+                  {...register('linkUrl', {
+                    validate: url => !url || isURL(url)
+                  })}
                   id="linkUrl"
                 />
+
+                {loadingMeta && (
+                  <div className="top-1/2 right-2.5 transform -translate-y-1/2 absolute">
+                    <IconSpinner />
+                  </div>
+                )}
               </div>
 
-              <PostEmbed linkUrl={linkUrl} metadata={linkMeta} />
+              {linkUrl && !isURL(linkUrl) && (
+                <div className="text-13 text-red-400 pt-1">
+                  Must be a valid URL
+                </div>
+              )}
+
+              {debouncedLinkUrl &&
+                isURL(debouncedLinkUrl) &&
+                (linkMeta || canEmbed(debouncedLinkUrl)) && (
+                  <div className="mt-5">
+                    <PostEmbed linkUrl={debouncedLinkUrl} metadata={linkMeta} />
+                  </div>
+                )}
             </>
           )}
 
           {currentTab === Tab.Image && (
             <div className="mt-5">
-              {dataUrls && dataUrls.length > 0 ? (
-                <div className="flex">
-                  <div className="flex scrollbar items-center space-x-3 overflow-x-auto border dark:border-gray-700 rounded-md h-31 px-3 max-w-full w-full">
-                    {dataUrls.map((url, i) => (
-                      <div
-                        key={i}
-                        onClick={() => setSelectedImage(i)}
-                        className={`cursor-pointer group relative rounded ${
-                          selectedImage === i
-                            ? 'border' + ' dark:border-gray-500'
-                            : ''
-                        }`}
-                      >
+              {images && images.length > 0 ? (
+                <div>
+                  <div className="flex">
+                    <div className="flex scrollbar-custom items-center space-x-3 overflow-x-auto border dark:border-gray-700 rounded-md h-31 px-3 max-w-full w-full">
+                      {images.map((image, i) => (
                         <div
-                          className={`max-w-25 max-h-25 min-w-[6.25rem] min-h-[6.25rem] transform ${
-                            selectedImage === i ? 'scale-85' : ''
+                          key={i}
+                          onClick={() => setSelectedImage(i)}
+                          className={`cursor-pointer group relative rounded border ${
+                            selectedImage === i
+                              ? 'dark:border-gray-500'
+                              : 'dark:border-transparent'
                           }`}
                         >
                           <div
-                            className="absolute top-1 right-1 rounded-full bg-black p-0.5 hidden group-hover:block z-10"
-                            onClick={() => setFiles(files.splice(i, 1))}
+                            className={`max-w-25 max-h-25 min-w-[6.25rem] min-h-[6.25rem] transform ${
+                              selectedImage === i ? 'scale-85' : ''
+                            }`}
                           >
-                            <IconX className="w-4.5 h-4.5 text-white" />
+                            <div
+                              className="absolute top-1 right-1 rounded-full bg-black p-0.5 hidden group-hover:block z-10"
+                              onClick={() => {
+                                if (selectedImage >= i && selectedImage > 0) {
+                                  setImmediate(() =>
+                                    setSelectedImage(selectedImage - 1)
+                                  )
+                                }
+                                const newImages = images.slice()
+                                newImages.splice(i, 1)
+                                setImages(newImages)
+                              }}
+                            >
+                              <IconX className="w-4.5 h-4.5 text-white" />
+                            </div>
+                            <div className="absolute inset-0 bg-black rounded bg-opacity-0 group-hover:bg-opacity-50" />
+                            <div
+                              style={{ backgroundImage: `url(${image.data})` }}
+                              className={`max-w-25 max-h-25 min-w-[6.25rem] min-h-[6.25rem] bg-cover bg-center select-none rounded`}
+                            />
                           </div>
-                          <div className="absolute inset-0 bg-black rounded bg-opacity-0 group-hover:bg-opacity-50" />
-                          <div
-                            style={{ backgroundImage: `url(${url})` }}
-                            className={`max-w-25 max-h-25 min-w-[6.25rem] min-h-[6.25rem] bg-cover bg-center select-none rounded`}
-                          />
                         </div>
+                      ))}
+
+                      <div className="w-25 h-25 rounded relative flex items-center justify-center border dark:border-gray-700 border-dashed cursor-pointer transition dark:hover:bg-gray-775">
+                        <input
+                          type="file"
+                          id="file"
+                          accept="image/png,image/jpeg,image/webp,image/gif"
+                          hidden
+                          multiple
+                          onChange={onAddImages}
+                        />
+                        <label
+                          htmlFor="file"
+                          className="absolute inset-0 block cursor-pointer"
+                        />
+                        <IconPlus className="w-1/2 h-1/2 text-tertiary" />
                       </div>
-                    ))}
-                    <div className="w-25 h-25 rounded relative flex items-center justify-center border dark:border-gray-700 border-dashed cursor-pointer transition dark:hover:bg-gray-775">
-                      <input
-                        type="file"
-                        id="file"
-                        accept="image/png,image/jpeg,image/webp,image/gif"
-                        hidden
-                        onChange={e => setFiles([...files, e.target.files[0]])}
-                      />
-                      <label
-                        htmlFor="file"
-                        className="absolute inset-0 block"
-                      />
-                      <IconPlus className="w-1/2 h-1/2 text-tertiary" />
                     </div>
                   </div>
+
+                  {images && images?.length > 0 && (
+                    <div className="mt-5 flex space-x-5">
+                      <div
+                        className="w-81 h-81 bg-contain bg-center bg-no-repeat dark:bg-gray-775 flex-shrink-0"
+                        style={{
+                          backgroundImage: `url(${images[selectedImage]?.data})`
+                        }}
+                      />
+
+                      <div className="space-y-5 max-w-full flex-grow">
+                        <div>
+                          <label htmlFor="caption" className={labelClass}>
+                            Caption
+                            {images[selectedImage]?.caption?.length > 0 &&
+                              ` (${images[selectedImage]?.caption?.length}/180)`}
+                          </label>
+                          <ContentEditable
+                            id="caption"
+                            className={`px-4 py-2.5 min-h-[2.5rem] dark:bg-gray-750 rounded text-sm text-primary focus:outline-none break-word`}
+                            html={images[selectedImage]?.caption || ''}
+                            onChange={e => {
+                              if (
+                                images[selectedImage]?.caption?.length >= 180
+                              ) {
+                                return
+                              }
+                              const temp = images.slice()
+                              let val = e.target.value
+                              if (val.length > 180) {
+                                val = val.substring(0, 181)
+                              }
+                              temp[selectedImage].caption = val
+                              setImages(temp)
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="link" className={labelClass}>
+                            Link
+                          </label>
+                          <input
+                            id="link"
+                            className={titleClass}
+                            value={images[selectedImage]?.linkUrl || ''}
+                            onChange={e => {
+                              const temp = images.slice()
+                              temp[selectedImage].linkUrl = e.target.value
+                              setImages(temp)
+                            }}
+                          />
+                          {images[selectedImage]?.linkUrl &&
+                            !isURL(images[selectedImage]?.linkUrl) && (
+                              <div className="text-13 text-red-400 pt-1">
+                                Must be a valid URL
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
-                <div {...getRootProps({})}>
-                  <input {...getInputProps()} />
-                  <div className="cursor-pointer flex items-center justify-center text-base text-tertiary h-30 border border-dashed dark:border-gray-700 rounded-md">
+                <div className="relative">
+                  <input
+                    type="file"
+                    id="files"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    hidden
+                    multiple
+                    onChange={onChangeImages}
+                  />
+                  <label
+                    htmlFor="files"
+                    className="select-none cursor-pointer flex items-center justify-center text-base text-tertiary h-30 border border-dashed dark:border-gray-700 rounded-md transition dark:hover:bg-gray-775"
+                  >
                     Drag 'n' drop some images here, or click to select images
-                  </div>
+                  </label>
                 </div>
               )}
             </div>
@@ -302,10 +522,7 @@ export default function CreatePostDialog({ open, setOpen }) {
               <button
                 type="button"
                 className={cancelBtnClass}
-                onClick={() => {
-                  setOpen(false)
-                  setText('')
-                }}
+                onClick={() => close()}
               >
                 {t('post.create.cancel')}
               </button>

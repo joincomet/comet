@@ -4,7 +4,6 @@ fragment Post on Post {
   isPinned
   text
   linkUrl
-  imageUrls
   relativeUrl
   commentCount
   voteCount
@@ -16,5 +15,10 @@ fragment Post on Post {
   updatedAt
   linkMetadata {
     ...Metadata
+  }
+  images {
+    url
+    linkUrl
+    caption
   }
 }

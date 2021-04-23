@@ -1,4 +1,4 @@
-query getLinkMeta($linkUrl: URL!) {
+query getLinkMeta($linkUrl: String!) {
   getLinkMeta(linkUrl: $linkUrl) {
     ...Metadata
   }

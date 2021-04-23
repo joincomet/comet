@@ -10,7 +10,7 @@ export default function Dialog({
   return (
     <Transition show={isOpen} as={Fragment}>
       <HeadlessDialog open={isOpen} onClose={close} static>
-        <div className="fixed z-10 inset-0 overflow-y-auto">
+        <div className="fixed z-10 inset-0">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <Transition.Child
               enter="ease-out duration-150"
@@ -44,9 +44,9 @@ export default function Dialog({
                 onClick={() => {
                   if (closeOnOverlayClick) close()
                 }}
-                className="inline-block h-screen overflow-hidden transform transition-all align-middle w-full"
+                className="overflow-y-auto scrollbar dark:scrollbar-thumb-gray-800 dark:scrollbar-track-transparent inline-block py-5 h-screen transform transition-all align-middle w-full"
               >
-                <div className="flex h-full w-full items-center justify-center">
+                <div className="flex min-h-full w-full items-center justify-center">
                   {children}
                 </div>
               </div>

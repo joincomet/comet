@@ -6,8 +6,8 @@ export const useToggleCommentPin = comment => {
   const [unpin] = useUnpinCommentMutation()
 
   return useCallback(() => {
-    const variables = { commentId: comment.id }
-    if (comment.isPinned) unpin({ variables })
-    else pin({ variables })
+    const input = { commentId: comment.id }
+    if (comment.isPinned) unpin({ variables: { input } })
+    else pin({ variables: { input } })
   }, [comment, pin, unpin])
 }
