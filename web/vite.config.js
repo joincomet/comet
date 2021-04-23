@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import { resolve } from 'path'
 import stringHash from 'string-hash'
+import postcss from './postcss.config.js'
 
 export default defineConfig(({ command }) => ({
   base: process.env.ELECTRON === 'true' ? './' : '/',
@@ -20,6 +21,7 @@ export default defineConfig(({ command }) => ({
     include: ['tailwind.config.js']
   },
   css: {
+    postcss,
     modules: {
       localsConvention: 'camelCaseOnly',
       generateScopedName: (name, filename, css) => {
