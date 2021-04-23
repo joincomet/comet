@@ -2,35 +2,10 @@ import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import { resolve } from 'path'
 import stringHash from 'string-hash'
-import { VitePWA } from 'vite-plugin-pwa'
-
-const pwa = VitePWA({
-  manifest: {
-    name: 'Comet',
-    short_name: 'Comet',
-    display: 'standalone',
-    orientation: 'portrait',
-    theme_color: '#3B82F6',
-    background_color: '#202023',
-    start_url: '/',
-    icons: [
-      {
-        src: '/icons/android-chrome-192x192.png',
-        sizes: '192x192',
-        type: 'image/png'
-      },
-      {
-        src: '/icons/icon-512x512.png',
-        sizes: '512x512',
-        type: 'image/png'
-      }
-    ]
-  }
-})
 
 export default defineConfig(({ command }) => ({
   base: process.env.ELECTRON === 'true' ? './' : '/',
-  plugins: [reactRefresh(), pwa],
+  plugins: [reactRefresh()],
   resolve: {
     alias: {
       '@': resolve(__dirname, '/src'),
