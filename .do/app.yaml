@@ -43,7 +43,6 @@ services:
 databases:
   - name: db
     engine: PG
-    version: 12
     production: true
     cluster_name: comet
     db_name: comet
