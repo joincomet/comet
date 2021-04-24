@@ -23,8 +23,13 @@ export class RedisLiveQueryStore {
     })
   }
 
-  async invalidate(resourceIdentifier: string) {
-    return this.pub.publish(CHANNEL, resourceIdentifier)
+  async invalidate(identifiers: Array<string> | string) {
+    if (typeof identifiers === 'string') {
+      identifiers = [identifiers]
+    }
+    for (const identifier of identifiers) {
+      this.pub.publish(CHANNEL, identifier)
+    }
   }
 
   async execute(...args: ExecutionParameter) {
