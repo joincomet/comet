@@ -80,9 +80,8 @@ export type ChangeOnlineStatusInput = {
   onlineStatus: OnlineStatus;
 };
 
-export type ChangePasswordInput = {
-  currentPassword: Scalars['String'];
-  password: Scalars['String'];
+export type ChangeUserAvatarInput = {
+  avatarFile?: Maybe<Scalars['Upload']>;
 };
 
 export type Channel = BaseEntity & {
@@ -224,6 +223,10 @@ export type CreateServerInput = {
   name: Scalars['String'];
 };
 
+
+export type DeleteAccountInput = {
+  password: Scalars['String'];
+};
 
 export type DeleteChannelInput = {
   channelId: Scalars['ID'];
@@ -449,7 +452,7 @@ export type Mutation = {
   changeNickname: ServerUser;
   changeNotificationSetting: ServerUser;
   changeOnlineStatus: User;
-  changePassword: LoginResponse;
+  changeUserAvatar: User;
   closeDm: Relationship;
   createAccount: LoginResponse;
   createChannel: Channel;
@@ -477,6 +480,7 @@ export type Mutation = {
   leaveGroup: Scalars['Boolean'];
   leaveServer: Scalars['Boolean'];
   login: LoginResponse;
+  logout: Scalars['Boolean'];
   markAllRepliesRead: Scalars['Boolean'];
   markReplyRead: Reply;
   moveChannel: Channel;
@@ -565,8 +569,8 @@ export type MutationChangeOnlineStatusArgs = {
 };
 
 
-export type MutationChangePasswordArgs = {
-  input: ChangePasswordInput;
+export type MutationChangeUserAvatarArgs = {
+  input: ChangeUserAvatarInput;
 };
 
 
@@ -622,6 +626,11 @@ export type MutationCreateRoleArgs = {
 
 export type MutationCreateServerArgs = {
   input: CreateServerInput;
+};
+
+
+export type MutationDeleteAccountArgs = {
+  input: DeleteAccountInput;
 };
 
 
@@ -1294,9 +1303,10 @@ export type UnvotePostInput = {
 };
 
 export type UpdateAccountInput = {
-  avatarFile?: Maybe<Scalars['Upload']>;
+  currentPassword: Scalars['String'];
   email?: Maybe<Scalars['EmailAddress']>;
   name?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
 };
 
 export type UpdateChannelInput = {
@@ -1412,6 +1422,43 @@ export type CommentFragment = (
     { __typename?: 'LinkMetadata' }
     & MetadataFragment
   )> }
+);
+
+export type CurrentUserFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'isAdmin' | 'email'>
+  & { servers: Array<(
+    { __typename?: 'Server' }
+    & Pick<Server, 'permissions'>
+    & { channels: Array<(
+      { __typename?: 'Channel' }
+      & ChannelFragment
+    )>, roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )> }
+    & ServerFragment
+  )>, relatedUsers: Array<(
+    { __typename?: 'User' }
+    & UserFragment
+  )>, groups: Array<(
+    { __typename?: 'Group' }
+    & { owner: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ), users: Array<(
+      { __typename?: 'User' }
+      & UserFragment
+    )> }
+    & GroupFragment
+  )>, folders: Array<(
+    { __typename?: 'Folder' }
+    & FolderFragment
+  )> }
+  & UserFragment
 );
 
 export type FolderFragment = (
@@ -2491,6 +2538,10 @@ export type CreateAccountMutation = (
   & { createAccount: (
     { __typename?: 'LoginResponse' }
     & Pick<LoginResponse, 'accessToken'>
+    & { user: (
+      { __typename?: 'User' }
+      & CurrentUserFragment
+    ) }
   ) }
 );
 
@@ -2503,16 +2554,39 @@ export type UpdateAccountMutation = (
   { __typename?: 'Mutation' }
   & { updateAccount: (
     { __typename?: 'User' }
-    & UserFragment
+    & CurrentUserFragment
   ) }
 );
 
-export type DeleteAccountMutationVariables = Exact<{ [key: string]: never; }>;
+export type ChangeUserAvatarMutationVariables = Exact<{
+  input: ChangeUserAvatarInput;
+}>;
+
+
+export type ChangeUserAvatarMutation = (
+  { __typename?: 'Mutation' }
+  & { changeUserAvatar: (
+    { __typename?: 'User' }
+    & CurrentUserFragment
+  ) }
+);
+
+export type DeleteAccountMutationVariables = Exact<{
+  input: DeleteAccountInput;
+}>;
 
 
 export type DeleteAccountMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteAccount'>
+);
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
 );
 
 export type LoginMutationVariables = Exact<{
@@ -2525,19 +2599,10 @@ export type LoginMutation = (
   & { login: (
     { __typename?: 'LoginResponse' }
     & Pick<LoginResponse, 'accessToken'>
-  ) }
-);
-
-export type ChangePasswordMutationVariables = Exact<{
-  input: ChangePasswordInput;
-}>;
-
-
-export type ChangePasswordMutation = (
-  { __typename?: 'Mutation' }
-  & { changePassword: (
-    { __typename?: 'LoginResponse' }
-    & Pick<LoginResponse, 'accessToken'>
+    & { user: (
+      { __typename?: 'User' }
+      & CurrentUserFragment
+    ) }
   ) }
 );
 
@@ -2550,7 +2615,7 @@ export type ChangeOnlineStatusMutation = (
   { __typename?: 'Mutation' }
   & { changeOnlineStatus: (
     { __typename?: 'User' }
-    & UserFragment
+    & CurrentUserFragment
   ) }
 );
 
@@ -2602,39 +2667,7 @@ export type CurrentUserQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'isAdmin'>
-    & { servers: Array<(
-      { __typename?: 'Server' }
-      & Pick<Server, 'permissions'>
-      & { channels: Array<(
-        { __typename?: 'Channel' }
-        & ChannelFragment
-      )>, roles: Array<(
-        { __typename?: 'Role' }
-        & RoleFragment
-      )>, folders: Array<(
-        { __typename?: 'Folder' }
-        & FolderFragment
-      )> }
-      & ServerFragment
-    )>, relatedUsers: Array<(
-      { __typename?: 'User' }
-      & UserFragment
-    )>, groups: Array<(
-      { __typename?: 'Group' }
-      & { owner: (
-        { __typename?: 'User' }
-        & Pick<User, 'id'>
-      ), users: Array<(
-        { __typename?: 'User' }
-        & UserFragment
-      )> }
-      & GroupFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )> }
-    & UserFragment
+    & CurrentUserFragment
   )> }
 );
 
@@ -2988,15 +3021,6 @@ export type UserStartedTypingSubscription = (
   & Pick<Subscription, 'userStartedTyping'>
 );
 
-export const ChannelFragmentDoc = gql`
-    fragment Channel on Channel {
-  id
-  name
-  description
-  unreadCount
-  mentionCount
-}
-    `;
 export const MetadataFragmentDoc = gql`
     fragment Metadata on LinkMetadata {
   author
@@ -3028,6 +3052,48 @@ export const CommentFragmentDoc = gql`
   }
 }
     ${MetadataFragmentDoc}`;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  name
+  tag
+  username
+  avatarUrl
+  onlineStatus
+  isCurrentUser
+  relationshipStatus
+  color
+}
+    `;
+export const ServerFragmentDoc = gql`
+    fragment Server on Server {
+  id
+  name
+  description
+  avatarUrl
+  bannerUrl
+  userCount
+  isPublic
+  initials
+}
+    `;
+export const ChannelFragmentDoc = gql`
+    fragment Channel on Channel {
+  id
+  name
+  description
+  unreadCount
+  mentionCount
+}
+    `;
+export const RoleFragmentDoc = gql`
+    fragment Role on Role {
+  id
+  name
+  color
+  permissions
+}
+    `;
 export const FolderFragmentDoc = gql`
     fragment Folder on Folder {
   id
@@ -3049,6 +3115,46 @@ export const GroupFragmentDoc = gql`
   unreadCount
 }
     `;
+export const CurrentUserFragmentDoc = gql`
+    fragment CurrentUser on User {
+  ...User
+  isAdmin
+  email
+  servers {
+    ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
+  }
+  relatedUsers {
+    ...User
+  }
+  groups {
+    ...Group
+    owner {
+      id
+    }
+    users {
+      ...User
+    }
+  }
+  folders {
+    ...Folder
+  }
+}
+    ${UserFragmentDoc}
+${ServerFragmentDoc}
+${ChannelFragmentDoc}
+${RoleFragmentDoc}
+${FolderFragmentDoc}
+${GroupFragmentDoc}`;
 export const MessageFragmentDoc = gql`
     fragment Message on Message {
   id
@@ -3111,27 +3217,6 @@ export const RelationshipFragmentDoc = gql`
   updatedAt
 }
     `;
-export const RoleFragmentDoc = gql`
-    fragment Role on Role {
-  id
-  name
-  color
-  permissions
-}
-    `;
-export const UserFragmentDoc = gql`
-    fragment User on User {
-  id
-  name
-  tag
-  username
-  avatarUrl
-  onlineStatus
-  isCurrentUser
-  relationshipStatus
-  color
-}
-    `;
 export const ServerUserFragmentDoc = gql`
     fragment ServerUser on ServerUser {
   name
@@ -3171,18 +3256,6 @@ export const ReplyFragmentDoc = gql`
   }
 }
     ${ServerUserFragmentDoc}`;
-export const ServerFragmentDoc = gql`
-    fragment Server on Server {
-  id
-  name
-  description
-  avatarUrl
-  bannerUrl
-  userCount
-  isPublic
-  initials
-}
-    `;
 export const CreateChannelDocument = gql`
     mutation createChannel($input: CreateChannelInput!) {
   createChannel(input: $input) {
@@ -5542,9 +5615,12 @@ export const CreateAccountDocument = gql`
     mutation createAccount($input: CreateAccountInput!) {
   createAccount(input: $input) {
     accessToken
+    user {
+      ...CurrentUser
+    }
   }
 }
-    `;
+    ${CurrentUserFragmentDoc}`;
 export type CreateAccountMutationFn = Apollo.MutationFunction<CreateAccountMutation, CreateAccountMutationVariables>;
 
 /**
@@ -5574,10 +5650,10 @@ export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAcco
 export const UpdateAccountDocument = gql`
     mutation updateAccount($input: UpdateAccountInput!) {
   updateAccount(input: $input) {
-    ...User
+    ...CurrentUser
   }
 }
-    ${UserFragmentDoc}`;
+    ${CurrentUserFragmentDoc}`;
 export type UpdateAccountMutationFn = Apollo.MutationFunction<UpdateAccountMutation, UpdateAccountMutationVariables>;
 
 /**
@@ -5604,9 +5680,42 @@ export function useUpdateAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateAccountMutationHookResult = ReturnType<typeof useUpdateAccountMutation>;
 export type UpdateAccountMutationResult = Apollo.MutationResult<UpdateAccountMutation>;
 export type UpdateAccountMutationOptions = Apollo.BaseMutationOptions<UpdateAccountMutation, UpdateAccountMutationVariables>;
+export const ChangeUserAvatarDocument = gql`
+    mutation changeUserAvatar($input: ChangeUserAvatarInput!) {
+  changeUserAvatar(input: $input) {
+    ...CurrentUser
+  }
+}
+    ${CurrentUserFragmentDoc}`;
+export type ChangeUserAvatarMutationFn = Apollo.MutationFunction<ChangeUserAvatarMutation, ChangeUserAvatarMutationVariables>;
+
+/**
+ * __useChangeUserAvatarMutation__
+ *
+ * To run a mutation, you first call `useChangeUserAvatarMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeUserAvatarMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeUserAvatarMutation, { data, loading, error }] = useChangeUserAvatarMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useChangeUserAvatarMutation(baseOptions?: Apollo.MutationHookOptions<ChangeUserAvatarMutation, ChangeUserAvatarMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeUserAvatarMutation, ChangeUserAvatarMutationVariables>(ChangeUserAvatarDocument, options);
+      }
+export type ChangeUserAvatarMutationHookResult = ReturnType<typeof useChangeUserAvatarMutation>;
+export type ChangeUserAvatarMutationResult = Apollo.MutationResult<ChangeUserAvatarMutation>;
+export type ChangeUserAvatarMutationOptions = Apollo.BaseMutationOptions<ChangeUserAvatarMutation, ChangeUserAvatarMutationVariables>;
 export const DeleteAccountDocument = gql`
-    mutation deleteAccount {
-  deleteAccount
+    mutation deleteAccount($input: DeleteAccountInput!) {
+  deleteAccount(input: $input)
 }
     `;
 export type DeleteAccountMutationFn = Apollo.MutationFunction<DeleteAccountMutation, DeleteAccountMutationVariables>;
@@ -5624,6 +5733,7 @@ export type DeleteAccountMutationFn = Apollo.MutationFunction<DeleteAccountMutat
  * @example
  * const [deleteAccountMutation, { data, loading, error }] = useDeleteAccountMutation({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
@@ -5634,13 +5744,46 @@ export function useDeleteAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteAccountMutationHookResult = ReturnType<typeof useDeleteAccountMutation>;
 export type DeleteAccountMutationResult = Apollo.MutationResult<DeleteAccountMutation>;
 export type DeleteAccountMutationOptions = Apollo.BaseMutationOptions<DeleteAccountMutation, DeleteAccountMutationVariables>;
+export const LogoutDocument = gql`
+    mutation logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const LoginDocument = gql`
     mutation login($input: LoginInput!) {
   login(input: $input) {
     accessToken
+    user {
+      ...CurrentUser
+    }
   }
 }
-    `;
+    ${CurrentUserFragmentDoc}`;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -5667,46 +5810,13 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
-export const ChangePasswordDocument = gql`
-    mutation changePassword($input: ChangePasswordInput!) {
-  changePassword(input: $input) {
-    accessToken
-  }
-}
-    `;
-export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
-
-/**
- * __useChangePasswordMutation__
- *
- * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
-      }
-export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
-export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
-export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const ChangeOnlineStatusDocument = gql`
     mutation changeOnlineStatus($input: ChangeOnlineStatusInput!) {
   changeOnlineStatus(input: $input) {
-    ...User
+    ...CurrentUser
   }
 }
-    ${UserFragmentDoc}`;
+    ${CurrentUserFragmentDoc}`;
 export type ChangeOnlineStatusMutationFn = Apollo.MutationFunction<ChangeOnlineStatusMutation, ChangeOnlineStatusMutationVariables>;
 
 /**
@@ -5842,44 +5952,10 @@ export type CommentsQueryResult = Apollo.QueryResult<CommentsQuery, CommentsQuer
 export const CurrentUserDocument = gql`
     query currentUser @live {
   user {
-    ...User
-    isAdmin
-    servers {
-      ...Server
-      permissions
-      channels {
-        ...Channel
-      }
-      roles {
-        ...Role
-      }
-      folders {
-        ...Folder
-      }
-    }
-    relatedUsers {
-      ...User
-    }
-    groups {
-      ...Group
-      owner {
-        id
-      }
-      users {
-        ...User
-      }
-    }
-    folders {
-      ...Folder
-    }
+    ...CurrentUser
   }
 }
-    ${UserFragmentDoc}
-${ServerFragmentDoc}
-${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}
-${GroupFragmentDoc}`;
+    ${CurrentUserFragmentDoc}`;
 
 /**
  * __useCurrentUserQuery__

@@ -54,7 +54,7 @@ export default function Routes() {
                 path="/register"
                 render={() => {
                   if (userLoading) return null
-                  return user ? <Redirect to="/me" /> : <RegisterPage />
+                  return user ? <Redirect to="/explore" /> : <RegisterPage />
                 }}
               />
             </Switch>

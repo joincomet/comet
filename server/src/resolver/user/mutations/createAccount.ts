@@ -3,14 +3,7 @@ import { IsEmail, Length } from 'class-validator'
 import { Context } from '@/types'
 import isEmail from 'validator/lib/isEmail'
 import { CustomError } from '@/types/CustomError'
-import {
-  Folder,
-  FolderVisibility,
-  Server,
-  ServerUser,
-  User,
-  UserFolder
-} from '@/entity'
+import { Folder, FolderVisibility, User, UserFolder } from '@/entity'
 import {
   createAccessToken,
   handleUnderscore,
@@ -18,7 +11,6 @@ import {
   tagGenerator
 } from '@/util'
 import * as argon2 from 'argon2'
-import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 
@@ -38,9 +30,11 @@ export class CreateAccountInput {
 }
 
 export async function createAccount(
-  { em, res, liveQueryStore }: Context,
+  ctx: Context,
   { name, email, password }: CreateAccountInput
 ): Promise<LoginResponse> {
+  const { em, res, liveQueryStore } = ctx
+
   email = email.toLowerCase()
   if (!isEmail(email)) throw new Error('error.login.invalidEmail')
 
@@ -58,7 +52,8 @@ export async function createAccount(
   }
 
   const foundUser = await em.findOne(User, {
-    email: handleUnderscore(email)
+    email: handleUnderscore(email),
+    isDeleted: false
   })
   if (foundUser) throw new Error('error.login.emailInUse')
 
@@ -68,7 +63,9 @@ export async function createAccount(
 
   while (
     await em.findOne(User, {
-      $and: [{ name: { $ilike: handleUnderscore(name) } }, { tag }]
+      name: { $ilike: handleUnderscore(name) },
+      tag,
+      isDeleted: false
     })
   ) {
     tag = tagGenerator()
@@ -115,6 +112,7 @@ export async function createAccount(
     secure: process.env.NODE_ENV === 'production'
   })
   liveQueryStore.invalidate(`Query.user`)
+  ctx.userId = user.id
   return {
     accessToken,
     user

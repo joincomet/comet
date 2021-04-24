@@ -47,30 +47,20 @@ export default function LandingPage() {
           <div className="px-24 h-16 flex items-center">
             <VectorLogo className="h-6 text-gray-200" />
 
-            <div className="inline-flex items-center bg-red-300 text-xs ml-6 px-3 h-6 text-red-700 rounded-full">
-              Coming Soon
-            </div>
-
             <div className="ml-auto space-x-3 inline-flex items-center">
-              <Tippy content="Support CometX on Patreon">
-                <div className={iconButton}>
-                  <IconPatreon size={20} className="text-gray-200" />
-                </div>
-              </Tippy>
-
-              <Tippy content="CometX Discord Server">
+              <Tippy content="Comet Discord Server">
                 <div className={`${iconButton}`}>
                   <IconDiscord size={20} className="text-gray-200" />
                 </div>
               </Tippy>
 
-              <Tippy content="@cometx_io on Twitter">
+              <Tippy content="@joincometapp on Twitter">
                 <div className={iconButton}>
                   <IconTwitter size={20} className="text-gray-200" />
                 </div>
               </Tippy>
 
-              <Tippy content="CometX on GitHub">
+              <Tippy content="Comet on GitHub">
                 <div className={iconButton}>
                   <IconGithub size={20} className="text-gray-200" />
                 </div>

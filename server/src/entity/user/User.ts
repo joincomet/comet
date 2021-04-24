@@ -57,7 +57,7 @@ export class User extends BaseEntity {
   @Authorized('USER')
   @Field(() => GraphQLEmailAddress)
   @Property({ columnType: 'text' })
-  @Unique()
+  // @Unique()
   email: string
 
   @Field({ nullable: true })

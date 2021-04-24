@@ -1,0 +1,33 @@
+fragment CurrentUser on User {
+  ...User
+  isAdmin
+  email
+  servers {
+    ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
+  }
+  relatedUsers {
+    ...User
+  }
+  groups {
+    ...Group
+    owner {
+      id
+    }
+    users {
+      ...User
+    }
+  }
+  folders {
+    ...Folder
+  }
+}

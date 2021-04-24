@@ -32,7 +32,7 @@ jobs:
           sed -i "s/<AWS_SECRET_ACCESS_KEY>/$AWS_SECRET_ACCESS_KEY/g" .do/app.yaml
           sed -i "s/<AWS_ENDPOINT>/${{ secrets.AWS_ENDPOINT }}/g" .do/app.yaml
           sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
-      - name: Update app spec
+      - name: Create app
         run: doctl apps create --spec .do/app.yaml
       - name: Get version from ref
         id: get-version

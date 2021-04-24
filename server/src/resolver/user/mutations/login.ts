@@ -17,12 +17,14 @@ export class LoginInput {
 }
 
 export async function login(
-  { em, res, liveQueryStore }: Context,
+  ctx: Context,
   { email, password }: LoginInput
 ): Promise<LoginResponse> {
+  const { em, res, liveQueryStore } = ctx
+
   email = email.toLowerCase()
   if (!isEmail(email)) throw new Error('error.login.invalidEmail')
-  const user = await em.findOne(User, { email })
+  const user = await em.findOne(User, { email, isDeleted: false })
   if (!user) throw new Error('error.login.invalid')
   const match = await argon2.verify(user.passwordHash, password)
   if (!match) throw new Error('error.login.invalid')
@@ -40,6 +42,7 @@ export async function login(
     secure: process.env.NODE_ENV === 'production'
   })
   liveQueryStore.invalidate(`Query.user`)
+  ctx.userId = user.id
   return {
     accessToken,
     user

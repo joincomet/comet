@@ -1,34 +1,44 @@
 mutation createAccount($input: CreateAccountInput!) {
   createAccount(input: $input) {
     accessToken
+    user {
+      ...CurrentUser
+    }
   }
 }
 
 mutation updateAccount($input: UpdateAccountInput!) {
   updateAccount(input: $input) {
-    ...User
+    ...CurrentUser
   }
 }
 
-mutation deleteAccount {
-  deleteAccount
+mutation changeUserAvatar($input: ChangeUserAvatarInput!) {
+  changeUserAvatar(input: $input) {
+    ...CurrentUser
+  }
+}
+
+mutation deleteAccount($input: DeleteAccountInput!) {
+  deleteAccount(input: $input)
+}
+
+mutation logout {
+  logout
 }
 
 mutation login($input: LoginInput!) {
   login(input: $input) {
     accessToken
-  }
-}
-
-mutation changePassword($input: ChangePasswordInput!) {
-  changePassword(input: $input) {
-    accessToken
+    user {
+      ...CurrentUser
+    }
   }
 }
 
 mutation changeOnlineStatus($input: ChangeOnlineStatusInput!) {
   changeOnlineStatus(input: $input) {
-    ...User
+    ...CurrentUser
   }
 }
 

@@ -2,26 +2,22 @@ import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import { resolve } from 'path'
 import stringHash from 'string-hash'
-import postcss from './postcss.config.js'
 
 export default defineConfig(({ command }) => ({
   base: process.env.ELECTRON === 'true' ? './' : '/',
   plugins: [reactRefresh()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, '/src'),
-      'tailwind.config.js': resolve(__dirname, 'tailwind.config.js')
+      '@': resolve(__dirname, '/src')
     }
   },
   server: {
     port: process.env.PORT ? +process.env.PORT : 3000
   },
   optimizeDeps: {
-    exclude: ['path'],
-    include: ['tailwind.config.js']
+    exclude: ['path']
   },
   css: {
-    postcss,
     modules: {
       localsConvention: 'camelCaseOnly',
       generateScopedName: (name, filename, css) => {

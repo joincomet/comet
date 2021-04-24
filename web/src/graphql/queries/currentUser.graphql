@@ -1,34 +1,5 @@
 query currentUser @live {
   user {
-    ...User
-    isAdmin
-    servers {
-      ...Server
-      permissions
-      channels {
-        ...Channel
-      }
-      roles {
-        ...Role
-      }
-      folders {
-        ...Folder
-      }
-    }
-    relatedUsers {
-      ...User
-    }
-    groups {
-      ...Group
-      owner {
-        id
-      }
-      users {
-        ...User
-      }
-    }
-    folders {
-      ...Folder
-    }
+    ...CurrentUser
   }
 }

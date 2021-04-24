@@ -16,6 +16,13 @@ import {
   SubscriptionResolver,
   UserResolver
 } from '@/resolver'
+import Redis from 'ioredis'
+import { RedisPubSub } from 'graphql-redis-subscriptions'
+import { PubSub } from 'graphql-subscriptions'
+
+const redisOptions: Redis.RedisOptions = {
+  retryStrategy: times => Math.max(times * 100, 3000)
+}
 
 export const ErrorInterceptor: MiddlewareFn<any> = async (
   { context, info },
@@ -32,8 +39,10 @@ export const ErrorInterceptor: MiddlewareFn<any> = async (
       throw new Error("Unknown error occurred!");
     }*/
 
-    console.error(err)
-    console.error(err.validationErrors)
+    if (err && process.env.NODE_ENV !== 'production') {
+      console.error(err)
+      if (err.validationErrors) console.error(err.validationErrors)
+    }
 
     // rethrow the error
     throw err
@@ -62,5 +71,12 @@ export const typeGraphQLConf = {
   validate: true,
   authChecker: authChecker,
   directives: [GraphQLLiveDirective],
-  globalMiddlewares: [ErrorInterceptor]
+  globalMiddlewares: [ErrorInterceptor],
+  pubSub:
+    process.env.NODE_ENV === 'production'
+      ? new RedisPubSub({
+          publisher: new Redis(process.env.REDIS_URL, redisOptions),
+          subscriber: new Redis(process.env.REDIS_URL, redisOptions)
+        })
+      : new PubSub()
 } as BuildSchemaOptions

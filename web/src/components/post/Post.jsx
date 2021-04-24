@@ -247,7 +247,11 @@ export default memo(function Post({
             {showServerName && (
               <div className="ml-4 flex items-center" onClick={onClick}>
                 <ServerPopup server={post.server}>
-                  <ServerAvatar server={post.server} size={5} />
+                  <ServerAvatar
+                    server={post.server}
+                    size={5}
+                    className="dark:bg-gray-750"
+                  />
                 </ServerPopup>
                 <ServerPopup server={post.server}>
                   <span className="ml-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">

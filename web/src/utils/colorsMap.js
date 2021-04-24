@@ -1,9 +1,20 @@
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from 'tailwind.config.js'
+import tailwindColors from 'tailwindcss/colors'
 
-const {
-  theme: { colors }
-} = resolveConfig(tailwindConfig)
+const colors = {
+  transparent: 'transparent',
+  current: 'currentColor',
+  black: tailwindColors.black,
+  white: tailwindColors.white,
+  gray: tailwindColors.gray,
+
+  red: tailwindColors.red,
+  yellow: tailwindColors.amber,
+  green: tailwindColors.emerald,
+  blue: tailwindColors.blue,
+  indigo: tailwindColors.indigo,
+  purple: tailwindColors.violet,
+  pink: tailwindColors.pink
+}
 
 export const colorsMap = {
   Red: colors.red[500],

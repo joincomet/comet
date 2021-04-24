@@ -14,15 +14,16 @@ export default function LoginPage() {
     refetchQueries: [{ query: CurrentUserDocument }],
     awaitRefetchQueries: true
   })
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, watch } = useForm()
+  const email = watch('email')
+  const password = watch('password')
   const { push } = useHistory()
-  const [user] = useCurrentUser()
 
-  useEffect(() => {
-    if (user) push('/me')
-  }, [user])
-
-  const onSubmit = input => login({ variables: { input } })
+  const onSubmit = input => {
+    login({ variables: { input } }).then(() => {
+      push('/me')
+    })
+  }
 
   return (
     <>
@@ -56,7 +57,9 @@ export default function LoginPage() {
             />
           </div>
 
-          <Button loading={loading}>Log In</Button>
+          <Button loading={loading} disabled={!email || !password}>
+            Log In
+          </Button>
           <div className="pt-3 text-mid text-sm">
             {t('auth.needAccount')}{' '}
             <Link to="/register" className="text-accent hover:underline">

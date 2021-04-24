@@ -17,6 +17,8 @@ services:
         value: ${db.DATABASE_URL}
       - key: CA_CERT
         value: ${db.CA_CERT}
+      - key: REDIS_URL
+        value: ${redis.REDIS_URL}
       - key: ACCESS_TOKEN_SECRET
         value: <ACCESS_TOKEN_SECRET>
       - key: BUCKET
@@ -45,8 +47,12 @@ databases:
     engine: PG
     production: true
     cluster_name: comet
-    db_name: comet
-    db_user: comet
+    db_name: defaultdb
+    db_user: doadmin
+  - name: redis
+    engine: REDIS
+    production: true
+    cluster_name: comet-redis
 domains:
   - domain: joincomet.app
     type: PRIMARY

@@ -4,7 +4,6 @@ import {
   Ctx,
   FieldResolver,
   ID,
-  Int,
   Mutation,
   Query,
   Resolver,
@@ -22,11 +21,12 @@ import {
 import {
   changeOnlineStatus,
   ChangeOnlineStatusInput,
-  changePassword,
-  ChangePasswordInput,
+  changeUserAvatar,
+  ChangeUserAvatarInput,
   createAccount,
   CreateAccountInput,
   deleteAccount,
+  DeleteAccountInput,
   globalBan,
   GlobalBanInput,
   login,
@@ -144,8 +144,27 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async deleteAccount(@Ctx() ctx: Context): Promise<boolean> {
-    return deleteAccount(ctx)
+  async deleteAccount(
+    @Ctx() ctx: Context,
+    @Arg('input') input: DeleteAccountInput
+  ): Promise<boolean> {
+    return deleteAccount(ctx, input)
+  }
+
+  @Authorized()
+  @Mutation(() => User)
+  async changeUserAvatar(
+    @Ctx() ctx: Context,
+    @Arg('input') input: ChangeUserAvatarInput
+  ): Promise<User> {
+    return changeUserAvatar(ctx, input)
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { res }: Context): Promise<boolean> {
+    res.clearCookie('token')
+    return true
   }
 
   @Mutation(() => LoginResponse)
@@ -154,15 +173,6 @@ export class UserResolver {
     @Arg('input') input: LoginInput
   ): Promise<LoginResponse> {
     return login(ctx, input)
-  }
-
-  @Authorized()
-  @Mutation(() => LoginResponse)
-  async changePassword(
-    @Ctx() ctx: Context,
-    @Arg('input') input: ChangePasswordInput
-  ): Promise<LoginResponse> {
-    return changePassword(ctx, input)
   }
 
   @Authorized()

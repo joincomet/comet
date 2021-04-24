@@ -60,9 +60,8 @@ input ChangeOnlineStatusInput {
   onlineStatus: OnlineStatus!
 }
 
-input ChangePasswordInput {
-  currentPassword: String!
-  password: String!
+input ChangeUserAvatarInput {
+  avatarFile: Upload
 }
 
 type Channel implements BaseEntity {
@@ -204,6 +203,10 @@ input CreateServerInput {
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+input DeleteAccountInput {
+  password: String!
+}
 
 input DeleteChannelInput {
   channelId: ID!
@@ -431,7 +434,7 @@ type Mutation {
   changeNickname(input: ChangeNicknameInput!): ServerUser!
   changeNotificationSetting(input: ChangeNotificationSettingInput!): ServerUser!
   changeOnlineStatus(input: ChangeOnlineStatusInput!): User!
-  changePassword(input: ChangePasswordInput!): LoginResponse!
+  changeUserAvatar(input: ChangeUserAvatarInput!): User!
   closeDm(input: CloseDmInput!): Relationship!
   createAccount(input: CreateAccountInput!): LoginResponse!
   createChannel(input: CreateChannelInput!): Channel!
@@ -443,7 +446,7 @@ type Mutation {
   createPost(input: CreatePostInput!): Post!
   createRole(input: CreateRoleInput!): Role!
   createServer(input: CreateServerInput!): Server!
-  deleteAccount: Boolean!
+  deleteAccount(input: DeleteAccountInput!): Boolean!
   deleteChannel(input: DeleteChannelInput!): Boolean!
   deleteComment(input: DeleteCommentInput!): Comment!
   deleteFolder(input: DeleteFolderInput!): Boolean!
@@ -459,6 +462,7 @@ type Mutation {
   leaveGroup(input: LeaveGroupInput!): Boolean!
   leaveServer(input: LeaveServerInput!): Boolean!
   login(input: LoginInput!): LoginResponse!
+  logout: Boolean!
   markAllRepliesRead: Boolean!
   markReplyRead(input: MarkReplyReadInput!): Reply!
   moveChannel(input: MoveChannelInput!): Channel!
@@ -816,9 +820,10 @@ input UnvotePostInput {
 }
 
 input UpdateAccountInput {
-  avatarFile: Upload
+  currentPassword: String!
   email: EmailAddress
   name: String
+  password: String
 }
 
 input UpdateChannelInput {

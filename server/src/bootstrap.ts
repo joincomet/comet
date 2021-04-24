@@ -24,8 +24,8 @@ export async function bootstrap() {
   // if (process.env.NODE_ENV !== 'production') {
   console.log(`Setting up the database...`)
   const generator = orm.getSchemaGenerator()
-  await generator.dropSchema(false)
-  await generator.createSchema(false)
+  // await generator.dropSchema(false)
+  // await generator.createSchema(false)
   await generator.updateSchema(false)
 
   //await seed(orm.em.fork())
@@ -77,8 +77,12 @@ export async function bootstrap() {
         },
         execute: liveQueryStore.execute,
         formatPayload: ({ payload, document }) => {
-          if (payload.errors && payload.errors.length)
-            console.log(payload.errors)
+          if (
+            payload.errors &&
+            payload.errors.length &&
+            process.env.NODE_ENV !== 'production'
+          )
+            console.error(payload.errors)
           return payload
         }
       })

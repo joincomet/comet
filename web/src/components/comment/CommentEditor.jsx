@@ -42,7 +42,6 @@ export default function CommentEditor({ postId, parentCommentId, setOpen }) {
         query: CommentsDocument,
         variables: { postId }
       })
-      console.log(data)
       cache.writeQuery({
         query: CommentsDocument,
         variables: { postId },

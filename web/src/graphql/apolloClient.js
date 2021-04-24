@@ -6,6 +6,7 @@ import { RetryLink } from '@apollo/client/link/retry'
 import toast from 'react-hot-toast'
 import { isLiveQueryOperationDefinitionNode } from '@n1ru4l/graphql-live-query'
 import { UploadLink } from '@/graphql/upload'
+import i18n from '@/locales/i18n'
 
 const url = import.meta.env.PROD
   ? `https://${import.meta.env.VITE_API_DOMAIN}/graphql`
@@ -25,7 +26,11 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       )
-      toast.error(message)
+      if (
+        message !==
+        'Access denied! You need to be authorized to perform this action!'
+      )
+        toast.error(i18n.t(message))
     })
   if (networkError) {
     console.log(`[Network error]: ${networkError}`)

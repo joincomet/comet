@@ -43,6 +43,7 @@ export {
   HiAnnotation as IconReply,
   HiUserGroup as IconFriends,
   HiX as IconX,
+  HiOutlineX as IconXLarge,
   HiCheck as IconCheck,
   HiOutlinePencil as IconEditAvatar,
   HiOutlinePhotograph as IconUploadPhoto,

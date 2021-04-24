@@ -1,13 +1,13 @@
-import defaultTheme from 'tailwindcss/defaultTheme'
-import colors from 'tailwindcss/colors'
-import plugin from 'tailwindcss/plugin'
-import formsPlugin from '@tailwindcss/forms'
-import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
-import typographyPlugin from '@tailwindcss/typography'
-import lineClampPlugin from '@tailwindcss/line-clamp'
-import scrollbarPlugin from 'tailwind-scrollbar'
+const defaultTheme = require('tailwindcss/defaultTheme')
+const colors = require('tailwindcss/colors')
+const plugin = require('tailwindcss/plugin')
+const formsPlugin = require('@tailwindcss/forms')
+const aspectRatioPlugin = require('@tailwindcss/aspect-ratio')
+const typographyPlugin = require('@tailwindcss/typography')
+const lineClampPlugin = require('@tailwindcss/line-clamp')
+const scrollbarPlugin = require('tailwind-scrollbar')
 
-export default {
+module.exports = {
   mode: 'jit',
   purge: ['./src/index.html', './src/**/*.{js,jsx,html}'],
   theme: {
