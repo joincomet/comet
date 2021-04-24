@@ -25,6 +25,8 @@ export async function bootstrap() {
   await generator.dropSchema(false)
   await generator.createSchema(false)
   await generator.updateSchema(false)
+  //const dropAndCreateDump = await generator.generate()
+  //console.log(dropAndCreateDump)
 
   //await seed(orm.em.fork())
   // }

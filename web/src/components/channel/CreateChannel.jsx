@@ -22,35 +22,26 @@ export default function CreateChannel({ serverId }) {
 
   const [isOpen, setIsOpen] = useState(false)
   const [isPrivate, setIsPrivate] = useState(false)
-
-  const { handleSubmit, register, reset } = useForm()
-
+  const [name, setName] = useState('')
   useEffect(() => {
-    if (!isOpen) return
-    reset()
-    setIsPrivate(false)
-  }, [isOpen, setIsPrivate, reset])
+    if (name === ' ' || name === '-') setName('')
+    setName(name.toLowerCase().replace(' ', '-'))
+    if (name.endsWith('--')) setName(name.substring(0, name.length - 1))
+    //setName(name.replace(/[^a-z0-9_]+/g, ''))
+  }, [name])
 
   const { push } = useHistory()
 
   const [createChannel, { loading }] = useCreateChannelMutation({
     update(cache, { data: { createChannel } }) {
       const data = cache.readQuery({ query: CurrentUserDocument })
+      console.log(data)
       data.user.servers
         .find(server => server.id === serverId)
         ?.channels.unshift(createChannel)
       cache.writeQuery({ query: CurrentUserDocument, data })
     }
   })
-
-  const onSubmit = ({ name }) => {
-    createChannel({
-      variables: { input: { name, serverId, isPrivate } }
-    }).then(({ data: { createChannel } }) => {
-      setIsOpen(false)
-      push(`/server/${serverId}/channel/${createChannel.id}`)
-    })
-  }
 
   if (!canManageChannels)
     return <SidebarLabel>{t('channel.title')}</SidebarLabel>
@@ -77,7 +68,7 @@ export default function CreateChannel({ serverId }) {
             {t('channel.create')}
           </DialogTitle>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
             <div className="mb-4 w-full">
               <label className="label" htmlFor="name">
                 Channel Name
@@ -85,29 +76,14 @@ export default function CreateChannel({ serverId }) {
 
               <div className="relative">
                 <input
-                  {...register('name', {
-                    required: true,
-                    maxLength: 100,
-                    pattern: /[a-z0-9_-]+/g
-                  })}
+                  name="name"
                   maxLength={100}
                   className="textbox pl-9 pr-3 lowercase"
                   spellCheck={false}
                   autoCapitalize="none"
                   id="name"
-                  onChange={e => {
-                    if (e.target.value === ' ' || e.target.value === '-')
-                      e.target.value = ''
-                    e.target.value = e.target.value
-                      .toLowerCase()
-                      .replace(' ', '-')
-                    if (e.target.value.endsWith('--'))
-                      e.target.value = e.target.value.substring(
-                        0,
-                        e.target.value.length - 1
-                      )
-                    e.target.value = e.target.value.replace(/[^a-z0-9_-]+/g, '')
-                  }}
+                  value={name}
+                  onChange={e => setName(e.target.value)}
                 />
 
                 <div className="absolute left-0 top-0 bottom-0 flex items-center w-10 justify-center pointer-events-none">
@@ -116,7 +92,23 @@ export default function CreateChannel({ serverId }) {
               </div>
             </div>
 
-            <Button loading={loading}>{t('continue')}</Button>
+            <Button
+              disabled={!name}
+              loading={loading}
+              type="button"
+              onClick={() => {
+                if (name.endsWith('-'))
+                  setName(name.substring(0, name.length - 1))
+                createChannel({
+                  variables: { input: { name, serverId, isPrivate } }
+                }).then(({ data: { createChannel } }) => {
+                  setIsOpen(false)
+                  push(`/server/${serverId}/channel/${createChannel.id}`)
+                })
+              }}
+            >
+              {t('continue')}
+            </Button>
 
             <div className="pt-4">
               <Switch
@@ -126,7 +118,7 @@ export default function CreateChannel({ serverId }) {
                 {t('channel.togglePrivate')}
               </Switch>
             </div>
-          </form>
+          </div>
         </div>
       </Dialog>
     </>
