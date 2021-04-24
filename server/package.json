@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",

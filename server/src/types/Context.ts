@@ -14,13 +14,12 @@ import {
 import { Request, Response } from 'express'
 import DataLoader from 'dataloader'
 import { NotificationSetting } from '@/types/NotificationSetting'
-import { RedisLiveQueryStore } from '@/util'
-import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+import { LiveQueryStore } from '@/util'
 
 export interface Context {
   em: EntityManager
   userId: string
-  liveQueryStore: RedisLiveQueryStore | InMemoryLiveQueryStore
+  liveQueryStore: LiveQueryStore
   req: Request
   res: Response
   loaders: {

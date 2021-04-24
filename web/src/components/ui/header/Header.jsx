@@ -12,18 +12,6 @@ export default function Header({
   title,
   showDivider = false
 }) {
-  const { t } = useTranslation()
-  const [updateAvailable, setUpdateAvailable] = useStore(s => [
-    s.updateAvailable,
-    s.setUpdateAvailable
-  ])
-  useEffect(() => {
-    if (window.electron) {
-      window.electron.on('updateAvailable', () => {
-        setUpdateAvailable(true)
-      })
-    }
-  }, [])
   return (
     <header
       id="header"
@@ -40,13 +28,6 @@ export default function Header({
       <div className="flex-grow flex items-center min-w-0 pr-4">{children}</div>
       <div className="flex w-60 min-w-[15rem] pr-4">
         <HeaderSearchBar />
-        {window.electron && updateAvailable && (
-          <Tippy content={t('updateAvailable')}>
-            <div className="pl-4" onClick={() => window.electron.restart()}>
-              <IconDownloadLarge className="w-6 h-6 text-green-500 cursor-pointer" />
-            </div>
-          </Tippy>
-        )}
       </div>
     </header>
   )

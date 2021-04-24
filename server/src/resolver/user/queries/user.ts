@@ -5,7 +5,6 @@ export async function user(
   { em, userId: currentUserId }: Context,
   userId: string
 ): Promise<User> {
-  // em = em.fork()
   if (!userId || userId === currentUserId) {
     // Current user
     if (!currentUserId) return null

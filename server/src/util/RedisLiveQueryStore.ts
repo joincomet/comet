@@ -1,38 +1,52 @@
 import Redis from 'ioredis'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { execute as defaultExecute, ExecutionArgs } from 'graphql'
+import {
+  execute as defaultExecute,
+  ExecutionArgs,
+  ExecutionResult
+} from 'graphql'
+import { MaybePromise } from 'type-graphql'
+import { LiveExecutionResult } from '@n1ru4l/graphql-live-query'
 
 const CHANNEL = 'LIVE_QUERY_INVALIDATIONS'
+
+const liveQueryStore = new InMemoryLiveQueryStore()
+const pub = new Redis(process.env.REDIS_URL)
+const sub = new Redis(process.env.REDIS_URL)
+
+sub.subscribe(CHANNEL, err => {
+  if (err) throw err
+})
+
+sub.on('message', (channel, resourceIdentifier) => {
+  if (channel === CHANNEL) liveQueryStore.invalidate(resourceIdentifier)
+})
 
 declare type ExecutionParameter =
   | Parameters<typeof defaultExecute>
   | [ExecutionArgs]
-export class RedisLiveQueryStore {
-  liveQueryStore = new InMemoryLiveQueryStore()
-  pub = new Redis(process.env.REDIS_URL)
-  sub = new Redis(process.env.REDIS_URL)
 
-  constructor() {
-    this.sub.subscribe(CHANNEL, err => {
-      if (err) throw err
-    })
+export interface LiveQueryStore {
+  invalidate: (identifiers: Array<string> | string) => Promise<void>
+  execute: (
+    ...args: ExecutionParameter
+  ) => MaybePromise<
+    | AsyncIterableIterator<ExecutionResult | LiveExecutionResult>
+    | ExecutionResult
+  >
+}
 
-    this.sub.on('message', (channel, resourceIdentifier) => {
-      if (channel === CHANNEL)
-        this.liveQueryStore.invalidate(resourceIdentifier)
-    })
-  }
-
-  async invalidate(identifiers: Array<string> | string) {
+export const RedisLiveQueryStore = {
+  invalidate: async (identifiers: Array<string> | string) => {
     if (typeof identifiers === 'string') {
       identifiers = [identifiers]
     }
     for (const identifier of identifiers) {
-      this.pub.publish(CHANNEL, identifier)
+      pub.publish(CHANNEL, identifier)
     }
-  }
+  },
 
-  async execute(...args: ExecutionParameter) {
-    return this.liveQueryStore.execute(...args)
+  execute: (...args: ExecutionParameter) => {
+    return liveQueryStore.execute(...args)
   }
-}
+} as LiveQueryStore

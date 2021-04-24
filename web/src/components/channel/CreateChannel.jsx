@@ -9,8 +9,8 @@ import { IconChannel } from '@/components/ui/icons/Icons'
 import Button from '@/components/ui/Button'
 import Switch from '@/components/ui/Switch'
 import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
 import { CurrentUserDocument, useCreateChannelMutation } from '@/graphql/hooks'
+import { useForm } from 'react-hook-form'
 
 export default function CreateChannel({ serverId }) {
   const { t } = useTranslation()
@@ -19,6 +19,8 @@ export default function CreateChannel({ serverId }) {
     serverId,
     permissions: [ServerPermission.ManageChannels]
   })
+
+  const { handleSubmit } = useForm({ mode: 'onChange' })
 
   const [isOpen, setIsOpen] = useState(false)
   const [isPrivate, setIsPrivate] = useState(false)
@@ -35,13 +37,23 @@ export default function CreateChannel({ serverId }) {
   const [createChannel, { loading }] = useCreateChannelMutation({
     update(cache, { data: { createChannel } }) {
       const data = cache.readQuery({ query: CurrentUserDocument })
-      console.log(data)
-      data.user.servers
-        .find(server => server.id === serverId)
-        ?.channels.unshift(createChannel)
-      cache.writeQuery({ query: CurrentUserDocument, data })
+      const clone = JSON.parse(JSON.stringify(data))
+      const server = clone.user.servers.find(s => s.id === serverId)
+      server.channels = [createChannel].concat(server.channels)
+      cache.writeQuery({ query: CurrentUserDocument, data: clone })
     }
   })
+
+  const onSubmit = () => {
+    if (name.endsWith('-')) setName(name.substring(0, name.length - 1))
+    createChannel({
+      variables: { input: { name, serverId, isPrivate } }
+    }).then(({ data: { createChannel } }) => {
+      setIsOpen(false)
+      setName('')
+      push(`/server/${serverId}/channel/${createChannel.id}`)
+    })
+  }
 
   if (!canManageChannels)
     return <SidebarLabel>{t('channel.title')}</SidebarLabel>
@@ -68,7 +80,7 @@ export default function CreateChannel({ serverId }) {
             {t('channel.create')}
           </DialogTitle>
 
-          <div>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4 w-full">
               <label className="label" htmlFor="name">
                 Channel Name
@@ -92,21 +104,7 @@ export default function CreateChannel({ serverId }) {
               </div>
             </div>
 
-            <Button
-              disabled={!name}
-              loading={loading}
-              type="button"
-              onClick={() => {
-                if (name.endsWith('-'))
-                  setName(name.substring(0, name.length - 1))
-                createChannel({
-                  variables: { input: { name, serverId, isPrivate } }
-                }).then(({ data: { createChannel } }) => {
-                  setIsOpen(false)
-                  push(`/server/${serverId}/channel/${createChannel.id}`)
-                })
-              }}
-            >
+            <Button disabled={!name} loading={loading} type="submit">
               {t('continue')}
             </Button>
 
@@ -118,7 +116,7 @@ export default function CreateChannel({ serverId }) {
                 {t('channel.togglePrivate')}
               </Switch>
             </div>
-          </div>
+          </form>
         </div>
       </Dialog>
     </>
