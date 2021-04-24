@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.38",
+	"version": "0.0.39",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -16,9 +16,10 @@
 		"web"
 	],
 	"scripts": {
-		"build": "yarn workspace web run build",
-		"preview": "yarn workspace web run preview",
-		"start": "yarn workspace server start",
+		"build:web": "yarn workspace web run build",
+		"build:server": "yarn workspace server run build",
+		"start:web": "yarn workspace web run preview",
+		"start:server": "yarn workspace server start",
 		"generate": "graphql-codegen",
 		"dev:web": "yarn workspace web run dev",
 		"dev:server": "concurrently \"yarn workspace server run dev\" \"yarn generate --watch\"",
