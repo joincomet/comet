@@ -3,15 +3,13 @@ import { mikroOrmConf } from '@/config/mikroOrm'
 import { buildSchema } from 'type-graphql'
 import { typeGraphQLConf } from '@/config/typeGraphQL'
 import express from 'express'
-import { specifiedRules, validate as graphqlValidate } from 'graphql'
+import { specifiedRules } from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
 import { getGraphQLParameters, processRequest } from 'graphql-helix'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { getUserId } from '@/util'
-import { User } from '@/entity'
 import { Context } from '@/types'
-import { seed } from '@/seed'
 import { createLoaders } from '@/util/loaders/createLoaders'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -24,8 +22,8 @@ export async function bootstrap() {
   // if (process.env.NODE_ENV !== 'production') {
   console.log(`Setting up the database...`)
   const generator = orm.getSchemaGenerator()
-  // await generator.dropSchema(false)
-  // await generator.createSchema(false)
+  await generator.dropSchema(false)
+  await generator.createSchema(false)
   await generator.updateSchema(false)
 
   //await seed(orm.em.fork())
