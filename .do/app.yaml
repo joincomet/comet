@@ -56,4 +56,3 @@ databases:
 domains:
   - domain: joincomet.app
     type: PRIMARY
-    wildcard: false

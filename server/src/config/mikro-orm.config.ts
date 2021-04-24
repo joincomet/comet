@@ -1,4 +1,8 @@
-import { Options, ReflectMetadataProvider } from '@mikro-orm/core'
+import {
+  MemoryCacheAdapter,
+  Options,
+  ReflectMetadataProvider
+} from '@mikro-orm/core'
 import { PostgreSqlDriver } from '@mikro-orm/postgresql'
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
 import { CustomError } from '@/types/CustomError'
@@ -31,6 +35,8 @@ import {
   User,
   UserFolder
 } from '@/entity'
+import { RedisCacheAdapter } from 'mikro-orm-cache-adapter-redis'
+import Redis from 'ioredis'
 
 export const mikroOrmConf = {
   highlighter: new SqlHighlighter(),
@@ -80,6 +86,15 @@ export const mikroOrmConf = {
           connection: { ssl: { rejectUnauthorized: false } }
         }
       : {},
+  resultCache:
+    process.env.NODE_ENV === 'production'
+      ? {
+          adapter: RedisCacheAdapter,
+          options: {
+            client: new Redis(process.env.REDIS_URL)
+          }
+        }
+      : { adapter: MemoryCacheAdapter },
   migrations: {
     disableForeignKeys: false
   }

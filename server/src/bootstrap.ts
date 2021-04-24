@@ -1,38 +1,36 @@
 import { MikroORM } from '@mikro-orm/core'
-import { mikroOrmConf } from '@/config/mikroOrm'
+import { mikroOrmConf } from '@/config/mikro-orm.config'
 import { buildSchema } from 'type-graphql'
 import { typeGraphQLConf } from '@/config/typeGraphQL'
 import express from 'express'
 import { specifiedRules } from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
 import { getGraphQLParameters, processRequest } from 'graphql-helix'
-import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { getUserId } from '@/util'
+import { getUserId, RedisLiveQueryStore } from '@/util'
 import { Context } from '@/types'
 import { createLoaders } from '@/util/loaders/createLoaders'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
   const orm = await MikroORM.init(mikroOrmConf)
 
-  // TODO don't seed in production
-  // if (process.env.NODE_ENV !== 'production') {
-  console.log(`Setting up the database...`)
-  const generator = orm.getSchemaGenerator()
-  await generator.dropSchema(false)
-  await generator.createSchema(false)
-  await generator.updateSchema(false)
-  //const dropAndCreateDump = await generator.generate()
-  //console.log(dropAndCreateDump)
-
-  //await seed(orm.em.fork())
-  // }
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Setting up the database...`)
+    const generator = orm.getSchemaGenerator()
+    // await generator.dropSchema(false)
+    // await generator.createSchema(false)
+    await generator.updateSchema(false)
+  }
 
   console.log(`Bootstraping schema and server...`)
-  const liveQueryStore = new InMemoryLiveQueryStore()
+  const liveQueryStore =
+    process.env.NODE_ENV === 'production'
+      ? new RedisLiveQueryStore()
+      : new InMemoryLiveQueryStore()
   const schema = await buildSchema(typeGraphQLConf)
 
   const app = express()

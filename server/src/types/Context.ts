@@ -11,15 +11,16 @@ import {
   ServerPermission,
   User
 } from '@/entity'
-import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { Request, Response } from 'express'
 import DataLoader from 'dataloader'
 import { NotificationSetting } from '@/types/NotificationSetting'
+import { RedisLiveQueryStore } from '@/util'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 
 export interface Context {
   em: EntityManager
   userId: string
-  liveQueryStore: InMemoryLiveQueryStore
+  liveQueryStore: RedisLiveQueryStore | InMemoryLiveQueryStore
   req: Request
   res: Response
   loaders: {

@@ -1,5 +1,5 @@
 FROM node:latest
 WORKDIR /app
 COPY . .
-RUN yarn
+RUN yarn && yarn run build
 CMD ["yarn", "run", "start"]

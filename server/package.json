@@ -1,13 +1,16 @@
 {
   "name": "server",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
-    "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts"
+    "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
+    "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "migrate": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/migrate.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "@mikro-orm/core": "^4.5.3",
+    "@mikro-orm/migrations": "^4.5.3",
     "@mikro-orm/postgresql": "^4.5.3",
     "@mikro-orm/sql-highlighter": "^1.0.1",
     "@n1ru4l/graphql-live-query": "^0.7.1",
@@ -43,6 +46,7 @@
     "metascraper-title": "^5.21.7",
     "metascraper-url": "^5.21.7",
     "metascraper-youtube": "^5.21.7",
+    "mikro-orm-cache-adapter-redis": "^1.1.1",
     "mime": "^2.5.2",
     "mudder": "^1.0.10",
     "nanoid": "^3.1.22",
@@ -71,5 +75,11 @@
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/config/mikro-orm.config.ts"
+    ]
   }
 }

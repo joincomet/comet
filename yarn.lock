@@ -1623,6 +1623,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mikro-orm/migrations@npm:^4.5.3":
+  version: 4.5.3
+  resolution: "@mikro-orm/migrations@npm:4.5.3"
+  dependencies:
+    "@mikro-orm/knex": ^4.5.3
+    "@types/umzug": 2.3.0
+    fs-extra: 9.1.0
+    knex: 0.21.19
+    umzug: 2.3.0
+  peerDependencies:
+    "@mikro-orm/core": ^4.0.0
+  checksum: da3eee72cf3c0c5666ced128c38b085ab96d78e1d13eb920b41895eb07bbc87ad52a0b2a925694423a316bd804c2e5a34d67c19774990a1b62cf8b220ccebb5d
+  languageName: node
+  linkType: hard
+
 "@mikro-orm/postgresql@npm:^4.5.3":
   version: 4.5.3
   resolution: "@mikro-orm/postgresql@npm:4.5.3"
@@ -2220,6 +2235,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bluebird@npm:*":
+  version: 3.5.33
+  resolution: "@types/bluebird@npm:3.5.33"
+  checksum: 45f7adeec6e656501f5b2127d5cc1538d3ae497d06bfa00d8d7f51eb2aa482267b3b4868ac1c75fc84acfad86d2c0d4de8af535cf725156f222d679df9694aff
+  languageName: node
+  linkType: hard
+
 "@types/body-parser@npm:*":
   version: 1.19.0
   resolution: "@types/body-parser@npm:1.19.0"
@@ -2227,6 +2249,15 @@ __metadata:
     "@types/connect": "*"
     "@types/node": "*"
   checksum: 4576f3fde5980c1219cadbc7c523bdb1cefc3713300e18bf47ff37bb9b8176342a1dc7519008311fd8fc11413cf188a83931b9b59051aa1c2f095c1e10459369
+  languageName: node
+  linkType: hard
+
+"@types/bson@npm:*":
+  version: 4.0.3
+  resolution: "@types/bson@npm:4.0.3"
+  dependencies:
+    "@types/node": "*"
+  checksum: 73c0179851f02bd43f010db65c465b09f7c495b35b0e3820a79d36f4bb209c84a512121c1af4c1d2512e5f13cd27cc74fa8aa6f3df9b17b7cca9d37d59ece3ce
   languageName: node
   linkType: hard
 
@@ -2255,6 +2286,15 @@ __metadata:
   version: 0.5.3
   resolution: "@types/content-disposition@npm:0.5.3"
   checksum: 1b7d94b19ae8564816233b74df5f662052d393d0fdb317c81d894f5e1e762010c46b1812ce01a1492a72603e182afd18a59673e25ae737efc3e470ba261697d7
+  languageName: node
+  linkType: hard
+
+"@types/continuation-local-storage@npm:*":
+  version: 3.2.3
+  resolution: "@types/continuation-local-storage@npm:3.2.3"
+  dependencies:
+    "@types/node": "*"
+  checksum: 4e9970a200751a2d79b416f6cfbc1e4c88d278196519c084aabf27ab0e11b7b63e4275bcdba3de480d6984273b93884d50df0c3edf402af96fc07b31ee4c31b0
   languageName: node
   linkType: hard
 
@@ -2393,7 +2433,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ioredis@npm:^4.26.0":
+"@types/ioredis@npm:^4.19.1, @types/ioredis@npm:^4.26.0":
   version: 4.26.0
   resolution: "@types/ioredis@npm:4.26.0"
   dependencies:
@@ -2487,6 +2527,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:*":
+  version: 4.14.168
+  resolution: "@types/lodash@npm:4.14.168"
+  checksum: 9a4e25f89fc035b9f0388f1f7be85e5eff49f9e6db0d93432c9a89fce0916f8a89db4e8290415f7ea02de6b00d3573826378dcb655b7b2d20530a6e8d6dd6fd0
+  languageName: node
+  linkType: hard
+
 "@types/mime@npm:^1":
   version: 1.3.2
   resolution: "@types/mime@npm:1.3.2"
@@ -2505,6 +2552,16 @@ __metadata:
   version: 3.0.3
   resolution: "@types/minimatch@npm:3.0.3"
   checksum: 672ccdac197e8176eed1a9441d0caf8a29a90eb139b1cefdd4c9e71b1c48f5c749f5d101a2d85da15c6259214ebda95072835021407d60330a731a2672964b82
+  languageName: node
+  linkType: hard
+
+"@types/mongodb@npm:*":
+  version: 3.6.12
+  resolution: "@types/mongodb@npm:3.6.12"
+  dependencies:
+    "@types/bson": "*"
+    "@types/node": "*"
+  checksum: 7e41e42a941a5c07cc45f83722e617f1e96942b27cabae8f06dd253ae86b420c1ca5c75e1de7bfbce787bb703714bc297bef45215ef1275815e8d355e03bc27c
   languageName: node
   linkType: hard
 
@@ -2797,6 +2854,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/sequelize@npm:*":
+  version: 4.28.9
+  resolution: "@types/sequelize@npm:4.28.9"
+  dependencies:
+    "@types/bluebird": "*"
+    "@types/continuation-local-storage": "*"
+    "@types/lodash": "*"
+    "@types/validator": "*"
+  checksum: 356b4cffbf5e40e25e31c3f7f7b5c0a1a0ca9d756a80727378580c8845ddf3e91c2e23ae4b9b69a7d4ef318905f5fbdd2aeb7c9c37a64ac5b11a99cf27114c64
+  languageName: node
+  linkType: hard
+
 "@types/serve-static@npm:*":
   version: 1.13.9
   resolution: "@types/serve-static@npm:1.13.9"
@@ -2830,6 +2899,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/umzug@npm:2.3.0":
+  version: 2.3.0
+  resolution: "@types/umzug@npm:2.3.0"
+  dependencies:
+    "@types/mongodb": "*"
+    "@types/sequelize": "*"
+  checksum: 3109c5a6d634edaf6d1969f6730133d97c177ffea2337f995bd2add4e0e7ae7e776594f54a87a180b7d4af1e5c95cc2a648249b8efb47a028e94b6ed214c8125
+  languageName: node
+  linkType: hard
+
 "@types/user-agents@npm:^1.0.1":
   version: 1.0.1
   resolution: "@types/user-agents@npm:1.0.1"
@@ -2837,7 +2916,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/validator@npm:^13.1.3":
+"@types/validator@npm:*, @types/validator@npm:^13.1.3":
   version: 13.1.3
   resolution: "@types/validator@npm:13.1.3"
   checksum: 47e1de4aebd3efbf97deea2d0f72b2308c924f95833c7a18d4f5d7cbd500f875fed9afd85038022ca352e3effb82241de149e5f1cbb32957b99fd7b0484641f3
@@ -3830,7 +3909,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird@npm:^3.5.5":
+"bluebird@npm:^3.5.5, bluebird@npm:^3.7.2":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
   checksum: 4f2288662f3d4eadbb82d4daa4a7d7976a28fa3c7eb4102c9b4033b03e5be4574ba123ac52a7c103cde4cb7b2d2afc1dbe41817ca15a29ff21ecd258d0286047
@@ -10118,6 +10197,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"mikro-orm-cache-adapter-redis@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "mikro-orm-cache-adapter-redis@npm:1.1.1"
+  dependencies:
+    "@types/ioredis": ^4.19.1
+  peerDependencies:
+    ioredis: ^4.22.0
+  checksum: 74d999917d828e96f5cb728be0f1a7bb45a7430ffbb0ba7e76c667adb1385c392f0c42ab335deab117c12f2d2a0a5f0396f0cc0f0b4f0422518dca0f183ed797
+  languageName: node
+  linkType: hard
+
 "mime-db@npm:1.45.0":
   version: 1.45.0
   resolution: "mime-db@npm:1.45.0"
@@ -13216,6 +13306,7 @@ resolve@^2.0.0-next.3:
   resolution: "server@workspace:server"
   dependencies:
     "@mikro-orm/core": ^4.5.3
+    "@mikro-orm/migrations": ^4.5.3
     "@mikro-orm/postgresql": ^4.5.3
     "@mikro-orm/sql-highlighter": ^1.0.1
     "@n1ru4l/graphql-live-query": ^0.7.1
@@ -13263,6 +13354,7 @@ resolve@^2.0.0-next.3:
     metascraper-title: ^5.21.7
     metascraper-url: ^5.21.7
     metascraper-youtube: ^5.21.7
+    mikro-orm-cache-adapter-redis: ^1.1.1
     mime: ^2.5.2
     mudder: ^1.0.10
     nanoid: ^3.1.22
@@ -14827,6 +14919,15 @@ typescript@^4.2.4:
   version: 1.0.6
   resolution: "uc.micro@npm:1.0.6"
   checksum: 9dfe5ad0a08059c3eb6ded70b7cfb6fdcb5908b385af9d4717cee7f140571f5c2bb89405093ace07cfd0e283f409495d2feafd321b4b703c1fa3014e129dab27
+  languageName: node
+  linkType: hard
+
+"umzug@npm:2.3.0":
+  version: 2.3.0
+  resolution: "umzug@npm:2.3.0"
+  dependencies:
+    bluebird: ^3.7.2
+  checksum: bab1ef758df57f0e3bcfa6108ea84c79d2fa7d30c08a2c8a2bf38025d944f3801d35c5c81ab510e5a27bf0ae475283fcd07bd9f6e77eb502982765e8fc6be778
   languageName: node
   linkType: hard
 
