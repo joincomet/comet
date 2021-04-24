@@ -1,0 +1,46 @@
+name: Create App
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        description: Tag to deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare
+        id: prep
+        run: echo ::set-output name=tag::${{ github.event.inputs.tag }}
+      - name: Checkout main
+        uses: actions/checkout@v2
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Update deployment file tags
+        run: |
+          TAG=${{ steps.prep.outputs.tag }}
+          ACCESS_TOKEN_SECRET=$(printf '%s\n' "${{ secrets.ACCESS_TOKEN_SECRET }}" | sed -e 's/[]\/$*.^[]/\\&/g');
+          AWS_SECRET_ACCESS_KEY=$(printf '%s\n' "${{ secrets.AWS_SECRET_ACCESS_KEY }}" | sed -e 's/[]\/$*.^[]/\\&/g');
+          sed -i "s/<TAG>/$TAG/g" .do/app.yaml
+          sed -i "s/<ACCESS_TOKEN_SECRET>/$ACCESS_TOKEN_SECRET/g" .do/app.yaml
+          sed -i "s/<BUCKET>/${{ secrets.BUCKET }}/g" .do/app.yaml
+          sed -i "s/<AWS_ACCESS_KEY_ID>/${{ secrets.AWS_ACCESS_KEY_ID }}/g" .do/app.yaml
+          sed -i "s/<AWS_SECRET_ACCESS_KEY>/$AWS_SECRET_ACCESS_KEY/g" .do/app.yaml
+          sed -i "s/<AWS_ENDPOINT>/${{ secrets.AWS_ENDPOINT }}/g" .do/app.yaml
+          sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
+      - name: Update app spec
+        run: doctl apps create --spec .do/app.yaml
+      - name: Get version from ref
+        id: get-version
+        run: |
+          ver=$(echo ${{ github.event.inputs.tag }} | cut -c 2-)
+          echo ::set-output name=VERSION::$ver
+      - name: Publish release on GitHub
+        uses: test-room-7/action-publish-release-drafts@v0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tag-name: ${{ steps.get-version.outputs.VERSION }}
