@@ -1,4 +1,4 @@
-import { IconFeatured, IconNew, IconTop } from '@/components/ui/icons/Icons'
+import { IconNew, IconTop } from '@/components/ui/icons/Icons'
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import { useStore } from '@/hooks/useStore'
@@ -58,7 +58,7 @@ export default function ExploreSidebar() {
 
   return (
     <Sidebar>
-      <div className="text-xl font-semibold px-4 h-12 flex items-center text-secondary">
+      <div className="text-lg font-medium px-4 h-12 flex items-center text-secondary">
         <VectorLogoIcon className="w-5 h-5 mr-3" />
         {t('explore.title')}
       </div>

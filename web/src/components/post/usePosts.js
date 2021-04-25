@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useStore } from '@/hooks/useStore'
 import { usePostsQuery } from '@/graphql/hooks'
 
@@ -13,13 +13,14 @@ export function usePosts({ serverId, folderId }) {
     pageSize: 20,
     page,
     sort: folderId ? folderSort : postsSort,
-    time: folderId ? null : postsTime,
+    time: postsSort === 'Top' && !folderId ? postsTime : null,
     serverId,
     folderId
   }
   const { data, loading, fetchMore } = usePostsQuery({
     variables,
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first'
   })
 
   return [

@@ -160,13 +160,6 @@ export class UserResolver {
     return changeUserAvatar(ctx, input)
   }
 
-  @Authorized()
-  @Mutation(() => Boolean)
-  async logout(@Ctx() { res }: Context): Promise<boolean> {
-    res.clearCookie('token')
-    return true
-  }
-
   @Mutation(() => LoginResponse)
   async login(
     @Ctx() ctx: Context,

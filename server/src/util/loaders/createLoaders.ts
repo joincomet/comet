@@ -14,6 +14,7 @@ import { serverNicknameLoader } from '@/util/loaders/server/ServerNicknameLoader
 import { serverNotificationSettingLoader } from '@/util/loaders/server/ServerNotificationSettingLoader'
 import { serverPermissionsLoader } from '@/util/loaders/server/ServerPermissionsLoader'
 import { serverRolesLoader } from '@/util/loaders/server/ServerRolesLoader'
+import { serverJoinedLoader } from '@/util/loaders/server/ServerJoinedLoader'
 import { relatedUsersLoader } from '@/util/loaders/user/RelatedUsersLoader'
 import { relationshipStatusLoader } from '@/util/loaders/user/RelationshipStatusLoader'
 import { userGroupsLoader } from '@/util/loaders/user/UserGroupsLoader'
@@ -48,6 +49,7 @@ export const createLoaders = (em: EntityManager, userId: string) => ({
   serverRolesLoader: serverRolesLoader(em),
   serverSystemMessagesChannelLoader: serverSystemMessagesChannelLoader(em),
   serverOnlineCountLoader: serverOnlineCountLoader(em),
+  serverJoinedLoader: serverJoinedLoader(em, userId),
 
   relatedUsersLoader: relatedUsersLoader(em, userId),
   relationshipStatusLoader: relationshipStatusLoader(em, userId),

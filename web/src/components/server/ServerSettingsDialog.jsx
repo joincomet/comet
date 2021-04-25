@@ -8,6 +8,7 @@ import ctl from '@netlify/classnames-template-literals'
 import {
   useChangeUserAvatarMutation,
   useDeleteAccountMutation,
+  useLogoutMutation,
   useUpdateAccountMutation
 } from '@/graphql/hooks'
 import { useForm } from 'react-hook-form'
@@ -16,7 +17,6 @@ import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useApolloClient } from '@apollo/client'
-import { gracefullyRestart } from '@/graphql/WebSocketLink'
 
 const inputClass = ctl(`
   w-full
@@ -78,7 +78,7 @@ const cancelBtn = ctl(`
   focus:outline-none
 `)
 
-export default function UserSettingsDialog({ open, setOpen }) {
+export default function ServerSettingsDialog({ open, setOpen }) {
   const [user] = useCurrentUser()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const {
@@ -101,9 +101,7 @@ export default function UserSettingsDialog({ open, setOpen }) {
   ] = useUpdateAccountMutation()
 
   const [changeAvatar] = useChangeUserAvatarMutation()
-  const logout = () => {
-    localStorage.removeItem('token')
-  }
+  const [logout] = useLogoutMutation()
   const { push } = useHistory()
   const apolloClient = useApolloClient()
 
@@ -154,9 +152,9 @@ export default function UserSettingsDialog({ open, setOpen }) {
                   onClick={() => {
                     setOpen(false)
                     push('/')
-                    logout()
-                    apolloClient.resetStore()
-                    gracefullyRestart()
+                    logout().then(() => {
+                      apolloClient.resetStore()
+                    })
                   }}
                 >
                   <span className="text-red-500">Log Out</span>

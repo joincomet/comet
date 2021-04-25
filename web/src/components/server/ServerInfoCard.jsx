@@ -1,6 +1,35 @@
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ServerAvatar from '@/components/server/ServerAvatar'
+import ctl from '@netlify/classnames-template-literals'
+import { CurrentUserDocument, useJoinServerMutation } from '@/graphql/hooks'
+import { IconSpinner } from '@/components/ui/icons/IconSpinner'
+import { useHistory } from 'react-router-dom'
+
+const joinBtn = ctl(`
+  absolute
+  cursor-pointer
+  select-none
+  top-32
+  -mt-4
+  hover:shadow-md
+  z-10
+  right-3
+  transition
+  flex
+  items-center
+  px-4
+  h-8
+  rounded-md
+  text-13
+  font-semibold
+  bg-gray-200
+  border-2
+  border-gray-800
+  text-gray-900
+  transform
+  hover:scale-105
+  focus:outline-none
+`)
 
 export default function ServerInfoCard({
   server,
@@ -8,13 +37,42 @@ export default function ServerInfoCard({
   className = ''
 }) {
   const { t } = useTranslation()
+
+  const [joinServer, { loading: joinLoading }] = useJoinServerMutation({
+    update(cache, { data: { joinServer } }) {
+      const data = cache.readQuery({ query: CurrentUserDocument })
+      cache.writeQuery({
+        query: CurrentUserDocument,
+        data: {
+          user: { ...data.user, servers: [joinServer, ...data.user.servers] }
+        }
+      })
+    }
+  })
+
+  const { push } = useHistory()
+
   return (
-    <Link
-      to={`/server/${server?.id}`}
-      className={`${className} cursor-pointer relative flex flex-col w-full rounded-lg group dark:bg-gray-800 dark:hover:bg-gray-850 duration-200 transform transition hover:shadow-xl ${
+    <div
+      className={`${className} relative relative flex flex-col w-full rounded-lg group dark:bg-gray-800 dark:hover:bg-gray-850 duration-200 transform transition hover:shadow-xl ${
         shadow ? 'shadow-lg' : ''
       }`}
     >
+      <button
+        type="button"
+        className={joinBtn}
+        onClick={() => {
+          if (!server.isJoined) {
+            joinServer({ variables: { input: { serverId: server.id } } })
+          } else {
+            push(`/server/${server.id}`)
+          }
+        }}
+      >
+        {server.isJoined ? 'View' : 'Join'}
+        {joinLoading && <IconSpinner className="w-4 h-4 text-gray-900 ml-2" />}
+      </button>
+
       <div
         className="h-32 rounded-t-lg w-full bg-cover bg-center bg-no-repeat relative bg-gradient-to-br from-red-400 to-indigo-600"
         style={
@@ -54,6 +112,6 @@ export default function ServerInfoCard({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }

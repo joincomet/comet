@@ -46,6 +46,9 @@ import {
   UpdateServerInput
 } from './mutations'
 import { GraphQLNonNegativeInt, GraphQLVoid } from 'graphql-scalars'
+import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
+import { PubSub } from 'type-graphql/dist/decorators/PubSub'
+import { Publisher } from 'type-graphql/dist/interfaces/Publisher'
 
 @Resolver(() => Server)
 export class ServerResolver {
@@ -121,6 +124,14 @@ export class ServerResolver {
     return serverOnlineCountLoader.load(server.id)
   }
 
+  @FieldResolver(() => Boolean)
+  async isJoined(
+    @Ctx() { loaders: { serverJoinedLoader } }: Context,
+    @Root() server: Server
+  ): Promise<boolean> {
+    return serverJoinedLoader.load(server.id)
+  }
+
   // --- Queries ---
   @Authorized()
   @Query(() => [Server])
@@ -163,9 +174,11 @@ export class ServerResolver {
   @Mutation(() => Server)
   async joinServer(
     @Ctx() ctx: Context,
-    @Arg('input') input: JoinServerInput
+    @Arg('input') input: JoinServerInput,
+    @PubSub(SubscriptionTopic.MessageChanged)
+    notifyMessageChanged: Publisher<ChangePayload>
   ): Promise<Server> {
-    return joinServer(ctx, input)
+    return joinServer(ctx, input, notifyMessageChanged)
   }
 
   @Authorized()

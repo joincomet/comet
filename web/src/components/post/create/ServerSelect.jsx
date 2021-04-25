@@ -62,7 +62,7 @@ export default function ServerSelect({ servers = [], server, setServer }) {
                   <>
                     <ServerAvatar
                       server={server}
-                      className="dark:bg-gray-750"
+                      className="dark:bg-gray-750 rounded-full"
                       size={7}
                     />
                     <span className="block truncate pl-2">{server.name}</span>

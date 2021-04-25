@@ -7,4 +7,5 @@ fragment Server on Server {
   userCount
   isPublic
   initials
+  isJoined
 }

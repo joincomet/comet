@@ -480,7 +480,6 @@ export type Mutation = {
   leaveGroup: Scalars['Boolean'];
   leaveServer: Scalars['Boolean'];
   login: LoginResponse;
-  logout: Scalars['Boolean'];
   markAllRepliesRead: Scalars['Boolean'];
   markReplyRead: Reply;
   moveChannel: Channel;
@@ -1177,6 +1176,7 @@ export type Server = BaseEntity & {
   isBanned: Scalars['Boolean'];
   isDeleted: Scalars['Boolean'];
   isFeatured: Scalars['Boolean'];
+  isJoined: Scalars['Boolean'];
   isPublic: Scalars['Boolean'];
   myRoles: Array<Role>;
   name: Scalars['String'];
@@ -1538,7 +1538,7 @@ export type RoleFragment = (
 
 export type ServerFragment = (
   { __typename?: 'Server' }
-  & Pick<Server, 'id' | 'name' | 'description' | 'avatarUrl' | 'bannerUrl' | 'userCount' | 'isPublic' | 'initials'>
+  & Pick<Server, 'id' | 'name' | 'description' | 'avatarUrl' | 'bannerUrl' | 'userCount' | 'isPublic' | 'initials' | 'isJoined'>
 );
 
 export type ServerUserFragment = (
@@ -2581,14 +2581,6 @@ export type DeleteAccountMutation = (
   & Pick<Mutation, 'deleteAccount'>
 );
 
-export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type LogoutMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'logout'>
-);
-
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
@@ -3075,6 +3067,7 @@ export const ServerFragmentDoc = gql`
   userCount
   isPublic
   initials
+  isJoined
 }
     `;
 export const ChannelFragmentDoc = gql`
@@ -5744,36 +5737,6 @@ export function useDeleteAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteAccountMutationHookResult = ReturnType<typeof useDeleteAccountMutation>;
 export type DeleteAccountMutationResult = Apollo.MutationResult<DeleteAccountMutation>;
 export type DeleteAccountMutationOptions = Apollo.BaseMutationOptions<DeleteAccountMutation, DeleteAccountMutationVariables>;
-export const LogoutDocument = gql`
-    mutation logout {
-  logout
-}
-    `;
-export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
-
-/**
- * __useLogoutMutation__
- *
- * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLogoutMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
- *   variables: {
- *   },
- * });
- */
-export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
-      }
-export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
-export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const LoginDocument = gql`
     mutation login($input: LoginInput!) {
   login(input: $input) {

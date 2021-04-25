@@ -3,16 +3,26 @@ import { mikroOrmConf } from '@/config/mikro-orm.config'
 import { buildSchema } from 'type-graphql'
 import { typeGraphQLConf } from '@/config/typeGraphQL'
 import express from 'express'
-import { specifiedRules } from 'graphql'
+import { ApolloServer } from 'apollo-server-express'
+import ws from 'ws' // yarn add ws
+import { useServer } from 'graphql-ws/lib/use/ws'
+import {
+  parse,
+  GraphQLError,
+  specifiedRules,
+  subscribe,
+  validate,
+  ExecutionArgs
+} from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
-import { getGraphQLParameters, processRequest } from 'graphql-helix'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { getUserId, RedisLiveQueryStore } from '@/util'
 import { Context } from '@/types'
 import { createLoaders } from '@/util/loaders/createLoaders'
 import cors from 'cors'
-import cookieParser from 'cookie-parser'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+
+const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -34,115 +44,59 @@ export async function bootstrap() {
   const schema = await buildSchema(typeGraphQLConf)
 
   const app = express()
-  app.use(cookieParser())
-  app.use(cors({ origin: true, credentials: true }))
-  app.use(express.json())
+  app.use(cors({ origin: true }))
   app.use(
-    '/graphql',
     graphqlUploadExpress({
-      maxFileSize: 8 * 1024 * 1024, // 8MB limit
-      maxFiles: 10
-    }),
-    async (req, res) => {
-      const request = {
-        body: req.body,
-        headers: req.headers,
-        method: req.method,
-        query: req.query
-      }
-      const { operationName, query, variables } = getGraphQLParameters(request)
+      maxFileSize: 32 * 1024 * 1024, // 32MB limit
+      maxFiles: 20
+    })
+  )
+  const apolloServer = new ApolloServer({
+    uploads: false,
+    schema,
+    context: ({ req }) => {
+      const em = orm.em.fork()
+      const userId = getUserId(req.headers.token as string)
+      return {
+        em,
+        userId,
+        liveQueryStore,
+        loaders: createLoaders(em, userId)
+      } as Context
+    }
+  })
+  apolloServer.applyMiddleware({ app })
 
-      const result = await processRequest({
-        operationName,
-        query,
-        variables,
-        request,
+  const port = +process.env.PORT || 4000
+
+  const server = app.listen(port, () => {
+    // create and use the websocket server
+    const wsServer = new ws.Server({
+      server,
+      path: '/graphql'
+    })
+
+    useServer(
+      {
         schema,
-        validationRules: [...specifiedRules, NoLiveMixedWithDeferStreamRule],
-        contextFactory: async () => {
+        execute: liveQueryStore.execute,
+        context: ({ connectionParams }) => {
+          const userId = getUserId(connectionParams?.token as string)
           const em = orm.em.fork()
-          const userId = getUserId(
-            (req.cookies.token || request.headers.token) as string
-          )
           return {
             em,
-            userId,
             liveQueryStore,
-            req,
-            res,
+            userId,
             loaders: createLoaders(em, userId)
           } as Context
-        },
-        execute: liveQueryStore.execute,
-        formatPayload: ({ payload, document }) => {
-          if (
-            payload.errors &&
-            payload.errors.length &&
-            process.env.NODE_ENV !== 'production'
-          )
-            console.error(payload.errors)
-          return payload
         }
-      })
+      },
+      wsServer
+    )
+  })
 
-      if (result.type === 'RESPONSE') {
-        result.headers.forEach(({ name, value }) => res.setHeader(name, value))
-        res.status(result.status)
-        res.json(result.payload)
-      } else if (result.type === 'MULTIPART_RESPONSE') {
-        res.writeHead(200, {
-          Connection: 'keep-alive',
-          'Content-Type': 'multipart/mixed; boundary="-"',
-          'Transfer-Encoding': 'chunked'
-        })
-
-        req.on('close', () => {
-          result.unsubscribe()
-        })
-
-        await result.subscribe(result => {
-          const chunk = Buffer.from(JSON.stringify(result), 'utf8')
-          const data = [
-            '',
-            '---',
-            'Content-Type: application/json; charset=utf-8',
-            'Content-Length: ' + String(chunk.length),
-            '',
-            chunk,
-            ''
-          ].join('\r\n')
-          res.write(data)
-        })
-
-        res.write('\r\n-----\r\n')
-        res.end()
-      } else {
-        res.writeHead(200, {
-          'Content-Type': 'text/event-stream',
-          Connection: 'keep-alive',
-          'Cache-Control': 'no-cache'
-        })
-
-        req.on('close', () => {
-          result.unsubscribe()
-        })
-
-        await result.subscribe(async data => {
-          res.write(`data: ${JSON.stringify(data)}\n\n`)
-          const forked = result.context.em.fork()
-          result.context.em = forked
-          result.context.loaders = createLoaders(forked, result.context.userId)
-          /*Object.values(result.context.loaders).forEach(loader =>
-            loader.clearAll()
-          )*/
-        })
-      }
-    }
-  )
-
-  const port = process.env.PORT || 4000
-
-  app.listen(port, () => {
-    console.log(`GraphQL server is running on port ${port}.`)
+  process.once('SIGINT', () => {
+    console.log('Received SIGINT. Shutting down HTTP and Websocket server.')
+    orm.close()
   })
 }

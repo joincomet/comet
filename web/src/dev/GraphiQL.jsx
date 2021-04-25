@@ -1,7 +1,6 @@
 import { GraphiQL as DefaultGraphiQL } from 'graphiql'
 import 'graphiql/graphiql.css'
 import { meros } from 'meros/browser'
-import { Subscription as SSESubscription } from 'sse-z'
 import { isLiveQueryOperationDefinitionNode } from '@n1ru4l/graphql-live-query'
 import {
   makeAsyncIterableIteratorFromSink,
@@ -9,8 +8,21 @@ import {
 } from '@n1ru4l/push-pull-async-iterable-iterator'
 import { parse, getOperationAST, specifiedRules } from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
+import { createClient } from 'graphql-ws'
 
-const httpMultipartFetcher = async (graphQLParams, { headers }) => {
+const wsClient = headers =>
+  createClient({
+    url: 'ws://localhost:4000/graphql',
+    lazy: false,
+    connectionParams: () => (headers.token ? { token: headers.token } : {})
+  })
+
+const wsFetcher = (headers, graphQLParams) =>
+  makeAsyncIterableIteratorFromSink(sink =>
+    wsClient(headers).subscribe(graphQLParams, sink)
+  )
+
+const fetcher = async (graphQLParams, { headers }) => {
   const abortController = new AbortController()
 
   const parsedDocument = parse(graphQLParams.query)
@@ -20,32 +32,7 @@ const httpMultipartFetcher = async (graphQLParams, { headers }) => {
     documentNode.operation === 'subscription' ||
     isLiveQueryOperationDefinitionNode(documentNode)
   ) {
-    const searchParams = {
-      operationName: graphQLParams.operationName,
-      query: graphQLParams.query
-    }
-    if (graphQLParams.variables) {
-      searchParams.variables = JSON.stringify(graphQLParams.variables)
-    }
-
-    return makeAsyncIterableIteratorFromSink(sink => {
-      const subscription = new SSESubscription({
-        url: 'http://localhost:4000/graphql',
-        searchParams,
-        eventSourceOptions: {
-          // Ensure cookies are included with the request
-          withCredentials: true,
-          headers
-        },
-        onNext: value => {
-          sink.next(JSON.parse(value))
-        },
-        onError: sink.error,
-        onComplete: sink.complete
-      })
-
-      return () => subscription.unsubscribe()
-    })
+    return wsFetcher(headers, graphQLParams)
   }
 
   const patches = await fetch('http://localhost:4000/graphql', {
@@ -83,7 +70,7 @@ export const GraphiQL = () => {
         shouldPersistHeaders
         defaultQuery={``}
         validationRules={[...specifiedRules, NoLiveMixedWithDeferStreamRule]}
-        fetcher={httpMultipartFetcher}
+        fetcher={fetcher}
       />
     </div>
   )

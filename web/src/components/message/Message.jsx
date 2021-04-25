@@ -1,17 +1,41 @@
 import UserPopup from '@/components/user/UserPopup'
 import UserAvatar from '@/components/user/UserAvatar'
 import { calendarDate, shortTime } from '@/utils/timeUtils'
-import { memo, useState } from 'react'
-import Dialog from '@/components/ui/dialog/Dialog'
-import { IconDownloadLarge } from '@/components/ui/icons/Icons'
+import { memo } from 'react'
+import { IconDownloadLarge, IconUserJoin } from '@/components/ui/icons/Icons'
 import { useFileIcon } from '@/hooks/useFileIcon'
 import { formatBytes } from '@/utils/formatBytes'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import MessageImageDialog from '@/components/message/MessageImageDialog'
+import ctl from '@netlify/classnames-template-literals'
+
+const joinMsg = ctl(`
+  text-base
+  text-secondary
+`)
 
 export default memo(function Message({ showUser, message }) {
   const FileIcon = useFileIcon(message?.file?.mime)
+
+  if (message.type === 'Join') {
+    return (
+      <div className="flex dark:hover:bg-gray-775 py-1 px-4">
+        <div className="w-10 flex justify-center">
+          <IconUserJoin className="w-5 h-5 text-green-500" />
+        </div>
+        <div className="pl-4 text-base text-tertiary ">
+          <span className="text-white cursor-pointer hover:underline">
+            {message.author.name}
+          </span>{' '}
+          has joined the {message.serverUser ? 'server' : 'group'}
+          <span className="pl-2 text-11 whitespace-nowrap text-mid cursor-default leading-5 select-none">
+            {shortTime(message.createdAt)}
+          </span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={`${showUser ? 'pt-4' : ''}`}>
@@ -56,7 +80,7 @@ export default memo(function Message({ showUser, message }) {
 
             {!!message.text && (
               <div
-                className="text-base text-gray-700 dark:text-gray-300"
+                className="text-base text-secondary"
                 dangerouslySetInnerHTML={{ __html: message.text }}
               />
             )}

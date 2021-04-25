@@ -38,7 +38,13 @@ export default memo(function Post({
   })
 
   const type = useMemo(() => {
-    if (post.text) return 'Text'
+    if (
+      post.text ||
+      (!post.text &&
+        !post.linkUrl &&
+        (!post.images || post.images.length === 0))
+    )
+      return 'Text'
     else if (post.linkUrl) return post.domain
     else if (post.images?.length === 1) return 'Image'
     else if (post.images?.length > 1) return 'Image Album'
@@ -76,7 +82,7 @@ export default memo(function Post({
 
         <div onClick={onClick}>
           <ContextMenuTrigger
-            data={{ type: ContextMenuType.User, user: post.author }}
+            data={{ type: ContextMenuType.User, user: post.author?.user }}
           >
             <UserPopup
               user={post.author?.user}
@@ -92,7 +98,7 @@ export default memo(function Post({
           <div className="flex items-end pb-1">
             <div onClick={onClick}>
               <ContextMenuTrigger
-                data={{ type: ContextMenuType.User, user: post.author }}
+                data={{ type: ContextMenuType.User, user: post.author?.user }}
               >
                 <UserPopup user={post.author}>
                   <div
@@ -250,7 +256,7 @@ export default memo(function Post({
                   <ServerAvatar
                     server={post.server}
                     size={5}
-                    className="dark:bg-gray-750"
+                    className="dark:bg-gray-750 rounded-full"
                   />
                 </ServerPopup>
                 <ServerPopup server={post.server}>

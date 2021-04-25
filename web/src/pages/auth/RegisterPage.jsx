@@ -4,11 +4,14 @@ import isEmail from 'validator/es/lib/isEmail'
 import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { CurrentUserDocument, useCreateAccountMutation } from '@/graphql/hooks'
 import ctl from '@netlify/classnames-template-literals'
+import { useApolloClient } from '@apollo/client'
+import { gracefullyRestart } from '@/graphql/WebSocketLink'
+import LoadingScreen from '@/pages/LoadingScreen'
 
 const errorClass = ctl(`
   text-xs
@@ -18,10 +21,8 @@ const errorClass = ctl(`
 
 export default function RegisterPage() {
   const { t } = useTranslation()
-  const [createAccount, { loading }] = useCreateAccountMutation({
-    refetchQueries: [{ query: CurrentUserDocument }],
-    awaitRefetchQueries: true
-  })
+  const apolloClient = useApolloClient()
+  const [createAccount, { loading }] = useCreateAccountMutation()
   const {
     register,
     handleSubmit,
@@ -34,15 +35,30 @@ export default function RegisterPage() {
   const email = watch('email')
   const password = watch('password')
   const { push } = useHistory()
+  const [success, setSuccess] = useState(false)
 
   const onSubmit = input => {
-    createAccount({ variables: { input } }).then(() => {
-      push('/explore')
-    })
+    createAccount({ variables: { input } }).then(
+      ({
+        data: {
+          createAccount: { accessToken, user }
+        }
+      }) => {
+        localStorage.setItem('token', accessToken)
+        setSuccess(true)
+        apolloClient.cache.writeQuery({
+          query: CurrentUserDocument,
+          data: user
+        })
+        gracefullyRestart()
+      }
+    )
   }
 
   return (
     <>
+      {success && <LoadingScreen />}
+
       <Helmet>
         <title>{t('auth.login')}</title>
       </Helmet>

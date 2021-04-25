@@ -10,7 +10,7 @@ export class DeleteAccountInput {
 }
 
 export async function deleteAccount(
-  { em, userId, res }: Context,
+  { em, userId }: Context,
   { password }: DeleteAccountInput
 ): Promise<boolean> {
   const user = await em.findOneOrFail(User, userId)
@@ -18,6 +18,5 @@ export async function deleteAccount(
   if (!match) throw new Error('error.login.wrongPassword')
   user.isDeleted = true
   await em.persistAndFlush(user)
-  res.clearCookie('token')
   return true
 }

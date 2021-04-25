@@ -1,11 +1,8 @@
-import { useContext } from 'react'
-import { UserContext } from '@/providers/UserProvider'
 import { useCurrentUserQuery } from '@/graphql/hooks'
+import { wsStatus } from '@/graphql/WebSocketLink'
 
 export const useCurrentUser = () => {
-  // const { user, loading } = useContext(UserContext)
-  // return [user, loading && !user]
   const { data, loading } = useCurrentUserQuery()
   const user = data?.user
-  return [user, loading && !user]
+  return [user, (loading || wsStatus.status !== 'connected') && !user]
 }

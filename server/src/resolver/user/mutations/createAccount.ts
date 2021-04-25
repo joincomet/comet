@@ -33,7 +33,7 @@ export async function createAccount(
   ctx: Context,
   { name, email, password }: CreateAccountInput
 ): Promise<LoginResponse> {
-  const { em, res, liveQueryStore } = ctx
+  const { em, liveQueryStore } = ctx
 
   email = email.toLowerCase()
   if (!isEmail(email)) throw new Error('error.login.invalidEmail')
@@ -106,11 +106,6 @@ export async function createAccount(
   await em.persistAndFlush(user)
   user.username = `${user.name}#${user.tag}`
   const accessToken = createAccessToken(user)
-  res.cookie('token', accessToken, {
-    maxAge: 2592000000,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production'
-  })
   liveQueryStore.invalidate(`Query.user`)
   ctx.userId = user.id
   return {

@@ -2,31 +2,46 @@ import { Link, useHistory } from 'react-router-dom'
 import AuthCard from '@/pages/auth/AuthCard'
 import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { CurrentUserDocument, useLoginMutation } from '@/graphql/hooks'
+import { useApolloClient } from '@apollo/client'
+import { gracefullyRestart } from '@/graphql/WebSocketLink'
+import { useState } from 'react'
+import LoadingScreen from '@/pages/LoadingScreen'
 
 export default function LoginPage() {
   const { t } = useTranslation()
-  const [login, { loading }] = useLoginMutation({
-    refetchQueries: [{ query: CurrentUserDocument }],
-    awaitRefetchQueries: true
-  })
+  const [login, { loading }] = useLoginMutation()
+  const apolloClient = useApolloClient()
   const { register, handleSubmit, watch } = useForm()
   const email = watch('email')
   const password = watch('password')
   const { push } = useHistory()
+  const [success, setSuccess] = useState(false)
 
   const onSubmit = input => {
-    login({ variables: { input } }).then(() => {
-      push('/me')
-    })
+    login({ variables: { input } }).then(
+      ({
+        data: {
+          login: { accessToken, user }
+        }
+      }) => {
+        localStorage.setItem('token', accessToken)
+        setSuccess(true)
+        apolloClient.cache.writeQuery({
+          query: CurrentUserDocument,
+          data: user
+        })
+        gracefullyRestart()
+      }
+    )
   }
 
   return (
     <>
+      {success && <LoadingScreen />}
+
       <Helmet>
         <title>{t('auth.login')}</title>
       </Helmet>

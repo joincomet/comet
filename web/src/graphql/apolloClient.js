@@ -1,24 +1,17 @@
-import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client'
+import { ApolloClient, InMemoryCache, from } from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
-import { SSELink } from '@/graphql/SSELink'
 import { onError } from '@apollo/client/link/error'
 import { RetryLink } from '@apollo/client/link/retry'
 import toast from 'react-hot-toast'
 import { isLiveQueryOperationDefinitionNode } from '@n1ru4l/graphql-live-query'
 import { UploadLink } from '@/graphql/upload'
 import i18n from '@/locales/i18n'
+import { WebSocketLink } from '@/graphql/WebSocketLink'
+import { setContext } from '@apollo/client/link/context'
 
 const url = import.meta.env.PROD
   ? `https://${import.meta.env.VITE_API_DOMAIN}/graphql`
   : 'http://localhost:4000/graphql'
-
-const sseLink = new SSELink({
-  url,
-  eventSourceOptions: {
-    // Ensure cookies are included with the request
-    withCredentials: true
-  }
-})
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
@@ -38,7 +31,26 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 })
 
-const httpLink = new UploadLink({ uri: url, credentials: 'include' })
+const httpLink = new UploadLink({
+  uri: url,
+  headers: { token: localStorage.getItem('token') }
+})
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('token')
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: token
+      ? {
+          ...headers,
+          token
+        }
+      : headers
+  }
+})
+
+const webSocketLink = new WebSocketLink()
 
 const splitLink = new RetryLink().split(
   ({ query }) => {
@@ -49,8 +61,8 @@ const splitLink = new RetryLink().split(
         isLiveQueryOperationDefinitionNode(definition))
     )
   },
-  sseLink,
-  httpLink
+  webSocketLink,
+  authLink.concat(httpLink)
 )
 
 const finalLink = from([errorLink, splitLink])
@@ -62,13 +74,13 @@ export const apolloClient = new ApolloClient({
       Query: {
         fields: {
           messages: {
-            keyArgs: false,
+            keyArgs: ['initialTime', 'channelId', 'groupId', 'userId'],
             merge(existing = [], incoming) {
               return [...existing, ...incoming]
             }
           },
           posts: {
-            keyArgs: false,
+            keyArgs: ['sort', 'time', 'serverId', 'folderId'],
             merge(existing = [], incoming) {
               return [...existing, ...incoming]
             }

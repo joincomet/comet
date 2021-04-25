@@ -44,7 +44,7 @@ export default function BottomBar() {
             content={`${
               window.electron && updateAvailable
                 ? 'Update available'
-                : 'Your are using the latest version'
+                : 'Up to date!'
             }`}
           >
             <div

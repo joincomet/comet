@@ -11,7 +11,6 @@ import {
   ServerPermission,
   User
 } from '@/entity'
-import { Request, Response } from 'express'
 import DataLoader from 'dataloader'
 import { NotificationSetting } from '@/types/NotificationSetting'
 import { LiveQueryStore } from '@/util'
@@ -20,8 +19,6 @@ export interface Context {
   em: EntityManager
   userId: string
   liveQueryStore: LiveQueryStore
-  req: Request
-  res: Response
   loaders: {
     channelMentionCountLoader: DataLoader<string, number>
     channelPermissionsLoader: DataLoader<string, ChannelPermission[]>
@@ -43,6 +40,7 @@ export interface Context {
     serverRolesLoader: DataLoader<string, Role[]>
     serverSystemMessagesChannelLoader: DataLoader<string, Channel>
     serverOnlineCountLoader: DataLoader<string, number>
+    serverJoinedLoader: DataLoader<string, boolean>
 
     relatedUsersLoader: DataLoader<string, User[]>
     relationshipStatusLoader: DataLoader<string, RelationshipStatus>

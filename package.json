@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.40",
+	"version": "0.0.41",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -9,7 +9,7 @@
 	},
 	"repository": "github:joincomet/comet",
 	"engines": {
-		"node": "15.x.x"
+		"node": "16.x.x"
 	},
 	"workspaces": [
 		"server",
@@ -38,5 +38,8 @@
 		"eslint-plugin-prettier": "^3.4.0",
 		"prettier": "^2.2.1",
 		"rimraf": "^3.0.2"
+	},
+	"dependencies": {
+		"ts-invariant": "^0.7.3"
 	}
 }

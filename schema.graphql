@@ -195,7 +195,7 @@ input CreateRoleInput {
 input CreateServerInput {
   avatarFile: Upload
   category: ServerCategory = Other
-  isPublic: Boolean = false
+  isPublic: Boolean = true
   name: String!
 }
 
@@ -462,7 +462,6 @@ type Mutation {
   leaveGroup(input: LeaveGroupInput!): Boolean!
   leaveServer(input: LeaveServerInput!): Boolean!
   login(input: LoginInput!): LoginResponse!
-  logout: Boolean!
   markAllRepliesRead: Boolean!
   markReplyRead(input: MarkReplyReadInput!): Reply!
   moveChannel(input: MoveChannelInput!): Channel!
@@ -703,6 +702,7 @@ type Server implements BaseEntity {
   isBanned: Boolean!
   isDeleted: Boolean!
   isFeatured: Boolean!
+  isJoined: Boolean!
   isPublic: Boolean!
   myRoles: [Role!]!
   name: String!

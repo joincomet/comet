@@ -31,6 +31,7 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useMessagesSubscriptions } from '@/hooks/useMessagesSubscriptions'
 import BottomBar from '@/components/BottomBar'
 import { DndProvider } from 'react-dnd'
+import { wsStatus } from '@/graphql/WebSocketLink'
 
 export default function PrivateRoutes() {
   const [user, userLoading] = useCurrentUser()
@@ -45,10 +46,14 @@ export default function PrivateRoutes() {
     setPath(pathname)
   }, [pathname])
 
+  useEffect(() => console.log(wsStatus.status), [wsStatus.status])
+
   return (
     <>
       <AnimatePresence>
-        {!user && userLoading && <LoadingScreen />}
+        {((!user && userLoading) || wsStatus.status !== 'connected') && (
+          <LoadingScreen />
+        )}
       </AnimatePresence>
 
       {user && <UserDialog />}
@@ -110,53 +115,37 @@ function ServerRoutes() {
   return (
     <>
       <AnimatePresence>{loading && <ServerLoadingScreen />}</AnimatePresence>
-      <ServerRoute path="/server/:serverId">
+      <PrivateRoute path="/server/:serverId">
         <ServerSidebar />
         <Switch>
-          <ServerRoute path="/server/:serverId" exact>
+          <PrivateRoute path="/server/:serverId" exact>
             <Redirect to={`/server/${serverId}/posts`} />
-          </ServerRoute>
-          <ServerRoute path="/server/:serverId/posts" exact>
+          </PrivateRoute>
+          <PrivateRoute path="/server/:serverId/posts" exact>
             <ServerPostsPage />
-          </ServerRoute>
-          <ServerRoute path="/server/:serverId/posts/:postId">
+          </PrivateRoute>
+          <PrivateRoute path="/server/:serverId/posts/:postId">
             <PostPage />
-          </ServerRoute>
-          <ServerRoute path="/server/:serverId/channel/:channelId">
+          </PrivateRoute>
+          <PrivateRoute path="/server/:serverId/channel/:channelId">
             <ChannelPage />
-          </ServerRoute>
-          <ServerRoute path="/server/:serverId/folder/:folderId">
+          </PrivateRoute>
+          <PrivateRoute path="/server/:serverId/folder/:folderId">
             <ServerFolderPage />
-          </ServerRoute>
+          </PrivateRoute>
         </Switch>
-      </ServerRoute>
+      </PrivateRoute>
     </>
   )
 }
 
 function PrivateRoute({ children, ...rest }) {
   const [user, userLoading] = useCurrentUser()
-  const dataLoading = false
   return (
     <Route
       {...rest}
       render={() => {
-        if (userLoading || dataLoading) return null
-        return user ? children : <Redirect to="/login" />
-      }}
-    />
-  )
-}
-
-function ServerRoute({ children, ...rest }) {
-  const [user, userLoading] = useCurrentUser()
-  const dataLoading = false
-  const serverLoading = false
-  return (
-    <Route
-      {...rest}
-      render={() => {
-        if (userLoading || dataLoading || serverLoading) return null
+        if (userLoading || wsStatus.status !== 'connected') return null
         return user ? children : <Redirect to="/login" />
       }}
     />

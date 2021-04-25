@@ -53,25 +53,21 @@ export async function messages(
     page
   }: MessagesArgs
 ): Promise<MessagesResponse[]> {
-  const channel = channelId ? await em.findOneOrFail(Channel, channelId) : null
-  const group = groupId ? await em.findOneOrFail(Group, groupId) : null
-  const toUser = userId ? await em.findOneOrFail(User, userId) : null
-
-  if (!channel && !group && !toUser)
+  if (!channelId && !groupId && !userId)
     throw new Error('error.message.missingArgs')
 
   const where: FilterQuery<Message> = {
     isDeleted: false
   }
   if (pinned) where.isPinned = true
-  if (channel) {
-    where.channel = channel
-  } else if (group) {
-    where.group = group
-  } else if (toUser) {
+  if (channelId) {
+    where.channel = channelId
+  } else if (groupId) {
+    where.group = groupId
+  } else if (userId) {
     where['$or'] = [
-      { author: currentUserId, toUser },
-      { author: toUser, toUser: currentUserId }
+      { author: currentUserId, toUser: userId },
+      { author: userId, toUser: currentUserId }
     ]
   }
 
@@ -85,7 +81,7 @@ export async function messages(
     await em.find(
       Message,
       where,
-      ['author'],
+      ['author', 'serverUser.roles', 'serverUser.user'],
       { createdAt: QueryOrder.DESC },
       pageSize + 1, // get one extra to determine hasMore
       page * pageSize

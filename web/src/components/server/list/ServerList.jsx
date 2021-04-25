@@ -95,6 +95,7 @@ function ServerListServer({ server }) {
   const serverPages = useStore(s => s.serverPages)
 
   const unread = !!server.channels.find(c => c.unreadCount > 0)
+  const active = serverId === server.id
 
   return (
     <ContextMenuTrigger data={{ type: ContextMenuType.Server, server }}>
@@ -104,14 +105,16 @@ function ServerListServer({ server }) {
         }`}
         name={server.name}
         ref={dragRef}
-        active={serverId === server.id}
+        active={active}
         unread={unread}
       >
         <ServerAvatar
           server={server}
           size={12}
           style={{ opacity }}
-          className="bg-gray-200 dark:bg-gray-800 rounded-3xl"
+          className={`bg-gray-200 dark:bg-gray-800 group-hover:rounded-2xl transition-all ${
+            active ? 'rounded-2xl' : 'rounded-3xl'
+          }`}
         />
       </ServerListItem>
     </ContextMenuTrigger>

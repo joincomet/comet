@@ -23,10 +23,6 @@ mutation deleteAccount($input: DeleteAccountInput!) {
   deleteAccount(input: $input)
 }
 
-mutation logout {
-  logout
-}
-
 mutation login($input: LoginInput!) {
   login(input: $input) {
     accessToken

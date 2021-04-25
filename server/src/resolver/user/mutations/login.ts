@@ -6,6 +6,7 @@ import * as argon2 from 'argon2'
 import { CustomError } from '@/types/CustomError'
 import { createAccessToken } from '@/util'
 import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
+import { createLoaders } from '@/util/loaders'
 
 @InputType()
 export class LoginInput {
@@ -20,7 +21,7 @@ export async function login(
   ctx: Context,
   { email, password }: LoginInput
 ): Promise<LoginResponse> {
-  const { em, res, liveQueryStore } = ctx
+  const { em, liveQueryStore } = ctx
 
   email = email.toLowerCase()
   if (!isEmail(email)) throw new Error('error.login.invalidEmail')
@@ -36,13 +37,9 @@ export async function login(
   user.lastLoginAt = new Date()
   await em.persistAndFlush(user)
   const accessToken = createAccessToken(user)
-  res.cookie('token', accessToken, {
-    maxAge: 2592000000,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production'
-  })
   liveQueryStore.invalidate(`Query.user`)
   ctx.userId = user.id
+  ctx.loaders = createLoaders(em, user.id)
   return {
     accessToken,
     user

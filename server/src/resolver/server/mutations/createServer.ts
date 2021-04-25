@@ -21,8 +21,8 @@ export class CreateServerInput {
   @Length(2, 100)
   name: string
 
-  @Field({ defaultValue: false })
-  isPublic: boolean = false
+  @Field({ defaultValue: true })
+  isPublic: boolean = true
 
   @Field(() => ServerCategory, { defaultValue: ServerCategory.Other })
   category: ServerCategory = ServerCategory.Other

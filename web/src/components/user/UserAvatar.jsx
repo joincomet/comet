@@ -20,7 +20,7 @@ export default forwardRef(
         ref={ref}
         avatarUrl={user?.avatarUrl}
         loading={loading}
-        className={`${className} cursor-pointer`}
+        className={`${className} cursor-pointer rounded-full`}
         size={size}
         style={
           !user?.avatarUrl ? { backgroundColor: colorsMap[user?.color] } : {}

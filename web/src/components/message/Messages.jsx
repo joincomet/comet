@@ -30,9 +30,9 @@ export default function Messages({ channel, user, group }) {
   const virtuoso = useRef(null)
 
   const [messages, fetching, fetchMore, hasMore] = useMessages({
-    channel,
-    user,
-    group
+    channelId: channel?.id,
+    userId: user?.id,
+    group: group?.id
   })
 
   const [length, setLength] = useState(messages?.length || 0)
