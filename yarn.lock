@@ -6930,13 +6930,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"event-source-polyfill@npm:^1.0.22":
-  version: 1.0.22
-  resolution: "event-source-polyfill@npm:1.0.22"
-  checksum: 59fc715a4c1e81128859d3ac580562ebc16785df7d21a24ba9cf97ba20402f60cf65c077cdccc11de80024eeeae6069582c278589b175f2eb8093e8420be77cd
-  languageName: node
-  linkType: hard
-
 "eventemitter3@npm:^3.1.0":
   version: 3.1.2
   resolution: "eventemitter3@npm:3.1.2"
@@ -16014,7 +16007,6 @@ typescript@^4.2.4:
     electron-updater: ^4.3.8
     eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
-    event-source-polyfill: ^1.0.22
     extract-files: ^9.0.0
     framer-motion: ^4.1.9
     fuse.js: ^6.4.6

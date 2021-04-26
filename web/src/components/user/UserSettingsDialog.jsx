@@ -131,14 +131,8 @@ export default function UserSettingsDialog({ open, setOpen }) {
   return (
     <>
       <Dialog isOpen={open} close={close}>
-        <div
-          className="rounded-xl dark:bg-gray-800 scrollbar-custom"
-          style={{
-            height: `calc(100vh - 2.5rem)`,
-            width: `calc(100% - 10rem)`
-          }}
-        >
-          <div className="w-full h-full relative flex">
+        <div className="min-w-full h-full min-h-full h-screen dark:bg-gray-800 scrollbar-custom">
+          <div className="w-full relative flex">
             <button
               className="absolute top-3 right-3 focus:outline-none rounded-full transition dark:hover:bg-gray-700 p-2"
               onClick={close}
@@ -146,8 +140,8 @@ export default function UserSettingsDialog({ open, setOpen }) {
               <IconXLarge className="w-6 h-6 text-tertiary" />
             </button>
 
-            <div className="w-1/3 dark:bg-gray-800 flex justify-end px-4 py-12">
-              <div className="w-48">
+            <div className="w-1/3 min-w-[14rem] dark:bg-gray-800 flex justify-end px-4 py-12">
+              <div className="w-56">
                 <SidebarLabel>User Settings</SidebarLabel>
                 <SidebarItem>My Account</SidebarItem>
                 <SidebarItem

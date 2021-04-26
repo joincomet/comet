@@ -33,6 +33,7 @@ export default function MessageInput({ channel, group, user }) {
   const [sendMessage] = useCreateMessageMutation()
 
   const editor = useEditor({
+    autofocus: true,
     extensions: [
       ...defaultExtensions().filter(extension =>
         exts.includes(extension.config.name)

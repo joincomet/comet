@@ -1,6 +1,7 @@
 import {
   Message,
   MessageType,
+  Role,
   Server,
   ServerInvite,
   ServerUser,
@@ -66,6 +67,8 @@ export async function joinServer(
   join.position = firstServerJoin
     ? ReorderUtils.positionBefore(firstServerJoin.position)
     : ReorderUtils.FIRST_POSITION
+  const everyoneRole = await em.findOne(Role, { server, name: '@everyone' })
+  if (everyoneRole) join.roles.add(everyoneRole)
   server.userCount++
   await em.persistAndFlush([join, server])
   liveQueryStore.invalidate([`User:${user.id}`, `Server:${server.id}`])

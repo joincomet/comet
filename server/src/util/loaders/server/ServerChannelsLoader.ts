@@ -6,7 +6,7 @@ export const serverChannelsLoader = (em: EntityManager) => {
   return new DataLoader<string, Channel[]>(async (serverIds: string[]) => {
     const channels = await em.find(
       Channel,
-      { server: serverIds },
+      { server: serverIds, isDeleted: false },
       { orderBy: { position: 'DESC' } }
     )
     const map: Record<string, Channel[]> = {}

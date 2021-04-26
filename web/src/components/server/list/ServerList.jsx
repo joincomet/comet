@@ -98,7 +98,10 @@ function ServerListServer({ server }) {
   const active = serverId === server.id
 
   return (
-    <ContextMenuTrigger data={{ type: ContextMenuType.Server, server }}>
+    <ContextMenuTrigger
+      className="h-12"
+      data={{ type: ContextMenuType.Server, server }}
+    >
       <ServerListItem
         to={`/server/${server.id}${
           serverPages[server.id] ? `/${serverPages[server.id]}` : ''
@@ -112,7 +115,7 @@ function ServerListServer({ server }) {
           server={server}
           size={12}
           style={{ opacity }}
-          className={`bg-gray-200 dark:bg-gray-800 group-hover:rounded-2xl transition-all ${
+          className={`bg-gray-200 h-12 w-12 dark:bg-gray-800 group-hover:rounded-2xl transition-all ${
             active ? 'rounded-2xl' : 'rounded-3xl'
           }`}
         />

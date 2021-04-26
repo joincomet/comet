@@ -12,7 +12,9 @@ export async function deleteChannel(
   { em, userId, liveQueryStore }: Context,
   { channelId }: DeleteChannelInput
 ): Promise<boolean> {
-  const channel = await em.findOneOrFail(Channel, channelId, ['server'])
+  const channel = await em.findOneOrFail(Channel, channelId, [
+    'server.systemMessagesChannel'
+  ])
   const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(
     em,
@@ -20,7 +22,9 @@ export async function deleteChannel(
     ServerPermission.ManageChannels
   )
   channel.isDeleted = true
-  await em.persistAndFlush(channel)
+  if (channel.server.systemMessagesChannel === channel)
+    channel.server.systemMessagesChannel = null
+  await em.persistAndFlush([channel, channel.server])
   liveQueryStore.invalidate(`Channel:${channelId}`)
   return true
 }

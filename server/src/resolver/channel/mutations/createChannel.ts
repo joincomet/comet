@@ -1,7 +1,6 @@
 import { Context } from '@/types'
 import { Field, ID, InputType } from 'type-graphql'
 import { Channel, Server, ServerPermission, User } from '@/entity'
-import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
 
 @InputType()
@@ -27,7 +26,9 @@ export async function createChannel(
     ServerPermission.ManageChannels
   )
 
-  const server = await em.findOneOrFail(Server, serverId)
+  const server = await em.findOneOrFail(Server, serverId, [
+    'systemMessagesChannel'
+  ])
 
   const firstChannel = await em.findOne(
     Channel,
@@ -44,7 +45,9 @@ export async function createChannel(
       : ReorderUtils.FIRST_POSITION
   })
 
-  await em.persistAndFlush(channel)
+  if (!server.systemMessagesChannel) server.systemMessagesChannel = channel
+
+  await em.persistAndFlush([channel, server])
   liveQueryStore.invalidate(`Server:${serverId}`)
   return channel
 }

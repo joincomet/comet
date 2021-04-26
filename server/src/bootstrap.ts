@@ -21,6 +21,7 @@ import { Context } from '@/types'
 import { createLoaders } from '@/util/loaders/createLoaders'
 import cors from 'cors'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+import { Disposable } from 'graphql-ws'
 
 const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
 
@@ -69,6 +70,7 @@ export async function bootstrap() {
 
   const port = +process.env.PORT || 4000
 
+  let graphqlWs: Disposable
   const server = app.listen(port, () => {
     // create and use the websocket server
     const wsServer = new ws.Server({
@@ -76,7 +78,7 @@ export async function bootstrap() {
       path: '/graphql'
     })
 
-    useServer(
+    graphqlWs = useServer(
       {
         schema,
         execute: liveQueryStore.execute,
@@ -97,6 +99,8 @@ export async function bootstrap() {
 
   process.once('SIGINT', () => {
     console.log('Received SIGINT. Shutting down HTTP and Websocket server.')
+    graphqlWs?.dispose()
+    server.close()
     orm.close()
   })
 }

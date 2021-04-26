@@ -237,6 +237,7 @@ input DeleteRoleInput {
 }
 
 input DeleteServerInput {
+  password: String!
   serverId: ID!
 }
 

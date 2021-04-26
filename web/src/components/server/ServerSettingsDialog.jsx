@@ -6,30 +6,29 @@ import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import UserAvatar from '@/components/user/UserAvatar'
 import ctl from '@netlify/classnames-template-literals'
 import {
-  useChangeUserAvatarMutation,
-  useDeleteAccountMutation,
-  useLogoutMutation,
-  useUpdateAccountMutation
+  useDeleteServerMutation,
+  useUpdateServerMutation
 } from '@/graphql/hooks'
 import { useForm } from 'react-hook-form'
 import isEmail from 'validator/es/lib/isEmail'
-import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useApolloClient } from '@apollo/client'
+import ServerAvatar from '@/components/server/ServerAvatar'
 
 const inputClass = ctl(`
   w-full
   h-10
-  dark:bg-gray-750
+  dark:bg-gray-775
+  dark:border-gray-850
+  border
   rounded
   focus:outline-none
   transition
-  focus:border-blue-400
+  dark:focus:border-blue-600
   px-4
   text-base
   text-primary
-  border-none
 `)
 
 const labelClass = ctl(`
@@ -78,7 +77,7 @@ const cancelBtn = ctl(`
   focus:outline-none
 `)
 
-export default function ServerSettingsDialog({ open, setOpen }) {
+export default function ServerSettingsDialog({ open, setOpen, server }) {
   const [user] = useCurrentUser()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const {
@@ -91,52 +90,23 @@ export default function ServerSettingsDialog({ open, setOpen }) {
     mode: 'onChange'
   })
   const name = watch('name')
-  const email = watch('email')
-  const password = watch('password')
-  const currentPassword = watch('currentPassword')
 
-  const [
-    updateAccount,
-    { loading: updateAccountLoading }
-  ] = useUpdateAccountMutation()
-
-  const [changeAvatar] = useChangeUserAvatarMutation()
-  const [logout] = useLogoutMutation()
-  const { push } = useHistory()
-  const apolloClient = useApolloClient()
+  const [updateServer, { loading: updateLoading }] = useUpdateServerMutation()
 
   const close = () => {
     setOpen(false)
     setTimeout(() => reset(), 300)
   }
 
-  const onSubmit = ({ name, email, password, currentPassword }) => {
-    updateAccount({
-      variables: {
-        input: {
-          name,
-          email,
-          password: password ? password : null,
-          currentPassword
-        }
-      }
-    }).then(() => {
-      toast.success('Saved changes!')
-      reset()
-    })
+  const onSubmit = ({ name }) => {
+    console.log(name)
   }
 
   return (
     <>
       <Dialog isOpen={open} close={close}>
-        <div
-          className="rounded-xl dark:bg-gray-800 scrollbar-custom"
-          style={{
-            height: `calc(100vh - 2.5rem)`,
-            width: `calc(100% - 10rem)`
-          }}
-        >
-          <div className="w-full h-full relative flex">
+        <div className="min-w-full h-full min-h-full h-screen dark:bg-gray-800 scrollbar-custom">
+          <div className="w-full relative flex">
             <button
               className="absolute top-3 right-3 focus:outline-none rounded-full transition dark:hover:bg-gray-700 p-2"
               onClick={close}
@@ -144,172 +114,68 @@ export default function ServerSettingsDialog({ open, setOpen }) {
               <IconXLarge className="w-6 h-6 text-tertiary" />
             </button>
 
-            <div className="w-1/3 dark:bg-gray-800 flex justify-end px-4 py-12">
-              <div className="w-48">
-                <SidebarLabel>User Settings</SidebarLabel>
-                <SidebarItem>My Account</SidebarItem>
-                <SidebarItem
-                  onClick={() => {
-                    setOpen(false)
-                    push('/')
-                    logout().then(() => {
-                      apolloClient.resetStore()
-                    })
-                  }}
-                >
-                  <span className="text-red-500">Log Out</span>
-                </SidebarItem>
+            <div className="w-1/3 min-w-[14rem] dark:bg-gray-800 flex justify-end px-5 py-12">
+              <div className="w-56">
+                <SidebarLabel>{server.name}</SidebarLabel>
+                <SidebarItem>Settings</SidebarItem>
+                <SidebarItem>Roles</SidebarItem>
               </div>
             </div>
             <div className="w-2/3 px-10 py-16 dark:bg-gray-750">
               <div className="max-w-screen-sm text-left">
                 <div className="font-semibold text-primary uppercase mb-6">
-                  My Account
+                  Planet Settings
                 </div>
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="rounded-lg dark:bg-gray-800 p-4"
-                >
-                  <div className="flex items-center">
-                    <input
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp,image/gif"
-                      name="avatarFile"
-                      id="avatarFile"
-                      hidden
-                      onChange={e => {
-                        const avatarFile = e.target.files[0]
-                        if (!avatarFile) return
-                        changeAvatar({ variables: { input: { avatarFile } } })
-                      }}
+                <div className="flex">
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    id="avatarFile"
+                    hidden
+                    {...register('avatarFile')}
+                  />
+                  <label
+                    htmlFor="avatarFile"
+                    className="relative h-24 w-24 group"
+                  >
+                    <ServerAvatar
+                      server={server}
+                      className="rounded-full dark:bg-gray-800"
+                      size={24}
                     />
-                    <label htmlFor="avatarFile" className="relative group">
-                      <UserAvatar user={user} size={20} />
-                      <div className="absolute rounded-full cursor-pointer inset-0 bg-black opacity-0 group-hover:opacity-100 bg-opacity-50 z-10 transition flex items-center justify-center">
-                        <IconEdit className="w-1/2 h-1/2" />
-                      </div>
-                    </label>
-
-                    <div className="flex items-end ml-6">
-                      <div className="font-semibold text-xl text-primary">
-                        {user.name}
-                      </div>
-                      <div
-                        className="text-base text-tertiary"
-                        style={{ marginBottom: '1px' }}
-                      >
-                        #{user.tag}
-                      </div>
+                    <div className="absolute rounded-full cursor-pointer inset-0 bg-black opacity-0 group-hover:opacity-100 bg-opacity-50 z-10 transition flex items-center justify-center">
+                      <IconEdit className="w-1/2 h-1/2" />
                     </div>
+                  </label>
+
+                  <div className="ml-6">
+                    <label className={labelClass}>Name</label>
+                    <input className={inputClass} defaultValue={server.name} />
                   </div>
+                </div>
 
-                  <div className="mt-5 space-y-5">
-                    <div>
-                      <label htmlFor="name" className={labelClass}>
-                        Name
-                      </label>
-                      <input
-                        className={inputClass}
-                        id="name"
-                        defaultValue={user.name}
-                        {...register('name', {
-                          required: true,
-                          maxLength: 32,
-                          minLength: 2
-                        })}
-                        maxLength={32}
-                        minLength={2}
-                        type="text"
-                      />
-                      {errors.name && (
-                        <div className={errorClass}>
-                          Name must be 2-32 characters
-                        </div>
-                      )}
-                    </div>
+                <div className="pt-5 pb-5 w-full">
+                  <label className={labelClass}>Description</label>
+                  <textarea
+                    className="h-24 w-full scrollbar-custom dark:bg-gray-775 border dark:border-gray-850 rounded resize-none"
+                    defaultValue={server.description}
+                  />
+                </div>
 
-                    <div>
-                      <label htmlFor="email" className={labelClass}>
-                        Email
-                      </label>
-                      <input
-                        className={inputClass}
-                        id="email"
-                        defaultValue={user.email}
-                        {...register('email', {
-                          required: true,
-                          validate: e => isEmail(e)
-                        })}
-                        type="email"
-                      />
-                      {errors.email && (
-                        <div className={errorClass}>Invalid email</div>
-                      )}
-                    </div>
-
-                    <div>
-                      <label htmlFor="password" className={labelClass}>
-                        New Password
-                      </label>
-                      <input
-                        className={inputClass}
-                        id="password"
-                        {...register('password', { minLength: 6 })}
-                        type="password"
-                        minLength={6}
-                      />
-                      {errors.password && (
-                        <div className={errorClass}>
-                          Password must be at least 6 characters
-                        </div>
-                      )}
-                    </div>
-
-                    <div>
-                      <label htmlFor="currentPassword" className={labelClass}>
-                        Current Password
-                      </label>
-                      <input
-                        className={inputClass}
-                        id="currentPassword"
-                        {...register('currentPassword', { required: true })}
-                        type="password"
-                      />
-                    </div>
+                <div className={labelClass}>Banner</div>
+                <div className="w-full h-32 relative group bg-gradient-to-br from-red-400 to-indigo-600 rounded">
+                  <div className="absolute rounded cursor-pointer inset-0 bg-black opacity-0 group-hover:opacity-100 bg-opacity-50 z-10 transition flex items-center justify-center">
+                    <IconEdit className="w-1/2 h-1/2" />
                   </div>
+                </div>
 
-                  <div className="flex items-center mt-5">
-                    <div className="ml-auto" />
-                    <button
-                      type="submit"
-                      disabled={
-                        updateAccountLoading ||
-                        !currentPassword ||
-                        name?.length < 2 ||
-                        name?.length > 32 ||
-                        !isEmail(email || '') ||
-                        (password && password?.length < 6) ||
-                        (!password &&
-                          email === user.email &&
-                          name === user.name)
-                      }
-                      className="disabled:opacity-50 disabled:cursor-not-allowed rounded px-4 h-9 text-sm text-primary bg-green-600 focus:outline-none flex items-center"
-                    >
-                      Save Changes
-                      {updateAccountLoading && (
-                        <IconSpinner className="w-5 h-5 text-primary ml-3" />
-                      )}
-                    </button>
-                  </div>
-                </form>
-
-                <div className="mt-10 flex items-center justify-end">
+                <div className="mt-10 flex items-center">
                   <button
                     type="button"
                     onClick={() => setDeleteOpen(true)}
                     className={deleteBtn}
                   >
-                    Delete Account
+                    Delete Planet
                   </button>
                 </div>
               </div>
@@ -317,7 +183,8 @@ export default function ServerSettingsDialog({ open, setOpen }) {
           </div>
         </div>
 
-        <DeleteAccountDialog
+        <DeleteServerDialog
+          server={server}
           deleteOpen={deleteOpen}
           setDeleteOpen={setDeleteOpen}
         />
@@ -326,9 +193,9 @@ export default function ServerSettingsDialog({ open, setOpen }) {
   )
 }
 
-function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
+function DeleteServerDialog({ deleteOpen, setDeleteOpen, server }) {
   const [password, setPassword] = useState('')
-  const [deleteAccount, { loading }] = useDeleteAccountMutation()
+  const [deleteServer, { loading }] = useDeleteServerMutation()
   const { push } = useHistory()
   const apolloClient = useApolloClient()
 
@@ -336,11 +203,11 @@ function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
     <Dialog isOpen={deleteOpen} close={() => setDeleteOpen(false)}>
       <div className="max-w-md w-full rounded-md dark:bg-gray-800 shadow-lg p-4">
         <div className="text-red-400 text-2xl font-semibold">
-          Delete Account
+          Delete {server.name}
         </div>
 
         <div className="text-secondary pb-5 pt-3 text-base">
-          You will not be able to recover your account.
+          You will not be able to restore this planet.
         </div>
 
         <div className="text-left">
@@ -370,14 +237,16 @@ function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
             type="button"
             disabled={!password || loading}
             onClick={() => {
-              deleteAccount({ variables: { input: { password } } }).then(() => {
+              deleteServer({
+                variables: { input: { password, serverId: server.id } }
+              }).then(() => {
                 setDeleteOpen(false)
                 push('/')
                 apolloClient.resetStore()
               })
             }}
           >
-            Delete Account
+            Delete {server.name}
             {loading && <IconSpinner className="w-5 h-5 text-primary ml-3" />}
           </button>
         </div>

@@ -1,7 +1,4 @@
-import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
-/*import { EventSourcePolyfill } from 'event-source-polyfill'
-window.EventSource = EventSourcePolyfill*/
 
 import './locales/i18n'
 
@@ -18,18 +15,8 @@ if (
   window.location.pathname === '/__dev__/graphiql'
 ) {
   import('./dev/GraphiQL').then(({ GraphiQL }) => {
-    ReactDOM.render(
-      <StrictMode>
-        <GraphiQL />
-      </StrictMode>,
-      document.getElementById('root')
-    )
+    ReactDOM.render(<GraphiQL />, document.getElementById('root'))
   })
 } else {
-  ReactDOM.render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-    document.getElementById('root')
-  )
+  ReactDOM.render(<App />, document.getElementById('root'))
 }

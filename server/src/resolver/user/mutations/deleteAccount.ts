@@ -1,5 +1,5 @@
 import { Context } from '@/types'
-import { User } from '@/entity'
+import { ServerUser, ServerUserStatus, User } from '@/entity'
 import { Field, InputType } from 'type-graphql'
 import * as argon2 from 'argon2'
 
@@ -18,5 +18,10 @@ export async function deleteAccount(
   if (!match) throw new Error('error.login.wrongPassword')
   user.isDeleted = true
   await em.persistAndFlush(user)
+  await em
+    .createQueryBuilder(ServerUser)
+    .where({ user, status: ServerUserStatus.Joined })
+    .update({ status: ServerUserStatus.None })
+    .execute()
   return true
 }

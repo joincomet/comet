@@ -257,6 +257,7 @@ export type DeleteRoleInput = {
 };
 
 export type DeleteServerInput = {
+  password: Scalars['String'];
   serverId: Scalars['ID'];
 };
 
@@ -1402,7 +1403,15 @@ export type VotePostInput = {
 
 export type ChannelFragment = (
   { __typename?: 'Channel' }
-  & Pick<Channel, 'id' | 'name' | 'description' | 'unreadCount' | 'mentionCount'>
+  & Pick<Channel, 'id' | 'name' | 'description' | 'unreadCount' | 'mentionCount' | 'permissions'>
+  & { rolePermissions: Array<(
+    { __typename?: 'ChannelPermissions' }
+    & Pick<ChannelPermissions, 'allowedPermissions' | 'deniedPermissions'>
+    & { role: (
+      { __typename?: 'Role' }
+      & RoleFragment
+    ) }
+  )> }
 );
 
 export type CommentFragment = (
@@ -3044,15 +3053,6 @@ export const ServerFragmentDoc = gql`
   }
 }
     `;
-export const ChannelFragmentDoc = gql`
-    fragment Channel on Channel {
-  id
-  name
-  description
-  unreadCount
-  mentionCount
-}
-    `;
 export const RoleFragmentDoc = gql`
     fragment Role on Role {
   id
@@ -3061,6 +3061,23 @@ export const RoleFragmentDoc = gql`
   permissions
 }
     `;
+export const ChannelFragmentDoc = gql`
+    fragment Channel on Channel {
+  id
+  name
+  description
+  unreadCount
+  mentionCount
+  permissions
+  rolePermissions {
+    allowedPermissions
+    deniedPermissions
+    role {
+      ...Role
+    }
+  }
+}
+    ${RoleFragmentDoc}`;
 export const FolderFragmentDoc = gql`
     fragment Folder on Folder {
   id

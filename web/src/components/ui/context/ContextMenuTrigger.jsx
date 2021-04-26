@@ -3,9 +3,14 @@ import { useContextMenuTrigger } from '@/providers/ContextMenuProvider'
 export default function ContextMenuTrigger({
   data,
   leftClick = false,
-  children
+  children,
+  className
 }) {
   const [bindTrigger] = useContextMenuTrigger(data, leftClick)
 
-  return <div {...bindTrigger}>{children}</div>
+  return (
+    <div className={className} {...bindTrigger}>
+      {children}
+    </div>
+  )
 }
