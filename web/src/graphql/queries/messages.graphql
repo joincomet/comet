@@ -2,17 +2,15 @@ query messages(
   $channelId: ID
   $userId: ID
   $groupId: ID
-  $pageSize: PositiveInt
-  $page: NonNegativeInt
-  $initialTime: DateTime
+  $limit: PositiveInt
+  $cursor: ID
 ) {
   messages(
     channelId: $channelId
     userId: $userId
     groupId: $groupId
-    pageSize: $pageSize
-    page: $page
-    initialTime: $initialTime
+    limit: $limit
+    cursor: $cursor
   ) {
     hasMore
     messages {
@@ -21,11 +19,7 @@ query messages(
         ...User
       }
       serverUser {
-        name
-        color
-        roles {
-          ...Role
-        }
+        ...ServerUser
       }
     }
   }

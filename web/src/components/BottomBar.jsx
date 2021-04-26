@@ -3,7 +3,6 @@ import UserAvatar from '@/components/user/UserAvatar'
 import {
   IconBell,
   IconDownload,
-  IconDownloadLarge,
   IconFolder,
   IconSearch,
   IconSettings
@@ -12,8 +11,8 @@ import Tippy from '@tippyjs/react'
 import { useEffect, useState } from 'react'
 import UserSettingsDialog from '@/components/user/UserSettingsDialog'
 import { version } from '../../package.json'
-import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
+import { useChangeOnlineStatusMutation } from '@/graphql/hooks'
 
 export default function BottomBar() {
   const [currentUser] = useCurrentUser()
@@ -30,6 +29,18 @@ export default function BottomBar() {
       })
     }
   }, [])
+
+  const [changeOnlineStatus] = useChangeOnlineStatusMutation()
+
+  // Update online status every 15 seconds
+  useEffect(() => {
+    const id = setInterval(() => {
+      changeOnlineStatus({
+        variables: { input: { onlineStatus: currentUser.onlineStatus } }
+      })
+    }, 15000)
+    return () => clearInterval(id)
+  })
 
   return (
     <>

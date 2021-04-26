@@ -57,11 +57,6 @@ export default function Editor({ text, setText }) {
     <div className="dark:bg-gray-750 rounded">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
-      {/*<ContentEditable
-        html={text}
-        className="min-h-[7.5rem] p-4 focus:outline-none text-base text-primary"
-        onChange={e => setText(e.target.value)}
-      />*/}
     </div>
   )
 }

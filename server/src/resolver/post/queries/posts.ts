@@ -26,12 +26,12 @@ import { GraphQLNonNegativeInt, GraphQLPositiveInt } from 'graphql-scalars'
 export class PostsArgs {
   @Field(() => GraphQLNonNegativeInt, { defaultValue: 0 })
   @Min(0)
-  page: number = 0
+  offset: number = 0
 
   @Field(() => GraphQLPositiveInt, { defaultValue: 20 })
   @Min(1)
   @Max(100)
-  pageSize: number = 20
+  limit: number = 20
 
   @Field(() => PostsSort, {
     defaultValue: 'Hot'
@@ -94,8 +94,8 @@ export class PostsResponse {
 
 export async function posts(
   { em, userId }: Context,
-  { page, pageSize, sort, time, folderId, serverId, search }: PostsArgs
-): Promise<PostsResponse[]> {
+  { offset, limit, sort, time, folderId, serverId, search }: PostsArgs
+): Promise<PostsResponse> {
   const user = await em.findOneOrFail(User, userId)
   let orderBy = {}
   if (sort === PostsSort.New) orderBy = { createdAt: QueryOrder.DESC }
@@ -156,15 +156,12 @@ export async function posts(
     },
     ['author.roles', 'author.user', 'server'],
     orderBy,
-    pageSize + 1, // get one extra to determine hasMore
-    page * pageSize
+    limit + 1,
+    offset
   )
-
-  const hasMore = posts.length > pageSize
-  return [
-    {
-      hasMore,
-      posts: hasMore ? posts.slice(0, posts.length - 1) : posts
-    }
-  ]
+  const hasMore = posts.length > limit
+  return {
+    hasMore,
+    posts: hasMore ? posts.slice(0, limit) : posts
+  } as PostsResponse
 }

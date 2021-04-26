@@ -33,10 +33,8 @@ import {
   UnvotePostInput
 } from './mutations'
 import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
-import { PostsArgs, PostsResponse, posts, post } from '@/resolver/post/queries'
+import { PostsArgs, posts, post, PostsResponse } from '@/resolver/post/queries'
 import { scrapeMetadata } from '@/util'
-import { GraphQLURL } from 'graphql-scalars'
-import { URL } from 'url'
 import { IsUrl, MaxLength } from 'class-validator'
 
 @ArgsType()
@@ -60,12 +58,12 @@ export class PostResolver {
 
   // --- Queries ---
   @Authorized()
-  @Query(() => [PostsResponse])
+  @Query(() => PostsResponse)
   async posts(
     @Ctx() ctx: Context,
     @Args()
     args: PostsArgs
-  ): Promise<PostsResponse[]> {
+  ): Promise<PostsResponse> {
     return posts(ctx, args)
   }
 

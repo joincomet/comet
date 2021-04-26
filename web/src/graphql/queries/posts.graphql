@@ -1,7 +1,7 @@
 query posts(
   $sort: PostsSort
-  $page: NonNegativeInt
-  $pageSize: PositiveInt
+  $offset: NonNegativeInt
+  $limit: PositiveInt
   $time: PostsTime
   $folderId: ID
   $serverId: ID
@@ -13,8 +13,8 @@ query posts(
     folderId: $folderId
     serverId: $serverId
     search: $search
-    page: $page
-    pageSize: $pageSize
+    offset: $offset
+    limit: $limit
   ) {
     hasMore
     posts {

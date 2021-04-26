@@ -1,47 +1,33 @@
-import { useEffect, useState } from 'react'
 import { useMessagesQuery } from '@/graphql/hooks'
-import { useStore } from '@/hooks/useStore'
 
-export function useMessages({ channelId, groupId, userId }) {
-  const initialTime = useStore(s => s.initialTime)
-  const [page, setPage] = useState(0)
-
-  const variables = {
-    channelId,
-    groupId,
-    userId,
-    initialTime: initialTime ? new Date(initialTime) : null,
-    pageSize: 100,
-    page
-  }
-
-  useEffect(() => console.log({ channelId, groupId, userId }), [
-    channelId,
-    groupId,
-    userId
-  ])
-
-  const { data, loading, fetchMore } = useMessagesQuery({
-    variables,
-    skip: (!channelId && !groupId && !userId) || !initialTime,
-    fetchPolicy: 'cache-and-network',
+export const useMessages = ({ channelId, groupId, userId }) => {
+  const vars = { channelId, groupId, userId }
+  const { data, fetchMore, loading } = useMessagesQuery({
+    variables: {
+      ...vars,
+      cursor: null
+    },
+    fetchPolicy: 'network-only',
     nextFetchPolicy: 'cache-first'
   })
-
-  return [
-    data?.messages.flatMap(res => res.messages),
-    loading,
-    () => {
-      // Wait 3 seconds before fetching because of bug where messages sometimes starts at top and immediately loads more
-      if (
-        !data ||
-        !data?.messages[0]?.hasMore ||
-        new Date() - initialTime < 3000
-      )
-        return
-      setPage(page + 1)
-      fetchMore({ variables })
-    },
-    data && data.messages.length > 0 ? data.messages[0].hasMore : true
-  ]
+  const hasMore = data?.messages.hasMore
+  const messages = data?.messages.messages ?? []
+  const loadMore = () => {
+    if (!hasMore || messages.length === 0) return
+    fetchMore({
+      variables: {
+        ...vars,
+        cursor: messages[0].id
+      },
+      updateQuery: (prev, { fetchMoreResult: res }) => {
+        return {
+          messages: {
+            hasMore: res.messages.hasMore,
+            messages: [...res.messages.messages, ...prev.messages.messages]
+          }
+        }
+      }
+    })
+  }
+  return [messages, loading, loadMore, hasMore]
 }

@@ -1,8 +1,8 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarUser from '@/components/ui/sidebar/SidebarUser'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useStore } from '@/hooks/useStore'
-import { useChannelUsersQuery } from '@/graphql/hooks'
+import { ServerPermission, useServerUsersQuery } from '@/graphql/hooks'
 import { Virtuoso } from 'react-virtuoso'
 import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
@@ -10,17 +10,19 @@ import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 export default function ChannelUsersSidebar({ channel }) {
   const server = useCurrentServer()
 
-  const { data } = useChannelUsersQuery({
-    variables: { channelId: channel?.id },
-    skip: !channel
+  const { data } = useServerUsersQuery({
+    variables: { serverId: server?.id },
+    skip: !server
   })
 
-  const users = data?.channelUsers ?? []
+  const serverUsers = data?.serverUsers ?? []
 
   const items = useMemo(() => {
     const temp = []
-    for (const role of server.roles) {
-      const roleUsers = users.filter(
+    for (const role of server.roles.filter(r =>
+      r.permissions.includes(ServerPermission.DisplayRoleSeparately)
+    )) {
+      const roleUsers = serverUsers.filter(
         user =>
           user.isOnline &&
           user.roles.map(r => r.id).includes(role.id) &&
@@ -30,13 +32,23 @@ export default function ChannelUsersSidebar({ channel }) {
       temp.push(`${role.name} — ${roleUsers.length}`)
       temp.push(...roleUsers)
     }
-    const offlineUsers = users.filter(user => !user.isOnline)
+    const onlineUsers = serverUsers.filter(
+      serverUser => serverUser.user.isOnline
+    )
+    if (onlineUsers.length) {
+      temp.push(`Online — ${onlineUsers.length}`)
+      temp.push(...onlineUsers)
+    }
+
+    const offlineUsers = serverUsers.filter(
+      serverUser => !serverUser.user.isOnline
+    )
     if (offlineUsers.length) {
       temp.push(`Offline — ${offlineUsers.length}`)
       temp.push(...offlineUsers)
     }
     return temp
-  }, [users, server.roles])
+  }, [serverUsers, server.roles])
 
   const virtusoRef = useRef()
 

@@ -8,4 +8,7 @@ fragment Server on Server {
   isPublic
   initials
   isJoined
+  owner {
+    id
+  }
 }

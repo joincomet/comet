@@ -4,6 +4,7 @@ import {
   Authorized,
   Ctx,
   FieldResolver,
+  ID,
   Mutation,
   Query,
   Resolver,
@@ -18,7 +19,7 @@ import {
   ServerUser
 } from '@/entity'
 import { Context, NotificationSetting } from '@/types'
-import { publicServers, PublicServersArgs } from './queries'
+import { publicServers, PublicServersArgs, serverUsers } from './queries'
 import {
   banUserFromServer,
   BanUserFromServerInput,
@@ -140,6 +141,15 @@ export class ServerResolver {
     @Args() args: PublicServersArgs
   ): Promise<Server[]> {
     return publicServers(ctx, args)
+  }
+
+  @Authorized()
+  @Query(() => [ServerUser])
+  async serverUsers(
+    @Ctx() ctx: Context,
+    @Arg('serverId', () => ID) serverId: string
+  ): Promise<ServerUser[]> {
+    return serverUsers(ctx, serverId)
   }
 
   // --- Mutations ---

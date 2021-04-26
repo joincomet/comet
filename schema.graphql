@@ -602,16 +602,15 @@ enum PublicServersSort {
 }
 
 type Query {
-  channelUsers(channelId: ID!): [ServerUser!]!
   comments(postId: ID, sort: CommentsSort = Top): [Comment!]!
   folder(id: ID!): Folder!
   getLinkMeta(linkUrl: String!): LinkMetadata
-  messages(channelId: ID, groupId: ID, initialTime: DateTime, page: NonNegativeInt = 0, pageSize: PositiveInt = 100, pinned: Boolean = false, userId: ID): [MessagesResponse!]!
+  messages(channelId: ID, cursor: ID, groupId: ID, limit: PositiveInt = 100, pinned: Boolean = false, userId: ID): MessagesResponse!
   post(id: ID!): Post!
-  posts(folderId: ID, page: NonNegativeInt = 0, pageSize: PositiveInt = 20, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): [PostsResponse!]!
+  posts(folderId: ID, limit: PositiveInt = 20, offset: NonNegativeInt = 0, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): PostsResponse!
   publicServers(category: ServerCategory, featured: Boolean = false, sort: PublicServersSort = Top): [Server!]!
   replies(userId: ID!): [Reply!]!
-  roleUsers(roleId: ID!): [ServerUser!]!
+  serverUsers(serverId: ID!): [ServerUser!]!
   user(id: ID): User
 }
 

@@ -78,7 +78,10 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<CommentChangedResponse> {
-    const entity = await em.findOneOrFail(Comment, id)
+    const entity = await em.findOneOrFail(Comment, id, [
+      'author.user',
+      'author.roles'
+    ])
     return getResult(entity, type)
   }
 
@@ -91,7 +94,11 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<PostChangedResponse> {
-    const entity = await em.findOneOrFail(Post, id)
+    const entity = await em.findOneOrFail(Post, id, [
+      'author.roles',
+      'author.user',
+      'server'
+    ])
     return getResult(entity, type)
   }
 
@@ -104,7 +111,11 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<MessageChangedResponse> {
-    const entity = await em.findOneOrFail(Message, id)
+    const entity = await em.findOneOrFail(Message, id, [
+      'author',
+      'serverUser.roles',
+      'serverUser.user'
+    ])
     return getResult(entity, type)
   }
 
@@ -121,11 +132,12 @@ export class SubscriptionResolver {
       Reply,
       { id: ids, user: userId },
       [
-        'fromUser',
-        'comment.author',
-        'parentComment.author',
-        'post.server',
-        'post.author'
+        'user',
+        'comment.author.roles',
+        'comment.author.user',
+        'comment.post.author.roles',
+        'comment.post.author.user',
+        'comment.post.server'
       ],
       { createdAt: 'DESC' }
     )

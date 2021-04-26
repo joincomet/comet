@@ -6,11 +6,7 @@ subscription MessageChanged {
         ...User
       }
       serverUser {
-        name
-        color
-        roles {
-          ...Role
-        }
+        ...ServerUser
       }
       channel {
         id
@@ -34,11 +30,7 @@ subscription MessageChanged {
         ...User
       }
       serverUser {
-        name
-        color
-        roles {
-          ...Role
-        }
+        ...ServerUser
       }
     }
     deleted {

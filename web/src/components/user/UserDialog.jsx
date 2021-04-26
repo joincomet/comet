@@ -221,7 +221,7 @@ export default memo(function UserDialog() {
                 <ServerAvatar
                   server={server}
                   size={10}
-                  className="dark:bg-gray-800"
+                  className="dark:bg-gray-800 rounded-full"
                 />
                 <div className="pl-2.5 text-base text-secondary font-medium">
                   {server.name}
@@ -240,7 +240,7 @@ export default memo(function UserDialog() {
                   user={friend}
                   size={10}
                   showOnline
-                  dotClassName="ring-2 dark:ring-gray-750 w-2 h-2"
+                  dotClassName="ring-3 dark:ring-gray-750 w-2.5 h-2.5"
                 />
                 <div className="pl-2.5">
                   <div className="text-base text-secondary font-medium">

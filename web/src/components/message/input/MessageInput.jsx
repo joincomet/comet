@@ -1,26 +1,54 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { IconFormatEmoji, IconUpload } from '@/components/ui/icons/Icons'
+import { IconUpload } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
-import ContentEditable from '@/components/ui/editor/ContentEditable'
 import MessageDropZone from '@/components/message/input/MessageDropZone'
 import MessageUploadDialog from '@/components/message/input/MessageUploadDialog'
 import { useTyping } from '@/components/message/input/useTyping'
 import { useMessagePlaceholder } from '@/components/message/input/useMessagePlaceholder'
-import { useMessageInput } from '@/components/message/input/useMessageInput'
 import { useCreateMessageMutation } from '@/graphql/hooks'
+import { EditorContent, useEditor } from '@tiptap/react'
+import { defaultExtensions } from '@tiptap/starter-kit'
+import Link from '@tiptap/extension-link'
+import Placeholder from '@tiptap/extension-placeholder'
+
+const exts = [
+  'doc',
+  'text',
+  'dropCursor',
+  'gapcursor',
+  'paragraph',
+  'history',
+  'code',
+  'codeBlock'
+]
 
 export default function MessageInput({ channel, group, user }) {
   const { t } = useTranslation()
-  const inputRef = useRef(null)
   const placeholder = useMessagePlaceholder({ channel, group, user })
-  const focus = useMessageInput(inputRef, placeholder)
   const [startTyping, typingNames] = useTyping({ channel, group, user })
-  const [text, setText] = useState('')
   const [files, setFiles] = useState(null)
   const [currentFile, setCurrentFile] = useState(null)
   const [currentFileIndex, setCurrentFileIndex] = useState(0)
   const [sendMessage] = useCreateMessageMutation()
+
+  const editor = useEditor({
+    extensions: [
+      ...defaultExtensions().filter(extension =>
+        exts.includes(extension.config.name)
+      ),
+      Link,
+      Placeholder.configure({
+        placeholder: `${t('message.message')} ${placeholder}`
+      })
+    ],
+    content: '',
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm dark:prose-dark focus:outline-none max-w-none'
+      }
+    }
+  })
 
   const variables = {
     channelId: channel?.id,
@@ -73,7 +101,7 @@ export default function MessageInput({ channel, group, user }) {
   }, [setFiles, setCurrentFile, setCurrentFileIndex])
 
   useEffect(() => {
-    setText('')
+    editor?.commands?.clearContent()
   }, [user, group, channel])
 
   return (
@@ -108,45 +136,26 @@ export default function MessageInput({ channel, group, user }) {
             </div>
           </Tippy>
 
-          {window.electron && window.electron.isEmojiPanelSupported() && (
-            <div
-              className="absolute right-4.5 top-1/2 transform -translate-y-1/2"
-              onClick={() => {
-                focus()
-                const te = text
-                setText('')
-                setTimeout(() => setText(te))
-                window.electron.showEmojiPanel()
-              }}
-            >
-              <IconFormatEmoji className="w-5 h-5 text-tertiary cursor-pointer" />
-            </div>
-          )}
-
-          <ContentEditable
-            ref={inputRef}
-            className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
-            html={text}
-            data-placeholder={`${t('message.message')} ${placeholder}`}
-            onChange={e => {
-              startTyping()
-              setText(e.target.value)
-              if (text === '<br>') setText('')
-            }}
+          <div
             onKeyDown={e => {
               if (e.key === 'Enter') {
+                const text = editor.getHTML()
                 if (text && !e.shiftKey) {
                   e.preventDefault()
                   sendMessage({
                     variables: { input: { text, ...variables } }
                   })
-                  setText('')
+                  editor.commands.clearContent()
                 } else if (!text) {
                   e.preventDefault()
+                  console.log('a')
                 }
               }
             }}
-          />
+            className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
+          >
+            <EditorContent editor={editor} />
+          </div>
         </div>
 
         <div

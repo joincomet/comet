@@ -8,6 +8,7 @@ import { UploadLink } from '@/graphql/upload'
 import i18n from '@/locales/i18n'
 import { WebSocketLink } from '@/graphql/WebSocketLink'
 import { setContext } from '@apollo/client/link/context'
+import { offsetLimitPagination } from '@apollo/client/utilities'
 
 const url = import.meta.env.PROD
   ? `https://${import.meta.env.VITE_API_DOMAIN}/graphql`
@@ -69,24 +70,5 @@ const finalLink = from([errorLink, splitLink])
 
 export const apolloClient = new ApolloClient({
   link: finalLink,
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          messages: {
-            keyArgs: ['initialTime', 'channelId', 'groupId', 'userId'],
-            merge(existing = [], incoming) {
-              return [...existing, ...incoming]
-            }
-          },
-          posts: {
-            keyArgs: ['sort', 'time', 'serverId', 'folderId'],
-            merge(existing = [], incoming) {
-              return [...existing, ...incoming]
-            }
-          }
-        }
-      }
-    }
-  })
+  cache: new InMemoryCache()
 })

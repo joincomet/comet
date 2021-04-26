@@ -1001,22 +1001,16 @@ export enum PublicServersSort {
 
 export type Query = {
   __typename?: 'Query';
-  channelUsers: Array<ServerUser>;
   comments: Array<Comment>;
   folder: Folder;
   getLinkMeta?: Maybe<LinkMetadata>;
-  messages: Array<MessagesResponse>;
+  messages: MessagesResponse;
   post: Post;
-  posts: Array<PostsResponse>;
+  posts: PostsResponse;
   publicServers: Array<Server>;
   replies: Array<Reply>;
-  roleUsers: Array<ServerUser>;
+  serverUsers: Array<ServerUser>;
   user?: Maybe<User>;
-};
-
-
-export type QueryChannelUsersArgs = {
-  channelId: Scalars['ID'];
 };
 
 
@@ -1038,10 +1032,9 @@ export type QueryGetLinkMetaArgs = {
 
 export type QueryMessagesArgs = {
   channelId?: Maybe<Scalars['ID']>;
+  cursor?: Maybe<Scalars['ID']>;
   groupId?: Maybe<Scalars['ID']>;
-  initialTime?: Maybe<Scalars['DateTime']>;
-  page?: Maybe<Scalars['NonNegativeInt']>;
-  pageSize?: Maybe<Scalars['PositiveInt']>;
+  limit?: Maybe<Scalars['PositiveInt']>;
   pinned?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['ID']>;
 };
@@ -1054,8 +1047,8 @@ export type QueryPostArgs = {
 
 export type QueryPostsArgs = {
   folderId?: Maybe<Scalars['ID']>;
-  page?: Maybe<Scalars['NonNegativeInt']>;
-  pageSize?: Maybe<Scalars['PositiveInt']>;
+  limit?: Maybe<Scalars['PositiveInt']>;
+  offset?: Maybe<Scalars['NonNegativeInt']>;
   search?: Maybe<Scalars['String']>;
   serverId?: Maybe<Scalars['ID']>;
   sort?: Maybe<PostsSort>;
@@ -1075,8 +1068,8 @@ export type QueryRepliesArgs = {
 };
 
 
-export type QueryRoleUsersArgs = {
-  roleId: Scalars['ID'];
+export type QueryServerUsersArgs = {
+  serverId: Scalars['ID'];
 };
 
 
@@ -1539,6 +1532,10 @@ export type RoleFragment = (
 export type ServerFragment = (
   { __typename?: 'Server' }
   & Pick<Server, 'id' | 'name' | 'description' | 'avatarUrl' | 'bannerUrl' | 'userCount' | 'isPublic' | 'initials' | 'isJoined'>
+  & { owner: (
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  ) }
 );
 
 export type ServerUserFragment = (
@@ -1555,7 +1552,7 @@ export type ServerUserFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'tag' | 'username' | 'avatarUrl' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus' | 'color'>
+  & Pick<User, 'id' | 'name' | 'tag' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus' | 'color'>
 );
 
 export type CreateChannelMutationVariables = Exact<{
@@ -2621,19 +2618,6 @@ export type GlobalBanMutation = (
   & Pick<Mutation, 'globalBan'>
 );
 
-export type ChannelUsersQueryVariables = Exact<{
-  channelId: Scalars['ID'];
-}>;
-
-
-export type ChannelUsersQuery = (
-  { __typename?: 'Query' }
-  & { channelUsers: Array<(
-    { __typename?: 'ServerUser' }
-    & ServerUserFragment
-  )> }
-);
-
 export type CommentsQueryVariables = Exact<{
   postId: Scalars['ID'];
   sort?: Maybe<CommentsSort>;
@@ -2701,15 +2685,14 @@ export type MessagesQueryVariables = Exact<{
   channelId?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['ID']>;
   groupId?: Maybe<Scalars['ID']>;
-  pageSize?: Maybe<Scalars['PositiveInt']>;
-  page?: Maybe<Scalars['NonNegativeInt']>;
-  initialTime?: Maybe<Scalars['DateTime']>;
+  limit?: Maybe<Scalars['PositiveInt']>;
+  cursor?: Maybe<Scalars['ID']>;
 }>;
 
 
 export type MessagesQuery = (
   { __typename?: 'Query' }
-  & { messages: Array<(
+  & { messages: (
     { __typename?: 'MessagesResponse' }
     & Pick<MessagesResponse, 'hasMore'>
     & { messages: Array<(
@@ -2719,15 +2702,11 @@ export type MessagesQuery = (
         & UserFragment
       ), serverUser?: Maybe<(
         { __typename?: 'ServerUser' }
-        & Pick<ServerUser, 'name' | 'color'>
-        & { roles: Array<(
-          { __typename?: 'Role' }
-          & RoleFragment
-        )> }
+        & ServerUserFragment
       )> }
       & MessageFragment
     )> }
-  )> }
+  ) }
 );
 
 export type PostQueryVariables = Exact<{
@@ -2752,8 +2731,8 @@ export type PostQuery = (
 
 export type PostsQueryVariables = Exact<{
   sort?: Maybe<PostsSort>;
-  page?: Maybe<Scalars['NonNegativeInt']>;
-  pageSize?: Maybe<Scalars['PositiveInt']>;
+  offset?: Maybe<Scalars['NonNegativeInt']>;
+  limit?: Maybe<Scalars['PositiveInt']>;
   time?: Maybe<PostsTime>;
   folderId?: Maybe<Scalars['ID']>;
   serverId?: Maybe<Scalars['ID']>;
@@ -2763,7 +2742,7 @@ export type PostsQueryVariables = Exact<{
 
 export type PostsQuery = (
   { __typename?: 'Query' }
-  & { posts: Array<(
+  & { posts: (
     { __typename?: 'PostsResponse' }
     & Pick<PostsResponse, 'hasMore'>
     & { posts: Array<(
@@ -2777,7 +2756,7 @@ export type PostsQuery = (
       ) }
       & PostFragment
     )> }
-  )> }
+  ) }
 );
 
 export type PublicServersQueryVariables = Exact<{
@@ -2809,16 +2788,15 @@ export type RepliesQuery = (
   )> }
 );
 
-export type RoleUsersQueryVariables = Exact<{
-  roleId: Scalars['ID'];
+export type ServerUsersQueryVariables = Exact<{
+  serverId: Scalars['ID'];
 }>;
 
 
-export type RoleUsersQuery = (
+export type ServerUsersQuery = (
   { __typename?: 'Query' }
-  & { roleUsers: Array<(
+  & { serverUsers: Array<(
     { __typename?: 'ServerUser' }
-    & Pick<ServerUser, 'nickname'>
     & ServerUserFragment
   )> }
 );
@@ -2888,11 +2866,7 @@ export type MessageChangedSubscription = (
         & UserFragment
       ), serverUser?: Maybe<(
         { __typename?: 'ServerUser' }
-        & Pick<ServerUser, 'name' | 'color'>
-        & { roles: Array<(
-          { __typename?: 'Role' }
-          & RoleFragment
-        )> }
+        & ServerUserFragment
       )>, channel?: Maybe<(
         { __typename?: 'Channel' }
         & Pick<Channel, 'id' | 'name'>
@@ -2915,11 +2889,7 @@ export type MessageChangedSubscription = (
         & UserFragment
       ), serverUser?: Maybe<(
         { __typename?: 'ServerUser' }
-        & Pick<ServerUser, 'name' | 'color'>
-        & { roles: Array<(
-          { __typename?: 'Role' }
-          & RoleFragment
-        )> }
+        & ServerUserFragment
       )> }
       & MessageFragment
     )>, deleted?: Maybe<(
@@ -3051,6 +3021,7 @@ export const UserFragmentDoc = gql`
   tag
   username
   avatarUrl
+  isOnline
   onlineStatus
   isCurrentUser
   relationshipStatus
@@ -3068,6 +3039,9 @@ export const ServerFragmentDoc = gql`
   isPublic
   initials
   isJoined
+  owner {
+    id
+  }
 }
     `;
 export const ChannelFragmentDoc = gql`
@@ -5837,41 +5811,6 @@ export function useGlobalBanMutation(baseOptions?: Apollo.MutationHookOptions<Gl
 export type GlobalBanMutationHookResult = ReturnType<typeof useGlobalBanMutation>;
 export type GlobalBanMutationResult = Apollo.MutationResult<GlobalBanMutation>;
 export type GlobalBanMutationOptions = Apollo.BaseMutationOptions<GlobalBanMutation, GlobalBanMutationVariables>;
-export const ChannelUsersDocument = gql`
-    query channelUsers($channelId: ID!) @live {
-  channelUsers(channelId: $channelId) {
-    ...ServerUser
-  }
-}
-    ${ServerUserFragmentDoc}`;
-
-/**
- * __useChannelUsersQuery__
- *
- * To run a query within a React component, call `useChannelUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useChannelUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useChannelUsersQuery({
- *   variables: {
- *      channelId: // value for 'channelId'
- *   },
- * });
- */
-export function useChannelUsersQuery(baseOptions: Apollo.QueryHookOptions<ChannelUsersQuery, ChannelUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ChannelUsersQuery, ChannelUsersQueryVariables>(ChannelUsersDocument, options);
-      }
-export function useChannelUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelUsersQuery, ChannelUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ChannelUsersQuery, ChannelUsersQueryVariables>(ChannelUsersDocument, options);
-        }
-export type ChannelUsersQueryHookResult = ReturnType<typeof useChannelUsersQuery>;
-export type ChannelUsersLazyQueryHookResult = ReturnType<typeof useChannelUsersLazyQuery>;
-export type ChannelUsersQueryResult = Apollo.QueryResult<ChannelUsersQuery, ChannelUsersQueryVariables>;
 export const CommentsDocument = gql`
     query comments($postId: ID!, $sort: CommentsSort) {
   comments(postId: $postId, sort: $sort) {
@@ -6026,14 +5965,13 @@ export type GetLinkMetaQueryHookResult = ReturnType<typeof useGetLinkMetaQuery>;
 export type GetLinkMetaLazyQueryHookResult = ReturnType<typeof useGetLinkMetaLazyQuery>;
 export type GetLinkMetaQueryResult = Apollo.QueryResult<GetLinkMetaQuery, GetLinkMetaQueryVariables>;
 export const MessagesDocument = gql`
-    query messages($channelId: ID, $userId: ID, $groupId: ID, $pageSize: PositiveInt, $page: NonNegativeInt, $initialTime: DateTime) {
+    query messages($channelId: ID, $userId: ID, $groupId: ID, $limit: PositiveInt, $cursor: ID) {
   messages(
     channelId: $channelId
     userId: $userId
     groupId: $groupId
-    pageSize: $pageSize
-    page: $page
-    initialTime: $initialTime
+    limit: $limit
+    cursor: $cursor
   ) {
     hasMore
     messages {
@@ -6042,18 +5980,14 @@ export const MessagesDocument = gql`
         ...User
       }
       serverUser {
-        name
-        color
-        roles {
-          ...Role
-        }
+        ...ServerUser
       }
     }
   }
 }
     ${MessageFragmentDoc}
 ${UserFragmentDoc}
-${RoleFragmentDoc}`;
+${ServerUserFragmentDoc}`;
 
 /**
  * __useMessagesQuery__
@@ -6070,9 +6004,8 @@ ${RoleFragmentDoc}`;
  *      channelId: // value for 'channelId'
  *      userId: // value for 'userId'
  *      groupId: // value for 'groupId'
- *      pageSize: // value for 'pageSize'
- *      page: // value for 'page'
- *      initialTime: // value for 'initialTime'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
@@ -6131,15 +6064,15 @@ export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
 export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
 export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
 export const PostsDocument = gql`
-    query posts($sort: PostsSort, $page: NonNegativeInt, $pageSize: PositiveInt, $time: PostsTime, $folderId: ID, $serverId: ID, $search: String) {
+    query posts($sort: PostsSort, $offset: NonNegativeInt, $limit: PositiveInt, $time: PostsTime, $folderId: ID, $serverId: ID, $search: String) {
   posts(
     sort: $sort
     time: $time
     folderId: $folderId
     serverId: $serverId
     search: $search
-    page: $page
-    pageSize: $pageSize
+    offset: $offset
+    limit: $limit
   ) {
     hasMore
     posts {
@@ -6170,8 +6103,8 @@ ${ServerFragmentDoc}`;
  * const { data, loading, error } = usePostsQuery({
  *   variables: {
  *      sort: // value for 'sort'
- *      page: // value for 'page'
- *      pageSize: // value for 'pageSize'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
  *      time: // value for 'time'
  *      folderId: // value for 'folderId'
  *      serverId: // value for 'serverId'
@@ -6263,42 +6196,41 @@ export function useRepliesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Re
 export type RepliesQueryHookResult = ReturnType<typeof useRepliesQuery>;
 export type RepliesLazyQueryHookResult = ReturnType<typeof useRepliesLazyQuery>;
 export type RepliesQueryResult = Apollo.QueryResult<RepliesQuery, RepliesQueryVariables>;
-export const RoleUsersDocument = gql`
-    query roleUsers($roleId: ID!) @live {
-  roleUsers(roleId: $roleId) {
-    nickname
+export const ServerUsersDocument = gql`
+    query serverUsers($serverId: ID!) @live {
+  serverUsers(serverId: $serverId) {
     ...ServerUser
   }
 }
     ${ServerUserFragmentDoc}`;
 
 /**
- * __useRoleUsersQuery__
+ * __useServerUsersQuery__
  *
- * To run a query within a React component, call `useRoleUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useRoleUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useServerUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useServerUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useRoleUsersQuery({
+ * const { data, loading, error } = useServerUsersQuery({
  *   variables: {
- *      roleId: // value for 'roleId'
+ *      serverId: // value for 'serverId'
  *   },
  * });
  */
-export function useRoleUsersQuery(baseOptions: Apollo.QueryHookOptions<RoleUsersQuery, RoleUsersQueryVariables>) {
+export function useServerUsersQuery(baseOptions: Apollo.QueryHookOptions<ServerUsersQuery, ServerUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RoleUsersQuery, RoleUsersQueryVariables>(RoleUsersDocument, options);
+        return Apollo.useQuery<ServerUsersQuery, ServerUsersQueryVariables>(ServerUsersDocument, options);
       }
-export function useRoleUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RoleUsersQuery, RoleUsersQueryVariables>) {
+export function useServerUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ServerUsersQuery, ServerUsersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RoleUsersQuery, RoleUsersQueryVariables>(RoleUsersDocument, options);
+          return Apollo.useLazyQuery<ServerUsersQuery, ServerUsersQueryVariables>(ServerUsersDocument, options);
         }
-export type RoleUsersQueryHookResult = ReturnType<typeof useRoleUsersQuery>;
-export type RoleUsersLazyQueryHookResult = ReturnType<typeof useRoleUsersLazyQuery>;
-export type RoleUsersQueryResult = Apollo.QueryResult<RoleUsersQuery, RoleUsersQueryVariables>;
+export type ServerUsersQueryHookResult = ReturnType<typeof useServerUsersQuery>;
+export type ServerUsersLazyQueryHookResult = ReturnType<typeof useServerUsersLazyQuery>;
+export type ServerUsersQueryResult = Apollo.QueryResult<ServerUsersQuery, ServerUsersQueryVariables>;
 export const UserDocument = gql`
     query user($id: ID) @live {
   user(id: $id) {
@@ -6400,11 +6332,7 @@ export const MessageChangedDocument = gql`
         ...User
       }
       serverUser {
-        name
-        color
-        roles {
-          ...Role
-        }
+        ...ServerUser
       }
       channel {
         id
@@ -6428,11 +6356,7 @@ export const MessageChangedDocument = gql`
         ...User
       }
       serverUser {
-        name
-        color
-        roles {
-          ...Role
-        }
+        ...ServerUser
       }
     }
     deleted {
@@ -6464,6 +6388,7 @@ export const MessageChangedDocument = gql`
 }
     ${MessageFragmentDoc}
 ${UserFragmentDoc}
+${ServerUserFragmentDoc}
 ${RoleFragmentDoc}`;
 
 /**

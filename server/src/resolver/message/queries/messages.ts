@@ -1,6 +1,6 @@
-import { ArgsType, Field, ID, Int, ObjectType } from 'type-graphql'
+import { ArgsType, Field, ID, ObjectType } from 'type-graphql'
 import { Max, Min } from 'class-validator'
-import { Channel, Group, Message, User } from '@/entity'
+import { Message } from '@/entity'
 import { Context } from '@/types'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
 import { GraphQLNonNegativeInt, GraphQLPositiveInt } from 'graphql-scalars'
@@ -19,17 +19,13 @@ export class MessagesArgs {
   @Field({ defaultValue: false })
   pinned: boolean = false
 
-  @Field({ nullable: true })
-  initialTime: Date
+  @Field(() => ID, { nullable: true })
+  cursor?: string
 
   @Field(() => GraphQLPositiveInt, { defaultValue: 100 })
   @Min(1)
   @Max(100)
-  pageSize: number = 100
-
-  @Field(() => GraphQLNonNegativeInt, { defaultValue: 0 })
-  @Min(0)
-  page: number = 0
+  limit: number = 100
 }
 
 @ObjectType()
@@ -42,17 +38,9 @@ export class MessagesResponse {
 }
 
 export async function messages(
-  { em, userId: currentUserId, liveQueryStore }: Context,
-  {
-    channelId,
-    groupId,
-    userId,
-    pinned,
-    initialTime,
-    pageSize,
-    page
-  }: MessagesArgs
-): Promise<MessagesResponse[]> {
+  { em, userId: currentUserId }: Context,
+  { channelId, groupId, userId, pinned, limit, cursor }: MessagesArgs
+): Promise<MessagesResponse> {
   if (!channelId && !groupId && !userId)
     throw new Error('error.message.missingArgs')
 
@@ -70,29 +58,18 @@ export async function messages(
       { author: userId, toUser: currentUserId }
     ]
   }
-
-  if (initialTime) {
-    where.createdAt = {
-      $lte: initialTime
-    }
-  }
+  if (cursor) where.id = { $lt: cursor }
 
   const messages = (
-    await em.find(
-      Message,
-      where,
-      ['author', 'serverUser.roles', 'serverUser.user'],
-      { createdAt: QueryOrder.DESC },
-      pageSize + 1, // get one extra to determine hasMore
-      page * pageSize
-    )
+    await em.find(Message, where, {
+      populate: ['author', 'serverUser.roles', 'serverUser.user'],
+      orderBy: { id: QueryOrder.DESC },
+      limit: limit + 1
+    })
   ).reverse()
-
-  const hasMore = messages.length > pageSize
-  return [
-    {
-      hasMore,
-      messages: hasMore ? messages.slice(1, messages.length) : messages
-    } as MessagesResponse
-  ]
+  const hasMore = messages.length > limit
+  return {
+    hasMore,
+    messages: hasMore ? messages.slice(1, messages.length) : messages
+  } as MessagesResponse
 }

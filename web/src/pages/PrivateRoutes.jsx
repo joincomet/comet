@@ -21,16 +21,13 @@ import ServerPostsPage from '@/pages/server/ServerPostsPage'
 import PostPage from '@/pages/post/PostPage'
 import ChannelPage from '@/pages/server/channel/ChannelPage'
 import ServerFolderPage from '@/pages/server/ServerFolderPage'
-import { AnimatePresence } from 'framer-motion'
 import LoadingScreen from '@/pages/LoadingScreen'
-import ServerLoadingScreen from '@/pages/ServerLoadingScreen'
 import { useStore } from '@/hooks/useStore'
 import { usePrevious } from 'react-use'
 import UserDialog from '@/components/user/UserDialog'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useMessagesSubscriptions } from '@/hooks/useMessagesSubscriptions'
 import BottomBar from '@/components/BottomBar'
-import { DndProvider } from 'react-dnd'
 import { wsStatus } from '@/graphql/WebSocketLink'
 
 export default function PrivateRoutes() {
@@ -46,15 +43,11 @@ export default function PrivateRoutes() {
     setPath(pathname)
   }, [pathname])
 
-  useEffect(() => console.log(wsStatus.status), [wsStatus.status])
-
   return (
     <>
-      <AnimatePresence>
-        {((!user && userLoading) || wsStatus.status !== 'connected') && (
-          <LoadingScreen />
-        )}
-      </AnimatePresence>
+      {((!user && userLoading) || wsStatus.status !== 'connected') && (
+        <LoadingScreen />
+      )}
 
       {user && <UserDialog />}
 
@@ -111,10 +104,8 @@ export default function PrivateRoutes() {
 
 function ServerRoutes() {
   const { serverId } = useParams()
-  const loading = false
   return (
     <>
-      <AnimatePresence>{loading && <ServerLoadingScreen />}</AnimatePresence>
       <PrivateRoute path="/server/:serverId">
         <ServerSidebar />
         <Switch>

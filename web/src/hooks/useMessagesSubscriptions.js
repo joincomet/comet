@@ -5,7 +5,6 @@ import {
   useMessageChangedSubscription
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useStore } from '@/hooks/useStore'
 
 export const useMessagesSubscriptions = () => {
   const [currentUser] = useCurrentUser()
@@ -28,7 +27,6 @@ export const useMessagesSubscriptions = () => {
       window.electron.on('windowClosed', () => setWindowOpen(false))
     }
   }, [])
-  const initialTime = useStore(s => s.initialTime)
 
   const { data: res } = useMessageChangedSubscription({
     skip: !currentUser,
@@ -41,28 +39,27 @@ export const useMessagesSubscriptions = () => {
         const messageChannelId = message.channel?.id
         const messageGroupId = message.group?.id
         const messageUserId = message.toUser?.id
-
         const queryOptions = {
           query: MessagesDocument,
           variables: {
             userId: messageUserId,
             groupId: messageGroupId,
             channelId: messageChannelId,
-            initialTime
+            cursor: null
           }
         }
-        client.cache.writeQuery({
-          ...queryOptions,
-          data: {
-            messages: [
-              {
-                __typename: 'MessagesResponse',
-                hasMore: false,
-                messages: [message]
+        const queryData = client.cache.readQuery(queryOptions)
+        if (queryData) {
+          client.cache.writeQuery({
+            ...queryOptions,
+            data: {
+              messages: {
+                ...queryData.messages,
+                messages: [...queryData.messages.messages, message]
               }
-            ]
-          }
-        })
+            }
+          })
+        }
 
         if (
           Notification.permission === 'granted' &&

@@ -10,14 +10,7 @@ import {
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import {
-  Folder,
-  Group,
-  RelationshipStatus,
-  Server,
-  ServerUser,
-  User
-} from '@/entity'
+import { Folder, Group, RelationshipStatus, Server, User } from '@/entity'
 import {
   changeOnlineStatus,
   ChangeOnlineStatusInput,
@@ -35,7 +28,7 @@ import {
   updateAccount,
   UpdateAccountInput
 } from '@/resolver/user/mutations'
-import { channelUsers, roleUsers, user } from '@/resolver/user/queries'
+import { user } from '@/resolver/user/queries'
 import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @Resolver(() => User)
@@ -102,24 +95,6 @@ export class UserResolver {
     @Arg('id', () => ID, { nullable: true }) id?: string
   ): Promise<User> {
     return user(ctx, id)
-  }
-
-  @Authorized()
-  @Query(() => [ServerUser])
-  async channelUsers(
-    @Ctx() ctx: Context,
-    @Arg('channelId', () => ID) channelId: string
-  ): Promise<ServerUser[]> {
-    return channelUsers(ctx, channelId)
-  }
-
-  @Authorized()
-  @Query(() => [ServerUser])
-  async roleUsers(
-    @Ctx() ctx: Context,
-    @Arg('roleId', () => ID) roleId: string
-  ): Promise<ServerUser[]> {
-    return roleUsers(ctx, roleId)
   }
 
   // --- Mutations --- //

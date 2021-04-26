@@ -1,0 +1,5 @@
+query serverUsers($serverId: ID!) @live {
+  serverUsers(serverId: $serverId) {
+    ...ServerUser
+  }
+}

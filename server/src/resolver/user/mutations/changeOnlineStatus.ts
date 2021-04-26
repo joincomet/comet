@@ -14,6 +14,7 @@ export async function changeOnlineStatus(
 ): Promise<User> {
   const user = await em.findOneOrFail(User, userId)
   user.onlineStatus = onlineStatus
+  user.lastLoginAt = new Date()
   await em.persistAndFlush(user)
   liveQueryStore.invalidate(`User:${user.id}`)
   return user

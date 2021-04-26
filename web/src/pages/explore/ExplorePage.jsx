@@ -25,7 +25,9 @@ export default function ExplorePage() {
       featured: exploreCategory === 'Featured',
       page,
       pageSize: 20
-    }
+    },
+    fetchPolicy: 'no-cache',
+    nextFetchPolicy: 'cache-first'
   })
   const servers = data?.publicServers ?? []
 

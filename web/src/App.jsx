@@ -10,9 +10,6 @@ import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 import { getOS } from '@/utils/getOS'
 import { apolloClient } from '@/graphql/apolloClient'
 import ContextMenuProvider from '@/providers/ContextMenuProvider'
-import UserAvatar from '@/components/user/UserAvatar'
-import { IconBell, IconFolder, IconSearch } from '@/components/ui/icons/Icons'
-import BottomBar from '@/components/BottomBar'
 
 export default function App() {
   const AppRouter = window.electron ? HashRouter : BrowserRouter

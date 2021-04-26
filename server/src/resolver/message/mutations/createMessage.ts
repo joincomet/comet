@@ -2,12 +2,15 @@ import { Context } from '@/types'
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import {
   Channel,
+  ChannelPermission,
   File,
   Group,
   GroupUser,
   Image,
   Message,
   RelationshipStatus,
+  ServerPermission,
+  ServerUser,
   User
 } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
@@ -38,7 +41,7 @@ export async function createMessage(
   { text, file, userId, groupId, channelId }: CreateMessageInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<Message> {
-  if (!text && !file) throw new Error('error.message.textOrFile')
+  if (!text && !file) throw new Error('Must provide text and/or file')
 
   const channel = channelId
     ? await em.findOneOrFail(Channel, channelId, ['server'])
@@ -46,6 +49,19 @@ export async function createMessage(
   const group = groupId ? await em.findOneOrFail(Group, groupId) : null
   const toUser = userId ? await em.findOneOrFail(User, userId) : null
   const user = await em.findOneOrFail(User, currentUserId)
+  const serverUser = channel
+    ? await em.findOneOrFail(ServerUser, { user, server: channel.server })
+    : null
+
+  if (channel)
+    await user.checkChannelPermission(
+      em,
+      channelId,
+      ChannelPermission.SendMessages,
+      ServerPermission.SendMessages
+    )
+
+  if (group) await user.checkInGroup(em, groupId)
 
   if (toUser) {
     const [myData] = await user.getFriendData(em, userId)
@@ -66,6 +82,7 @@ export async function createMessage(
     group,
     toUser,
     author: user,
+    serverUser,
     image: upload && (upload as Image).originalUrl ? upload : null,
     file: upload && (upload as File).url ? upload : null
   })

@@ -4,6 +4,7 @@ fragment User on User {
   tag
   username
   avatarUrl
+  isOnline
   onlineStatus
   isCurrentUser
   relationshipStatus

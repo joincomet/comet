@@ -12,7 +12,7 @@ import {
 import { Message } from '@/entity'
 import { Context } from '@/types'
 import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
-import { MessagesArgs, MessagesResponse, messages } from './queries'
+import { MessagesArgs, messages, MessagesResponse } from './queries'
 import {
   createMessage,
   CreateMessageInput,
@@ -30,12 +30,12 @@ import {
 export class MessageResolver {
   // --- Queries ---
   @Authorized()
-  @Query(() => [MessagesResponse])
+  @Query(() => MessagesResponse)
   async messages(
     @Ctx() ctx: Context,
     @Args()
     args: MessagesArgs
-  ): Promise<MessagesResponse[]> {
+  ): Promise<MessagesResponse> {
     return messages(ctx, args)
   }
 

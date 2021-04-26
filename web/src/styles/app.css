@@ -122,9 +122,12 @@ body {
   @apply scrollbar-thin dark:scrollbar-thumb-gray-850 dark:scrollbar-track-gray-800 scrollbar-thumb-rounded-md;
 }
 
-[contentEditable=true]:empty:before{
+.ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  @apply text-gray-500 dark:text-gray-500 leading-none;
+  @apply text-gray-500 dark:text-gray-500;
+  float: left;
+  pointer-events: none;
+  height: 0;
 }
 
 .messages-start {

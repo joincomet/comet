@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useStore } from '@/hooks/useStore'
 import { usePostsQuery } from '@/graphql/hooks'
 
-export function usePosts({ serverId, folderId }) {
+export const usePosts = ({ serverId, folderId }) => {
   const [postsSort, postsTime, folderSort] = useStore(s => [
     s.postsSort,
     s.postsTime,
@@ -10,8 +10,6 @@ export function usePosts({ serverId, folderId }) {
   ])
   const [page, setPage] = useState(0)
   const variables = {
-    pageSize: 20,
-    page,
     sort: folderId ? folderSort : postsSort,
     time: postsSort === 'Top' && !folderId ? postsTime : null,
     serverId,
@@ -19,19 +17,28 @@ export function usePosts({ serverId, folderId }) {
   }
   const { data, loading, fetchMore } = usePostsQuery({
     variables,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     nextFetchPolicy: 'cache-first'
   })
-
-  return [
-    data?.posts.flatMap(res => res.posts),
-    loading,
-    () => {
-      setPage(page + 1)
-      fetchMore({ variables })
-    },
-    data && data.posts.length > 0
-      ? data.posts[data.posts.length - 1].hasMore
-      : false
-  ]
+  const hasMore = data?.posts.hasMore
+  const posts = data?.posts.posts ?? []
+  const loadMore = () => {
+    if (!hasMore || posts.length === 0) return
+    fetchMore({
+      variables: {
+        ...variables,
+        offset: 20 * (page + 1)
+      },
+      updateQuery: (prev, { fetchMoreResult: res }) => {
+        return {
+          posts: {
+            hasMore: res.posts.hasMore,
+            posts: [...prev.posts.posts, ...res.posts.posts]
+          }
+        }
+      }
+    })
+    setPage(page + 1)
+  }
+  return [posts, loading, loadMore, hasMore]
 }

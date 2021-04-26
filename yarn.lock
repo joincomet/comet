@@ -2263,6 +2263,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-placeholder@npm:^2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@tiptap/extension-placeholder@npm:2.0.0-beta.8"
+  dependencies:
+    prosemirror-model: ^1.14.0
+    prosemirror-state: ^1.3.4
+    prosemirror-view: ^1.18.2
+  peerDependencies:
+    "@tiptap/core": ^2.0.0-beta.1
+  checksum: 8df7fa2570e5370da680f1010aa77cd3faffba8ea74d070c242de5c3ca26ab2431ef5c8f9cf620eef1d4cb02f6af6d2e187f0868b8e3874ae0cb9acc3d325b09
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-strike@npm:^2.0.0-beta.7":
   version: 2.0.0-beta.7
   resolution: "@tiptap/extension-strike@npm:2.0.0-beta.7"
@@ -12698,12 +12711,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.3.2":
-  version: 7.3.2
-  resolution: "react-hook-form@npm:7.3.2"
+"react-hook-form@npm:^7.3.3":
+  version: 7.3.3
+  resolution: "react-hook-form@npm:7.3.3"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: b31c7f24f815e0ddd13d3036c939649aaa664cd495d7cf95ba76cad59b6202b54f15461ceb654ade75629f25ee9f3518ecd0e7b6cb9ef7cb2a505a0a8d55758c
+  checksum: b9c12402d85cfbd47709713f495bc04001ca56faf535d0ec849b55b235abced524387626e01994c5658e8c394d5cc829cc2191ec93f3b18ebf021acf5bef4ed6
   languageName: node
   linkType: hard
 
@@ -15889,9 +15902,9 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "vite@npm:2.2.2"
+"vite@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "vite@npm:2.2.3"
   dependencies:
     esbuild: ^0.9.3
     fsevents: ~2.3.1
@@ -15903,7 +15916,7 @@ typescript@^4.2.4:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 003efc445d217ee33dc27ec5a3a383fd100273305cf0d01f7d77601d3b7d265772ae4cb53f0227ad703fb906b8273ae558093e959f249cee89b2dc801a319d57
+  checksum: c621b561fe8ddc8b1c417bc140fd48591d483de1b890109e16793f0dbb04d262dd855e0fa5922e7370e9086225492a4202ec7f9f3336b68288618a58721e0988
   languageName: node
   linkType: hard
 
@@ -15975,6 +15988,7 @@ typescript@^4.2.4:
     "@tippyjs/react": ^4.2.5
     "@tiptap/extension-link": ^2.0.0-beta.8
     "@tiptap/extension-mention": ^2.0.0-beta.39
+    "@tiptap/extension-placeholder": ^2.0.0-beta.8
     "@tiptap/extension-underline": ^2.0.0-beta.7
     "@tiptap/react": ^2.0.0-beta.25
     "@tiptap/starter-kit": ^2.0.0-beta.34
@@ -16021,7 +16035,7 @@ typescript@^4.2.4:
     react-dropzone: ^11.3.2
     react-giphy-searchbox: ^1.5.4
     react-helmet-async: ^1.0.9
-    react-hook-form: ^7.3.2
+    react-hook-form: ^7.3.3
     react-hot-toast: ^1.0.2
     react-i18next: ^11.8.13
     react-icons: ^4.2.0
@@ -16043,7 +16057,7 @@ typescript@^4.2.4:
     typescript: ^4.2.4
     use-dark-mode: ^2.3.1
     validator: ^13.6.0
-    vite: ^2.2.2
+    vite: ^2.2.3
     zustand: ^3.4.1
   languageName: unknown
   linkType: soft
