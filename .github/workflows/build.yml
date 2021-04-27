@@ -35,6 +35,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16
+      - run: yarn
       - run: yarn run build:web
         env:
           VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
