@@ -1,26 +1,22 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.47",
+  "version": "0.0.48",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
   "engines": {
-    "node": "16.x.x"
+    "node": "15.x.x"
   },
   "author": {
     "name": "Comet",
     "email": "admin@joincomet.app"
   },
-  "main": "electron/index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:electron": "cross-env ELECTRON=true vite build",
-    "preview": "vite preview --port 3000",
-    "dev:electron": "electron .",
-    "dist": "electron-builder",
-    "pack": "electron-builder --dir"
+    "preview": "vite preview --port 3000"
   },
   "dependencies": {
     "@apollo/client": "^3.4.0-beta.23",
@@ -43,13 +39,6 @@
     "date-fns": "^2.21.1",
     "dayjs": "^1.10.4",
     "dayjs-twitter": "^0.4.0",
-    "discord-rpc": "^3.2.0",
-    "electron-builder-notarize": "^1.2.0",
-    "electron-context-menu": "^2.5.2",
-    "electron-is-dev": "^2.0.0",
-    "electron-log": "^4.3.4",
-    "electron-store": "^8.0.0",
-    "electron-updater": "^4.3.8",
     "extract-files": "^9.0.0",
     "framer-motion": "^4.1.10",
     "fuse.js": "^6.4.6",
@@ -89,15 +78,12 @@
     "@tailwindcss/forms": "^0.3.2",
     "@tailwindcss/line-clamp": "^0.2.0",
     "@tailwindcss/typography": "^0.4.0",
-    "@types/node": "^15.0.1",
     "@types/react": "^17.0.4",
     "@types/react-dom": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-virtualized": "^9.21.11",
     "@vitejs/plugin-react-refresh": "^1.3.3",
     "autoprefixer": "^10.2.5",
-    "electron": "12.0.5",
-    "electron-builder": "^22.10.5",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "graphiql": "^1.4.1",
@@ -111,36 +97,5 @@
     "tailwind-scrollbar": "^1.3.0",
     "tailwindcss": "^2.1.2",
     "vite": "^2.2.3"
-  },
-  "build": {
-    "productName": "Comet",
-    "appId": "app.joincomet",
-    "asar": true,
-    "files": [
-      "electron",
-      "dist"
-    ],
-    "directories": {
-      "buildResources": "electron/resources",
-      "output": "dist-electron"
-    },
-    "snap": {
-      "publish": {
-        "provider": "generic",
-        "url": "https://anydummyurl.com"
-      }
-    },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "joincomet",
-        "repo": "comet",
-        "vPrefixedTagName": false
-      }
-    ],
-    "afterSign": "electron-builder-notarize",
-    "mac": {
-      "hardenedRuntime": true
-    }
   }
 }

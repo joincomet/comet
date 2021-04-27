@@ -34,6 +34,7 @@ export default defineConfig(({ command }) => ({
     jsxInject: `import React from 'react'`
   },
   build: {
-    target: 'es2018'
+    target: 'es2018',
+    outDir: process.env.ELECTRON === 'true' ? '../electron/dist' : 'dist'
   }
 }))

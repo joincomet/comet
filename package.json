@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.47",
+	"version": "0.0.48",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -9,30 +9,34 @@
 	},
 	"repository": "github:joincomet/comet",
 	"engines": {
-		"node": "16.x.x"
+		"node": "15.x.x"
 	},
 	"workspaces": [
 		"server",
-		"web"
+		"web",
+		"electron"
 	],
 	"scripts": {
 		"build:web": "yarn workspace web run build",
+		"build:electron": "yarn workspace web run build:electron",
 		"build:server": "yarn workspace server run build",
 		"start:web": "yarn workspace web run preview",
 		"start:server": "yarn workspace server start",
 		"generate": "graphql-codegen",
 		"dev:web": "yarn workspace web run dev",
 		"dev:server": "concurrently \"yarn workspace server run dev\" \"yarn generate --watch\"",
-		"dev:electron": "yarn workspace web run dev:electron"
+		"dev:electron": "yarn workspace electron run dev"
 	},
 	"devDependencies": {
 		"@graphql-codegen/cli": "^1.21.4",
 		"@graphql-codegen/typescript": "^1.22.0",
 		"@graphql-codegen/typescript-operations": "^1.17.16",
 		"@graphql-codegen/typescript-react-apollo": "^2.2.4",
+		"@types/node": "^15.0.1",
 		"@typescript-eslint/eslint-plugin": "^4.22.0",
 		"@typescript-eslint/parser": "^4.22.0",
 		"concurrently": "^6.0.2",
+		"cross-env": "^7.0.3",
 		"eslint": "^7.25.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.0",
