@@ -67,6 +67,7 @@ const deleteBtn = ctl(`
   disabled:hover:text-red-500
   flex
   items-center
+  select-none
 `)
 
 const cancelBtn = ctl(`
@@ -157,7 +158,7 @@ export default function UserSettingsDialog({ open, setOpen }) {
                 </SidebarItem>
               </div>
             </div>
-            <div className="w-2/3 px-10 py-16 dark:bg-gray-750">
+            <div className="w-2/3 px-10 py-16 dark:bg-gray-750 min-h-screen">
               <div className="max-w-screen-sm text-left">
                 <div className="font-semibold text-primary uppercase mb-6">
                   My Account

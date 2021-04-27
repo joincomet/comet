@@ -66,6 +66,7 @@ const deleteBtn = ctl(`
   disabled:hover:text-red-500
   flex
   items-center
+  select-none
 `)
 
 const cancelBtn = ctl(`
@@ -90,6 +91,9 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
     mode: 'onChange'
   })
   const name = watch('name')
+  const description = watch('description')
+  const avatarFile = watch('avatarFile')
+  const bannerFile = watch('bannerFile')
 
   const [updateServer, { loading: updateLoading }] = useUpdateServerMutation()
 
@@ -121,7 +125,7 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
                 <SidebarItem>Roles</SidebarItem>
               </div>
             </div>
-            <div className="w-2/3 px-10 py-16 dark:bg-gray-750">
+            <div className="w-2/3 px-10 py-16 min-h-screen dark:bg-gray-750">
               <div className="max-w-screen-sm text-left">
                 <div className="font-semibold text-primary uppercase mb-6">
                   Planet Settings
@@ -150,7 +154,11 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
 
                   <div className="ml-6">
                     <label className={labelClass}>Name</label>
-                    <input className={inputClass} defaultValue={server.name} />
+                    <input
+                      className={inputClass}
+                      {...register('name')}
+                      defaultValue={server.name}
+                    />
                   </div>
                 </div>
 
@@ -159,23 +167,44 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
                   <textarea
                     className="h-24 w-full scrollbar-custom dark:bg-gray-775 border dark:border-gray-850 rounded resize-none"
                     defaultValue={server.description}
+                    {...register('description')}
                   />
                 </div>
 
                 <div className={labelClass}>Banner</div>
-                <div className="w-full h-32 relative group bg-gradient-to-br from-red-400 to-indigo-600 rounded">
-                  <div className="absolute rounded cursor-pointer inset-0 bg-black opacity-0 group-hover:opacity-100 bg-opacity-50 z-10 transition flex items-center justify-center">
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  id="bannerFile"
+                  hidden
+                  {...register('bannerFile')}
+                />
+                <div className="block w-full h-32 relative group bg-gradient-to-br from-red-400 to-indigo-600 rounded">
+                  <label
+                    htmlFor="bannerFile"
+                    className="block absolute rounded cursor-pointer inset-0 bg-black opacity-0 group-hover:opacity-100 bg-opacity-50 z-10 transition flex items-center justify-center"
+                  >
                     <IconEdit className="w-1/2 h-1/2" />
-                  </div>
+                  </label>
                 </div>
 
-                <div className="mt-10 flex items-center">
+                <div className="mt-10 flex items-center space-x-5 justify-end">
                   <button
                     type="button"
                     onClick={() => setDeleteOpen(true)}
                     className={deleteBtn}
                   >
                     Delete Planet
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="disabled:opacity-50 disabled:cursor-not-allowed rounded px-4 h-10 text-sm text-primary bg-green-600 focus:outline-none flex items-center"
+                  >
+                    Save Changes
+                    {updateLoading && (
+                      <IconSpinner className="w-5 h-5 text-primary ml-3" />
+                    )}
                   </button>
                 </div>
               </div>

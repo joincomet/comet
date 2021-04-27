@@ -11,7 +11,7 @@ services:
     instance_size_slug: professional-s
     http_port: 4000
     routes:
-      - path: /api
+      - path: /
     envs:
       - key: DATABASE_URL
         value: ${db.DATABASE_URL}
@@ -31,17 +31,6 @@ services:
         value: <AWS_ENDPOINT>
       - key: MEDIA_DOMAIN
         value: <MEDIA_DOMAIN>
-  - name: web
-    image:
-      registry_type: DOCKER_HUB
-      registry: joincomet
-      repository: web
-      tag: <TAG>
-    instance_count: 1
-    instance_size_slug: professional-xs
-    http_port: 3000
-    routes:
-      - path: /
 databases:
   - name: db
     engine: PG
@@ -54,5 +43,5 @@ databases:
     production: true
     cluster_name: comet-redis
 domains:
-  - domain: joincomet.app
+  - domain: api.joincomet.app
     type: PRIMARY

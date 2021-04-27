@@ -244,7 +244,7 @@ input DeleteServerInput {
 """
 A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
 """
-scalar EmailAddress
+scalar EmailAddress @specifiedBy(url: "https://www.w3.org/Protocols/rfc822/")
 
 type File {
   filename: String!
@@ -299,7 +299,7 @@ type Group implements BaseEntity {
 """
 A field whose value is a hex color code: https://en.wikipedia.org/wiki/Web_colors.
 """
-scalar HexColorCode
+scalar HexColorCode @specifiedBy(url: "https://en.wikipedia.org/wiki/Web_colors")
 
 type Image {
   originalHeight: PositiveInt!

@@ -6,14 +6,7 @@ import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import ws from 'ws' // yarn add ws
 import { useServer } from 'graphql-ws/lib/use/ws'
-import {
-  parse,
-  GraphQLError,
-  specifiedRules,
-  subscribe,
-  validate,
-  ExecutionArgs
-} from 'graphql'
+import { specifiedRules } from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { getUserId, RedisLiveQueryStore } from '@/util'
@@ -55,6 +48,7 @@ export async function bootstrap() {
   const apolloServer = new ApolloServer({
     uploads: false,
     schema,
+    validationRules,
     context: ({ req }) => {
       const em = orm.em.fork()
       const userId = getUserId(req.headers.token as string)
