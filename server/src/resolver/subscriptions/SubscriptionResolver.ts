@@ -114,7 +114,10 @@ export class SubscriptionResolver {
     const entity = await em.findOneOrFail(Message, id, [
       'author',
       'serverUser.roles',
-      'serverUser.user'
+      'serverUser.user',
+      'channel.server',
+      'group',
+      'toUser'
     ])
     return getResult(entity, type)
   }
