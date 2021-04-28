@@ -30,7 +30,7 @@ export async function updateRole(
   await user.checkServerPermission(
     em,
     role.server.id,
-    ServerPermission.ManageRoles
+    ServerPermission.ManageServer
   )
   em.assign(role, {
     name: name ?? role.name,

@@ -27,7 +27,7 @@ export async function removeUserFromRole(
   await currentUser.checkServerPermission(
     em,
     role.server.id,
-    ServerPermission.ManageRoles
+    ServerPermission.ManageServer
   )
   const serverUser = await em.findOneOrFail(ServerUser, {
     user: userId,

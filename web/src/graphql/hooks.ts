@@ -99,7 +99,6 @@ export type Channel = BaseEntity & {
 
 export enum ChannelPermission {
   ManageMessages = 'ManageMessages',
-  ManagePermissions = 'ManagePermissions',
   SendMessages = 'SendMessages',
   ViewChannel = 'ViewChannel'
 }
@@ -1220,7 +1219,6 @@ export enum ServerPermission {
   ManageMessages = 'ManageMessages',
   ManageNicknames = 'ManageNicknames',
   ManagePosts = 'ManagePosts',
-  ManageRoles = 'ManageRoles',
   ManageServer = 'ManageServer',
   ManageUsers = 'ManageUsers',
   Mention = 'Mention',
@@ -1540,7 +1538,7 @@ export type RoleFragment = (
 
 export type ServerFragment = (
   { __typename?: 'Server' }
-  & Pick<Server, 'id' | 'name' | 'description' | 'avatarUrl' | 'bannerUrl' | 'userCount' | 'isPublic' | 'initials' | 'isJoined'>
+  & Pick<Server, 'id' | 'name' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isPublic' | 'initials' | 'isJoined'>
   & { owner: (
     { __typename?: 'User' }
     & Pick<User, 'id'>
@@ -3044,6 +3042,7 @@ export const ServerFragmentDoc = gql`
   description
   avatarUrl
   bannerUrl
+  category
   userCount
   isPublic
   initials

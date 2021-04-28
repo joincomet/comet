@@ -28,7 +28,7 @@ export async function createRole(
   { serverId, name, color, permissions }: CreateRoleInput
 ): Promise<Role> {
   const user = await em.findOneOrFail(User, userId)
-  await user.checkServerPermission(em, serverId, ServerPermission.ManageRoles)
+  await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
   const roles = await em.find(
     Role,
     { server: serverId },

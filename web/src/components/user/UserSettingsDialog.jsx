@@ -132,7 +132,10 @@ export default function UserSettingsDialog({ open, setOpen }) {
   return (
     <>
       <Dialog isOpen={open} close={close}>
-        <div className="min-w-full h-full min-h-full h-screen dark:bg-gray-800 scrollbar-custom">
+        <div
+          className="min-w-full h-full min-h-full h-screen dark:bg-gray-800 scrollbar-custom"
+          onClick={e => e.stopPropagation()}
+        >
           <div className="w-full relative flex">
             <button
               className="absolute top-3 right-3 focus:outline-none rounded-full transition dark:hover:bg-gray-700 p-2"

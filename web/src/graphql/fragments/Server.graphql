@@ -4,6 +4,7 @@ fragment Server on Server {
   description
   avatarUrl
   bannerUrl
+  category
   userCount
   isPublic
   initials

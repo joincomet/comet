@@ -8,7 +8,7 @@ export const permissions = {
       title: 'Manage Channels',
       description: 'Allows members to create, edit, or delete channels.'
     },
-    [ServerPermission.ManageRoles]: {
+    [ServerPermission.ManageServer]: {
       title: 'Manage Roles',
       description:
         'Allows members to create new roles and edit or delete roles lower than their highest role. Also allows members to change permissions of individual channels that they have access to.'

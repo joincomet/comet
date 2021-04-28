@@ -1,5 +1,11 @@
 import { Field, ID, InputType } from 'type-graphql'
-import { ChannelPermission, Role, ServerPermission, User } from '@/entity'
+import {
+  Channel,
+  ChannelPermission,
+  Role,
+  ServerPermission,
+  User
+} from '@/entity'
 import { Context } from '@/types'
 
 @InputType()
@@ -28,11 +34,11 @@ export async function updateChannelPermissions(
 ): Promise<Role> {
   const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId)
-  await user.checkChannelPermission(
+  const channel = await em.findOneOrFail(Channel, channelId, ['server'])
+  await user.checkServerPermission(
     em,
-    channelId,
-    ChannelPermission.ManagePermissions,
-    ServerPermission.ManageRoles
+    channel.server.id,
+    ServerPermission.ManageServer
   )
   const channelPerms = role.channelPermissions
     .getItems()

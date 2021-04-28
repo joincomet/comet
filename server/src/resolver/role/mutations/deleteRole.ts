@@ -17,7 +17,7 @@ export async function deleteRole(
   await user.checkServerPermission(
     em,
     role.server.id,
-    ServerPermission.ManageRoles
+    ServerPermission.ManageServer
   )
   await em.remove(role).flush()
   liveQueryStore.invalidate(`Role:${roleId}`)

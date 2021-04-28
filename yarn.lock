@@ -2025,9 +2025,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/core@npm:^2.0.0-beta.39":
-  version: 2.0.0-beta.39
-  resolution: "@tiptap/core@npm:2.0.0-beta.39"
+"@tiptap/core@npm:^2.0.0-beta.41":
+  version: 2.0.0-beta.41
+  resolution: "@tiptap/core@npm:2.0.0-beta.41"
   dependencies:
     "@types/prosemirror-commands": ^1.0.4
     "@types/prosemirror-inputrules": ^1.0.4
@@ -2045,7 +2045,7 @@ __metadata:
     prosemirror-state: ^1.3.4
     prosemirror-transform: ^1.3.2
     prosemirror-view: ^1.18.2
-  checksum: a8830a2f1eb48205b78de3212374cbcb3ec83c1c5a7009ed7fc883648626d5bdadb96e0eefc95da3e91e933e0846ae6d45b1a4bd63545c86ace0545c3adba612
+  checksum: c8b42bb52de9a8a5d114d00c18e08cfeb25e2bd0016e106b6d102449992b7741ce1a95c8f7ad0807af518d9f1424b53cc84f0d9d89ce89d43e35df4482a60138
   languageName: node
   linkType: hard
 
@@ -2232,14 +2232,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-mention@npm:^2.0.0-beta.40":
-  version: 2.0.0-beta.40
-  resolution: "@tiptap/extension-mention@npm:2.0.0-beta.40"
+"@tiptap/extension-mention@npm:^2.0.0-beta.42":
+  version: 2.0.0-beta.42
+  resolution: "@tiptap/extension-mention@npm:2.0.0-beta.42"
   dependencies:
-    "@tiptap/suggestion": ^2.0.0-beta.40
+    "@tiptap/suggestion": ^2.0.0-beta.42
   peerDependencies:
     "@tiptap/core": ^2.0.0-beta.1
-  checksum: fe3144ab00ca923b20206c95dca81ceb16597552171184abf88bed5b5a7ae4c6e9c1712fdc2e4fe4e2c0094593569fbc29aadee87f8a2ce4709a9bcf80ed67fe
+  checksum: 64e3a3390927e79a495b574f13e5f6c60c73e2c66ac6cc6a6689fb66b508c6e0ea7a21f929998cb7345d4f1b3b813f4e41c407eb3c516fd509b2c4adf39932e8
   languageName: node
   linkType: hard
 
@@ -2318,11 +2318,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/starter-kit@npm:^2.0.0-beta.35":
-  version: 2.0.0-beta.35
-  resolution: "@tiptap/starter-kit@npm:2.0.0-beta.35"
+"@tiptap/starter-kit@npm:^2.0.0-beta.37":
+  version: 2.0.0-beta.37
+  resolution: "@tiptap/starter-kit@npm:2.0.0-beta.37"
   dependencies:
-    "@tiptap/core": ^2.0.0-beta.39
+    "@tiptap/core": ^2.0.0-beta.41
     "@tiptap/extension-blockquote": ^2.0.0-beta.6
     "@tiptap/extension-bold": ^2.0.0-beta.6
     "@tiptap/extension-bullet-list": ^2.0.0-beta.6
@@ -2341,19 +2341,19 @@ __metadata:
     "@tiptap/extension-paragraph": ^2.0.0-beta.7
     "@tiptap/extension-strike": ^2.0.0-beta.7
     "@tiptap/extension-text": ^2.0.0-beta.5
-  checksum: f96336d034eb464eb860bab0030bea40f3b073e4b7789256384a0a2fc6a334d9ccc839f35e6a522f2f94ed1727289e79b8881f7129f3d80f9f6286f4e54b79fd
+  checksum: a28c5b6d0a673c302fa962efad61ea86e3eacdfd39f0a318c7955dbcbc545d20b2993b356c6e7cc18ed915c76851056cf5527a0f9f46d516d569992e8f261dda
   languageName: node
   linkType: hard
 
-"@tiptap/suggestion@npm:^2.0.0-beta.40":
-  version: 2.0.0-beta.40
-  resolution: "@tiptap/suggestion@npm:2.0.0-beta.40"
+"@tiptap/suggestion@npm:^2.0.0-beta.42":
+  version: 2.0.0-beta.42
+  resolution: "@tiptap/suggestion@npm:2.0.0-beta.42"
   dependencies:
-    "@tiptap/core": ^2.0.0-beta.39
+    "@tiptap/core": ^2.0.0-beta.41
     prosemirror-model: ^1.14.1
     prosemirror-state: ^1.3.4
     prosemirror-view: ^1.18.2
-  checksum: 3acaf1e15b9751ef66afe8014507f1eb742ac04f99d59b15c76cfe4ce720a495f5b13e14b767e1e923b785cfbdee43ed573252fb273bbd857889f9c7ef136a6e
+  checksum: f7d177944f9cd3cba85231707b9e0d9e26b318a82ad05ce798bf9e752c7380c1fcb116beacb7066be59c90855a75d8ce0b8ed9d272ece481afdc6fd67cb1a82d
   languageName: node
   linkType: hard
 
@@ -8301,12 +8301,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql-ws@npm:^4.4.2":
-  version: 4.4.2
-  resolution: "graphql-ws@npm:4.4.2"
+"graphql-ws@npm:^4.4.3":
+  version: 4.4.3
+  resolution: "graphql-ws@npm:4.4.3"
   peerDependencies:
     graphql: ">=0.11 <=15"
-  checksum: b38e3a9b04110ac65a91efbfb385c6552dbfe88270ff3e8e87278dd0a13f01a3954b8e66d75e6f3355675260dde854b7a39faccbcd72a83f362c69d8b877cb1c
+  checksum: 803d97727897e11090ab49c7fff3702b62b6ac3e6d2ec95a3ae6e1a269a566ba71beb0e3bac8bbbc31eac5e92c2437ae0ee1fd589885b1ce1bdc3a650c138f61
   languageName: node
   linkType: hard
 
@@ -13914,7 +13914,7 @@ resolve@^2.0.0-next.3:
     graphql-scalars: ^1.9.3
     graphql-subscriptions: ^1.2.1
     graphql-upload: ^11.0.0
-    graphql-ws: ^4.4.2
+    graphql-ws: ^4.4.3
     ioredis: ^4.27.1
     jsonwebtoken: ^8.5.1
     metascraper: ^5.21.7
@@ -16027,11 +16027,11 @@ typescript@^4.2.4:
     "@tailwindcss/typography": ^0.4.0
     "@tippyjs/react": ^4.2.5
     "@tiptap/extension-link": ^2.0.0-beta.8
-    "@tiptap/extension-mention": ^2.0.0-beta.40
+    "@tiptap/extension-mention": ^2.0.0-beta.42
     "@tiptap/extension-placeholder": ^2.0.0-beta.9
     "@tiptap/extension-underline": ^2.0.0-beta.7
     "@tiptap/react": ^2.0.0-beta.26
-    "@tiptap/starter-kit": ^2.0.0-beta.35
+    "@tiptap/starter-kit": ^2.0.0-beta.37
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
     "@types/react-router-dom": ^5.1.7
@@ -16050,7 +16050,7 @@ typescript@^4.2.4:
     graphiql: ^1.4.1
     graphql: ^15.4.0-experimental-stream-defer.1
     graphql-tag: ^2.12.3
-    graphql-ws: ^4.4.2
+    graphql-ws: ^4.4.3
     i18next: ^20.2.2
     i18next-browser-languagedetector: ^6.1.0
     meros: ^1.1.4

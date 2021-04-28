@@ -78,7 +78,6 @@ type Channel implements BaseEntity {
 
 enum ChannelPermission {
   ManageMessages
-  ManagePermissions
   SendMessages
   ViewChannel
 }
@@ -752,7 +751,6 @@ enum ServerPermission {
   ManageMessages
   ManageNicknames
   ManagePosts
-  ManageRoles
   ManageServer
   ManageUsers
   Mention

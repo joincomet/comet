@@ -4,7 +4,7 @@ import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import { useStore } from '@/hooks/useStore'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { ServerCategory } from '@/graphql/hooks'
-import { useCategoryIcon } from '@/hooks/useCategoryIcon'
+import { getCategoryIcon } from '@/hooks/getCategoryIcon'
 import { useTranslation } from 'react-i18next'
 import { VectorLogoIcon } from '@/components/ui/vectors/VectorLogoIcon'
 import { useMemo } from 'react'
@@ -16,7 +16,7 @@ function Category({ category }) {
     s.setExploreCategory
   ])
 
-  const Icon = useCategoryIcon(category)
+  const Icon = getCategoryIcon(category)
   return (
     <SidebarItem
       onClick={() => setExploreCategory(category)}

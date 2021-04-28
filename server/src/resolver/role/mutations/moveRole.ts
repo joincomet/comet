@@ -22,7 +22,7 @@ export async function moveRole(
   await user.checkServerPermission(
     em,
     role.server.id,
-    ServerPermission.ManageRoles
+    ServerPermission.ManageServer
   )
   const roles = await em.find(
     Role,

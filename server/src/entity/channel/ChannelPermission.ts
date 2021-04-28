@@ -4,8 +4,7 @@ import { ServerPermission } from '@/entity/server/ServerPermission'
 export enum ChannelPermission {
   ViewChannel = 'ViewChannel',
   SendMessages = 'SendMessages',
-  ManageMessages = 'ManageMessages',
-  ManagePermissions = 'ManagePermissions'
+  ManageMessages = 'ManageMessages'
 }
 
 registerEnumType(ChannelPermission, { name: 'ChannelPermission' })
@@ -13,6 +12,5 @@ registerEnumType(ChannelPermission, { name: 'ChannelPermission' })
 export const ChannelPermissionFallbacks = {
   [ChannelPermission.ViewChannel]: ServerPermission.ViewChannels,
   [ChannelPermission.SendMessages]: ServerPermission.SendMessages,
-  [ChannelPermission.ManageMessages]: ServerPermission.ManageMessages,
-  [ChannelPermission.ManagePermissions]: ServerPermission.ManageRoles
+  [ChannelPermission.ManageMessages]: ServerPermission.ManageMessages
 }
