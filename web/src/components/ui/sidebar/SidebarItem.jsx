@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import ctl from '@netlify/classnames-template-literals'
 
-const className = (large, small) =>
+const className = (large, small, light) =>
   ctl(`
   ${large && 'h-11'}
   ${small && 'h-9'}
@@ -16,10 +16,13 @@ const className = (large, small) =>
   font-medium
   px-4
   w-full
-  dark:hover:bg-gray-775
+  ${
+    light
+      ? 'dark:hover:bg-gray-725 dark:active:bg-gray-725'
+      : 'dark:hover:bg-gray-775 dark:active:bg-gray-775'
+  }
   text-gray-600
   dark:text-gray-400
-  dark:active:bg-gray-775
   select-none
   focus:outline-none
   relative
@@ -27,11 +30,15 @@ const className = (large, small) =>
   dark:hover:text-gray-300
 `)
 
-const activeClassName = ctl(`
+const activeClassName = light =>
+  ctl(`
   text-gray-800
   dark:text-gray-200
-  dark:bg-gray-750
-  dark:hover:bg-gray-750
+  ${
+    light
+      ? `dark:bg-gray-700 dark:hover:bg-gray-700`
+      : `dark:bg-gray-750 dark:hover:bg-gray-750`
+  }
 `)
 
 export default forwardRef(
@@ -43,7 +50,8 @@ export default forwardRef(
       to,
       onClick,
       active = false,
-      exact = false
+      exact = false,
+      light = false
     },
     ref
   ) => {
@@ -52,10 +60,10 @@ export default forwardRef(
         <NavLink
           ref={ref}
           to={to}
-          className={`${className(large, small)} ${
-            active ? activeClassName : ''
+          className={`${className(large, small, light)} ${
+            active ? activeClassName(light) : ''
           }`}
-          activeClassName={activeClassName}
+          activeClassName={activeClassName(light)}
           exact={exact}
         >
           {children}
@@ -66,8 +74,8 @@ export default forwardRef(
       <button
         ref={ref}
         onClick={onClick}
-        className={`${className(large, small)} ${
-          active ? activeClassName : ''
+        className={`${className(large, small, light)} ${
+          active ? activeClassName(light) : ''
         }`}
       >
         {children}

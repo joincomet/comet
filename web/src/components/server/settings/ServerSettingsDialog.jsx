@@ -1,83 +1,19 @@
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import Dialog from '@/components/ui/dialog/Dialog'
 import { IconEdit, IconSpinner, IconXLarge } from '@/components/ui/icons/Icons'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
-import UserAvatar from '@/components/user/UserAvatar'
 import ctl from '@netlify/classnames-template-literals'
 import {
   useDeleteServerMutation,
   useUpdateServerMutation
 } from '@/graphql/hooks'
 import { useForm } from 'react-hook-form'
-import isEmail from 'validator/es/lib/isEmail'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useApolloClient } from '@apollo/client'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import CategorySelect from '@/components/server/CategorySelect'
-
-const inputClass = ctl(`
-  w-full
-  h-10
-  dark:bg-gray-775
-  dark:border-gray-850
-  border
-  rounded
-  focus:outline-none
-  transition
-  dark:focus:border-blue-600
-  px-4
-  text-base
-  text-primary
-`)
-
-const labelClass = ctl(`
-  text-11
-  font-semibold
-  tracking-widest
-  uppercase
-  text-tertiary
-  block
-  pb-1.5
-`)
-
-const errorClass = ctl(`
-  text-xs
-  text-red-400
-  pt-1.5
-`)
-
-const deleteBtn = ctl(`
-  text-red-500
-  border
-  rounded
-  border-red-500
-  px-4
-  h-10
-  text-sm
-  font-medium
-  transition
-  hover:bg-red-500
-  hover:text-gray-100
-  focus:outline-none
-  disabled:opacity-50
-  disabled:cursor-not-allowed
-  disabled:hover:bg-transparent
-  disabled:hover:text-red-500
-  flex
-  items-center
-  select-none
-`)
-
-const cancelBtn = ctl(`
-  text-tertiary
-  px-2
-  h-10
-  text-sm
-  font-medium
-  focus:outline-none
-`)
+import { useTranslation } from 'react-i18next'
+import RoleSettings from '@/components/server/settings/RoleSettings'
 
 const Tab = {
   Settings: 'Settings',
@@ -94,11 +30,6 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
   const [updateServer, { loading: updateLoading }] = useUpdateServerMutation()
   const [category, setCategory] = useState(server.category)
   const [currentTab, setCurrentTab] = useState(Tab.Settings)
-
-  useEffect(() => console.log(category === server.category), [
-    category,
-    server.category
-  ])
 
   const close = () => {
     setOpen(false)
@@ -129,7 +60,7 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
             </button>
 
             <div className="w-1/3 min-w-[14rem] dark:bg-gray-800 flex justify-end px-5 py-12">
-              <div className="w-56">
+              <div className="w-56 space-y-0.5">
                 <SidebarLabel>{server.name}</SidebarLabel>
                 <SidebarItem
                   active={currentTab === Tab.Settings}
@@ -145,7 +76,7 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
                 </SidebarItem>
               </div>
             </div>
-            <div className="w-2/3 px-10 py-16 min-h-screen dark:bg-gray-750">
+            <div className="w-2/3 px-8 py-16 min-h-screen dark:bg-gray-750">
               {currentTab === Tab.Settings && (
                 <form
                   onSubmit={handleSubmit(onSubmit)}
@@ -187,16 +118,16 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
 
                     <div className="ml-6 w-full space-y-3">
                       <div>
-                        <label className={labelClass}>Name</label>
+                        <label className="label">Name</label>
                         <input
-                          className={inputClass}
+                          className="textbox"
                           {...register('name')}
                           defaultValue={server.name}
                         />
                       </div>
 
                       <div>
-                        <label className={labelClass}>Category</label>
+                        <label className="label">Category</label>
 
                         <CategorySelect
                           category={category}
@@ -207,15 +138,15 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
                   </div>
 
                   <div className="pt-5 pb-5 w-full">
-                    <label className={labelClass}>Description</label>
+                    <label className="label">Description</label>
                     <textarea
-                      className="h-24 w-full scrollbar-custom dark:bg-gray-775 border dark:border-gray-850 rounded resize-none"
+                      className="h-24 w-full text-base scrollbar-custom dark:bg-gray-775 border dark:border-gray-850 rounded resize-none"
                       defaultValue={server.description}
                       {...register('description')}
                     />
                   </div>
 
-                  <div className={labelClass}>Banner</div>
+                  <div className="label">Banner</div>
                   <input
                     type="file"
                     accept="image/png,image/jpeg,image/webp,image/gif"
@@ -254,14 +185,14 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
                     <button
                       type="button"
                       onClick={() => setDeleteOpen(true)}
-                      className={deleteBtn}
+                      className="delete-button"
                     >
                       Delete Planet
                     </button>
 
                     <button
                       type="submit"
-                      className="disabled:opacity-50 disabled:cursor-not-allowed rounded px-4 h-10 text-sm text-primary bg-green-600 focus:outline-none flex items-center"
+                      className="save-button"
                       disabled={
                         (!name || name === server.name) &&
                         (description || '') === (server.description || '') &&
@@ -276,13 +207,7 @@ export default function ServerSettingsDialog({ open, setOpen, server }) {
                   </div>
                 </form>
               )}
-              {currentTab === Tab.Roles && (
-                <div className="max-w-screen-sm text-left">
-                  <div className="font-semibold text-primary uppercase mb-6">
-                    Roles
-                  </div>
-                </div>
-              )}
+              {currentTab === Tab.Roles && <RoleSettings server={server} />}
             </div>
           </div>
         </div>
@@ -301,7 +226,6 @@ function DeleteServerDialog({ deleteOpen, setDeleteOpen, server }) {
   const [password, setPassword] = useState('')
   const [deleteServer, { loading }] = useDeleteServerMutation()
   const { push } = useHistory()
-  const apolloClient = useApolloClient()
 
   return (
     <Dialog isOpen={deleteOpen} close={() => setDeleteOpen(false)}>
@@ -315,13 +239,13 @@ function DeleteServerDialog({ deleteOpen, setDeleteOpen, server }) {
         </div>
 
         <div className="text-left">
-          <label htmlFor="confirmPassword" className={labelClass}>
+          <label htmlFor="confirmPassword" className="label">
             Password
           </label>
           <input
             id="confirmPassword"
             name="confirmPassword"
-            className={inputClass}
+            className="textbox"
             value={password}
             onChange={e => setPassword(e.target.value)}
             type="password"
@@ -330,14 +254,14 @@ function DeleteServerDialog({ deleteOpen, setDeleteOpen, server }) {
 
         <div className="flex items-center justify-end space-x-4 pt-4">
           <button
-            className={cancelBtn}
+            className="cancel-button"
             type="button"
             onClick={() => setDeleteOpen(false)}
           >
             Cancel
           </button>
           <button
-            className={deleteBtn}
+            className="delete-button"
             type="button"
             disabled={!password || loading}
             onClick={() => {
@@ -345,8 +269,7 @@ function DeleteServerDialog({ deleteOpen, setDeleteOpen, server }) {
                 variables: { input: { password, serverId: server.id } }
               }).then(() => {
                 setDeleteOpen(false)
-                push('/')
-                apolloClient.resetStore()
+                push('/me')
               })
             }}
           >

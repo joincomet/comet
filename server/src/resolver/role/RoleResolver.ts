@@ -1,4 +1,4 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
+import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from 'type-graphql'
 import { Role, ServerUser } from '@/entity'
 import { Context } from '@/types'
 import {
@@ -37,11 +37,11 @@ export class RoleResolver {
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => ID)
   async deleteRole(
     @Ctx() ctx: Context,
     @Arg('input') input: DeleteRoleInput
-  ): Promise<boolean> {
+  ): Promise<string> {
     return deleteRole(ctx, input)
   }
 

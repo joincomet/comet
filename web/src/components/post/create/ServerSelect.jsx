@@ -102,7 +102,7 @@ export default function ServerSelect({ servers = [], server, setServer }) {
                           <ServerAvatar
                             server={server}
                             size={7}
-                            className="dark:bg-gray-725"
+                            className="dark:bg-gray-725 rounded-full"
                           />
                           <span
                             className={`${

@@ -15,7 +15,7 @@ export class DeleteServerInput {
 export async function deleteServer(
   { em, userId, liveQueryStore }: Context,
   { serverId, password }: DeleteServerInput
-): Promise<boolean> {
+): Promise<string> {
   const user = await em.findOneOrFail(User, userId)
   const match = await argon2.verify(user.passwordHash, password)
   if (!match) throw new Error('error.login.wrongPassword')
@@ -25,5 +25,5 @@ export async function deleteServer(
   server.isDeleted = true
   await em.persistAndFlush(server)
   liveQueryStore.invalidate(`Server:${serverId}`)
-  return true
+  return serverId
 }

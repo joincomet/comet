@@ -1,10 +1,9 @@
 import { Role, ServerPermission, User } from '@/entity'
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { IsHexColor, Length } from 'class-validator'
+import { Length } from 'class-validator'
 import { QueryOrder } from '@mikro-orm/core'
 import { ReorderUtils } from '@/util'
-import { GraphQLHexColorCode } from 'graphql-scalars'
 
 @InputType()
 export class CreateRoleInput {
@@ -14,19 +13,13 @@ export class CreateRoleInput {
   @Field()
   @Length(1, 100)
   name: string
-
-  @Field(() => GraphQLHexColorCode, { nullable: true })
-  @IsHexColor()
-  color?: string
-
-  @Field(() => [ServerPermission])
-  permissions: ServerPermission[]
 }
 
 export async function createRole(
   { em, userId, liveQueryStore }: Context,
-  { serverId, name, color, permissions }: CreateRoleInput
+  { serverId, name }: CreateRoleInput
 ): Promise<Role> {
+  if (name === '@everyone') throw new Error('Cannot create @everyone role')
   const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
   const roles = await em.find(
@@ -51,8 +44,6 @@ export async function createRole(
   const role = await em.create(Role, {
     server: serverId,
     name,
-    color,
-    permissions,
     position
   })
   await em.persistAndFlush(role)

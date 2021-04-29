@@ -92,7 +92,7 @@ body {
 }
 
 .textbox {
-  @apply rounded dark:bg-gray-775 border dark:border-gray-850 duration-300 dark:focus:border-blue-500 h-10 placeholder-gray-600 dark:placeholder-gray-400 block focus:outline-none transition w-full text-base;
+  @apply disabled:opacity-50 px-3 rounded dark:bg-gray-775 border dark:border-gray-850 duration-300 dark:focus:border-blue-500 h-10 placeholder-gray-600 dark:placeholder-gray-400 block focus:outline-none transition w-full text-base;
 }
 
 .label {
@@ -137,4 +137,20 @@ body {
 
 span[data-spoiler='1'] {
   @apply dark:bg-gray-100 bg-gray-900 dark:hover:bg-transparent hover:bg-transparent;
+}
+
+.cancel-button {
+  @apply text-gray-600 dark:text-gray-400 px-2 h-10 text-sm font-medium focus:outline-none;
+}
+
+.save-button {
+  @apply disabled:opacity-50 disabled:cursor-not-allowed rounded px-4 h-10 text-sm dark:text-gray-100 text-gray-900 bg-green-600 focus:outline-none flex items-center;
+}
+
+.delete-button {
+  @apply text-red-500 border rounded border-red-500 px-4 h-10 text-sm font-medium transition hover:bg-red-500 hover:text-gray-100 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-red-500 flex items-center select-none;
+}
+
+.error {
+  @apply text-xs text-red-400 pt-1.5;
 }

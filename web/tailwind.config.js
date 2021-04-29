@@ -57,6 +57,9 @@ module.exports = {
         800: '800ms',
         900: '900ms'
       },
+      translate: {
+        '1px': '1px'
+      },
       scale: {
         80: '.80',
         85: '.85',

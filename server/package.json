@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.51",
+  "version": "0.0.52",
   "private": true,
   "engines": {
     "node": "15.x.x"
@@ -20,7 +20,7 @@
     "@n1ru4l/in-memory-live-query-store": "^0.6.4",
     "apollo-server-express": "^2.23.0",
     "argon2": "^0.27.2",
-    "aws-sdk": "^2.894.0",
+    "aws-sdk": "^2.895.0",
     "class-validator": "^0.13.1",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -35,7 +35,7 @@
     "graphql-scalars": "^1.9.3",
     "graphql-subscriptions": "^1.2.1",
     "graphql-upload": "^11.0.0",
-    "graphql-ws": "^4.4.3",
+    "graphql-ws": "^4.4.4",
     "ioredis": "^4.27.1",
     "jsonwebtoken": "^8.5.1",
     "metascraper": "^5.21.7",
@@ -58,7 +58,7 @@
     "sharp": "^0.28.1",
     "type-graphql": "^1.1.1",
     "typescript": "^4.2.4",
-    "user-agents": "^1.0.635",
+    "user-agents": "^1.0.636",
     "validator": "^13.6.0",
     "ws": "^7.4.5",
     "xss": "^1.0.8"

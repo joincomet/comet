@@ -11,9 +11,10 @@ export class DeleteRoleInput {
 export async function deleteRole(
   { em, userId, liveQueryStore }: Context,
   { roleId }: DeleteRoleInput
-): Promise<boolean> {
+): Promise<string> {
   const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId, ['server'])
+  if (role.name === '@everyone') throw new Error('@everyone cannot be deleted')
   await user.checkServerPermission(
     em,
     role.server.id,
@@ -21,5 +22,5 @@ export async function deleteRole(
   )
   await em.remove(role).flush()
   liveQueryStore.invalidate(`Role:${roleId}`)
-  return true
+  return roleId
 }

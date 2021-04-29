@@ -27,6 +27,8 @@ export async function updateRole(
 ): Promise<Role> {
   const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId, ['server'])
+  if (name && role.name === '@everyone' && name !== '@everyone')
+    throw new Error('Cannot change name of @everyone role')
   await user.checkServerPermission(
     em,
     role.server.id,
@@ -34,7 +36,7 @@ export async function updateRole(
   )
   em.assign(role, {
     name: name ?? role.name,
-    color: color ?? role.color,
+    color,
     permissions: permissions ?? role.permissions
   })
   await em.persistAndFlush(role)

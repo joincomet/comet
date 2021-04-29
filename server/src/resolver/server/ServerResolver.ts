@@ -172,11 +172,11 @@ export class ServerResolver {
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => ID)
   async deleteServer(
     @Ctx() ctx: Context,
     @Arg('input') input: DeleteServerInput
-  ): Promise<boolean> {
+  ): Promise<string> {
     return deleteServer(ctx, input)
   }
 

@@ -1,12 +1,7 @@
 import tailwindColors from 'tailwindcss/colors'
 
-const colors = {
-  transparent: 'transparent',
-  current: 'currentColor',
-  black: tailwindColors.black,
-  white: tailwindColors.white,
+export const realColors = {
   gray: tailwindColors.gray,
-
   red: tailwindColors.red,
   yellow: tailwindColors.amber,
   green: tailwindColors.emerald,
@@ -14,6 +9,14 @@ const colors = {
   indigo: tailwindColors.indigo,
   purple: tailwindColors.violet,
   pink: tailwindColors.pink
+}
+
+export const colors = {
+  transparent: 'transparent',
+  current: 'currentColor',
+  black: tailwindColors.black,
+  white: tailwindColors.white,
+  ...realColors
 }
 
 export const colorsMap = {

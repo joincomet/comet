@@ -18,67 +18,6 @@ import { useHistory } from 'react-router-dom'
 import { useApolloClient } from '@apollo/client'
 import { gracefullyRestart } from '@/graphql/WebSocketLink'
 
-const inputClass = ctl(`
-  w-full
-  h-10
-  dark:bg-gray-750
-  rounded
-  focus:outline-none
-  transition
-  focus:border-blue-400
-  px-4
-  text-base
-  text-primary
-  border-none
-`)
-
-const labelClass = ctl(`
-  text-11
-  font-semibold
-  tracking-widest
-  uppercase
-  text-tertiary
-  block
-  pb-1.5
-`)
-
-const errorClass = ctl(`
-  text-xs
-  text-red-400
-  pt-1.5
-`)
-
-const deleteBtn = ctl(`
-  text-red-500
-  border
-  rounded
-  border-red-500
-  px-4
-  h-10
-  text-sm
-  font-medium
-  transition
-  hover:bg-red-500
-  hover:text-gray-100
-  focus:outline-none
-  disabled:opacity-50
-  disabled:cursor-not-allowed
-  disabled:hover:bg-transparent
-  disabled:hover:text-red-500
-  flex
-  items-center
-  select-none
-`)
-
-const cancelBtn = ctl(`
-  text-tertiary
-  px-2
-  h-10
-  text-sm
-  font-medium
-  focus:outline-none
-`)
-
 export default function UserSettingsDialog({ open, setOpen }) {
   const [user] = useCurrentUser()
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -205,11 +144,11 @@ export default function UserSettingsDialog({ open, setOpen }) {
 
                   <div className="mt-5 space-y-5">
                     <div>
-                      <label htmlFor="name" className={labelClass}>
+                      <label htmlFor="name" className="label">
                         Name
                       </label>
                       <input
-                        className={inputClass}
+                        className="textbox"
                         id="name"
                         defaultValue={user.name}
                         {...register('name', {
@@ -222,18 +161,18 @@ export default function UserSettingsDialog({ open, setOpen }) {
                         type="text"
                       />
                       {errors.name && (
-                        <div className={errorClass}>
+                        <div className="error">
                           Name must be 2-32 characters
                         </div>
                       )}
                     </div>
 
                     <div>
-                      <label htmlFor="email" className={labelClass}>
+                      <label htmlFor="email" className="label">
                         Email
                       </label>
                       <input
-                        className={inputClass}
+                        className="textbox"
                         id="email"
                         defaultValue={user.email}
                         {...register('email', {
@@ -243,34 +182,34 @@ export default function UserSettingsDialog({ open, setOpen }) {
                         type="email"
                       />
                       {errors.email && (
-                        <div className={errorClass}>Invalid email</div>
+                        <div className="error">Invalid email</div>
                       )}
                     </div>
 
                     <div>
-                      <label htmlFor="password" className={labelClass}>
+                      <label htmlFor="password" className="label">
                         New Password
                       </label>
                       <input
-                        className={inputClass}
+                        className="textbox"
                         id="password"
                         {...register('password', { minLength: 6 })}
                         type="password"
                         minLength={6}
                       />
                       {errors.password && (
-                        <div className={errorClass}>
+                        <div className="error">
                           Password must be at least 6 characters
                         </div>
                       )}
                     </div>
 
                     <div>
-                      <label htmlFor="currentPassword" className={labelClass}>
+                      <label htmlFor="currentPassword" className="label">
                         Current Password
                       </label>
                       <input
-                        className={inputClass}
+                        className="textbox"
                         id="currentPassword"
                         {...register('currentPassword', { required: true })}
                         type="password"
@@ -307,7 +246,7 @@ export default function UserSettingsDialog({ open, setOpen }) {
                   <button
                     type="button"
                     onClick={() => setDeleteOpen(true)}
-                    className={deleteBtn}
+                    className="delete-button"
                   >
                     Delete Account
                   </button>
@@ -344,13 +283,13 @@ function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
         </div>
 
         <div className="text-left">
-          <label htmlFor="confirmPassword" className={labelClass}>
+          <label htmlFor="confirmPassword" className="label">
             Password
           </label>
           <input
             id="confirmPassword"
             name="confirmPassword"
-            className={inputClass}
+            className="textbox"
             value={password}
             onChange={e => setPassword(e.target.value)}
             type="password"
@@ -359,14 +298,14 @@ function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
 
         <div className="flex items-center justify-end space-x-4 pt-4">
           <button
-            className={cancelBtn}
+            className="cancel-button"
             type="button"
             onClick={() => setDeleteOpen(false)}
           >
             Cancel
           </button>
           <button
-            className={deleteBtn}
+            className="delete-button"
             type="button"
             disabled={!password || loading}
             onClick={() => {

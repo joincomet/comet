@@ -11,7 +11,7 @@ export class DeleteChannelInput {
 export async function deleteChannel(
   { em, userId, liveQueryStore }: Context,
   { channelId }: DeleteChannelInput
-): Promise<boolean> {
+): Promise<string> {
   const channel = await em.findOneOrFail(Channel, channelId, [
     'server.systemMessagesChannel'
   ])
@@ -26,5 +26,5 @@ export async function deleteChannel(
     channel.server.systemMessagesChannel = null
   await em.persistAndFlush([channel, channel.server])
   liveQueryStore.invalidate(`Channel:${channelId}`)
-  return true
+  return channelId
 }

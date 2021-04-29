@@ -185,9 +185,7 @@ input CreatePostInput {
 }
 
 input CreateRoleInput {
-  color: HexColorCode
   name: String!
-  permissions: [ServerPermission!]!
   serverId: ID!
 }
 
@@ -447,14 +445,14 @@ type Mutation {
   createRole(input: CreateRoleInput!): Role!
   createServer(input: CreateServerInput!): Server!
   deleteAccount(input: DeleteAccountInput!): Boolean!
-  deleteChannel(input: DeleteChannelInput!): Boolean!
+  deleteChannel(input: DeleteChannelInput!): ID!
   deleteComment(input: DeleteCommentInput!): Comment!
   deleteFolder(input: DeleteFolderInput!): Boolean!
   deleteFriendRequest(input: DeleteFriendRequestInput!): Relationship!
   deleteMessage(input: DeleteMessageInput!): Boolean!
   deletePost(input: DeletePostInput!): Post!
-  deleteRole(input: DeleteRoleInput!): Boolean!
-  deleteServer(input: DeleteServerInput!): Boolean!
+  deleteRole(input: DeleteRoleInput!): ID!
+  deleteServer(input: DeleteServerInput!): ID!
   followFolder(input: FollowFolderInput!): Folder!
   globalBan(input: GlobalBanInput!): Boolean!
   joinServer(input: JoinServerInput!): Server!

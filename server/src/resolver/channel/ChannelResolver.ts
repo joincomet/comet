@@ -3,6 +3,7 @@ import {
   Authorized,
   Ctx,
   FieldResolver,
+  ID,
   Int,
   Mutation,
   Resolver,
@@ -81,11 +82,11 @@ export class ChannelResolver {
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => ID)
   async deleteChannel(
     @Ctx() ctx: Context,
     @Arg('input') input: DeleteChannelInput
-  ): Promise<boolean> {
+  ): Promise<string> {
     return deleteChannel(ctx, input)
   }
 

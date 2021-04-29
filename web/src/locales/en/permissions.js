@@ -97,12 +97,22 @@ export const permissions = {
       description: ''
     },
     [ServerPermission.Mentionable]: {
-      title: 'Allow anyone to **@mention** this role',
+      title: 'Allow anyone to @mention this role',
       description: `Note: Members with the "Mention @everyone, @here, and All Roles" permission will always be able to ping this role.`
     },
     [ServerPermission.Admin]: {
       title: 'Administrator',
       description: `Members with this permission will have every permission and will also bypass all channel specific permissions or restrictions (for example, these members would get access to all private channels). **This is a dangerous permission to grant**.`
+    },
+
+    [ServerPermission.ManageUsers]: {
+      title: 'Manage Users',
+      description: `Ban and kick users`
+    },
+
+    [ServerPermission.ViewChannels]: {
+      title: 'View Channels',
+      description: `View channels`
     }
   },
   channel: {

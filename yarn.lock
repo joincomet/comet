@@ -1541,12 +1541,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@headlessui/react@npm:1.1.0"
+"@headlessui/react@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@headlessui/react@npm:1.1.1"
   peerDependencies:
     react: ">=16"
-  checksum: 6106eb17b3cbb5c5918953d2f9f1402e134d439553a3ea4e5847da8d9cce49ec7478e3c84827f1b4a65c7230053fd4608f5e25478b830a297446470fb9b265e2
+  checksum: e749b329336c01e9919e104776e1b639a63166b2bc2f52de17944a14188e67da69fd3c945616451ebd6f7d559a4a0ffdda35a726743eea2d8deebe878bd09f20
   languageName: node
   linkType: hard
 
@@ -4199,9 +4199,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.894.0":
-  version: 2.894.0
-  resolution: "aws-sdk@npm:2.894.0"
+"aws-sdk@npm:^2.895.0":
+  version: 2.895.0
+  resolution: "aws-sdk@npm:2.895.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4212,7 +4212,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: b01ce7ed8fba215d34e36424832f014b363137edbe2b8e3da2dfecbfa0cc738766e5e1a856a0349d955c72247ed7db52c54872453fc16f603ed7e66ed9b24eeb
+  checksum: e757e707a68d445a15a538348eac88b6e3b6beb4aeaade0168b477de2f1cedc9b76e6befa2d7986657eeddabae4b0a3bf7f5a546950b77c86b730f752fb564c6
   languageName: node
   linkType: hard
 
@@ -7552,9 +7552,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^4.1.10":
-  version: 4.1.10
-  resolution: "framer-motion@npm:4.1.10"
+"framer-motion@npm:^4.1.11":
+  version: 4.1.11
+  resolution: "framer-motion@npm:4.1.11"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     framesync: 5.3.0
@@ -7568,7 +7568,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: ecb4067e46770aa8e0b412f4fb5318ed503745b44f9b5940a9cc4564e6d19ff6822d4a6ee0607fcff4bf49f053a5be19d49aa9c5b3c92622abe4a7dc1c2d5638
+  checksum: f4d7a9c6086b4c64f8d8291b5335592f7467b878f5aca072b29f5d5c9f560a5d3a9233ddebf10311a216dfebb9bad31bcc2856dc8a0e2f32b7769c27f7cdef16
   languageName: node
   linkType: hard
 
@@ -8301,12 +8301,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql-ws@npm:^4.4.3":
-  version: 4.4.3
-  resolution: "graphql-ws@npm:4.4.3"
+"graphql-ws@npm:^4.4.4":
+  version: 4.4.4
+  resolution: "graphql-ws@npm:4.4.4"
   peerDependencies:
     graphql: ">=0.11 <=15"
-  checksum: 803d97727897e11090ab49c7fff3702b62b6ac3e6d2ec95a3ae6e1a269a566ba71beb0e3bac8bbbc31eac5e92c2437ae0ee1fd589885b1ce1bdc3a650c138f61
+  checksum: a79a32eba2411366b8ae8f181d942c79243385359c7fad20f9e1ae33b3ef224061e0cf409c1f7340d299f5479e2a20597f9b44d5977eaf1ed65221ffdc50b99f
   languageName: node
   linkType: hard
 
@@ -8532,12 +8532,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"html-parse-stringify@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "html-parse-stringify@npm:3.0.0"
+"html-parse-stringify@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "html-parse-stringify@npm:3.0.1"
   dependencies:
     void-elements: 3.1.0
-  checksum: bf35f8560cd90b872b8c68484824d3de4e2e838eb8f4e532f7393d5a8f8a64ddf9093111b77178d7097db31485c3b73f05a01fdbc94f64a746b175f002bbbf17
+  checksum: 26de837d271ef79e8c54fc50c17ab1f870b539202d2a593905d3933484bd5b9c30afe57d23a7e0468ef370573e6c0e83b8d8e81bd803858a27ff5acbaa1d9032
   languageName: node
   linkType: hard
 
@@ -12752,12 +12752,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.3.4":
-  version: 7.3.4
-  resolution: "react-hook-form@npm:7.3.4"
+"react-hook-form@npm:^7.3.5":
+  version: 7.3.5
+  resolution: "react-hook-form@npm:7.3.5"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: d4bb222fdcdb106d0f0f9977ecc14722ae687df2054cdc6ac961115a1fbe4b9e6a3fc12c5f55c22bbb5165a444234633cd7035813bc1349fcab6a33c7c20710e
+  checksum: ab6102cd03ae977291c640f3c5494a82e5982a8aedc5776b50e1af7d7231b3ce0adff08fd8d66149e017fce97dd5643fa724860e31f3833513dd0c8591bac72f
   languageName: node
   linkType: hard
 
@@ -12773,16 +12773,16 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^11.8.13":
-  version: 11.8.13
-  resolution: "react-i18next@npm:11.8.13"
+"react-i18next@npm:^11.8.15":
+  version: 11.8.15
+  resolution: "react-i18next@npm:11.8.15"
   dependencies:
     "@babel/runtime": ^7.13.6
-    html-parse-stringify: ^3.0.0
+    html-parse-stringify: ^3.0.1
   peerDependencies:
     i18next: ">= 19.0.0"
     react: ">= 16.8.0"
-  checksum: 6ff531811ae872a52f97dc852aef5fd69a8cce1f63a6a9163f2b84b1f7395b15ab9cf62829450689e69e6edad4c672ed2f18f68d444d0ec752010f79cb265f37
+  checksum: 1b4014a52e62ca56a84789fbc8d890a8534fbaeba5f996403deb9e675cdf51209ccddbc2ef352cdeec6ef463a39aee3c6b673252e2f1648ff0548d0fe8f91fb9
   languageName: node
   linkType: hard
 
@@ -13709,14 +13709,14 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.32.11":
-  version: 1.32.11
-  resolution: "sass@npm:1.32.11"
+"sass@npm:^1.32.12":
+  version: 1.32.12
+  resolution: "sass@npm:1.32.12"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
   bin:
     sass: sass.js
-  checksum: a56ca780febc1f4c5c015f2fbd5dacd780297371456197424bce7e48d54cef8ae564fb8927076ef61e6fcd34f69556d0a3dd8e157ff06081729066ad595e97bf
+  checksum: 8ff7460bfe2836b14836d22e9bfb3218870c606e1da1edc780ca6fd9a01aa08ec86b6e631d288a764d9d1959980f8feb9ba376eebcef0316db860c1c7a3d8cb3
   languageName: node
   linkType: hard
 
@@ -13899,7 +13899,7 @@ resolve@^2.0.0-next.3:
     "@types/user-agents": ^1.0.1
     apollo-server-express: ^2.23.0
     argon2: ^0.27.2
-    aws-sdk: ^2.894.0
+    aws-sdk: ^2.895.0
     class-validator: ^0.13.1
     cors: ^2.8.5
     cross-env: ^7.0.3
@@ -13914,7 +13914,7 @@ resolve@^2.0.0-next.3:
     graphql-scalars: ^1.9.3
     graphql-subscriptions: ^1.2.1
     graphql-upload: ^11.0.0
-    graphql-ws: ^4.4.3
+    graphql-ws: ^4.4.4
     ioredis: ^4.27.1
     jsonwebtoken: ^8.5.1
     metascraper: ^5.21.7
@@ -13940,7 +13940,7 @@ resolve@^2.0.0-next.3:
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
     typescript: ^4.2.4
-    user-agents: ^1.0.635
+    user-agents: ^1.0.636
     validator: ^13.6.0
     ws: ^7.4.5
     xss: ^1.0.8
@@ -15776,13 +15776,13 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"user-agents@npm:^1.0.635":
-  version: 1.0.635
-  resolution: "user-agents@npm:1.0.635"
+"user-agents@npm:^1.0.636":
+  version: 1.0.636
+  resolution: "user-agents@npm:1.0.636"
   dependencies:
     dot-json: ^1.2.2
     lodash.clonedeep: ^4.5.0
-  checksum: 5cb53bd6d7ca6edfcee62141d61562e859afe82523fd8c5bae26edae2a8d5781cb35c3c343e0fb5f2564c8cbee4382ea6a0eaba3bf4072d12f23349e8b0dd146
+  checksum: 2003408ad3dd5c13367c5564fc4f47db6c220f223539b086251e8c06c3f6f40b1acd01502195f84a57b939745357622c9799269c1e7fcdb62938b0765a74a10b
   languageName: node
   linkType: hard
 
@@ -16014,7 +16014,7 @@ typescript@^4.2.4:
   dependencies:
     "@apollo/client": ^3.4.0-beta.23
     "@electron/remote": ^1.1.0
-    "@headlessui/react": ^1.1.0
+    "@headlessui/react": ^1.1.1
     "@n1ru4l/graphql-live-query": ^0.7.1
     "@n1ru4l/graphql-live-query-patch": ^0.3.1
     "@n1ru4l/push-pull-async-iterable-iterator": ^2.1.4
@@ -16045,12 +16045,12 @@ typescript@^4.2.4:
     eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
     extract-files: ^9.0.0
-    framer-motion: ^4.1.10
+    framer-motion: ^4.1.11
     fuse.js: ^6.4.6
     graphiql: ^1.4.1
     graphql: ^15.4.0-experimental-stream-defer.1
     graphql-tag: ^2.12.3
-    graphql-ws: ^4.4.3
+    graphql-ws: ^4.4.4
     i18next: ^20.2.2
     i18next-browser-languagedetector: ^6.1.0
     meros: ^1.1.4
@@ -16064,9 +16064,9 @@ typescript@^4.2.4:
     react-dropzone: ^11.3.2
     react-giphy-searchbox: ^1.5.4
     react-helmet-async: ^1.0.9
-    react-hook-form: ^7.3.4
+    react-hook-form: ^7.3.5
     react-hot-toast: ^1.0.2
-    react-i18next: ^11.8.13
+    react-i18next: ^11.8.15
     react-icons: ^4.2.0
     react-intersection-observer: ^8.31.1
     react-player: ^2.9.0
@@ -16077,7 +16077,7 @@ typescript@^4.2.4:
     react-use: ^17.2.4
     react-virtual: ^2.7.1
     react-virtuoso: ^1.8.6
-    sass: ^1.32.11
+    sass: ^1.32.12
     string-hash: ^1.1.3
     tailwind-scrollbar: ^1.3.0
     tailwindcss: ^2.1.2

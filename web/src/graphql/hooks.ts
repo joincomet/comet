@@ -209,9 +209,7 @@ export type CreatePostInput = {
 };
 
 export type CreateRoleInput = {
-  color?: Maybe<Scalars['HexColorCode']>;
   name: Scalars['String'];
-  permissions: Array<ServerPermission>;
   serverId: Scalars['ID'];
 };
 
@@ -465,14 +463,14 @@ export type Mutation = {
   createRole: Role;
   createServer: Server;
   deleteAccount: Scalars['Boolean'];
-  deleteChannel: Scalars['Boolean'];
+  deleteChannel: Scalars['ID'];
   deleteComment: Comment;
   deleteFolder: Scalars['Boolean'];
   deleteFriendRequest: Relationship;
   deleteMessage: Scalars['Boolean'];
   deletePost: Post;
-  deleteRole: Scalars['Boolean'];
-  deleteServer: Scalars['Boolean'];
+  deleteRole: Scalars['ID'];
+  deleteServer: Scalars['ID'];
   followFolder: Folder;
   globalBan: Scalars['Boolean'];
   joinServer: Server;
