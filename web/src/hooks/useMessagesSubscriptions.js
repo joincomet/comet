@@ -49,7 +49,10 @@ export const useMessagesSubscriptions = () => {
           }
         }
         const queryData = client.cache.readQuery(queryOptions)
-        if (queryData) {
+        if (
+          queryData &&
+          !queryData.messages.messages.map(m => m.id).includes(message.id)
+        ) {
           client.cache.writeQuery({
             ...queryOptions,
             data: {
@@ -63,7 +66,8 @@ export const useMessagesSubscriptions = () => {
 
         if (
           Notification.permission === 'granted' &&
-          message.author.id !== currentUser.id
+          message.author.id !== currentUser.id &&
+          message.text
         ) {
           if (
             (!window.electron || (window.electron && windowOpen)) &&

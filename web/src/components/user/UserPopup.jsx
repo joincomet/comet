@@ -58,7 +58,7 @@ export default function UserPopup({
             <div className="p-4 dark:bg-gray-800 rounded-b-md">
               {roles && (
                 <div>
-                  <div className="text-11 font-semibold uppercase tracking-widest text-secondary pb-1">
+                  <div className="text-11 font-semibold uppercase tracking-widest text-secondary pb-2">
                     Roles
                   </div>
                   <div className="flex space-x-1">

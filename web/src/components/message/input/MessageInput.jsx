@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { IconUpload } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
@@ -6,11 +6,24 @@ import MessageDropZone from '@/components/message/input/MessageDropZone'
 import MessageUploadDialog from '@/components/message/input/MessageUploadDialog'
 import { useTyping } from '@/components/message/input/useTyping'
 import { useMessagePlaceholder } from '@/components/message/input/useMessagePlaceholder'
-import { useCreateMessageMutation } from '@/graphql/hooks'
-import { EditorContent, useEditor } from '@tiptap/react'
+import {
+  MessagesDocument,
+  useCreateMessageMutation,
+  useServerUsersQuery
+} from '@/graphql/hooks'
+import {
+  EditorContent,
+  useEditor,
+  ReactRenderer,
+  Extension
+} from '@tiptap/react'
 import { defaultExtensions } from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
+import Mention from '@tiptap/extension-mention'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import tippy from 'tippy.js/headless'
+import { MentionList } from '@/components/message/input/MentionList'
 
 const exts = [
   'doc',
@@ -20,17 +33,60 @@ const exts = [
   'paragraph',
   'history',
   'code',
-  'codeBlock'
+  'codeBlock',
+  'hardBreak'
 ]
 
-export default function MessageInput({ channel, group, user }) {
+export default function MessageInput({
+  channel,
+  group,
+  user,
+  users,
+  serverUsers
+}) {
   const { t } = useTranslation()
   const placeholder = useMessagePlaceholder({ channel, group, user })
   const [startTyping, typingNames] = useTyping({ channel, group, user })
   const [files, setFiles] = useState(null)
   const [currentFile, setCurrentFile] = useState(null)
   const [currentFileIndex, setCurrentFileIndex] = useState(0)
-  const [sendMessage] = useCreateMessageMutation()
+
+  const [createMessage] = useCreateMessageMutation({
+    update(cache, { data: { createMessage } }) {
+      const messageChannelId = channel?.id
+      const messageGroupId = group?.id
+      const messageUserId = user?.id
+      const queryOptions = {
+        query: MessagesDocument,
+        variables: {
+          userId: messageUserId,
+          groupId: messageGroupId,
+          channelId: messageChannelId,
+          cursor: null
+        }
+      }
+      const queryData = cache.readQuery(queryOptions)
+      if (
+        queryData &&
+        !queryData.messages.messages.map(m => m.id).includes(createMessage.id)
+      ) {
+        cache.writeQuery({
+          ...queryOptions,
+          data: {
+            messages: {
+              ...queryData.messages,
+              messages: [...queryData.messages.messages, createMessage]
+            }
+          }
+        })
+      }
+    }
+  })
+
+  const computedServerUsers = useMemo(() => {
+    if (serverUsers) return serverUsers
+    else return users.map(user => ({ user, name: user.name }))
+  }, [serverUsers, users])
 
   const editor = useEditor({
     autofocus: true,
@@ -41,6 +97,109 @@ export default function MessageInput({ channel, group, user }) {
       Link,
       Placeholder.configure({
         placeholder: `${t('message.message')} ${placeholder}`
+      }),
+      Extension.create({
+        addCommands() {
+          return {
+            getState: () => ({ state }) => state
+          }
+        },
+        addKeyboardShortcuts() {
+          return {
+            Enter: ({ editor }) => {
+              const text = editor.getHTML()
+              if (text !== '<p></p>') {
+                createMessage({
+                  variables: { input: { text, ...variables } }
+                })
+                editor.commands.clearContent()
+                return true
+              }
+              return false
+            }
+          }
+        }
+      }),
+      Mention.configure({
+        HTMLAttributes: {
+          class: 'mention'
+        },
+        suggestion: {
+          allowSpaces: true,
+          items: query => {
+            return computedServerUsers
+              .filter(
+                su =>
+                  su.name.toLowerCase().startsWith(query.toLowerCase()) ||
+                  su.user.username.toLowerCase().startsWith(query.toLowerCase())
+              )
+              .slice(0, 5)
+          },
+          render: () => {
+            let reactRenderer
+            let popup
+
+            return {
+              onStart: props => {
+                reactRenderer = new ReactRenderer(MentionList, {
+                  props,
+                  editor: props.editor
+                })
+
+                popup = tippy('body', {
+                  getReferenceClientRect: props.clientRect,
+                  appendTo: () => document.body,
+                  content: reactRenderer.element,
+                  showOnCreate: true,
+                  interactive: true,
+                  trigger: 'manual',
+                  placement: 'top-start',
+                  render(instance) {
+                    // The recommended structure is to use the popper as an outer wrapper
+                    // element, with an inner `box` element
+                    const popper = document.createElement('div')
+                    const box = document.createElement('div')
+
+                    popper.appendChild(box)
+
+                    box.innerHTML = ''
+                    box.appendChild(instance.props.content)
+
+                    function onUpdate(prevProps, nextProps) {
+                      // DOM diffing
+                      if (prevProps.content !== nextProps.content) {
+                        box.innerHTML = ''
+                        box.appendChild(nextProps.content)
+                      }
+                    }
+
+                    // Return an object with two properties:
+                    // - `popper` (the root popper element)
+                    // - `onUpdate` callback whenever .setProps() or .setContent() is called
+                    return {
+                      popper,
+                      onUpdate // optional
+                    }
+                  }
+                })
+              },
+              onUpdate(props) {
+                reactRenderer.updateProps(props)
+
+                popup[0].setProps({
+                  getReferenceClientRect: props.clientRect
+                })
+              },
+              onKeyDown(props) {
+                return reactRenderer.ref?.onKeyDown(props)
+              },
+              onExit() {
+                popup[0].destroy()
+                reactRenderer.destroy()
+              }
+            }
+          }
+        }
       })
     ],
     content: '',
@@ -110,7 +269,7 @@ export default function MessageInput({ channel, group, user }) {
       <MessageDropZone placeholder={placeholder} setFiles={setFiles} />
 
       <MessageUploadDialog
-        sendMessage={sendMessage}
+        createMessage={createMessage}
         variables={variables}
         file={currentFile}
         setFileIndex={setCurrentFileIndex}
@@ -137,24 +296,7 @@ export default function MessageInput({ channel, group, user }) {
             </div>
           </Tippy>
 
-          <div
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                const text = editor.getHTML()
-                if (text && !e.shiftKey) {
-                  e.preventDefault()
-                  sendMessage({
-                    variables: { input: { text, ...variables } }
-                  })
-                  editor.commands.clearContent()
-                } else if (!text) {
-                  e.preventDefault()
-                  console.log('a')
-                }
-              }
-            }}
-            className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none"
-          >
+          <div className="px-14 min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light py-3 w-full dark:bg-gray-700 rounded-lg text-base focus:outline-none text-secondary border-none">
             <EditorContent editor={editor} />
           </div>
         </div>

@@ -94,7 +94,7 @@ function ServerListServer({ server }) {
   const serverId = matched?.params?.serverId
   const serverPages = useStore(s => s.serverPages)
 
-  const unread = !!server.channels.find(c => c.unreadCount > 0)
+  const unread = !!server.channels.find(c => c.isUnread)
   const active = serverId === server.id
 
   return (

@@ -38,7 +38,7 @@ const uploadBtnClass = ctl(`
 `)
 
 export default function MessageUploadDialog({
-  sendMessage,
+  createMessage,
   variables,
   file,
   setFileIndex,
@@ -57,13 +57,13 @@ export default function MessageUploadDialog({
 
   const send = useCallback(() => {
     setSending(true)
-    sendMessage({
+    createMessage({
       variables: { input: { text: text ? text : null, file, ...variables } }
     }).then(() => {
       setSending(false)
       close()
     })
-  }, [close, text, file, variables, sendMessage])
+  }, [close, text, file, variables, createMessage])
 
   useEffect(() => setText(''), [file])
 

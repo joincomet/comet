@@ -30,12 +30,12 @@ export default function SidebarChannel({ channel, serverId }) {
       data={{ type: ContextMenuType.Channel, channel: channel }}
     >
       <SidebarItem to={to}>
-        {!!channel.unreadCount && !active && (
+        {channel.isUnread && !active && (
           <div className="absolute -left-1.5 top-1/2 transform -translate-y-1/2 rounded-r-full dark:bg-gray-100 h-2 w-1" />
         )}
 
         <IconChannel className={`w-5 h-5 mr-3 text-tertiary`} />
-        <span className={`${channel.unreadCount ? 'text-primary' : ''}`}>
+        <span className={`${channel.isUnread ? 'text-primary' : ''}`}>
           {channel.name}
         </span>
 

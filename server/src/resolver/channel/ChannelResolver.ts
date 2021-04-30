@@ -38,12 +38,12 @@ export class ChannelResolver {
     return channelMentionCountLoader.load(channel.id)
   }
 
-  @FieldResolver(() => GraphQLNonNegativeInt)
-  async unreadCount(
-    @Ctx() { loaders: { channelUnreadCountLoader } }: Context,
+  @FieldResolver(() => Boolean)
+  async isUnread(
+    @Ctx() { loaders: { channelUnreadLoader } }: Context,
     @Root() channel: Channel
-  ): Promise<number> {
-    return channelUnreadCountLoader.load(channel.id)
+  ): Promise<boolean> {
+    return channelUnreadLoader.load(channel.id)
   }
 
   @FieldResolver(() => [ChannelPermission])

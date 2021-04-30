@@ -33,7 +33,7 @@ export async function bootstrap() {
   console.log(`Bootstraping schema and server...`)
   const liveQueryStore =
     process.env.NODE_ENV === 'production'
-      ? RedisLiveQueryStore
+      ? new RedisLiveQueryStore(process.env.REDIS_URL)
       : new InMemoryLiveQueryStore()
   const schema = await buildSchema(typeGraphQLConf)
 
@@ -75,7 +75,7 @@ export async function bootstrap() {
     graphqlWs = useServer(
       {
         schema,
-        execute: liveQueryStore.execute,
+        execute: args => liveQueryStore.execute(args),
         context: ({ connectionParams }) => {
           const userId = getUserId(connectionParams?.token as string)
           const em = orm.em.fork()

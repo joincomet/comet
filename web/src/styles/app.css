@@ -154,3 +154,7 @@ span[data-spoiler='1'] {
 .error {
   @apply text-xs text-red-400 pt-1.5;
 }
+
+.mention {
+  @apply text-blue-500 hover:underline cursor-pointer;
+}

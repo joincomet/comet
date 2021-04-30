@@ -7,16 +7,7 @@ import { Virtuoso } from 'react-virtuoso'
 import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 
-export default function ChannelUsersSidebar({ channel }) {
-  const server = useCurrentServer()
-
-  const { data } = useServerUsersQuery({
-    variables: { serverId: server?.id },
-    skip: !server
-  })
-
-  const serverUsers = data?.serverUsers ?? []
-
+export default function ChannelUsersSidebar({ server, serverUsers }) {
   const items = useMemo(() => {
     const temp = []
     for (const role of server.roles.filter(r =>

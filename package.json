@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.52",
+	"version": "0.0.53",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -45,5 +45,8 @@
 	},
 	"dependencies": {
 		"ts-invariant": "^0.7.3"
+	},
+	"resolutions": {
+		"prosemirror-model": "1.14.1"
 	}
 }

@@ -9,6 +9,7 @@ import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import MessageImageDialog from '@/components/message/MessageImageDialog'
 import ctl from '@netlify/classnames-template-literals'
+import PostEmbed from '@/components/post/PostEmbed'
 
 const joinMsg = ctl(`
   text-base
@@ -66,7 +67,7 @@ export default memo(function Message({ showUser, message }) {
                   data={{ type: ContextMenuType.User, user: message.author }}
                 >
                   <UserPopup user={message.author}>
-                    <div className="text-sm font-medium cursor-pointer hover:underline leading-none">
+                    <div className="text-base font-medium cursor-pointer hover:underline leading-none">
                       {message.author.name}
                     </div>
                   </UserPopup>
@@ -80,9 +81,19 @@ export default memo(function Message({ showUser, message }) {
 
             {!!message.text && (
               <div
-                className="text-base text-secondary"
+                className="prose prose-sm dark:prose-dark focus:outline-none max-w-none"
                 dangerouslySetInnerHTML={{ __html: message.text }}
               />
+            )}
+
+            {!!message.linkMetadatas?.length && (
+              <>
+                {message.linkMetadatas.map((lm, i) => (
+                  <div key={i} className="pt-1.5 max-w-screen-sm w-full">
+                    <PostEmbed metadata={lm} linkUrl={lm.url} />
+                  </div>
+                ))}
+              </>
             )}
 
             <MessageImageDialog message={message} />

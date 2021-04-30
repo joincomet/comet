@@ -11,6 +11,10 @@ fragment CurrentUser on User {
     roles {
       ...Role
     }
+    myRoles {
+      ...Role
+    }
+    nickname
     folders {
       ...Folder
     }

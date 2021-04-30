@@ -49,8 +49,8 @@ export class Channel extends BaseEntity {
   @Field(() => GraphQLNonNegativeInt)
   mentionCount: number = 0
 
-  @Field(() => GraphQLNonNegativeInt)
-  unreadCount: number = 0
+  @Field()
+  isUnread: boolean = true
 
   @Field(() => [ChannelPermission])
   permissions: ChannelPermission[]

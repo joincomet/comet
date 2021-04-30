@@ -8,20 +8,6 @@ import {
 import { MaybePromise } from 'type-graphql'
 import { LiveExecutionResult } from '@n1ru4l/graphql-live-query'
 
-const CHANNEL = 'LIVE_QUERY_INVALIDATIONS'
-
-const liveQueryStore = new InMemoryLiveQueryStore()
-const pub = new Redis(process.env.REDIS_URL)
-const sub = new Redis(process.env.REDIS_URL)
-
-sub.subscribe(CHANNEL, err => {
-  if (err) throw err
-})
-
-sub.on('message', (channel, resourceIdentifier) => {
-  if (channel === CHANNEL) liveQueryStore.invalidate(resourceIdentifier)
-})
-
 declare type ExecutionParameter =
   | Parameters<typeof defaultExecute>
   | [ExecutionArgs]
@@ -36,17 +22,38 @@ export interface LiveQueryStore {
   >
 }
 
-export const RedisLiveQueryStore = {
-  invalidate: async (identifiers: Array<string> | string) => {
+const CHANNEL = 'LIVE_QUERY_INVALIDATIONS'
+
+export class RedisLiveQueryStore {
+  pub: Redis.Redis
+  sub: Redis.Redis
+  liveQueryStore: InMemoryLiveQueryStore
+
+  constructor(redisUrl: string) {
+    this.pub = new Redis(redisUrl)
+    this.sub = new Redis(redisUrl)
+    this.liveQueryStore = new InMemoryLiveQueryStore()
+
+    this.sub.subscribe(CHANNEL, err => {
+      if (err) throw err
+    })
+
+    this.sub.on('message', (channel, resourceIdentifier) => {
+      if (channel === CHANNEL && resourceIdentifier)
+        this.liveQueryStore.invalidate(resourceIdentifier)
+    })
+  }
+
+  async invalidate(identifiers: Array<string> | string) {
     if (typeof identifiers === 'string') {
       identifiers = [identifiers]
     }
     for (const identifier of identifiers) {
-      pub.publish(CHANNEL, identifier)
+      this.pub.publish(CHANNEL, identifier)
     }
-  },
-
-  execute: (...args: ExecutionParameter) => {
-    return liveQueryStore.execute(...args)
   }
-} as LiveQueryStore
+
+  execute(...args: ExecutionParameter) {
+    return this.liveQueryStore.execute(...args)
+  }
+}

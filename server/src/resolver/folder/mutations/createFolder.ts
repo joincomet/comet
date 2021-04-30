@@ -47,7 +47,8 @@ export async function createFolder(
     const server = await em.findOneOrFail(Server, serverId)
     folder = em.create(Folder, {
       name,
-      visibility
+      visibility,
+      server: serverId
     })
     const serverFolder = em.create(ServerFolder, {
       server,

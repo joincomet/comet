@@ -16,7 +16,4 @@ export class ChannelUser {
 
   @Property()
   mentionCount: number = 0
-
-  @Property()
-  unreadCount: number = 0
 }

@@ -68,12 +68,12 @@ type Channel implements BaseEntity {
   createdAt: DateTime!
   description: String
   id: ID!
+  isUnread: Boolean!
   mentionCount: NonNegativeInt!
   name: String
   permissions: [ChannelPermission!]!
   rolePermissions: [ChannelPermissions!]!
   server: Server!
-  unreadCount: NonNegativeInt!
 }
 
 enum ChannelPermission {

@@ -80,9 +80,8 @@ export async function joinServer(
       type: MessageType.Join,
       channel: server.systemMessagesChannel
     })
-    em.persistAndFlush(joinMessage).then(() =>
-      notifyMessageChanged({ type: ChangeType.Added, id: joinMessage.id })
-    )
+    await em.persistAndFlush(joinMessage)
+    await notifyMessageChanged({ type: ChangeType.Added, id: joinMessage.id })
   }
   return server
 }

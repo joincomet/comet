@@ -18,7 +18,7 @@ import { useStore } from '@/hooks/useStore'
 
 const PREPEND_OFFSET = 10 ** 7
 
-export default function Messages({ channel, user, group }) {
+export default function Messages({ channel, user, group, users, serverUsers }) {
   const [readDm] = useReadDmMutation()
   const [readGroup] = useReadGroupMutation()
   const [readChannel] = useReadChannelMutation()
@@ -45,7 +45,7 @@ export default function Messages({ channel, user, group }) {
       readChannel({ variables: { input: { channelId: channel.id } } })
     if (group) readGroup({ variables: { input: { groupId: group.id } } })
     if (user) readDm({ variables: { input: { userId: user.id } } })
-  }, [messages?.length])
+  }, [channel, user, group])
 
   const {
     atBottom,
@@ -123,7 +123,15 @@ export default function Messages({ channel, user, group }) {
           totalCount={messages?.length || 0}
         />
       </div>
-      <MessageInput channel={channel} user={user} group={group} />
+      {(!!users || !!serverUsers) && (
+        <MessageInput
+          channel={channel}
+          user={user}
+          group={group}
+          users={users}
+          serverUsers={serverUsers}
+        />
+      )}
     </>
   )
 }

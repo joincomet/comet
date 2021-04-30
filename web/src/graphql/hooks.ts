@@ -89,12 +89,12 @@ export type Channel = BaseEntity & {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  isUnread: Scalars['Boolean'];
   mentionCount: Scalars['NonNegativeInt'];
   name?: Maybe<Scalars['String']>;
   permissions: Array<ChannelPermission>;
   rolePermissions: Array<ChannelPermissions>;
   server: Server;
-  unreadCount: Scalars['NonNegativeInt'];
 };
 
 export enum ChannelPermission {
@@ -1399,7 +1399,7 @@ export type VotePostInput = {
 
 export type ChannelFragment = (
   { __typename?: 'Channel' }
-  & Pick<Channel, 'id' | 'name' | 'description' | 'unreadCount' | 'mentionCount' | 'permissions'>
+  & Pick<Channel, 'id' | 'name' | 'description' | 'isUnread' | 'mentionCount' | 'permissions'>
   & { rolePermissions: Array<(
     { __typename?: 'ChannelPermissions' }
     & Pick<ChannelPermissions, 'allowedPermissions' | 'deniedPermissions'>
@@ -1427,11 +1427,14 @@ export type CurrentUserFragment = (
   & Pick<User, 'isAdmin' | 'email'>
   & { servers: Array<(
     { __typename?: 'Server' }
-    & Pick<Server, 'permissions'>
+    & Pick<Server, 'permissions' | 'nickname'>
     & { channels: Array<(
       { __typename?: 'Channel' }
       & ChannelFragment
     )>, roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )>, myRoles: Array<(
       { __typename?: 'Role' }
       & RoleFragment
     )>, folders: Array<(
@@ -3063,7 +3066,7 @@ export const ChannelFragmentDoc = gql`
   id
   name
   description
-  unreadCount
+  isUnread
   mentionCount
   permissions
   rolePermissions {
@@ -3110,6 +3113,10 @@ export const CurrentUserFragmentDoc = gql`
     roles {
       ...Role
     }
+    myRoles {
+      ...Role
+    }
+    nickname
     folders {
       ...Folder
     }

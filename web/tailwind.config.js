@@ -85,12 +85,21 @@ module.exports = {
         10: '10px'
       },
       typography: theme => ({
+        sm: {
+          css: {
+            fontSize: '.9375rem'
+          }
+        },
         DEFAULT: {
           css: {
             color: theme('colors.gray.900'),
             a: {
               color: theme('colors.blue.500'),
-              'text-decoration': 'none'
+              'text-decoration': 'none',
+              'font-weight': 400,
+              '&:hover': {
+                'text-decoration': 'underline !important'
+              }
             },
             strong: {
               color: theme('colors.gray.900')

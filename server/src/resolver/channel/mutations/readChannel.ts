@@ -18,8 +18,7 @@ export async function readChannel(
     channelUser = em.create(ChannelUser, { user: userId, channel })
   channelUser.lastViewAt = new Date()
   channelUser.mentionCount = 0
-  channelUser.unreadCount = 0
-  channel.unreadCount = 0
+  channel.isUnread = false
   channel.mentionCount = 0
   await em.persistAndFlush(channelUser)
   liveQueryStore.invalidate(`Channel:${channelId}`)

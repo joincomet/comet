@@ -8,10 +8,10 @@ export async function user(
   if (!userId || userId === currentUserId) {
     // Current user
     if (!currentUserId) return null
-    return em.findOne(User, currentUserId, { cache: false })
+    return em.findOne(User, currentUserId)
   } else {
     // Other user
     if (!currentUserId) throw new Error('Must be authorized')
-    return em.findOneOrFail(User, userId, { cache: false })
+    return em.findOneOrFail(User, userId)
   }
 }

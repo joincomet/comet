@@ -38,6 +38,13 @@ export default function CustomEmbed({ url }) {
           className="absolute top-0 left-0"
           width="100%"
           height="100%"
+          config={{
+            youtube: {
+              playerVars: {
+                controls: 1
+              }
+            }
+          }}
         />
       </div>
     )

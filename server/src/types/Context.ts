@@ -19,38 +19,40 @@ export interface Context {
   em: EntityManager
   userId: string
   liveQueryStore: LiveQueryStore
-  loaders: {
-    channelMentionCountLoader: DataLoader<string, number>
-    channelPermissionsLoader: DataLoader<string, ChannelPermission[]>
-    channelRolePermissionsLoader: DataLoader<string, ChannelPermissions[]>
-    channelUnreadCountLoader: DataLoader<string, number>
+  loaders: Loaders
+}
 
-    commentVoteLoader: DataLoader<string, boolean>
+export interface Loaders {
+  channelMentionCountLoader: DataLoader<string, number>
+  channelPermissionsLoader: DataLoader<string, ChannelPermission[]>
+  channelRolePermissionsLoader: DataLoader<string, ChannelPermissions[]>
+  channelUnreadLoader: DataLoader<string, boolean>
 
-    groupUnreadCountLoader: DataLoader<string, number>
+  commentVoteLoader: DataLoader<string, boolean>
 
-    postVoteLoader: DataLoader<string, boolean>
+  groupUnreadCountLoader: DataLoader<string, number>
 
-    serverChannelsLoader: DataLoader<string, Channel[]>
-    serverFoldersLoader: DataLoader<string, Folder[]>
-    serverMyRolesLoader: DataLoader<string, Role[]>
-    serverNicknameLoader: DataLoader<string, string>
-    serverNotificationSettingLoader: DataLoader<string, NotificationSetting>
-    serverPermissionsLoader: DataLoader<string, ServerPermission[]>
-    serverRolesLoader: DataLoader<string, Role[]>
-    serverSystemMessagesChannelLoader: DataLoader<string, Channel>
-    serverOnlineCountLoader: DataLoader<string, number>
-    serverJoinedLoader: DataLoader<string, boolean>
+  postVoteLoader: DataLoader<string, boolean>
 
-    relatedUsersLoader: DataLoader<string, User[]>
-    relationshipStatusLoader: DataLoader<string, RelationshipStatus>
-    userFoldersLoader: DataLoader<string, Folder[]>
-    userGroupsLoader: DataLoader<string, Group[]>
-    userServersLoader: DataLoader<string, Server[]>
-    userUnreadCountLoader: DataLoader<string, number>
+  serverChannelsLoader: DataLoader<string, Channel[]>
+  serverFoldersLoader: DataLoader<string, Folder[]>
+  serverMyRolesLoader: DataLoader<string, Role[]>
+  serverNicknameLoader: DataLoader<string, string>
+  serverNotificationSettingLoader: DataLoader<string, NotificationSetting>
+  serverPermissionsLoader: DataLoader<string, ServerPermission[]>
+  serverRolesLoader: DataLoader<string, Role[]>
+  serverSystemMessagesChannelLoader: DataLoader<string, Channel>
+  serverOnlineCountLoader: DataLoader<string, number>
+  serverJoinedLoader: DataLoader<string, boolean>
 
-    folderFollowingLoader: DataLoader<string, boolean>
-    folderOwnerLoader: DataLoader<string, User>
-    folderServerLoader: DataLoader<string, Server>
-  }
+  relatedUsersLoader: DataLoader<string, User[]>
+  relationshipStatusLoader: DataLoader<string, RelationshipStatus>
+  userFoldersLoader: DataLoader<string, Folder[]>
+  userGroupsLoader: DataLoader<string, Group[]>
+  userServersLoader: DataLoader<string, Server[]>
+  userUnreadCountLoader: DataLoader<string, number>
+
+  folderFollowingLoader: DataLoader<string, boolean>
+  folderOwnerLoader: DataLoader<string, User>
+  folderServerLoader: DataLoader<string, Server>
 }

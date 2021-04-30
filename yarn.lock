@@ -4199,9 +4199,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.895.0":
-  version: 2.895.0
-  resolution: "aws-sdk@npm:2.895.0"
+"aws-sdk@npm:^2.896.0":
+  version: 2.896.0
+  resolution: "aws-sdk@npm:2.896.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4212,7 +4212,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: e757e707a68d445a15a538348eac88b6e3b6beb4aeaade0168b477de2f1cedc9b76e6befa2d7986657eeddabae4b0a3bf7f5a546950b77c86b730f752fb564c6
+  checksum: 6706390310c3124e3c19d1a268dda308c50118e2311a49baca0c7d9a90e79bd734722341d20b538434b7fb0c214340940361855a901b30eb6b543cc430a70569
   languageName: node
   linkType: hard
 
@@ -8253,6 +8253,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"graphql-tag@npm:^2.12.4":
+  version: 2.12.4
+  resolution: "graphql-tag@npm:2.12.4"
+  dependencies:
+    tslib: ^2.1.0
+  peerDependencies:
+    graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 01623ede3509a46becd80cdcff81b63248f3bc5dc44b4e7df54730b5c77101c5b44d49ed7d1fbb83a5de0ad21fda59fca33f0f2d9ea5c0d95884aba6d15aeab9
+  languageName: node
+  linkType: hard
+
 "graphql-tools@npm:^4.0.8":
   version: 4.0.8
   resolution: "graphql-tools@npm:4.0.8"
@@ -8301,12 +8312,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql-ws@npm:^4.4.4":
-  version: 4.4.4
-  resolution: "graphql-ws@npm:4.4.4"
+"graphql-ws@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "graphql-ws@npm:4.5.0"
   peerDependencies:
     graphql: ">=0.11 <=15"
-  checksum: a79a32eba2411366b8ae8f181d942c79243385359c7fad20f9e1ae33b3ef224061e0cf409c1f7340d299f5479e2a20597f9b44d5977eaf1ed65221ffdc50b99f
+  checksum: 72d0f298dfcbb02d577a36f03c53003043e231bc084808ce49fc52ec571d33af4c2e2e03fa92fd56cd9edba350647f46ddcbc19a41c01a3b5f5e1ca5a35950b0
   languageName: node
   linkType: hard
 
@@ -12397,16 +12408,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prosemirror-model@npm:^1.0.0, prosemirror-model@npm:^1.1.0":
-  version: 1.14.0
-  resolution: "prosemirror-model@npm:1.14.0"
-  dependencies:
-    orderedmap: ^1.1.0
-  checksum: 464969f20073f95135f1a9fe633b921db21783eaf59d3dec65a11823d0612fad02542b8c95366eed3516515f268de8c17cfd82ecc23014600da3ff02b8c9c215
-  languageName: node
-  linkType: hard
-
-"prosemirror-model@npm:^1.14.1":
+"prosemirror-model@npm:1.14.1":
   version: 1.14.1
   resolution: "prosemirror-model@npm:1.14.1"
   dependencies:
@@ -13899,7 +13901,7 @@ resolve@^2.0.0-next.3:
     "@types/user-agents": ^1.0.1
     apollo-server-express: ^2.23.0
     argon2: ^0.27.2
-    aws-sdk: ^2.895.0
+    aws-sdk: ^2.896.0
     class-validator: ^0.13.1
     cors: ^2.8.5
     cross-env: ^7.0.3
@@ -13914,7 +13916,7 @@ resolve@^2.0.0-next.3:
     graphql-scalars: ^1.9.3
     graphql-subscriptions: ^1.2.1
     graphql-upload: ^11.0.0
-    graphql-ws: ^4.4.4
+    graphql-ws: ^4.5.0
     ioredis: ^4.27.1
     jsonwebtoken: ^8.5.1
     metascraper: ^5.21.7
@@ -13940,7 +13942,7 @@ resolve@^2.0.0-next.3:
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
     typescript: ^4.2.4
-    user-agents: ^1.0.636
+    user-agents: ^1.0.637
     validator: ^13.6.0
     ws: ^7.4.5
     xss: ^1.0.8
@@ -15776,13 +15778,13 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"user-agents@npm:^1.0.636":
-  version: 1.0.636
-  resolution: "user-agents@npm:1.0.636"
+"user-agents@npm:^1.0.637":
+  version: 1.0.637
+  resolution: "user-agents@npm:1.0.637"
   dependencies:
     dot-json: ^1.2.2
     lodash.clonedeep: ^4.5.0
-  checksum: 2003408ad3dd5c13367c5564fc4f47db6c220f223539b086251e8c06c3f6f40b1acd01502195f84a57b939745357622c9799269c1e7fcdb62938b0765a74a10b
+  checksum: 9020494092004f69efaa499e248fcdc5712d57ab403ae6cf445c959cb0e3c0fa73bbe9255cf1ec82dfc5b9f8cbb048349fa7e6344d509cf9df88faca787932c8
   languageName: node
   linkType: hard
 
@@ -16049,8 +16051,8 @@ typescript@^4.2.4:
     fuse.js: ^6.4.6
     graphiql: ^1.4.1
     graphql: ^15.4.0-experimental-stream-defer.1
-    graphql-tag: ^2.12.3
-    graphql-ws: ^4.4.4
+    graphql-tag: ^2.12.4
+    graphql-ws: ^4.5.0
     i18next: ^20.2.2
     i18next-browser-languagedetector: ^6.1.0
     meros: ^1.1.4

@@ -2,7 +2,7 @@ fragment Channel on Channel {
   id
   name
   description
-  unreadCount
+  isUnread
   mentionCount
   permissions
   rolePermissions {
