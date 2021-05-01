@@ -1,53 +1,53 @@
 mutation createFriendRequest($input: CreateFriendRequestInput!) {
   createFriendRequest(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
 
 mutation deleteFriendRequest($input: DeleteFriendRequestInput!) {
   deleteFriendRequest(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
 
 mutation answerFriendRequest($input: AnswerFriendRequestInput!) {
   answerFriendRequest(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
 
 mutation blockUser($input: BlockUserInput!) {
   blockUser(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
 
 mutation unblockUser($input: UnblockUserInput!) {
   unblockUser(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
 
 mutation removeFriend($input: RemoveFriendInput!) {
   removeFriend(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
 
 mutation readDm($input: ReadDmInput!) {
   readDm(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
 
 mutation openDm($input: OpenDmInput!) {
   openDm(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
 
 mutation closeDm($input: CloseDmInput!) {
   closeDm(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }

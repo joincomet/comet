@@ -6,10 +6,7 @@ import {
   Property
 } from '@mikro-orm/core'
 import { RelationshipStatus, User } from '@/entity'
-import { Field, Int, ObjectType } from 'type-graphql'
-import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
-@ObjectType()
 @Entity()
 export class Relationship {
   @ManyToOne({
@@ -19,7 +16,6 @@ export class Relationship {
   })
   owner: User
 
-  @Field(() => User)
   @ManyToOne({ entity: () => User, primary: true })
   user: User;
 
@@ -28,11 +24,9 @@ export class Relationship {
   @Property()
   createdAt: Date = new Date()
 
-  @Field()
   @Property()
   showChat: boolean = false
 
-  @Field(() => RelationshipStatus)
   @Enum({
     items: () => RelationshipStatus
   })
@@ -41,15 +35,12 @@ export class Relationship {
   @Property()
   lastViewAt: Date = new Date()
 
-  @Field()
   @Property()
   lastMessageAt: Date = new Date()
 
-  @Field()
   @Property()
   updatedAt: Date = new Date()
 
-  @Field(() => GraphQLNonNegativeInt)
   @Property()
   unreadCount: number = 0
 }

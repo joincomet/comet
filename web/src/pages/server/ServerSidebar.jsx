@@ -100,7 +100,7 @@ function ServerInviteDialog({ open, setOpen }) {
   return (
     <Dialog isOpen={open} close={() => setOpen(false)}>
       <div className="dark:bg-gray-850 p-5">
-        <button>Continue</button>
+        <button onClick={() => setOpen(false)}>Continue</button>
       </div>
     </Dialog>
   )

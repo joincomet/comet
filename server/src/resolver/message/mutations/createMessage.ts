@@ -16,7 +16,11 @@ import {
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { uploadFileOrImage } from '@/util'
 import { getLinkMetas } from '@/util/getLinkMetas'
-import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+import {
+  ChangePayload,
+  ChangeType,
+  TypingPayload
+} from '@/resolver/subscriptions'
 
 @InputType()
 export class CreateMessageInput {
@@ -39,7 +43,8 @@ export class CreateMessageInput {
 export async function createMessage(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { text, file, userId, groupId, channelId }: CreateMessageInput,
-  notifyMessageChanged: Publisher<ChangePayload>
+  notifyMessageChanged: Publisher<ChangePayload>,
+  notifyTypingUpdated: Publisher<TypingPayload>
 ): Promise<Message> {
   if (!text && !file) throw new Error('Must provide text and/or file')
 
@@ -57,8 +62,7 @@ export async function createMessage(
     await user.checkChannelPermission(
       em,
       channelId,
-      ChannelPermission.SendMessages,
-      ServerPermission.SendMessages
+      ChannelPermission.SendMessages
     )
 
   if (group) await user.checkInGroup(em, groupId)
@@ -76,6 +80,16 @@ export async function createMessage(
     upload = await uploadFileOrImage(file)
   }
 
+  let mentionIds = []
+  let isEveryoneMentioned = false
+  if (text) {
+    const mentionRegex = /data-mention="<@(\d+)>"/gi
+    mentionIds = [...text.matchAll(mentionRegex)].flatMap(match => match[1])
+
+    const everyoneRegex = /data-mention="<@everyone>"/gi
+    isEveryoneMentioned = everyoneRegex.test(text)
+  }
+
   const message = em.create(Message, {
     text,
     channel,
@@ -84,7 +98,9 @@ export async function createMessage(
     author: user,
     serverUser,
     image: upload && (upload as Image).originalUrl ? upload : null,
-    file: upload && (upload as File).url ? upload : null
+    file: upload && (upload as File).url ? upload : null,
+    mentionedUsers: mentionIds,
+    isEveryoneMentioned
   })
 
   if (text) message.linkMetadatas = await getLinkMetas(text)
@@ -119,6 +135,14 @@ export async function createMessage(
   await notifyMessageChanged({
     id: message.id,
     type: ChangeType.Added
+  })
+
+  await notifyTypingUpdated({
+    typingUserId: currentUserId,
+    userId,
+    groupId,
+    channelId,
+    isTyping: false
   })
 
   return message

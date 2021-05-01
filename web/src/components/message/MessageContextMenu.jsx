@@ -1,9 +1,9 @@
 import { useCopyToClipboard } from 'react-use'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { ServerPermission, ChannelPermission } from '@/graphql/hooks'
+import { ChannelPermission } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useParams } from 'react-router-dom'
+import { matchPath, useLocation, useParams } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasChannelPermissions } from '@/hooks/useHasChannelPermissions'
 import { useToggleMessagePin } from '@/components/message/useToggleMessagePin'
@@ -14,7 +14,20 @@ import {
 } from '@/graphql/hooks'
 
 export default function MessageContextMenu({ message, ContextMenuItem }) {
-  const { serverId, channelId, userId, groupId } = useParams()
+  const { pathname } = useLocation()
+  const matchedGroup = matchPath(pathname, {
+    path: '/me/group/:groupId'
+  })
+  const matchedDm = matchPath(pathname, {
+    path: '/me/dm/:userId'
+  })
+  const matchedChannel = matchPath(pathname, {
+    path: '/server/:serverId/channel/:channelId'
+  })
+  const groupId = matchedGroup?.params?.groupId
+  const userId = matchedDm?.params?.userId
+  const serverId = matchedChannel?.params?.serverId
+  const channelId = matchedChannel?.params?.channelId
   const [canManageMessages] = useHasChannelPermissions({
     channelId,
     permissions: [ChannelPermission.ManageMessages]

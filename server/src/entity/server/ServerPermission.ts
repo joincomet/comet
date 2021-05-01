@@ -43,5 +43,6 @@ export const defaultServerPermissions = [
   ServerPermission.VotePost,
   ServerPermission.CreateComment,
   ServerPermission.VoteComment,
-  ServerPermission.ViewComments
+  ServerPermission.ViewComments,
+  ServerPermission.ViewChannels
 ]

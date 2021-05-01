@@ -1,7 +1,0 @@
-fragment Relationship on Relationship {
-  lastMessageAt
-  showChat
-  status
-  unreadCount
-  updatedAt
-}

@@ -11,7 +11,11 @@ import {
 } from 'type-graphql'
 import { Message } from '@/entity'
 import { Context } from '@/types'
-import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
+import {
+  ChangePayload,
+  SubscriptionTopic,
+  TypingPayload
+} from '@/resolver/subscriptions'
 import { MessagesArgs, messages, MessagesResponse } from './queries'
 import {
   createMessage,
@@ -46,9 +50,11 @@ export class MessageResolver {
     @Ctx() ctx: Context,
     @Arg('input') input: CreateMessageInput,
     @PubSub(SubscriptionTopic.MessageChanged)
-    notifyMessageChanged: Publisher<ChangePayload>
+    notifyMessageChanged: Publisher<ChangePayload>,
+    @PubSub(SubscriptionTopic.TypingUpdated)
+    notifyTypingUpdated: Publisher<TypingPayload>
   ): Promise<Message> {
-    return createMessage(ctx, input, notifyMessageChanged)
+    return createMessage(ctx, input, notifyMessageChanged, notifyTypingUpdated)
   }
 
   @Authorized()

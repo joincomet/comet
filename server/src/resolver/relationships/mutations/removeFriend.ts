@@ -12,7 +12,7 @@ export class RemoveFriendInput {
 export async function removeFriend(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: BlockUserInput
-): Promise<Relationship> {
+): Promise<User> {
   const user = await em.findOneOrFail(User, currentUserId)
   const [myData, theirData] = await user.getFriendData(em, userId)
   if (
@@ -26,5 +26,5 @@ export async function removeFriend(
   theirData.status = RelationshipStatus.None
   await em.persistAndFlush([myData, theirData])
   liveQueryStore.invalidate(`User:${userId}`)
-  return myData
+  return myData.user
 }

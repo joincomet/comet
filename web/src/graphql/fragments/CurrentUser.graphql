@@ -20,7 +20,7 @@ fragment CurrentUser on User {
     }
   }
   relatedUsers {
-    ...User
+    ...RelatedUser
   }
   groups {
     ...Group

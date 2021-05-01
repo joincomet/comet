@@ -11,12 +11,12 @@ export class OpenDmInput {
 export async function openDm(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: OpenDmInput
-): Promise<Relationship> {
+): Promise<User> {
   const user = await em.findOneOrFail(User, currentUserId)
   const [myData] = await user.getFriendData(em, userId)
   if (myData.showChat) throw new Error('DM already open')
   myData.showChat = true
   await em.persistAndFlush(myData)
   liveQueryStore.invalidate(`User:${userId}`)
-  return myData
+  return myData.user
 }

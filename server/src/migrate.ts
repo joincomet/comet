@@ -4,8 +4,10 @@ import { mikroOrmConf } from '@/config/mikro-orm.config'
   const orm = await MikroORM.init(mikroOrmConf)
 
   const migrator = orm.getMigrator()
-  await migrator.createMigration() // creates file Migration20191019195930.ts
-  await migrator.up() // runs migrations up to the latest
+  process.env.MIGRATE_INITIAL === 'true'
+    ? await migrator.createInitialMigration()
+    : await migrator.createMigration()
+  await migrator.up()
   await orm.close(true)
   process.exit(0)
 })()

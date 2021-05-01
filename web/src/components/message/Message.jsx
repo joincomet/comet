@@ -1,52 +1,82 @@
 import UserPopup from '@/components/user/UserPopup'
 import UserAvatar from '@/components/user/UserAvatar'
 import { calendarDate, shortTime } from '@/utils/timeUtils'
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { IconDownloadLarge, IconUserJoin } from '@/components/ui/icons/Icons'
 import { useFileIcon } from '@/hooks/useFileIcon'
 import { formatBytes } from '@/utils/formatBytes'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import MessageImageDialog from '@/components/message/MessageImageDialog'
-import ctl from '@netlify/classnames-template-literals'
 import PostEmbed from '@/components/post/PostEmbed'
-
-const joinMsg = ctl(`
-  text-base
-  text-secondary
-`)
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default memo(function Message({ showUser, message }) {
+  const [currentUser] = useCurrentUser()
+  const isMentioned =
+    message.isEveryoneMentioned ||
+    message.mentionedUsers.map(u => u.id).includes(currentUser.id)
   const FileIcon = useFileIcon(message?.file?.mime)
+
+  const onClickMention = useCallback(
+    e => {
+      const mention = e.target?.dataset?.mention
+      if (mention) {
+        const id = mention.substring(2, mention.length - 1)
+      }
+    },
+    [message]
+  )
 
   if (message.type === 'Join') {
     return (
-      <div className="flex dark:hover:bg-gray-775 py-1 px-4">
-        <div className="w-10 flex justify-center">
-          <IconUserJoin className="w-5 h-5 text-green-500" />
+      <ContextMenuTrigger data={{ type: ContextMenuType.Message, message }}>
+        <div className="flex dark:hover:bg-gray-775 py-1 px-4">
+          <div className="w-10 flex justify-center">
+            <IconUserJoin className="w-5 h-5 text-green-500" />
+          </div>
+          <div className="pl-4 text-base text-tertiary">
+            <ContextMenuTrigger
+              className="inline-block"
+              data={{ type: ContextMenuType.User, user: message.author }}
+            >
+              <UserPopup
+                user={message.author}
+                roles={message.serverUser?.roles}
+                nickname={message.serverUser?.nickname}
+              >
+                <span className="text-white cursor-pointer hover:underline">
+                  {message.author.name}
+                </span>
+              </UserPopup>
+            </ContextMenuTrigger>{' '}
+            has joined the {message.serverUser ? 'planet' : 'group'}
+            <span className="pl-2 text-11 whitespace-nowrap text-mid cursor-default leading-5 select-none">
+              {shortTime(message.createdAt)}
+            </span>
+          </div>
         </div>
-        <div className="pl-4 text-base text-tertiary ">
-          <span className="text-white cursor-pointer hover:underline">
-            {message.author.name}
-          </span>{' '}
-          has joined the {message.serverUser ? 'server' : 'group'}
-          <span className="pl-2 text-11 whitespace-nowrap text-mid cursor-default leading-5 select-none">
-            {shortTime(message.createdAt)}
-          </span>
-        </div>
-      </div>
+      </ContextMenuTrigger>
     )
   }
 
   return (
     <div className={`${showUser ? 'pt-4' : ''}`}>
       <ContextMenuTrigger data={{ type: ContextMenuType.Message, message }}>
-        <div className={`flex py-1 px-4 dark:hover:bg-gray-775 group`}>
+        <div className={`flex py-1 px-4 dark:hover:bg-gray-775 group relative`}>
+          {isMentioned && (
+            <div className="bg-green-600 group-hover:bg-green-300 group-hover:bg-opacity-10 bg-opacity-10 absolute inset-0 pointer-events-none border-l-2 border-green-500" />
+          )}
+
           {showUser ? (
             <ContextMenuTrigger
               data={{ type: ContextMenuType.User, user: message.author }}
             >
-              <UserPopup user={message.author}>
+              <UserPopup
+                user={message.author}
+                roles={message.serverUser?.roles}
+                nickname={message.serverUser?.nickname}
+              >
                 <UserAvatar
                   user={message.author}
                   size={10}
@@ -55,18 +85,22 @@ export default memo(function Message({ showUser, message }) {
               </UserPopup>
             </ContextMenuTrigger>
           ) : (
-            <div className="w-10 text-11 whitespace-nowrap text-mid group-hover:opacity-100 opacity-0 cursor-default leading-5 select-none">
+            <div className="w-10 text-11 whitespace-nowrap text-mid group-hover:opacity-100 opacity-0 cursor-default select-none leading-6.5">
               {shortTime(message.createdAt)}
             </div>
           )}
 
           <div className="pl-4 w-full">
             {showUser && (
-              <div className="flex items-end pb-1.5">
+              <div className="flex items-end pb-0.5">
                 <ContextMenuTrigger
                   data={{ type: ContextMenuType.User, user: message.author }}
                 >
-                  <UserPopup user={message.author}>
+                  <UserPopup
+                    user={message.author}
+                    roles={message.serverUser?.roles}
+                    nickname={message.serverUser?.nickname}
+                  >
                     <div className="text-base font-medium cursor-pointer hover:underline leading-none">
                       {message.author.name}
                     </div>
@@ -81,6 +115,7 @@ export default memo(function Message({ showUser, message }) {
 
             {!!message.text && (
               <div
+                onClick={onClickMention}
                 className="prose prose-sm dark:prose-dark focus:outline-none max-w-none"
                 dangerouslySetInnerHTML={{ __html: message.text }}
               />
@@ -89,8 +124,8 @@ export default memo(function Message({ showUser, message }) {
             {!!message.linkMetadatas?.length && (
               <>
                 {message.linkMetadatas.map((lm, i) => (
-                  <div key={i} className="pt-1.5 max-w-screen-sm w-full">
-                    <PostEmbed metadata={lm} linkUrl={lm.url} />
+                  <div key={i} className="py-1.5 max-w-screen-sm w-full">
+                    <PostEmbed dark metadata={lm} linkUrl={lm.url} />
                   </div>
                 ))}
               </>

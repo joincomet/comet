@@ -3,7 +3,7 @@ import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { ServerPermission } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useParams } from 'react-router-dom'
+import { matchPath, useLocation } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useToggleCommentVote } from '@/components/comment/useToggleCommentVote'
@@ -14,7 +14,11 @@ import { useDeleteCommentMutation } from '@/graphql/hooks'
 export default function CommentContextMenu({ comment, ContextMenuItem }) {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
-  const { serverId } = useParams()
+  const { pathname } = useLocation()
+  const matchedServer = matchPath(pathname, {
+    path: '/server/:serverId'
+  })
+  const serverId = matchedServer?.params?.serverId
   const setReplyingCommentId = useStore(s => s.setReplyingCommentId)
   const [canManageComments, canVote, canComment] = useHasServerPermissions({
     serverId,

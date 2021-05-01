@@ -33,9 +33,8 @@ export class ServerUser {
   createdAt: Date = new Date()
 
   @Field(() => [Role])
-  @ManyToMany({
-    entity: () => Role,
-    mappedBy: 'serverUsers',
+  @ManyToMany(() => Role, 'serverUsers', {
+    owner: true,
     orderBy: { position: QueryOrder.ASC }
   })
   roles = new Collection<Role>(this)

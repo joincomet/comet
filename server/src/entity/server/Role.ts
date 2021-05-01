@@ -27,7 +27,7 @@ export class Role extends BaseEntity {
   @ManyToOne({ entity: () => Server, inversedBy: 'roles' })
   server: Server
 
-  @ManyToMany({ entity: () => ServerUser, inversedBy: 'roles' })
+  @ManyToMany(() => ServerUser, 'roles')
   serverUsers = new Collection<ServerUser>(this)
 
   @OneToMany({

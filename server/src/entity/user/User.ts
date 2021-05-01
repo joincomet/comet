@@ -7,13 +7,13 @@ import {
   ManyToMany,
   OneToMany,
   Property,
-  QueryOrder,
-  Unique
+  QueryOrder
 } from '@mikro-orm/core'
 import { BaseEntity } from '@/entity/BaseEntity'
 import {
   Channel,
   ChannelPermission,
+  ChannelPermissionFallbacks,
   ChannelPermissions,
   Folder,
   FolderVisibility,
@@ -31,11 +31,7 @@ import { CustomError } from '@/types/CustomError'
 import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 import { OnlineStatus } from '@/entity/user/OnlineStatus'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import {
-  GraphQLEmailAddress,
-  GraphQLNonNegativeInt,
-  GraphQLURL
-} from 'graphql-scalars'
+import { GraphQLEmailAddress, GraphQLNonNegativeInt } from 'graphql-scalars'
 import { Color } from '@/types'
 import { randomEnum } from '@/util'
 
@@ -134,6 +130,9 @@ export class User extends BaseEntity {
   @Field(() => GraphQLNonNegativeInt)
   unreadCount: number
 
+  @Field()
+  showChat: boolean
+
   @Field(() => RelationshipStatus)
   relationshipStatus: RelationshipStatus
 
@@ -229,52 +228,54 @@ export class User extends BaseEntity {
   async hasChannelPermission(
     em: EntityManager,
     channelId: string,
-    channelPermission: ChannelPermission,
-    serverPermission: ServerPermission = null
+    channelPermission: ChannelPermission
   ): Promise<boolean> {
-    if (this.isAdmin) return true
     const channel = await em.findOneOrFail(Channel, channelId, ['server.owner'])
-    if (channel.server.owner === this) return true
     const serverUser = await em.findOne(
       ServerUser,
       { server: channel.server, user: this, status: ServerUserStatus.Joined },
-      ['roles']
+      ['roles.channelPermissions']
     )
     if (!serverUser) return false
-    const userRoles = serverUser.roles.getItems()
-    const channelPerms = await em.find(
-      ChannelPermissions,
-      {
-        channel,
-        role: userRoles
-      },
-      { orderBy: { role: { position: QueryOrder.ASC } } }
-    )
-    const hasServerPerm =
-      !!serverPermission &&
-      !!userRoles.find(role => role.hasPermission(serverPermission))
-    const channelPerm = channelPerms.find(
-      perm =>
-        perm.deniedPermissions.includes(channelPermission) ||
-        perm.allowedPermissions.includes(channelPermission)
-    )
-    if (!channelPerm) return hasServerPerm
-    return channelPerm.allowedPermissions.includes(channelPermission)
+    if (channel.server.owner === this) return true
+    if (this.isAdmin) return true
+    let serverPerms: ServerPermission[] = []
+    let allowedPerms: ChannelPermission[] = []
+    let deniedPerms: ChannelPermission[] = []
+    const roles = serverUser.roles.getItems()
+    roles.forEach(role => {
+      serverPerms.push(...role.permissions)
+      const channelPerms = role.channelPermissions
+        .getItems()
+        .find(c => c.channel === channel)
+      allowedPerms.push(...(channelPerms?.allowedPermissions ?? []))
+      deniedPerms.push(...(channelPerms?.deniedPermissions ?? []))
+    })
+    serverPerms = [...new Set(serverPerms)]
+    allowedPerms = [...new Set(allowedPerms)]
+    deniedPerms = [...new Set(deniedPerms)]
+    const perms = Object.values(ChannelPermission).filter(perm => {
+      if (deniedPerms.includes(perm)) return false
+      else {
+        if (allowedPerms.includes(perm)) return true
+        if (serverPerms.includes(ChannelPermissionFallbacks[perm])) return true
+      }
+      return false
+    })
+    return perms.includes(channelPermission)
   }
 
   async checkChannelPermission(
     em: EntityManager,
     channelId: string,
-    channelPermission: ChannelPermission,
-    serverPermission: ServerPermission | null
+    channelPermission: ChannelPermission
   ) {
     const channel = await em.findOneOrFail(Channel, channelId, ['server'])
     await this.checkJoinedServer(em, channel.server.id)
     const hasChannelPermission = await this.hasChannelPermission(
       em,
       channelId,
-      channelPermission,
-      serverPermission
+      channelPermission
     )
     if (!hasChannelPermission)
       throw new CustomError(

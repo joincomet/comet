@@ -12,6 +12,9 @@ module.exports = {
   purge: ['./src/index.html', './src/**/*.{js,jsx,html}'],
   theme: {
     extend: {
+      lineHeight: {
+        6.5: '1.625rem'
+      },
       spacing: {
         4.5: '1.125rem',
         5.5: '1.375rem',
@@ -37,6 +40,7 @@ module.exports = {
           725: '#39393F',
           750: '#333338',
           775: '#2D2D31',
+          825: '#242427',
           850: '#202023',
           950: '#0C0C0E'
         }
@@ -110,9 +114,18 @@ module.exports = {
             h3: {
               color: theme('colors.gray.900')
             },
+            pre: {
+              'background-color': theme('colors.gray.775'),
+              border: '1px solid',
+              'border-color': theme('colors.gray.825')
+            },
             code: {
-              color: 'white',
-              'background-color': theme('colors.gray.900'),
+              'background-color': theme('colors.gray.775'),
+              'border-radius': '.25rem',
+              'padding-left': '0.25rem',
+              'padding-right': '0.25rem',
+              'padding-top': '0.25rem',
+              'padding-bottom': '0.25rem',
               '&:before, &:after': {
                 display: 'none'
               }

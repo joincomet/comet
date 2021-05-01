@@ -22,10 +22,8 @@ import { useCloseDmMutation, useCreateMessageMutation } from '@/graphql/hooks'
 import { useGroupsAndDms } from '@/hooks/graphql/useGroupsAndDms'
 
 export default function HomeSidebar() {
-  const groupsAndDms = useGroupsAndDms()
-
   const { t } = useTranslation()
-
+  const groupsAndDms = useGroupsAndDms()
   return (
     <>
       <Sidebar>

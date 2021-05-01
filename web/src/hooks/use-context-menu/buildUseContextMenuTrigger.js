@@ -33,7 +33,10 @@ export default function buildUseContextMenuTrigger(
       event.preventDefault()
       event.stopPropagation()
 
-      triggerVisible(getCoords(event, config), config.collect())
+      triggerVisible(getCoords(event, config), {
+        ...config.collect(),
+        href: event.target.href
+      })
     }
 
     const handleMouseDown = event => {

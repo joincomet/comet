@@ -82,6 +82,14 @@ export class UserResolver {
     return userUnreadCountLoader.load(user.id)
   }
 
+  @FieldResolver(() => Boolean)
+  async showChat(
+    @Ctx() { loaders: { userShowChatLoader } }: Context,
+    @Root() user: User
+  ): Promise<boolean> {
+    return userShowChatLoader.load(user.id)
+  }
+
   @FieldResolver()
   isCurrentUser(@Ctx() { userId }: Context, @Root() user: User): boolean {
     return userId && user.id === userId

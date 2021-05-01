@@ -11,7 +11,7 @@ import { getOS } from '@/utils/getOS'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
-import { useEffect } from 'react'
+import { ChannelPermission } from '@/graphql/hooks'
 
 export default function ServerList() {
   const servers = useJoinedServers()
@@ -94,7 +94,11 @@ function ServerListServer({ server }) {
   const serverId = matched?.params?.serverId
   const serverPages = useStore(s => s.serverPages)
 
-  const unread = !!server.channels.find(c => c.isUnread)
+  const unread = !!server.channels
+    .filter(channel =>
+      channel.permissions.includes(ChannelPermission.ViewChannel)
+    )
+    .find(c => c.isUnread)
   const active = serverId === server.id
 
   return (

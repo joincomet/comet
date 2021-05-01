@@ -31,6 +31,7 @@ export async function banUserFromServer(
     server,
     status: ServerUserStatus.Joined
   })
+  serverUser.roles.set([])
   serverUser.status = ServerUserStatus.Banned
   server.userCount--
   await em.persistAndFlush([serverUser, server])

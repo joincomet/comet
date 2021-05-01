@@ -31,6 +31,7 @@ export async function kickUserFromServer(
     server,
     status: ServerUserStatus.Joined
   })
+  serverUser.roles.set([])
   serverUser.status = ServerUserStatus.None
   server.userCount--
   await em.persistAndFlush([serverUser, server])

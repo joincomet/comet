@@ -13,6 +13,7 @@ import UserSettingsDialog from '@/components/user/UserSettingsDialog'
 import { version } from '../../package.json'
 import { useStore } from '@/hooks/useStore'
 import { useChangeOnlineStatusMutation } from '@/graphql/hooks'
+import { Link } from 'react-router-dom'
 
 export default function BottomBar() {
   const [currentUser] = useCurrentUser()
@@ -95,9 +96,9 @@ export default function BottomBar() {
           </Tippy>
 
           <Tippy content="Notifications" offset={offset}>
-            <div>
+            <Link to="/me/inbox">
               <IconBell className="w-4.5 h-4.5 cursor-pointer" />
-            </div>
+            </Link>
           </Tippy>
 
           <Tippy content="Settings" offset={offset}>

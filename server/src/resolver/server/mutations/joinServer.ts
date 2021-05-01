@@ -51,32 +51,32 @@ export async function joinServer(
     ['server'],
     { position: 'ASC' }
   )
-  let join = await em.findOne(ServerUser, {
+  let serverUser = await em.findOne(ServerUser, {
     server,
     user
   })
-  if (join && join.status === ServerUserStatus.Joined)
+  if (serverUser && serverUser.status === ServerUserStatus.Joined)
     throw new Error('Already joined this server')
-  if (!join) {
-    join = em.create(ServerUser, {
+  if (!serverUser) {
+    serverUser = em.create(ServerUser, {
       server,
       user
     })
   }
-  join.status = ServerUserStatus.Joined
-  join.position = firstServerJoin
+  serverUser.status = ServerUserStatus.Joined
+  serverUser.position = firstServerJoin
     ? ReorderUtils.positionBefore(firstServerJoin.position)
     : ReorderUtils.FIRST_POSITION
   const everyoneRole = await em.findOne(Role, { server, name: '@everyone' })
-  if (everyoneRole) join.roles.add(everyoneRole)
+  if (everyoneRole) serverUser.roles.set([everyoneRole])
   server.userCount++
-  await em.persistAndFlush([join, server])
+  await em.persistAndFlush([serverUser, server])
   liveQueryStore.invalidate([`User:${user.id}`, `Server:${server.id}`])
   server.isJoined = true
   if (server.sendWelcomeMessage && server.systemMessagesChannel) {
     const joinMessage = em.create(Message, {
       author: user,
-      serverUser: join,
+      serverUser: serverUser,
       type: MessageType.Join,
       channel: server.systemMessagesChannel
     })

@@ -29,6 +29,7 @@ import { MessageSubscriptionFilter } from '@/resolver/subscriptions/filters/Mess
 import { RepliesSubscriptionFilter } from '@/resolver/subscriptions/filters/RepliesSubscriptionFilter'
 import BulkChangeResponse from '@/resolver/subscriptions/BulkChangeResponse'
 import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
+import { TypingResponse } from '@/resolver/subscriptions/typing/TypingResponse'
 
 @ObjectType()
 class CommentChangedResponse extends ChangeResponse(Comment) {}
@@ -117,7 +118,8 @@ export class SubscriptionResolver {
       'serverUser.user',
       'channel.server',
       'group',
-      'toUser'
+      'toUser',
+      'mentionedUsers'
     ])
     return getResult(entity, type)
   }
@@ -148,32 +150,35 @@ export class SubscriptionResolver {
   }
 
   @Authorized()
-  @Subscription(() => String, {
-    topics: SubscriptionTopic.UserStartedTyping,
+  @Subscription(() => TypingResponse, {
+    topics: SubscriptionTopic.TypingUpdated,
     filter: TypingFilter
   })
-  userStartedTyping(
+  typingUpdated(
     @Root()
-    { username }: TypingPayload,
+    { typingUserId, isTyping }: TypingPayload,
     @Args() {}: TypingArgs
-  ): string {
-    return username
+  ): TypingResponse {
+    return {
+      typingUserId,
+      isTyping
+    } as TypingResponse
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async startTyping(
-    @Ctx() { userId: currentUserId, em }: Context,
-    @Arg('input') { channelId, groupId, userId }: TypingInput,
-    @PubSub(SubscriptionTopic.UserStartedTyping)
-    notifyUserStartedTyping: Publisher<TypingPayload>
+  async updateTyping(
+    @Ctx() { userId: currentUserId }: Context,
+    @Arg('input') { channelId, groupId, userId, isTyping }: TypingInput,
+    @PubSub(SubscriptionTopic.TypingUpdated)
+    notifyTypingUpdated: Publisher<TypingPayload>
   ): Promise<boolean> {
-    const user = await em.findOneOrFail(User, currentUserId)
-    await notifyUserStartedTyping({
-      username: user.username,
+    await notifyTypingUpdated({
+      typingUserId: currentUserId,
       userId,
       groupId,
-      channelId
+      channelId,
+      isTyping
     })
     return true
   }

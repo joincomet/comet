@@ -22,4 +22,9 @@ fragment Message on Message {
   linkMetadatas {
     ...Metadata
   }
+  mentionedUsers {
+    id
+  }
+  isEveryoneMentioned
+  isPinned
 }

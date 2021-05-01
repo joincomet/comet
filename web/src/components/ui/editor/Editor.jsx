@@ -32,7 +32,7 @@ export default function Editor({ text, setText }) {
         heading: {
           levels: [2, 3]
         }
-      }).filter(extension => extension.config.name !== 'hardBreak'),
+      }),
       Link,
       Underline,
       Spoiler

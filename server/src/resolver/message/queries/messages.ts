@@ -3,7 +3,7 @@ import { Max, Min } from 'class-validator'
 import { Message } from '@/entity'
 import { Context } from '@/types'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
-import { GraphQLNonNegativeInt, GraphQLPositiveInt } from 'graphql-scalars'
+import { GraphQLPositiveInt } from 'graphql-scalars'
 
 @ArgsType()
 export class MessagesArgs {
@@ -62,7 +62,12 @@ export async function messages(
 
   const messages = (
     await em.find(Message, where, {
-      populate: ['author', 'serverUser.roles', 'serverUser.user'],
+      populate: [
+        'author',
+        'serverUser.roles',
+        'serverUser.user',
+        'mentionedUsers'
+      ],
       orderBy: { id: QueryOrder.DESC },
       limit: limit + 1
     })

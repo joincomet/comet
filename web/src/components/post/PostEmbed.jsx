@@ -2,7 +2,7 @@ import { IconLinkWeb } from '@/components/ui/icons/Icons'
 import CustomEmbed, { canEmbed } from '@/components/ui/CustomEmbed'
 import { useMemo } from 'react'
 
-export default function PostEmbed({ linkUrl, metadata }) {
+export default function PostEmbed({ linkUrl, metadata, dark = false }) {
   const domain = useMemo(() => {
     if (!linkUrl) return 'domain.com'
     let d = new URL(linkUrl).hostname
@@ -16,7 +16,11 @@ export default function PostEmbed({ linkUrl, metadata }) {
       href={linkUrl}
       rel="noopener nofollow noreferrer"
       target="_blank"
-      className="rounded-md flex dark:bg-gray-750 dark:hover:bg-gray-725 transition"
+      className={`rounded-md flex transition ${
+        dark
+          ? 'dark:bg-gray-775 border dark:border-gray-825'
+          : 'dark:bg-gray-750 dark:hover:bg-gray-725'
+      }`}
     >
       <div
         className="rounded-l-md dark:bg-gray-750 flex flex-shrink-0 items-center justify-center h-24 w-24 bg-contain bg-center"

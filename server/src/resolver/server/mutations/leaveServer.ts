@@ -20,6 +20,7 @@ export async function leaveServer(
     server: serverId,
     status: ServerUserStatus.Joined
   })
+  serverUser.roles.set([])
   serverUser.status = ServerUserStatus.None
   server.userCount--
   await em.persistAndFlush([serverUser, server])

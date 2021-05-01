@@ -10,6 +10,9 @@ export class TypingInput {
 
   @Field(() => ID, { nullable: true })
   userId?: string
+
+  @Field(() => Boolean, { defaultValue: true })
+  isTyping: boolean
 }
 
 @ArgsType()

@@ -20,8 +20,7 @@ export async function pinMessage(
     await user.checkChannelPermission(
       em,
       message.channel.id,
-      ChannelPermission.ManageMessages,
-      ServerPermission.ManageMessages
+      ChannelPermission.ManageMessages
     )
   }
   message.isPinned = true

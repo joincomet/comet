@@ -385,8 +385,10 @@ export type Message = BaseEntity & {
   id: Scalars['ID'];
   image?: Maybe<Image>;
   isDeleted: Scalars['Boolean'];
+  isEveryoneMentioned: Scalars['Boolean'];
   isPinned: Scalars['Boolean'];
   linkMetadatas: Array<LinkMetadata>;
+  mentionedUsers: Array<User>;
   pinnedAt?: Maybe<Scalars['DateTime']>;
   serverUser?: Maybe<ServerUser>;
   text?: Maybe<Scalars['String']>;
@@ -444,19 +446,19 @@ export type Mutation = {
   addPostToFolder: Folder;
   addUserToGroup: Group;
   addUserToRole: ServerUser;
-  answerFriendRequest: Relationship;
+  answerFriendRequest: User;
   banUserFromServer: Scalars['Boolean'];
-  blockUser: Relationship;
+  blockUser: User;
   changeNickname: ServerUser;
   changeNotificationSetting: ServerUser;
   changeOnlineStatus: User;
   changeUserAvatar: User;
-  closeDm: Relationship;
+  closeDm: User;
   createAccount: LoginResponse;
   createChannel: Channel;
   createComment: Comment;
   createFolder: Folder;
-  createFriendRequest: Relationship;
+  createFriendRequest: User;
   createGroup: Group;
   createMessage: Message;
   createPost: Post;
@@ -466,7 +468,7 @@ export type Mutation = {
   deleteChannel: Scalars['ID'];
   deleteComment: Comment;
   deleteFolder: Scalars['Boolean'];
-  deleteFriendRequest: Relationship;
+  deleteFriendRequest: User;
   deleteMessage: Scalars['Boolean'];
   deletePost: Post;
   deleteRole: Scalars['ID'];
@@ -485,21 +487,20 @@ export type Mutation = {
   moveServer: Scalars['Void'];
   moveServerFolder: Folder;
   moveUserFolder: Folder;
-  openDm: Relationship;
+  openDm: User;
   pinComment: Comment;
   pinMessage: Message;
   pinPost: Post;
   readChannel: Channel;
-  readDm: Relationship;
+  readDm: User;
   readGroup: Group;
   readServer: Server;
-  removeFriend: Relationship;
+  removeFriend: User;
   removePostFromFolder: Folder;
   removeUserFromGroup: Group;
   removeUserFromRole: ServerUser;
-  startTyping: Scalars['Boolean'];
   unbanUserFromServer: Scalars['Boolean'];
-  unblockUser: Relationship;
+  unblockUser: User;
   unfollowFolder: Folder;
   unpinComment: Comment;
   unpinMessage: Message;
@@ -516,6 +517,7 @@ export type Mutation = {
   updatePost: Post;
   updateRole: Role;
   updateServer: Server;
+  updateTyping: Scalars['Boolean'];
   voteComment: Comment;
   votePost: Post;
 };
@@ -796,11 +798,6 @@ export type MutationRemoveUserFromRoleArgs = {
 };
 
 
-export type MutationStartTypingArgs = {
-  input: TypingInput;
-};
-
-
 export type MutationUnbanUserFromServerArgs = {
   input: UnbanUserFromServerInput;
 };
@@ -888,6 +885,11 @@ export type MutationUpdateRoleArgs = {
 
 export type MutationUpdateServerArgs = {
   input: UpdateServerInput;
+};
+
+
+export type MutationUpdateTypingArgs = {
+  input: TypingInput;
 };
 
 
@@ -1091,16 +1093,6 @@ export type ReadServerInput = {
   serverId: Scalars['ID'];
 };
 
-export type Relationship = {
-  __typename?: 'Relationship';
-  lastMessageAt: Scalars['DateTime'];
-  showChat: Scalars['Boolean'];
-  status: RelationshipStatus;
-  unreadCount: Scalars['NonNegativeInt'];
-  updatedAt: Scalars['DateTime'];
-  user: User;
-};
-
 export enum RelationshipStatus {
   Blocked = 'Blocked',
   Blocking = 'Blocking',
@@ -1243,11 +1235,11 @@ export type Subscription = {
   messageChanged: MessageChangedResponse;
   postChanged: PostChangedResponse;
   repliesChanged: RepliesChangedResponse;
-  userStartedTyping: Scalars['String'];
+  typingUpdated: TypingResponse;
 };
 
 
-export type SubscriptionUserStartedTypingArgs = {
+export type SubscriptionTypingUpdatedArgs = {
   channelId?: Maybe<Scalars['ID']>;
   groupId?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['ID']>;
@@ -1256,7 +1248,14 @@ export type SubscriptionUserStartedTypingArgs = {
 export type TypingInput = {
   channelId?: Maybe<Scalars['ID']>;
   groupId?: Maybe<Scalars['ID']>;
+  isTyping?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['ID']>;
+};
+
+export type TypingResponse = {
+  __typename?: 'TypingResponse';
+  isTyping: Scalars['Boolean'];
+  typingUserId: Scalars['ID'];
 };
 
 export type UnbanUserFromServerInput = {
@@ -1383,6 +1382,7 @@ export type User = BaseEntity & {
   relatedUsers: Array<User>;
   relationshipStatus: RelationshipStatus;
   servers: Array<Server>;
+  showChat: Scalars['Boolean'];
   tag: Scalars['String'];
   unreadCount: Scalars['NonNegativeInt'];
   username: Scalars['String'];
@@ -1444,7 +1444,7 @@ export type CurrentUserFragment = (
     & ServerFragment
   )>, relatedUsers: Array<(
     { __typename?: 'User' }
-    & UserFragment
+    & RelatedUserFragment
   )>, groups: Array<(
     { __typename?: 'Group' }
     & { owner: (
@@ -1474,7 +1474,7 @@ export type GroupFragment = (
 
 export type MessageFragment = (
   { __typename?: 'Message' }
-  & Pick<Message, 'id' | 'text' | 'createdAt' | 'updatedAt' | 'type'>
+  & Pick<Message, 'id' | 'text' | 'createdAt' | 'updatedAt' | 'type' | 'isEveryoneMentioned' | 'isPinned'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & Pick<Image, 'originalUrl' | 'popupUrl' | 'popupWidth' | 'popupHeight' | 'smallUrl' | 'smallWidth' | 'smallHeight'>
@@ -1484,6 +1484,9 @@ export type MessageFragment = (
   )>, linkMetadatas: Array<(
     { __typename?: 'LinkMetadata' }
     & MetadataFragment
+  )>, mentionedUsers: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
   )> }
 );
 
@@ -1504,9 +1507,10 @@ export type PostFragment = (
   )> }
 );
 
-export type RelationshipFragment = (
-  { __typename?: 'Relationship' }
-  & Pick<Relationship, 'lastMessageAt' | 'showChat' | 'status' | 'unreadCount' | 'updatedAt'>
+export type RelatedUserFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'showChat' | 'unreadCount'>
+  & UserFragment
 );
 
 export type ReplyFragment = (
@@ -1548,7 +1552,7 @@ export type ServerFragment = (
 
 export type ServerUserFragment = (
   { __typename?: 'ServerUser' }
-  & Pick<ServerUser, 'name' | 'color'>
+  & Pick<ServerUser, 'name' | 'nickname' | 'color'>
   & { roles: Array<(
     { __typename?: 'Role' }
     & RoleFragment
@@ -2036,14 +2040,14 @@ export type UnpinMessageMutation = (
   ) }
 );
 
-export type StartTypingMutationVariables = Exact<{
+export type UpdateTypingMutationVariables = Exact<{
   input: TypingInput;
 }>;
 
 
-export type StartTypingMutation = (
+export type UpdateTypingMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'startTyping'>
+  & Pick<Mutation, 'updateTyping'>
 );
 
 export type CreatePostMutationVariables = Exact<{
@@ -2173,8 +2177,8 @@ export type CreateFriendRequestMutationVariables = Exact<{
 export type CreateFriendRequestMutation = (
   { __typename?: 'Mutation' }
   & { createFriendRequest: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2186,8 +2190,8 @@ export type DeleteFriendRequestMutationVariables = Exact<{
 export type DeleteFriendRequestMutation = (
   { __typename?: 'Mutation' }
   & { deleteFriendRequest: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2199,8 +2203,8 @@ export type AnswerFriendRequestMutationVariables = Exact<{
 export type AnswerFriendRequestMutation = (
   { __typename?: 'Mutation' }
   & { answerFriendRequest: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2212,8 +2216,8 @@ export type BlockUserMutationVariables = Exact<{
 export type BlockUserMutation = (
   { __typename?: 'Mutation' }
   & { blockUser: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2225,8 +2229,8 @@ export type UnblockUserMutationVariables = Exact<{
 export type UnblockUserMutation = (
   { __typename?: 'Mutation' }
   & { unblockUser: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2238,8 +2242,8 @@ export type RemoveFriendMutationVariables = Exact<{
 export type RemoveFriendMutation = (
   { __typename?: 'Mutation' }
   & { removeFriend: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2251,8 +2255,8 @@ export type ReadDmMutationVariables = Exact<{
 export type ReadDmMutation = (
   { __typename?: 'Mutation' }
   & { readDm: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2264,8 +2268,8 @@ export type OpenDmMutationVariables = Exact<{
 export type OpenDmMutation = (
   { __typename?: 'Mutation' }
   & { openDm: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2277,8 +2281,8 @@ export type CloseDmMutationVariables = Exact<{
 export type CloseDmMutation = (
   { __typename?: 'Mutation' }
   & { closeDm: (
-    { __typename?: 'Relationship' }
-    & RelationshipFragment
+    { __typename?: 'User' }
+    & RelatedUserFragment
   ) }
 );
 
@@ -2979,16 +2983,19 @@ export type RepliesChangedSubscription = (
   ) }
 );
 
-export type UserStartedTypingSubscriptionVariables = Exact<{
+export type TypingUpdatedSubscriptionVariables = Exact<{
   userId?: Maybe<Scalars['ID']>;
   groupId?: Maybe<Scalars['ID']>;
   channelId?: Maybe<Scalars['ID']>;
 }>;
 
 
-export type UserStartedTypingSubscription = (
+export type TypingUpdatedSubscription = (
   { __typename?: 'Subscription' }
-  & Pick<Subscription, 'userStartedTyping'>
+  & { typingUpdated: (
+    { __typename?: 'TypingResponse' }
+    & Pick<TypingResponse, 'typingUserId' | 'isTyping'>
+  ) }
 );
 
 export const MetadataFragmentDoc = gql`
@@ -3090,6 +3097,13 @@ export const FolderFragmentDoc = gql`
   visibility
 }
     `;
+export const RelatedUserFragmentDoc = gql`
+    fragment RelatedUser on User {
+  ...User
+  showChat
+  unreadCount
+}
+    ${UserFragmentDoc}`;
 export const GroupFragmentDoc = gql`
     fragment Group on Group {
   id
@@ -3122,7 +3136,7 @@ export const CurrentUserFragmentDoc = gql`
     }
   }
   relatedUsers {
-    ...User
+    ...RelatedUser
   }
   groups {
     ...Group
@@ -3142,6 +3156,7 @@ ${ServerFragmentDoc}
 ${ChannelFragmentDoc}
 ${RoleFragmentDoc}
 ${FolderFragmentDoc}
+${RelatedUserFragmentDoc}
 ${GroupFragmentDoc}`;
 export const MessageFragmentDoc = gql`
     fragment Message on Message {
@@ -3168,6 +3183,11 @@ export const MessageFragmentDoc = gql`
   linkMetadatas {
     ...Metadata
   }
+  mentionedUsers {
+    id
+  }
+  isEveryoneMentioned
+  isPinned
 }
     ${MetadataFragmentDoc}`;
 export const PostFragmentDoc = gql`
@@ -3196,18 +3216,10 @@ export const PostFragmentDoc = gql`
   }
 }
     ${MetadataFragmentDoc}`;
-export const RelationshipFragmentDoc = gql`
-    fragment Relationship on Relationship {
-  lastMessageAt
-  showChat
-  status
-  unreadCount
-  updatedAt
-}
-    `;
 export const ServerUserFragmentDoc = gql`
     fragment ServerUser on ServerUser {
   name
+  nickname
   color
   roles {
     ...Role
@@ -4385,37 +4397,37 @@ export function useUnpinMessageMutation(baseOptions?: Apollo.MutationHookOptions
 export type UnpinMessageMutationHookResult = ReturnType<typeof useUnpinMessageMutation>;
 export type UnpinMessageMutationResult = Apollo.MutationResult<UnpinMessageMutation>;
 export type UnpinMessageMutationOptions = Apollo.BaseMutationOptions<UnpinMessageMutation, UnpinMessageMutationVariables>;
-export const StartTypingDocument = gql`
-    mutation startTyping($input: TypingInput!) {
-  startTyping(input: $input)
+export const UpdateTypingDocument = gql`
+    mutation updateTyping($input: TypingInput!) {
+  updateTyping(input: $input)
 }
     `;
-export type StartTypingMutationFn = Apollo.MutationFunction<StartTypingMutation, StartTypingMutationVariables>;
+export type UpdateTypingMutationFn = Apollo.MutationFunction<UpdateTypingMutation, UpdateTypingMutationVariables>;
 
 /**
- * __useStartTypingMutation__
+ * __useUpdateTypingMutation__
  *
- * To run a mutation, you first call `useStartTypingMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useStartTypingMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateTypingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTypingMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [startTypingMutation, { data, loading, error }] = useStartTypingMutation({
+ * const [updateTypingMutation, { data, loading, error }] = useUpdateTypingMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useStartTypingMutation(baseOptions?: Apollo.MutationHookOptions<StartTypingMutation, StartTypingMutationVariables>) {
+export function useUpdateTypingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTypingMutation, UpdateTypingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<StartTypingMutation, StartTypingMutationVariables>(StartTypingDocument, options);
+        return Apollo.useMutation<UpdateTypingMutation, UpdateTypingMutationVariables>(UpdateTypingDocument, options);
       }
-export type StartTypingMutationHookResult = ReturnType<typeof useStartTypingMutation>;
-export type StartTypingMutationResult = Apollo.MutationResult<StartTypingMutation>;
-export type StartTypingMutationOptions = Apollo.BaseMutationOptions<StartTypingMutation, StartTypingMutationVariables>;
+export type UpdateTypingMutationHookResult = ReturnType<typeof useUpdateTypingMutation>;
+export type UpdateTypingMutationResult = Apollo.MutationResult<UpdateTypingMutation>;
+export type UpdateTypingMutationOptions = Apollo.BaseMutationOptions<UpdateTypingMutation, UpdateTypingMutationVariables>;
 export const CreatePostDocument = gql`
     mutation createPost($input: CreatePostInput!) {
   createPost(input: $input) {
@@ -4678,10 +4690,10 @@ export type UnpinPostMutationOptions = Apollo.BaseMutationOptions<UnpinPostMutat
 export const CreateFriendRequestDocument = gql`
     mutation createFriendRequest($input: CreateFriendRequestInput!) {
   createFriendRequest(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type CreateFriendRequestMutationFn = Apollo.MutationFunction<CreateFriendRequestMutation, CreateFriendRequestMutationVariables>;
 
 /**
@@ -4711,10 +4723,10 @@ export type CreateFriendRequestMutationOptions = Apollo.BaseMutationOptions<Crea
 export const DeleteFriendRequestDocument = gql`
     mutation deleteFriendRequest($input: DeleteFriendRequestInput!) {
   deleteFriendRequest(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type DeleteFriendRequestMutationFn = Apollo.MutationFunction<DeleteFriendRequestMutation, DeleteFriendRequestMutationVariables>;
 
 /**
@@ -4744,10 +4756,10 @@ export type DeleteFriendRequestMutationOptions = Apollo.BaseMutationOptions<Dele
 export const AnswerFriendRequestDocument = gql`
     mutation answerFriendRequest($input: AnswerFriendRequestInput!) {
   answerFriendRequest(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type AnswerFriendRequestMutationFn = Apollo.MutationFunction<AnswerFriendRequestMutation, AnswerFriendRequestMutationVariables>;
 
 /**
@@ -4777,10 +4789,10 @@ export type AnswerFriendRequestMutationOptions = Apollo.BaseMutationOptions<Answ
 export const BlockUserDocument = gql`
     mutation blockUser($input: BlockUserInput!) {
   blockUser(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type BlockUserMutationFn = Apollo.MutationFunction<BlockUserMutation, BlockUserMutationVariables>;
 
 /**
@@ -4810,10 +4822,10 @@ export type BlockUserMutationOptions = Apollo.BaseMutationOptions<BlockUserMutat
 export const UnblockUserDocument = gql`
     mutation unblockUser($input: UnblockUserInput!) {
   unblockUser(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type UnblockUserMutationFn = Apollo.MutationFunction<UnblockUserMutation, UnblockUserMutationVariables>;
 
 /**
@@ -4843,10 +4855,10 @@ export type UnblockUserMutationOptions = Apollo.BaseMutationOptions<UnblockUserM
 export const RemoveFriendDocument = gql`
     mutation removeFriend($input: RemoveFriendInput!) {
   removeFriend(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type RemoveFriendMutationFn = Apollo.MutationFunction<RemoveFriendMutation, RemoveFriendMutationVariables>;
 
 /**
@@ -4876,10 +4888,10 @@ export type RemoveFriendMutationOptions = Apollo.BaseMutationOptions<RemoveFrien
 export const ReadDmDocument = gql`
     mutation readDm($input: ReadDmInput!) {
   readDm(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type ReadDmMutationFn = Apollo.MutationFunction<ReadDmMutation, ReadDmMutationVariables>;
 
 /**
@@ -4909,10 +4921,10 @@ export type ReadDmMutationOptions = Apollo.BaseMutationOptions<ReadDmMutation, R
 export const OpenDmDocument = gql`
     mutation openDm($input: OpenDmInput!) {
   openDm(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type OpenDmMutationFn = Apollo.MutationFunction<OpenDmMutation, OpenDmMutationVariables>;
 
 /**
@@ -4942,10 +4954,10 @@ export type OpenDmMutationOptions = Apollo.BaseMutationOptions<OpenDmMutation, O
 export const CloseDmDocument = gql`
     mutation closeDm($input: CloseDmInput!) {
   closeDm(input: $input) {
-    ...Relationship
+    ...RelatedUser
   }
 }
-    ${RelationshipFragmentDoc}`;
+    ${RelatedUserFragmentDoc}`;
 export type CloseDmMutationFn = Apollo.MutationFunction<CloseDmMutation, CloseDmMutationVariables>;
 
 /**
@@ -6513,23 +6525,26 @@ export function useRepliesChangedSubscription(baseOptions?: Apollo.SubscriptionH
       }
 export type RepliesChangedSubscriptionHookResult = ReturnType<typeof useRepliesChangedSubscription>;
 export type RepliesChangedSubscriptionResult = Apollo.SubscriptionResult<RepliesChangedSubscription>;
-export const UserStartedTypingDocument = gql`
-    subscription userStartedTyping($userId: ID, $groupId: ID, $channelId: ID) {
-  userStartedTyping(userId: $userId, groupId: $groupId, channelId: $channelId)
+export const TypingUpdatedDocument = gql`
+    subscription typingUpdated($userId: ID, $groupId: ID, $channelId: ID) {
+  typingUpdated(userId: $userId, groupId: $groupId, channelId: $channelId) {
+    typingUserId
+    isTyping
+  }
 }
     `;
 
 /**
- * __useUserStartedTypingSubscription__
+ * __useTypingUpdatedSubscription__
  *
- * To run a query within a React component, call `useUserStartedTypingSubscription` and pass it any options that fit your needs.
- * When your component renders, `useUserStartedTypingSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTypingUpdatedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useTypingUpdatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserStartedTypingSubscription({
+ * const { data, loading, error } = useTypingUpdatedSubscription({
  *   variables: {
  *      userId: // value for 'userId'
  *      groupId: // value for 'groupId'
@@ -6537,9 +6552,9 @@ export const UserStartedTypingDocument = gql`
  *   },
  * });
  */
-export function useUserStartedTypingSubscription(baseOptions?: Apollo.SubscriptionHookOptions<UserStartedTypingSubscription, UserStartedTypingSubscriptionVariables>) {
+export function useTypingUpdatedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<TypingUpdatedSubscription, TypingUpdatedSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<UserStartedTypingSubscription, UserStartedTypingSubscriptionVariables>(UserStartedTypingDocument, options);
+        return Apollo.useSubscription<TypingUpdatedSubscription, TypingUpdatedSubscriptionVariables>(TypingUpdatedDocument, options);
       }
-export type UserStartedTypingSubscriptionHookResult = ReturnType<typeof useUserStartedTypingSubscription>;
-export type UserStartedTypingSubscriptionResult = Apollo.SubscriptionResult<UserStartedTypingSubscription>;
+export type TypingUpdatedSubscriptionHookResult = ReturnType<typeof useTypingUpdatedSubscription>;
+export type TypingUpdatedSubscriptionResult = Apollo.SubscriptionResult<TypingUpdatedSubscription>;

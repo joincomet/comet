@@ -11,7 +11,7 @@ export class BlockUserInput {
 export async function blockUser(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: BlockUserInput
-): Promise<Relationship> {
+): Promise<User> {
   const user = await em.findOneOrFail(User, currentUserId)
   const [myData, theirData] = await user.getFriendData(em, userId)
   if (myData.status === RelationshipStatus.Blocking)
@@ -21,5 +21,5 @@ export async function blockUser(
     theirData.status = RelationshipStatus.Blocked
   await em.persistAndFlush([myData, theirData])
   liveQueryStore.invalidate(`User:${userId}`)
-  return myData
+  return myData.user
 }

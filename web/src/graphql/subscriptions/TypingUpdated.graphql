@@ -1,0 +1,6 @@
+subscription typingUpdated($userId: ID, $groupId: ID, $channelId: ID) {
+  typingUpdated(userId: $userId, groupId: $groupId, channelId: $channelId) {
+    typingUserId
+    isTyping
+  }
+}

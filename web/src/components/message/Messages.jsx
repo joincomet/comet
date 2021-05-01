@@ -71,7 +71,9 @@ export default function Messages({ channel, user, group, users, serverUsers }) {
           message={message}
           showUser={
             messageIndex === 0 ||
-            (prevMessage && prevMessage.author.id !== message.author.id)
+            (prevMessage &&
+              (!prevMessage.text ||
+                prevMessage.author.id !== message.author.id))
           }
         />
       )

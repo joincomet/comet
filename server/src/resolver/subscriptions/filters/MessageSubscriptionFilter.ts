@@ -8,10 +8,13 @@ export async function MessageSubscriptionFilter({
 }: SubscriptionFilter<ChangePayload>): Promise<boolean> {
   const message = await em.findOneOrFail(Message, id)
   const user = await em.findOneOrFail(User, userId)
-  return user.hasChannelPermission(
-    em,
-    message.channel.id,
-    ChannelPermission.ViewChannel,
-    ServerPermission.ViewChannels
-  )
+  if (message.channel)
+    return user.hasChannelPermission(
+      em,
+      message.channel.id,
+      ChannelPermission.ViewChannel
+    )
+  else if (message.group) return user.isInGroup(em, message.group.id)
+  else if (message.toUser)
+    return message.toUser === user || message.author === user
 }

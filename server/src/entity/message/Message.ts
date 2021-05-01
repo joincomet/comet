@@ -70,6 +70,14 @@ export class Message extends BaseEntity {
   @ManyToMany(() => ServerInvite)
   invites = new Collection<ServerInvite>(this)
 
+  @Field(() => [User])
+  @ManyToMany(() => User)
+  mentionedUsers = new Collection<User>(this)
+
+  @Field()
+  @Property()
+  isEveryoneMentioned: boolean = false
+
   @Field()
   @Property()
   isPinned: boolean = false

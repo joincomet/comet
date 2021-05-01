@@ -1,10 +1,4 @@
-import {
-  Channel,
-  ChannelPermission,
-  Group,
-  ServerPermission,
-  User
-} from '@/entity'
+import { Channel, ChannelPermission, Group, User } from '@/entity'
 import { TypingPayload } from '@/resolver/subscriptions/typing/TypingPayload'
 import { SubscriptionFilter } from '@/resolver/subscriptions/filters/SubscriptionFilter'
 
@@ -23,13 +17,12 @@ export async function TypingFilter({
     return user.hasChannelPermission(
       em,
       channel.id,
-      ChannelPermission.ViewChannel,
-      ServerPermission.ViewChannels
+      ChannelPermission.ViewChannel
     )
   } else if (typingGroupId && groupId === typingGroupId) {
     const group = await em.findOneOrFail(Group, typingGroupId)
     return group.users.contains(em.getReference(User, currentUserId))
-  } else
+  } else if (typingUserId)
     return (
       typingUserId &&
       (userId === typingUserId || currentUserId === typingUserId)

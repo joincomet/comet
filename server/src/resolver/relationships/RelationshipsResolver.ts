@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from 'type-graphql'
-import { Relationship } from '@/entity'
+import { User } from '@/entity'
 import { Context } from '@/types'
 import {
   CreateFriendRequestInput,
@@ -22,87 +22,87 @@ import {
   closeDm
 } from '@/resolver/relationships'
 
-@Resolver(() => Relationship)
+@Resolver()
 export class RelationshipsResolver {
   // --- Mutations ---
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async createFriendRequest(
     @Ctx() ctx: Context,
     @Arg('input') input: CreateFriendRequestInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return createFriendRequest(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async deleteFriendRequest(
     @Ctx() ctx: Context,
     @Arg('input') input: DeleteFriendRequestInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return deleteFriendRequest(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async answerFriendRequest(
     @Ctx() ctx: Context,
     @Arg('input') input: AnswerFriendRequestInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return answerFriendRequest(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async blockUser(
     @Ctx() ctx: Context,
     @Arg('input') input: BlockUserInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return blockUser(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async unblockUser(
     @Ctx() ctx: Context,
     @Arg('input') input: UnblockUserInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return unblockUser(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async removeFriend(
     @Ctx() ctx: Context,
     @Arg('input') input: RemoveFriendInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return removeFriend(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async readDm(
     @Ctx() ctx: Context,
     @Arg('input') input: ReadDmInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return readDm(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async openDm(
     @Ctx() ctx: Context,
     @Arg('input') input: OpenDmInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return openDm(ctx, input)
   }
 
   @Authorized()
-  @Mutation(() => Relationship)
+  @Mutation(() => User)
   async closeDm(
     @Ctx() ctx: Context,
     @Arg('input') input: CloseDmInput
-  ): Promise<Relationship> {
+  ): Promise<User> {
     return closeDm(ctx, input)
   }
 }

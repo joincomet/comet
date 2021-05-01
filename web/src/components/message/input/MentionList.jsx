@@ -10,7 +10,7 @@ export class MentionList extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    if (this.props.items !== oldProps.items) {
+    if (this.props.serverUsers !== oldProps.serverUsers) {
       this.setState({
         selectedIndex: 0
       })
@@ -40,14 +40,15 @@ export class MentionList extends Component {
   upHandler() {
     this.setState({
       selectedIndex:
-        (this.state.selectedIndex + this.props.items.length - 1) %
-        this.props.items.length
+        (this.state.selectedIndex + this.props.serverUsers.length - 1) %
+        this.props.serverUsers.length
     })
   }
 
   downHandler() {
     this.setState({
-      selectedIndex: (this.state.selectedIndex + 1) % this.props.items.length
+      selectedIndex:
+        (this.state.selectedIndex + 1) % this.props.serverUsers.length
     })
   }
 
@@ -56,27 +57,38 @@ export class MentionList extends Component {
   }
 
   selectItem(index) {
-    const item = this.props.items[index]
+    const item = this.props.serverUsers[index]
 
     if (item) {
-      this.props.command({ id: item.user.id })
+      this.props.command(
+        typeof item === 'string'
+          ? { id: `<${item}>`, name: item.substring(1) }
+          : { id: `<@${item.user.id}>`, name: item.name }
+      )
     }
   }
 
   render() {
     return (
-      <div className="relative w-full rounded dark:bg-gray-700 text-primary overflow-hidden text-sm shadow-md">
-        {this.props.items.map((item, index) => (
-          <button
-            className={`block w-full text-left bg-transparent border-none px-2 py-2 dark:hover:bg-gray-750 ${
-              index === this.state.selectedIndex ? 'dark:bg-gray-750' : ''
-            }`}
-            key={item.user.id}
-            onClick={() => this.selectItem(index)}
-          >
-            {item.name}
-          </button>
-        ))}
+      <div className="relative w-full w-72 rounded dark:bg-gray-800 text-primary overflow-hidden text-sm shadow-md">
+        {this.props.serverUsers
+          .filter(su =>
+            (typeof su === 'string' ? su.substring(1) : su.name)
+              .toLowerCase()
+              .startsWith(this.props.query.toLowerCase())
+          )
+          .slice(0, 5)
+          .map((item, index) => (
+            <button
+              className={`block w-full text-left bg-transparent border-none px-2 py-2 dark:hover:bg-gray-775 focus:outline-none ${
+                index === this.state.selectedIndex ? 'dark:bg-gray-775' : ''
+              }`}
+              key={typeof item === 'string' ? item : item.user.id}
+              onClick={() => this.selectItem(index)}
+            >
+              {typeof item === 'string' ? item : item.name}
+            </button>
+          ))}
       </div>
     )
   }

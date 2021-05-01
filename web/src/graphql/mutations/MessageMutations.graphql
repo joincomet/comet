@@ -50,6 +50,6 @@ mutation unpinMessage($input: UnpinMessageInput!) {
   }
 }
 
-mutation startTyping($input: TypingInput!) {
-  startTyping(input: $input)
+mutation updateTyping($input: TypingInput!) {
+  updateTyping(input: $input)
 }

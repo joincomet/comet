@@ -11,12 +11,12 @@ export class ReadDmInput {
 export async function readDm(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: ReadDmInput
-): Promise<Relationship> {
+): Promise<User> {
   const user = await em.findOneOrFail(User, currentUserId)
   const [myData] = await user.getFriendData(em, userId)
   myData.unreadCount = 0
   myData.lastViewAt = new Date()
   await em.persistAndFlush(myData)
   liveQueryStore.invalidate(`User:${userId}`)
-  return myData
+  return myData.user
 }

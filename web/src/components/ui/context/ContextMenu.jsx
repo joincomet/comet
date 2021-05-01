@@ -8,6 +8,11 @@ import CommentContextMenu from '@/components/comment/CommentContextMenu'
 import ServerContextMenu from '@/components/server/ServerContextMenu'
 import ChannelContextMenu from '@/components/channel/ChannelContextMenu'
 import FolderContextMenu from '@/components/folder/FolderContextMenu'
+import { useEffect } from 'react'
+import { getOS } from '@/utils/getOS'
+import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
+import ContextMenuDivider from '@/components/ui/context/ContextMenuDivider'
+import { useCopyToClipboard } from 'react-use'
 
 const className = ctl(`
   p-2
@@ -26,6 +31,11 @@ export default function ContextMenu({
 }) {
   const ContextMenuItem = useContextMenuItem({ bindMenuItem, hideMenu })
 
+  const copyToClipboard = useCopyToClipboard()[1]
+
+  const os = getOS()
+  const isMac = os === 'Mac OS'
+
   return (
     <div
       style={{ ...style, zIndex: 999999 }}
@@ -34,6 +44,21 @@ export default function ContextMenu({
       tabIndex={tabIndex}
       className={className}
     >
+      {!!window.getSelection().toString() && (
+        <>
+          <ContextMenuItem
+            label={
+              <div className="flex items-center w-full">
+                Copy
+                <div className="ml-auto">{isMac ? '⌘+C' : 'Ctrl+C'}</div>
+              </div>
+            }
+            onClick={() => document.execCommand('copy')}
+          />
+          <ContextMenuDivider />
+        </>
+      )}
+
       {data?.type === ContextMenuType.Post && (
         <PostContextMenu post={data?.post} ContextMenuItem={ContextMenuItem} />
       )}
@@ -74,6 +99,22 @@ export default function ContextMenu({
           folder={data?.folder}
           ContextMenuItem={ContextMenuItem}
         />
+      )}
+
+      {!!data?.href && (
+        <>
+          <ContextMenuDivider />
+          <ContextMenuSection>
+            <ContextMenuItem
+              label="Copy Link"
+              onClick={() => copyToClipboard(data.href)}
+            />
+            <ContextMenuItem
+              label="Open Link"
+              onClick={() => window.open(data.href, '_blank')}
+            />
+          </ContextMenuSection>
+        </>
       )}
     </div>
   )

@@ -6,11 +6,7 @@ import MessageDropZone from '@/components/message/input/MessageDropZone'
 import MessageUploadDialog from '@/components/message/input/MessageUploadDialog'
 import { useTyping } from '@/components/message/input/useTyping'
 import { useMessagePlaceholder } from '@/components/message/input/useMessagePlaceholder'
-import {
-  MessagesDocument,
-  useCreateMessageMutation,
-  useServerUsersQuery
-} from '@/graphql/hooks'
+import { MessagesDocument, useCreateMessageMutation } from '@/graphql/hooks'
 import {
   EditorContent,
   useEditor,
@@ -20,8 +16,7 @@ import {
 import { defaultExtensions } from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
-import Mention from '@tiptap/extension-mention'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { Mention } from '@/components/ui/editor/Mention'
 import tippy from 'tippy.js/headless'
 import { MentionList } from '@/components/message/input/MentionList'
 
@@ -45,43 +40,8 @@ export default function MessageInput({
   serverUsers
 }) {
   const { t } = useTranslation()
-  const placeholder = useMessagePlaceholder({ channel, group, user })
-  const [startTyping, typingNames] = useTyping({ channel, group, user })
-  const [files, setFiles] = useState(null)
-  const [currentFile, setCurrentFile] = useState(null)
-  const [currentFileIndex, setCurrentFileIndex] = useState(0)
 
-  const [createMessage] = useCreateMessageMutation({
-    update(cache, { data: { createMessage } }) {
-      const messageChannelId = channel?.id
-      const messageGroupId = group?.id
-      const messageUserId = user?.id
-      const queryOptions = {
-        query: MessagesDocument,
-        variables: {
-          userId: messageUserId,
-          groupId: messageGroupId,
-          channelId: messageChannelId,
-          cursor: null
-        }
-      }
-      const queryData = cache.readQuery(queryOptions)
-      if (
-        queryData &&
-        !queryData.messages.messages.map(m => m.id).includes(createMessage.id)
-      ) {
-        cache.writeQuery({
-          ...queryOptions,
-          data: {
-            messages: {
-              ...queryData.messages,
-              messages: [...queryData.messages.messages, createMessage]
-            }
-          }
-        })
-      }
-    }
-  })
+  const placeholder = useMessagePlaceholder({ channel, group, user })
 
   const computedServerUsers = useMemo(() => {
     if (serverUsers) return serverUsers
@@ -99,42 +59,29 @@ export default function MessageInput({
         placeholder: `${t('message.message')} ${placeholder}`
       }),
       Extension.create({
-        addCommands() {
-          return {
-            getState: () => ({ state }) => state
-          }
-        },
         addKeyboardShortcuts() {
           return {
             Enter: ({ editor }) => {
-              const text = editor.getHTML()
-              if (text !== '<p></p>') {
+              let text = editor.getHTML()
+              const isEmpty = editor.state.doc.textContent.length === 0
+              if (!isEmpty) {
+                const pRegex = /^<p>|<\/p>$/gi
+                const brRegex = /^\s*(?:<br\s*\/?\s*>)+|(?:<br\s*\/?\s*>)+\s*$/gi
+                text = text.replace(pRegex, '')
+                text = text.replace(brRegex, '')
                 createMessage({
                   variables: { input: { text, ...variables } }
                 })
                 editor.commands.clearContent()
-                return true
               }
-              return false
+              return true
             }
           }
         }
       }),
       Mention.configure({
-        HTMLAttributes: {
-          class: 'mention'
-        },
         suggestion: {
           allowSpaces: true,
-          items: query => {
-            return computedServerUsers
-              .filter(
-                su =>
-                  su.name.toLowerCase().startsWith(query.toLowerCase()) ||
-                  su.user.username.toLowerCase().startsWith(query.toLowerCase())
-              )
-              .slice(0, 5)
-          },
           render: () => {
             let reactRenderer
             let popup
@@ -142,7 +89,10 @@ export default function MessageInput({
             return {
               onStart: props => {
                 reactRenderer = new ReactRenderer(MentionList, {
-                  props,
+                  props: {
+                    ...props,
+                    serverUsers: ['@everyone'].concat(computedServerUsers)
+                  },
                   editor: props.editor
                 })
 
@@ -153,7 +103,7 @@ export default function MessageInput({
                   showOnCreate: true,
                   interactive: true,
                   trigger: 'manual',
-                  placement: 'top-start',
+                  placement: 'bottom-start',
                   render(instance) {
                     // The recommended structure is to use the popper as an outer wrapper
                     // element, with an inner `box` element
@@ -210,6 +160,48 @@ export default function MessageInput({
     }
   })
 
+  const [startTyping, typingNames] = useTyping({
+    channel,
+    group,
+    user,
+    serverUsers: computedServerUsers
+  })
+  const [files, setFiles] = useState(null)
+  const [currentFile, setCurrentFile] = useState(null)
+  const [currentFileIndex, setCurrentFileIndex] = useState(0)
+
+  const [createMessage] = useCreateMessageMutation({
+    update(cache, { data: { createMessage } }) {
+      const messageChannelId = channel?.id
+      const messageGroupId = group?.id
+      const messageUserId = user?.id
+      const queryOptions = {
+        query: MessagesDocument,
+        variables: {
+          userId: messageUserId,
+          groupId: messageGroupId,
+          channelId: messageChannelId,
+          cursor: null
+        }
+      }
+      const queryData = cache.readQuery(queryOptions)
+      if (
+        queryData &&
+        !queryData.messages.messages.map(m => m.id).includes(createMessage.id)
+      ) {
+        cache.writeQuery({
+          ...queryOptions,
+          data: {
+            messages: {
+              ...queryData.messages,
+              messages: [...queryData.messages.messages, createMessage]
+            }
+          }
+        })
+      }
+    }
+  })
+
   const variables = {
     channelId: channel?.id,
     groupId: group?.id,
@@ -261,7 +253,7 @@ export default function MessageInput({
   }, [setFiles, setCurrentFile, setCurrentFileIndex])
 
   useEffect(() => {
-    editor?.commands?.clearContent()
+    setTimeout(() => editor?.commands?.clearContent())
   }, [user, group, channel])
 
   return (
@@ -278,7 +270,10 @@ export default function MessageInput({
         cancelAll={cancelAll}
       />
 
-      <div className="px-4 dark:bg-gray-750">
+      <div
+        className="px-4 dark:bg-gray-750 relative"
+        onKeyPress={() => startTyping()}
+      >
         <div className="relative">
           <Tippy content={t('message.upload')}>
             <div className="block absolute left-4.5 top-1/2 transform -translate-y-1/2">

@@ -370,8 +370,10 @@ type Message implements BaseEntity {
   id: ID!
   image: Image
   isDeleted: Boolean!
+  isEveryoneMentioned: Boolean!
   isPinned: Boolean!
   linkMetadatas: [LinkMetadata!]!
+  mentionedUsers: [User!]!
   pinnedAt: DateTime
   serverUser: ServerUser
   text: String
@@ -426,19 +428,19 @@ type Mutation {
   addPostToFolder(input: AddPostToFolderInput!): Folder!
   addUserToGroup(input: AddUserToGroupInput!): Group!
   addUserToRole(input: AddUserToRoleInput!): ServerUser!
-  answerFriendRequest(input: AnswerFriendRequestInput!): Relationship!
+  answerFriendRequest(input: AnswerFriendRequestInput!): User!
   banUserFromServer(input: BanUserFromServerInput!): Boolean!
-  blockUser(input: BlockUserInput!): Relationship!
+  blockUser(input: BlockUserInput!): User!
   changeNickname(input: ChangeNicknameInput!): ServerUser!
   changeNotificationSetting(input: ChangeNotificationSettingInput!): ServerUser!
   changeOnlineStatus(input: ChangeOnlineStatusInput!): User!
   changeUserAvatar(input: ChangeUserAvatarInput!): User!
-  closeDm(input: CloseDmInput!): Relationship!
+  closeDm(input: CloseDmInput!): User!
   createAccount(input: CreateAccountInput!): LoginResponse!
   createChannel(input: CreateChannelInput!): Channel!
   createComment(input: CreateCommentInput!): Comment!
   createFolder(input: CreateFolderInput!): Folder!
-  createFriendRequest(input: CreateFriendRequestInput!): Relationship!
+  createFriendRequest(input: CreateFriendRequestInput!): User!
   createGroup(input: CreateGroupInput!): Group!
   createMessage(input: CreateMessageInput!): Message!
   createPost(input: CreatePostInput!): Post!
@@ -448,7 +450,7 @@ type Mutation {
   deleteChannel(input: DeleteChannelInput!): ID!
   deleteComment(input: DeleteCommentInput!): Comment!
   deleteFolder(input: DeleteFolderInput!): Boolean!
-  deleteFriendRequest(input: DeleteFriendRequestInput!): Relationship!
+  deleteFriendRequest(input: DeleteFriendRequestInput!): User!
   deleteMessage(input: DeleteMessageInput!): Boolean!
   deletePost(input: DeletePostInput!): Post!
   deleteRole(input: DeleteRoleInput!): ID!
@@ -467,21 +469,20 @@ type Mutation {
   moveServer(input: MoveServerInput!): Void!
   moveServerFolder(input: MoveServerFolderInput!): Folder!
   moveUserFolder(input: MoveUserFolderInput!): Folder!
-  openDm(input: OpenDmInput!): Relationship!
+  openDm(input: OpenDmInput!): User!
   pinComment(input: PinCommentInput!): Comment!
   pinMessage(input: PinMessageInput!): Message!
   pinPost(input: PinPostInput!): Post!
   readChannel(input: ReadChannelInput!): Channel!
-  readDm(input: ReadDmInput!): Relationship!
+  readDm(input: ReadDmInput!): User!
   readGroup(input: ReadGroupInput!): Group!
   readServer(input: ReadServerInput!): Server!
-  removeFriend(input: RemoveFriendInput!): Relationship!
+  removeFriend(input: RemoveFriendInput!): User!
   removePostFromFolder(input: RemovePostFromFolderInput!): Folder!
   removeUserFromGroup(input: RemoveUserFromGroupInput!): Group!
   removeUserFromRole(input: RemoveUserFromRoleInput!): ServerUser!
-  startTyping(input: TypingInput!): Boolean!
   unbanUserFromServer(input: UnbanUserFromServerInput!): Boolean!
-  unblockUser(input: UnblockUserInput!): Relationship!
+  unblockUser(input: UnblockUserInput!): User!
   unfollowFolder(input: UnfollowFolderInput!): Folder!
   unpinComment(input: UnpinCommentInput!): Comment!
   unpinMessage(input: UnpinMessageInput!): Message!
@@ -498,6 +499,7 @@ type Mutation {
   updatePost(input: UpdatePostInput!): Post!
   updateRole(input: UpdateRoleInput!): Role!
   updateServer(input: UpdateServerInput!): Server!
+  updateTyping(input: TypingInput!): Boolean!
   voteComment(input: VoteCommentInput!): Comment!
   votePost(input: VotePostInput!): Post!
 }
@@ -626,15 +628,6 @@ input ReadGroupInput {
 
 input ReadServerInput {
   serverId: ID!
-}
-
-type Relationship {
-  lastMessageAt: DateTime!
-  showChat: Boolean!
-  status: RelationshipStatus!
-  unreadCount: NonNegativeInt!
-  updatedAt: DateTime!
-  user: User!
 }
 
 enum RelationshipStatus {
@@ -773,13 +766,19 @@ type Subscription {
   messageChanged: MessageChangedResponse!
   postChanged: PostChangedResponse!
   repliesChanged: RepliesChangedResponse!
-  userStartedTyping(channelId: ID, groupId: ID, userId: ID): String!
+  typingUpdated(channelId: ID, groupId: ID, userId: ID): TypingResponse!
 }
 
 input TypingInput {
   channelId: ID
   groupId: ID
+  isTyping: Boolean = true
   userId: ID
+}
+
+type TypingResponse {
+  isTyping: Boolean!
+  typingUserId: ID!
 }
 
 input UnbanUserFromServerInput {
@@ -907,6 +906,7 @@ type User implements BaseEntity {
   relatedUsers: [User!]!
   relationshipStatus: RelationshipStatus!
   servers: [Server!]!
+  showChat: Boolean!
   tag: String!
   unreadCount: NonNegativeInt!
   username: String!

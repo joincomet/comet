@@ -14,7 +14,7 @@ export class AnswerFriendRequestInput {
 export async function answerFriendRequest(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId, accept }: AnswerFriendRequestInput
-): Promise<Relationship> {
+): Promise<User> {
   const user = await em.findOneOrFail(User, currentUserId)
   const [myData, theirData] = await user.getFriendData(em, userId)
   if (
@@ -34,5 +34,5 @@ export async function answerFriendRequest(
   }
   await em.persistAndFlush([myData, theirData])
   liveQueryStore.invalidate(`User:${userId}`)
-  return myData
+  return myData.user
 }

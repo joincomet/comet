@@ -24,8 +24,7 @@ export async function deleteMessage(
       await user.checkChannelPermission(
         em,
         message.channel.id,
-        ChannelPermission.ManageMessages,
-        ServerPermission.ManageMessages
+        ChannelPermission.ManageMessages
       )
     } else throw new Error('Must be author to delete message')
   }

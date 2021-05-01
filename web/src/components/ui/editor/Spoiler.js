@@ -7,20 +7,20 @@ export const Spoiler = Mark.create({
 
   defaultOptions: {
     HTMLAttributes: {
-      'data-spoiler': '1'
+      'data-spoiler': ''
     }
   },
 
   addAttributes() {
     return {
       'data-spoiler': {
-        default: '1'
+        default: ''
       }
     }
   },
 
   parseHTML() {
-    return [{ tag: `span[data-spoiler='1']` }]
+    return [{ tag: `span[data-spoiler]` }]
   },
 
   renderHTML({ HTMLAttributes }) {

@@ -33,80 +33,87 @@ export const useMessagesSubscriptions = () => {
     onSubscriptionData({ client, subscriptionData }) {
       if (subscriptionData.data) {
         const data = subscriptionData.data.messageChanged
-        const message = data?.added
-        if (!message) return
-        const messageServerId = message.channel?.server.id
-        const messageChannelId = message.channel?.id
-        const messageGroupId = message.group?.id
-        const messageUserId = message.toUser?.id
-        const queryOptions = {
-          query: MessagesDocument,
-          variables: {
-            userId: messageUserId,
-            groupId: messageGroupId,
-            channelId: messageChannelId,
-            cursor: null
-          }
-        }
-        const queryData = client.cache.readQuery(queryOptions)
-        if (
-          queryData &&
-          !queryData.messages.messages.map(m => m.id).includes(message.id)
-        ) {
-          client.cache.writeQuery({
-            ...queryOptions,
-            data: {
-              messages: {
-                ...queryData.messages,
-                messages: [...queryData.messages.messages, message]
-              }
+        const addedMessage = data?.added
+        const deletedMessage = data?.deleted
+        let message
+
+        if (addedMessage) {
+          message = addedMessage
+          const messageServerId = message.channel?.server.id
+          const messageChannelId = message.channel?.id
+          const messageGroupId = message.group?.id
+          const messageUserId = message.toUser ? message.author?.id : undefined
+          const queryOptions = {
+            query: MessagesDocument,
+            variables: {
+              userId: messageUserId,
+              groupId: messageGroupId,
+              channelId: messageChannelId,
+              cursor: null
             }
-          })
-        }
-
-        if (
-          Notification.permission === 'granted' &&
-          message.author.id !== currentUser.id &&
-          message.text
-        ) {
-          if (
-            (!window.electron || (window.electron && windowOpen)) &&
-            ((currentGroupId &&
-              messageGroupId &&
-              currentGroupId === messageGroupId) ||
-              (currentUserId &&
-                messageUserId &&
-                currentUserId === messageUserId) ||
-              (currentChannelId &&
-                messageChannelId &&
-                currentChannelId === messageChannelId))
-          )
-            return
-
-          let title = `@${message.author.name}`
-          if (message.channel) title += ` · #${message.channel.name}`
-          if (message.group) title += ` · #${message.group.displayName}`
-
-          const notification = new Notification(title, {
-            body: message.text,
-            icon:
-              message.author.avatarUrl ??
-              `${window.electron ? '.' : ''}/icons/icon.png`,
-            timestamp: message.createdAt,
-            silent: true
-          })
-          notification.onclick = () => {
-            if (messageUserId) push(`/me/dm/${messageUserId}`)
-            else if (messageGroupId) push(`/me/group/${messageGroupId}`)
-            else if (messageChannelId && messageServerId)
-              push(`/server/${messageServerId}/channel/${messageChannelId}`)
-            if (window.electron) window.electron.show()
           }
-          const audio = new Audio(
-            `${window.electron ? '.' : ''}/notification.mp3`
-          )
-          audio.volume = 0.5
-          audio.play()
+          const queryData = client.cache.readQuery(queryOptions)
+          if (
+            queryData &&
+            !queryData.messages.messages.map(m => m.id).includes(message.id)
+          ) {
+            client.cache.writeQuery({
+              ...queryOptions,
+              data: {
+                messages: {
+                  ...queryData.messages,
+                  messages: [...queryData.messages.messages, message]
+                }
+              }
+            })
+          }
+
+          if (
+            Notification.permission === 'granted' &&
+            message.author.id !== currentUser.id &&
+            message.text
+          ) {
+            if (
+              (!window.electron || (window.electron && windowOpen)) &&
+              ((currentGroupId &&
+                messageGroupId &&
+                currentGroupId === messageGroupId) ||
+                (currentUserId &&
+                  messageUserId &&
+                  currentUserId === messageUserId) ||
+                (currentChannelId &&
+                  messageChannelId &&
+                  currentChannelId === messageChannelId))
+            )
+              return
+
+            let title = `@${message.author.name}`
+            if (message.channel) title += ` · #${message.channel.name}`
+            if (message.group) title += ` · #${message.group.displayName}`
+
+            const notification = new Notification(title, {
+              body: message.text,
+              icon:
+                message.author.avatarUrl ??
+                `${window.electron ? '.' : ''}/icons/icon.png`,
+              timestamp: message.createdAt,
+              silent: true
+            })
+            notification.onclick = () => {
+              if (messageUserId) push(`/me/dm/${messageUserId}`)
+              else if (messageGroupId) push(`/me/group/${messageGroupId}`)
+              else if (messageChannelId && messageServerId)
+                push(`/server/${messageServerId}/channel/${messageChannelId}`)
+              if (window.electron) window.electron.show()
+            }
+            const audio = new Audio(
+              `${window.electron ? '.' : ''}/notification.mp3`
+            )
+            audio.volume = 0.5
+            audio.play()
+          }
+        } else if (deletedMessage) {
+          message = deletedMessage
         }
       }
     }

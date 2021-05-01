@@ -135,10 +135,6 @@ body {
   min-height: calc(100vh - 23rem);
 }
 
-span[data-spoiler='1'] {
-  @apply dark:bg-gray-100 bg-gray-900 dark:hover:bg-transparent hover:bg-transparent;
-}
-
 .cancel-button {
   @apply text-gray-600 dark:text-gray-400 px-2 h-10 text-sm font-medium focus:outline-none;
 }
@@ -155,6 +151,10 @@ span[data-spoiler='1'] {
   @apply text-xs text-red-400 pt-1.5;
 }
 
-.mention {
-  @apply text-blue-500 hover:underline cursor-pointer;
+span[data-mention] {
+  @apply text-blue-500 hover:underline cursor-pointer bg-blue-600 bg-opacity-10 rounded;
+}
+
+span[data-spoiler] {
+  @apply dark:bg-gray-100 bg-gray-900 dark:hover:bg-transparent hover:bg-transparent;
 }

@@ -28,9 +28,10 @@ import {
   folderServerLoader
 } from '@/util/loaders/folder'
 import { Loaders } from '@/types'
+import { userShowChatLoader } from '@/util/loaders/user'
 
-export const createLoaders = (em: EntityManager, userId: string) =>
-  ({
+export function createLoaders(em: EntityManager, userId: string): Loaders {
+  return {
     channelMentionCountLoader: channelMentionCountLoader(em, userId),
     channelPermissionsLoader: channelPermissionsLoader(em, userId),
     channelRolePermissionsLoader: channelRolePermissionsLoader(em),
@@ -62,8 +63,10 @@ export const createLoaders = (em: EntityManager, userId: string) =>
     userGroupsLoader: userGroupsLoader(em, userId),
     userServersLoader: userServersLoader(em, userId),
     userUnreadCountLoader: userUnreadCountLoader(em, userId),
+    userShowChatLoader: userShowChatLoader(em, userId),
 
     folderFollowingLoader: folderFollowingLoader(em, userId),
     folderOwnerLoader: folderOwnerLoader(em),
     folderServerLoader: folderServerLoader(em)
-  } as Loaders)
+  }
+}

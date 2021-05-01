@@ -15,7 +15,8 @@ export default function ChannelPage() {
   useSetServerPage(`channel/${channelId}`)
   const { data } = useServerUsersQuery({
     variables: { serverId: server?.id },
-    skip: !server
+    skip: !server,
+    fetchPolicy: 'cache-and-network'
   })
   const serverUsers = data?.serverUsers
 
