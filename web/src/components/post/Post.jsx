@@ -9,8 +9,10 @@ import UserPopup from '@/components/user/UserPopup'
 import { calendarDate } from '@/utils/timeUtils'
 import {
   IconChat,
+  IconChevronDown,
   IconChevrownLeft,
   IconChevrownRight,
+  IconChevrownUp,
   IconDotsHorizontal,
   IconLinkWeb,
   IconText,
@@ -20,12 +22,14 @@ import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import PostEmbed from '@/components/post/PostEmbed'
+import { HiThumbDown } from 'react-icons/hi'
 
 export default memo(function Post({
   post,
   isPostPage = false,
   showServerName = false,
-  className = ''
+  className = '',
+  index
 }) {
   const toggleVote = useTogglePostVote(post)
 
@@ -62,8 +66,27 @@ export default memo(function Post({
       <div
         ref={dragRef}
         style={{ opacity }}
-        className={`${className} cursor-pointer relative transition dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
+        className={`${className} cursor-pointer relative group transition hover:shadow dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
       >
+        <div className="absolute top-3 right-3 flex items-center">
+          {post.linkMetadata?.logo && (
+            <div
+              className="h-6 w-6 rounded-full transform transition opacity-50 group-hover:opacity-100 group-hover:scale-105 group-hover:shadow-md dark:bg-gray-725 bg-contain bg-center"
+              style={
+                post.linkMetadata?.logo
+                  ? { backgroundImage: `url(${post.linkMetadata?.logo})` }
+                  : {}
+              }
+            />
+          )}
+
+          {!!(index + 1) && (
+            <div className="ml-2 w-6 h-6 leading-none flex items-center justify-center text-xs font-medium text-mid transform transition opacity-50 group-hover:opacity-100 group-hover:scale-105">
+              #{index + 1}
+            </div>
+          )}
+        </div>
+
         {!isPostPage && (
           <div
             className="w-26 flex-shrink-0 rounded dark:bg-gray-700 mr-3 flex items-center justify-center bg-center bg-cover bg-no-repeat"
@@ -94,7 +117,7 @@ export default memo(function Post({
           </ContextMenuTrigger>
         </div>
 
-        <div className="pl-3 flex-grow">
+        <div className="pl-3 pr-16 flex-grow">
           <div className="flex items-end pb-1">
             <div onClick={onClick}>
               <ContextMenuTrigger
@@ -102,7 +125,7 @@ export default memo(function Post({
               >
                 <UserPopup user={post.author}>
                   <div
-                    className="hover:underline cursor-pointer text-sm font-medium leading-none"
+                    className="hover:underline cursor-pointer text-secondary text-sm font-medium leading-none"
                     style={{ color: post.author?.color }}
                   >
                     {post.author.name}
@@ -116,7 +139,10 @@ export default memo(function Post({
             </div>
           </div>
 
-          <Link to={post.relativeUrl} className="text-primary text-base">
+          <Link
+            to={post.relativeUrl}
+            className="text-secondary text-base font-medium"
+          >
             {post.title}
           </Link>
 
@@ -228,6 +254,11 @@ export default memo(function Post({
             >
               <IconVote className="w-4 h-4" />
               <div className="ml-2 text-xs font-medium">{post.voteCount}</div>
+              {/*<IconChevrownUp className="w-5 h-5" />
+              <div className="mx-2 text-xs text-blue-400 font-medium">
+                {post.voteCount}
+              </div>
+              <IconChevronDown className="w-5 h-5 text-blue-400" />*/}
             </div>
 
             <div

@@ -47,7 +47,7 @@ export default function BottomBar() {
     <>
       <UserSettingsDialog open={open} setOpen={setOpen} />
 
-      <div className="flex items-center px-5 bottom-0 h-5.5 bg-gray-700 z-50">
+      <div className="flex items-center shadow-md px-5 bottom-0 h-5.5 bg-gray-700 z-50">
         <UserAvatar size={4.5} className="mr-2" user={currentUser} />
         <div className="dark:text-white text-sm">{currentUser.name}</div>
         <div className="w-2 h-2 rounded-full bg-green-500 ml-2" />

@@ -260,7 +260,7 @@ export default memo(function UserDialog() {
             className={tabClass(currentTab === tab.MutualServers)}
             onClick={() => setCurrentTab(tab.MutualServers)}
           >
-            <div className="transform translate-y-0.5">Mutual Servers</div>
+            <div className="transform translate-y-0.5">Mutual Planets</div>
           </button>
 
           <button

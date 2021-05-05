@@ -50,7 +50,7 @@ export default function ServerSidebar() {
             {canManageServer && (
               <button
                 type="button"
-                className="rounded-full cursor-pointer focus:outline-none h-7 w-7 flex items-center justify-center transition bg-opacity-0 hover:bg-opacity-25 bg-gray-800"
+                className="transition hover:rotate-12 transform rounded-full cursor-pointer focus:outline-none h-7 w-7 flex items-center justify-center transition bg-opacity-0 hover:bg-opacity-25 bg-gray-800"
                 onClick={() => setSettingsOpen(true)}
               >
                 <IconSettings className="w-5 h-5 text-primary" />

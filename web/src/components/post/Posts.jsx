@@ -14,8 +14,8 @@ export default function Posts({ folderId, serverId, showServerName, header }) {
       const post = postsList[index]
       if (!post) return <div style={{ height: '1px' }} /> // returning null or zero height breaks the virtuoso
       return (
-        <div className="px-4 pb-1">
-          <Post post={post} showServerName={showServerName} />
+        <div className="px-4 pb-1.5">
+          <Post post={post} showServerName={showServerName} index={index} />
         </div>
       )
     },
