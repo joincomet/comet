@@ -83,8 +83,17 @@ export default function Comment({
               <ContextMenuTrigger
                 data={{ type: ContextMenuType.User, user: comment.author }}
               >
-                <UserPopup user={comment.author}>
-                  <div className="text-sm font-medium cursor-pointer hover:underline leading-none text-accent">
+                <UserPopup
+                  user={comment.author?.user}
+                  roles={comment.author?.roles}
+                  nickname={comment.author?.nickname}
+                >
+                  <div
+                    className={`text-sm font-medium cursor-pointer hover:underline leading-none ${
+                      comment.author.color ? '' : 'text-primary'
+                    }`}
+                    style={{ color: comment.author.color }}
+                  >
                     {comment.author.name}
                   </div>
                 </UserPopup>

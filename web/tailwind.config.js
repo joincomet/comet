@@ -34,7 +34,7 @@ module.exports = {
         78: '19.5rem',
         81: '20.25rem'
       },
-      colors: {
+      /*colors: {
         gray: {
           650: '#494951',
           725: '#39393F',
@@ -43,8 +43,16 @@ module.exports = {
           825: '#242427',
           850: '#202023',
           950: '#0C0C0E'
+          // coolGray
+          /!*650: '#414B5A',
+          725: '#353A45',
+          750: '#2B3544',
+          775: '#252F3E',
+          825: '#1C2533',
+          850: '#18212F',
+          950: '#090C14'*!/
         }
-      },
+      },*/
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans]
       },
@@ -197,7 +205,25 @@ module.exports = {
       current: 'currentColor',
       black: colors.black,
       white: colors.white,
-      gray: colors.gray,
+      gray: {
+        50: '#FAFAFB',
+        100: '#F4F4F6',
+        200: '#F4F4F6',
+        300: '#D3D5DA',
+        400: '#9FA2AD',
+        500: '#6E727D',
+        600: '#4F545F',
+        650: '#454A56',
+        700: '#3B404C',
+        725: '#353A46',
+        750: '#2F343F',
+        775: '#292E38',
+        800: '#232831',
+        825: '#20242D',
+        850: '#1C2029',
+        900: '#151821',
+        950: '#0B0C11'
+      },
 
       red: colors.red,
       yellow: colors.amber,

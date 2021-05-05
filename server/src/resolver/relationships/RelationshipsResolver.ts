@@ -21,6 +21,9 @@ import {
   CloseDmInput,
   closeDm
 } from '@/resolver/relationships'
+import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
+import { PubSub } from 'type-graphql/dist/decorators/PubSub'
+import { Publisher } from 'type-graphql/dist/interfaces/Publisher'
 
 @Resolver()
 export class RelationshipsResolver {
@@ -29,9 +32,11 @@ export class RelationshipsResolver {
   @Mutation(() => User)
   async createFriendRequest(
     @Ctx() ctx: Context,
-    @Arg('input') input: CreateFriendRequestInput
+    @Arg('input') input: CreateFriendRequestInput,
+    @PubSub(SubscriptionTopic.MessageChanged)
+    messageChanged: Publisher<ChangePayload>
   ): Promise<User> {
-    return createFriendRequest(ctx, input)
+    return createFriendRequest(ctx, input, messageChanged)
   }
 
   @Authorized()

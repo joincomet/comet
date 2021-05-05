@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import Dialog from '@/components/ui/dialog/Dialog'
 import UserAvatar from '@/components/user/UserAvatar'
 import { IconDotsVertical, IconFolder } from '@/components/ui/icons/Icons'
@@ -7,8 +7,20 @@ import { useTranslation } from 'react-i18next'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { Link } from 'react-router-dom'
 import { useStore } from '@/hooks/useStore'
-import { useUserQuery } from '@/graphql/hooks'
+import {
+  RelationshipStatus,
+  useAnswerFriendRequestMutation,
+  useBlockUserMutation,
+  useCreateFriendRequestMutation,
+  useDeleteFriendRequestMutation,
+  useRemoveFriendMutation,
+  useUnblockUserMutation,
+  useUserQuery
+} from '@/graphql/hooks'
 import { useUserRelationships } from '@/hooks/useUserRelationships'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
+import { ContextMenuType } from '@/types/ContextMenuType'
 
 const tabClass = active =>
   ctl(`
@@ -64,9 +76,11 @@ const tab = {
 }
 
 export default memo(function UserDialog() {
-  const [user, setUser, open, setOpen] = useStore(s => [
-    s.dialogUser,
-    s.setDialogUser,
+  const [currentUser] = useCurrentUser()
+
+  const [userId, setUserId, open, setOpen] = useStore(s => [
+    s.dialogUserId,
+    s.setDialogUserId,
     s.userDialogOpen,
     s.setUserDialogOpen
   ])
@@ -74,66 +88,99 @@ export default memo(function UserDialog() {
   const [currentTab, setCurrentTab] = useState(tab.MutualServers)
 
   const { data: userData } = useUserQuery({
-    variables: { id: user?.id },
-    skip: !user
+    variables: { id: userId },
+    skip: !userId
   })
+
+  const user = userData?.user
+
+  const [createFriendRequest] = useCreateFriendRequestMutation()
+  const [deleteFriendRequest] = useDeleteFriendRequestMutation()
+  const [answerFriendRequest] = useAnswerFriendRequestMutation()
+  const [blockUser] = useBlockUserMutation()
+  const [unblockUser] = useUnblockUserMutation()
+  const [removeFriend] = useRemoveFriendMutation()
 
   const mutualFriends = userData?.user?.relatedUsers ?? []
   const mutualServers = userData?.user?.servers ?? []
   const folders = userData?.user?.folders ?? []
 
-  const {
-    outgoingFriendRequests,
-    incomingFriendRequests,
-    friends,
-    blocking,
-    blockedBy
-  } = useUserRelationships()
-  const isFriendRequestSent = outgoingFriendRequests
-    .map(u => u.id)
-    .includes(user?.id)
-  const isFriendRequestReceived = incomingFriendRequests
-    .map(u => u.id)
-    .includes(user?.id)
-  const isFriend = friends.map(u => u.id).includes(user?.id)
-  const isBlocking = blocking.map(u => u.id).includes(user?.id)
-  const isBlocked = blockedBy.map(u => u.id).includes(user?.id)
+  const close = useCallback(() => {
+    setOpen(false)
+    // setTimeout(() => setUserId(null), 300)
+  }, [setOpen])
 
   const buttons = useMemo(() => {
-    if (isFriendRequestReceived)
+    if (user?.relationshipStatus === RelationshipStatus.FriendRequestIncoming)
       return (
         <>
-          <button className={buttonClass(true)}>
+          <button
+            className={buttonClass(true)}
+            onClick={() =>
+              answerFriendRequest({
+                variables: { input: { userId, accept: true } }
+              })
+            }
+          >
             {t('user.context.accept')}
           </button>
-          <button className={buttonClass(false)}>
+          <button
+            className={buttonClass(false)}
+            onClick={() =>
+              answerFriendRequest({
+                variables: { input: { userId, accept: true } }
+              })
+            }
+          >
             {t('user.context.ignore')}
           </button>
         </>
       )
-    else if (isFriendRequestSent)
+    else if (
+      user?.relationshipStatus === RelationshipStatus.FriendRequestOutgoing
+    )
       return (
-        <button className={buttonClass(false)}>
+        <button
+          className={buttonClass(false)}
+          onClick={() =>
+            deleteFriendRequest({
+              variables: { input: { userId } },
+              optimisticResponse: {
+                deleteFriendRequest: {
+                  ...user,
+                  relationshipStatus: RelationshipStatus.None
+                }
+              }
+            })
+          }
+        >
           {t('user.context.revoke')}
         </button>
       )
-    else if (isFriend)
+    else if (user?.relationshipStatus === RelationshipStatus.Friends)
       return (
         <Link
-          to={`/me/dm/${user.id}`}
+          to={`/me/dm/${userId}`}
           onClick={() => close()}
           className={buttonClass(true)}
         >
           {t('user.context.sendMessage')}
         </Link>
       )
-    else if (isBlocking)
+    else if (user?.relationshipStatus === RelationshipStatus.Blocking)
       return (
-        <button className={buttonClass(false)}>
+        <button
+          className={buttonClass(false)}
+          onClick={() =>
+            unblockUser({
+              variables: { input: { userId } }
+            })
+          }
+        >
           {t('user.context.unblock')}
         </button>
       )
-    else if (isBlocked)
+    else if (user?.relationshipStatus === RelationshipStatus.Blocked)
       return (
         <button disabled className={buttonClass(false)}>
           {t('user.context.blockingYou')}
@@ -141,22 +188,33 @@ export default memo(function UserDialog() {
       )
     else
       return (
-        <button className={buttonClass(true)}>
+        <button
+          className={buttonClass(true)}
+          onClick={() =>
+            createFriendRequest({
+              variables: { input: { userId } },
+              optimisticResponse: {
+                createFriendRequest: {
+                  ...user,
+                  relationshipStatus: RelationshipStatus.FriendRequestOutgoing
+                }
+              }
+            })
+          }
+        >
           {t('user.context.sendFriendRequest')}
         </button>
       )
   }, [
-    isFriendRequestSent,
-    isFriendRequestReceived,
-    isFriend,
-    isBlocking,
-    isBlocked
+    user,
+    t,
+    userId,
+    answerFriendRequest,
+    deleteFriendRequest,
+    close,
+    unblockUser,
+    createFriendRequest
   ])
-
-  const close = () => {
-    setOpen(false)
-    setTimeout(() => setUser(null), 300)
-  }
 
   return (
     <Dialog closeOnOverlayClick isOpen={open} close={close}>
@@ -179,12 +237,22 @@ export default memo(function UserDialog() {
               </span>
             </div>
 
-            <div className="ml-auto" />
-            <div className="flex items-center space-x-2.5 h-8">{buttons}</div>
-
-            <button className="h-8 cursor-pointer highlightable ml-3 focus:outline-none">
-              <IconDotsVertical className="w-5 h-5" />
-            </button>
+            {userId !== currentUser.id && (
+              <>
+                <div className="ml-auto" />
+                <div className="flex items-center space-x-2.5 h-8">
+                  {buttons}
+                </div>
+                <ContextMenuTrigger
+                  data={{ type: ContextMenuType.User, user }}
+                  leftClick
+                >
+                  <button className="h-8 cursor-pointer highlightable ml-3 focus:outline-none">
+                    <IconDotsVertical className="w-5 h-5" />
+                  </button>
+                </ContextMenuTrigger>
+              </>
+            )}
           </div>
         </div>
         <div className="px-5 dark:border-gray-775 border-t h-14 flex items-center space-x-10">
@@ -234,7 +302,7 @@ export default memo(function UserDialog() {
               <div
                 key={friend.id}
                 className={itemClass}
-                onClick={() => setUser(friend)}
+                onClick={() => setUserId(friend.id)}
               >
                 <UserAvatar
                   user={friend}

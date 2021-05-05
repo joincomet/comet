@@ -1,0 +1,3 @@
+build server docker image ------------------------------v
+build web ----------------------------------------------v
+build web electron -> build electron app/publish draft -> deploy server -> deploy to gh-pages, publish electron app

@@ -10,7 +10,7 @@ export default function FriendListItemBase({ friend, children }) {
   return (
     <div className="group px-2 dark:hover:bg-gray-725 rounded-lg">
       <div
-        onClick={() => push(`/dm/${friend.id}`)}
+        onClick={() => push(`/me/dm/${friend.id}`)}
         className="relative h-16 py-2 flex items-center cursor-pointer group border-t dark:border-gray-700"
       >
         <div className="flex">

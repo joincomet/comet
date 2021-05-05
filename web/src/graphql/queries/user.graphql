@@ -16,4 +16,3 @@ query user($id: ID) @live {
     }
   }
 }
-

@@ -101,12 +101,12 @@ export default function buildUseContextMenuTrigger(
 
     const triggerBind = {
       onContextMenu: handleContextMenu,
-      onClick: handleMouseClick,
+      onClick: handleMouseClick
       // onMouseDown: handleMouseDown,
       // onMouseUp: handleMouseUp,
       // onTouchStart: handleTouchstart,
       // onTouchEnd: handleTouchEnd,
-      onMouseOut: handleMouseOut
+      // onMouseOut: handleMouseOut
     }
 
     return [triggerBind]

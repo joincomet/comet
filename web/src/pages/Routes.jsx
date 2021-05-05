@@ -8,7 +8,6 @@ import PrivateRoutes from '@/pages/PrivateRoutes'
 import { Helmet } from 'react-helmet-async'
 import LoadingScreen from '@/pages/LoadingScreen'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { wsStatus } from '@/graphql/WebSocketLink'
 
 export default function Routes() {
   const [user, userLoading] = useCurrentUser()

@@ -8,6 +8,7 @@ import { useSetHomePage } from '@/hooks/useSetHomePage'
 import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'
 import { useUserRelationships } from '@/hooks/useUserRelationships'
+import { RelationshipStatus } from '@/graphql/hooks'
 
 const label = ctl(`
   px-2
@@ -59,10 +60,15 @@ export default function FriendsPage() {
             <div className={label}>
               Pending Requests - {friendRequests.length}
             </div>
-            {friendRequests.map(fr => (
+            {friendRequests.map(user => (
               <FriendRequestListItem
-                request={fr}
-                key={`${fr.isOutgoing ? 'outgoing' : 'incoming'}-${fr.user.id}`}
+                user={user}
+                key={`${
+                  user.relationshipStatus ===
+                  RelationshipStatus.FriendRequestOutgoing
+                    ? 'outgoing'
+                    : 'incoming'
+                }-${user.id}`}
               />
             ))}
           </>

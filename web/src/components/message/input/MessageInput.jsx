@@ -208,13 +208,21 @@ export default function MessageInput({
     userId: user?.id
   }
 
-  const pasteListener = useCallback(e => {
-    const files = e.clipboardData.files
-    if (files && files.length > 0) {
-      setFiles(files)
-      e.preventDefault()
-    }
-  }, [])
+  const pasteListener = useCallback(
+    e => {
+      const files = e.clipboardData.files
+      if (files && files.length > 0) {
+        setFiles(files)
+        e.preventDefault()
+      } else {
+        const text = e.clipboardData.getData('text')
+        if (text) {
+          editor?.commands.focus()
+        }
+      }
+    },
+    [editor]
+  )
 
   useEffect(() => {
     document.body.addEventListener('paste', pasteListener)

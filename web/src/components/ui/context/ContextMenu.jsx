@@ -8,7 +8,6 @@ import CommentContextMenu from '@/components/comment/CommentContextMenu'
 import ServerContextMenu from '@/components/server/ServerContextMenu'
 import ChannelContextMenu from '@/components/channel/ChannelContextMenu'
 import FolderContextMenu from '@/components/folder/FolderContextMenu'
-import { useEffect } from 'react'
 import { getOS } from '@/utils/getOS'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import ContextMenuDivider from '@/components/ui/context/ContextMenuDivider'
@@ -33,6 +32,9 @@ export default function ContextMenu({
 
   const copyToClipboard = useCopyToClipboard()[1]
 
+  const url = data?.href ? new URL(data.href) : null
+  const isCometLink = url && url.origin === window.location.origin
+
   const os = getOS()
   const isMac = os === 'Mac OS'
 
@@ -43,6 +45,10 @@ export default function ContextMenu({
       role={role}
       tabIndex={tabIndex}
       className={className}
+      onMouseDown={e => {
+        e.stopPropagation()
+        e.preventDefault()
+      }}
     >
       {!!window.getSelection().toString() && (
         <>
@@ -101,7 +107,7 @@ export default function ContextMenu({
         />
       )}
 
-      {!!data?.href && (
+      {!!data?.href && !isCometLink && (
         <>
           <ContextMenuDivider />
           <ContextMenuSection>

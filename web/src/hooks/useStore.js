@@ -37,8 +37,9 @@ export const useStore = create((set, get) => ({
   exploreCategory: null,
   setExploreCategory: exploreCategory => set({ exploreCategory }),
 
-  dialogUser: null,
-  setDialogUser: user => set({ dialogUser: user, userDialogOpen: !!user }),
+  dialogUserId: null,
+  setDialogUserId: userId =>
+    set({ dialogUserId: userId, userDialogOpen: !!userId }),
   userDialogOpen: false,
   setUserDialogOpen: open => set({ userDialogOpen: open }),
 
@@ -46,8 +47,5 @@ export const useStore = create((set, get) => ({
   setFolderSort: sort => set({ folderSort: sort }),
 
   updateAvailable: false,
-  setUpdateAvailable: updateAvailable => set({ updateAvailable }),
-
-  initialTime: null,
-  setInitialTime: initialTime => set({ initialTime })
+  setUpdateAvailable: updateAvailable => set({ updateAvailable })
 }))

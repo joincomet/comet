@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Relationship, RelationshipStatus, User } from '@/entity'
+import { RelationshipStatus, User } from '@/entity'
 
 @InputType()
 export class DeleteFriendRequestInput {

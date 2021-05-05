@@ -1,6 +1,10 @@
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { ServerPermission } from '@/graphql/hooks'
+import {
+  RelationshipStatus,
+  ServerPermission,
+  useRemoveFriendMutation
+} from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
@@ -41,10 +45,9 @@ export default function UserContextMenu({
   const [banUser] = useBanUserFromServerMutation()
   const [kickUser] = useKickUserFromServerMutation()
   const [createFriendRequest] = useCreateFriendRequestMutation()
+  const [removeFriend] = useRemoveFriendMutation()
 
-  const isFriend = false // friends.map(f => f.id).includes(user?.id)
-  const hasSentFriendRequest = false // outgoingFriendRequests.includes(user?.id)
-  const setDialogUser = useStore(s => s.setDialogUser)
+  const setDialogUserId = useStore(s => s.setDialogUserId)
   const { push } = useHistory()
 
   if (!user) return null
@@ -54,7 +57,7 @@ export default function UserContextMenu({
         <ContextMenuItem
           label={t('user.context.viewProfile')}
           onClick={() => {
-            setDialogUser(user)
+            setDialogUserId(user.id)
           }}
         />
         <ContextMenuItem
@@ -82,8 +85,22 @@ export default function UserContextMenu({
         )}
         {user.id !== currentUser.id ? (
           <>
-            {isFriend ? (
-              <ContextMenuItem label={t('user.context.removeFriend')} red />
+            {user.relationshipStatus === RelationshipStatus.Friends ? (
+              <ContextMenuItem
+                label={t('user.context.removeFriend')}
+                red
+                onClick={() =>
+                  removeFriend({
+                    variables: { input: { userId: user.id } },
+                    optimisticResponse: {
+                      removeFriend: {
+                        ...user,
+                        relationshipStatus: RelationshipStatus.None
+                      }
+                    }
+                  })
+                }
+              />
             ) : (
               <ContextMenuItem
                 label={t('user.context.addFriend')}

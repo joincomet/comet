@@ -18,7 +18,6 @@ import { useUpdateFolderMutation } from '@/graphql/hooks'
 
 export default function FolderInfoCard({ folder }) {
   const { t } = useTranslation()
-  const setDialogUser = useStore(s => s.setDialogUser)
 
   const folderIcon = useMemo(() => {
     if (!folder || folder.avatarUrl) return null

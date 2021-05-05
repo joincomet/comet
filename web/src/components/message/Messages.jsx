@@ -8,13 +8,11 @@ import MessageInput from '@/components/message/input/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import MessagesStart from '@/components/message/MessagesStart'
 import { usePrevious } from 'react-use'
-import { useLocation } from 'react-router-dom'
 import {
   useReadChannelMutation,
   useReadDmMutation,
   useReadGroupMutation
 } from '@/graphql/hooks'
-import { useStore } from '@/hooks/useStore'
 
 const PREPEND_OFFSET = 10 ** 7
 
@@ -22,10 +20,6 @@ export default function Messages({ channel, user, group, users, serverUsers }) {
   const [readDm] = useReadDmMutation()
   const [readGroup] = useReadGroupMutation()
   const [readChannel] = useReadChannelMutation()
-  const setInitialTime = useStore(s => s.setInitialTime)
-
-  const { pathname } = useLocation()
-  useEffect(() => setInitialTime(new Date()), [pathname])
 
   const virtuoso = useRef(null)
 
@@ -69,12 +63,8 @@ export default function Messages({ channel, user, group, users, serverUsers }) {
       return (
         <Message
           message={message}
-          showUser={
-            messageIndex === 0 ||
-            (prevMessage &&
-              (!prevMessage.text ||
-                prevMessage.author.id !== message.author.id))
-          }
+          index={messageIndex}
+          prevMessage={prevMessage}
         />
       )
     },

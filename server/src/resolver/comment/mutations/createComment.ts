@@ -84,21 +84,16 @@ export async function createComment(
   if (parentComment) {
     if (parentComment.author.user !== user) {
       reply = em.create(Reply, {
-        post,
         comment,
-        parentComment,
-        toUser: parentComment.author,
-        fromUser: user
+        user: parentComment.author.user
       })
     }
   } else {
-    await em.populate(post, ['author'])
+    await em.populate(post, ['author.user'])
     if (post.author.user !== user) {
       reply = em.create(Reply, {
-        post,
         comment,
-        toUser: post.author,
-        fromUser: user
+        user: post.author.user
       })
     }
   }

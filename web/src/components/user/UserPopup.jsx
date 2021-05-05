@@ -10,7 +10,7 @@ export default function UserPopup({
   children,
   placement = 'right'
 }) {
-  const setDialogUser = useStore(s => s.setDialogUser)
+  const setDialogUserId = useStore(s => s.setDialogUserId)
   return (
     <>
       <Popup
@@ -31,7 +31,7 @@ export default function UserPopup({
                 <div
                   onClick={() => {
                     close()
-                    setDialogUser(user)
+                    setDialogUserId(user.id)
                   }}
                   className="cursor-pointer bg-black bg-opacity-50 transition rounded-full absolute whitespace-nowrap inset-0 flex items-center justify-center text-9 uppercase tracking-widest font-semibold opacity-0 group-hover:opacity-100"
                 >

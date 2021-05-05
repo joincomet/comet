@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import {
   MessagesDocument,
+  MessageType,
   useMessageChangedSubscription
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { createNotification } from '@/utils/createNotification'
 
 export const useMessagesSubscriptions = () => {
   const [currentUser] = useCurrentUser()
@@ -68,11 +70,7 @@ export const useMessagesSubscriptions = () => {
             })
           }
 
-          if (
-            Notification.permission === 'granted' &&
-            message.author.id !== currentUser.id &&
-            message.text
-          ) {
+          if (message.author.id !== currentUser.id) {
             if (
               (!window.electron || (window.electron && windowOpen)) &&
               ((currentGroupId &&
@@ -87,30 +85,42 @@ export const useMessagesSubscriptions = () => {
             )
               return
 
-            let title = `@${message.author.name}`
-            if (message.channel) title += ` · #${message.channel.name}`
-            if (message.group) title += ` · #${message.group.displayName}`
+            if (message.type === MessageType.Normal && message.text) {
+              let title = `@${message.author.name}`
+              if (message.channel) title += ` · #${message.channel.name}`
+              if (message.group) title += ` · #${message.group.displayName}`
 
-            const notification = new Notification(title, {
-              body: message.text,
-              icon:
-                message.author.avatarUrl ??
-                `${window.electron ? '.' : ''}/icons/icon.png`,
-              timestamp: message.createdAt,
-              silent: true
-            })
-            notification.onclick = () => {
-              if (messageUserId) push(`/me/dm/${messageUserId}`)
-              else if (messageGroupId) push(`/me/group/${messageGroupId}`)
-              else if (messageChannelId && messageServerId)
-                push(`/server/${messageServerId}/channel/${messageChannelId}`)
-              if (window.electron) window.electron.show()
+              createNotification({
+                title,
+                body: message.text,
+                icon:
+                  message.author.avatarUrl ??
+                  `${window.electron ? '.' : ''}/icons/icon.png`,
+                timestamp: message.createdAt,
+                onClick: () => {
+                  if (messageUserId) push(`/me/dm/${messageUserId}`)
+                  else if (messageGroupId) push(`/me/group/${messageGroupId}`)
+                  else if (messageChannelId && messageServerId)
+                    push(
+                      `/server/${messageServerId}/channel/${messageChannelId}`
+                    )
+                  if (window.electron) window.electron.show()
+                }
+              })
+            } else if (message.type === MessageType.FriendRequestReceived) {
+              createNotification({
+                title: `@${message.author.name}`,
+                body: 'Sent a friend request',
+                icon:
+                  message.author.avatarUrl ??
+                  `${window.electron ? '.' : ''}/icons/icon.png`,
+                timestamp: message.createdAt,
+                onClick: () => {
+                  push(`/me/friends`)
+                  if (window.electron) window.electron.show()
+                }
+              })
             }
-            const audio = new Audio(
-              `${window.electron ? '.' : ''}/notification.mp3`
-            )
-            audio.volume = 0.5
-            audio.play()
           }
         } else if (deletedMessage) {
           message = deletedMessage

@@ -33,7 +33,7 @@ export default function MessageImageDialog({ message }) {
             <div className="pt-1">
               <a
                 href={message.image.originalUrl}
-                className="hover:underline cursor-pointer text-mid font-semibold text-13"
+                className="hover:underline cursor-pointer text-mid font-semibold text-13 focus:outline-none"
                 target="_blank"
                 rel="noreferrer noopener"
                 onClick={e => e.stopPropagation()}

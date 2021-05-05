@@ -405,6 +405,7 @@ export type MessageChangedResponse = {
 };
 
 export enum MessageType {
+  FriendRequestReceived = 'FriendRequestReceived',
   Join = 'Join',
   Left = 'Left',
   Normal = 'Normal'
@@ -2178,7 +2179,17 @@ export type CreateFriendRequestMutation = (
   { __typename?: 'Mutation' }
   & { createFriendRequest: (
     { __typename?: 'User' }
-    & RelatedUserFragment
+    & { folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )>, relatedUsers: Array<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, servers: Array<(
+      { __typename?: 'Server' }
+      & Pick<Server, 'nickname' | 'id' | 'avatarUrl' | 'name' | 'initials'>
+    )> }
+    & UserFragment
   ) }
 );
 
@@ -2191,7 +2202,17 @@ export type DeleteFriendRequestMutation = (
   { __typename?: 'Mutation' }
   & { deleteFriendRequest: (
     { __typename?: 'User' }
-    & RelatedUserFragment
+    & { folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )>, relatedUsers: Array<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, servers: Array<(
+      { __typename?: 'Server' }
+      & Pick<Server, 'nickname' | 'id' | 'avatarUrl' | 'name' | 'initials'>
+    )> }
+    & UserFragment
   ) }
 );
 
@@ -4690,10 +4711,24 @@ export type UnpinPostMutationOptions = Apollo.BaseMutationOptions<UnpinPostMutat
 export const CreateFriendRequestDocument = gql`
     mutation createFriendRequest($input: CreateFriendRequestInput!) {
   createFriendRequest(input: $input) {
-    ...RelatedUser
+    ...User
+    folders {
+      ...Folder
+    }
+    relatedUsers {
+      ...User
+    }
+    servers {
+      nickname
+      id
+      avatarUrl
+      name
+      initials
+    }
   }
 }
-    ${RelatedUserFragmentDoc}`;
+    ${UserFragmentDoc}
+${FolderFragmentDoc}`;
 export type CreateFriendRequestMutationFn = Apollo.MutationFunction<CreateFriendRequestMutation, CreateFriendRequestMutationVariables>;
 
 /**
@@ -4723,10 +4758,24 @@ export type CreateFriendRequestMutationOptions = Apollo.BaseMutationOptions<Crea
 export const DeleteFriendRequestDocument = gql`
     mutation deleteFriendRequest($input: DeleteFriendRequestInput!) {
   deleteFriendRequest(input: $input) {
-    ...RelatedUser
+    ...User
+    folders {
+      ...Folder
+    }
+    relatedUsers {
+      ...User
+    }
+    servers {
+      nickname
+      id
+      avatarUrl
+      name
+      initials
+    }
   }
 }
-    ${RelatedUserFragmentDoc}`;
+    ${UserFragmentDoc}
+${FolderFragmentDoc}`;
 export type DeleteFriendRequestMutationFn = Apollo.MutationFunction<DeleteFriendRequestMutation, DeleteFriendRequestMutationVariables>;
 
 /**

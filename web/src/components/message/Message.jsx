@@ -11,7 +11,7 @@ import MessageImageDialog from '@/components/message/MessageImageDialog'
 import PostEmbed from '@/components/post/PostEmbed'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
-export default memo(function Message({ showUser, message }) {
+export default memo(function Message({ index, message, prevMessage }) {
   const [currentUser] = useCurrentUser()
   const isMentioned =
     message.isEveryoneMentioned ||
@@ -28,9 +28,17 @@ export default memo(function Message({ showUser, message }) {
     [message]
   )
 
+  const showUser =
+    index === 0 ||
+    (prevMessage &&
+      (!prevMessage.text || prevMessage.author.id !== message.author.id))
+
   if (message.type === 'Join') {
     return (
-      <ContextMenuTrigger data={{ type: ContextMenuType.Message, message }}>
+      <ContextMenuTrigger
+        className={prevMessage?.text ? 'pt-4' : ''}
+        data={{ type: ContextMenuType.Message, message }}
+      >
         <div className="flex dark:hover:bg-gray-775 py-1 px-4">
           <div className="w-10 flex justify-center">
             <IconUserJoin className="w-5 h-5 text-green-500" />
@@ -65,7 +73,7 @@ export default memo(function Message({ showUser, message }) {
       <ContextMenuTrigger data={{ type: ContextMenuType.Message, message }}>
         <div className={`flex py-1 px-4 dark:hover:bg-gray-775 group relative`}>
           {isMentioned && (
-            <div className="bg-green-600 group-hover:bg-green-300 group-hover:bg-opacity-10 bg-opacity-10 absolute inset-0 pointer-events-none border-l-2 border-green-500" />
+            <div className="bg-gray-500 group-hover:bg-opacity-30 bg-opacity-10 absolute inset-0 pointer-events-none border-l-2 border-gray-500" />
           )}
 
           {showUser ? (

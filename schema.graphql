@@ -389,6 +389,7 @@ type MessageChangedResponse {
 }
 
 enum MessageType {
+  FriendRequestReceived
   Join
   Left
   Normal

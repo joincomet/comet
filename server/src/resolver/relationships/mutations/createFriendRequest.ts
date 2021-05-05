@@ -1,6 +1,8 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Relationship, RelationshipStatus, User } from '@/entity'
+import { Message, MessageType, RelationshipStatus, User } from '@/entity'
+import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+import { Publisher } from 'type-graphql/dist/interfaces/Publisher'
 
 @InputType()
 export class CreateFriendRequestInput {
@@ -10,10 +12,11 @@ export class CreateFriendRequestInput {
 
 export async function createFriendRequest(
   { em, userId: currentUserId, liveQueryStore }: Context,
-  { userId }: CreateFriendRequestInput
+  { userId }: CreateFriendRequestInput,
+  notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<User> {
-  const user = await em.findOneOrFail(User, currentUserId)
-  const [myData, theirData] = await user.getFriendData(em, userId)
+  const currentUser = await em.findOneOrFail(User, currentUserId)
+  const [myData, theirData] = await currentUser.getFriendData(em, userId)
   if (
     !(
       myData.status === RelationshipStatus.None &&
@@ -25,5 +28,12 @@ export async function createFriendRequest(
   theirData.status = RelationshipStatus.FriendRequestIncoming
   await em.persistAndFlush([myData, theirData])
   liveQueryStore.invalidate(`User:${userId}`)
+  const message = em.create(Message, {
+    type: MessageType.FriendRequestReceived,
+    toUser: userId,
+    author: currentUser
+  })
+  await em.persistAndFlush(message)
+  await notifyMessageChanged({ id: message.id, type: ChangeType.Added })
   return myData.user
 }
