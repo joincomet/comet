@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom'
 
 import './locales/i18n'
 
+import './styles/fonts.css'
 import './styles/index.css'
 import './styles/app.css'
 import './styles/tippy.css'

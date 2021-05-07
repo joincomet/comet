@@ -6,7 +6,7 @@ import UserAvatar from '@/components/user/UserAvatar'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import ServerPopup from '@/components/server/ServerPopup'
 import UserPopup from '@/components/user/UserPopup'
-import { calendarDate } from '@/utils/timeUtils'
+import { calendarDate, shortDate } from '@/utils/timeUtils'
 import {
   IconChat,
   IconChevronDown,
@@ -14,8 +14,10 @@ import {
   IconChevrownRight,
   IconChevrownUp,
   IconDotsHorizontal,
+  IconDotsVertical,
   IconLinkWeb,
   IconText,
+  IconUserToServerArrow,
   IconVote
 } from '@/components/ui/icons/Icons'
 import { useTogglePostVote } from '@/components/post/useTogglePostVote'
@@ -68,7 +70,7 @@ export default memo(function Post({
         style={{ opacity }}
         className={`${className} cursor-pointer relative group transition hover:shadow dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
       >
-        <div className="absolute top-3 right-3 flex items-center">
+        {/*<div className="absolute top-3 right-3 flex items-center">
           {post.linkMetadata?.logo && (
             <div
               className="h-6 w-6 rounded-full transform transition opacity-50 group-hover:opacity-100 group-hover:scale-105 group-hover:shadow-md dark:bg-gray-725 bg-contain bg-center"
@@ -85,11 +87,11 @@ export default memo(function Post({
               #{index + 1}
             </div>
           )}
-        </div>
+        </div>*/}
 
         {!isPostPage && (
           <div
-            className="w-26 flex-shrink-0 rounded dark:bg-gray-700 mr-3 flex items-center justify-center bg-center bg-cover bg-no-repeat"
+            className="w-26 h-18 rounded dark:bg-gray-700 mr-3 flex items-center justify-center bg-center bg-cover bg-no-repeat"
             style={
               post.thumbnailUrl
                 ? { backgroundImage: `url(${post.thumbnailUrl})` }
@@ -103,7 +105,7 @@ export default memo(function Post({
           </div>
         )}
 
-        <div onClick={onClick}>
+        {/*<div onClick={onClick}>
           <ContextMenuTrigger
             data={{ type: ContextMenuType.User, user: post.author?.user }}
           >
@@ -115,35 +117,12 @@ export default memo(function Post({
               <UserAvatar user={post.author?.user} size={7} />
             </UserPopup>
           </ContextMenuTrigger>
-        </div>
+        </div>*/}
 
-        <div className="pl-3 pr-16 flex-grow">
-          <div className="flex items-end pb-1">
-            <div onClick={onClick}>
-              <ContextMenuTrigger
-                data={{ type: ContextMenuType.User, user: post.author?.user }}
-              >
-                <UserPopup user={post.author}>
-                  <div
-                    className="hover:underline cursor-pointer text-secondary text-sm font-medium leading-none"
-                    style={{ color: post.author?.color }}
-                  >
-                    {post.author.name}
-                  </div>
-                </UserPopup>
-              </ContextMenuTrigger>
-            </div>
-
-            <div className="text-11 text-mid font-medium pl-2 leading-none">
-              {calendarDate(post.createdAt)} &middot; {type}
-            </div>
-          </div>
-
-          <Link
-            to={post.relativeUrl}
-            className="text-secondary text-base font-medium"
-          >
+        <div className="pr-3 py-0.5 flex-grow flex flex-col">
+          <Link to={post.relativeUrl} className="text-secondary font-medium">
             {post.title}
+            <span className="text-xs text-mid">&nbsp;&nbsp;{type}</span>
           </Link>
 
           {isPostPage && type && (
@@ -240,7 +219,59 @@ export default memo(function Post({
             </div>
           )}
 
-          <div className="flex items-center pt-2">
+          <div className="flex items-center pt-2 mt-auto">
+            <ContextMenuTrigger
+              data={{ type: ContextMenuType.User, user: post.author?.user }}
+            >
+              <UserPopup user={post.author}>
+                <UserAvatar user={post.author.user} size={5} />
+              </UserPopup>
+            </ContextMenuTrigger>
+
+            <ContextMenuTrigger
+              data={{ type: ContextMenuType.User, user: post.author?.user }}
+            >
+              <UserPopup user={post.author}>
+                <div
+                  className="ml-2 hover:underline cursor-pointer text-tertiary text-xs font-medium leading-none"
+                  style={{ color: post.author?.color }}
+                >
+                  {post.author.name}
+                </div>
+              </UserPopup>
+            </ContextMenuTrigger>
+
+            {showServerName && (
+              <div className="ml-1 flex items-center" onClick={onClick}>
+                <IconUserToServerArrow className="w-4.5 h-4.5 text-mid mr-1" />
+                <Link
+                  to={`/server/${post.server.id}`}
+                  className="flex items-center"
+                >
+                  <ServerAvatar
+                    server={post.server}
+                    size={5}
+                    className="dark:bg-gray-750 rounded-full"
+                  />
+                  <span className="ml-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    {post.server.name}
+                  </span>
+                </Link>
+                <div className="text-xs text-mid font-medium">
+                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;{shortDate(post.createdAt)}
+                </div>
+              </div>
+            )}
+
+            <div
+              className={`ml-auto text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+            >
+              <IconChat className="w-5 h-5" />
+              <div className="ml-2 text-xs font-medium">
+                {post.commentCount}
+              </div>
+            </div>
+
             <div
               onClick={e => {
                 e.preventDefault()
@@ -250,7 +281,7 @@ export default memo(function Post({
                 post.isVoted
                   ? 'text-red-400'
                   : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-              } flex items-center cursor-pointer`}
+              } flex items-center cursor-pointer ml-6`}
             >
               <IconVote className="w-4 h-4" />
               <div className="ml-2 text-xs font-medium">{post.voteCount}</div>
@@ -261,15 +292,6 @@ export default memo(function Post({
               <IconChevronDown className="w-5 h-5 text-blue-400" />*/}
             </div>
 
-            <div
-              className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
-            >
-              <IconChat className="w-5 h-5" />
-              <div className="ml-2 text-xs font-medium">
-                {post.commentCount}
-              </div>
-            </div>
-
             <ContextMenuTrigger
               data={{ type: ContextMenuType.Post, post }}
               leftClick
@@ -277,26 +299,9 @@ export default memo(function Post({
               <div
                 className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
               >
-                <IconDotsHorizontal className="w-5 h-5" />
+                <IconDotsVertical className="text-disabled w-4 h-4" />
               </div>
             </ContextMenuTrigger>
-
-            {showServerName && (
-              <div className="ml-4 flex items-center" onClick={onClick}>
-                <ServerPopup server={post.server}>
-                  <ServerAvatar
-                    server={post.server}
-                    size={5}
-                    className="dark:bg-gray-750 rounded-full"
-                  />
-                </ServerPopup>
-                <ServerPopup server={post.server}>
-                  <span className="ml-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                    {post.server.name}
-                  </span>
-                </ServerPopup>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -32,7 +32,7 @@
 		"@graphql-codegen/typescript": "^1.22.0",
 		"@graphql-codegen/typescript-operations": "^1.17.16",
 		"@graphql-codegen/typescript-react-apollo": "^2.2.4",
-		"@types/node": "^15.0.1",
+		"@types/node": "^15.0.2",
 		"@typescript-eslint/eslint-plugin": "^4.22.1",
 		"@typescript-eslint/parser": "^4.22.1",
 		"concurrently": "^6.0.2",

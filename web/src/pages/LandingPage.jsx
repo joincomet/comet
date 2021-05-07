@@ -72,7 +72,7 @@ export default function LandingPage() {
         <div
           style={{
             backgroundImage:
-              'radial-gradient(ellipse at top , #18181B 0%,  #27272A 95%)'
+              'radial-gradient(ellipse at top , #151821 0%,  #232831 95%)'
           }}
           className="overflow-hidden py-64 w-full relative"
         >

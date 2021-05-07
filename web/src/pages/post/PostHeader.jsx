@@ -11,10 +11,10 @@ export default function PostHeader({ post }) {
   return (
     <header
       id="header"
-      className={`h-12 min-h-[3rem] items-center bg-white dark:bg-gray-750 border-b dark:border-gray-800 shadow flex`}
+      className={`h-12 min-h-[3rem] items-center bg-white dark:bg-gray-750 border-b dark:border-gray-800 shadow flex items-center`}
     >
       <div
-        className={`flex items-center font-semibold text-base text-primary pl-4 pr-4`}
+        className={`flex items-center font-semibold text-base text-primary pl-4`}
       >
         <div
           className="highlightable mr-3 cursor-pointer"
@@ -28,12 +28,10 @@ export default function PostHeader({ post }) {
         >
           <IconBack className="w-5 h-5" />
         </div>
-        {post?.title}
+        <span className="line-clamp-1">{post?.title}</span>
       </div>
-      <div className="flex-grow flex items-center min-w-0 pr-4">
-        <div className="ml-auto pl-6">
-          <ShowUsersButton />
-        </div>
+      <div className="ml-auto pl-6 pr-4">
+        <ShowUsersButton />
       </div>
       <div className="flex w-60 min-w-[15rem] pr-4">
         <HeaderSearchBar />

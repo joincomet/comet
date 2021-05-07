@@ -12,7 +12,7 @@ export default function AuthLayout({ children }) {
       className="h-full flex flex-grow items-center justify-center relative overflow-x-hidden overflow-y-hidden"
       style={{
         backgroundImage:
-          'radial-gradient(ellipse at top , #18181B 0%,  #27272A 95%)'
+          'radial-gradient(ellipse at top , #151821 0%,  #232831 95%)'
       }}
     >
       {children}
