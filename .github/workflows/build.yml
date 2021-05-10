@@ -44,6 +44,7 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
   web:
     runs-on: ubuntu-latest
     steps:
@@ -54,15 +55,41 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-      - name: Restore yarn workspaces
-        id: yarn-cache
-        uses: actions/cache@master
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: |
-            node_modules
-            **/node_modules
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn
+      - run: yarn run build:web
+        env:
+          VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist-web
+          path: web/dist/
+
+  web-electron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 15
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn
@@ -72,10 +99,11 @@ jobs:
           ELECTRON: true
       - uses: actions/upload-artifact@v2
         with:
-          name: dist
+          name: dist-electron
           path: electron/dist/
+
   electron:
-    needs: [web]
+    needs: [web-electron]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -90,21 +118,19 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-      - name: Restore yarn workspaces
-        id: yarn-cache
-        uses: actions/cache@master
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: |
-            node_modules
-            **/node_modules
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn
       - uses: actions/download-artifact@v2
         with:
-          name: dist
+          name: dist-electron
           path: electron/dist
       - name: Prepare for app notarization
         if: startsWith(matrix.os, 'macos')
@@ -128,8 +154,9 @@ jobs:
           # macOS notarization API key
           API_KEY_ID: ${{ secrets.api_key_id }}
           API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
+
   deploy:
-    needs: [server]
+    needs: [web, electron, server]
     runs-on: ubuntu-latest
     steps:
       - name: Prepare
@@ -157,34 +184,32 @@ jobs:
         run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml
 
   pages:
+    needs: [deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/download-artifact@v2
         with:
-          node-version: 15
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-      - name: Restore yarn workspaces
-        id: yarn-cache
-        uses: actions/cache@master
-        with:
-          path: |
-            node_modules
-            **/node_modules
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn
-      - name: Build
-        run: yarn run build:web
-        env:
-          VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
+          name: dist-web
+          path: web/dist
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4
+        uses: JamesIves/github-pages-deploy-action@4.1.2
         with:
           branch: gh-pages
           folder: web/dist
+
+  release:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get version from ref
+        id: get-version
+        run: |
+          ver=$(echo ${GITHUB_REF/refs\/tags\//} | cut -c 2-)
+          echo ::set-output name=VERSION::$ver
+      - name: Publish release on GitHub
+        uses: test-room-7/action-publish-release-drafts@v0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tag-name: ${{ steps.get-version.outputs.VERSION }}

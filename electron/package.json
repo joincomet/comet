@@ -1,7 +1,7 @@
 {
   "name": "electron",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
@@ -31,8 +31,8 @@
     "typescript": "^4.2.4"
   },
   "devDependencies": {
-    "electron": "12.0.6",
-    "electron-builder": "^22.11.1"
+    "electron": "12.0.7",
+    "electron-builder": "^22.11.2"
   },
   "build": {
     "productName": "Comet",
