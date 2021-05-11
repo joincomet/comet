@@ -82,6 +82,14 @@ export class UserResolver {
     return userUnreadCountLoader.load(user.id)
   }
 
+  @FieldResolver(() => Date, { nullable: true })
+  async lastMessageAt(
+    @Ctx() { loaders: { userLastMessageAtLoader } }: Context,
+    @Root() user: User
+  ): Promise<Date> {
+    return userLastMessageAtLoader.load(user.id)
+  }
+
   @FieldResolver(() => Boolean)
   async showChat(
     @Ctx() { loaders: { userShowChatLoader } }: Context,

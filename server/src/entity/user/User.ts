@@ -1,4 +1,4 @@
-import { Authorized, Field, Int, ObjectType } from 'type-graphql'
+import { Authorized, Field, ObjectType } from 'type-graphql'
 import {
   Collection,
   Entity,
@@ -14,7 +14,6 @@ import {
   Channel,
   ChannelPermission,
   ChannelPermissionFallbacks,
-  ChannelPermissions,
   Folder,
   FolderVisibility,
   Group,
@@ -53,12 +52,14 @@ export class User extends BaseEntity {
   @Authorized('USER')
   @Field(() => GraphQLEmailAddress)
   @Property({ columnType: 'text' })
-  // @Unique()
   email: string
 
   @Field({ nullable: true })
   @Property({ nullable: true })
   lastLoginAt?: Date
+
+  @Field({ nullable: true })
+  lastMessageAt?: Date
 
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })

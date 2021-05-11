@@ -1,19 +1,15 @@
-import { memo, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useDrag } from 'react-dnd'
+import { memo, useEffect, useMemo, useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+import { useDrag, useDragDropManager } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
 import UserAvatar from '@/components/user/UserAvatar'
 import ServerAvatar from '@/components/server/ServerAvatar'
-import ServerPopup from '@/components/server/ServerPopup'
 import UserPopup from '@/components/user/UserPopup'
-import { calendarDate, shortDate } from '@/utils/timeUtils'
+import { shortDate } from '@/utils/timeUtils'
 import {
   IconChat,
-  IconChevronDown,
   IconChevrownLeft,
   IconChevrownRight,
-  IconChevrownUp,
-  IconDotsHorizontal,
   IconDotsVertical,
   IconLinkWeb,
   IconText,
@@ -24,7 +20,6 @@ import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import PostEmbed from '@/components/post/PostEmbed'
-import { HiThumbDown } from 'react-icons/hi'
 
 export default memo(function Post({
   post,
@@ -33,6 +28,8 @@ export default memo(function Post({
   className = '',
   index
 }) {
+  const { push } = useHistory()
+
   const toggleVote = useTogglePostVote(post)
 
   const [{ opacity }, dragRef] = useDrag({
@@ -42,6 +39,19 @@ export default memo(function Post({
       opacity: monitor.isDragging() ? 0.4 : 1
     })
   })
+
+  const dragDropManager = useDragDropManager()
+  const dragging = dragDropManager.getMonitor().isDragging()
+  const [isDragging, setIsDragging] = useState(false)
+  useEffect(() => {
+    console.log({ dragging, isDragging })
+    if (dragging) {
+      setIsDragging(true)
+    } else {
+      const id = setTimeout(() => setIsDragging(false), 300)
+      return () => clearTimeout(id)
+    }
+  }, [dragging])
 
   const type = useMemo(() => {
     if (
@@ -54,7 +64,7 @@ export default memo(function Post({
     else if (post.linkUrl) return post.domain
     else if (post.images?.length === 1) return 'Image'
     else if (post.images?.length > 1) return 'Image Album'
-  }, [post.domain, post.images?.length, post.linkUrl, post.text])
+  }, [post.domain, post.images, post.linkUrl, post.text])
 
   const onClick = e => {
     e.stopPropagation()
@@ -68,7 +78,12 @@ export default memo(function Post({
       <div
         ref={dragRef}
         style={{ opacity }}
-        className={`${className} cursor-pointer relative group transition hover:shadow dark:bg-gray-800 pt-3 px-3 pb-3 rounded flex`}
+        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 pt-3 px-3 pb-3 rounded flex`}
+        onClick={() => {
+          if (!isDragging) {
+            push(post.relativeUrl)
+          }
+        }}
       >
         {/*<div className="absolute top-3 right-3 flex items-center">
           {post.linkMetadata?.logo && (
@@ -104,20 +119,6 @@ export default memo(function Post({
             )}
           </div>
         )}
-
-        {/*<div onClick={onClick}>
-          <ContextMenuTrigger
-            data={{ type: ContextMenuType.User, user: post.author?.user }}
-          >
-            <UserPopup
-              user={post.author?.user}
-              nickname={post.author?.nickname}
-              roles={post.author?.roles}
-            >
-              <UserAvatar user={post.author?.user} size={7} />
-            </UserPopup>
-          </ContextMenuTrigger>
-        </div>*/}
 
         <div className="pr-3 py-0.5 flex-grow flex flex-col">
           <Link to={post.relativeUrl} className="text-secondary font-medium">
@@ -220,88 +221,100 @@ export default memo(function Post({
           )}
 
           <div className="flex items-center pt-2 mt-auto">
-            <ContextMenuTrigger
-              data={{ type: ContextMenuType.User, user: post.author?.user }}
-            >
-              <UserPopup user={post.author}>
-                <UserAvatar user={post.author.user} size={5} />
-              </UserPopup>
-            </ContextMenuTrigger>
-
-            <ContextMenuTrigger
-              data={{ type: ContextMenuType.User, user: post.author?.user }}
-            >
-              <UserPopup user={post.author}>
-                <div
-                  className="ml-2 hover:underline cursor-pointer text-tertiary text-xs font-medium leading-none"
-                  style={{ color: post.author?.color }}
+            <div className="flex items-center" onClick={onClick}>
+              <ContextMenuTrigger
+                data={{ type: ContextMenuType.User, user: post.author?.user }}
+              >
+                <UserPopup
+                  user={post.author?.user}
+                  roles={post.author?.roles}
+                  nickname={post.author?.nickname}
                 >
-                  {post.author.name}
-                </div>
-              </UserPopup>
-            </ContextMenuTrigger>
+                  <UserAvatar user={post.author.user} size={5} />
+                </UserPopup>
+              </ContextMenuTrigger>
 
-            {showServerName && (
-              <div className="ml-1 flex items-center" onClick={onClick}>
-                <IconUserToServerArrow className="w-4.5 h-4.5 text-mid mr-1" />
-                <Link
-                  to={`/server/${post.server.id}`}
-                  className="flex items-center"
+              <ContextMenuTrigger
+                data={{ type: ContextMenuType.User, user: post.author?.user }}
+              >
+                <UserPopup
+                  user={post.author?.user}
+                  roles={post.author?.roles}
+                  nickname={post.author?.nickname}
                 >
-                  <ServerAvatar
-                    server={post.server}
-                    size={5}
-                    className="dark:bg-gray-750 rounded-full"
-                  />
-                  <span className="ml-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                    {post.server.name}
-                  </span>
-                </Link>
-                <div className="text-xs text-mid font-medium">
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;{shortDate(post.createdAt)}
-                </div>
-              </div>
-            )}
+                  <div
+                    className="ml-2 hover:underline cursor-pointer text-tertiary text-xs font-medium leading-none"
+                    style={{ color: post.author?.color }}
+                  >
+                    {post.author.name}
+                  </div>
+                </UserPopup>
+              </ContextMenuTrigger>
 
-            <div
-              className={`ml-auto text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
-            >
-              <IconChat className="w-5 h-5" />
-              <div className="ml-2 text-xs font-medium">
-                {post.commentCount}
-              </div>
+              {showServerName && (
+                <div className="ml-1 flex items-center" onClick={onClick}>
+                  <IconUserToServerArrow className="w-4.5 h-4.5 text-mid mr-1" />
+                  <Link
+                    to={`/server/${post.server.id}`}
+                    className="flex items-center"
+                  >
+                    <ServerAvatar
+                      server={post.server}
+                      size={5}
+                      className="dark:bg-gray-750 rounded-full"
+                    />
+                    <span className="ml-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                      {post.server.name}
+                    </span>
+                  </Link>
+                  <div className="text-xs text-mid font-medium">
+                    &nbsp;&nbsp;&middot;&nbsp;&nbsp;{shortDate(post.createdAt)}
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div
-              onClick={e => {
-                e.preventDefault()
-                toggleVote()
-              }}
-              className={`${
-                post.isVoted
-                  ? 'text-red-400'
-                  : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-              } flex items-center cursor-pointer ml-6`}
-            >
-              <IconVote className="w-4 h-4" />
-              <div className="ml-2 text-xs font-medium">{post.voteCount}</div>
-              {/*<IconChevrownUp className="w-5 h-5" />
+            <div className="flex items-center ml-auto" onClick={onClick}>
+              <div
+                className={`text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+              >
+                <IconChat className="w-5 h-5" />
+                <div className="ml-2 text-xs font-medium">
+                  {post.commentCount}
+                </div>
+              </div>
+
+              <div
+                onClick={e => {
+                  e.preventDefault()
+                  toggleVote()
+                }}
+                className={`${
+                  post.isVoted
+                    ? 'text-red-400'
+                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                } flex items-center cursor-pointer ml-6`}
+              >
+                <IconVote className="w-4 h-4" />
+                <div className="ml-2 text-xs font-medium">{post.voteCount}</div>
+                {/*<IconChevrownUp className="w-5 h-5" />
               <div className="mx-2 text-xs text-blue-400 font-medium">
                 {post.voteCount}
               </div>
               <IconChevronDown className="w-5 h-5 text-blue-400" />*/}
-            </div>
-
-            <ContextMenuTrigger
-              data={{ type: ContextMenuType.Post, post }}
-              leftClick
-            >
-              <div
-                className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
-              >
-                <IconDotsVertical className="text-disabled w-4 h-4" />
               </div>
-            </ContextMenuTrigger>
+
+              <ContextMenuTrigger
+                data={{ type: ContextMenuType.Post, post }}
+                leftClick
+              >
+                <div
+                  className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+                >
+                  <IconDotsVertical className="text-disabled w-4 h-4" />
+                </div>
+              </ContextMenuTrigger>
+            </div>
           </div>
         </div>
       </div>

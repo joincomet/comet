@@ -6,5 +6,8 @@ export const useGroupsAndDms = () => {
   const dms = user?.relatedUsers?.filter(r => r.showChat) ?? []
   return groups
     .concat(dms)
-    .sort((a, b) => a.lastMessageAt.getTime() - b.lastMessageAt.getTime())
+    .sort(
+      (a, b) =>
+        (a.lastMessageAt?.getTime() ?? 0) - (b.lastMessageAt?.getTime() ?? 0)
+    )
 }

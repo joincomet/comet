@@ -52,6 +52,7 @@ export interface Loaders {
   userServersLoader: DataLoader<string, Server[]>
   userUnreadCountLoader: DataLoader<string, number>
   userShowChatLoader: DataLoader<string, boolean>
+  userLastMessageAtLoader: DataLoader<string, Date>
 
   folderFollowingLoader: DataLoader<string, boolean>
   folderOwnerLoader: DataLoader<string, User>

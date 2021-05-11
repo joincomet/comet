@@ -195,6 +195,9 @@ jobs:
         with:
           branch: gh-pages
           folder: web/dist
+          clean: true
+          clean-exclude: |
+            404.html
 
   release:
     needs: [deploy]

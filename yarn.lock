@@ -2624,12 +2624,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ioredis@npm:^4.26.2":
-  version: 4.26.2
-  resolution: "@types/ioredis@npm:4.26.2"
+"@types/ioredis@npm:^4.26.3":
+  version: 4.26.3
+  resolution: "@types/ioredis@npm:4.26.3"
   dependencies:
     "@types/node": "*"
-  checksum: b100013e092100e491848484562c65e2a7a1bdd901886eec1344122e57e9e96f9f3c98888b8e1dd89ded2004e6a3867d9faadcdfe35ad1e361a54f8783d21e2f
+  checksum: 804cd0b14ab778dee7ecf635753af21f25795d82ad13d78e87b9ac89e53633343cd063c63a7d962dd25ed6b8ae1cddbf2f2fb7b47aea8fe351ae4679ea0b2215
   languageName: node
   linkType: hard
 
@@ -2966,12 +2966,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^17.0.3":
-  version: 17.0.3
-  resolution: "@types/react-dom@npm:17.0.3"
+"@types/react-dom@npm:^17.0.4":
+  version: 17.0.4
+  resolution: "@types/react-dom@npm:17.0.4"
   dependencies:
     "@types/react": "*"
-  checksum: 9314c91a985f153591e1e74aef3d63d8b22e098069773f32745bf0733740a49802731761a46da8788a7d3dd2c21346036f12c2c24627630e5a6210b120a650e6
+  checksum: 2c69fc56cbb6231d0725fbcec09386fccd797863b3b67ebe046be0f777f25c0d4a147f3601a3cf62ef45aea1f0af2df74d063c1ccdac18211ec43f5029b233d9
   languageName: node
   linkType: hard
 
@@ -7136,6 +7136,13 @@ __metadata:
   version: 9.0.0
   resolution: "extract-files@npm:9.0.0"
   checksum: 021b10787718a2f81847e58bd5eea3b09d636e8bb3cf281dad2aeeafc439c32f9e7d2353b2b4b30f6a7febf93be9d1edd76706ea56cff6850b3f39e1594e5bb3
+  languageName: node
+  linkType: hard
+
+"extract-files@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "extract-files@npm:10.0.0"
+  checksum: 42260fac5301f114da9fd1a10100ddfc802a8c92b3b3ad06226bddc75523d4063ec1e0155c38ff1afd67967ef4f0075cd726f476224a583dd9b347eb9973855a
   languageName: node
   linkType: hard
 
@@ -12228,14 +12235,14 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.2.14":
-  version: 8.2.14
-  resolution: "postcss@npm:8.2.14"
+"postcss@npm:^8.2.15":
+  version: 8.2.15
+  resolution: "postcss@npm:8.2.15"
   dependencies:
     colorette: ^1.2.2
-    nanoid: ^3.1.22
+    nanoid: ^3.1.23
     source-map: ^0.6.1
-  checksum: 46bcc7c05f2b6b0e22e36af03e0244366871bd5cd9e3ca35e0ba2a87fb9080063322ee1dcef307d6e116fdac7c85941aaebd3755a3c88b4533bb8722b7bba4d2
+  checksum: 2d26bc29dedd7656d1f53fa002374a014a8c2c7b9f1538d0fafadb9eae2494f5b037c87de4390d620f622b31d7f15c8c8d88de2bd682e206104fb44e781737df
   languageName: node
   linkType: hard
 
@@ -13950,7 +13957,7 @@ resolve@^2.0.0-next.3:
     "@types/express": ^4.17.11
     "@types/faker": ^5.5.5
     "@types/graphql-upload": ^8.0.4
-    "@types/ioredis": ^4.26.2
+    "@types/ioredis": ^4.26.3
     "@types/jsonwebtoken": ^8.5.1
     "@types/mime": ^2.0.3
     "@types/sanitize-html": ^2.3.1
@@ -16088,7 +16095,7 @@ typescript@^4.2.4:
     "@tiptap/react": ^2.0.0-beta.33
     "@tiptap/starter-kit": ^2.0.0-beta.51
     "@types/react": ^17.0.5
-    "@types/react-dom": ^17.0.3
+    "@types/react-dom": ^17.0.4
     "@types/react-router-dom": ^5.1.7
     "@types/react-virtualized": ^9.21.11
     "@vitejs/plugin-react-refresh": ^1.3.3
@@ -16099,7 +16106,7 @@ typescript@^4.2.4:
     dayjs-twitter: ^0.4.0
     eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
-    extract-files: ^9.0.0
+    extract-files: ^10.0.0
     framer-motion: ^4.1.13
     fuse.js: ^6.4.6
     graphiql: ^1.4.1
@@ -16109,7 +16116,7 @@ typescript@^4.2.4:
     i18next: ^20.2.2
     i18next-browser-languagedetector: ^6.1.1
     meros: ^1.1.4
-    postcss: ^8.2.14
+    postcss: ^8.2.15
     react: ^17.0.2
     react-contenteditable: ^3.3.5
     react-dnd: ^14.0.2

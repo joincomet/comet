@@ -902,6 +902,7 @@ type User implements BaseEntity {
   isOnline: Boolean!
   isPremium: Boolean!
   lastLoginAt: DateTime
+  lastMessageAt: DateTime
   name: String!
   onlineStatus: OnlineStatus!
   relatedUsers: [User!]!

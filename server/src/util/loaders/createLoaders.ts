@@ -29,6 +29,7 @@ import {
 } from '@/util/loaders/folder'
 import { Loaders } from '@/types'
 import { userShowChatLoader } from '@/util/loaders/user'
+import { userLastMessageAtLoader } from '@/util/loaders/user/UserLastMessageAtLoader'
 
 export function createLoaders(em: EntityManager, userId: string): Loaders {
   return {
@@ -64,6 +65,7 @@ export function createLoaders(em: EntityManager, userId: string): Loaders {
     userServersLoader: userServersLoader(em, userId),
     userUnreadCountLoader: userUnreadCountLoader(em, userId),
     userShowChatLoader: userShowChatLoader(em, userId),
+    userLastMessageAtLoader: userLastMessageAtLoader(em, userId),
 
     folderFollowingLoader: folderFollowingLoader(em, userId),
     folderOwnerLoader: folderOwnerLoader(em),

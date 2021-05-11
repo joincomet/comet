@@ -1378,6 +1378,7 @@ export type User = BaseEntity & {
   isOnline: Scalars['Boolean'];
   isPremium: Scalars['Boolean'];
   lastLoginAt?: Maybe<Scalars['DateTime']>;
+  lastMessageAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   onlineStatus: OnlineStatus;
   relatedUsers: Array<User>;
@@ -1510,7 +1511,7 @@ export type PostFragment = (
 
 export type RelatedUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'showChat' | 'unreadCount'>
+  & Pick<User, 'showChat' | 'unreadCount' | 'lastMessageAt'>
   & UserFragment
 );
 
@@ -3123,6 +3124,7 @@ export const RelatedUserFragmentDoc = gql`
   ...User
   showChat
   unreadCount
+  lastMessageAt
 }
     ${UserFragmentDoc}`;
 export const GroupFragmentDoc = gql`

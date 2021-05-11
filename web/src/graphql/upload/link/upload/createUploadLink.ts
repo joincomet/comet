@@ -142,14 +142,14 @@ export const createUploadLink = (linkOptions: UploadOptions = {}) => {
       form.append('map', JSON.stringify(map))
 
       i = 0
-      files.forEach((paths: any, file: any) => {
+      files.forEach((_: any, file: any) => {
         customFormDataAppendFile(form, ++i, file)
       })
 
       options.body = form
     } else {
       try {
-        ;(options as any).body = serializeFetchParameter(body, 'Payload')
+        options.body = serializeFetchParameter(body, 'Payload')
       } catch (parseError) {
         return fromError(parseError)
       }
