@@ -7,7 +7,6 @@ import {
   IconFormatDivider,
   IconFormatEmoji,
   IconFormatHeading,
-  IconFormatImage,
   IconFormatItalic,
   IconFormatLink,
   IconFormatLinkRemove,
@@ -19,7 +18,7 @@ import {
   IconFormatUnderline
 } from '@/components/ui/icons/Icons'
 import { useEditor, EditorContent } from '@tiptap/react'
-import { defaultExtensions } from '@tiptap/starter-kit'
+import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Underline from '@tiptap/extension-underline'
 import { Spoiler } from './Spoiler'
@@ -28,7 +27,7 @@ import { useEffect } from 'react'
 export default function Editor({ text, setText }) {
   const editor = useEditor({
     extensions: [
-      ...defaultExtensions({
+      StarterKit.configure({
         heading: {
           levels: [2, 3]
         }

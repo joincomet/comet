@@ -1471,7 +1471,7 @@ export type FolderFragment = (
 
 export type GroupFragment = (
   { __typename?: 'Group' }
-  & Pick<Group, 'id' | 'name' | 'displayName' | 'avatarUrl' | 'unreadCount'>
+  & Pick<Group, 'id' | 'name' | 'displayName' | 'avatarUrl' | 'unreadCount' | 'lastMessageAt'>
 );
 
 export type MessageFragment = (
@@ -3134,6 +3134,7 @@ export const GroupFragmentDoc = gql`
   displayName
   avatarUrl
   unreadCount
+  lastMessageAt
 }
     `;
 export const CurrentUserFragmentDoc = gql`

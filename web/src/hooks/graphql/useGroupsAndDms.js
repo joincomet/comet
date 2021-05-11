@@ -8,6 +8,7 @@ export const useGroupsAndDms = () => {
     .concat(dms)
     .sort(
       (a, b) =>
-        (a.lastMessageAt?.getTime() ?? 0) - (b.lastMessageAt?.getTime() ?? 0)
+        (a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0) -
+        (b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0)
     )
 }

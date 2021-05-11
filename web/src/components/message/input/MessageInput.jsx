@@ -13,24 +13,12 @@ import {
   ReactRenderer,
   Extension
 } from '@tiptap/react'
-import { defaultExtensions } from '@tiptap/starter-kit'
+import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Mention } from '@/components/ui/editor/Mention'
 import tippy from 'tippy.js/headless'
 import { MentionList } from '@/components/message/input/MentionList'
-
-const exts = [
-  'doc',
-  'text',
-  'dropCursor',
-  'gapcursor',
-  'paragraph',
-  'history',
-  'code',
-  'codeBlock',
-  'hardBreak'
-]
 
 export default function MessageInput({
   channel,
@@ -51,9 +39,13 @@ export default function MessageInput({
   const editor = useEditor({
     autofocus: true,
     extensions: [
-      ...defaultExtensions().filter(extension =>
-        exts.includes(extension.config.name)
-      ),
+      StarterKit.configure({
+        horizontalRule: false,
+        bulletList: false,
+        orderedList: false,
+        listItem: false,
+        heading: false
+      }),
       Link,
       Placeholder.configure({
         placeholder: `${t('message.message')} ${placeholder}`
@@ -66,7 +58,8 @@ export default function MessageInput({
               const isEmpty = editor.state.doc.textContent.length === 0
               if (!isEmpty) {
                 const pRegex = /^<p>|<\/p>$/gi
-                const brRegex = /^\s*(?:<br\s*\/?\s*>)+|(?:<br\s*\/?\s*>)+\s*$/gi
+                const brRegex =
+                  /^\s*(?:<br\s*\/?\s*>)+|(?:<br\s*\/?\s*>)+\s*$/gi
                 text = text.replace(pRegex, '')
                 text = text.replace(brRegex, '')
                 createMessage({
