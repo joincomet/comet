@@ -10,7 +10,6 @@ export default function ChannelHeader({ channel }) {
       title={`${channel?.name ?? ''}`}
     >
       <div className="ml-auto pl-6 flex items-center space-x-5">
-        <PinnedMessagesButton />
         <ShowUsersButton />
       </div>
     </Header>

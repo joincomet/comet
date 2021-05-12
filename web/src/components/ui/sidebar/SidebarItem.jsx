@@ -33,7 +33,9 @@ const className = (large, small, light) =>
 const activeClassName = light =>
   ctl(`
   text-gray-800
+  hover:text-gray-800
   dark:text-gray-200
+  dark:hover:text-gray-200
   ${
     light
       ? `dark:bg-gray-700 dark:hover:bg-gray-700`

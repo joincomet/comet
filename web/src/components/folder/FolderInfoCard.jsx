@@ -111,7 +111,11 @@ export default function FolderInfoCard({ folder }) {
               ) : (
                 <div className="flex items-center">
                   <ServerPopup server={folder.server}>
-                    <ServerAvatar size={5} server={folder.server} />
+                    <ServerAvatar
+                      className="rounded-full"
+                      size={5}
+                      server={folder.server}
+                    />
                   </ServerPopup>
                   <ServerPopup server={folder.server}>
                     <span className="ml-1.5 text-primary cursor-pointer hover:underline font-medium">

@@ -9,7 +9,7 @@ export async function replies({ em, userId }: Context): Promise<Reply[]> {
       'user',
       'comment.author.user',
       'comment.author.roles',
-      'comment.post',
+      'comment.post.server',
       'comment.parentComment.author.user',
       'comment.parentComment.author.roles'
     ],

@@ -54,7 +54,7 @@ module.exports = {
         }
       },*/
       fontFamily: {
-        sans: ['Graphik', ...defaultTheme.fontFamily.sans]
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans]
       },
       fontSize: {
         base: '.9375rem',

@@ -20,10 +20,6 @@ export default function DmHeader({ user }) {
           />
         </>
       }
-    >
-      <div className="ml-auto">
-        <PinnedMessagesButton />
-      </div>
-    </Header>
+    ></Header>
   )
 }

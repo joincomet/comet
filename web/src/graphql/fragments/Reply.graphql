@@ -5,17 +5,26 @@ fragment Reply on Reply {
     id
     text
     voteCount
+    createdAt
     author {
       ...ServerUser
     }
     post {
       id
       title
+      relativeUrl
+      server {
+        id
+        name
+        avatarUrl
+        initials
+      }
     }
     parentComment {
       id
       text
       voteCount
+      createdAt
       author {
         ...ServerUser
       }

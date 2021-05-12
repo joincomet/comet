@@ -1520,16 +1520,20 @@ export type ReplyFragment = (
   & Pick<Reply, 'id' | 'isRead'>
   & { comment: (
     { __typename?: 'Comment' }
-    & Pick<Comment, 'id' | 'text' | 'voteCount'>
+    & Pick<Comment, 'id' | 'text' | 'voteCount' | 'createdAt'>
     & { author?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )>, post: (
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'title'>
+      & Pick<Post, 'id' | 'title' | 'relativeUrl'>
+      & { server: (
+        { __typename?: 'Server' }
+        & Pick<Server, 'id' | 'name' | 'avatarUrl' | 'initials'>
+      ) }
     ), parentComment?: Maybe<(
       { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'text' | 'voteCount'>
+      & Pick<Comment, 'id' | 'text' | 'voteCount' | 'createdAt'>
       & { author?: Maybe<(
         { __typename?: 'ServerUser' }
         & ServerUserFragment
@@ -2854,7 +2858,7 @@ export type UserQuery = (
       { __typename?: 'Server' }
       & Pick<Server, 'nickname' | 'id' | 'avatarUrl' | 'name' | 'initials'>
     )> }
-    & UserFragment
+    & RelatedUserFragment
   )> }
 );
 
@@ -3262,17 +3266,26 @@ export const ReplyFragmentDoc = gql`
     id
     text
     voteCount
+    createdAt
     author {
       ...ServerUser
     }
     post {
       id
       title
+      relativeUrl
+      server {
+        id
+        name
+        avatarUrl
+        initials
+      }
     }
     parentComment {
       id
       text
       voteCount
+      createdAt
       author {
         ...ServerUser
       }
@@ -6319,7 +6332,7 @@ export type ServerUsersQueryResult = Apollo.QueryResult<ServerUsersQuery, Server
 export const UserDocument = gql`
     query user($id: ID) @live {
   user(id: $id) {
-    ...User
+    ...RelatedUser
     folders {
       ...Folder
     }
@@ -6335,8 +6348,9 @@ export const UserDocument = gql`
     }
   }
 }
-    ${UserFragmentDoc}
-${FolderFragmentDoc}`;
+    ${RelatedUserFragmentDoc}
+${FolderFragmentDoc}
+${UserFragmentDoc}`;
 
 /**
  * __useUserQuery__

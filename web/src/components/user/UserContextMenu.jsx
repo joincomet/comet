@@ -27,18 +27,15 @@ export default function UserContextMenu({
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
 
-  const [
-    canManageUsers,
-    canChangeNickname,
-    canManageNicknames
-  ] = useHasServerPermissions({
-    serverId: server?.id,
-    permissions: [
-      ServerPermission.ManageUsers,
-      ServerPermission.ChangeNickname,
-      ServerPermission.ManageNicknames
-    ]
-  })
+  const [canManageUsers, canChangeNickname, canManageNicknames] =
+    useHasServerPermissions({
+      serverId: server?.id,
+      permissions: [
+        ServerPermission.ManageUsers,
+        ServerPermission.ChangeNickname,
+        ServerPermission.ManageNicknames
+      ]
+    })
 
   const [closeDm] = useCloseDmMutation()
   const [readDm] = useReadDmMutation()
@@ -60,10 +57,6 @@ export default function UserContextMenu({
             setDialogUserId(user.id)
           }}
         />
-        <ContextMenuItem
-          onClick={() => push(`/me/dm/${user.id}`)}
-          label={t('user.context.sendMessage')}
-        />
         {isDm && (
           <>
             {!!user.unreadCount && (
@@ -83,36 +76,13 @@ export default function UserContextMenu({
             />
           </>
         )}
+
         {user.id !== currentUser.id ? (
           <>
-            {user.relationshipStatus === RelationshipStatus.Friends ? (
+            {!isDm && (
               <ContextMenuItem
-                label={t('user.context.removeFriend')}
-                red
-                onClick={() =>
-                  removeFriend({
-                    variables: { input: { userId: user.id } },
-                    optimisticResponse: {
-                      removeFriend: {
-                        ...user,
-                        relationshipStatus: RelationshipStatus.None
-                      }
-                    }
-                  })
-                }
-              />
-            ) : (
-              <ContextMenuItem
-                label={t('user.context.addFriend')}
-                onClick={() =>
-                  createFriendRequest({
-                    variables: {
-                      input: {
-                        userId: user.id
-                      }
-                    }
-                  })
-                }
+                onClick={() => push(`/me/dm/${user.id}`)}
+                label={t('user.context.sendMessage')}
               />
             )}
           </>

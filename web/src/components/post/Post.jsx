@@ -5,7 +5,7 @@ import { DragItemTypes } from '@/types/DragItemTypes'
 import UserAvatar from '@/components/user/UserAvatar'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import UserPopup from '@/components/user/UserPopup'
-import { shortDate } from '@/utils/timeUtils'
+import { calendarDate, shortDate } from '@/utils/timeUtils'
 import {
   IconChat,
   IconChevrownLeft,
@@ -20,6 +20,7 @@ import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import PostEmbed from '@/components/post/PostEmbed'
+import Tippy from '@tippyjs/react'
 
 export default memo(function Post({
   post,
@@ -44,7 +45,6 @@ export default memo(function Post({
   const dragging = dragDropManager.getMonitor().isDragging()
   const [isDragging, setIsDragging] = useState(false)
   useEffect(() => {
-    console.log({ dragging, isDragging })
     if (dragging) {
       setIsDragging(true)
     } else {
@@ -113,9 +113,14 @@ export default memo(function Post({
                 : {}
             }
           >
-            {!!post.text && <IconText className="w-8 h-8 text-tertiary" />}
-            {!post.thumbnailUrl && !post.text && (
-              <IconLinkWeb className="w-8 h-8 text-tertiary" />
+            {!post.thumbnailUrl && (
+              <>
+                {post.linkUrl ? (
+                  <IconLinkWeb className="w-8 h-8 text-tertiary" />
+                ) : (
+                  <IconText className="w-8 h-8 text-tertiary" />
+                )}
+              </>
             )}
           </div>
         )}
@@ -267,11 +272,14 @@ export default memo(function Post({
                       {post.server.name}
                     </span>
                   </Link>
-                  <div className="text-xs text-mid font-medium">
-                    &nbsp;&nbsp;&middot;&nbsp;&nbsp;{shortDate(post.createdAt)}
-                  </div>
                 </div>
               )}
+              <div className="text-xs text-mid font-medium">
+                &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                <Tippy content={calendarDate(post.createdAt)}>
+                  <span>{shortDate(post.createdAt)}</span>
+                </Tippy>
+              </div>
             </div>
 
             <div className="flex items-center ml-auto" onClick={onClick}>

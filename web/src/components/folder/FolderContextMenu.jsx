@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
-import { useState } from 'react'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import {
@@ -17,11 +16,10 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const [currentUser] = useCurrentUser()
   const userFolders = useUserFolders()
   const isFollowing = userFolders
-    .filter(f => f.owner.id !== currentUser.id)
+    .filter(f => f.owner?.id !== currentUser.id)
     .map(f => f.id)
     .includes(folder.id)
   const editable = folder.name !== 'Read Later' && folder.name !== 'Favorites'
-  const [c, setC] = useState(false)
   const [updateFolder] = useUpdateFolderMutation()
   const [followFolder] = useFollowFolderMutation()
   const [unfollowFolder] = useUnfollowFolderMutation()
@@ -36,7 +34,7 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
       <ContextMenuSection>
         <ContextMenuItem label={t('folder.context.copyLink')} />
 
-        {folder.owner.id !== currentUser.id && (
+        {folder.owner?.id !== currentUser.id && (
           <>
             {isFollowing ? (
               <ContextMenuItem

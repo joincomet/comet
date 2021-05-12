@@ -22,7 +22,7 @@ export default function ServerContextMenu({ server, ContextMenuItem }) {
     <>
       <ContextMenuSection>
         <ContextMenuItem label={t('server.context.markRead')} />
-        <ContextMenuItem label={t('server.context.mute')} />
+        {/*<ContextMenuItem label={t('server.context.mute')} />*/}
         <ContextMenuItem label={t('server.context.invite')} />
         {server.owner.id !== currentUser.id && (
           <ContextMenuItem

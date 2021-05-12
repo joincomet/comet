@@ -1,25 +1,58 @@
 import FriendListItemBase from '@/pages/me/friends/FriendListItemBase'
 import { IconCheck, IconX } from '@/components/ui/icons/Icons'
 import FriendListItemButton from '@/pages/me/friends/FriendListItemButton'
-import { RelationshipStatus } from '@/graphql/hooks'
+import {
+  RelationshipStatus,
+  useAnswerFriendRequestMutation,
+  useDeleteFriendRequestMutation
+} from '@/graphql/hooks'
+import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
+import { ContextMenuType } from '@/types/ContextMenuType'
 
 export default function FriendRequestListItem({ user }) {
+  const [deleteFriendRequest] = useDeleteFriendRequestMutation()
+  const [answerFriendRequest] = useAnswerFriendRequestMutation()
   return (
-    <FriendListItemBase friend={user}>
-      {user.relationshipStatus === RelationshipStatus.FriendRequestOutgoing ? (
-        <FriendListItemButton label="friends.revokeRequest">
-          <IconX className="w-5 h-5" />
-        </FriendListItemButton>
-      ) : (
-        <>
-          <FriendListItemButton label="friends.acceptRequest">
-            <IconCheck className="w-5 h-5" />
-          </FriendListItemButton>
-          <FriendListItemButton label="friends.rejectRequest">
+    <ContextMenuTrigger data={{ type: ContextMenuType.User, user }}>
+      <FriendListItemBase friend={user}>
+        {user.relationshipStatus ===
+        RelationshipStatus.FriendRequestOutgoing ? (
+          <FriendListItemButton
+            label="Cancel"
+            onClick={e => {
+              e.stopPropagation()
+              deleteFriendRequest({ variables: { input: { userId: user.id } } })
+            }}
+          >
             <IconX className="w-5 h-5" />
           </FriendListItemButton>
-        </>
-      )}
-    </FriendListItemBase>
+        ) : (
+          <>
+            <FriendListItemButton
+              label="Accept"
+              onClick={e => {
+                e.stopPropagation()
+                answerFriendRequest({
+                  variables: { input: { userId: user.id, accept: true } }
+                })
+              }}
+            >
+              <IconCheck className="w-5 h-5" />
+            </FriendListItemButton>
+            <FriendListItemButton
+              label="Ignore"
+              onClick={e => {
+                e.stopPropagation()
+                answerFriendRequest({
+                  variables: { input: { userId: user.id, accept: false } }
+                })
+              }}
+            >
+              <IconX className="w-5 h-5" />
+            </FriendListItemButton>
+          </>
+        )}
+      </FriendListItemBase>
+    </ContextMenuTrigger>
   )
 }

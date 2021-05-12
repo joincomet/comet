@@ -18,12 +18,20 @@ import { VectorLogo } from '@/components/ui/vectors'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import CountBadge from '@/components/ui/CountBadge'
-import { useCloseDmMutation, useCreateMessageMutation } from '@/graphql/hooks'
+import {
+  useCloseDmMutation,
+  useCreateMessageMutation,
+  useRepliesQuery
+} from '@/graphql/hooks'
 import { useGroupsAndDms } from '@/hooks/graphql/useGroupsAndDms'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function HomeSidebar() {
   const { t } = useTranslation()
   const groupsAndDms = useGroupsAndDms()
+  const [currentUser] = useCurrentUser()
+  const { data } = useRepliesQuery({ variables: { userId: currentUser?.id } })
+  const replies = data?.replies ?? []
   return (
     <>
       <Sidebar>
@@ -41,11 +49,9 @@ export default function HomeSidebar() {
             <SidebarItem to="/me/inbox">
               <IconInbox className="mr-3 h-5 w-5" />
               {t('inbox.title')}
-            </SidebarItem>
-
-            <SidebarItem onClick={() => toast.error(t('infinity.comingSoon'))}>
-              <IconInfinity className="mr-3 h-5 w-5" />
-              {t('infinity.title')}
+              <div className="ml-auto">
+                <CountBadge count={replies.length} />
+              </div>
             </SidebarItem>
           </div>
 

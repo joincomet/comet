@@ -26,7 +26,6 @@ const itemClass = red =>
   dark:hover:text-white
   dark:focus:text-white
   hover:text-white
-  flex
   select-none
   cursor-pointer
   w-full

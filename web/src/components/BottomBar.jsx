@@ -14,6 +14,8 @@ import { version } from '../../package.json'
 import { useStore } from '@/hooks/useStore'
 import { useChangeOnlineStatusMutation } from '@/graphql/hooks'
 import { Link } from 'react-router-dom'
+import { useCopyToClipboard } from 'react-use'
+import toast from 'react-hot-toast'
 
 export default function BottomBar() {
   const [currentUser] = useCurrentUser()
@@ -42,6 +44,7 @@ export default function BottomBar() {
     }, 15000)
     return () => clearInterval(id)
   })
+  const copyToClipboard = useCopyToClipboard()[1]
 
   return (
     <>
@@ -49,7 +52,17 @@ export default function BottomBar() {
 
       <div className="flex items-center shadow-md px-5 bottom-0 h-5.5 bg-gray-700 z-50">
         <UserAvatar size={4.5} className="mr-2" user={currentUser} />
-        <div className="dark:text-white text-sm">{currentUser.name}</div>
+        <Tippy content={currentUser.username}>
+          <div
+            className="dark:text-white text-sm cursor-pointer"
+            onClick={() => {
+              copyToClipboard(currentUser.username)
+              toast.success('Copied username!')
+            }}
+          >
+            {currentUser.name}
+          </div>
+        </Tippy>
         <div className="w-2 h-2 rounded-full bg-green-500 ml-2" />
         <div className="ml-auto flex items-center space-x-4 text-primary">
           <Tippy
@@ -83,7 +96,7 @@ export default function BottomBar() {
             </div>
           </Tippy>
 
-          <Tippy content="Search" offset={offset}>
+          {/*<Tippy content="Search" offset={offset}>
             <div>
               <IconSearch className="w-4.5 h-4.5 cursor-pointer" />
             </div>
@@ -93,7 +106,7 @@ export default function BottomBar() {
             <div>
               <IconFolder className="w-4.5 h-4.5 cursor-pointer" />
             </div>
-          </Tippy>
+          </Tippy>*/}
 
           <Tippy content="Notifications" offset={offset}>
             <Link to="/me/inbox">

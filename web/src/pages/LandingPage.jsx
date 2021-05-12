@@ -49,21 +49,36 @@ export default function LandingPage() {
 
             <div className="ml-auto space-x-3 inline-flex items-center">
               <Tippy content="Comet Discord Server">
-                <div className={`${iconButton}`}>
+                <a
+                  href="https://discord.gg/NPCMGSm"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={`${iconButton}`}
+                >
                   <IconDiscord size={20} className="text-gray-200" />
-                </div>
+                </a>
               </Tippy>
 
               <Tippy content="@joincometapp on Twitter">
-                <div className={iconButton}>
+                <a
+                  href="https://twitter.com/joincometapp"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={iconButton}
+                >
                   <IconTwitter size={20} className="text-gray-200" />
-                </div>
+                </a>
               </Tippy>
 
               <Tippy content="Comet on GitHub">
-                <div className={iconButton}>
+                <a
+                  href="https://github.com/joincomet/comet"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={iconButton}
+                >
                   <IconGithub size={20} className="text-gray-200" />
-                </div>
+                </a>
               </Tippy>
             </div>
           </div>

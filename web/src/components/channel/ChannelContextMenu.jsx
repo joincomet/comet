@@ -33,7 +33,7 @@ export default function ChannelContextMenu({ channel, ContextMenuItem }) {
     <>
       <ContextMenuSection>
         <ContextMenuItem label={t('channel.context.markRead')} />
-        <ContextMenuItem label={t('channel.context.mute')} />
+        {/*<ContextMenuItem label={t('channel.context.mute')} />*/}
         <ContextMenuItem label={t('channel.context.edit')} />
         {canManageChannels && (
           <ContextMenuItem

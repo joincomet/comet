@@ -48,7 +48,7 @@ export default function MessageContextMenu({ message, ContextMenuItem }) {
     <>
       <ContextMenuSection>
         {isAuthor && <ContextMenuItem label={t('message.context.edit')} />}
-        {canPin && (
+        {/*{canPin && (
           <ContextMenuItem
             label={
               message.isPinned
@@ -57,13 +57,13 @@ export default function MessageContextMenu({ message, ContextMenuItem }) {
             }
             onClick={() => togglePin()}
           />
-        )}
-        <ContextMenuItem
+        )}*/}
+        {/*<ContextMenuItem
           onClick={() => {
             copyToClipboard(`${message.relativeUrl}`)
           }}
           label={t('message.context.copyLink')}
-        />
+        />*/}
         {canDelete && (
           <ContextMenuItem
             label={t('message.context.delete')}
