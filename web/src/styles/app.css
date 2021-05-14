@@ -158,3 +158,19 @@ span[data-mention] {
 span[data-spoiler] {
   @apply dark:bg-gray-100 bg-gray-900 dark:hover:bg-transparent hover:bg-transparent;
 }
+
+@keyframes float {
+  0% {
+    transform: translatey(6px);
+  }
+  50% {
+    transform: translatey(-6px);
+  }
+  100% {
+    transform: translatey(6px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}

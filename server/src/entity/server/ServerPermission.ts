@@ -1,8 +1,8 @@
 import { registerEnumType } from 'type-graphql'
 
 export enum ServerPermission {
-  ViewChannels = 'ViewChannels',
   ManageChannels = 'ManageChannels',
+  PrivateChannels = 'PrivateChannels',
 
   ManageServer = 'ManageServer',
   CreateInvite = 'CreateInvite',
@@ -22,7 +22,6 @@ export enum ServerPermission {
   CreateComment = 'CreateComment',
   VoteComment = 'VoteComment',
   ManageComments = 'ManageComments',
-  ViewComments = 'ViewComments',
 
   ManageFolders = 'ManageFolders',
   AddPostToFolder = 'AddPostToFolder',
@@ -42,7 +41,5 @@ export const defaultServerPermissions = [
   ServerPermission.CreatePost,
   ServerPermission.VotePost,
   ServerPermission.CreateComment,
-  ServerPermission.VoteComment,
-  ServerPermission.ViewComments,
-  ServerPermission.ViewChannels
+  ServerPermission.VoteComment
 ]

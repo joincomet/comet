@@ -5,10 +5,47 @@ import UserAvatar from '@/components/user/UserAvatar'
 import { calendarDate } from '@/utils/timeUtils'
 import { Link } from 'react-router-dom'
 import ServerAvatar from '@/components/server/ServerAvatar'
+import { IconCheck } from '@/components/ui/icons/Icons'
+import { RepliesDocument, useMarkReplyReadMutation } from '@/graphql/hooks'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useStore } from '@/hooks/useStore'
 
 export default function Reply({ reply }) {
+  const inboxPage = useStore(s => s.inboxPage)
   const { comment } = reply
   const { parentComment, post } = comment
+  const [currentUser] = useCurrentUser()
+  const [markReplyRead] = useMarkReplyReadMutation({
+    optimisticResponse: {
+      markReplyRead: {
+        ...reply,
+        isRead: true
+      }
+    },
+    update(cache, { data: { markReplyRead } }) {
+      const queryOptions = {
+        query: RepliesDocument,
+        variables: {
+          input: {
+            userId: currentUser.id,
+            unreadOnly: inboxPage === 'Unread'
+          }
+        }
+      }
+      const queryData = cache.readQuery(queryOptions)
+      if (
+        queryData &&
+        queryData.replies.map(r => r.id).includes(markReplyRead.id)
+      ) {
+        cache.writeQuery({
+          ...queryOptions,
+          data: {
+            replies: queryData.replies.filter(r => r.id !== markReplyRead.id)
+          }
+        })
+      }
+    }
+  })
 
   return (
     <Link
@@ -16,7 +53,7 @@ export default function Reply({ reply }) {
       className="block dark:bg-gray-800 dark:hover:bg-gray-825 rounded p-3 cursor-pointer relative"
     >
       <div className="flex">
-        <div className="text-13 hover:underline font-medium text-mid pr-5 leading-5">
+        <div className="text-13 hover:underline font-medium text-tertiary pr-5 leading-5">
           {post.title}
         </div>
         <div className="flex items-center ml-auto h-5">
@@ -41,6 +78,20 @@ export default function Reply({ reply }) {
       ) : (
         <ReplyContent comment={comment} />
       )}
+
+      <div className="flex items-center pt-3 border-t dark:border-gray-750 mt-2">
+        <div
+          className="flex items-center highlightable"
+          onClick={e => {
+            e.stopPropagation()
+            e.preventDefault()
+            markReplyRead({ variables: { input: { replyId: reply.id } } })
+          }}
+        >
+          <IconCheck className="h-5 w-5" />
+          <div className="ml-2 text-xs font-medium">Mark Read</div>
+        </div>
+      </div>
     </Link>
   )
 }

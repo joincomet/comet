@@ -1,5 +1,5 @@
-query replies($userId: ID!) {
-  replies(userId: $userId) {
+query replies($input: RepliesInput!) {
+  replies(input: $input) {
     ...Reply
   }
 }

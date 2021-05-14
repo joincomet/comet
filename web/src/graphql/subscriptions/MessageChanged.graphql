@@ -21,7 +21,7 @@ subscription MessageChanged {
       }
       toUser {
         id
-        name
+        username
       }
     }
     updated {
@@ -34,17 +34,7 @@ subscription MessageChanged {
       }
     }
     deleted {
-      ...Message
-      author {
-        ...User
-      }
-      serverUser {
-        name
-        color
-        roles {
-          ...Role
-        }
-      }
+      id
       channel {
         id
         server {

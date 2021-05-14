@@ -43,7 +43,7 @@ export default function PostsHeader({ refreshPosts }) {
       isRightSidebar={showFolders}
       title={postsSort}
       icon={icon}
-      showDivider={postsSort !== 'Hot'}
+      showDivider={postsSort === 'Top'}
     >
       {postsSort === 'Top' && (
         <div className="flex items-center space-x-4">
@@ -56,7 +56,7 @@ export default function PostsHeader({ refreshPosts }) {
         </div>
       )}
 
-      {postsSort === 'New' && (
+      {/*{postsSort === 'New' && (
         <Tippy content={t('post.feed.liveMode.description')} placement="right">
           <div>
             <Switch
@@ -67,7 +67,7 @@ export default function PostsHeader({ refreshPosts }) {
             </Switch>
           </div>
         </Tippy>
-      )}
+      )}*/}
 
       <div className="ml-auto space-x-5 flex items-center">
         <Tippy content={t('post.feed.refresh')}>

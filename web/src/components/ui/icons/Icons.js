@@ -35,6 +35,7 @@ export {
   HiCog as IconSettings,
   HiHome as IconHome,
   HiPencil as IconEdit,
+  HiPencilAlt as IconCreate,
   HiUser as IconUser,
   HiDownload as IconDownload,
   HiOutlineDownload as IconDownloadLarge,

@@ -1,6 +1,6 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
-import { ChannelPermission, Message, ServerPermission, User } from '@/entity'
+import { Message, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -17,10 +17,10 @@ export async function pinMessage(
   const user = await em.findOneOrFail(User, userId)
   const message = await em.findOneOrFail(Message, messageId, ['channel'])
   if (message.channel) {
-    await user.checkChannelPermission(
+    await user.checkServerPermission(
       em,
-      message.channel.id,
-      ChannelPermission.ManageMessages
+      message.channel.server.id,
+      ServerPermission.ManageMessages
     )
   }
   message.isPinned = true

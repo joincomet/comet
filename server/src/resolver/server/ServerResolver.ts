@@ -19,12 +19,15 @@ import {
   ServerUser
 } from '@/entity'
 import { Context, NotificationSetting } from '@/types'
-import { publicServers, PublicServersArgs, serverUsers } from './queries'
+import {
+  publicServers,
+  PublicServersArgs,
+  serverUsers,
+  server
+} from './queries'
 import {
   banUserFromServer,
   BanUserFromServerInput,
-  changeNickname,
-  ChangeNicknameInput,
   changeNotificationSetting,
   ChangeNotificationSettingInput,
   createServer,
@@ -85,14 +88,6 @@ export class ServerResolver {
     return serverRolesLoader.load(server.id)
   }
 
-  @FieldResolver()
-  async nickname(
-    @Ctx() { loaders: { serverNicknameLoader } }: Context,
-    @Root() server: Server
-  ): Promise<string> {
-    return serverNicknameLoader.load(server.id)
-  }
-
   @FieldResolver(() => NotificationSetting)
   async notificationSetting(
     @Ctx() { loaders: { serverNotificationSettingLoader } }: Context,
@@ -134,7 +129,6 @@ export class ServerResolver {
   }
 
   // --- Queries ---
-  @Authorized()
   @Query(() => [Server])
   async publicServers(
     @Ctx() ctx: Context,
@@ -143,13 +137,20 @@ export class ServerResolver {
     return publicServers(ctx, args)
   }
 
-  @Authorized()
   @Query(() => [ServerUser])
   async serverUsers(
     @Ctx() ctx: Context,
     @Arg('serverId', () => ID) serverId: string
   ): Promise<ServerUser[]> {
     return serverUsers(ctx, serverId)
+  }
+
+  @Query(() => Server)
+  async server(
+    @Ctx() ctx: Context,
+    @Arg('serverId', () => ID) serverId: string
+  ): Promise<Server> {
+    return server(ctx, serverId)
   }
 
   // --- Mutations ---
@@ -216,15 +217,6 @@ export class ServerResolver {
     @Arg('input') input: ReadServerInput
   ): Promise<Server> {
     return readServer(ctx, input)
-  }
-
-  @Authorized()
-  @Mutation(() => ServerUser)
-  async changeNickname(
-    @Ctx() ctx: Context,
-    @Arg('input') input: ChangeNicknameInput
-  ): Promise<ServerUser> {
-    return changeNickname(ctx, input)
   }
 
   @Authorized()

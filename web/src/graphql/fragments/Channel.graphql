@@ -4,12 +4,5 @@ fragment Channel on Channel {
   description
   isUnread
   mentionCount
-  permissions
-  rolePermissions {
-    allowedPermissions
-    deniedPermissions
-    role {
-      ...Role
-    }
-  }
+  isPrivate
 }

@@ -17,9 +17,9 @@ export default function PostPage() {
   const { t } = useTranslation()
   const { postId, serverId } = useParams()
 
-  const [canViewComments, canCreateComment] = useHasServerPermissions({
+  const [canCreateComment] = useHasServerPermissions({
     serverId,
-    permissions: [ServerPermission.ViewComments, ServerPermission.CreateComment]
+    permissions: [ServerPermission.CreateComment]
   })
 
   const { data } = usePostQuery({
@@ -54,22 +54,16 @@ export default function PostPage() {
           </div>
         )}
 
-        {canViewComments ? (
-          <div className="space-y-2 px-4 pt-4 pb-96">
-            {comments.map((comment, index) => (
-              <Comment
-                key={comment.id}
-                comment={comment}
-                post={post}
-                isLast={index < comments.length - 1}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="py-10 px-4 text-center font-semibold text-xl text-tertiary">
-            {t('comment.noPermission')}
-          </div>
-        )}
+        <div className="space-y-2 px-4 pt-4 pb-96">
+          {comments.map((comment, index) => (
+            <Comment
+              key={comment.id}
+              comment={comment}
+              post={post}
+              isLast={index < comments.length - 1}
+            />
+          ))}
+        </div>
       </div>
     </Page>
   )

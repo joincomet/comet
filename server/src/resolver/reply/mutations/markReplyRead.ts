@@ -1,36 +1,32 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
-import { ChangeType } from '@/resolver/subscriptions'
+import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Context } from '@/types'
 import { Reply, User } from '@/entity'
-import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 
 @InputType()
 export class MarkReplyReadInput {
   @Field(() => ID)
   replyId: string
-
-  @Field({ nullable: true })
-  isRead?: boolean
 }
 
 export async function markReplyRead(
   { em, userId }: Context,
-  { replyId, isRead }: MarkReplyReadInput,
-  notifyRepliesChanged: Publisher<BulkChangePayload>
+  { replyId }: MarkReplyReadInput,
+  notifyReplyChanged: Publisher<ChangePayload>
 ): Promise<Reply> {
   const reply = await em.findOneOrFail(Reply, replyId, [
-    'fromUser',
-    'comment.author',
-    'parentComment.author',
-    'post.server',
-    'post.author'
+    'user',
+    'comment.author.user',
+    'comment.author.roles',
+    'comment.post.server',
+    'comment.parentComment.author.user',
+    'comment.parentComment.author.roles'
   ])
   if (reply.user !== em.getReference(User, userId))
     throw new Error('Not your reply')
-  if (isRead != null) {
-    reply.isRead = isRead
-  }
+  if (reply.isRead) throw new Error('Already marked read')
+  reply.isRead = true
   await em.persistAndFlush(reply)
-  await notifyRepliesChanged({ ids: [replyId], type: ChangeType.Updated })
+  await notifyReplyChanged({ id: replyId, type: ChangeType.Updated })
   return reply
 }

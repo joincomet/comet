@@ -1,5 +1,4 @@
 export * from './banUserFromServer'
-export * from './changeNickname'
 export * from './changeNotificationSetting'
 export * from './createServer'
 export * from './deleteServer'

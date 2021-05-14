@@ -14,7 +14,12 @@ export default function InboxPage() {
   const inboxPage = useStore(s => s.inboxPage)
   useSetHomePage(`inbox`)
   const [currentUser] = useCurrentUser()
-  const { data } = useRepliesQuery({ variables: { userId: currentUser?.id } })
+  const { data } = useRepliesQuery({
+    variables: {
+      input: { unreadOnly: inboxPage === 'Unread' }
+    },
+    skip: !currentUser
+  })
   const replies = data?.replies ?? []
   return (
     <Page header={<InboxHeader />}>

@@ -1,7 +1,7 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Context } from '@/types'
-import { ChannelPermission, Message, ServerPermission, User } from '@/entity'
+import { Message, ServerPermission, User } from '@/entity'
 
 @InputType()
 export class DeleteMessageInput {
@@ -17,14 +17,14 @@ export async function deleteMessage(
   const user = await em.findOneOrFail(User, userId)
   const message = await em.findOneOrFail(Message, messageId, [
     'author',
-    'channel'
+    'channel.server'
   ])
   if (message.author !== user) {
     if (message.channel) {
-      await user.checkChannelPermission(
+      await user.checkServerPermission(
         em,
-        message.channel.id,
-        ChannelPermission.ManageMessages
+        message.channel.server.id,
+        ServerPermission.ManageMessages
       )
     } else throw new Error('Must be author to delete message')
   }

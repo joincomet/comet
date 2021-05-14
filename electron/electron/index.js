@@ -62,6 +62,8 @@ app.whenReady().then(() => {
           if (loadingScreen) {
             loadingScreen.hide();
           }
+        });
+        mainWindow.once("ready-to-show", () => {
           mainWindow.show();
           mainWindow.send("windowOpened");
         });
@@ -101,11 +103,13 @@ app.whenReady().then(() => {
       setImmediate(() => autoUpdater.quitAndInstall());
     });
   } else {
-    mainWindow = createWindow(loadingScreen);
+    mainWindow = createWindow();
     mainWindow.webContents.on("did-finish-load", () => {
       if (loadingScreen) {
         loadingScreen.hide();
       }
+    });
+    mainWindow.once("ready-to-show", () => {
       mainWindow.show();
       mainWindow.send("windowOpened");
     });

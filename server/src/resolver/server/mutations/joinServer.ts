@@ -73,7 +73,7 @@ export async function joinServer(
   await em.persistAndFlush([serverUser, server])
   liveQueryStore.invalidate([`User:${user.id}`, `Server:${server.id}`])
   server.isJoined = true
-  if (server.sendWelcomeMessage && server.systemMessagesChannel) {
+  if (server.systemMessagesChannel) {
     const joinMessage = em.create(Message, {
       author: user,
       serverUser: serverUser,

@@ -1,7 +1,5 @@
 fragment User on User {
   id
-  name
-  tag
   username
   avatarUrl
   isOnline

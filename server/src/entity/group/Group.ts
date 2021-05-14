@@ -10,7 +10,7 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
-import { GraphQLNonNegativeInt, GraphQLURL } from 'graphql-scalars'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -47,7 +47,7 @@ export class Group extends BaseEntity {
     if (this.users.isInitialized())
       return this.users
         .getItems()
-        .map(u => u.name)
+        .map(u => u.username)
         .join(', ')
     return this.id
   }

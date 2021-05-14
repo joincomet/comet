@@ -33,7 +33,6 @@ import {
 @Resolver()
 export class MessageResolver {
   // --- Queries ---
-  @Authorized()
   @Query(() => MessagesResponse)
   async messages(
     @Ctx() ctx: Context,

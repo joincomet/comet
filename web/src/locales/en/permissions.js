@@ -1,5 +1,4 @@
 import { ServerPermission } from '@/graphql/hooks'
-import { ChannelPermission } from '@/graphql/hooks'
 
 export const permissions = {
   server: {
@@ -64,10 +63,6 @@ export const permissions = {
     },
 
     // Comments
-    [ServerPermission.ViewComments]: {
-      title: 'View Comments',
-      description: 'Allows members to view comments on posts.'
-    },
     [ServerPermission.CreateComment]: {
       title: 'Create Comments',
       description: 'Allows members to create comments.'
@@ -113,25 +108,6 @@ export const permissions = {
     [ServerPermission.ViewChannels]: {
       title: 'View Channels',
       description: `View channels`
-    }
-  },
-  channel: {
-    [ChannelPermission.ViewChannel]: {
-      title: 'View Channel',
-      description:
-        'Allows members to view this channel by default. Disabling this for @everyone will make this channel private.'
-    },
-    [ChannelPermission.ManagePermissions]: {
-      title: 'Manage Permissions',
-      description: `Allows users to change this channel's permissions.`
-    },
-    [ChannelPermission.SendMessages]: {
-      title: 'Send Messages',
-      description: `Allows members to send messages in this channel.`
-    },
-    [ChannelPermission.ManageMessages]: {
-      title: 'Manage Messages',
-      description: `Allows members to remove messages by other users or pin any message in this channel.`
     }
   }
 }

@@ -10,7 +10,7 @@ import {
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import { Channel, ChannelPermission, ChannelPermissions, Role } from '@/entity'
+import { Channel, Role } from '@/entity'
 import {
   createChannel,
   CreateChannelInput,
@@ -21,9 +21,7 @@ import {
   moveChannel,
   MoveChannelInput,
   readChannel,
-  ReadChannelInput,
-  updateChannelPermissions,
-  UpdateChannelPermissionsInput
+  ReadChannelInput
 } from './mutations'
 import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
@@ -44,22 +42,6 @@ export class ChannelResolver {
     @Root() channel: Channel
   ): Promise<boolean> {
     return channelUnreadLoader.load(channel.id)
-  }
-
-  @FieldResolver(() => [ChannelPermission])
-  async permissions(
-    @Ctx() { loaders: { channelPermissionsLoader } }: Context,
-    @Root() channel: Channel
-  ): Promise<ChannelPermission[]> {
-    return channelPermissionsLoader.load(channel.id)
-  }
-
-  @FieldResolver(() => [ChannelPermissions])
-  async rolePermissions(
-    @Ctx() { loaders: { channelRolePermissionsLoader } }: Context,
-    @Root() channel: Channel
-  ): Promise<ChannelPermissions[]> {
-    return channelRolePermissionsLoader.load(channel.id)
   }
 
   // --- Mutations ---
@@ -106,14 +88,5 @@ export class ChannelResolver {
     @Arg('input') input: ReadChannelInput
   ): Promise<Channel> {
     return readChannel(ctx, input)
-  }
-
-  @Authorized()
-  @Mutation(() => Role)
-  async updateChannelPermissions(
-    @Ctx() ctx: Context,
-    @Arg('input') input: UpdateChannelPermissionsInput
-  ): Promise<Role> {
-    return updateChannelPermissions(ctx, input)
   }
 }

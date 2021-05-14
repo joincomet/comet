@@ -25,9 +25,3 @@ mutation readChannel($input: ReadChannelInput!) {
     ...Channel
   }
 }
-
-mutation updateChannelPermissions($input: UpdateChannelPermissionsInput!) {
-  updateChannelPermissions(input: $input) {
-    ...Role
-  }
-}

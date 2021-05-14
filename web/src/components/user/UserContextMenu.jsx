@@ -81,7 +81,7 @@ export default function UserContextMenu({
           <>
             {!isDm && (
               <ContextMenuItem
-                onClick={() => push(`/me/dm/${user.id}`)}
+                onClick={() => push(`/dm/${user.id}`)}
                 label={t('user.context.sendMessage')}
               />
             )}

@@ -4,6 +4,8 @@ mutation markReplyRead($input: MarkReplyReadInput!) {
   }
 }
 
-mutation markAllRepliesRead {
-  markAllRepliesRead
+mutation markReplyUnread($input: MarkReplyUnreadInput!) {
+  markReplyUnread(input: $input) {
+    ...Reply
+  }
 }

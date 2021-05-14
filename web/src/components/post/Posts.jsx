@@ -3,6 +3,7 @@ import { usePosts } from '@/components/post/usePosts'
 import Post from '@/components/post/Post'
 import { IconSpinner } from '@/components/ui/icons/IconSpinner'
 import { useCallback, useRef } from 'react'
+import EndReached from '@/components/ui/EndReached'
 
 export default function Posts({ folderId, serverId, showServerName, header }) {
   const virtuoso = useRef(null)
@@ -34,9 +35,7 @@ export default function Posts({ folderId, serverId, showServerName, header }) {
                 <IconSpinner />
               </div>
             ) : (
-              <div className="flex items-center justify-center h-20 text-primary">
-                No posts :(
-              </div>
+              <EndReached />
             )
         }}
         endReached={() => {

@@ -2,7 +2,6 @@ import { Context } from '@/types'
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import {
   Channel,
-  ChannelPermission,
   File,
   Group,
   GroupUser,
@@ -58,12 +57,20 @@ export async function createMessage(
     ? await em.findOneOrFail(ServerUser, { user, server: channel.server })
     : null
 
-  if (channel)
-    await user.checkChannelPermission(
+  if (channel) {
+    await user.checkServerPermission(
       em,
-      channelId,
-      ChannelPermission.SendMessages
+      channel.server.id,
+      ServerPermission.SendMessages
     )
+    if (channel.isPrivate) {
+      await user.checkServerPermission(
+        em,
+        channel.server.id,
+        ServerPermission.PrivateChannels
+      )
+    }
+  }
 
   if (group) await user.checkInGroup(em, groupId)
 

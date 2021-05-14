@@ -25,7 +25,7 @@ export enum SubscriptionTopic {
    * @payload { replyId }
    * @response { added: Reply[], updated: Reply[], deleted: Reply[] }
    */
-  RepliesChanged = 'RepliesChanged',
+  ReplyChanged = 'ReplyChanged',
 
   /**
    * User started typing

@@ -20,7 +20,7 @@ export default function SettingsPage() {
       <Page>
         <div className="h-full flex relative">
           <Link
-            to="/me"
+            to="/home"
             className="absolute top-4 left-4 rounded-full cursor-pointer transition dark:hover:bg-gray-700 p-3"
           >
             <IconX className="w-6 h-6 text-tertiary" />

@@ -11,14 +11,14 @@ import {
 } from 'type-graphql'
 import { Reply } from '@/entity'
 import { Context } from '@/types'
-import { replies } from '@/resolver/reply/queries/replies'
+import { replies, RepliesInput } from '@/resolver/reply/queries/replies'
 import {
   MarkReplyReadInput,
   markReplyRead,
-  markAllRepliesRead
+  markReplyUnread,
+  MarkReplyUnreadInput
 } from '@/resolver/reply/mutations'
-import { SubscriptionTopic } from '@/resolver/subscriptions'
-import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
+import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 
 @Resolver(() => Reply)
 export class RepliesResolver {
@@ -27,9 +27,9 @@ export class RepliesResolver {
   @Query(() => [Reply])
   async replies(
     @Ctx() ctx: Context,
-    @Arg('userId', () => ID) userId: string
+    @Arg('input') input: RepliesInput
   ): Promise<Reply[]> {
-    return replies(ctx)
+    return replies(ctx, input)
   }
 
   // --- Mutations ---
@@ -38,15 +38,20 @@ export class RepliesResolver {
   async markReplyRead(
     @Ctx() ctx: Context,
     @Arg('input') input: MarkReplyReadInput,
-    @PubSub(SubscriptionTopic.RepliesChanged)
-    notifyRepliesChanged: Publisher<BulkChangePayload>
+    @PubSub(SubscriptionTopic.ReplyChanged)
+    notifyReplyChanged: Publisher<ChangePayload>
   ): Promise<Reply> {
-    return markReplyRead(ctx, input, notifyRepliesChanged)
+    return markReplyRead(ctx, input, notifyReplyChanged)
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
-  async markAllRepliesRead(@Ctx() ctx: Context): Promise<boolean> {
-    return markAllRepliesRead(ctx)
+  @Mutation(() => Reply)
+  async markReplyUnread(
+    @Ctx() ctx: Context,
+    @Arg('input') input: MarkReplyUnreadInput,
+    @PubSub(SubscriptionTopic.ReplyChanged)
+    notifyReplyChanged: Publisher<ChangePayload>
+  ): Promise<Reply> {
+    return markReplyUnread(ctx, input, notifyReplyChanged)
   }
 }

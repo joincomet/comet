@@ -30,7 +30,6 @@ import {
   UnvoteCommentInput
 } from './mutations'
 import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
-import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 import { CommentsArgs, comments } from '@/resolver/comment/queries/comments'
 
 @Resolver(() => Comment)
@@ -44,7 +43,6 @@ export class CommentResolver {
   }
 
   // --- Queries ---
-  @Authorized()
   @Query(() => [Comment])
   async comments(
     @Ctx() ctx: Context,
@@ -61,10 +59,10 @@ export class CommentResolver {
     @Arg('input') input: CreateCommentInput,
     @PubSub(SubscriptionTopic.CommentChanged)
     notifyCommentChanged: Publisher<ChangePayload>,
-    @PubSub(SubscriptionTopic.RepliesChanged)
-    notifyRepliesChanged: Publisher<BulkChangePayload>
+    @PubSub(SubscriptionTopic.ReplyChanged)
+    notifyReplyChanged: Publisher<ChangePayload>
   ): Promise<Comment> {
-    return createComment(ctx, input, notifyCommentChanged, notifyRepliesChanged)
+    return createComment(ctx, input, notifyCommentChanged, notifyReplyChanged)
   }
 
   @Authorized()
@@ -85,10 +83,10 @@ export class CommentResolver {
     @Arg('input') input: DeleteCommentInput,
     @PubSub(SubscriptionTopic.CommentChanged)
     notifyCommentChanged: Publisher<ChangePayload>,
-    @PubSub(SubscriptionTopic.RepliesChanged)
-    notifyRepliesChanged: Publisher<BulkChangePayload>
+    @PubSub(SubscriptionTopic.ReplyChanged)
+    notifyReplyChanged: Publisher<ChangePayload>
   ): Promise<Comment> {
-    return deleteComment(ctx, input, notifyCommentChanged, notifyRepliesChanged)
+    return deleteComment(ctx, input, notifyCommentChanged, notifyReplyChanged)
   }
 
   @Authorized()

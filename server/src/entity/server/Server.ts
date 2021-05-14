@@ -32,6 +32,10 @@ export class Server extends BaseEntity {
   @Property({ columnType: 'text' })
   name: string
 
+  @Field()
+  @Property({ columnType: 'text' })
+  urlName: string
+
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
   description?: string
@@ -91,10 +95,6 @@ export class Server extends BaseEntity {
   @Field()
   @Property()
   isDeleted: boolean = false
-
-  @Field()
-  @Property()
-  sendWelcomeMessage: boolean = true
 
   @Field(() => [Channel])
   @OneToMany(() => Channel, 'server', {

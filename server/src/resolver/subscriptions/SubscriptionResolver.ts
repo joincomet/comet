@@ -15,7 +15,7 @@ import { SubscriptionTopic } from '@/resolver/subscriptions/SubscriptionTopic'
 import { Context } from '@/types'
 import { ChangePayload } from '@/resolver/subscriptions/ChangePayload'
 import { ChangeType } from '@/resolver/subscriptions/ChangeType'
-import { Comment, Message, Post, Reply, User } from '@/entity'
+import { Comment, Message, Post, Reply } from '@/entity'
 import ChangeResponse from '@/resolver/subscriptions/ChangeResponse'
 import { TypingFilter } from '@/resolver/subscriptions/typing/TypingFilter'
 import { TypingPayload } from '@/resolver/subscriptions/typing/TypingPayload'
@@ -27,8 +27,6 @@ import { CommentSubscriptionFilter } from '@/resolver/subscriptions/filters/Comm
 import { PostSubscriptionFilter } from '@/resolver/subscriptions/filters/PostSubscriptionFilter'
 import { MessageSubscriptionFilter } from '@/resolver/subscriptions/filters/MessageSubscriptionFilter'
 import { RepliesSubscriptionFilter } from '@/resolver/subscriptions/filters/RepliesSubscriptionFilter'
-import BulkChangeResponse from '@/resolver/subscriptions/BulkChangeResponse'
-import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 import { TypingResponse } from '@/resolver/subscriptions/typing/TypingResponse'
 
 @ObjectType()
@@ -38,7 +36,7 @@ class PostChangedResponse extends ChangeResponse(Post) {}
 @ObjectType()
 class MessageChangedResponse extends ChangeResponse(Message) {}
 @ObjectType()
-class RepliesChangedResponse extends BulkChangeResponse(Reply) {}
+class ReplyChangedResponse extends ChangeResponse(Reply) {}
 
 function getResult<TItem>(
   entity: TItem,
@@ -51,20 +49,6 @@ function getResult<TItem>(
       return { updated: entity }
     case ChangeType.Deleted:
       return { deleted: entity }
-  }
-}
-
-function getBulkResult<TItem>(
-  entities: TItem[],
-  type: ChangeType
-): { added: TItem[]; updated: TItem[]; deleted: TItem[] } {
-  switch (type) {
-    case ChangeType.Added:
-      return { added: entities, updated: [], deleted: [] }
-    case ChangeType.Updated:
-      return { updated: entities, added: [], deleted: [] }
-    case ChangeType.Deleted:
-      return { deleted: entities, added: [], updated: [] }
   }
 }
 
@@ -125,28 +109,23 @@ export class SubscriptionResolver {
   }
 
   @Authorized()
-  @Subscription(() => RepliesChangedResponse, {
-    topics: SubscriptionTopic.RepliesChanged,
+  @Subscription(() => ReplyChangedResponse, {
+    topics: SubscriptionTopic.ReplyChanged,
     filter: RepliesSubscriptionFilter
   })
-  async repliesChanged(
+  async replyChanged(
     @Ctx() { em, userId }: Context,
-    @Root() { ids, type }: BulkChangePayload
-  ): Promise<RepliesChangedResponse> {
-    const entities = await em.find(
-      Reply,
-      { id: ids, user: userId },
-      [
-        'user',
-        'comment.author.roles',
-        'comment.author.user',
-        'comment.post.author.roles',
-        'comment.post.author.user',
-        'comment.post.server'
-      ],
-      { createdAt: 'DESC' }
-    )
-    return getBulkResult(entities, type)
+    @Root() { id, type }: ChangePayload
+  ): Promise<ReplyChangedResponse> {
+    const entity = await em.findOneOrFail(Reply, { id, user: userId }, [
+      'user',
+      'comment.author.roles',
+      'comment.author.user',
+      'comment.post.author.roles',
+      'comment.post.author.user',
+      'comment.post.server'
+    ])
+    return getResult(entity, type)
   }
 
   @Authorized()

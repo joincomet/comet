@@ -2,7 +2,6 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { Comment, Reply, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
-import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 
 @InputType()
 export class DeleteCommentInput {
@@ -14,7 +13,7 @@ export async function deleteComment(
   { em, userId }: Context,
   { commentId }: DeleteCommentInput,
   notifyCommentChanged: Publisher<ChangePayload>,
-  notifyRepliesChanged: Publisher<BulkChangePayload>
+  notifyReplyChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
   const user = await em.findOneOrFail(User, userId)
   const comment = await em.findOneOrFail(Comment, commentId, [
@@ -32,10 +31,12 @@ export async function deleteComment(
   // Delete replies associated with deleted comment
   const replies = await em.find(Reply, { comment })
   em.remove(replies)
-  await notifyRepliesChanged({
-    ids: replies.map(reply => reply.id),
-    type: ChangeType.Deleted
-  })
+  for (const reply of replies) {
+    await notifyReplyChanged({
+      id: reply.id,
+      type: ChangeType.Deleted
+    })
+  }
   await em.persistAndFlush(comment)
   comment.text = '[deleted]'
   comment.author = null

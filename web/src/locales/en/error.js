@@ -77,7 +77,8 @@ export const error = {
     illegalName: `Name cannot contain {{replace}}`,
     nameLength: 'Name must be 2-32 characters',
     banned: 'Banned{{replace}}',
-    wrongPassword: 'Incorrect password'
+    wrongPassword: 'Incorrect password',
+    usernameTaken: 'Username taken'
   },
   notif: {
     notYours: 'This is not your notification'

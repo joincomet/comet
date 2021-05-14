@@ -9,6 +9,7 @@ export const serverNotificationSettingLoader = (
 ) => {
   return new DataLoader<string, NotificationSetting>(
     async (serverIds: string[]) => {
+      if (!userId) return serverIds.map(_ => null)
       const serverUsers = await em.find(ServerUser, {
         user: userId,
         server: serverIds

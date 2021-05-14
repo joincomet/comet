@@ -45,12 +45,6 @@ input BlockUserInput {
   userId: ID!
 }
 
-input ChangeNicknameInput {
-  nickname: String
-  serverId: ID!
-  userId: ID
-}
-
 input ChangeNotificationSettingInput {
   notificationSetting: NotificationSetting!
   serverId: ID!
@@ -68,24 +62,11 @@ type Channel implements BaseEntity {
   createdAt: DateTime!
   description: String
   id: ID!
+  isPrivate: Boolean!
   isUnread: Boolean!
   mentionCount: NonNegativeInt!
   name: String
-  permissions: [ChannelPermission!]!
-  rolePermissions: [ChannelPermissions!]!
   server: Server!
-}
-
-enum ChannelPermission {
-  ManageMessages
-  SendMessages
-  ViewChannel
-}
-
-type ChannelPermissions {
-  allowedPermissions: [ChannelPermission!]!
-  deniedPermissions: [ChannelPermission!]!
-  role: Role!
 }
 
 input CloseDmInput {
@@ -131,8 +112,8 @@ enum CommentsSort {
 
 input CreateAccountInput {
   email: EmailAddress!
-  name: String!
   password: String!
+  username: String!
 }
 
 input CreateChannelInput {
@@ -194,6 +175,7 @@ input CreateServerInput {
   category: ServerCategory = Other
   isPublic: Boolean = true
   name: String!
+  urlName: String!
 }
 
 """
@@ -357,7 +339,10 @@ type LoginResponse {
 }
 
 input MarkReplyReadInput {
-  isRead: Boolean
+  replyId: ID!
+}
+
+input MarkReplyUnreadInput {
   replyId: ID!
 }
 
@@ -432,7 +417,6 @@ type Mutation {
   answerFriendRequest(input: AnswerFriendRequestInput!): User!
   banUserFromServer(input: BanUserFromServerInput!): Boolean!
   blockUser(input: BlockUserInput!): User!
-  changeNickname(input: ChangeNicknameInput!): ServerUser!
   changeNotificationSetting(input: ChangeNotificationSettingInput!): ServerUser!
   changeOnlineStatus(input: ChangeOnlineStatusInput!): User!
   changeUserAvatar(input: ChangeUserAvatarInput!): User!
@@ -463,8 +447,8 @@ type Mutation {
   leaveGroup(input: LeaveGroupInput!): Boolean!
   leaveServer(input: LeaveServerInput!): Boolean!
   login(input: LoginInput!): LoginResponse!
-  markAllRepliesRead: Boolean!
   markReplyRead(input: MarkReplyReadInput!): Reply!
+  markReplyUnread(input: MarkReplyUnreadInput!): Reply!
   moveChannel(input: MoveChannelInput!): Channel!
   moveRole(input: MoveRoleInput!): Role!
   moveServer(input: MoveServerInput!): Void!
@@ -492,7 +476,6 @@ type Mutation {
   unvotePost(input: UnvotePostInput!): Post!
   updateAccount(input: UpdateAccountInput!): User!
   updateChannel(input: UpdateChannelInput!): Channel!
-  updateChannelPermissions(input: UpdateChannelPermissionsInput!): Role!
   updateComment(input: UpdateCommentInput!): Comment!
   updateFolder(input: UpdateFolderInput!): Folder!
   updateGroup(input: UpdateGroupInput!): Group!
@@ -610,7 +593,8 @@ type Query {
   post(id: ID!): Post!
   posts(folderId: ID, limit: PositiveInt = 20, offset: NonNegativeInt = 0, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): PostsResponse!
   publicServers(category: ServerCategory, featured: Boolean = false, sort: PublicServersSort = Top): [Server!]!
-  replies(userId: ID!): [Reply!]!
+  replies(input: RepliesInput!): [Reply!]!
+  server(serverId: ID!): Server!
   serverUsers(serverId: ID!): [ServerUser!]!
   user(id: ID): User
 }
@@ -659,10 +643,8 @@ input RemoveUserFromRoleInput {
   userId: ID!
 }
 
-type RepliesChangedResponse {
-  added: [Reply!]!
-  deleted: [Reply!]!
-  updated: [Reply!]!
+input RepliesInput {
+  unreadOnly: Boolean = true
 }
 
 type Reply implements BaseEntity {
@@ -670,6 +652,12 @@ type Reply implements BaseEntity {
   createdAt: DateTime!
   id: ID!
   isRead: Boolean!
+}
+
+type ReplyChangedResponse {
+  added: Reply
+  deleted: Reply
+  updated: Reply
 }
 
 type Role implements BaseEntity {
@@ -703,8 +691,8 @@ type Server implements BaseEntity {
   owner: User!
   permissions: [ServerPermission!]!
   roles: [Role!]!
-  sendWelcomeMessage: Boolean!
   systemMessagesChannel: Channel!
+  urlName: String!
   userCount: NonNegativeInt!
 }
 
@@ -747,17 +735,14 @@ enum ServerPermission {
   ManageUsers
   Mention
   Mentionable
+  PrivateChannels
   SendMessages
-  ViewChannels
-  ViewComments
   VoteComment
   VotePost
 }
 
 type ServerUser {
   color: String
-  name: String!
-  nickname: String
   roles: [Role!]!
   user: User!
 }
@@ -766,7 +751,7 @@ type Subscription {
   commentChanged: CommentChangedResponse!
   messageChanged: MessageChangedResponse!
   postChanged: PostChangedResponse!
-  repliesChanged: RepliesChangedResponse!
+  replyChanged: ReplyChangedResponse!
   typingUpdated(channelId: ID, groupId: ID, userId: ID): TypingResponse!
 }
 
@@ -818,21 +803,14 @@ input UnvotePostInput {
 input UpdateAccountInput {
   currentPassword: String!
   email: EmailAddress
-  name: String
   password: String
+  username: String
 }
 
 input UpdateChannelInput {
   channelId: ID!
   isPrivate: Boolean
   name: String
-}
-
-input UpdateChannelPermissionsInput {
-  allowedPermissions: [ChannelPermission!]!
-  channelId: ID!
-  deniedPermissions: [ChannelPermission!]!
-  roleId: ID!
 }
 
 input UpdateCommentInput {
@@ -881,9 +859,9 @@ input UpdateServerInput {
   isPublic: Boolean
   name: String
   ownerId: ID
-  sendWelcomeMessage: Boolean
   serverId: ID!
   systemMessagesChannelId: ID
+  urlName: String
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -903,13 +881,11 @@ type User implements BaseEntity {
   isPremium: Boolean!
   lastLoginAt: DateTime
   lastMessageAt: DateTime
-  name: String!
   onlineStatus: OnlineStatus!
   relatedUsers: [User!]!
   relationshipStatus: RelationshipStatus!
   servers: [Server!]!
   showChat: Boolean!
-  tag: String!
   unreadCount: NonNegativeInt!
   username: String!
 }

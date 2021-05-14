@@ -55,8 +55,7 @@ export default function CreateChannel({ serverId }) {
     })
   }
 
-  if (!canManageChannels)
-    return <SidebarLabel>{t('channel.title')}</SidebarLabel>
+  if (!canManageChannels) return <SidebarLabel>Channels</SidebarLabel>
 
   return (
     <>

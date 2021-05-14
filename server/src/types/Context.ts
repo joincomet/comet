@@ -1,8 +1,6 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import {
   Channel,
-  ChannelPermission,
-  ChannelPermissions,
   Folder,
   Group,
   RelationshipStatus,
@@ -24,8 +22,6 @@ export interface Context {
 
 export interface Loaders {
   channelMentionCountLoader: DataLoader<string, number>
-  channelPermissionsLoader: DataLoader<string, ChannelPermission[]>
-  channelRolePermissionsLoader: DataLoader<string, ChannelPermissions[]>
   channelUnreadLoader: DataLoader<string, boolean>
 
   commentVoteLoader: DataLoader<string, boolean>
@@ -37,7 +33,6 @@ export interface Loaders {
   serverChannelsLoader: DataLoader<string, Channel[]>
   serverFoldersLoader: DataLoader<string, Folder[]>
   serverMyRolesLoader: DataLoader<string, Role[]>
-  serverNicknameLoader: DataLoader<string, string>
   serverNotificationSettingLoader: DataLoader<string, NotificationSetting>
   serverPermissionsLoader: DataLoader<string, ServerPermission[]>
   serverRolesLoader: DataLoader<string, Role[]>

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
 import SidebarChannel from '@/components/channel/SidebarChannel'
 import CreateChannel from '@/components/channel/CreateChannel'
-import { ChannelPermission, ServerPermission } from '@/graphql/hooks'
+import { ServerPermission } from '@/graphql/hooks'
 import ServerSettingsDialog from '@/components/server/settings/ServerSettingsDialog'
 import { useState } from 'react'
 import Dialog from '@/components/ui/dialog/Dialog'
@@ -18,9 +18,12 @@ export default function ServerSidebar() {
   const server = useCurrentServer()
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [inviteOpen, setInviteOpen] = useState(false)
-  const [canManageServer] = useHasServerPermissions({
+  const [canManageServer, canViewPrivateChannels] = useHasServerPermissions({
     serverId: server.id,
-    permissions: [ServerPermission.ManageServer]
+    permissions: [
+      ServerPermission.ManageServer,
+      ServerPermission.PrivateChannels
+    ]
   })
 
   return (
@@ -80,7 +83,7 @@ export default function ServerSidebar() {
           <div className="space-y-0.5">
             {server.channels
               .filter(channel =>
-                channel.permissions.includes(ChannelPermission.ViewChannel)
+                channel.isPrivate ? canViewPrivateChannels : true
               )
               .map(channel => (
                 <SidebarChannel

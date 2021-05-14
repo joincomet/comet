@@ -48,16 +48,6 @@ export class ServerUser {
   status: ServerUserStatus = ServerUserStatus.Joined
 
   @Field({ nullable: true })
-  @Property({ nullable: true })
-  nickname: string
-
-  @Field()
-  get name(): string {
-    if (this.nickname) return this.nickname
-    return this.user?.name ?? ''
-  }
-
-  @Field({ nullable: true })
   get color(): string {
     if (!this.roles || !this.roles.isInitialized() || this.roles.length === 0)
       return null

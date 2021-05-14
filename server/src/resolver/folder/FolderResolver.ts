@@ -64,7 +64,6 @@ export class FolderResolver {
   }
 
   // --- Queries ---
-  @Authorized()
   @Query(() => Folder)
   async folder(
     @Ctx() ctx: Context,

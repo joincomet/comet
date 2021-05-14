@@ -57,7 +57,6 @@ export class PostResolver {
   }
 
   // --- Queries ---
-  @Authorized()
   @Query(() => PostsResponse)
   async posts(
     @Ctx() ctx: Context,
@@ -67,7 +66,6 @@ export class PostResolver {
     return posts(ctx, args)
   }
 
-  @Authorized()
   @Query(() => Post)
   async post(
     @Ctx() ctx: Context,

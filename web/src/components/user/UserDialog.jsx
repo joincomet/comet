@@ -160,7 +160,7 @@ export default memo(function UserDialog() {
     else if (user?.relationshipStatus === RelationshipStatus.Friends)
       return (
         <Link
-          to={`/me/dm/${userId}`}
+          to={`/dm/${userId}`}
           onClick={() => close()}
           className={buttonClass(true)}
         >
@@ -324,7 +324,7 @@ export default memo(function UserDialog() {
           {currentTab === tab.Folders &&
             folders.map(folder => (
               <Link
-                to={`/me/folder/${folder.id}`}
+                to={`/folder/${folder.id}`}
                 key={folder.id}
                 className={itemClass}
                 onClick={() => close()}

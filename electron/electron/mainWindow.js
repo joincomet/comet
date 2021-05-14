@@ -10,7 +10,7 @@ module.exports = {
     const options = {
       frame: false,
       titleBarStyle: "hidden",
-      backgroundColor: "#fff",
+      backgroundColor: "#17181E",
       width: 1280,
       height: 800,
       show: false,

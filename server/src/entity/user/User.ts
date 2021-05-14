@@ -3,7 +3,6 @@ import {
   Collection,
   Entity,
   Enum,
-  Formula,
   ManyToMany,
   OneToMany,
   Property,
@@ -11,9 +10,6 @@ import {
 } from '@mikro-orm/core'
 import { BaseEntity } from '@/entity/BaseEntity'
 import {
-  Channel,
-  ChannelPermission,
-  ChannelPermissionFallbacks,
   Folder,
   FolderVisibility,
   Group,
@@ -39,14 +35,6 @@ import { randomEnum } from '@/util'
 export class User extends BaseEntity {
   @Field()
   @Property({ columnType: 'text' })
-  name: string
-
-  @Field()
-  @Property({ columnType: 'text' })
-  tag: string
-
-  @Field()
-  @Formula("name || '#' || tag")
   username: string
 
   @Authorized('USER')
@@ -224,65 +212,6 @@ export class User extends BaseEntity {
     await this.checkJoinedServer(em, serverId)
     if (!(await this.hasServerPermission(em, serverId, permission)))
       throw new CustomError('error.server.missingPermission', permission)
-  }
-
-  async hasChannelPermission(
-    em: EntityManager,
-    channelId: string,
-    channelPermission: ChannelPermission
-  ): Promise<boolean> {
-    const channel = await em.findOneOrFail(Channel, channelId, ['server.owner'])
-    const serverUser = await em.findOne(
-      ServerUser,
-      { server: channel.server, user: this, status: ServerUserStatus.Joined },
-      ['roles.channelPermissions']
-    )
-    if (!serverUser) return false
-    if (channel.server.owner === this) return true
-    if (this.isAdmin) return true
-    let serverPerms: ServerPermission[] = []
-    let allowedPerms: ChannelPermission[] = []
-    let deniedPerms: ChannelPermission[] = []
-    const roles = serverUser.roles.getItems()
-    roles.forEach(role => {
-      serverPerms.push(...role.permissions)
-      const channelPerms = role.channelPermissions
-        .getItems()
-        .find(c => c.channel === channel)
-      allowedPerms.push(...(channelPerms?.allowedPermissions ?? []))
-      deniedPerms.push(...(channelPerms?.deniedPermissions ?? []))
-    })
-    serverPerms = [...new Set(serverPerms)]
-    allowedPerms = [...new Set(allowedPerms)]
-    deniedPerms = [...new Set(deniedPerms)]
-    const perms = Object.values(ChannelPermission).filter(perm => {
-      if (deniedPerms.includes(perm)) return false
-      else {
-        if (allowedPerms.includes(perm)) return true
-        if (serverPerms.includes(ChannelPermissionFallbacks[perm])) return true
-      }
-      return false
-    })
-    return perms.includes(channelPermission)
-  }
-
-  async checkChannelPermission(
-    em: EntityManager,
-    channelId: string,
-    channelPermission: ChannelPermission
-  ) {
-    const channel = await em.findOneOrFail(Channel, channelId, ['server'])
-    await this.checkJoinedServer(em, channel.server.id)
-    const hasChannelPermission = await this.hasChannelPermission(
-      em,
-      channelId,
-      channelPermission
-    )
-    if (!hasChannelPermission)
-      throw new CustomError(
-        'error.channel.missingPermission',
-        channelPermission
-      )
   }
 
   async isInGroup(em: EntityManager, groupId: string) {

@@ -2,7 +2,6 @@ import {
   IconDiscord,
   IconDownload,
   IconGithub,
-  IconPatreon,
   IconTwitter
 } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
@@ -15,9 +14,8 @@ import {
 import { Meteors } from '@/components/ui/meteors'
 import { getOS } from '@/utils/getOS'
 import Page from '@/components/ui/page/Page'
-import { useMemo } from 'react'
-import { version } from '../../package.json'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { getDownloadLink } from '@/hooks/getDownloadLink'
 
 const container = 'relative z-10 max-w-screen-lg xl:max-w-screen-xl mx-auto'
 const iconButton =
@@ -27,25 +25,16 @@ export default function LandingPage() {
   const [currentUser] = useCurrentUser()
 
   const os = getOS()
-  const downloadLink = useMemo(() => {
-    if (os === 'Windows')
-      return `https://github.com/joincomet/comet/releases/download/${version}/Comet-Setup-${version}.exe`
-    else if (os === 'Mac OS')
-      return `https://github.com/joincomet/comet/releases/download/${version}/Comet-${version}.dmg`
-    else if (os === 'Linux')
-      return `https://github.com/joincomet/comet/releases/download/${version}/Comet-${version}.AppImage`
-  }, [os])
+  const downloadLink = getDownloadLink()
 
   return (
     <Page>
       <div className="relative flex-grow flex flex-col items-center">
-        <div
-          className={`fixed top-0 left-0 right-0 z-50 bg-gray-900 transition`}
-        >
+        <div className={`fixed top-0 left-0 right-0 z-50 transition`}>
           <div className="h-1 bg-gradient-to-r from-blue-500 to-red-500 w-full" />
 
           <div className="px-24 h-16 flex items-center">
-            <VectorLogo className="h-6 text-gray-200" />
+            <VectorLogo className="h-6 text-secondary" />
 
             <div className="ml-auto space-x-3 inline-flex items-center">
               <Tippy content="Comet Discord Server">
@@ -100,8 +89,6 @@ export default function LandingPage() {
 
           <div className={container}>
             <div className="text-center flex flex-col items-center space-y-12">
-              {/*<Logo className="h-16 text-gray-200" />*/}
-
               <h1 className="inline-flex items-center">
                 <div className="text-5xl text-white font-semibold tracking-tight">
                   All-in-one chat and forums for communities.
@@ -123,7 +110,7 @@ export default function LandingPage() {
                 </a>
 
                 <Link
-                  to={currentUser ? '/me' : '/login'}
+                  to="/home"
                   className="border border-gray-700 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
                 >
                   Open in Browser

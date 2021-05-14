@@ -30,7 +30,10 @@ export default function HomeSidebar() {
   const { t } = useTranslation()
   const groupsAndDms = useGroupsAndDms()
   const [currentUser] = useCurrentUser()
-  const { data } = useRepliesQuery({ variables: { userId: currentUser?.id } })
+  const { data } = useRepliesQuery({
+    variables: { input: { unreadOnly: true } },
+    skip: !currentUser
+  })
   const replies = data?.replies ?? []
   return (
     <>
@@ -39,40 +42,48 @@ export default function HomeSidebar() {
           <VectorLogo className="h-4" />
         </div>
 
-        <div className="px-1.5 pt-3">
-          <div className="space-y-0.5">
-            <SidebarItem to="/me/friends">
-              <IconFriends className="mr-3 h-5 w-5" />
-              {t('user.friends.title')}
-            </SidebarItem>
+        <div className="px-1.5">
+          {!!currentUser && (
+            <div className="space-y-0.5 pt-3">
+              <SidebarItem to="/friends">
+                <IconFriends className="mr-3 h-5 w-5" />
+                {t('user.friends.title')}
+              </SidebarItem>
 
-            <SidebarItem to="/me/inbox">
-              <IconInbox className="mr-3 h-5 w-5" />
-              {t('inbox.title')}
-              <div className="ml-auto">
-                <CountBadge count={replies.length} />
-              </div>
-            </SidebarItem>
-          </div>
+              <SidebarItem to="/inbox">
+                <IconInbox className="mr-3 h-5 w-5" />
+                {t('inbox.title')}
+                <div className="ml-auto">
+                  <CountBadge count={replies.length} />
+                </div>
+              </SidebarItem>
+            </div>
+          )}
 
-          <SidebarLabel>{t('post.feed.title')}</SidebarLabel>
+          <SidebarLabel>Posts</SidebarLabel>
 
           <SidebarSortButtons />
 
-          <SidebarLabel plusLabel="Create DM">{t('dm.title')}</SidebarLabel>
+          {!!currentUser && (
+            <>
+              <SidebarLabel plusLabel="Create DM">{t('dm.title')}</SidebarLabel>
 
-          <div className="space-y-0.5">
-            {!!groupsAndDms &&
-              groupsAndDms.map(groupOrDm => {
-                if (groupOrDm.__typename === 'Group') {
-                  const group = groupOrDm
-                  return <div>Group</div>
-                } else if (groupOrDm.__typename === 'User') {
-                  const user = groupOrDm
-                  return <DirectMessage user={user} key={`user-${user.id}`} />
-                }
-              })}
-          </div>
+              <div className="space-y-0.5">
+                {!!groupsAndDms &&
+                  groupsAndDms.map(groupOrDm => {
+                    if (groupOrDm.__typename === 'Group') {
+                      const group = groupOrDm
+                      return <div>Group</div>
+                    } else if (groupOrDm.__typename === 'User') {
+                      const user = groupOrDm
+                      return (
+                        <DirectMessage user={user} key={`user-${user.id}`} />
+                      )
+                    }
+                  })}
+              </div>
+            </>
+          )}
         </div>
       </Sidebar>
     </>
@@ -92,7 +103,7 @@ function DirectMessage({ user }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,
     drop: (post, monitor) => {
-      push(`/me/dm/${user.id}`)
+      push(`/dm/${user.id}`)
       sendMessage({
         variables: {
           input: {
@@ -117,7 +128,7 @@ function DirectMessage({ user }) {
         <SidebarItem
           ref={dropRef}
           large
-          to={`/me/dm/${user.id}`}
+          to={`/dm/${user.id}`}
           key={`user-${user.id}`}
         >
           <UserAvatar
@@ -139,7 +150,7 @@ function DirectMessage({ user }) {
               e.stopPropagation()
               e.preventDefault()
               closeDm({ variables: { input: { userId: user.id } } })
-              if (pathname === `/me/dm/${user.id}`) push('/me/friends')
+              if (pathname === `/dm/${user.id}`) push('/friends')
             }}
             className="group-hover:visible invisible w-5 h-5 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           />

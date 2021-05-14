@@ -12,7 +12,6 @@ import {
 } from '@/entity'
 import { handleText } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
-import { BulkChangePayload } from '@/resolver/subscriptions/BulkChangePayload'
 
 @InputType()
 export class CreateCommentInput {
@@ -33,7 +32,7 @@ export async function createComment(
   { em, userId }: Context,
   { text, postId, parentCommentId }: CreateCommentInput,
   notifyCommentChanged: Publisher<ChangePayload>,
-  notifyRepliesChanged: Publisher<BulkChangePayload>
+  notifyReplyChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
   text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
   if (!text) throw new Error('error.comment.empty')
@@ -100,7 +99,7 @@ export async function createComment(
   await notifyCommentChanged({ id: comment.id, type: ChangeType.Added })
   if (reply) {
     await em.persistAndFlush(reply)
-    await notifyRepliesChanged({ ids: [reply.id], type: ChangeType.Added })
+    await notifyReplyChanged({ id: reply.id, type: ChangeType.Added })
   }
   return comment
 }

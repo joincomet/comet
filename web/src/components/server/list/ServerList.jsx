@@ -11,16 +11,19 @@ import { getOS } from '@/utils/getOS'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
-import { ChannelPermission } from '@/graphql/hooks'
+import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
+import { ServerPermission } from '@/graphql/hooks'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function ServerList() {
   const servers = useJoinedServers()
   const { pathname } = useLocation()
   const { t } = useTranslation()
   const homePage = useStore(s => s.homePage)
-  const homeActive = pathname.startsWith('/me')
+  const homeActive = pathname !== '/explore' && !pathname.startsWith('/+')
   const exploreActive = pathname.startsWith('/explore')
   const isMac = getOS() === 'Mac OS' && window.electron
+  const [currentUser] = useCurrentUser()
 
   return (
     <>
@@ -32,7 +35,7 @@ export default function ServerList() {
           <div className="space-y-2 flex flex-col items-center py-2">
             <ServerListItem
               name={t('home')}
-              to={`/me${homePage ? `/${homePage}` : ''}`}
+              to={`${homePage ? `/${homePage}` : '/home'}`}
               active={homeActive}
               className={`${
                 homeActive
@@ -64,7 +67,7 @@ export default function ServerList() {
               />
             </ServerListItem>
 
-            <CreateServerDialog />
+            {!!currentUser && <CreateServerDialog />}
           </div>
 
           {!!servers && servers.length > 0 && (
@@ -93,11 +96,12 @@ function ServerListServer({ server }) {
   const matched = matchPath(pathname, { path: '/server/:serverId' })
   const serverId = matched?.params?.serverId
   const serverPages = useStore(s => s.serverPages)
-
+  const [canViewPrivateChannels] = useHasServerPermissions({
+    serverId,
+    permissions: [ServerPermission.PrivateChannels]
+  })
   const unread = !!server.channels
-    .filter(channel =>
-      channel.permissions.includes(ChannelPermission.ViewChannel)
-    )
+    .filter(channel => (channel.isPrivate ? canViewPrivateChannels : true))
     .find(c => c.isUnread)
   const active = serverId === server.id
 

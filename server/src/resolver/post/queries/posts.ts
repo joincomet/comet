@@ -96,17 +96,17 @@ export async function posts(
   { em, userId }: Context,
   { offset, limit, sort, time, folderId, serverId, search }: PostsArgs
 ): Promise<PostsResponse> {
-  const user = await em.findOneOrFail(User, userId)
+  const user = userId ? await em.findOneOrFail(User, userId) : null
   let orderBy = {}
   if (sort === PostsSort.New) orderBy = { createdAt: QueryOrder.DESC }
   else if (sort === PostsSort.Hot) orderBy = { hotRank: QueryOrder.DESC }
   else if (sort === PostsSort.Top) orderBy = { voteCount: QueryOrder.DESC }
 
   const joinedOnly = !folderId && !serverId
-  let server
-  if (serverId) {
+  const server = serverId ? await em.findOneOrFail(Server, serverId) : null
+  if (server && !server.isPublic) {
+    if (!user) throw new Error('Private server')
     await user.checkJoinedServer(em, serverId)
-    server = await em.findOneOrFail(Server, serverId)
   }
 
   let servers = []

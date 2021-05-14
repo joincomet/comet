@@ -1,6 +1,7 @@
 fragment Server on Server {
   id
   name
+  urlName
   description
   avatarUrl
   bannerUrl

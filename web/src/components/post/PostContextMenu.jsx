@@ -18,7 +18,7 @@ import { useUserFolders } from '@/hooks/graphql/useUserFolders'
 export default function PostContextMenu({ post, ContextMenuItem }) {
   const { pathname } = useLocation()
   const matchedUserFolder = matchPath(pathname, {
-    path: '/me/folder/:folderId'
+    path: '/folder/:folderId'
   })
   const matchedServerFolder = matchPath(pathname, {
     path: '/server/:serverId/folder/:folderId'

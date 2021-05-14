@@ -269,7 +269,7 @@ function DeleteServerDialog({ deleteOpen, setDeleteOpen, server }) {
                 variables: { input: { password, serverId: server.id } }
               }).then(() => {
                 setDeleteOpen(false)
-                push('/me')
+                push('/home')
               })
             }}
           >

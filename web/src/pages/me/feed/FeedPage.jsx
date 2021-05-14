@@ -8,17 +8,18 @@ import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import Page from '@/components/ui/page/Page'
 import CreatePostHeader from '@/components/post/create/CreatePostHeader'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function FeedPage() {
   const { t } = useTranslation()
   const showFolders = useStore(s => s.showFolders)
-
+  const [currentUser] = useCurrentUser()
   const ref = useRef(null)
 
   const refreshPosts = () => {
     if (ref && ref.current) ref.current.refresh()
   }
-  useSetHomePage(`feed`)
+  useSetHomePage(`home`)
 
   useEffect(() => {
     if (Notification.permission === 'default') {
@@ -40,14 +41,17 @@ export default function FeedPage() {
   return (
     <>
       <Helmet>
-        <title>{t('post.feed.title')}</title>
+        <title>Home</title>
       </Helmet>
 
       <Page
         header={<PostsHeader refreshPosts={refreshPosts} />}
         rightSidebar={<UserFoldersSidebar show={showFolders} />}
       >
-        <Posts showServerName header={<CreatePostHeader />} />
+        <Posts
+          showServerName
+          header={currentUser ? <CreatePostHeader /> : null}
+        />
       </Page>
     </>
   )

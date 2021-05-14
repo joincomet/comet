@@ -1,14 +1,12 @@
 import {
-  Cascade,
   Collection,
   Entity,
   Enum,
   ManyToMany,
   ManyToOne,
-  OneToMany,
   Property
 } from '@mikro-orm/core'
-import { ChannelPermissions, Server, ServerUser } from '@/entity'
+import { Server, ServerUser } from '@/entity'
 import {
   defaultServerPermissions,
   ServerPermission
@@ -29,13 +27,6 @@ export class Role extends BaseEntity {
 
   @ManyToMany(() => ServerUser, 'roles')
   serverUsers = new Collection<ServerUser>(this)
-
-  @OneToMany({
-    entity: () => ChannelPermissions,
-    mappedBy: 'role',
-    cascade: [Cascade.ALL]
-  })
-  channelPermissions = new Collection<ChannelPermissions>(this)
 
   @Property({ columnType: 'text' })
   position: string = ReorderUtils.FIRST_POSITION

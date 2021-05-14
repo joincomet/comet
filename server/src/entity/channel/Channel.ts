@@ -1,10 +1,5 @@
-import { Field, Int, ObjectType } from 'type-graphql'
-import {
-  ChannelPermission,
-  ChannelPermissions,
-  Message,
-  Server
-} from '@/entity'
+import { Field, ObjectType } from 'type-graphql'
+import { Message, Server } from '@/entity'
 import {
   Collection,
   Entity,
@@ -37,6 +32,7 @@ export class Channel extends BaseEntity {
   @Property({ columnType: 'text' })
   position: string = ReorderUtils.FIRST_POSITION
 
+  @Field()
   @Property()
   isPrivate: boolean = false
 
@@ -51,10 +47,4 @@ export class Channel extends BaseEntity {
 
   @Field()
   isUnread: boolean = true
-
-  @Field(() => [ChannelPermission])
-  permissions: ChannelPermission[]
-
-  @Field(() => [ChannelPermissions])
-  rolePermissions: ChannelPermissions[]
 }

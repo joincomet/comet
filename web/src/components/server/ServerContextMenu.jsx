@@ -29,7 +29,7 @@ export default function ServerContextMenu({ server, ContextMenuItem }) {
             label={t('server.context.leave')}
             red
             onClick={() => {
-              if (pathname.startsWith(`/server/${server.id}`)) push('/me')
+              if (pathname.startsWith(`/+${server.id}`)) push('/home')
               leaveServer({ variables: { input: { serverId: server.id } } })
               const data = apolloClient.cache.readQuery({
                 query: CurrentUserDocument

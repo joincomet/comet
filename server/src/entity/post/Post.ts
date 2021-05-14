@@ -116,15 +116,15 @@ export class Post extends BaseEntity {
 
   @Field()
   get relativeUrl(): string {
-    /*const slug = this.title
+    const slug = this.title
       .toLowerCase()
       .trim()
       .split(' ')
       .slice(0, 9)
       .join('-')
       .replace(/[^a-z0-9-]+/gi, '')
-      .replace(/[-](.)\1+/g, '$1')*/
-    return `/server/${this.server.id}/posts/${this.id}`
+      .replace(/[-](.)\1+/g, '$1')
+    return `/+${this.server.name}/post/${this.id}/${slug}`
   }
 
   @Formula(

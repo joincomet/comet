@@ -4,12 +4,20 @@ import Routes from '@/pages/Routes'
 import { ApolloProvider } from '@apollo/client/react'
 import ResponsiveToaster from '@/components/ui/ResponsiveToaster'
 import CustomDragLayer from '@/components/ui/CustomDragLayer'
-import { BrowserRouter, HashRouter } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Link } from 'react-router-dom'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 import { getOS } from '@/utils/getOS'
 import { apolloClient } from '@/graphql/apolloClient'
 import ContextMenuProvider from '@/providers/ContextMenuProvider'
+import { VectorLogo } from '@/components/ui/vectors'
+import {
+  IconDiscord,
+  IconGithub,
+  IconTwitter
+} from '@/components/ui/icons/Icons'
+import { Meteors } from '@/components/ui/meteors'
+import MobileComingSoon from '@/components/ui/MobileComingSoon'
 
 export default function App() {
   const AppRouter = window.electron ? HashRouter : BrowserRouter
@@ -34,6 +42,8 @@ export default function App() {
               backend={TouchBackend}
               options={{ enableTouchEvents: false, enableMouseEvents: true }}
             >
+              <MobileComingSoon />
+
               <ResponsiveToaster />
               <CustomDragLayer />
               {window.electron && !isMac && <TitleBar />}
@@ -43,7 +53,7 @@ export default function App() {
                     ? { height: isMac ? '100%' : 'calc(100% - 1.375rem)' }
                     : { height: '100%' }
                 }
-                className="flex"
+                className="hidden lg:flex"
               >
                 <Routes />
               </div>

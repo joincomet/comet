@@ -1,5 +1,5 @@
 import { Field, InputType } from 'type-graphql'
-import { Length } from 'class-validator'
+import { Length, Matches } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import {
@@ -14,12 +14,18 @@ import {
   ServerUserStatus
 } from '@/entity'
 import { ReorderUtils, uploadImageFileSingle } from '@/util'
+import { serverRegex } from '@/util/text/serverRegex'
 
 @InputType()
 export class CreateServerInput {
   @Field()
   @Length(2, 100)
   name: string
+
+  @Field()
+  @Length(3, 21)
+  @Matches(serverRegex)
+  urlName: string
 
   @Field({ defaultValue: true })
   isPublic: boolean = true
@@ -33,7 +39,7 @@ export class CreateServerInput {
 
 export async function createServer(
   { em, userId, liveQueryStore }: Context,
-  { name, isPublic, category, avatarFile }: CreateServerInput
+  { name, urlName, isPublic, category, avatarFile }: CreateServerInput
 ): Promise<Server> {
   if ((await em.count(ServerUser, { user: userId })) >= 100)
     throw new Error('error.server.joinLimit')
@@ -58,6 +64,7 @@ export async function createServer(
 
   const server = em.create(Server, {
     name,
+    urlName,
     owner: userId,
     channels: [channel],
     avatarUrl,

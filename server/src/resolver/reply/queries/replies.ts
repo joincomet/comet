@@ -1,10 +1,20 @@
 import { Context } from '@/types'
 import { Reply } from '@/entity'
+import { Field, ID, InputType } from 'type-graphql'
 
-export async function replies({ em, userId }: Context): Promise<Reply[]> {
+@InputType()
+export class RepliesInput {
+  @Field(() => Boolean, { defaultValue: true })
+  unreadOnly: boolean = true
+}
+
+export async function replies(
+  { em, userId }: Context,
+  { unreadOnly }: RepliesInput
+): Promise<Reply[]> {
   return em.find(
     Reply,
-    { user: userId },
+    unreadOnly ? { user: userId, isRead: false } : { user: userId },
     [
       'user',
       'comment.author.user',
@@ -13,6 +23,6 @@ export async function replies({ em, userId }: Context): Promise<Reply[]> {
       'comment.parentComment.author.user',
       'comment.parentComment.author.roles'
     ],
-    { createdAt: 'DESC' }
+    { id: 'DESC' }
   )
 }

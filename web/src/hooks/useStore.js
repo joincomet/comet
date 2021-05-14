@@ -47,5 +47,11 @@ export const useStore = create((set, get) => ({
   setFolderSort: sort => set({ folderSort: sort }),
 
   updateAvailable: false,
-  setUpdateAvailable: updateAvailable => set({ updateAvailable })
+  setUpdateAvailable: updateAvailable => set({ updateAvailable }),
+
+  loginDialog: false,
+  setLoginDialog: open => set({ loginDialog: open }),
+
+  createAccount: false,
+  setCreateAccount: createAccount => set({ createAccount })
 }))

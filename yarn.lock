@@ -7632,9 +7632,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^4.1.15":
-  version: 4.1.15
-  resolution: "framer-motion@npm:4.1.15"
+"framer-motion@npm:^4.1.16":
+  version: 4.1.16
+  resolution: "framer-motion@npm:4.1.16"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     framesync: 5.3.0
@@ -7648,7 +7648,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: 3d9ca7b8cd1c509a547a2e4645da80d8c2a7e92903c4fff5fc67cf22b489263c67dcdb58101984e14ef2b04ab0ae92d4025e4934209ad571607043ead11e1bf6
+  checksum: a3ff236c391be7fd5395f4f561e38ca9281bb40fb74e24ad9958b26dc6d70fbab70755f6d7d82fd7116c507512e3e708952589402751cd099b23e998fe57c7c0
   languageName: node
   linkType: hard
 
@@ -11295,13 +11295,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"node-html-parser@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "node-html-parser@npm:3.2.0"
+"node-html-parser@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "node-html-parser@npm:3.3.0"
   dependencies:
     css-select: ^3.1.2
     he: 1.2.0
-  checksum: 5d457e87191ab9374dfdcc81ee5158d9b0b6ecf1921e4712010da5a1089fc0fa3ef6554bdf18346a5dfdfbc77323b1be85f4542d44e14d896cd60770180caa40
+  checksum: 77abb1e1624638f74e9d1944719372943b61f80de4e49bb5c91437964343a4f68d92c25daf943bb08a98a1dace5e98db94d919a96a7c1f23cb29a84b237fa961
   languageName: node
   linkType: hard
 
@@ -12320,7 +12320,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.2.15":
+"postcss@npm:^8.2.10, postcss@npm:^8.2.15":
   version: 8.2.15
   resolution: "postcss@npm:8.2.15"
   dependencies:
@@ -13860,14 +13860,14 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.32.12":
-  version: 1.32.12
-  resolution: "sass@npm:1.32.12"
+"sass@npm:^1.32.13":
+  version: 1.32.13
+  resolution: "sass@npm:1.32.13"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
   bin:
     sass: sass.js
-  checksum: 8ff7460bfe2836b14836d22e9bfb3218870c606e1da1edc780ca6fd9a01aa08ec86b6e631d288a764d9d1959980f8feb9ba376eebcef0316db860c1c7a3d8cb3
+  checksum: 93913232ec9efbd9edbe63e9c32e08c90e2ca7e1b75079b570207aa828386ad1391a0944a06411f2b2add88803a41dd3ecbfbbcf45ec4c2b288154e17243e71f
   languageName: node
   linkType: hard
 
@@ -14083,7 +14083,7 @@ resolve@^2.0.0-next.3:
     mime: ^2.5.2
     mudder: ^1.0.10
     nanoid: ^3.1.23
-    node-html-parser: ^3.2.0
+    node-html-parser: ^3.3.0
     reflect-metadata: ^0.1.13
     sanitize-html: ^2.3.3
     sharp: ^0.28.2
@@ -14092,7 +14092,7 @@ resolve@^2.0.0-next.3:
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
     typescript: ^4.2.4
-    user-agents: ^1.0.649
+    user-agents: ^1.0.650
     validator: ^13.6.0
     ws: ^7.4.5
     xss: ^1.0.9
@@ -15949,13 +15949,13 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"user-agents@npm:^1.0.649":
-  version: 1.0.649
-  resolution: "user-agents@npm:1.0.649"
+"user-agents@npm:^1.0.650":
+  version: 1.0.650
+  resolution: "user-agents@npm:1.0.650"
   dependencies:
     dot-json: ^1.2.2
     lodash.clonedeep: ^4.5.0
-  checksum: 7c9aebac45ad189803606d13abc1cc4f4f864abac627eb14f9ab1ce1b89da5c51ea8900b99774c8431313e96e61cd30395c0d2d376244cbad625fad4c6741f32
+  checksum: 71455ef6c92207b8aa9e8d0400cb9330e5273a3d948e2b9463fe1d951bf66ff7590c9a70b64357d134657529ae1d1770c65b2e6f1b54017673210f90ed7a57ca
   languageName: node
   linkType: hard
 
@@ -16099,13 +16099,13 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "vite@npm:2.3.0"
+"vite@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "vite@npm:2.3.1"
   dependencies:
     esbuild: ^0.11.19
     fsevents: ~2.3.1
-    postcss: ^8.2.1
+    postcss: ^8.2.10
     resolve: ^1.19.0
     rollup: ^2.38.5
   dependenciesMeta:
@@ -16113,7 +16113,7 @@ typescript@^4.2.4:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 4da878c94d71e049d08f71389416ca3798ed8a9bae53a4a8d3c5dd21081a538776b729cbc2a4aeea95b244818f28bb66b141a5c623c1ecd35f7b3fe55aa98630
+  checksum: 4bb6cc6df27ff04d6d669b168d77462cd5722bfece3099bc09e5813e2cc685af4f52e61c239799ed8cdb96fe251a51f2cf1fc8e66adffa5799f2f22a90ded378
   languageName: node
   linkType: hard
 
@@ -16202,7 +16202,7 @@ typescript@^4.2.4:
     eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
     extract-files: ^10.0.0
-    framer-motion: ^4.1.15
+    framer-motion: ^4.1.16
     fuse.js: ^6.4.6
     graphiql: ^1.4.1
     graphql: ^15.4.0-experimental-stream-defer.1
@@ -16234,7 +16234,7 @@ typescript@^4.2.4:
     react-use: ^17.2.4
     react-virtual: ^2.7.1
     react-virtuoso: ^1.8.6
-    sass: ^1.32.12
+    sass: ^1.32.13
     string-hash: ^1.1.3
     tailwind-scrollbar: ^1.3.0
     tailwindcss: ^2.1.2
@@ -16243,7 +16243,7 @@ typescript@^4.2.4:
     typescript: ^4.2.4
     use-dark-mode: ^2.3.1
     validator: ^13.6.0
-    vite: ^2.3.0
+    vite: ^2.3.1
     zustand: ^3.5.1
   languageName: unknown
   linkType: soft

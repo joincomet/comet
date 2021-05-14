@@ -12,7 +12,7 @@ export default function NotFound() {
           This page does not exist.
         </div>
         <Link
-          to={user ? '/me' : '/'}
+          to={user ? '/home' : '/'}
           className="block text-xl text-accent font-medium cursor-pointer hover:underline"
         >
           Return to home page

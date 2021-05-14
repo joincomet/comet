@@ -142,10 +142,10 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
               red
               onClick={() => {
                 deleteFolder({ variables: { input: { folderId: folder.id } } })
-                if (pathname.startsWith('/me/folder')) {
-                  push('/me')
-                } else if (pathname.startsWith(`/server/${serverId}/folder`)) {
-                  push(`/server/${serverId}`)
+                if (pathname.startsWith('/folder')) {
+                  push('/home')
+                } else if (pathname.startsWith(`/+${serverId}/folder`)) {
+                  push(`/+${serverId}`)
                 }
               }}
             />

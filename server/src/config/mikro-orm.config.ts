@@ -9,7 +9,6 @@ import { CustomError } from '@/types/CustomError'
 import { BaseEntity } from '@/entity/BaseEntity'
 import {
   Channel,
-  ChannelPermissions,
   ChannelUser,
   Comment,
   CommentVote,
@@ -44,7 +43,6 @@ export const mikroOrmConf = {
   cache: { enabled: false },
   entities: [
     Channel,
-    ChannelPermissions,
     ChannelUser,
     Comment,
     CommentVote,

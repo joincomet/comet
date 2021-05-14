@@ -1,9 +1,10 @@
 import { Field, ID, InputType, Int } from 'type-graphql'
-import { Length } from 'class-validator'
+import { Length, Matches } from 'class-validator'
 import { Server, ServerCategory, ServerPermission, User } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { uploadImageFileSingle } from '@/util'
+import { serverRegex } from '@/util/text/serverRegex'
 
 @InputType()
 export class UpdateServerInput {
@@ -13,6 +14,11 @@ export class UpdateServerInput {
   @Field({ nullable: true })
   @Length(2, 100)
   name?: string
+
+  @Field({ nullable: true })
+  @Length(3, 21)
+  @Matches(serverRegex)
+  urlName?: string
 
   @Field({ nullable: true })
   @Length(0, 500)
@@ -41,9 +47,6 @@ export class UpdateServerInput {
 
   @Field(() => ID, { nullable: true })
   systemMessagesChannelId?: string
-
-  @Field({ nullable: true })
-  sendWelcomeMessage: boolean
 }
 
 export async function updateServer(
@@ -51,6 +54,7 @@ export async function updateServer(
   {
     serverId,
     name,
+    urlName,
     description,
     isPublic,
     isFeatured,
@@ -59,8 +63,7 @@ export async function updateServer(
     avatarFile,
     bannerFile,
     ownerId,
-    systemMessagesChannelId,
-    sendWelcomeMessage
+    systemMessagesChannelId
   }: UpdateServerInput
 ): Promise<Server> {
   const user = await em.findOneOrFail(User, userId)
@@ -72,6 +75,7 @@ export async function updateServer(
   await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
   em.assign(server, {
     name: name ?? server.name,
+    urlName: urlName ?? server.urlName,
     description: description ?? server.description,
     isFeatured: isFeatured ?? server.isFeatured,
     featuredPosition: featuredPosition ?? server.featuredPosition,
@@ -84,8 +88,7 @@ export async function updateServer(
       : server.bannerUrl,
     isPublic: isPublic ?? server.isPublic,
     systemMessagesChannel:
-      systemMessagesChannelId ?? server.systemMessagesChannel,
-    sendWelcomeMessage: sendWelcomeMessage ?? server.sendWelcomeMessage
+      systemMessagesChannelId ?? server.systemMessagesChannel
   })
   await em.persistAndFlush(server)
   liveQueryStore.invalidate(`Server:${serverId}`)

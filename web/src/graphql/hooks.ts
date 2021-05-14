@@ -65,12 +65,6 @@ export type BlockUserInput = {
   userId: Scalars['ID'];
 };
 
-export type ChangeNicknameInput = {
-  nickname?: Maybe<Scalars['String']>;
-  serverId: Scalars['ID'];
-  userId?: Maybe<Scalars['ID']>;
-};
-
 export type ChangeNotificationSettingInput = {
   notificationSetting: NotificationSetting;
   serverId: Scalars['ID'];
@@ -89,25 +83,11 @@ export type Channel = BaseEntity & {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  isPrivate: Scalars['Boolean'];
   isUnread: Scalars['Boolean'];
   mentionCount: Scalars['NonNegativeInt'];
   name?: Maybe<Scalars['String']>;
-  permissions: Array<ChannelPermission>;
-  rolePermissions: Array<ChannelPermissions>;
   server: Server;
-};
-
-export enum ChannelPermission {
-  ManageMessages = 'ManageMessages',
-  SendMessages = 'SendMessages',
-  ViewChannel = 'ViewChannel'
-}
-
-export type ChannelPermissions = {
-  __typename?: 'ChannelPermissions';
-  allowedPermissions: Array<ChannelPermission>;
-  deniedPermissions: Array<ChannelPermission>;
-  role: Role;
 };
 
 export type CloseDmInput = {
@@ -155,8 +135,8 @@ export enum CommentsSort {
 
 export type CreateAccountInput = {
   email: Scalars['EmailAddress'];
-  name: Scalars['String'];
   password: Scalars['String'];
+  username: Scalars['String'];
 };
 
 export type CreateChannelInput = {
@@ -218,6 +198,7 @@ export type CreateServerInput = {
   category?: Maybe<ServerCategory>;
   isPublic?: Maybe<Scalars['Boolean']>;
   name: Scalars['String'];
+  urlName: Scalars['String'];
 };
 
 
@@ -371,7 +352,10 @@ export type LoginResponse = {
 };
 
 export type MarkReplyReadInput = {
-  isRead?: Maybe<Scalars['Boolean']>;
+  replyId: Scalars['ID'];
+};
+
+export type MarkReplyUnreadInput = {
   replyId: Scalars['ID'];
 };
 
@@ -450,7 +434,6 @@ export type Mutation = {
   answerFriendRequest: User;
   banUserFromServer: Scalars['Boolean'];
   blockUser: User;
-  changeNickname: ServerUser;
   changeNotificationSetting: ServerUser;
   changeOnlineStatus: User;
   changeUserAvatar: User;
@@ -481,8 +464,8 @@ export type Mutation = {
   leaveGroup: Scalars['Boolean'];
   leaveServer: Scalars['Boolean'];
   login: LoginResponse;
-  markAllRepliesRead: Scalars['Boolean'];
   markReplyRead: Reply;
+  markReplyUnread: Reply;
   moveChannel: Channel;
   moveRole: Role;
   moveServer: Scalars['Void'];
@@ -510,7 +493,6 @@ export type Mutation = {
   unvotePost: Post;
   updateAccount: User;
   updateChannel: Channel;
-  updateChannelPermissions: Role;
   updateComment: Comment;
   updateFolder: Folder;
   updateGroup: Group;
@@ -551,11 +533,6 @@ export type MutationBanUserFromServerArgs = {
 
 export type MutationBlockUserArgs = {
   input: BlockUserInput;
-};
-
-
-export type MutationChangeNicknameArgs = {
-  input: ChangeNicknameInput;
 };
 
 
@@ -714,6 +691,11 @@ export type MutationMarkReplyReadArgs = {
 };
 
 
+export type MutationMarkReplyUnreadArgs = {
+  input: MarkReplyUnreadInput;
+};
+
+
 export type MutationMoveChannelArgs = {
   input: MoveChannelInput;
 };
@@ -846,11 +828,6 @@ export type MutationUpdateAccountArgs = {
 
 export type MutationUpdateChannelArgs = {
   input: UpdateChannelInput;
-};
-
-
-export type MutationUpdateChannelPermissionsArgs = {
-  input: UpdateChannelPermissionsInput;
 };
 
 
@@ -1010,6 +987,7 @@ export type Query = {
   posts: PostsResponse;
   publicServers: Array<Server>;
   replies: Array<Reply>;
+  server: Server;
   serverUsers: Array<ServerUser>;
   user?: Maybe<User>;
 };
@@ -1065,7 +1043,12 @@ export type QueryPublicServersArgs = {
 
 
 export type QueryRepliesArgs = {
-  userId: Scalars['ID'];
+  input: RepliesInput;
+};
+
+
+export type QueryServerArgs = {
+  serverId: Scalars['ID'];
 };
 
 
@@ -1122,11 +1105,8 @@ export type RemoveUserFromRoleInput = {
   userId: Scalars['ID'];
 };
 
-export type RepliesChangedResponse = {
-  __typename?: 'RepliesChangedResponse';
-  added: Array<Reply>;
-  deleted: Array<Reply>;
-  updated: Array<Reply>;
+export type RepliesInput = {
+  unreadOnly?: Maybe<Scalars['Boolean']>;
 };
 
 export type Reply = BaseEntity & {
@@ -1135,6 +1115,13 @@ export type Reply = BaseEntity & {
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   isRead: Scalars['Boolean'];
+};
+
+export type ReplyChangedResponse = {
+  __typename?: 'ReplyChangedResponse';
+  added?: Maybe<Reply>;
+  deleted?: Maybe<Reply>;
+  updated?: Maybe<Reply>;
 };
 
 export type Role = BaseEntity & {
@@ -1170,8 +1157,8 @@ export type Server = BaseEntity & {
   owner: User;
   permissions: Array<ServerPermission>;
   roles: Array<Role>;
-  sendWelcomeMessage: Scalars['Boolean'];
   systemMessagesChannel: Channel;
+  urlName: Scalars['String'];
   userCount: Scalars['NonNegativeInt'];
 };
 
@@ -1214,9 +1201,8 @@ export enum ServerPermission {
   ManageUsers = 'ManageUsers',
   Mention = 'Mention',
   Mentionable = 'Mentionable',
+  PrivateChannels = 'PrivateChannels',
   SendMessages = 'SendMessages',
-  ViewChannels = 'ViewChannels',
-  ViewComments = 'ViewComments',
   VoteComment = 'VoteComment',
   VotePost = 'VotePost'
 }
@@ -1224,8 +1210,6 @@ export enum ServerPermission {
 export type ServerUser = {
   __typename?: 'ServerUser';
   color?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  nickname?: Maybe<Scalars['String']>;
   roles: Array<Role>;
   user: User;
 };
@@ -1235,7 +1219,7 @@ export type Subscription = {
   commentChanged: CommentChangedResponse;
   messageChanged: MessageChangedResponse;
   postChanged: PostChangedResponse;
-  repliesChanged: RepliesChangedResponse;
+  replyChanged: ReplyChangedResponse;
   typingUpdated: TypingResponse;
 };
 
@@ -1295,21 +1279,14 @@ export type UnvotePostInput = {
 export type UpdateAccountInput = {
   currentPassword: Scalars['String'];
   email?: Maybe<Scalars['EmailAddress']>;
-  name?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
 };
 
 export type UpdateChannelInput = {
   channelId: Scalars['ID'];
   isPrivate?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
-};
-
-export type UpdateChannelPermissionsInput = {
-  allowedPermissions: Array<ChannelPermission>;
-  channelId: Scalars['ID'];
-  deniedPermissions: Array<ChannelPermission>;
-  roleId: Scalars['ID'];
 };
 
 export type UpdateCommentInput = {
@@ -1358,9 +1335,9 @@ export type UpdateServerInput = {
   isPublic?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   ownerId?: Maybe<Scalars['ID']>;
-  sendWelcomeMessage?: Maybe<Scalars['Boolean']>;
   serverId: Scalars['ID'];
   systemMessagesChannelId?: Maybe<Scalars['ID']>;
+  urlName?: Maybe<Scalars['String']>;
 };
 
 
@@ -1379,13 +1356,11 @@ export type User = BaseEntity & {
   isPremium: Scalars['Boolean'];
   lastLoginAt?: Maybe<Scalars['DateTime']>;
   lastMessageAt?: Maybe<Scalars['DateTime']>;
-  name: Scalars['String'];
   onlineStatus: OnlineStatus;
   relatedUsers: Array<User>;
   relationshipStatus: RelationshipStatus;
   servers: Array<Server>;
   showChat: Scalars['Boolean'];
-  tag: Scalars['String'];
   unreadCount: Scalars['NonNegativeInt'];
   username: Scalars['String'];
 };
@@ -1401,15 +1376,7 @@ export type VotePostInput = {
 
 export type ChannelFragment = (
   { __typename?: 'Channel' }
-  & Pick<Channel, 'id' | 'name' | 'description' | 'isUnread' | 'mentionCount' | 'permissions'>
-  & { rolePermissions: Array<(
-    { __typename?: 'ChannelPermissions' }
-    & Pick<ChannelPermissions, 'allowedPermissions' | 'deniedPermissions'>
-    & { role: (
-      { __typename?: 'Role' }
-      & RoleFragment
-    ) }
-  )> }
+  & Pick<Channel, 'id' | 'name' | 'description' | 'isUnread' | 'mentionCount' | 'isPrivate'>
 );
 
 export type CommentFragment = (
@@ -1549,7 +1516,7 @@ export type RoleFragment = (
 
 export type ServerFragment = (
   { __typename?: 'Server' }
-  & Pick<Server, 'id' | 'name' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isPublic' | 'initials' | 'isJoined'>
+  & Pick<Server, 'id' | 'name' | 'urlName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isPublic' | 'initials' | 'isJoined'>
   & { owner: (
     { __typename?: 'User' }
     & Pick<User, 'id'>
@@ -1558,7 +1525,7 @@ export type ServerFragment = (
 
 export type ServerUserFragment = (
   { __typename?: 'ServerUser' }
-  & Pick<ServerUser, 'name' | 'nickname' | 'color'>
+  & Pick<ServerUser, 'color'>
   & { roles: Array<(
     { __typename?: 'Role' }
     & RoleFragment
@@ -1570,7 +1537,7 @@ export type ServerUserFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'tag' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus' | 'color'>
+  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus' | 'color'>
 );
 
 export type CreateChannelMutationVariables = Exact<{
@@ -1632,19 +1599,6 @@ export type ReadChannelMutation = (
   & { readChannel: (
     { __typename?: 'Channel' }
     & ChannelFragment
-  ) }
-);
-
-export type UpdateChannelPermissionsMutationVariables = Exact<{
-  input: UpdateChannelPermissionsInput;
-}>;
-
-
-export type UpdateChannelPermissionsMutation = (
-  { __typename?: 'Mutation' }
-  & { updateChannelPermissions: (
-    { __typename?: 'Role' }
-    & RoleFragment
   ) }
 );
 
@@ -2325,12 +2279,17 @@ export type MarkReplyReadMutation = (
   ) }
 );
 
-export type MarkAllRepliesReadMutationVariables = Exact<{ [key: string]: never; }>;
+export type MarkReplyUnreadMutationVariables = Exact<{
+  input: MarkReplyUnreadInput;
+}>;
 
 
-export type MarkAllRepliesReadMutation = (
+export type MarkReplyUnreadMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'markAllRepliesRead'>
+  & { markReplyUnread: (
+    { __typename?: 'Reply' }
+    & ReplyFragment
+  ) }
 );
 
 export type CreateRoleMutationVariables = Exact<{
@@ -2814,7 +2773,7 @@ export type PublicServersQuery = (
 );
 
 export type RepliesQueryVariables = Exact<{
-  userId: Scalars['ID'];
+  input: RepliesInput;
 }>;
 
 
@@ -2917,7 +2876,7 @@ export type MessageChangedSubscription = (
         & Pick<Group, 'id' | 'displayName'>
       )>, toUser?: Maybe<(
         { __typename?: 'User' }
-        & Pick<User, 'id' | 'name'>
+        & Pick<User, 'id' | 'username'>
       )> }
       & MessageFragment
     )>, updated?: Maybe<(
@@ -2932,17 +2891,8 @@ export type MessageChangedSubscription = (
       & MessageFragment
     )>, deleted?: Maybe<(
       { __typename?: 'Message' }
-      & { author: (
-        { __typename?: 'User' }
-        & UserFragment
-      ), serverUser?: Maybe<(
-        { __typename?: 'ServerUser' }
-        & Pick<ServerUser, 'name' | 'color'>
-        & { roles: Array<(
-          { __typename?: 'Role' }
-          & RoleFragment
-        )> }
-      )>, channel?: Maybe<(
+      & Pick<Message, 'id'>
+      & { channel?: Maybe<(
         { __typename?: 'Channel' }
         & Pick<Channel, 'id'>
         & { server: (
@@ -2956,7 +2906,6 @@ export type MessageChangedSubscription = (
         { __typename?: 'User' }
         & Pick<User, 'id'>
       )> }
-      & MessageFragment
     )> }
   ) }
 );
@@ -2989,20 +2938,20 @@ export type PostChangedSubscription = (
   ) }
 );
 
-export type RepliesChangedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type ReplyChangedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RepliesChangedSubscription = (
+export type ReplyChangedSubscription = (
   { __typename?: 'Subscription' }
-  & { repliesChanged: (
-    { __typename?: 'RepliesChangedResponse' }
-    & { added: Array<(
+  & { replyChanged: (
+    { __typename?: 'ReplyChangedResponse' }
+    & { added?: Maybe<(
       { __typename?: 'Reply' }
       & ReplyFragment
-    )>, updated: Array<(
+    )>, updated?: Maybe<(
       { __typename?: 'Reply' }
       & ReplyFragment
-    )>, deleted: Array<(
+    )>, deleted?: Maybe<(
       { __typename?: 'Reply' }
       & ReplyFragment
     )> }
@@ -3058,8 +3007,6 @@ export const CommentFragmentDoc = gql`
 export const UserFragmentDoc = gql`
     fragment User on User {
   id
-  name
-  tag
   username
   avatarUrl
   isOnline
@@ -3073,6 +3020,7 @@ export const ServerFragmentDoc = gql`
     fragment Server on Server {
   id
   name
+  urlName
   description
   avatarUrl
   bannerUrl
@@ -3086,6 +3034,16 @@ export const ServerFragmentDoc = gql`
   }
 }
     `;
+export const ChannelFragmentDoc = gql`
+    fragment Channel on Channel {
+  id
+  name
+  description
+  isUnread
+  mentionCount
+  isPrivate
+}
+    `;
 export const RoleFragmentDoc = gql`
     fragment Role on Role {
   id
@@ -3094,23 +3052,6 @@ export const RoleFragmentDoc = gql`
   permissions
 }
     `;
-export const ChannelFragmentDoc = gql`
-    fragment Channel on Channel {
-  id
-  name
-  description
-  isUnread
-  mentionCount
-  permissions
-  rolePermissions {
-    allowedPermissions
-    deniedPermissions
-    role {
-      ...Role
-    }
-  }
-}
-    ${RoleFragmentDoc}`;
 export const FolderFragmentDoc = gql`
     fragment Folder on Folder {
   id
@@ -3246,8 +3187,6 @@ export const PostFragmentDoc = gql`
     ${MetadataFragmentDoc}`;
 export const ServerUserFragmentDoc = gql`
     fragment ServerUser on ServerUser {
-  name
-  nickname
   color
   roles {
     ...Role
@@ -3456,39 +3395,6 @@ export function useReadChannelMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ReadChannelMutationHookResult = ReturnType<typeof useReadChannelMutation>;
 export type ReadChannelMutationResult = Apollo.MutationResult<ReadChannelMutation>;
 export type ReadChannelMutationOptions = Apollo.BaseMutationOptions<ReadChannelMutation, ReadChannelMutationVariables>;
-export const UpdateChannelPermissionsDocument = gql`
-    mutation updateChannelPermissions($input: UpdateChannelPermissionsInput!) {
-  updateChannelPermissions(input: $input) {
-    ...Role
-  }
-}
-    ${RoleFragmentDoc}`;
-export type UpdateChannelPermissionsMutationFn = Apollo.MutationFunction<UpdateChannelPermissionsMutation, UpdateChannelPermissionsMutationVariables>;
-
-/**
- * __useUpdateChannelPermissionsMutation__
- *
- * To run a mutation, you first call `useUpdateChannelPermissionsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateChannelPermissionsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateChannelPermissionsMutation, { data, loading, error }] = useUpdateChannelPermissionsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateChannelPermissionsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateChannelPermissionsMutation, UpdateChannelPermissionsMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateChannelPermissionsMutation, UpdateChannelPermissionsMutationVariables>(UpdateChannelPermissionsDocument, options);
-      }
-export type UpdateChannelPermissionsMutationHookResult = ReturnType<typeof useUpdateChannelPermissionsMutation>;
-export type UpdateChannelPermissionsMutationResult = Apollo.MutationResult<UpdateChannelPermissionsMutation>;
-export type UpdateChannelPermissionsMutationOptions = Apollo.BaseMutationOptions<UpdateChannelPermissionsMutation, UpdateChannelPermissionsMutationVariables>;
 export const CreateCommentDocument = gql`
     mutation createComment($input: CreateCommentInput!) {
   createComment(input: $input) {
@@ -5082,36 +4988,39 @@ export function useMarkReplyReadMutation(baseOptions?: Apollo.MutationHookOption
 export type MarkReplyReadMutationHookResult = ReturnType<typeof useMarkReplyReadMutation>;
 export type MarkReplyReadMutationResult = Apollo.MutationResult<MarkReplyReadMutation>;
 export type MarkReplyReadMutationOptions = Apollo.BaseMutationOptions<MarkReplyReadMutation, MarkReplyReadMutationVariables>;
-export const MarkAllRepliesReadDocument = gql`
-    mutation markAllRepliesRead {
-  markAllRepliesRead
+export const MarkReplyUnreadDocument = gql`
+    mutation markReplyUnread($input: MarkReplyUnreadInput!) {
+  markReplyUnread(input: $input) {
+    ...Reply
+  }
 }
-    `;
-export type MarkAllRepliesReadMutationFn = Apollo.MutationFunction<MarkAllRepliesReadMutation, MarkAllRepliesReadMutationVariables>;
+    ${ReplyFragmentDoc}`;
+export type MarkReplyUnreadMutationFn = Apollo.MutationFunction<MarkReplyUnreadMutation, MarkReplyUnreadMutationVariables>;
 
 /**
- * __useMarkAllRepliesReadMutation__
+ * __useMarkReplyUnreadMutation__
  *
- * To run a mutation, you first call `useMarkAllRepliesReadMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useMarkAllRepliesReadMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useMarkReplyUnreadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkReplyUnreadMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [markAllRepliesReadMutation, { data, loading, error }] = useMarkAllRepliesReadMutation({
+ * const [markReplyUnreadMutation, { data, loading, error }] = useMarkReplyUnreadMutation({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useMarkAllRepliesReadMutation(baseOptions?: Apollo.MutationHookOptions<MarkAllRepliesReadMutation, MarkAllRepliesReadMutationVariables>) {
+export function useMarkReplyUnreadMutation(baseOptions?: Apollo.MutationHookOptions<MarkReplyUnreadMutation, MarkReplyUnreadMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<MarkAllRepliesReadMutation, MarkAllRepliesReadMutationVariables>(MarkAllRepliesReadDocument, options);
+        return Apollo.useMutation<MarkReplyUnreadMutation, MarkReplyUnreadMutationVariables>(MarkReplyUnreadDocument, options);
       }
-export type MarkAllRepliesReadMutationHookResult = ReturnType<typeof useMarkAllRepliesReadMutation>;
-export type MarkAllRepliesReadMutationResult = Apollo.MutationResult<MarkAllRepliesReadMutation>;
-export type MarkAllRepliesReadMutationOptions = Apollo.BaseMutationOptions<MarkAllRepliesReadMutation, MarkAllRepliesReadMutationVariables>;
+export type MarkReplyUnreadMutationHookResult = ReturnType<typeof useMarkReplyUnreadMutation>;
+export type MarkReplyUnreadMutationResult = Apollo.MutationResult<MarkReplyUnreadMutation>;
+export type MarkReplyUnreadMutationOptions = Apollo.BaseMutationOptions<MarkReplyUnreadMutation, MarkReplyUnreadMutationVariables>;
 export const CreateRoleDocument = gql`
     mutation createRole($input: CreateRoleInput!) {
   createRole(input: $input) {
@@ -6260,8 +6169,8 @@ export type PublicServersQueryHookResult = ReturnType<typeof usePublicServersQue
 export type PublicServersLazyQueryHookResult = ReturnType<typeof usePublicServersLazyQuery>;
 export type PublicServersQueryResult = Apollo.QueryResult<PublicServersQuery, PublicServersQueryVariables>;
 export const RepliesDocument = gql`
-    query replies($userId: ID!) {
-  replies(userId: $userId) {
+    query replies($input: RepliesInput!) {
+  replies(input: $input) {
     ...Reply
   }
 }
@@ -6279,7 +6188,7 @@ export const RepliesDocument = gql`
  * @example
  * const { data, loading, error } = useRepliesQuery({
  *   variables: {
- *      userId: // value for 'userId'
+ *      input: // value for 'input'
  *   },
  * });
  */
@@ -6446,7 +6355,7 @@ export const MessageChangedDocument = gql`
       }
       toUser {
         id
-        name
+        username
       }
     }
     updated {
@@ -6459,17 +6368,7 @@ export const MessageChangedDocument = gql`
       }
     }
     deleted {
-      ...Message
-      author {
-        ...User
-      }
-      serverUser {
-        name
-        color
-        roles {
-          ...Role
-        }
-      }
+      id
       channel {
         id
         server {
@@ -6487,8 +6386,7 @@ export const MessageChangedDocument = gql`
 }
     ${MessageFragmentDoc}
 ${UserFragmentDoc}
-${ServerUserFragmentDoc}
-${RoleFragmentDoc}`;
+${ServerUserFragmentDoc}`;
 
 /**
  * __useMessageChangedSubscription__
@@ -6554,9 +6452,9 @@ export function usePostChangedSubscription(baseOptions?: Apollo.SubscriptionHook
       }
 export type PostChangedSubscriptionHookResult = ReturnType<typeof usePostChangedSubscription>;
 export type PostChangedSubscriptionResult = Apollo.SubscriptionResult<PostChangedSubscription>;
-export const RepliesChangedDocument = gql`
-    subscription RepliesChanged {
-  repliesChanged {
+export const ReplyChangedDocument = gql`
+    subscription ReplyChanged {
+  replyChanged {
     added {
       ...Reply
     }
@@ -6571,26 +6469,26 @@ export const RepliesChangedDocument = gql`
     ${ReplyFragmentDoc}`;
 
 /**
- * __useRepliesChangedSubscription__
+ * __useReplyChangedSubscription__
  *
- * To run a query within a React component, call `useRepliesChangedSubscription` and pass it any options that fit your needs.
- * When your component renders, `useRepliesChangedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useReplyChangedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useReplyChangedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useRepliesChangedSubscription({
+ * const { data, loading, error } = useReplyChangedSubscription({
  *   variables: {
  *   },
  * });
  */
-export function useRepliesChangedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<RepliesChangedSubscription, RepliesChangedSubscriptionVariables>) {
+export function useReplyChangedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<ReplyChangedSubscription, ReplyChangedSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<RepliesChangedSubscription, RepliesChangedSubscriptionVariables>(RepliesChangedDocument, options);
+        return Apollo.useSubscription<ReplyChangedSubscription, ReplyChangedSubscriptionVariables>(ReplyChangedDocument, options);
       }
-export type RepliesChangedSubscriptionHookResult = ReturnType<typeof useRepliesChangedSubscription>;
-export type RepliesChangedSubscriptionResult = Apollo.SubscriptionResult<RepliesChangedSubscription>;
+export type ReplyChangedSubscriptionHookResult = ReturnType<typeof useReplyChangedSubscription>;
+export type ReplyChangedSubscriptionResult = Apollo.SubscriptionResult<ReplyChangedSubscription>;
 export const TypingUpdatedDocument = gql`
     subscription typingUpdated($userId: ID, $groupId: ID, $channelId: ID) {
   typingUpdated(userId: $userId, groupId: $groupId, channelId: $channelId) {

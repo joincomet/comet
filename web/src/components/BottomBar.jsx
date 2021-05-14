@@ -3,8 +3,6 @@ import UserAvatar from '@/components/user/UserAvatar'
 import {
   IconBell,
   IconDownload,
-  IconFolder,
-  IconSearch,
   IconSettings
 } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
@@ -16,6 +14,7 @@ import { useChangeOnlineStatusMutation } from '@/graphql/hooks'
 import { Link } from 'react-router-dom'
 import { useCopyToClipboard } from 'react-use'
 import toast from 'react-hot-toast'
+import { getDownloadLink } from '@/hooks/getDownloadLink'
 
 export default function BottomBar() {
   const [currentUser] = useCurrentUser()
@@ -37,37 +36,47 @@ export default function BottomBar() {
 
   // Update online status every 15 seconds
   useEffect(() => {
-    const id = setInterval(() => {
-      changeOnlineStatus({
-        variables: { input: { onlineStatus: currentUser.onlineStatus } }
-      })
-    }, 15000)
-    return () => clearInterval(id)
-  })
-  const copyToClipboard = useCopyToClipboard()[1]
+    if (currentUser) {
+      const id = setInterval(() => {
+        changeOnlineStatus({
+          variables: {
+            input: { onlineStatus: currentUser.onlineStatus }
+          }
+        })
+      }, 15000)
+      return () => clearInterval(id)
+    }
+  }, [currentUser])
+
+  const downloadLink = getDownloadLink()
 
   return (
     <>
-      <UserSettingsDialog open={open} setOpen={setOpen} />
+      {!!currentUser && <UserSettingsDialog open={open} setOpen={setOpen} />}
 
-      <div className="flex items-center shadow-md px-5 bottom-0 h-5.5 bg-gray-700 z-50">
-        <UserAvatar size={4.5} className="mr-2" user={currentUser} />
-        <Tippy content={currentUser.username}>
-          <div
-            className="dark:text-white text-sm cursor-pointer"
-            onClick={() => {
-              copyToClipboard(currentUser.username)
-              toast.success('Copied username!')
-            }}
-          >
-            {currentUser.name}
+      <div className="flex items-center shadow-md px-3 bottom-0 h-5.5 bg-gray-700 z-50">
+        {currentUser ? (
+          <>
+            <UserAvatar size={4.5} className="mr-2" user={currentUser} />
+            <div className="text-primary text-13 font-medium cursor-pointer">
+              {currentUser.username}
+            </div>
+            <div className="w-2 h-2 rounded-full bg-green-500 ml-2" />
+          </>
+        ) : (
+          <div className="flex items-center text-primary text-13 font-medium">
+            <div className="cursor-pointer hover:underline">Log In</div>
+            &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+            <div className="cursor-pointer hover:underline">Create account</div>
           </div>
-        </Tippy>
-        <div className="w-2 h-2 rounded-full bg-green-500 ml-2" />
+        )}
+
         <div className="ml-auto flex items-center space-x-4 text-primary">
           <Tippy
             content={`${
-              window.electron && updateAvailable
+              !window.electron
+                ? 'Download Desktop App'
+                : updateAvailable
                 ? 'Update available'
                 : 'Up to date!'
             }`}
@@ -77,20 +86,24 @@ export default function BottomBar() {
               onClick={() => {
                 if (window.electron && updateAvailable) {
                   window.electron.restart()
+                } else if (!window.electron) {
+                  window.open(downloadLink, '_blank')
                 }
               }}
             >
               <div
                 className={`text-xs font-medium ${
-                  updateAvailable ? 'text-green-500' : 'text-tertiary'
+                  updateAvailable || !window.electron
+                    ? 'text-green-500'
+                    : 'text-tertiary'
                 }`}
               >
                 v{version}
               </div>
 
-              {window.electron && updateAvailable && (
+              {((window.electron && updateAvailable) || !window.electron) && (
                 <div className="pl-2">
-                  <IconDownload className="w-4.5 h-4.5 text-green-500 cursor-pointer animate-bounce" />
+                  <IconDownload className="w-4.5 h-4.5 text-green-500 cursor-pointer" />
                 </div>
               )}
             </div>
@@ -108,17 +121,21 @@ export default function BottomBar() {
             </div>
           </Tippy>*/}
 
-          <Tippy content="Notifications" offset={offset}>
-            <Link to="/me/inbox">
-              <IconBell className="w-4.5 h-4.5 cursor-pointer" />
-            </Link>
-          </Tippy>
+          {!!currentUser && (
+            <>
+              <Tippy content="Notifications" offset={offset}>
+                <Link to="/inbox">
+                  <IconBell className="w-4.5 h-4.5 cursor-pointer" />
+                </Link>
+              </Tippy>
 
-          <Tippy content="Settings" offset={offset}>
-            <div onClick={() => setOpen(true)}>
-              <IconSettings className="w-4.5 h-4.5 cursor-pointer" />
-            </div>
-          </Tippy>
+              <Tippy content="Settings" offset={offset}>
+                <div onClick={() => setOpen(true)}>
+                  <IconSettings className="w-4.5 h-4.5 cursor-pointer" />
+                </div>
+              </Tippy>
+            </>
+          )}
         </div>
       </div>
     </>

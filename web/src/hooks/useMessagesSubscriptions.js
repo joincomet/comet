@@ -17,9 +17,9 @@ export const useMessagesSubscriptions = () => {
   })
   const currentServerId = matchedChannel?.params?.serverId
   const currentChannelId = matchedChannel?.params?.channelId
-  const matchedDm = matchPath(pathname, { path: '/me/dm/:userId' })
+  const matchedDm = matchPath(pathname, { path: '/dm/:userId' })
   const currentUserId = matchedDm?.params?.userId
-  const matchedGroup = matchPath(pathname, { path: '/me/group/:groupId' })
+  const matchedGroup = matchPath(pathname, { path: '/group/:groupId' })
   const currentGroupId = matchedGroup?.params?.groupId
 
   const [windowOpen, setWindowOpen] = useState(true)
@@ -98,8 +98,8 @@ export const useMessagesSubscriptions = () => {
                   `${window.electron ? '.' : ''}/icons/icon.png`,
                 timestamp: message.createdAt,
                 onClick: () => {
-                  if (messageUserId) push(`/me/dm/${messageUserId}`)
-                  else if (messageGroupId) push(`/me/group/${messageGroupId}`)
+                  if (messageUserId) push(`/dm/${messageUserId}`)
+                  else if (messageGroupId) push(`/group/${messageGroupId}`)
                   else if (messageChannelId && messageServerId)
                     push(
                       `/server/${messageServerId}/channel/${messageChannelId}`
@@ -116,7 +116,7 @@ export const useMessagesSubscriptions = () => {
                   `${window.electron ? '.' : ''}/icons/icon.png`,
                 timestamp: message.createdAt,
                 onClick: () => {
-                  push(`/me/friends`)
+                  push(`/friends`)
                   if (window.electron) window.electron.show()
                 }
               })
