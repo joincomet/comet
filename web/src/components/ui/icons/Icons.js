@@ -56,6 +56,9 @@ export {
   HiArrowLeft as IconBack,
   HiUserAdd as IconUserAdd,
   HiViewGrid as IconHub,
+  HiEye as IconShow,
+  HiEyeOff as IconHide,
+  HiMail as IconEmail,
   // EDITOR
   HiCode as IconFormatCodeInline,
   HiEmojiHappy as IconFormatEmoji,

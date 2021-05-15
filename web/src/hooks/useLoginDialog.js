@@ -7,3 +7,8 @@ export const useLoginDialog = () =>
     s.createAccount,
     s.setCreateAccount
   ])
+
+export const useOpenLogin = () => {
+  const open = useLoginDialog()[1]
+  return () => open(true)
+}

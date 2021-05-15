@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom'
 import { useCopyToClipboard } from 'react-use'
 import toast from 'react-hot-toast'
 import { getDownloadLink } from '@/hooks/getDownloadLink'
+import { useLoginDialog, useOpenLogin } from '@/hooks/useLoginDialog'
 
 export default function BottomBar() {
   const [currentUser] = useCurrentUser()
@@ -49,7 +50,8 @@ export default function BottomBar() {
   }, [currentUser])
 
   const downloadLink = getDownloadLink()
-
+  const [loginOpen, setLoginOpen, isCreateAccount, setCreateAccount] =
+    useLoginDialog()
   return (
     <>
       {!!currentUser && <UserSettingsDialog open={open} setOpen={setOpen} />}
@@ -65,9 +67,25 @@ export default function BottomBar() {
           </>
         ) : (
           <div className="flex items-center text-primary text-13 font-medium">
-            <div className="cursor-pointer hover:underline">Log In</div>
+            <div
+              className="cursor-pointer hover:underline"
+              onClick={() => {
+                setCreateAccount(false)
+                setLoginOpen(true)
+              }}
+            >
+              Log In
+            </div>
             &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-            <div className="cursor-pointer hover:underline">Create account</div>
+            <div
+              className="cursor-pointer hover:underline"
+              onClick={() => {
+                setCreateAccount(true)
+                setLoginOpen(true)
+              }}
+            >
+              Create account
+            </div>
           </div>
         )}
 

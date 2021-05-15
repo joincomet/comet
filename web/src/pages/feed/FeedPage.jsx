@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import UserFoldersSidebar from '@/pages/me/feed/UserFoldersSidebar'
+import UserFoldersSidebar from '@/pages/feed/UserFoldersSidebar'
 import PostsHeader from '@/components/post/PostsHeader'
 import { useStore } from '@/hooks/useStore'
 import Posts from '@/components/post/Posts'

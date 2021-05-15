@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useStore } from '@/hooks/useStore'
-import FriendListItem from '@/pages/me/friends/FriendListItem'
-import FriendsHeader from '@/pages/me/friends/FriendsHeader'
+import FriendListItem from '@/pages/friends/FriendListItem'
+import FriendsHeader from '@/pages/friends/FriendsHeader'
 import ctl from '@netlify/classnames-template-literals'
-import FriendRequestListItem from '@/pages/me/friends/FriendRequestListItem'
+import FriendRequestListItem from '@/pages/friends/FriendRequestListItem'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
 import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'
@@ -22,12 +22,8 @@ const label = ctl(`
 `)
 
 export default function FriendsPage() {
-  const {
-    friends,
-    outgoingFriendRequests,
-    incomingFriendRequests,
-    blocking
-  } = useUserRelationships()
+  const { friends, outgoingFriendRequests, incomingFriendRequests, blocking } =
+    useUserRelationships()
   const onlineFriends = friends.filter(f => f.isOnline)
   const friendRequests = outgoingFriendRequests.concat(incomingFriendRequests)
   const friendsPage = useStore(s => s.friendsPage)

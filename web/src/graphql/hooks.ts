@@ -341,8 +341,9 @@ export type LinkMetadata = {
 };
 
 export type LoginInput = {
-  email: Scalars['String'];
+  email?: Maybe<Scalars['EmailAddress']>;
   password: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 export type LoginResponse = {

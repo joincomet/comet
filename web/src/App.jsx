@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/icons/Icons'
 import { Meteors } from '@/components/ui/meteors'
 import MobileComingSoon from '@/components/ui/MobileComingSoon'
+import LoginDialog from '@/components/LoginDialog'
 
 export default function App() {
   const AppRouter = window.electron ? HashRouter : BrowserRouter
@@ -47,6 +48,7 @@ export default function App() {
               <ResponsiveToaster />
               <CustomDragLayer />
               {window.electron && !isMac && <TitleBar />}
+              <LoginDialog />
               <div
                 style={
                   window.electron

@@ -1,7 +1,15 @@
 import { Field, InputType } from 'type-graphql'
 import { IsEmail, Length, Matches } from 'class-validator'
 import { Context } from '@/types'
-import { Folder, FolderVisibility, User, UserFolder } from '@/entity'
+import {
+  Folder,
+  FolderVisibility,
+  Server,
+  ServerUser,
+  ServerUserStatus,
+  User,
+  UserFolder
+} from '@/entity'
 import { createAccessToken, handleUnderscore, ReorderUtils } from '@/util'
 import * as argon2 from 'argon2'
 import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
@@ -32,13 +40,13 @@ export async function createAccount(
   email = email.toLowerCase()
 
   const foundEmail = await em.findOne(User, {
-    email: handleUnderscore(email),
+    email: { $ilike: handleUnderscore(email) },
     isDeleted: false
   })
   if (foundEmail) throw new Error('error.login.emailInUse')
 
   const foundUsername = await em.findOne(User, {
-    email: handleUnderscore(email),
+    username: { $ilike: handleUnderscore(username) },
     isDeleted: false
   })
   if (foundUsername) throw new Error('error.login.usernameTaken')
@@ -76,7 +84,19 @@ export async function createAccount(
     })
   )
 
-  await em.persistAndFlush(user)
+  const cometServer = await em.findOne(Server, { urlName: 'Comet' })
+  if (cometServer) {
+    cometServer.userCount++
+    em.persist(
+      em.create(ServerUser, {
+        user,
+        server: cometServer,
+        status: ServerUserStatus.Joined
+      })
+    )
+  }
+
+  await em.persistAndFlush([user, cometServer])
   const accessToken = createAccessToken(user)
   liveQueryStore.invalidate(`Query.user`)
   ctx.userId = user.id

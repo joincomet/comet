@@ -38,11 +38,11 @@ export class WebSocketLink extends ApolloLink {
         }
       },
       on: {
-        connected: (socket: WebSocket) => {
+        connected: (socket: unknown) => {
           wsStatus.status = 'connected'
           gracefullyRestart = () => {
-            if (socket.readyState === WebSocket.OPEN) {
-              socket.close(4205, 'Client Restart')
+            if ((socket as WebSocket).readyState === WebSocket.OPEN) {
+              ;(socket as WebSocket).close(4205, 'Client Restart')
             }
           }
 

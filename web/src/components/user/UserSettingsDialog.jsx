@@ -35,10 +35,8 @@ export default function UserSettingsDialog({ open, setOpen }) {
   const password = watch('password')
   const currentPassword = watch('currentPassword')
 
-  const [
-    updateAccount,
-    { loading: updateAccountLoading }
-  ] = useUpdateAccountMutation()
+  const [updateAccount, { loading: updateAccountLoading }] =
+    useUpdateAccountMutation()
 
   const [changeAvatar] = useChangeUserAvatarMutation()
   const logout = () => {
@@ -90,7 +88,7 @@ export default function UserSettingsDialog({ open, setOpen }) {
                 <SidebarItem
                   onClick={() => {
                     setOpen(false)
-                    push('/')
+                    push('/home')
                     logout()
                     apolloClient.resetStore()
                     gracefullyRestart()
@@ -311,7 +309,7 @@ function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
             onClick={() => {
               deleteAccount({ variables: { input: { password } } }).then(() => {
                 setDeleteOpen(false)
-                push('/')
+                push('/home')
                 apolloClient.resetStore()
               })
             }}

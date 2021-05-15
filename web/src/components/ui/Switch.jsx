@@ -1,11 +1,17 @@
 import { Switch as HeadlessSwitch } from '@headlessui/react'
 import { IconCheck, IconX } from '@/components/ui/icons/Icons'
 
-export default function Switch({ checked, onChange, children, green = false }) {
+export default function Switch({
+  checked,
+  onChange,
+  children,
+  green = false,
+  className
+}) {
   return (
     <HeadlessSwitch.Group as="div" className="flex items-center space-x-3">
       {children && (
-        <HeadlessSwitch.Label className="uppercase text-11 font-semibold tracking-widest text-tertiary select-none">
+        <HeadlessSwitch.Label className={className}>
           {children}
         </HeadlessSwitch.Label>
       )}

@@ -329,8 +329,9 @@ type LinkMetadata {
 }
 
 input LoginInput {
-  email: String!
+  email: EmailAddress
   password: String!
+  username: String
 }
 
 type LoginResponse {

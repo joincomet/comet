@@ -1,10 +1,10 @@
-import FriendListItemBase from '@/pages/me/friends/FriendListItemBase'
+import FriendListItemBase from '@/pages/friends/FriendListItemBase'
 import Tippy from '@tippyjs/react'
 import { IconChat, IconDotsVertical } from '@/components/ui/icons/Icons'
 import { useTranslation } from 'react-i18next'
 import FriendListItemButton, {
   friendListButtonClass
-} from '@/pages/me/friends/FriendListItemButton'
+} from '@/pages/friends/FriendListItemButton'
 
 export default function FriendListItem({ friend }) {
   const { t } = useTranslation()

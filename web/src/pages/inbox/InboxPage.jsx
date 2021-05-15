@@ -1,5 +1,5 @@
 import { useStore } from '@/hooks/useStore'
-import InboxHeader from '@/pages/me/inbox/InboxHeader'
+import InboxHeader from '@/pages/inbox/InboxHeader'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
 import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'

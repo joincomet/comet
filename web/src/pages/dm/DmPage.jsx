@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import DmHeader from '@/pages/me/dm/DmHeader'
+import DmHeader from '@/pages/dm/DmHeader'
 import Messages from '@/components/message/Messages'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
 import Page from '@/components/ui/page/Page'

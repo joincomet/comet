@@ -4,8 +4,11 @@ import { useHistory } from 'react-router-dom'
 import Dialog from '@/components/ui/dialog/Dialog'
 import {
   IconCreateServer,
+  IconEdit,
   IconEditAvatar,
-  IconUploadPhoto
+  IconSpinner,
+  IconUploadPhoto,
+  IconUserToServerArrow
 } from '@/components/ui/icons/Icons'
 import Button from '@/components/ui/Button'
 import { readURL } from '@/utils/readURL'
@@ -14,6 +17,21 @@ import ServerListItem from '@/components/server/list/ServerListItem'
 import Switch from '@/components/ui/Switch'
 import DialogTitle from '@/components/ui/dialog/DialogTitle'
 import { CurrentUserDocument, useCreateServerMutation } from '@/graphql/hooks'
+import ctl from '@netlify/classnames-template-literals'
+
+const buttonClass = ctl(`
+  disabled:opacity-50
+  focus:outline-none
+  shadow
+  rounded
+  bg-green-600
+  w-20
+  h-9
+  flex
+  items-center
+  justify-center
+  disabled:cursor-not-allowed
+`)
 
 export default function CreateServerDialog() {
   const [createServer, { loading }] = useCreateServerMutation({
@@ -81,74 +99,72 @@ export default function CreateServerDialog() {
         close={() => setIsOpen(false)}
         closeOnOverlayClick
       >
-        <div
-          className="rounded-lg dark:bg-gray-750 max-w-md w-full p-4"
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="rounded-lg dark:bg-gray-800 max-w-lg w-full relative"
           onClick={e => e.stopPropagation()}
         >
-          <DialogTitle className="title mb-4">
-            {t('server.create.title')}
-          </DialogTitle>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-center"
+          <div className="h-24 bg-gradient-to-br from-red-400 to-indigo-600 relative rounded-t-lg group cursor-pointer">
+            <div className="absolute inset-0 transition bg-black opacity-0 group-hover:opacity-50 flex items-center justify-center">
+              <IconEdit className="w-10 h-10" />
+            </div>
+          </div>
+
+          <input
+            type="file"
+            {...register('avatarFile')}
+            className="hidden"
+            id="avatarFile"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+          />
+
+          <label
+            htmlFor="avatarFile"
+            className="cursor-pointer rounded-3xl h-24 w-24 absolute left-3 top-24 transform -translate-y-1/2 dark:bg-gray-700 shadow group bg-center bg-cover"
+            style={avatarSrc ? { backgroundImage: `url(${avatarSrc})` } : {}}
           >
+            <div className="absolute rounded-3xl inset-0 transition bg-black opacity-0 group-hover:opacity-50 flex items-center justify-center">
+              <IconEdit className="w-10 h-10" />
+            </div>
+          </label>
+
+          <div className="pl-30 pr-5 pt-2 text-left">
             <input
-              type="file"
-              {...register('avatarFile')}
-              className="hidden"
-              id="avatarFile"
-              accept="image/png,image/jpeg,image/webp,image/gif"
+              placeholder="Display Name"
+              className="h-9 px-1.5 w-full text-primary font-medium bg-transparent focus:outline-none border-b dark:border-gray-700 dark:focus:border-blue-500 transition"
             />
+          </div>
 
-            {!avatarSrc ? (
-              <label
-                htmlFor="avatarFile"
-                className="transition dark:hover:bg-gray-700 rounded-full h-24 w-24 border-2 text-tertiary border-dashed border-gray-600 dark:border-gray-400 flex flex-col items-center justify-center mb-4 cursor-pointer select-none"
-              >
-                <IconUploadPhoto className="w-6 h-6" />
-                <div className="text-sm pt-1">{t('server.create.upload')}</div>
-              </label>
-            ) : (
-              <label
-                htmlFor="avatarFile"
-                className="transition rounded-full h-24 w-24 block mb-4 cursor-pointer select-none group relative"
-              >
-                <IconEditAvatar className="absolute w-6 h-6 text-white inset-1/2 transform -translate-x-1/2 -translate-y-1/2 transition opacity-0 group-hover:opacity-100" />
-                <img
-                  src={avatarSrc}
-                  className="w-full h-full object-cover rounded-full transition group-hover:opacity-25"
-                  alt=""
-                />
-              </label>
-            )}
-
-            <div className="mb-4 w-full">
-              <label className="label text-left" htmlFor="name">
-                {t('server.create.name')}
-              </label>
-
+          <div className="pb-5 space-y-3 pt-3 px-5 text-left">
+            <div className="text-sm text-accent flex items-center py-3">
+              <span className="h-7 flex items-center">joincomet.app/+</span>
               <input
-                {...register('name', {
-                  required: true,
-                  maxLength: 100
-                })}
-                maxLength={100}
-                className="textbox px-3"
-                id="name"
+                placeholder="Name"
+                className="bg-transparent h-7 w-full border-b dark:border-gray-700 focus:outline-none transition dark:focus:border-blue-500"
               />
             </div>
 
-            <div className="pb-4 w-full">
-              <Button loading={loading} disabled={!name || name.length < 2}>
-                {t('continue')}
-              </Button>
-            </div>
-
-            <Switch checked={isPublic} onChange={() => setPublic(!isPublic)}>
-              Public Planet
+            <Switch
+              className="text-13 font-medium text-tertiary"
+              checked={isPublic}
+              onChange={() => setPublic(!isPublic)}
+            >
+              Public visibility
             </Switch>
-          </form>
-        </div>
+          </div>
+
+          <div className="dark:bg-gray-800 rounded absolute right-5 bottom-9 transform translate-y-1/2">
+            <button type="submit" className={buttonClass}>
+              {loading ? (
+                <IconSpinner className="w-5 h-5 text-primary" />
+              ) : (
+                <IconUserToServerArrow className="w-5 h-5 text-primary" />
+              )}
+            </button>
+          </div>
+
+          <div className="rounded-b-lg dark:bg-gray-750 h-9" />
+        </form>
       </Dialog>
     </>
   )

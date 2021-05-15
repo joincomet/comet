@@ -1,6 +1,6 @@
-import FriendListItemBase from '@/pages/me/friends/FriendListItemBase'
+import FriendListItemBase from '@/pages/friends/FriendListItemBase'
 import { IconUnblockUser } from '@/components/ui/icons/Icons'
-import FriendListItemButton from '@/pages/me/friends/FriendListItemButton'
+import FriendListItemButton from '@/pages/friends/FriendListItemButton'
 
 export default function BlockedUserListItem({ user }) {
   return (

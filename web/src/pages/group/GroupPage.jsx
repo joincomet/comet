@@ -1,6 +1,6 @@
 import Header from '@/components/ui/header/Header'
 import { useParams } from 'react-router-dom'
-import GroupUsersSidebar from '@/pages/me/group/GroupUsersSidebar'
+import GroupUsersSidebar from '@/pages/group/GroupUsersSidebar'
 import Messages from '@/components/message/Messages'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
 import Page from '@/components/ui/page/Page'

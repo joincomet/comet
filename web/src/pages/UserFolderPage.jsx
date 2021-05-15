@@ -1,4 +1,4 @@
-import UserFoldersSidebar from '@/pages/me/feed/UserFoldersSidebar'
+import UserFoldersSidebar from '@/pages/feed/UserFoldersSidebar'
 import Posts from '@/components/post/Posts'
 import { useParams } from 'react-router-dom'
 import { useStore } from '@/hooks/useStore'

@@ -1,4 +1,8 @@
-export default function EndReached({ children = 'You have reached the end!' }) {
+import { memo } from 'react'
+
+export default memo(function EndReached({
+  children = 'You have reached the end!'
+}) {
   return (
     <div className="flex flex-col items-center justify-center text-primary">
       <img
@@ -9,4 +13,4 @@ export default function EndReached({ children = 'You have reached the end!' }) {
       <div className="text-tertiary pt-1 text-lg font-semibold">{children}</div>
     </div>
   )
-}
+})

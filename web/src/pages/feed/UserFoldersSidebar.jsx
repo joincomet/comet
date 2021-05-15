@@ -9,17 +9,21 @@ import {
   IconChat,
   IconCreate,
   IconCreateServer,
+  IconDotsHorizontal,
   IconFolder,
   IconFriends,
   IconText,
   IconTop
 } from '@/components/ui/icons/Icons'
+import { useLoginDialog } from '@/hooks/useLoginDialog'
 
 export default function UserFoldersSidebar() {
   const { t } = useTranslation()
   const showFolders = useStore(s => s.showFolders)
   const userFolders = useUserFolders()
   const [currentUser] = useCurrentUser()
+  const [loginOpen, setLoginOpen, isCreateAccount, setCreateAccount] =
+    useLoginDialog()
 
   return (
     <Sidebar right show={showFolders}>
@@ -71,10 +75,28 @@ export default function UserFoldersSidebar() {
                 </div>
                 Add Friends
               </div>
-              <button className="focus:outline-none w-full h-8 rounded cursor-pointer select-none border border-gray-750 text-blue-500 flex items-center justify-center text-sm font-medium">
+              <div className="flex items-center text-sm font-medium">
+                <div className="mr-3 rounded dark:bg-gray-900 p-1.5 flex items-center justify-center shadow-inner">
+                  <IconDotsHorizontal className="w-5 h-5 text-mid" />
+                </div>
+                And Much More
+              </div>
+              <button
+                onClick={() => {
+                  setLoginOpen(true)
+                  setCreateAccount(false)
+                }}
+                className="focus:outline-none w-full h-8 rounded cursor-pointer select-none border border-gray-750 text-blue-500 flex items-center justify-center text-sm font-medium"
+              >
                 Log In
               </button>
-              <button className="focus:outline-none w-full h-8 rounded cursor-pointer select-none bg-blue-600 text-white flex items-center justify-center text-sm font-medium">
+              <button
+                onClick={() => {
+                  setLoginOpen(true)
+                  setCreateAccount(true)
+                }}
+                className="focus:outline-none w-full h-8 rounded cursor-pointer select-none bg-blue-600 text-white flex items-center justify-center text-sm font-medium"
+              >
                 Create Account
               </button>
             </div>

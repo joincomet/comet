@@ -10,13 +10,11 @@ import { useStore } from '@/hooks/useStore'
 import { getOS } from '@/utils/getOS'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
-import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { ServerPermission } from '@/graphql/hooks'
+import { ServerPermission, usePublicServersQuery } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function ServerList() {
-  const servers = useJoinedServers()
   const { pathname } = useLocation()
   const { t } = useTranslation()
   const homePage = useStore(s => s.homePage)
@@ -24,6 +22,13 @@ export default function ServerList() {
   const exploreActive = pathname.startsWith('/explore')
   const isMac = getOS() === 'Mac OS' && window.electron
   const [currentUser] = useCurrentUser()
+
+  const { data: publicServersData } = usePublicServersQuery({
+    variables: { featured: true }
+  })
+  const servers = currentUser
+    ? currentUser.servers
+    : publicServersData?.publicServers ?? []
 
   return (
     <>
