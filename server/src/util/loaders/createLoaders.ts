@@ -8,8 +8,6 @@ import { channelUnreadLoader } from '@/util/loaders/channel/ChannelUnreadLoader'
 import { commentVoteLoader } from '@/util/loaders/comment/CommentVoteLoader'
 import { groupUnreadCountLoader } from '@/util/loaders/group/GroupUnreadCountLoader'
 import { postVoteLoader } from '@/util/loaders/post/PostVoteLoader'
-import { serverMyRolesLoader } from '@/util/loaders/server/ServerMyRolesLoader'
-import { serverNotificationSettingLoader } from '@/util/loaders/server/ServerNotificationSettingLoader'
 import { serverPermissionsLoader } from '@/util/loaders/server/ServerPermissionsLoader'
 import { serverRolesLoader } from '@/util/loaders/server/ServerRolesLoader'
 import { serverJoinedLoader } from '@/util/loaders/server/ServerJoinedLoader'
@@ -41,11 +39,6 @@ export function createLoaders(em: EntityManager, userId: string): Loaders {
 
     serverChannelsLoader: serverChannelsLoader(em),
     serverFoldersLoader: serverFoldersLoader(em),
-    serverMyRolesLoader: serverMyRolesLoader(em, userId),
-    serverNotificationSettingLoader: serverNotificationSettingLoader(
-      em,
-      userId
-    ),
     serverPermissionsLoader: serverPermissionsLoader(em, userId),
     serverRolesLoader: serverRolesLoader(em),
     serverSystemMessagesChannelLoader: serverSystemMessagesChannelLoader(em),

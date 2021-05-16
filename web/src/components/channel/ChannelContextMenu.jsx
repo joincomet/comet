@@ -1,34 +1,22 @@
 import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { matchPath, useHistory, useLocation } from 'react-router-dom'
-import {
-  CurrentUserDocument,
-  ServerPermission,
-  useDeleteChannelMutation
-} from '@/graphql/hooks'
-import { useApolloClient } from '@apollo/client'
+import { useHistory, useLocation } from 'react-router-dom'
+import { ServerPermission, useDeleteChannelMutation } from '@/graphql/hooks'
 
-export default function ChannelContextMenu({ channel, ContextMenuItem }) {
+export default function ChannelContextMenu({
+  channel,
+  server,
+  ContextMenuItem
+}) {
   const { t } = useTranslation()
   const { push } = useHistory()
   const { pathname } = useLocation()
-  const matchedServer = matchPath(pathname, {
-    path: '/server/:serverId'
-  })
-  const matchedChannel = matchPath(pathname, {
-    path: '/server/:serverId/channel/:channelId'
-  })
-  const serverId = matchedServer?.params?.serverId
-  const channelId = matchedChannel?.params?.channelId
   const [canManageChannels] = useHasServerPermissions({
-    serverId,
+    server,
     permissions: [ServerPermission.ManageChannels]
   })
-
-  const apolloClient = useApolloClient()
   const [deleteChannel] = useDeleteChannelMutation()
-
   return (
     <>
       <ContextMenuSection>
@@ -40,15 +28,9 @@ export default function ChannelContextMenu({ channel, ContextMenuItem }) {
             label={t('channel.context.delete')}
             red
             onClick={() => {
-              if (pathname === `/server/${serverId}/channel/${channelId}`)
-                push(`/server/${serverId}`)
+              if (pathname === `/+${server.name}/#${channel.name}`)
+                push(`/+${server.name}`)
               deleteChannel({ variables: { input: { channelId: channel.id } } })
-              const cache = apolloClient.cache
-              const data = cache.readQuery({ query: CurrentUserDocument })
-              const clone = JSON.parse(JSON.stringify(data))
-              const server = clone.user.servers.find(s => s.id === serverId)
-              server.channels = server.channels.filter(c => c.id !== channel.id)
-              cache.writeQuery({ query: CurrentUserDocument, data: clone })
             }}
           />
         )}

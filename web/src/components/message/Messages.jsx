@@ -13,10 +13,12 @@ import {
   useReadDmMutation,
   useReadGroupMutation
 } from '@/graphql/hooks'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 const PREPEND_OFFSET = 10 ** 7
 
-export default function Messages({ channel, user, group, users, serverUsers }) {
+export default function Messages({ channel, server, user, group, users }) {
+  const [currentUser] = useCurrentUser()
   const [readDm] = useReadDmMutation()
   const [readGroup] = useReadGroupMutation()
   const [readChannel] = useReadChannelMutation()
@@ -35,17 +37,16 @@ export default function Messages({ channel, user, group, users, serverUsers }) {
     setLength(messages?.length || 0)
     if (prevLength === 0) virtuoso.current.scrollBy({ top: PREPEND_OFFSET })
 
-    if (channel)
-      readChannel({ variables: { input: { channelId: channel.id } } })
-    if (group) readGroup({ variables: { input: { groupId: group.id } } })
-    if (user) readDm({ variables: { input: { userId: user.id } } })
+    if (currentUser) {
+      if (channel)
+        readChannel({ variables: { input: { channelId: channel.id } } })
+      if (group) readGroup({ variables: { input: { groupId: group.id } } })
+      if (user) readDm({ variables: { input: { userId: user.id } } })
+    }
   }, [channel, user, group])
 
-  const {
-    atBottom,
-    newMessagesNotification,
-    setNewMessagesNotification
-  } = useNewMessageNotification(messages)
+  const { atBottom, newMessagesNotification, setNewMessagesNotification } =
+    useNewMessageNotification(messages)
 
   const numItemsPrepended = usePrependedMessagesCount(messages)
   const shouldForceScrollToBottom = useShouldForceScrollToBottom(messages)
@@ -62,6 +63,7 @@ export default function Messages({ channel, user, group, users, serverUsers }) {
 
       return (
         <Message
+          server={server}
           message={message}
           index={messageIndex}
           prevMessage={prevMessage}
@@ -115,13 +117,12 @@ export default function Messages({ channel, user, group, users, serverUsers }) {
           totalCount={messages?.length || 0}
         />
       </div>
-      {(!!users || !!serverUsers) && (
+      {!!users && (
         <MessageInput
           channel={channel}
           user={user}
           group={group}
           users={users}
-          serverUsers={serverUsers}
         />
       )}
     </>

@@ -13,6 +13,7 @@ import { useStore } from '@/hooks/useStore'
 import { useToggleCommentVote } from '@/components/comment/useToggleCommentVote'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
+import toast from 'react-hot-toast'
 
 const replyBtnClass = ctl(`
   ml-4
@@ -34,9 +35,8 @@ export default function Comment({
   isLast
 }) {
   const { t } = useTranslation()
-  const { serverId } = useParams()
   const [canComment, canVote] = useHasServerPermissions({
-    serverId,
+    server: post.server,
     permissions: [ServerPermission.CreateComment, ServerPermission.VoteComment]
   })
   const [collapse, setCollapse] = useState(false)
@@ -61,7 +61,6 @@ export default function Comment({
           >
             <UserPopup
               user={comment.author?.user}
-              nickname={comment.author?.nickname}
               roles={comment.author?.roles}
             >
               <UserAvatar
@@ -86,7 +85,6 @@ export default function Comment({
                 <UserPopup
                   user={comment.author?.user}
                   roles={comment.author?.roles}
-                  nickname={comment.author?.nickname}
                 >
                   <div
                     className={`text-sm font-medium cursor-pointer hover:underline leading-none ${
@@ -94,7 +92,7 @@ export default function Comment({
                     }`}
                     style={{ color: comment.author.color }}
                   >
-                    {comment.author.name}
+                    {comment.author?.user?.username ?? '[deleted]'}
                   </div>
                 </UserPopup>
               </ContextMenuTrigger>
@@ -175,13 +173,18 @@ export default function Comment({
   )
 }
 
-function VoteButton({ comment }) {
+function VoteButton({ comment, canVote }) {
   const toggleVote = useToggleCommentVote(comment)
+  const { t } = useTranslation()
 
   return (
     <div
       onClick={e => {
         e.stopPropagation()
+        if (!canVote) {
+          toast.error(t('comment.context.votePermission'))
+          return
+        }
         toggleVote()
       }}
       className={`${

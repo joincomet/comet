@@ -65,7 +65,7 @@ export default function ServerInfoCard({
           if (!server.isJoined) {
             joinServer({ variables: { input: { serverId: server.id } } })
           } else {
-            push(`/server/${server.id}`)
+            push(`/+${server.name}`)
           }
         }}
       >
@@ -81,11 +81,13 @@ export default function ServerInfoCard({
             : undefined
         }
       >
-        <ServerAvatar
-          size={10}
-          server={server}
-          className="dark:bg-gray-750 rounded-xl ring-4 dark:ring-gray-800 transition dark:group-hover:ring-gray-850 group-hover:shadow-md -bottom-3 left-4 absolute"
-        />
+        <div className="absolute left-4 -bottom-3">
+          <ServerAvatar
+            size={10}
+            server={server}
+            className="dark:bg-gray-750 rounded-xl ring-4 dark:ring-gray-800 transition dark:group-hover:ring-gray-850 group-hover:shadow-md"
+          />
+        </div>
       </div>
 
       <div className="flex flex-col flex-grow px-4 pt-7 pb-4 h-40">

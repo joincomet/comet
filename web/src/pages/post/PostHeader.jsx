@@ -22,7 +22,7 @@ export default function PostHeader({ post }) {
             if (canGoBack) {
               goBack()
             } else {
-              push(`/server/${post?.server.id}`)
+              push(`/+${post?.server.name}`)
             }
           }}
         >

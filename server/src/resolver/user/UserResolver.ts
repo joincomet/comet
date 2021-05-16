@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Authorized,
   Ctx,
   FieldResolver,
@@ -28,7 +29,7 @@ import {
   updateAccount,
   UpdateAccountInput
 } from '@/resolver/user/mutations'
-import { user } from '@/resolver/user/queries'
+import { user, UserArgs } from '@/resolver/user/queries'
 import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @Resolver(() => User)
@@ -100,17 +101,14 @@ export class UserResolver {
 
   @FieldResolver()
   isCurrentUser(@Ctx() { userId }: Context, @Root() user: User): boolean {
-    return userId && user.id === userId
+    return !!userId && user.id === userId
   }
 
   // --- Queries --- //
 
   @Query(() => User, { nullable: true })
-  async user(
-    @Ctx() ctx: Context,
-    @Arg('id', () => ID, { nullable: true }) id?: string
-  ): Promise<User> {
-    return user(ctx, id)
+  async user(@Ctx() ctx: Context, @Args() args: UserArgs): Promise<User> {
+    return user(ctx, args)
   }
 
   // --- Mutations --- //

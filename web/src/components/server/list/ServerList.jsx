@@ -1,18 +1,20 @@
 import { IconExplore, IconHome } from '@/components/ui/icons/Icons'
 import ServerAvatar from '@/components/server/ServerAvatar'
-import CreateServerDialog from '@/components/server/create/CreateServerDialog'
 import { matchPath, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ServerListItem from '@/components/server/list/ServerListItem'
-import { useDrag } from 'react-dnd'
-import { DragItemTypes } from '@/types/DragItemTypes'
 import { useStore } from '@/hooks/useStore'
 import { getOS } from '@/utils/getOS'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { ServerPermission, usePublicServersQuery } from '@/graphql/hooks'
+import {
+  ServerPermission,
+  usePublicServersQuery,
+  ChannelType
+} from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import CreateServerButton from '@/components/server/create/CreateServerButton'
 
 export default function ServerList() {
   const { pathname } = useLocation()
@@ -72,7 +74,7 @@ export default function ServerList() {
               />
             </ServerListItem>
 
-            {!!currentUser && <CreateServerDialog />}
+            {!!currentUser && <CreateServerButton />}
           </div>
 
           {!!servers && servers.length > 0 && (
@@ -89,26 +91,20 @@ export default function ServerList() {
 }
 
 function ServerListServer({ server }) {
-  const [{ opacity }, dragRef] = useDrag({
-    type: DragItemTypes.Server,
-    item: server,
-    collect: monitor => ({
-      opacity: monitor.isDragging() ? 0.6 : 1
-    })
-  })
-
   const { pathname } = useLocation()
-  const matched = matchPath(pathname, { path: '/server/:serverId' })
-  const serverId = matched?.params?.serverId
+  const matched = matchPath(pathname, { path: '/:server' })
+  const serverName = matched?.params?.server?.substring(1)
   const serverPages = useStore(s => s.serverPages)
   const [canViewPrivateChannels] = useHasServerPermissions({
-    serverId,
+    server,
     permissions: [ServerPermission.PrivateChannels]
   })
-  const unread = !!server.channels
-    .filter(channel => (channel.isPrivate ? canViewPrivateChannels : true))
+  const unread = !!(server.channels ?? [])
+    .filter(channel =>
+      channel.type === ChannelType.Private ? canViewPrivateChannels : true
+    )
     .find(c => c.isUnread)
-  const active = serverId === server.id
+  const active = serverName === server.name
 
   return (
     <ContextMenuTrigger
@@ -116,18 +112,16 @@ function ServerListServer({ server }) {
       data={{ type: ContextMenuType.Server, server }}
     >
       <ServerListItem
-        to={`/server/${server.id}${
+        to={`/+${server.name}${
           serverPages[server.id] ? `/${serverPages[server.id]}` : ''
         }`}
-        name={server.name}
-        ref={dragRef}
+        name={server.displayName}
         active={active}
         unread={unread}
       >
         <ServerAvatar
           server={server}
           size={12}
-          style={{ opacity }}
           className={`bg-gray-200 h-12 w-12 dark:bg-gray-800 group-hover:rounded-2xl transition-all ${
             active ? 'rounded-2xl' : 'rounded-3xl'
           }`}

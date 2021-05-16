@@ -52,7 +52,6 @@ export async function login(
   user.lastLoginAt = new Date()
   await em.persistAndFlush(user)
   const accessToken = createAccessToken(user)
-  liveQueryStore.invalidate(`Query.user`)
   ctx.userId = user.id
   ctx.loaders = createLoaders(em, user.id)
   return {

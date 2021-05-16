@@ -29,7 +29,6 @@ import {
   Role,
   Server,
   ServerFolder,
-  ServerInvite,
   ServerUser,
   User,
   UserFolder
@@ -60,7 +59,6 @@ export const mikroOrmConf = {
     PostVote,
     Role,
     Server,
-    ServerInvite,
     ServerUser,
     Relationship,
     User,

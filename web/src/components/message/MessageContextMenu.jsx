@@ -13,23 +13,22 @@ import {
 } from '@/graphql/hooks'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 
-export default function MessageContextMenu({ message, ContextMenuItem }) {
+export default function MessageContextMenu({
+  message,
+  server,
+  ContextMenuItem
+}) {
   const { pathname } = useLocation()
   const matchedGroup = matchPath(pathname, {
     path: '/group/:groupId'
   })
   const matchedDm = matchPath(pathname, {
-    path: '/dm/:userId'
-  })
-  const matchedChannel = matchPath(pathname, {
-    path: '/server/:serverId/channel/:channelId'
+    path: '/dm/:username'
   })
   const groupId = matchedGroup?.params?.groupId
-  const userId = matchedDm?.params?.userId
-  const serverId = matchedChannel?.params?.serverId
-  const channelId = matchedChannel?.params?.channelId
+  const username = matchedDm?.params?.username
   const [canManageMessages] = useHasServerPermissions({
-    serverId,
+    server,
     permissions: [ServerPermission.ManageMessages]
   })
   const copyToClipboard = useCopyToClipboard()[1]
@@ -42,7 +41,7 @@ export default function MessageContextMenu({ message, ContextMenuItem }) {
 
   const isAuthor = message.author.id === currentUser.id
   const canDelete = canManageMessages || isAuthor
-  const canPin = canManageMessages || groupId || userId
+  const canPin = canManageMessages || groupId || username
 
   return (
     <>

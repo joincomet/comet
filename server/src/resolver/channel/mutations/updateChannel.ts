@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Channel, ServerPermission, User } from '@/entity'
+import { Channel, ChannelType, ServerPermission, User } from '@/entity'
+import { handleUnderscore } from '@/util'
 
 @InputType()
 export class UpdateChannelInput {
@@ -10,13 +11,13 @@ export class UpdateChannelInput {
   @Field({ nullable: true })
   name?: string
 
-  @Field({ nullable: true })
-  isPrivate?: boolean
+  @Field(() => ChannelType, { nullable: true })
+  type?: boolean
 }
 
 export async function updateChannel(
   { em, userId, liveQueryStore }: Context,
-  { channelId, name, isPrivate }: UpdateChannelInput
+  { channelId, name, type }: UpdateChannelInput
 ): Promise<Channel> {
   const user = await em.findOneOrFail(User, userId)
   const channel = await em.findOneOrFail(Channel, channelId, ['server'])
@@ -25,9 +26,18 @@ export async function updateChannel(
     channel.server.id,
     ServerPermission.ManageChannels
   )
+
+  if (name) {
+    const foundChannel = await em.findOne(Channel, {
+      server: channel.server,
+      name: { $ilike: handleUnderscore(name) }
+    })
+    if (foundChannel) throw new Error('Channel with that name already exists')
+  }
+
   em.assign(channel, {
     name: name ?? channel.name,
-    isPrivate: isPrivate ?? channel.isPrivate
+    type: type ?? channel.type
   })
   await em.persistAndFlush(channel)
   liveQueryStore.invalidate(`Channel:${channelId}`)

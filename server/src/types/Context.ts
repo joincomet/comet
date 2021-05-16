@@ -10,7 +10,6 @@ import {
   User
 } from '@/entity'
 import DataLoader from 'dataloader'
-import { NotificationSetting } from '@/types/NotificationSetting'
 import { LiveQueryStore } from '@/util'
 
 export interface Context {
@@ -32,8 +31,6 @@ export interface Loaders {
 
   serverChannelsLoader: DataLoader<string, Channel[]>
   serverFoldersLoader: DataLoader<string, Folder[]>
-  serverMyRolesLoader: DataLoader<string, Role[]>
-  serverNotificationSettingLoader: DataLoader<string, NotificationSetting>
   serverPermissionsLoader: DataLoader<string, ServerPermission[]>
   serverRolesLoader: DataLoader<string, Role[]>
   serverSystemMessagesChannelLoader: DataLoader<string, Channel>

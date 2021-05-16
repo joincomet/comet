@@ -8240,9 +8240,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql-redis-subscriptions@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "graphql-redis-subscriptions@npm:2.3.1"
+"graphql-redis-subscriptions@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "graphql-redis-subscriptions@npm:2.4.0"
   dependencies:
     ioredis: ^4.17.3
     iterall: ^1.3.0
@@ -8251,7 +8251,7 @@ fsevents@~2.3.1:
   dependenciesMeta:
     ioredis:
       optional: true
-  checksum: 11fff9d8eaa3ae35e348a6c0a02344db0ab0fcbf4a3d1a10d84fc898d0063cd6c02d660a2758540c1665e3dbe1f6a3a7561052488d7b98df3d8ab75d7ba8061e
+  checksum: 409e5a3f98219ea277a83fc887b7b7e5d00c4777ef8621a6af4e0c68a990b883f03c1e6554dc7e666a7c4be93c0f70b730cdb2522ac5a667499fba9220d8fb2e
   languageName: node
   linkType: hard
 
@@ -8761,12 +8761,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"i18next@npm:^20.2.3":
-  version: 20.2.3
-  resolution: "i18next@npm:20.2.3"
+"i18next@npm:^20.2.4":
+  version: 20.2.4
+  resolution: "i18next@npm:20.2.4"
   dependencies:
     "@babel/runtime": ^7.12.0
-  checksum: ce7781baba85c0d46aa792ceb1da7ebbe51e7309e40268934cba4c92a9c49bc82b6726c15d4a593b0f98e14c35a19e4d1e751dbbc969c879861ed89abfa4ddc7
+  checksum: ba2a6b06508227b924d1e0f1af049e5c9a2cd311478dfd096adf8b4f4e5705d28b742e1009a7ee8d3692cd083c1b5645151a33b53e78cafa59cf8c649b5aede8
   languageName: node
   linkType: hard
 
@@ -14036,7 +14036,7 @@ resolve@^2.0.0-next.3:
     file-type: ^16.4.0
     got: ^11.8.2
     graphql: ^15.4.0-experimental-stream-defer.1
-    graphql-redis-subscriptions: ^2.3.1
+    graphql-redis-subscriptions: ^2.4.0
     graphql-scalars: ^1.9.3
     graphql-subscriptions: ^1.2.1
     graphql-upload: ^12.0.0
@@ -16173,7 +16173,7 @@ typescript@^4.2.4:
     graphql: ^15.4.0-experimental-stream-defer.1
     graphql-tag: ^2.12.4
     graphql-ws: ^4.5.0
-    i18next: ^20.2.3
+    i18next: ^20.2.4
     i18next-browser-languagedetector: ^6.1.1
     meros: ^1.1.4
     postcss: ^8.2.15

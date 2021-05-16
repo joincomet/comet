@@ -27,15 +27,10 @@ export default function UserContextMenu({
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
 
-  const [canManageUsers, canChangeNickname, canManageNicknames] =
-    useHasServerPermissions({
-      serverId: server?.id,
-      permissions: [
-        ServerPermission.ManageUsers,
-        ServerPermission.ChangeNickname,
-        ServerPermission.ManageNicknames
-      ]
-    })
+  const [canManageUsers] = useHasServerPermissions({
+    server,
+    permissions: [ServerPermission.ManageUsers]
+  })
 
   const [closeDm] = useCloseDmMutation()
   const [readDm] = useReadDmMutation()
@@ -89,46 +84,39 @@ export default function UserContextMenu({
         ) : (
           <></>
         )}
-        {!!server && (canManageNicknames || canManageUsers) && (
+        {!!server && canManageUsers && (
           <>
-            {canManageNicknames && (
-              <ContextMenuItem label={t('user.context.changeNickname')} />
-            )}
-            {canManageUsers && (
-              <>
-                <ContextMenuItem
-                  label={t('user.context.kickUser', { user: user })}
-                  red
-                  onClick={() => {
-                    kickUser({
-                      variables: {
-                        input: { serverId: server.id, userId: user.id }
-                      }
-                    })
-                    toast.success(t('user.context.kickedUser', { user: user }))
-                  }}
-                />
+            <ContextMenuItem
+              label={t('user.context.kickUser', { user: user })}
+              red
+              onClick={() => {
+                kickUser({
+                  variables: {
+                    input: { serverId: server.id, userId: user.id }
+                  }
+                })
+                toast.success(t('user.context.kickedUser', { user: user }))
+              }}
+            />
 
-                <ContextMenuItem
-                  label={t('user.context.banUser', { user: user })}
-                  red
-                  onClick={() => {
-                    const reason = window.prompt(t('user.context.banPrompt'))
-                    if (reason === null) return
-                    banUser({
-                      variables: {
-                        input: {
-                          serverId: server.id,
-                          userId: user.id,
-                          reason
-                        }
-                      }
-                    })
-                    toast.success(t('user.context.bannedUser', { user: user }))
-                  }}
-                />
-              </>
-            )}
+            <ContextMenuItem
+              label={t('user.context.banUser', { user: user })}
+              red
+              onClick={() => {
+                const reason = window.prompt(t('user.context.banPrompt'))
+                if (reason === null) return
+                banUser({
+                  variables: {
+                    input: {
+                      serverId: server.id,
+                      userId: user.id,
+                      reason
+                    }
+                  }
+                })
+                toast.success(t('user.context.bannedUser', { user: user }))
+              }}
+            />
           </>
         )}
       </ContextMenuSection>

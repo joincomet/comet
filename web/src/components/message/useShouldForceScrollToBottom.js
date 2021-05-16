@@ -11,7 +11,7 @@ export function useShouldForceScrollToBottom(messages) {
       const lastMessage = messages[messages.length - 1]
 
       if (
-        lastMessage.author?.id === currentUser.id &&
+        lastMessage.author?.id === currentUser?.id &&
         lastFocusedOwnMessage.current !== lastMessage.id
       ) {
         lastFocusedOwnMessage.current = lastMessage.id

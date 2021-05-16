@@ -8,7 +8,7 @@ import {
 
 const TYPING_TIMEOUT = 3000
 
-export const useTyping = ({ channel, group, user, serverUsers }) => {
+export const useTyping = ({ channel, group, user, users }) => {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
   const [typingIds, setTypingIds] = useState(new Set())
@@ -50,7 +50,7 @@ export const useTyping = ({ channel, group, user, serverUsers }) => {
   const typingNamesDisplay = useMemo(() => {
     const names = [...typingIds]
       .filter(id => id !== currentUser.id)
-      .map(id => serverUsers.find(su => su.user.id === id)?.name)
+      .map(id => user.find(user => user.id === id)?.name)
       .filter(name => !!name)
       .map(
         name =>

@@ -11,7 +11,6 @@ import {
 import { Role, Server, User } from '@/entity'
 import { ReorderUtils } from '@/util/ReorderUtils'
 import { Field, ObjectType } from 'type-graphql'
-import { NotificationSetting } from '@/types/NotificationSetting'
 import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
 @ObjectType()
@@ -38,9 +37,6 @@ export class ServerUser {
     orderBy: { position: QueryOrder.ASC }
   })
   roles = new Collection<Role>(this)
-
-  @Enum({ items: () => NotificationSetting })
-  notificationSetting: NotificationSetting = NotificationSetting.Mentions
 
   @Enum({
     items: () => ServerUserStatus

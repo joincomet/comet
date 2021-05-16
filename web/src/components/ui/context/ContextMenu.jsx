@@ -79,6 +79,7 @@ export default function ContextMenu({
       {data?.type === ContextMenuType.Message && (
         <MessageContextMenu
           message={data?.message}
+          server={data?.server}
           ContextMenuItem={ContextMenuItem}
         />
       )}

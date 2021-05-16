@@ -1,9 +1,7 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
-import { useTranslation } from 'react-i18next'
 import { useStore } from '@/hooks/useStore'
 import SidebarFolder from '@/components/folder/SidebarFolder'
 import CreateFolder from '@/components/folder/CreateFolder'
-import { useUserFolders } from '@/hooks/graphql/useUserFolders'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import {
   IconChat,
@@ -11,17 +9,14 @@ import {
   IconCreateServer,
   IconDotsHorizontal,
   IconFolder,
-  IconFriends,
-  IconText,
-  IconTop
+  IconFriends
 } from '@/components/ui/icons/Icons'
 import { useLoginDialog } from '@/hooks/useLoginDialog'
 
 export default function UserFoldersSidebar() {
-  const { t } = useTranslation()
   const showFolders = useStore(s => s.showFolders)
-  const userFolders = useUserFolders()
   const [currentUser] = useCurrentUser()
+  const userFolders = currentUser?.folders ?? []
   const [loginOpen, setLoginOpen, isCreateAccount, setCreateAccount] =
     useLoginDialog()
 

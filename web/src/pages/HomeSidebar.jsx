@@ -1,11 +1,6 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
-import {
-  IconFriends,
-  IconInbox,
-  IconInfinity,
-  IconX
-} from '@/components/ui/icons/Icons'
+import { IconFriends, IconInbox, IconX } from '@/components/ui/icons/Icons'
 import { useHistory, useLocation } from 'react-router-dom'
 import UserAvatar from '@/components/user/UserAvatar'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
@@ -13,7 +8,6 @@ import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { useTranslation } from 'react-i18next'
 import { useDrop } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
-import toast from 'react-hot-toast'
 import { VectorLogo } from '@/components/ui/vectors'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
@@ -23,13 +17,20 @@ import {
   useCreateMessageMutation,
   useRepliesQuery
 } from '@/graphql/hooks'
-import { useGroupsAndDms } from '@/hooks/graphql/useGroupsAndDms'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function HomeSidebar() {
   const { t } = useTranslation()
-  const groupsAndDms = useGroupsAndDms()
   const [currentUser] = useCurrentUser()
+  const groups = currentUser?.groups ?? []
+  const dms = currentUser?.relatedUsers?.filter(r => r.showChat) ?? []
+  const groupsAndDms = groups
+    .concat(dms)
+    .sort(
+      (a, b) =>
+        (a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0) -
+        (b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0)
+    )
   const { data } = useRepliesQuery({
     variables: { input: { unreadOnly: true } },
     skip: !currentUser

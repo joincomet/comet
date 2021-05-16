@@ -1,14 +1,12 @@
 fragment Server on Server {
   id
   name
-  urlName
+  displayName
   description
   avatarUrl
   bannerUrl
   category
   userCount
-  isPublic
-  initials
   isJoined
   owner {
     id

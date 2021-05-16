@@ -1,4 +1,4 @@
-import { Channel, Group, ServerPermission, User } from '@/entity'
+import { Channel, ChannelType, Group, ServerPermission, User } from '@/entity'
 import { TypingPayload } from '@/resolver/subscriptions/typing/TypingPayload'
 import { SubscriptionFilter } from '@/resolver/subscriptions/filters/SubscriptionFilter'
 
@@ -16,14 +16,15 @@ export async function TypingFilter({
     const user = currentUserId
       ? await em.findOneOrFail(User, currentUserId)
       : null
-    if (channel.isPrivate) {
-      return user.hasServerPermission(
-        em,
-        channel.id,
-        ServerPermission.PrivateChannels
+    if (channel.type === ChannelType.Private) {
+      return (
+        !!user &&
+        (await user.hasServerPermission(
+          em,
+          channel.id,
+          ServerPermission.PrivateChannels
+        ))
       )
-    } else if (!channel.server.isPublic) {
-      return user.hasJoinedServer(em, channel.server.id)
     } else return true
   } else if (typingGroupId && groupId === typingGroupId) {
     if (!currentUserId) return false

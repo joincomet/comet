@@ -18,18 +18,17 @@ import {
   ServerPermission,
   ServerUser
 } from '@/entity'
-import { Context, NotificationSetting } from '@/types'
+import { Context } from '@/types'
 import {
   publicServers,
   PublicServersArgs,
   serverUsers,
-  server
+  server,
+  ServerArgs
 } from './queries'
 import {
   banUserFromServer,
   BanUserFromServerInput,
-  changeNotificationSetting,
-  ChangeNotificationSettingInput,
   createServer,
   CreateServerInput,
   deleteServer,
@@ -73,27 +72,11 @@ export class ServerResolver {
   }
 
   @FieldResolver(() => [Role])
-  async myRoles(
-    @Ctx() { loaders: { serverMyRolesLoader } }: Context,
-    @Root() server: Server
-  ): Promise<Role[]> {
-    return serverMyRolesLoader.load(server.id)
-  }
-
-  @FieldResolver(() => [Role])
   async roles(
     @Ctx() { loaders: { serverRolesLoader } }: Context,
     @Root() server: Server
   ): Promise<Role[]> {
     return serverRolesLoader.load(server.id)
-  }
-
-  @FieldResolver(() => NotificationSetting)
-  async notificationSetting(
-    @Ctx() { loaders: { serverNotificationSettingLoader } }: Context,
-    @Root() server: Server
-  ): Promise<NotificationSetting> {
-    return serverNotificationSettingLoader.load(server.id)
   }
 
   @FieldResolver(() => [ServerPermission])
@@ -146,11 +129,8 @@ export class ServerResolver {
   }
 
   @Query(() => Server)
-  async server(
-    @Ctx() ctx: Context,
-    @Arg('serverId', () => ID) serverId: string
-  ): Promise<Server> {
-    return server(ctx, serverId)
+  async server(@Ctx() ctx: Context, @Args() args: ServerArgs): Promise<Server> {
+    return server(ctx, args)
   }
 
   // --- Mutations ---
@@ -217,15 +197,6 @@ export class ServerResolver {
     @Arg('input') input: ReadServerInput
   ): Promise<Server> {
     return readServer(ctx, input)
-  }
-
-  @Authorized()
-  @Mutation(() => ServerUser)
-  async changeNotificationSetting(
-    @Ctx() ctx: Context,
-    @Arg('input') input: ChangeNotificationSettingInput
-  ): Promise<ServerUser> {
-    return changeNotificationSetting(ctx, input)
   }
 
   @Authorized()

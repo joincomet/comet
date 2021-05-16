@@ -11,16 +11,18 @@ import { createNotification } from '@/utils/createNotification'
 export const useMessagesSubscriptions = () => {
   const [currentUser] = useCurrentUser()
   const { push } = useHistory()
-  const { pathname } = useLocation()
-  const matchedChannel = matchPath(pathname, {
-    path: '/server/:serverId/channel/:channelId'
+  const { pathname, hash } = useLocation()
+  const matchedServer = matchPath(pathname, {
+    path: '/:server'
   })
-  const currentServerId = matchedChannel?.params?.serverId
-  const currentChannelId = matchedChannel?.params?.channelId
-  const matchedDm = matchPath(pathname, { path: '/dm/:userId' })
-  const currentUserId = matchedDm?.params?.userId
+  const server = matchedServer?.params?.server
+  const channelName = server && hash ? hash.substring(1) : null
+
+  const matchedDm = matchPath(pathname, { path: '/dm/:username' })
+  const username = matchedDm?.params?.username?.substring(1)
+
   const matchedGroup = matchPath(pathname, { path: '/group/:groupId' })
-  const currentGroupId = matchedGroup?.params?.groupId
+  const groupId = matchedGroup?.params?.groupId
 
   const [windowOpen, setWindowOpen] = useState(true)
   useEffect(() => {
@@ -41,7 +43,6 @@ export const useMessagesSubscriptions = () => {
 
         if (addedMessage) {
           message = addedMessage
-          const messageServerId = message.channel?.server.id
           const messageChannelId = message.channel?.id
           const messageGroupId = message.group?.id
           const messageUserId = message.toUser ? message.author?.id : undefined
@@ -73,9 +74,7 @@ export const useMessagesSubscriptions = () => {
           if (message.author.id !== currentUser.id) {
             if (
               (!window.electron || (window.electron && windowOpen)) &&
-              ((currentGroupId &&
-                messageGroupId &&
-                currentGroupId === messageGroupId) ||
+              ((groupId && messageGroupId && groupId === messageGroupId) ||
                 (currentUserId &&
                   messageUserId &&
                   currentUserId === messageUserId) ||
@@ -85,7 +84,17 @@ export const useMessagesSubscriptions = () => {
             )
               return
 
-            if (message.type === MessageType.Normal && message.text) {
+            if (
+              message.type === MessageType.Normal &&
+              message.text &&
+              (message.toUser ||
+                message.group ||
+                message.isEveryoneMentioned ||
+                (!!currentUser &&
+                  message.mentionedUsers
+                    .map(u => u.id)
+                    .includes(currentUser.id)))
+            ) {
               let title = `@${message.author.name}`
               if (message.channel) title += ` · #${message.channel.name}`
               if (message.group) title += ` · #${message.group.displayName}`
@@ -100,10 +109,8 @@ export const useMessagesSubscriptions = () => {
                 onClick: () => {
                   if (messageUserId) push(`/dm/${messageUserId}`)
                   else if (messageGroupId) push(`/group/${messageGroupId}`)
-                  else if (messageChannelId && messageServerId)
-                    push(
-                      `/server/${messageServerId}/channel/${messageChannelId}`
-                    )
+                  else if (messageChannelId)
+                    push(`/+${message.server.name}/#${message.channel.name}`)
                   if (window.electron) window.electron.show()
                 }
               })

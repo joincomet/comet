@@ -10,7 +10,7 @@ export class MentionList extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    if (this.props.serverUsers !== oldProps.serverUsers) {
+    if (this.props.users !== oldProps.users) {
       this.setState({
         selectedIndex: 0
       })
@@ -40,15 +40,14 @@ export class MentionList extends Component {
   upHandler() {
     this.setState({
       selectedIndex:
-        (this.state.selectedIndex + this.props.serverUsers.length - 1) %
-        this.props.serverUsers.length
+        (this.state.selectedIndex + this.props.users.length - 1) %
+        this.props.users.length
     })
   }
 
   downHandler() {
     this.setState({
-      selectedIndex:
-        (this.state.selectedIndex + 1) % this.props.serverUsers.length
+      selectedIndex: (this.state.selectedIndex + 1) % this.props.users.length
     })
   }
 
@@ -57,7 +56,7 @@ export class MentionList extends Component {
   }
 
   selectItem(index) {
-    const item = this.props.serverUsers[index]
+    const item = this.props.users[index]
 
     if (item) {
       this.props.command(
@@ -71,22 +70,22 @@ export class MentionList extends Component {
   render() {
     return (
       <div className="relative w-full w-72 rounded dark:bg-gray-800 text-primary overflow-hidden text-sm shadow-md">
-        {this.props.serverUsers
-          .filter(su =>
-            (typeof su === 'string' ? su.substring(1) : su.name)
+        {this.props.users
+          .filter(user =>
+            (typeof user === 'string' ? user.substring(1) : user.username)
               .toLowerCase()
               .startsWith(this.props.query.toLowerCase())
           )
           .slice(0, 5)
-          .map((item, index) => (
+          .map((user, index) => (
             <button
               className={`block w-full text-left bg-transparent border-none px-2 py-2 dark:hover:bg-gray-775 focus:outline-none ${
                 index === this.state.selectedIndex ? 'dark:bg-gray-775' : ''
               }`}
-              key={typeof item === 'string' ? item : item.user.id}
+              key={typeof user === 'string' ? user : user.id}
               onClick={() => this.selectItem(index)}
             >
-              {typeof item === 'string' ? item : item.name}
+              {typeof user === 'string' ? user : user.username}
             </button>
           ))}
       </div>

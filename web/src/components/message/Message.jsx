@@ -11,11 +11,11 @@ import MessageImageDialog from '@/components/message/MessageImageDialog'
 import PostEmbed from '@/components/post/PostEmbed'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
-export default memo(function Message({ index, message, prevMessage }) {
+export default memo(function Message({ index, message, prevMessage, server }) {
   const [currentUser] = useCurrentUser()
   const isMentioned =
     message.isEveryoneMentioned ||
-    message.mentionedUsers.map(u => u.id).includes(currentUser.id)
+    message.mentionedUsers.map(u => u.id).includes(currentUser?.id)
   const FileIcon = useFileIcon(message?.file?.mime)
 
   const onClickMention = useCallback(
@@ -51,10 +51,9 @@ export default memo(function Message({ index, message, prevMessage }) {
               <UserPopup
                 user={message.author}
                 roles={message.serverUser?.roles}
-                nickname={message.serverUser?.nickname}
               >
                 <span className="text-white cursor-pointer hover:underline">
-                  {message.author.name}
+                  {message.author.username}
                 </span>
               </UserPopup>
             </ContextMenuTrigger>{' '}
@@ -70,7 +69,9 @@ export default memo(function Message({ index, message, prevMessage }) {
 
   return (
     <div className={`${showUser ? 'pt-4' : ''}`}>
-      <ContextMenuTrigger data={{ type: ContextMenuType.Message, message }}>
+      <ContextMenuTrigger
+        data={{ type: ContextMenuType.Message, message, server }}
+      >
         <div className={`flex py-1 px-4 dark:hover:bg-gray-775 group relative`}>
           {isMentioned && (
             <div className="bg-gray-500 group-hover:bg-opacity-30 bg-opacity-10 absolute inset-0 pointer-events-none border-l-2 border-gray-500" />
@@ -83,7 +84,6 @@ export default memo(function Message({ index, message, prevMessage }) {
               <UserPopup
                 user={message.author}
                 roles={message.serverUser?.roles}
-                nickname={message.serverUser?.nickname}
               >
                 <UserAvatar
                   user={message.author}
@@ -107,10 +107,9 @@ export default memo(function Message({ index, message, prevMessage }) {
                   <UserPopup
                     user={message.author}
                     roles={message.serverUser?.roles}
-                    nickname={message.serverUser?.nickname}
                   >
                     <div className="text-base font-medium cursor-pointer hover:underline leading-none">
-                      {message.author.name}
+                      {message.author.username}
                     </div>
                   </UserPopup>
                 </ContextMenuTrigger>

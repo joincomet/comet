@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom'
 import DmHeader from '@/pages/dm/DmHeader'
 import Messages from '@/components/message/Messages'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
@@ -7,10 +6,9 @@ import { useOpenDmMutation, useUserQuery } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useEffect } from 'react'
 
-export default function DmPage() {
-  const { userId } = useParams()
+export default function DmPage({ username }) {
   const { data: userData } = useUserQuery({
-    variables: { id: userId }
+    variables: { username }
   })
   const [openDm] = useOpenDmMutation()
   const user = userData?.user
@@ -20,7 +18,7 @@ export default function DmPage() {
       openDm({ variables: { input: { userId: user.id } } })
     }
   }, [user])
-  useSetHomePage(`dm/${userId}`)
+  useSetHomePage(`dm/@${username}`)
   const [currentUser] = useCurrentUser()
   return (
     <Page header={<DmHeader user={user} />}>

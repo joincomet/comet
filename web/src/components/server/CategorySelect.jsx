@@ -7,7 +7,6 @@ import { getCategoryIcon } from '@/hooks/getCategoryIcon'
 
 const listboxClass = ctl(`
   relative
-  w-full
   flex
   items-center
   pl-3
@@ -16,37 +15,42 @@ const listboxClass = ctl(`
   bg-white
   cursor-pointer
   focus:outline-none
-  text-sm
+  text-13
   rounded
   border
   h-10
-  dark:bg-gray-775
-  dark:border-gray-850
-  border
-  rounded
+  dark:bg-gray-800
+  dark:border-gray-700
+  border-b
+  border-t-0
+  border-r-0
+  border-l-0
+  rounded-none
   focus:outline-none
   transition
   px-4
-  text-base
-  text-primary
+  text-secondary
 `)
 
 const listboxOptionsClass = ctl(`
-  scrollbar-dark
+  scrollbar-thin
+  dark:scrollbar-thumb-gray-750
+  dark:scrollbar-track-gray-850
+  scrollbar-thumb-rounded-md
   absolute
-  w-full
   py-1
   mt-1
   overflow-auto
-  text-sm
-  text-primary
+  text-13
+  text-secondary
   bg-white
-  dark:bg-gray-800
+  dark:bg-gray-850
   rounded-md
   shadow-lg
   max-h-60
   focus:outline-none
   space-y-0.5
+  font-medium
 `)
 
 const listboxOptionClass = active =>

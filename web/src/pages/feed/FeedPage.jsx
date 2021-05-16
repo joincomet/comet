@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import Page from '@/components/ui/page/Page'
 import CreatePostHeader from '@/components/post/create/CreatePostHeader'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { createNotification } from '@/utils/createNotification'
 
 export default function FeedPage() {
   const { t } = useTranslation()
@@ -26,13 +27,10 @@ export default function FeedPage() {
       Notification.requestPermission().then(function (permission) {
         // If the user accepts, let's create a notification
         if (permission === 'granted') {
-          new Notification('Notifications enabled!', {
-            silent: true,
+          createNotification({
+            title: 'Notifications enabled!',
             icon: '/icons/icon.png'
           })
-          const audio = new Audio('/notification.mp3')
-          audio.volume = 0.5
-          audio.play()
         }
       })
     }

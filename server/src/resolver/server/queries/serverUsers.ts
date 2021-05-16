@@ -12,6 +12,6 @@ export async function serverUsers(
       status: ServerUserStatus.Joined
     },
     ['user', 'roles'],
-    { user: { name: 'ASC', tag: 'ASC' } }
+    { user: { username: 'ASC' } }
   )
 }

@@ -6,7 +6,11 @@ export default forwardRef(
     { server, loading = 'eager', size = 12, className = '', style = {} },
     ref
   ) => {
-    const initials = server.initials
+    const initials = server.displayName
+      .split(' ')
+      .map(s => s[0])
+      .join('')
+      .toUpperCase()
     const fontSize = useMemo(() => {
       const i = initials
       if (i.length <= 2) return '18px'

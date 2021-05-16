@@ -34,6 +34,8 @@ export {
   HiInbox as IconInbox,
   HiCog as IconSettings,
   HiHome as IconHome,
+  HiShieldCheck as IconShield,
+  HiTrash as IconDelete,
   HiPencil as IconEdit,
   HiPencilAlt as IconCreate,
   HiUser as IconUser,

@@ -4,5 +4,5 @@ fragment Channel on Channel {
   description
   isUnread
   mentionCount
-  isPrivate
+  type
 }

@@ -1,30 +1,19 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
-import { useTranslation } from 'react-i18next'
-import { ServerPermission } from '@/graphql/hooks'
 import { useStore } from '@/hooks/useStore'
-import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import SidebarFolder from '@/components/folder/SidebarFolder'
 import CreateFolder from '@/components/folder/CreateFolder'
-import { useUserFolders } from '@/hooks/graphql/useUserFolders'
-import { useServer } from '@/hooks/graphql/useServer'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
-export default function ServerFoldersSidebar({ serverId }) {
-  const userFolders = useUserFolders()
-  const server = useServer(serverId)
-  const serverFolders = server.folders
-
-  const [canManageFolders] = useHasServerPermissions({
-    serverId,
-    permissions: [ServerPermission.ManagePosts]
-  })
-
-  const { t } = useTranslation()
+export default function ServerFoldersSidebar({ server }) {
+  const [currentUser] = useCurrentUser()
+  const userFolders = currentUser?.folders ?? []
+  const serverFolders = server?.folders ?? []
   const showFolders = useStore(s => s.showFolders)
 
   return (
     <Sidebar right show={showFolders}>
       <div className="px-1.5">
-        <CreateFolder serverId={serverId} />
+        <CreateFolder server={server} />
         {serverFolders.length > 0 && (
           <div className="space-y-0.5">
             {!!serverFolders &&
@@ -32,7 +21,7 @@ export default function ServerFoldersSidebar({ serverId }) {
                 <SidebarFolder
                   key={folder.id}
                   folder={folder}
-                  serverId={serverId}
+                  server={server}
                 />
               ))}
           </div>

@@ -5,7 +5,6 @@ import {
   Image,
   LinkMetadata,
   MessageType,
-  ServerInvite,
   ServerUser,
   User
 } from '@/entity'
@@ -66,9 +65,6 @@ export class Message extends BaseEntity {
   @Field(() => [LinkMetadata])
   @Embedded(() => LinkMetadata, { object: true, array: true })
   linkMetadatas: LinkMetadata[] = []
-
-  @ManyToMany(() => ServerInvite)
-  invites = new Collection<ServerInvite>(this)
 
   @Field(() => [User])
   @ManyToMany(() => User)

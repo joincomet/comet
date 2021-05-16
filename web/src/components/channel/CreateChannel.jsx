@@ -12,11 +12,11 @@ import { useTranslation } from 'react-i18next'
 import { CurrentUserDocument, useCreateChannelMutation } from '@/graphql/hooks'
 import { useForm } from 'react-hook-form'
 
-export default function CreateChannel({ serverId }) {
+export default function CreateChannel({ server }) {
   const { t } = useTranslation()
 
   const [canManageChannels] = useHasServerPermissions({
-    serverId,
+    server,
     permissions: [ServerPermission.ManageChannels]
   })
 
@@ -38,7 +38,7 @@ export default function CreateChannel({ serverId }) {
     update(cache, { data: { createChannel } }) {
       const data = cache.readQuery({ query: CurrentUserDocument })
       const clone = JSON.parse(JSON.stringify(data))
-      const server = clone.user.servers.find(s => s.id === serverId)
+      const server = clone.user.servers.find(s => s.id === server.id)
       server.channels = [createChannel].concat(server.channels)
       cache.writeQuery({ query: CurrentUserDocument, data: clone })
     }
@@ -47,11 +47,11 @@ export default function CreateChannel({ serverId }) {
   const onSubmit = () => {
     if (name.endsWith('-')) setName(name.substring(0, name.length - 1))
     createChannel({
-      variables: { input: { name, serverId, isPrivate } }
+      variables: { input: { name, serverId: server.id, isPrivate } }
     }).then(({ data: { createChannel } }) => {
       setIsOpen(false)
       setName('')
-      push(`/server/${serverId}/channel/${createChannel.id}`)
+      push(`/+${server.name}/#${createChannel.name}`)
     })
   }
 

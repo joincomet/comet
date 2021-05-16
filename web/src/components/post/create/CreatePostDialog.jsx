@@ -9,7 +9,7 @@ import {
   IconText,
   IconX
 } from '@/components/ui/icons/Icons'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   ServerPermission,
@@ -19,12 +19,12 @@ import {
 import Dialog from '@/components/ui/dialog/Dialog'
 import { useForm } from 'react-hook-form'
 import ServerSelect from '@/components/post/create/ServerSelect'
-import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
 import PostEmbed from '@/components/post/PostEmbed'
 import ContentEditable from '@/components/ui/editor/ContentEditable'
 import isURL from 'validator/es/lib/isURL'
 import { useDebounce } from 'react-use'
 import { canEmbed } from '@/components/ui/CustomEmbed'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 const labelClass = ctl(`
   block
@@ -100,28 +100,21 @@ const Tab = {
   Image: 'Image'
 }
 
-export default function CreatePostDialog({ open, setOpen }) {
+export default function CreatePostDialog({ open, setOpen, serverId }) {
   const [text, setText] = useState('')
   const [createPost, { loading }] = useCreatePostMutation()
   const { t } = useTranslation()
   const { push } = useHistory()
-  const { serverId } = useParams()
-  const servers = useJoinedServers().filter(s =>
+  const [currentUser] = useCurrentUser()
+  const servers = (currentUser?.servers ?? []).filter(s =>
     s.permissions.includes(ServerPermission.CreatePost)
   )
   const [server, setServer] = useState(
     serverId ? servers?.find(s => s.id === serverId) : null
   )
   const [currentTab, setCurrentTab] = useState(Tab.Text)
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState,
-    watch,
-    setValue,
-    trigger
-  } = useForm({ mode: 'onChange' })
+  const { register, handleSubmit, reset, formState, watch, setValue, trigger } =
+    useForm({ mode: 'onChange' })
   const linkUrl = watch('linkUrl')
   const [debouncedLinkUrl, setDebouncedLinkUrl] = useState('')
   useDebounce(

@@ -1,9 +1,5 @@
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
-import {
-  IconChannel,
-  IconHashtag,
-  IconSettings
-} from '@/components/ui/icons/Icons'
+import { IconChannel, IconSettings } from '@/components/ui/icons/Icons'
 import { useTranslation } from 'react-i18next'
 import Tippy from '@tippyjs/react'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
@@ -13,23 +9,23 @@ import { ContextMenuType } from '@/types/ContextMenuType'
 import CountBadge from '@/components/ui/CountBadge'
 import { useLocation } from 'react-router-dom'
 
-export default function SidebarChannel({ channel, serverId }) {
+export default function SidebarChannel({ channel, server }) {
   const { t } = useTranslation()
 
   const [canManageChannels] = useHasServerPermissions({
-    serverId,
+    server,
     permissions: [ServerPermission.ManageChannels]
   })
 
-  const { pathname } = useLocation()
-  const to = `/server/${serverId}/channel/${channel.id}`
-  const active = pathname === to
+  const { hash } = useLocation()
+  const to = `/+${server?.name}/#${channel.name}`
+  const active = hash.substring(1) === channel.name
 
   return (
     <ContextMenuTrigger
       data={{ type: ContextMenuType.Channel, channel: channel }}
     >
-      <SidebarItem to={to}>
+      <SidebarItem to={to} active={active}>
         {channel.isUnread && !active && (
           <div className="absolute -left-1.5 top-1/2 transform -translate-y-1/2 rounded-r-full dark:bg-gray-100 h-2 w-1" />
         )}

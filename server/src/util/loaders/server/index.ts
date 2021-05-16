@@ -1,7 +1,5 @@
 export * from './ServerChannelsLoader'
 export * from './ServerFoldersLoader'
-export * from './ServerMyRolesLoader'
-export * from './ServerNotificationSettingLoader'
 export * from './ServerOnlineCountLoader'
 export * from './ServerPermissionsLoader'
 export * from './ServerRolesLoader'

@@ -13,6 +13,7 @@ subscription MessageChanged {
         name
         server {
           id
+          name
         }
       }
       group {
@@ -37,9 +38,6 @@ subscription MessageChanged {
       id
       channel {
         id
-        server {
-          id
-        }
       }
       group {
         id

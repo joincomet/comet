@@ -91,15 +91,11 @@ export default function LoginDialog() {
     watch,
     reset,
     getValues,
-    trigger,
     formState: { errors }
   } = useForm({
     mode: 'onChange',
     shouldUnregister: true
   })
-  useEffect(() => {
-    trigger()
-  }, [trigger, isCreateAccount])
   const email = watch('email')
   const username = watch('username')
   const usernameOrEmail = watch('usernameOrEmail')
@@ -116,7 +112,7 @@ export default function LoginDialog() {
           input: {
             username,
             password,
-            email
+            email: email ? email : null
           }
         }
       }).then(
@@ -168,8 +164,7 @@ export default function LoginDialog() {
       username.length >= 3 &&
       username.length <= 20 &&
       usernameRegex.test(username) &&
-      !!email &&
-      isEmail(email) &&
+      (!email || (!!email && isEmail(email))) &&
       !!password &&
       password.length >= 6 &&
       !!confirmPassword &&
@@ -186,8 +181,10 @@ export default function LoginDialog() {
           <div className="pb-4 flex items-center">
             <div
               onClick={() => {
-                setCreateAccount(false)
-                reset()
+                if (isCreateAccount) {
+                  setCreateAccount(false)
+                  reset()
+                }
               }}
               className={`text-sm cursor-pointer mr-3 py-3 border-b-2 inline-flex items-center justify-center px-3 ${
                 isCreateAccount
@@ -200,8 +197,10 @@ export default function LoginDialog() {
 
             <div
               onClick={() => {
-                setCreateAccount(true)
-                reset()
+                if (!isCreateAccount) {
+                  setCreateAccount(true)
+                  reset()
+                }
               }}
               className={`text-sm cursor-pointer py-3 border-b-2 inline-flex items-center justify-center px-3 ${
                 isCreateAccount
@@ -258,13 +257,13 @@ export default function LoginDialog() {
                     <input
                       id="email"
                       {...register('email', {
-                        required: true,
                         validate: {
-                          email: value => isEmail(value) || 'Invalid email'
+                          email: value =>
+                            !value || isEmail(value) || 'Invalid email'
                         }
                       })}
                       className={`${inputClass} pl-9`}
-                      placeholder="Email"
+                      placeholder="Email (Optional)"
                       type="email"
                     />
                     <IconEmail className={iconClass} />
@@ -277,7 +276,10 @@ export default function LoginDialog() {
             ) : (
               <input
                 id="usernameOrEmail"
-                {...register('usernameOrEmail', { required: true })}
+                {...register('usernameOrEmail', {
+                  required: true,
+                  shouldUnregister: true
+                })}
                 className={inputClass}
                 placeholder="Username or email"
               />

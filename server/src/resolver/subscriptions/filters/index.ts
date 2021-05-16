@@ -1,5 +1,3 @@
-export * from './CommentSubscriptionFilter'
 export * from './MessageSubscriptionFilter'
-export * from './PostSubscriptionFilter'
 export * from './RepliesSubscriptionFilter'
 export * from './SubscriptionFilter'

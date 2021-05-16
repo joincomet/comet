@@ -13,7 +13,6 @@ import {
   useDeletePostMutation,
   useRemovePostFromFolderMutation
 } from '@/graphql/hooks'
-import { useUserFolders } from '@/hooks/graphql/useUserFolders'
 
 export default function PostContextMenu({ post, ContextMenuItem }) {
   const { pathname } = useLocation()
@@ -28,7 +27,7 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
   const { t } = useTranslation()
 
   const [canManagePosts] = useHasServerPermissions({
-    serverId: post?.server.id,
+    server: post?.server,
     permissions: [ServerPermission.ManagePosts]
   })
 
@@ -43,7 +42,7 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
   const isAuthor = post?.author?.id === currentUser.id
   const canDelete = isAuthor || canManagePosts
 
-  const userFolders = useUserFolders()
+  const userFolders = currentUser?.folders ?? []
   const serverFolders =
     currentUser.servers.find(s => s.id === post.server.id)?.folders ?? []
   const friends = currentUser.relatedUsers.filter(

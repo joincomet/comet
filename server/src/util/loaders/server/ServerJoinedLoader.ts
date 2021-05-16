@@ -4,7 +4,7 @@ import DataLoader from 'dataloader'
 
 export const serverJoinedLoader = (em: EntityManager, userId: string) => {
   return new DataLoader<string, boolean>(async (serverIds: string[]) => {
-    if (!userId) return serverIds.map(_ => null)
+    if (!userId) return serverIds.map(_ => false)
     const serverUsers = await em.find(ServerUser, {
       server: serverIds,
       user: userId,

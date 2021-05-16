@@ -1,7 +1,7 @@
 import { Context } from '@/types'
 import { Field, ID, InputType } from 'type-graphql'
-import { Channel, Server, ServerPermission, User } from '@/entity'
-import { ReorderUtils } from '@/util'
+import { Channel, ChannelType, Server, ServerPermission, User } from '@/entity'
+import { handleUnderscore, ReorderUtils } from '@/util'
 
 @InputType()
 export class CreateChannelInput {
@@ -11,13 +11,13 @@ export class CreateChannelInput {
   @Field()
   name: string
 
-  @Field({ defaultValue: false })
-  isPrivate: boolean = false
+  @Field({ defaultValue: ChannelType.Public })
+  type: ChannelType = ChannelType.Public
 }
 
 export async function createChannel(
   { em, userId, liveQueryStore }: Context,
-  { serverId, name, isPrivate }: CreateChannelInput
+  { serverId, name, type }: CreateChannelInput
 ): Promise<Channel> {
   const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(
@@ -30,6 +30,12 @@ export async function createChannel(
     'systemMessagesChannel'
   ])
 
+  const foundChannel = await em.findOne(Channel, {
+    server,
+    name: { $ilike: handleUnderscore(name) }
+  })
+  if (foundChannel) throw new Error('Channel with that name already exists')
+
   const firstChannel = await em.findOne(
     Channel,
     { server },
@@ -39,7 +45,7 @@ export async function createChannel(
   const channel = em.create(Channel, {
     name,
     server,
-    isPrivate,
+    type,
     position: firstChannel
       ? ReorderUtils.positionBefore(firstChannel.position)
       : ReorderUtils.FIRST_POSITION

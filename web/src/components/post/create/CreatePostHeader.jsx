@@ -4,14 +4,14 @@ import UserAvatar from '@/components/user/UserAvatar'
 import { useState } from 'react'
 import CreatePostDialog from '@/components/post/create/CreatePostDialog'
 
-export default function CreatePostHeader() {
+export default function CreatePostHeader({ server }) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [user] = useCurrentUser()
 
   return (
     <>
-      <CreatePostDialog open={open} setOpen={setOpen} />
+      <CreatePostDialog open={open} setOpen={setOpen} serverId={server?.id} />
       <div className="p-4">
         <div
           onClick={() => setOpen(true)}

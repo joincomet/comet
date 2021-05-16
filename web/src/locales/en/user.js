@@ -10,7 +10,6 @@ export const user = {
     removeFriend: 'Remove Friend',
     sendMessage: 'Send Message',
     message: 'Message',
-    changeNickname: 'Change Nickname',
     kickUser: 'Kick {{user.name}}',
     banUser: 'Ban {{user.name}}',
     banPrompt: 'Reason (Optional)',

@@ -6,6 +6,7 @@ import PageView from '@/components/ui/page/PageView'
 import { useRepliesQuery } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import Reply from '@/components/reply/Reply'
+import EndReached from '@/components/ui/EndReached'
 
 const label =
   'px-2 pb-2 text-11 text-tertiary uppercase tracking-widest font-semibold'
@@ -33,6 +34,10 @@ export default function InboxPage() {
           <>
             <div className={label}>All - {replies.length}</div>
           </>
+        )}
+
+        {replies.length === 0 && (
+          <EndReached>You are all caught up!</EndReached>
         )}
 
         <div className="space-y-1.5">

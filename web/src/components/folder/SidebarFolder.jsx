@@ -16,17 +16,17 @@ import { ContextMenuType } from '@/types/ContextMenuType'
 import { useFolderName } from '@/components/folder/useFolderName'
 import { useAddPostToFolderMutation } from '@/graphql/hooks'
 
-export default function SidebarFolder({ folder, serverId }) {
+export default function SidebarFolder({ folder, server }) {
   const [addPostToFolder] = useAddPostToFolderMutation()
   const [canAddPosts] = useHasServerPermissions({
-    serverId,
+    server,
     permissions: [ServerPermission.AddPostToFolder]
   })
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,
     drop: async (post, monitor) => {
-      if (serverId && !canAddPosts) {
+      if (!!server && !canAddPosts) {
         toast.error(t('folder.noPermission'))
         return
       }
@@ -60,7 +60,7 @@ export default function SidebarFolder({ folder, serverId }) {
       )
     }
 
-    if (!serverId && folder.name === 'Favorites')
+    if (!server && folder.name === 'Favorites')
       return (
         <>
           <IconFavoritesFolder className="w-5 h-5 ml-1 mr-4 text-yellow-500" />
@@ -68,7 +68,7 @@ export default function SidebarFolder({ folder, serverId }) {
         </>
       )
 
-    if (!serverId && folder.name === 'Read Later')
+    if (!server && folder.name === 'Read Later')
       return (
         <>
           <IconReadLaterFolder className="w-5 h-5 ml-1 mr-4 text-blue-500" />
@@ -82,7 +82,7 @@ export default function SidebarFolder({ folder, serverId }) {
         <span className="truncate">{folder.name}</span>
       </>
     )
-  }, [serverId, folder, folderName])
+  }, [server, folder, folderName])
 
   return (
     <div>
@@ -90,9 +90,9 @@ export default function SidebarFolder({ folder, serverId }) {
         <SidebarItem
           active={isActive}
           to={`${
-            serverId || folder.server
-              ? `/+${serverId ?? folder.server.id}`
-              : '/home'
+            !!server || folder.server
+              ? `/+${server?.name ?? folder.server?.name}`
+              : ''
           }/folder/${folder.id}`}
           ref={dropRef}
         >

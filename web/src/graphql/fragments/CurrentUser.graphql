@@ -6,17 +6,8 @@ fragment CurrentUser on User {
     ...Server
     permissions
     channels {
-      ...Channel
-    }
-    roles {
-      ...Role
-    }
-    myRoles {
-      ...Role
-    }
-    nickname
-    folders {
-      ...Folder
+      isUnread
+      mentionCount
     }
   }
   relatedUsers {

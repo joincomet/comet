@@ -104,10 +104,6 @@ export async function posts(
 
   const joinedOnly = !folderId && !serverId
   const server = serverId ? await em.findOneOrFail(Server, serverId) : null
-  if (server && !server.isPublic) {
-    if (!user) throw new Error('Private server')
-    await user.checkJoinedServer(em, serverId)
-  }
 
   let servers = []
   if (joinedOnly) {

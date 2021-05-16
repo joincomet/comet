@@ -1,24 +1,18 @@
 import { useMemo } from 'react'
 import Post from '@/components/post/Post'
-import { useParams } from 'react-router-dom'
 import PostUsersSidebar from '@/pages/post/PostUsersSidebar'
 import { createCommentTree, getParticipants } from '@/utils/commentUtils'
 import Comment from '@/components/comment/Comment'
 import CreateCommentCard from '@/components/comment/CreateCommentCard'
-import { useStore } from '@/hooks/useStore'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/graphql/hooks'
-import { useTranslation } from 'react-i18next'
 import PostHeader from '@/pages/post/PostHeader'
 import Page from '@/components/ui/page/Page'
 import { useCommentsQuery, usePostQuery } from '@/graphql/hooks'
 
-export default function PostPage() {
-  const { t } = useTranslation()
-  const { postId, serverId } = useParams()
-
+export default function PostPage({ server, postId }) {
   const [canCreateComment] = useHasServerPermissions({
-    serverId,
+    server,
     permissions: [ServerPermission.CreateComment]
   })
 

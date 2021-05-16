@@ -23,9 +23,9 @@ export class CreateAccountInput {
   @Matches(usernameRegex)
   username: string
 
-  @Field(() => GraphQLEmailAddress)
+  @Field(() => GraphQLEmailAddress, { nullable: true })
   @IsEmail()
-  email: string
+  email?: string
 
   @Field()
   @Length(6)
@@ -37,13 +37,14 @@ export async function createAccount(
   { username, email, password }: CreateAccountInput
 ): Promise<LoginResponse> {
   const { em, liveQueryStore } = ctx
-  email = email.toLowerCase()
-
-  const foundEmail = await em.findOne(User, {
-    email: { $ilike: handleUnderscore(email) },
-    isDeleted: false
-  })
-  if (foundEmail) throw new Error('error.login.emailInUse')
+  if (email) {
+    email = email.toLowerCase()
+    const foundEmail = await em.findOne(User, {
+      email: { $ilike: handleUnderscore(email) },
+      isDeleted: false
+    })
+    if (foundEmail) throw new Error('error.login.emailInUse')
+  }
 
   const foundUsername = await em.findOne(User, {
     username: { $ilike: handleUnderscore(username) },
@@ -84,21 +85,24 @@ export async function createAccount(
     })
   )
 
-  const cometServer = await em.findOne(Server, { urlName: 'Comet' })
+  const cometServer = await em.findOne(Server, {
+    name: 'Comet',
+    isDeleted: false
+  })
   if (cometServer) {
     cometServer.userCount++
-    em.persist(
+    em.persist([
+      cometServer,
       em.create(ServerUser, {
         user,
         server: cometServer,
         status: ServerUserStatus.Joined
       })
-    )
+    ])
   }
 
-  await em.persistAndFlush([user, cometServer])
+  await em.persistAndFlush(user)
   const accessToken = createAccessToken(user)
-  liveQueryStore.invalidate(`Query.user`)
   ctx.userId = user.id
   return {
     accessToken,

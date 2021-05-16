@@ -18,7 +18,6 @@ export default function PostUsersSidebar({ post, users = [] }) {
               user={post.author?.user}
               color={post.author?.color}
               roles={post.author?.roles}
-              nickname={post.author?.nickname}
             />
           </>
         )}
@@ -34,7 +33,6 @@ export default function PostUsersSidebar({ post, users = [] }) {
                 user={user.user}
                 color={user.color}
                 roles={user.roles}
-                nickname={user.nickname}
               />
             ))}
           </>

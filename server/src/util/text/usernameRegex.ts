@@ -1,1 +1,1 @@
-export const usernameRegex = /^[A-Za-z0-9-_]+/gi
+export const usernameRegex = /^[A-Za-z0-9-_]+/i

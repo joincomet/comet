@@ -45,11 +45,6 @@ input BlockUserInput {
   userId: ID!
 }
 
-input ChangeNotificationSettingInput {
-  notificationSetting: NotificationSetting!
-  serverId: ID!
-}
-
 input ChangeOnlineStatusInput {
   onlineStatus: OnlineStatus!
 }
@@ -62,11 +57,17 @@ type Channel implements BaseEntity {
   createdAt: DateTime!
   description: String
   id: ID!
-  isPrivate: Boolean!
   isUnread: Boolean!
   mentionCount: NonNegativeInt!
   name: String
   server: Server!
+  type: ChannelType!
+}
+
+enum ChannelType {
+  Private
+  Public
+  Restricted
 }
 
 input CloseDmInput {
@@ -111,15 +112,15 @@ enum CommentsSort {
 }
 
 input CreateAccountInput {
-  email: EmailAddress!
+  email: EmailAddress
   password: String!
   username: String!
 }
 
 input CreateChannelInput {
-  isPrivate: Boolean = false
   name: String!
   serverId: ID!
+  type: String = "Public"
 }
 
 input CreateCommentInput {
@@ -172,10 +173,10 @@ input CreateRoleInput {
 
 input CreateServerInput {
   avatarFile: Upload
+  bannerFile: Upload
   category: ServerCategory = Other
-  isPublic: Boolean = true
+  displayName: String!
   name: String!
-  urlName: String!
 }
 
 """
@@ -298,7 +299,6 @@ A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
 scalar JWT
 
 input JoinServerInput {
-  inviteId: ID
   serverId: ID
 }
 
@@ -418,7 +418,6 @@ type Mutation {
   answerFriendRequest(input: AnswerFriendRequestInput!): User!
   banUserFromServer(input: BanUserFromServerInput!): Boolean!
   blockUser(input: BlockUserInput!): User!
-  changeNotificationSetting(input: ChangeNotificationSettingInput!): ServerUser!
   changeOnlineStatus(input: ChangeOnlineStatusInput!): User!
   changeUserAvatar(input: ChangeUserAvatarInput!): User!
   closeDm(input: CloseDmInput!): User!
@@ -491,12 +490,6 @@ type Mutation {
 
 """Integers that will have a value of 0 or more."""
 scalar NonNegativeInt
-
-enum NotificationSetting {
-  All
-  Mentions
-  None
-}
 
 enum OnlineStatus {
   Away
@@ -595,9 +588,9 @@ type Query {
   posts(folderId: ID, limit: PositiveInt = 20, offset: NonNegativeInt = 0, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): PostsResponse!
   publicServers(category: ServerCategory, featured: Boolean = false, sort: PublicServersSort = Top): [Server!]!
   replies(input: RepliesInput!): [Reply!]!
-  server(serverId: ID!): Server!
+  server(id: ID, name: String): Server!
   serverUsers(serverId: ID!): [ServerUser!]!
-  user(id: ID): User
+  user(id: ID, username: String): User
 }
 
 input ReadChannelInput {
@@ -676,24 +669,19 @@ type Server implements BaseEntity {
   channels: [Channel!]!
   createdAt: DateTime!
   description: String
+  displayName: String!
   folders: [Folder!]!
   id: ID!
-  initials: String!
   isBanned: Boolean!
   isDeleted: Boolean!
   isFeatured: Boolean!
   isJoined: Boolean!
-  isPublic: Boolean!
-  myRoles: [Role!]!
   name: String!
-  nickname: String
-  notificationSetting: NotificationSetting!
   onlineCount: NonNegativeInt!
   owner: User!
   permissions: [ServerPermission!]!
   roles: [Role!]!
   systemMessagesChannel: Channel!
-  urlName: String!
   userCount: NonNegativeInt!
 }
 
@@ -721,22 +709,20 @@ enum ServerCategory {
 enum ServerPermission {
   AddPostToFolder
   Admin
-  ChangeNickname
   CreateComment
-  CreateInvite
   CreatePost
   DisplayRoleSeparately
   ManageChannels
   ManageComments
   ManageFolders
   ManageMessages
-  ManageNicknames
   ManagePosts
   ManageServer
   ManageUsers
   Mention
   Mentionable
   PrivateChannels
+  RestrictedChannels
   SendMessages
   VoteComment
   VotePost
@@ -810,8 +796,8 @@ input UpdateAccountInput {
 
 input UpdateChannelInput {
   channelId: ID!
-  isPrivate: Boolean
   name: String
+  type: ChannelType
 }
 
 input UpdateCommentInput {
@@ -855,14 +841,12 @@ input UpdateServerInput {
   bannerFile: Upload
   category: ServerCategory
   description: String
+  displayName: String
   featuredPosition: String
   isFeatured: Boolean
-  isPublic: Boolean
-  name: String
   ownerId: ID
   serverId: ID!
   systemMessagesChannelId: ID
-  urlName: String
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -872,7 +856,7 @@ type User implements BaseEntity {
   avatarUrl: String
   color: Color!
   createdAt: DateTime!
-  email: EmailAddress!
+  email: EmailAddress
   folders: [Folder!]!
   groups: [Group!]!
   id: ID!

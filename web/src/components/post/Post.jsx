@@ -230,11 +230,7 @@ export default memo(function Post({
               <ContextMenuTrigger
                 data={{ type: ContextMenuType.User, user: post.author?.user }}
               >
-                <UserPopup
-                  user={post.author?.user}
-                  roles={post.author?.roles}
-                  nickname={post.author?.nickname}
-                >
+                <UserPopup user={post.author?.user} roles={post.author?.roles}>
                   <UserAvatar user={post.author.user} size={5} />
                 </UserPopup>
               </ContextMenuTrigger>
@@ -242,16 +238,12 @@ export default memo(function Post({
               <ContextMenuTrigger
                 data={{ type: ContextMenuType.User, user: post.author?.user }}
               >
-                <UserPopup
-                  user={post.author?.user}
-                  roles={post.author?.roles}
-                  nickname={post.author?.nickname}
-                >
+                <UserPopup user={post.author?.user} roles={post.author?.roles}>
                   <div
                     className="ml-2 hover:underline cursor-pointer text-tertiary text-xs font-medium leading-none"
                     style={{ color: post.author?.color }}
                   >
-                    {post.author.name}
+                    {post.author?.user.username ?? '[deleted]'}
                   </div>
                 </UserPopup>
               </ContextMenuTrigger>
@@ -260,7 +252,7 @@ export default memo(function Post({
                 <div className="ml-1 flex items-center" onClick={onClick}>
                   <IconUserToServerArrow className="w-4.5 h-4.5 text-mid mr-1" />
                   <Link
-                    to={`/server/${post.server.id}`}
+                    to={`/+${post.server.name}`}
                     className="flex items-center"
                   >
                     <ServerAvatar

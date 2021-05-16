@@ -1,10 +1,9 @@
-import { Field, ID, InputType, Int } from 'type-graphql'
-import { Length, Matches } from 'class-validator'
+import { Field, ID, InputType } from 'type-graphql'
+import { Length } from 'class-validator'
 import { Server, ServerCategory, ServerPermission, User } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { uploadImageFileSingle } from '@/util'
-import { serverRegex } from '@/util/text/serverRegex'
 
 @InputType()
 export class UpdateServerInput {
@@ -13,19 +12,11 @@ export class UpdateServerInput {
 
   @Field({ nullable: true })
   @Length(2, 100)
-  name?: string
-
-  @Field({ nullable: true })
-  @Length(3, 21)
-  @Matches(serverRegex)
-  urlName?: string
+  displayName?: string
 
   @Field({ nullable: true })
   @Length(0, 500)
   description?: string
-
-  @Field({ nullable: true })
-  isPublic?: boolean
 
   @Field({ nullable: true })
   isFeatured?: boolean
@@ -53,10 +44,8 @@ export async function updateServer(
   { em, userId, liveQueryStore }: Context,
   {
     serverId,
-    name,
-    urlName,
+    displayName,
     description,
-    isPublic,
     isFeatured,
     featuredPosition,
     category,
@@ -74,8 +63,7 @@ export async function updateServer(
     throw new Error('Must be server owner to change owner')
   await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
   em.assign(server, {
-    name: name ?? server.name,
-    urlName: urlName ?? server.urlName,
+    displayName: displayName ?? server.displayName,
     description: description ?? server.description,
     isFeatured: isFeatured ?? server.isFeatured,
     featuredPosition: featuredPosition ?? server.featuredPosition,
@@ -86,7 +74,6 @@ export async function updateServer(
     bannerUrl: bannerFile
       ? await uploadImageFileSingle(bannerFile, { width: 920, height: 540 })
       : server.bannerUrl,
-    isPublic: isPublic ?? server.isPublic,
     systemMessagesChannel:
       systemMessagesChannelId ?? server.systemMessagesChannel
   })

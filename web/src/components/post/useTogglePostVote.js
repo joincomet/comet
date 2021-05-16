@@ -26,7 +26,7 @@ export const useTogglePostVote = post => {
     }
   })
   const [canVote] = useHasServerPermissions({
-    serverId: post?.server.id,
+    server: post?.server,
     permissions: [ServerPermission.VotePost]
   })
 

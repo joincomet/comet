@@ -21,6 +21,7 @@ import { useUserRelationships } from '@/hooks/useUserRelationships'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
+import EndReached from '@/components/ui/EndReached'
 
 const tabClass = active =>
   ctl(`
@@ -231,13 +232,10 @@ export default memo(function UserDialog() {
           />
           <div className="ml-5 flex w-full pt-5">
             <div className="font-semibold text-lg text-primary">
-              {user?.name}
-              <span className="text-tertiary text-sm font-normal">
-                #{user?.tag}
-              </span>
+              {user?.username}
             </div>
 
-            {userId !== currentUser.id && (
+            {userId !== currentUser?.id && (
               <>
                 <div className="ml-auto" />
                 <div className="flex items-center space-x-2.5 h-8">
@@ -279,68 +277,80 @@ export default memo(function UserDialog() {
         </div>
         <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar-custom">
           {currentTab === tab.MutualServers &&
-            mutualServers.map(server => (
-              <Link
-                to={`/server/${server.id}`}
-                key={server.id}
-                className={itemClass}
-                onClick={() => close()}
-              >
-                <ServerAvatar
-                  server={server}
-                  size={10}
-                  className="dark:bg-gray-800 rounded-full"
-                />
-                <div className="pl-2.5 text-base text-secondary font-medium">
-                  {server.name}
-                </div>
-              </Link>
+            (mutualServers.length > 0 ? (
+              mutualServers.map(server => (
+                <Link
+                  to={`/+${server.name}`}
+                  key={server.id}
+                  className={itemClass}
+                  onClick={() => close()}
+                >
+                  <ServerAvatar
+                    server={server}
+                    size={10}
+                    className="dark:bg-gray-800 rounded-full"
+                  />
+                  <div className="pl-2.5 text-base text-secondary font-medium">
+                    {server.name}
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <EndReached className="h-36">No mutual planets</EndReached>
             ))}
 
           {currentTab === tab.MutualFriends &&
-            mutualFriends.map(friend => (
-              <div
-                key={friend.id}
-                className={itemClass}
-                onClick={() => setUserId(friend.id)}
-              >
-                <UserAvatar
-                  user={friend}
-                  size={10}
-                  showOnline
-                  dotClassName="ring-3 dark:ring-gray-750 w-2.5 h-2.5"
-                />
-                <div className="pl-2.5">
-                  <div className="text-base text-secondary font-medium">
-                    {friend.name}
-                    <span className="text-13 text-tertiary font-normal">
-                      #{friend.tag}
-                    </span>
+            (mutualFriends.length > 0 ? (
+              mutualFriends.map(friend => (
+                <div
+                  key={friend.id}
+                  className={itemClass}
+                  onClick={() => setUserId(friend.id)}
+                >
+                  <UserAvatar
+                    user={friend}
+                    size={10}
+                    showOnline
+                    dotClassName="ring-3 dark:ring-gray-750 w-2.5 h-2.5"
+                  />
+                  <div className="pl-2.5">
+                    <div className="text-base text-secondary font-medium">
+                      {friend.name}
+                      <span className="text-13 text-tertiary font-normal">
+                        #{friend.tag}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))
+            ) : (
+              <EndReached className="h-36">No mutual friends</EndReached>
             ))}
 
           {currentTab === tab.Folders &&
-            folders.map(folder => (
-              <Link
-                to={`/folder/${folder.id}`}
-                key={folder.id}
-                className={itemClass}
-                onClick={() => close()}
-              >
-                {folder.avatarUrl ? (
-                  <div
-                    className="h-10 w-10 rounded-full bg-cover bg-no-repeat bg-center"
-                    style={{ backgroundImage: `url(${folder.avatarUrl})` }}
-                  />
-                ) : (
-                  <IconFolder className="text-gray-500 w-6 h-6 mx-2" />
-                )}
-                <div className="pl-2.5 text-base text-secondary font-medium">
-                  {folder.name}
-                </div>
-              </Link>
+            (folders.length > 0 ? (
+              folders.map(folder => (
+                <Link
+                  to={`/folder/${folder.id}`}
+                  key={folder.id}
+                  className={itemClass}
+                  onClick={() => close()}
+                >
+                  {folder.avatarUrl ? (
+                    <div
+                      className="h-10 w-10 rounded-full bg-cover bg-no-repeat bg-center"
+                      style={{ backgroundImage: `url(${folder.avatarUrl})` }}
+                    />
+                  ) : (
+                    <IconFolder className="text-gray-500 w-6 h-6 mx-2" />
+                  )}
+                  <div className="pl-2.5 text-base text-secondary font-medium">
+                    {folder.name}
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <EndReached className="h-36">No visible folders</EndReached>
             ))}
         </div>
       </div>

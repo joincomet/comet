@@ -1,25 +1,22 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
-import { IconSettings, IconUserAdd } from '@/components/ui/icons/Icons'
+import { IconSettings, IconShield } from '@/components/ui/icons/Icons'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { useTranslation } from 'react-i18next'
-import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
 import SidebarChannel from '@/components/channel/SidebarChannel'
 import CreateChannel from '@/components/channel/CreateChannel'
-import { ServerPermission } from '@/graphql/hooks'
-import ServerSettingsDialog from '@/components/server/settings/ServerSettingsDialog'
+import { ServerPermission, ChannelType } from '@/graphql/hooks'
 import { useState } from 'react'
-import Dialog from '@/components/ui/dialog/Dialog'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
+import CreateServerDialog from '@/components/server/create/CreateServerDialog'
+import { VectorLogo } from '@/components/ui/vectors'
 
-export default function ServerSidebar() {
-  const { t } = useTranslation()
-  const server = useCurrentServer()
-  const [settingsOpen, setSettingsOpen] = useState(false)
+export default function ServerSidebar({ server }) {
+  const [editOpen, setEditOpen] = useState(false)
   const [inviteOpen, setInviteOpen] = useState(false)
   const [canManageServer, canViewPrivateChannels] = useHasServerPermissions({
-    serverId: server.id,
+    server,
     permissions: [
       ServerPermission.ManageServer,
       ServerPermission.PrivateChannels
@@ -28,83 +25,78 @@ export default function ServerSidebar() {
 
   return (
     <>
-      <ServerSettingsDialog
-        open={settingsOpen}
-        setOpen={setSettingsOpen}
-        server={server}
-      />
-      <ServerInviteDialog open={inviteOpen} setOpen={setInviteOpen} />
+      {!!server && (
+        <CreateServerDialog
+          open={editOpen}
+          setOpen={setEditOpen}
+          server={server}
+        />
+      )}
 
       <Sidebar>
-        <div
-          className={`h-20 relative bg-center bg-cover bg-no-repeat ${
-            server.bannerUrl
-              ? ''
-              : 'bg-gradient-to-br from-red-400 to-indigo-600'
-          }`}
-          style={
-            server.bannerUrl
-              ? { backgroundImage: `url(${server.bannerUrl})` }
-              : {}
-          }
-        >
-          <div className="absolute inset-0 flex pt-3 pl-4 pr-3 justify-between bg-gradient-to-b from-transparent to-gray-800 text-lg font-medium">
-            {server.name}
-            {canManageServer && (
-              <button
-                type="button"
-                className="transition hover:rotate-12 transform rounded-full cursor-pointer focus:outline-none h-7 w-7 flex items-center justify-center transition bg-opacity-0 hover:bg-opacity-25 bg-gray-800"
-                onClick={() => setSettingsOpen(true)}
-              >
-                <IconSettings className="w-5 h-5 text-primary" />
-              </button>
-            )}
+        {server?.bannerUrl ? (
+          <div
+            className={`h-20 relative bg-center bg-cover bg-no-repeat ${
+              server?.bannerUrl
+                ? ''
+                : 'bg-gradient-to-br from-red-400 to-indigo-600'
+            }`}
+            style={
+              server?.bannerUrl
+                ? { backgroundImage: `url(${server?.bannerUrl})` }
+                : {}
+            }
+          />
+        ) : (
+          <div className="h-12 border-b dark:border-gray-850 shadow flex items-center px-5 text-base font-medium">
+            <VectorLogo className="h-4" />
           </div>
-        </div>
+        )}
 
         <div className="px-1.5 pt-4">
-          {/*<SidebarItem>
-          <IconHub className="mr-3 w-5 h-5" />
-          Hub
-        </SidebarItem>*/}
-          <SidebarItem onClick={() => setInviteOpen(true)}>
-            <IconUserAdd className="mr-3 w-5 h-5" />
-            {t('server.invitePeople')}
-          </SidebarItem>
+          <div className="font-semibold text-lg px-3 text-primary">
+            {server?.displayName}
+          </div>
 
-          <SidebarLabel plusLabel="Create Post">
-            {t('server.feed')}
-          </SidebarLabel>
+          <SidebarLabel plusLabel="Create Post">Posts</SidebarLabel>
 
           <SidebarSortButtons />
 
-          <CreateChannel serverId={server.id} />
+          <CreateChannel server={server} />
 
           <div className="space-y-0.5">
-            {server.channels
+            {server?.channels
               .filter(channel =>
-                channel.isPrivate ? canViewPrivateChannels : true
+                channel.type === ChannelType.Private
+                  ? canViewPrivateChannels
+                  : true
               )
               .map(channel => (
                 <SidebarChannel
                   key={channel.id}
                   channel={channel}
-                  serverId={server.id}
+                  server={server}
                 />
               ))}
           </div>
+
+          {canManageServer && (
+            <>
+              <SidebarLabel>Admin</SidebarLabel>
+              <div className="space-y-0.5">
+                <SidebarItem onClick={() => setEditOpen(true)}>
+                  <IconSettings className="mr-3 w-5 h-5" />
+                  Edit Planet
+                </SidebarItem>
+                <SidebarItem>
+                  <IconShield className="mr-3 w-5 h-5" />
+                  Manage Roles
+                </SidebarItem>
+              </div>
+            </>
+          )}
         </div>
       </Sidebar>
     </>
-  )
-}
-
-function ServerInviteDialog({ open, setOpen }) {
-  return (
-    <Dialog isOpen={open} close={() => setOpen(false)}>
-      <div className="dark:bg-gray-850 p-5">
-        <button onClick={() => setOpen(false)}>Continue</button>
-      </div>
-    </Dialog>
   )
 }

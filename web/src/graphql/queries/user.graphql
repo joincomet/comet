@@ -8,11 +8,9 @@ query user($id: ID) @live {
       ...User
     }
     servers {
-      nickname
       id
       avatarUrl
       name
-      initials
     }
   }
 }

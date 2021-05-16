@@ -4,21 +4,15 @@ import Routes from '@/pages/Routes'
 import { ApolloProvider } from '@apollo/client/react'
 import ResponsiveToaster from '@/components/ui/ResponsiveToaster'
 import CustomDragLayer from '@/components/ui/CustomDragLayer'
-import { BrowserRouter, HashRouter, Link } from 'react-router-dom'
+import { BrowserRouter, HashRouter } from 'react-router-dom'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 import { getOS } from '@/utils/getOS'
 import { apolloClient } from '@/graphql/apolloClient'
 import ContextMenuProvider from '@/providers/ContextMenuProvider'
-import { VectorLogo } from '@/components/ui/vectors'
-import {
-  IconDiscord,
-  IconGithub,
-  IconTwitter
-} from '@/components/ui/icons/Icons'
-import { Meteors } from '@/components/ui/meteors'
 import MobileComingSoon from '@/components/ui/MobileComingSoon'
 import LoginDialog from '@/components/LoginDialog'
+import UserDialog from '@/components/user/UserDialog'
 
 export default function App() {
   const AppRouter = window.electron ? HashRouter : BrowserRouter
@@ -49,6 +43,7 @@ export default function App() {
               <CustomDragLayer />
               {window.electron && !isMac && <TitleBar />}
               <LoginDialog />
+              <UserDialog />
               <div
                 style={
                   window.electron

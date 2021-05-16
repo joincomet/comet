@@ -7,14 +7,14 @@ import { useTranslation } from 'react-i18next'
 
 function SortItem({ name, icon }) {
   const [postsSort, setPostsSort] = useStore(s => [s.postsSort, s.setPostsSort])
-  const { serverId } = useParams()
+  const { server } = useParams()
 
   const { pathname } = useLocation()
 
   const { push } = useHistory()
 
   const active =
-    postsSort === name && (pathname === '/home' || pathname === `/+${serverId}`)
+    postsSort === name && (pathname === '/home' || pathname === `/${server}`)
 
   const Icon = icon
 
@@ -22,7 +22,7 @@ function SortItem({ name, icon }) {
     <SidebarItem
       onClick={() => {
         setPostsSort(name)
-        push(serverId ? `/+${serverId}` : '/home')
+        push(server ? `/${server}` : '/home')
       }}
       active={active}
     >

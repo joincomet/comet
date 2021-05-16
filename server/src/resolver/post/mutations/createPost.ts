@@ -68,7 +68,7 @@ export async function createPost(
     if (!text) text = null
   }
 
-  const server = await em.findOne(Server, serverId)
+  const server = await em.findOne(Server, serverId, { isDeleted: false })
   const user = await em.findOneOrFail(User, userId)
   const serverUser = await em.findOneOrFail(ServerUser, {
     user,

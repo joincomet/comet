@@ -18,21 +18,6 @@ export const permissions = {
         "Allows members to change this planet's name, description, icon, and banner image."
     },
 
-    // Membership
-    [ServerPermission.CreateInvite]: {
-      title: 'Create Invite',
-      description: 'Allows members to invite new people to this planet.'
-    },
-    [ServerPermission.ChangeNickname]: {
-      title: 'Change Nicknames',
-      description:
-        'Allows members to change their own nickname, a custom name for just this planet.'
-    },
-    [ServerPermission.ManageNicknames]: {
-      title: 'Manage Nicknames',
-      description: 'Allows members to change the nicknames of other members.'
-    },
-
     // Channels
     [ServerPermission.SendMessages]: {
       title: 'Send Messages',

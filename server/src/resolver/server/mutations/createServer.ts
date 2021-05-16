@@ -6,6 +6,8 @@ import {
   Channel,
   defaultServerPermissions,
   Folder,
+  Message,
+  MessageType,
   Role,
   Server,
   ServerCategory,
@@ -13,42 +15,36 @@ import {
   ServerUser,
   ServerUserStatus
 } from '@/entity'
-import { ReorderUtils, uploadImageFileSingle } from '@/util'
+import { handleUnderscore, ReorderUtils, uploadImageFileSingle } from '@/util'
 import { serverRegex } from '@/util/text/serverRegex'
 
 @InputType()
 export class CreateServerInput {
   @Field()
-  @Length(2, 100)
+  @Length(3, 21)
   name: string
 
   @Field()
-  @Length(3, 21)
+  @Length(2, 100)
   @Matches(serverRegex)
-  urlName: string
-
-  @Field({ defaultValue: true })
-  isPublic: boolean = true
+  displayName: string
 
   @Field(() => ServerCategory, { defaultValue: ServerCategory.Other })
   category: ServerCategory = ServerCategory.Other
 
   @Field(() => GraphQLUpload, { nullable: true })
   avatarFile?: FileUpload
+
+  @Field(() => GraphQLUpload, { nullable: true })
+  bannerFile?: FileUpload
 }
 
 export async function createServer(
   { em, userId, liveQueryStore }: Context,
-  { name, urlName, isPublic, category, avatarFile }: CreateServerInput
+  { name, displayName, category, avatarFile, bannerFile }: CreateServerInput
 ): Promise<Server> {
   if ((await em.count(ServerUser, { user: userId })) >= 100)
     throw new Error('error.server.joinLimit')
-
-  const channel = em.create(Channel, {
-    name: 'general'
-  })
-
-  em.persist(channel)
 
   let avatarUrl = null
   if (avatarFile) {
@@ -62,17 +58,40 @@ export async function createServer(
     )
   }
 
+  let bannerUrl = null
+  if (bannerFile) {
+    bannerUrl = await uploadImageFileSingle(
+      bannerFile,
+      {
+        width: 1920,
+        height: 1080
+      },
+      true
+    )
+  }
+
+  const foundServer = await em.findOne(Server, {
+    name: handleUnderscore(name),
+    isDeleted: false
+  })
+  if (foundServer) throw new Error('Planet with that name already exists')
+
   const server = em.create(Server, {
     name,
-    urlName,
+    displayName,
     owner: userId,
-    channels: [channel],
     avatarUrl,
+    bannerUrl,
     category,
-    isPublic,
-    systemMessagesChannel: channel,
     userCount: 1
   })
+
+  const channel = em.create(Channel, {
+    name: 'general',
+    server
+  })
+  server.systemMessagesChannel = channel
+
   const serverFolder = em.create(ServerFolder, {
     server,
     folder: em.create(Folder, { server, name: 'Announcements' })
@@ -96,7 +115,16 @@ export async function createServer(
     permissions: defaultServerPermissions,
     serverUsers: [serverUser]
   })
-  await em.persistAndFlush([server, serverUser, serverFolder, role])
+
+  await em.persistAndFlush([server, channel, serverUser, serverFolder, role])
+
+  const joinMessage = em.create(Message, {
+    author: userId,
+    serverUser: serverUser,
+    type: MessageType.Join,
+    channel
+  })
+  await em.persistAndFlush(joinMessage)
   liveQueryStore.invalidate(`User:${userId}`)
   return server
 }

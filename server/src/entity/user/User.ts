@@ -38,8 +38,8 @@ export class User extends BaseEntity {
   username: string
 
   @Authorized('USER')
-  @Field(() => GraphQLEmailAddress)
-  @Property({ columnType: 'text' })
+  @Field(() => GraphQLEmailAddress, { nullable: true })
+  @Property({ columnType: 'text', nullable: true })
   email: string
 
   @Field({ nullable: true })

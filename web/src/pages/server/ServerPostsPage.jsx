@@ -1,15 +1,12 @@
 import { useRef } from 'react'
 import PostsHeader from '@/components/post/PostsHeader'
-import { useParams } from 'react-router-dom'
 import Posts from '@/components/post/Posts'
 import ServerFoldersSidebar from '@/pages/server/ServerFoldersSidebar'
 import { useSetServerPage } from '@/hooks/useSetServerPage'
 import Page from '@/components/ui/page/Page'
 import CreatePostHeader from '@/components/post/create/CreatePostHeader'
 
-export default function ServerPostsPage() {
-  const { serverId } = useParams()
-
+export default function ServerPostsPage({ server }) {
   const ref = useRef(null)
 
   const refreshPosts = () => {
@@ -21,9 +18,12 @@ export default function ServerPostsPage() {
   return (
     <Page
       header={<PostsHeader refreshPosts={refreshPosts} />}
-      rightSidebar={<ServerFoldersSidebar serverId={serverId} />}
+      rightSidebar={<ServerFoldersSidebar server={server} />}
     >
-      <Posts serverId={serverId} header={<CreatePostHeader />} />
+      <Posts
+        serverId={server?.id}
+        header={<CreatePostHeader server={server} />}
+      />
     </Page>
   )
 }

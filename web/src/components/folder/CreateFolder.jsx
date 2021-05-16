@@ -8,14 +8,12 @@ import Button from '@/components/ui/Button'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { useCreateFolderMutation } from '@/graphql/hooks'
-import { useJoinedServers } from '@/hooks/graphql/useJoinedServers'
-import { useServer } from '@/hooks/graphql/useServer'
 
-export default function CreateFolder({ serverId }) {
+export default function CreateFolder({ server }) {
   const { t } = useTranslation()
 
   const [canManagePosts] = useHasServerPermissions({
-    serverId,
+    server,
     permissions: [ServerPermission.ManagePosts]
   })
 
@@ -33,21 +31,19 @@ export default function CreateFolder({ serverId }) {
   const [createFolder, { loading }] = useCreateFolderMutation()
 
   const onSubmit = ({ name }) => {
-    createFolder({ variables: { input: { name, serverId } } }).then(
+    createFolder({ variables: { input: { name, serverId: server.id } } }).then(
       ({ data: { createFolder } }) => {
         setIsOpen(false)
       }
     )
   }
 
-  const server = useServer(serverId)
-
-  const title = serverId
+  const title = server
     ? t('folder.server.title', { name: server?.name })
     : t('folder.user.title')
-  const create = serverId ? t('folder.server.create') : t('folder.user.create')
+  const create = server ? t('folder.server.create') : t('folder.user.create')
 
-  if (serverId && !canManagePosts) return <SidebarLabel>{title}</SidebarLabel>
+  if (server && !canManagePosts) return <SidebarLabel>{title}</SidebarLabel>
 
   return (
     <>

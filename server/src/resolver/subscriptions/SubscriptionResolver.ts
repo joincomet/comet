@@ -23,8 +23,6 @@ import {
   TypingArgs,
   TypingInput
 } from '@/resolver/subscriptions/typing/TypingInput'
-import { CommentSubscriptionFilter } from '@/resolver/subscriptions/filters/CommentSubscriptionFilter'
-import { PostSubscriptionFilter } from '@/resolver/subscriptions/filters/PostSubscriptionFilter'
 import { MessageSubscriptionFilter } from '@/resolver/subscriptions/filters/MessageSubscriptionFilter'
 import { RepliesSubscriptionFilter } from '@/resolver/subscriptions/filters/RepliesSubscriptionFilter'
 import { TypingResponse } from '@/resolver/subscriptions/typing/TypingResponse'
@@ -54,10 +52,8 @@ function getResult<TItem>(
 
 @Resolver()
 export class SubscriptionResolver {
-  @Authorized()
   @Subscription(() => CommentChangedResponse, {
-    topics: SubscriptionTopic.CommentChanged,
-    filter: CommentSubscriptionFilter
+    topics: SubscriptionTopic.CommentChanged
   })
   async commentChanged(
     @Ctx() { em }: Context,
@@ -70,10 +66,8 @@ export class SubscriptionResolver {
     return getResult(entity, type)
   }
 
-  @Authorized()
   @Subscription(() => PostChangedResponse, {
-    topics: SubscriptionTopic.PostChanged,
-    filter: PostSubscriptionFilter
+    topics: SubscriptionTopic.PostChanged
   })
   async postChanged(
     @Ctx() { em }: Context,
@@ -87,7 +81,6 @@ export class SubscriptionResolver {
     return getResult(entity, type)
   }
 
-  @Authorized()
   @Subscription(() => MessageChangedResponse, {
     topics: SubscriptionTopic.MessageChanged,
     filter: MessageSubscriptionFilter
@@ -128,7 +121,6 @@ export class SubscriptionResolver {
     return getResult(entity, type)
   }
 
-  @Authorized()
   @Subscription(() => TypingResponse, {
     topics: SubscriptionTopic.TypingUpdated,
     filter: TypingFilter

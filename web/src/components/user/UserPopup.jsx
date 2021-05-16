@@ -5,7 +5,6 @@ import { IconPlus } from '@/components/ui/icons/Icons'
 
 export default function UserPopup({
   user,
-  nickname,
   roles,
   children,
   placement = 'right'
@@ -41,18 +40,9 @@ export default function UserPopup({
 
               <div className="mt-3 text-base">
                 <span className="font-semibold text-primary">
-                  {nickname || user.name}
+                  {user.username}
                 </span>
-                {!nickname && (
-                  <span className="text-tertiary">#{user.tag}</span>
-                )}
               </div>
-
-              {nickname && (
-                <div className="text-13 text-tertiary font-semibold">
-                  {user.name}
-                </div>
-              )}
             </div>
 
             <div className="p-4 dark:bg-gray-800 rounded-b-md">

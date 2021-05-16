@@ -19,6 +19,7 @@ $shadow: ();
     &:before {
       content: "";
       position: absolute;
+      left: 0;
       width: 4px;
       height: 5px;
       border-radius: 50%;

@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom'
-import AuthLayout from '@/pages/auth/AuthLayout'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 export default function NotFound() {
   const [user] = useCurrentUser()
   return (
-    <AuthLayout>
+    <div className="h-full w-full">
       <div className="text-center space-y-3">
         <div className="text-primary text-4xl font-bold">Oh no!</div>
         <div className="text-primary text-xl font-medium">
@@ -18,6 +17,6 @@ export default function NotFound() {
           Return to home page
         </Link>
       </div>
-    </AuthLayout>
+    </div>
   )
 }

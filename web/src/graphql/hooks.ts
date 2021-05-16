@@ -65,11 +65,6 @@ export type BlockUserInput = {
   userId: Scalars['ID'];
 };
 
-export type ChangeNotificationSettingInput = {
-  notificationSetting: NotificationSetting;
-  serverId: Scalars['ID'];
-};
-
 export type ChangeOnlineStatusInput = {
   onlineStatus: OnlineStatus;
 };
@@ -83,12 +78,18 @@ export type Channel = BaseEntity & {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  isPrivate: Scalars['Boolean'];
   isUnread: Scalars['Boolean'];
   mentionCount: Scalars['NonNegativeInt'];
   name?: Maybe<Scalars['String']>;
   server: Server;
+  type: ChannelType;
 };
+
+export enum ChannelType {
+  Private = 'Private',
+  Public = 'Public',
+  Restricted = 'Restricted'
+}
 
 export type CloseDmInput = {
   userId: Scalars['ID'];
@@ -134,15 +135,15 @@ export enum CommentsSort {
 }
 
 export type CreateAccountInput = {
-  email: Scalars['EmailAddress'];
+  email?: Maybe<Scalars['EmailAddress']>;
   password: Scalars['String'];
   username: Scalars['String'];
 };
 
 export type CreateChannelInput = {
-  isPrivate?: Maybe<Scalars['Boolean']>;
   name: Scalars['String'];
   serverId: Scalars['ID'];
+  type?: Maybe<Scalars['String']>;
 };
 
 export type CreateCommentInput = {
@@ -195,10 +196,10 @@ export type CreateRoleInput = {
 
 export type CreateServerInput = {
   avatarFile?: Maybe<Scalars['Upload']>;
+  bannerFile?: Maybe<Scalars['Upload']>;
   category?: Maybe<ServerCategory>;
-  isPublic?: Maybe<Scalars['Boolean']>;
+  displayName: Scalars['String'];
   name: Scalars['String'];
-  urlName: Scalars['String'];
 };
 
 
@@ -309,7 +310,6 @@ export type Image = {
 
 
 export type JoinServerInput = {
-  inviteId?: Maybe<Scalars['ID']>;
   serverId?: Maybe<Scalars['ID']>;
 };
 
@@ -435,7 +435,6 @@ export type Mutation = {
   answerFriendRequest: User;
   banUserFromServer: Scalars['Boolean'];
   blockUser: User;
-  changeNotificationSetting: ServerUser;
   changeOnlineStatus: User;
   changeUserAvatar: User;
   closeDm: User;
@@ -534,11 +533,6 @@ export type MutationBanUserFromServerArgs = {
 
 export type MutationBlockUserArgs = {
   input: BlockUserInput;
-};
-
-
-export type MutationChangeNotificationSettingArgs = {
-  input: ChangeNotificationSettingInput;
 };
 
 
@@ -882,12 +876,6 @@ export type MutationVotePostArgs = {
 };
 
 
-export enum NotificationSetting {
-  All = 'All',
-  Mentions = 'Mentions',
-  None = 'None'
-}
-
 export enum OnlineStatus {
   Away = 'Away',
   DoNotDisturb = 'DoNotDisturb',
@@ -1049,7 +1037,8 @@ export type QueryRepliesArgs = {
 
 
 export type QueryServerArgs = {
-  serverId: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 
@@ -1060,6 +1049,7 @@ export type QueryServerUsersArgs = {
 
 export type QueryUserArgs = {
   id?: Maybe<Scalars['ID']>;
+  username?: Maybe<Scalars['String']>;
 };
 
 export type ReadChannelInput = {
@@ -1142,24 +1132,19 @@ export type Server = BaseEntity & {
   channels: Array<Channel>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  displayName: Scalars['String'];
   folders: Array<Folder>;
   id: Scalars['ID'];
-  initials: Scalars['String'];
   isBanned: Scalars['Boolean'];
   isDeleted: Scalars['Boolean'];
   isFeatured: Scalars['Boolean'];
   isJoined: Scalars['Boolean'];
-  isPublic: Scalars['Boolean'];
-  myRoles: Array<Role>;
   name: Scalars['String'];
-  nickname?: Maybe<Scalars['String']>;
-  notificationSetting: NotificationSetting;
   onlineCount: Scalars['NonNegativeInt'];
   owner: User;
   permissions: Array<ServerPermission>;
   roles: Array<Role>;
   systemMessagesChannel: Channel;
-  urlName: Scalars['String'];
   userCount: Scalars['NonNegativeInt'];
 };
 
@@ -1187,22 +1172,20 @@ export enum ServerCategory {
 export enum ServerPermission {
   AddPostToFolder = 'AddPostToFolder',
   Admin = 'Admin',
-  ChangeNickname = 'ChangeNickname',
   CreateComment = 'CreateComment',
-  CreateInvite = 'CreateInvite',
   CreatePost = 'CreatePost',
   DisplayRoleSeparately = 'DisplayRoleSeparately',
   ManageChannels = 'ManageChannels',
   ManageComments = 'ManageComments',
   ManageFolders = 'ManageFolders',
   ManageMessages = 'ManageMessages',
-  ManageNicknames = 'ManageNicknames',
   ManagePosts = 'ManagePosts',
   ManageServer = 'ManageServer',
   ManageUsers = 'ManageUsers',
   Mention = 'Mention',
   Mentionable = 'Mentionable',
   PrivateChannels = 'PrivateChannels',
+  RestrictedChannels = 'RestrictedChannels',
   SendMessages = 'SendMessages',
   VoteComment = 'VoteComment',
   VotePost = 'VotePost'
@@ -1286,8 +1269,8 @@ export type UpdateAccountInput = {
 
 export type UpdateChannelInput = {
   channelId: Scalars['ID'];
-  isPrivate?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
+  type?: Maybe<ChannelType>;
 };
 
 export type UpdateCommentInput = {
@@ -1331,14 +1314,12 @@ export type UpdateServerInput = {
   bannerFile?: Maybe<Scalars['Upload']>;
   category?: Maybe<ServerCategory>;
   description?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
   featuredPosition?: Maybe<Scalars['String']>;
   isFeatured?: Maybe<Scalars['Boolean']>;
-  isPublic?: Maybe<Scalars['Boolean']>;
-  name?: Maybe<Scalars['String']>;
   ownerId?: Maybe<Scalars['ID']>;
   serverId: Scalars['ID'];
   systemMessagesChannelId?: Maybe<Scalars['ID']>;
-  urlName?: Maybe<Scalars['String']>;
 };
 
 
@@ -1347,7 +1328,7 @@ export type User = BaseEntity & {
   avatarUrl?: Maybe<Scalars['String']>;
   color: Color;
   createdAt: Scalars['DateTime'];
-  email: Scalars['EmailAddress'];
+  email?: Maybe<Scalars['EmailAddress']>;
   folders: Array<Folder>;
   groups: Array<Group>;
   id: Scalars['ID'];
@@ -1377,7 +1358,7 @@ export type VotePostInput = {
 
 export type ChannelFragment = (
   { __typename?: 'Channel' }
-  & Pick<Channel, 'id' | 'name' | 'description' | 'isUnread' | 'mentionCount' | 'isPrivate'>
+  & Pick<Channel, 'id' | 'name' | 'description' | 'isUnread' | 'mentionCount' | 'type'>
 );
 
 export type CommentFragment = (
@@ -1397,19 +1378,10 @@ export type CurrentUserFragment = (
   & Pick<User, 'isAdmin' | 'email'>
   & { servers: Array<(
     { __typename?: 'Server' }
-    & Pick<Server, 'permissions' | 'nickname'>
+    & Pick<Server, 'permissions'>
     & { channels: Array<(
       { __typename?: 'Channel' }
-      & ChannelFragment
-    )>, roles: Array<(
-      { __typename?: 'Role' }
-      & RoleFragment
-    )>, myRoles: Array<(
-      { __typename?: 'Role' }
-      & RoleFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
+      & Pick<Channel, 'isUnread' | 'mentionCount'>
     )> }
     & ServerFragment
   )>, relatedUsers: Array<(
@@ -1497,7 +1469,7 @@ export type ReplyFragment = (
       & Pick<Post, 'id' | 'title' | 'relativeUrl'>
       & { server: (
         { __typename?: 'Server' }
-        & Pick<Server, 'id' | 'name' | 'avatarUrl' | 'initials'>
+        & Pick<Server, 'id' | 'name' | 'avatarUrl'>
       ) }
     ), parentComment?: Maybe<(
       { __typename?: 'Comment' }
@@ -1517,7 +1489,7 @@ export type RoleFragment = (
 
 export type ServerFragment = (
   { __typename?: 'Server' }
-  & Pick<Server, 'id' | 'name' | 'urlName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isPublic' | 'initials' | 'isJoined'>
+  & Pick<Server, 'id' | 'name' | 'displayName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isJoined'>
   & { owner: (
     { __typename?: 'User' }
     & Pick<User, 'id'>
@@ -2147,7 +2119,7 @@ export type CreateFriendRequestMutation = (
       & UserFragment
     )>, servers: Array<(
       { __typename?: 'Server' }
-      & Pick<Server, 'nickname' | 'id' | 'avatarUrl' | 'name' | 'initials'>
+      & Pick<Server, 'id' | 'avatarUrl' | 'name'>
     )> }
     & UserFragment
   ) }
@@ -2170,7 +2142,7 @@ export type DeleteFriendRequestMutation = (
       & UserFragment
     )>, servers: Array<(
       { __typename?: 'Server' }
-      & Pick<Server, 'nickname' | 'id' | 'avatarUrl' | 'name' | 'initials'>
+      & Pick<Server, 'id' | 'avatarUrl' | 'name'>
     )> }
     & UserFragment
   ) }
@@ -2721,6 +2693,7 @@ export type PostQuery = (
       & ServerUserFragment
     )>, server: (
       { __typename?: 'Server' }
+      & Pick<Server, 'permissions'>
       & ServerFragment
     ) }
     & PostFragment
@@ -2786,6 +2759,38 @@ export type RepliesQuery = (
   )> }
 );
 
+export type ServerQueryVariables = Exact<{
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ServerQuery = (
+  { __typename?: 'Query' }
+  & { server: (
+    { __typename?: 'Server' }
+    & Pick<Server, 'permissions'>
+    & { channels: Array<(
+      { __typename?: 'Channel' }
+      & ChannelFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & { owner?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      )>, server?: Maybe<(
+        { __typename?: 'Server' }
+        & Pick<Server, 'id' | 'name' | 'avatarUrl'>
+      )> }
+      & FolderFragment
+    )>, roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )> }
+    & ServerFragment
+  ) }
+);
+
 export type ServerUsersQueryVariables = Exact<{
   serverId: Scalars['ID'];
 }>;
@@ -2816,7 +2821,7 @@ export type UserQuery = (
       & UserFragment
     )>, servers: Array<(
       { __typename?: 'Server' }
-      & Pick<Server, 'nickname' | 'id' | 'avatarUrl' | 'name' | 'initials'>
+      & Pick<Server, 'id' | 'avatarUrl' | 'name'>
     )> }
     & RelatedUserFragment
   )> }
@@ -2870,7 +2875,7 @@ export type MessageChangedSubscription = (
         & Pick<Channel, 'id' | 'name'>
         & { server: (
           { __typename?: 'Server' }
-          & Pick<Server, 'id'>
+          & Pick<Server, 'id' | 'name'>
         ) }
       )>, group?: Maybe<(
         { __typename?: 'Group' }
@@ -2896,10 +2901,6 @@ export type MessageChangedSubscription = (
       & { channel?: Maybe<(
         { __typename?: 'Channel' }
         & Pick<Channel, 'id'>
-        & { server: (
-          { __typename?: 'Server' }
-          & Pick<Server, 'id'>
-        ) }
       )>, group?: Maybe<(
         { __typename?: 'Group' }
         & Pick<Group, 'id'>
@@ -2974,6 +2975,16 @@ export type TypingUpdatedSubscription = (
   ) }
 );
 
+export const ChannelFragmentDoc = gql`
+    fragment Channel on Channel {
+  id
+  name
+  description
+  isUnread
+  mentionCount
+  type
+}
+    `;
 export const MetadataFragmentDoc = gql`
     fragment Metadata on LinkMetadata {
   author
@@ -3021,48 +3032,16 @@ export const ServerFragmentDoc = gql`
     fragment Server on Server {
   id
   name
-  urlName
+  displayName
   description
   avatarUrl
   bannerUrl
   category
   userCount
-  isPublic
-  initials
   isJoined
   owner {
     id
   }
-}
-    `;
-export const ChannelFragmentDoc = gql`
-    fragment Channel on Channel {
-  id
-  name
-  description
-  isUnread
-  mentionCount
-  isPrivate
-}
-    `;
-export const RoleFragmentDoc = gql`
-    fragment Role on Role {
-  id
-  name
-  color
-  permissions
-}
-    `;
-export const FolderFragmentDoc = gql`
-    fragment Folder on Folder {
-  id
-  name
-  avatarUrl
-  description
-  postCount
-  followerCount
-  isCollaborative
-  visibility
 }
     `;
 export const RelatedUserFragmentDoc = gql`
@@ -3083,6 +3062,18 @@ export const GroupFragmentDoc = gql`
   lastMessageAt
 }
     `;
+export const FolderFragmentDoc = gql`
+    fragment Folder on Folder {
+  id
+  name
+  avatarUrl
+  description
+  postCount
+  followerCount
+  isCollaborative
+  visibility
+}
+    `;
 export const CurrentUserFragmentDoc = gql`
     fragment CurrentUser on User {
   ...User
@@ -3092,17 +3083,8 @@ export const CurrentUserFragmentDoc = gql`
     ...Server
     permissions
     channels {
-      ...Channel
-    }
-    roles {
-      ...Role
-    }
-    myRoles {
-      ...Role
-    }
-    nickname
-    folders {
-      ...Folder
+      isUnread
+      mentionCount
     }
   }
   relatedUsers {
@@ -3123,11 +3105,9 @@ export const CurrentUserFragmentDoc = gql`
 }
     ${UserFragmentDoc}
 ${ServerFragmentDoc}
-${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}
 ${RelatedUserFragmentDoc}
-${GroupFragmentDoc}`;
+${GroupFragmentDoc}
+${FolderFragmentDoc}`;
 export const MessageFragmentDoc = gql`
     fragment Message on Message {
   id
@@ -3186,6 +3166,14 @@ export const PostFragmentDoc = gql`
   }
 }
     ${MetadataFragmentDoc}`;
+export const RoleFragmentDoc = gql`
+    fragment Role on Role {
+  id
+  name
+  color
+  permissions
+}
+    `;
 export const ServerUserFragmentDoc = gql`
     fragment ServerUser on ServerUser {
   color
@@ -3218,7 +3206,6 @@ export const ReplyFragmentDoc = gql`
         id
         name
         avatarUrl
-        initials
       }
     }
     parentComment {
@@ -4642,11 +4629,9 @@ export const CreateFriendRequestDocument = gql`
       ...User
     }
     servers {
-      nickname
       id
       avatarUrl
       name
-      initials
     }
   }
 }
@@ -4689,11 +4674,9 @@ export const DeleteFriendRequestDocument = gql`
       ...User
     }
     servers {
-      nickname
       id
       avatarUrl
       name
-      initials
     }
   }
 }
@@ -6037,6 +6020,7 @@ export const PostDocument = gql`
     }
     server {
       ...Server
+      permissions
     }
   }
 }
@@ -6204,6 +6188,64 @@ export function useRepliesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Re
 export type RepliesQueryHookResult = ReturnType<typeof useRepliesQuery>;
 export type RepliesLazyQueryHookResult = ReturnType<typeof useRepliesLazyQuery>;
 export type RepliesQueryResult = Apollo.QueryResult<RepliesQuery, RepliesQueryVariables>;
+export const ServerDocument = gql`
+    query server($id: ID, $name: String) @live {
+  server(id: $id, name: $name) {
+    ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    folders {
+      ...Folder
+      owner {
+        id
+        username
+      }
+      server {
+        id
+        name
+        avatarUrl
+      }
+    }
+    roles {
+      ...Role
+    }
+  }
+}
+    ${ServerFragmentDoc}
+${ChannelFragmentDoc}
+${FolderFragmentDoc}
+${RoleFragmentDoc}`;
+
+/**
+ * __useServerQuery__
+ *
+ * To run a query within a React component, call `useServerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useServerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useServerQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useServerQuery(baseOptions?: Apollo.QueryHookOptions<ServerQuery, ServerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ServerQuery, ServerQueryVariables>(ServerDocument, options);
+      }
+export function useServerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ServerQuery, ServerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ServerQuery, ServerQueryVariables>(ServerDocument, options);
+        }
+export type ServerQueryHookResult = ReturnType<typeof useServerQuery>;
+export type ServerLazyQueryHookResult = ReturnType<typeof useServerLazyQuery>;
+export type ServerQueryResult = Apollo.QueryResult<ServerQuery, ServerQueryVariables>;
 export const ServerUsersDocument = gql`
     query serverUsers($serverId: ID!) @live {
   serverUsers(serverId: $serverId) {
@@ -6250,11 +6292,9 @@ export const UserDocument = gql`
       ...User
     }
     servers {
-      nickname
       id
       avatarUrl
       name
-      initials
     }
   }
 }
@@ -6348,6 +6388,7 @@ export const MessageChangedDocument = gql`
         name
         server {
           id
+          name
         }
       }
       group {
@@ -6372,9 +6413,6 @@ export const MessageChangedDocument = gql`
       id
       channel {
         id
-        server {
-          id
-        }
       }
       group {
         id

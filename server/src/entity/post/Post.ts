@@ -121,9 +121,9 @@ export class Post extends BaseEntity {
       .trim()
       .split(' ')
       .slice(0, 9)
-      .join('-')
-      .replace(/[^a-z0-9-]+/gi, '')
-      .replace(/[-](.)\1+/g, '$1')
+      .join('_')
+      .replace(/[^a-z0-9_]+/gi, '')
+      .replace(/[_](.)\1+/g, '$1')
     return `/+${this.server.name}/post/${this.id}/${slug}`
   }
 

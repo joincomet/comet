@@ -1,11 +1,10 @@
-import { Field, Int, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql'
 import {
   Channel,
   Folder,
   Post,
   ServerCategory,
   ServerFolder,
-  ServerInvite,
   ServerPermission,
   User
 } from '@/entity'
@@ -22,8 +21,7 @@ import {
 } from '@mikro-orm/core'
 import { ServerUser } from '@/entity/server/ServerUser'
 import { Role } from '@/entity/server/Role'
-import { NotificationSetting } from '@/types'
-import { GraphQLNonNegativeInt, GraphQLURL } from 'graphql-scalars'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -34,7 +32,7 @@ export class Server extends BaseEntity {
 
   @Field()
   @Property({ columnType: 'text' })
-  urlName: string
+  displayName: string
 
   @Field({ nullable: true })
   @Property({ nullable: true, columnType: 'text' })
@@ -52,9 +50,6 @@ export class Server extends BaseEntity {
     orderBy: { position: QueryOrder.ASC }
   })
   roles = new Collection<Role>(this)
-
-  @Field(() => [Role])
-  myRoles: Role[]
 
   @OneToMany(() => ServerUser, 'server', {
     orderBy: { position: QueryOrder.ASC }
@@ -102,22 +97,12 @@ export class Server extends BaseEntity {
   })
   channels = new Collection<Channel>(this)
 
-  @Field({ nullable: true })
-  nickname?: string
-
-  @Field(() => NotificationSetting)
-  notificationSetting: NotificationSetting
-
   @Field(() => [ServerPermission])
   permissions: ServerPermission[]
 
   @Field(() => Channel)
   @OneToOne(() => Channel, undefined, { nullable: true })
   systemMessagesChannel?: Channel
-
-  @Field()
-  @Property()
-  isPublic: boolean = true
 
   @Field()
   @Property()
@@ -128,15 +113,4 @@ export class Server extends BaseEntity {
 
   @Property({ nullable: true, columnType: 'text' })
   featuredPosition?: string
-
-  @OneToMany(() => ServerInvite, 'server')
-  invites = new Collection<ServerInvite>(this)
-
-  @Field()
-  get initials(): string {
-    return this.name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-  }
 }

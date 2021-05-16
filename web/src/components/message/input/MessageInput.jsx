@@ -20,21 +20,10 @@ import { Mention } from '@/components/ui/editor/Mention'
 import tippy from 'tippy.js/headless'
 import { MentionList } from '@/components/message/input/MentionList'
 
-export default function MessageInput({
-  channel,
-  group,
-  user,
-  users,
-  serverUsers
-}) {
+export default function MessageInput({ channel, group, user, users }) {
   const { t } = useTranslation()
 
   const placeholder = useMessagePlaceholder({ channel, group, user })
-
-  const computedServerUsers = useMemo(() => {
-    if (serverUsers) return serverUsers
-    else return users.map(user => ({ user, name: user.name }))
-  }, [serverUsers, users])
 
   const editor = useEditor({
     autofocus: true,
@@ -84,7 +73,7 @@ export default function MessageInput({
                 reactRenderer = new ReactRenderer(MentionList, {
                   props: {
                     ...props,
-                    serverUsers: ['@everyone'].concat(computedServerUsers)
+                    users: ['@everyone'].concat(users)
                   },
                   editor: props.editor
                 })
@@ -157,7 +146,7 @@ export default function MessageInput({
     channel,
     group,
     user,
-    serverUsers: computedServerUsers
+    users
   })
   const [files, setFiles] = useState(null)
   const [currentFile, setCurrentFile] = useState(null)

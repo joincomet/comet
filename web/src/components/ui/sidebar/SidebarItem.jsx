@@ -65,7 +65,7 @@ export default forwardRef(
           className={`${className(large, small, light)} ${
             active ? activeClassName(light) : ''
           }`}
-          activeClassName={activeClassName(light)}
+          activeClassName={active != null ? '' : activeClassName(light)}
           exact={exact}
         >
           {children}

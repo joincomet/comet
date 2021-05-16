@@ -2,7 +2,6 @@ import { memo, useEffect, useState } from 'react'
 import { useDragLayer } from 'react-dnd'
 import PostDragPreview from '@/components/post/PostDragPreview'
 import { DragItemTypes } from '@/types/DragItemTypes'
-import ServerDragPreview from '@/components/server/ServerDragPreview'
 
 const layerStyles = {
   position: 'fixed',
@@ -73,9 +72,6 @@ export default memo(function CustomDragLayer() {
       >
         {itemType === DragItemTypes.Post && (
           <PostDragPreview post={item} show={isDragging} />
-        )}
-        {itemType === DragItemTypes.Server && (
-          <ServerDragPreview server={item} show={isDragging} />
         )}
       </div>
     </div>

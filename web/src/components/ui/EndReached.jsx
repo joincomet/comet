@@ -1,16 +1,17 @@
 import { memo } from 'react'
 
 export default memo(function EndReached({
-  children = 'You have reached the end!'
+  children = 'You have reached the end!',
+  className = 'h-48'
 }) {
   return (
-    <div className="flex flex-col items-center justify-center text-primary">
+    <div className="flex flex-col items-center justify-center text-primary pt-6">
       <img
         alt="astronaut"
         src="/astronaut.png"
-        className="object-contain opacity-50 h-48 animate-float"
+        className={`object-contain opacity-50 animate-float select-none pointer-events-none ${className}`}
       />
-      <div className="text-tertiary pt-1 text-lg font-semibold">{children}</div>
+      <div className="text-tertiary pt-3 text-lg font-semibold">{children}</div>
     </div>
   )
 })

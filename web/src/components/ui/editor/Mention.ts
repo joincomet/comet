@@ -98,6 +98,7 @@ export const Mention = Node.create<MentionOptions>({
             return false
           }
 
+          // @ts-ignore
           state.doc.nodesBetween(anchor - 1, anchor, (node, pos) => {
             if (node.type.name === 'mention') {
               isMention = true

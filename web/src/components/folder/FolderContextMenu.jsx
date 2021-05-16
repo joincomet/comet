@@ -9,12 +9,11 @@ import {
   useUnfollowFolderMutation,
   useUpdateFolderMutation
 } from '@/graphql/hooks'
-import { useUserFolders } from '@/hooks/graphql/useUserFolders'
 
 export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
-  const userFolders = useUserFolders()
+  const userFolders = currentUser?.folders ?? []
   const isFollowing = userFolders
     .filter(f => f.owner?.id !== currentUser.id)
     .map(f => f.id)
@@ -26,8 +25,8 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const [deleteFolder] = useDeleteFolderMutation()
   const { push } = useHistory()
   const { pathname } = useLocation()
-  const matched = matchPath(pathname, { path: '/server/:serverId' })
-  const serverId = matched?.params?.serverId
+  const matched = matchPath(pathname, { path: '/:server' })
+  const serverName = matched?.params?.server?.substring(1)
 
   return (
     <>
@@ -61,7 +60,7 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
         {editable && (
           <>
             <ContextMenuItem label={t('folder.context.edit')} />
-            {!serverId && (
+            {!serverName && (
               <ContextMenuItem
                 label={t('folder.context.collaborative')}
                 checked={folder.isCollaborative}
@@ -144,8 +143,8 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
                 deleteFolder({ variables: { input: { folderId: folder.id } } })
                 if (pathname.startsWith('/folder')) {
                   push('/home')
-                } else if (pathname.startsWith(`/+${serverId}/folder`)) {
-                  push(`/+${serverId}`)
+                } else if (pathname.startsWith(`/${serverName}/folder`)) {
+                  push(`/${serverName}`)
                 }
               }}
             />

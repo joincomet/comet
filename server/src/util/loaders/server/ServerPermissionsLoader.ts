@@ -11,7 +11,7 @@ import { EntityManager } from '@mikro-orm/postgresql'
 export const serverPermissionsLoader = (em: EntityManager, userId: string) => {
   return new DataLoader<string, ServerPermission[]>(
     async (serverIds: string[]) => {
-      if (!userId) return serverIds.map(_ => null)
+      if (!userId) return serverIds.map(_ => [])
       const currentUser = await em.findOneOrFail(User, userId)
       const serverUsers = await em.find(
         ServerUser,

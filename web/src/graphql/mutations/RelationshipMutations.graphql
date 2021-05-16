@@ -8,11 +8,9 @@ mutation createFriendRequest($input: CreateFriendRequestInput!) {
       ...User
     }
     servers {
-      nickname
       id
       avatarUrl
       name
-      initials
     }
   }
 }
@@ -27,11 +25,9 @@ mutation deleteFriendRequest($input: DeleteFriendRequestInput!) {
       ...User
     }
     servers {
-      nickname
       id
       avatarUrl
       name
-      initials
     }
   }
 }

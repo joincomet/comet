@@ -1,8 +1,9 @@
 import { Field, ObjectType } from 'type-graphql'
-import { Message, Server } from '@/entity'
+import { Message, Server, ChannelType } from '@/entity'
 import {
   Collection,
   Entity,
+  Enum,
   ManyToOne,
   OneToMany,
   Property
@@ -32,9 +33,11 @@ export class Channel extends BaseEntity {
   @Property({ columnType: 'text' })
   position: string = ReorderUtils.FIRST_POSITION
 
-  @Field()
-  @Property()
-  isPrivate: boolean = false
+  @Field(() => ChannelType)
+  @Enum({
+    items: () => ChannelType
+  })
+  type: ChannelType = ChannelType.Public
 
   @Property()
   isDeleted: boolean = false

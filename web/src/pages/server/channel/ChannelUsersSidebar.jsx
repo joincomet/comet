@@ -1,16 +1,15 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarUser from '@/components/ui/sidebar/SidebarUser'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useStore } from '@/hooks/useStore'
-import { ServerPermission, useServerUsersQuery } from '@/graphql/hooks'
+import { ServerPermission } from '@/graphql/hooks'
 import { Virtuoso } from 'react-virtuoso'
-import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 
 export default function ChannelUsersSidebar({ server, serverUsers }) {
   const items = useMemo(() => {
     const temp = []
-    for (const role of server.roles.filter(r =>
+    for (const role of (server?.roles ?? []).filter(r =>
       r.permissions.includes(ServerPermission.DisplayRoleSeparately)
     )) {
       const roleUsers = serverUsers.filter(
@@ -39,7 +38,7 @@ export default function ChannelUsersSidebar({ server, serverUsers }) {
       temp.push(...offlineUsers)
     }
     return temp
-  }, [serverUsers, server.roles])
+  }, [serverUsers, server])
 
   const virtusoRef = useRef()
 
@@ -63,7 +62,6 @@ export default function ChannelUsersSidebar({ server, serverUsers }) {
               <div className={`${user.user.isOnline ? '' : 'opacity-35'}`}>
                 <SidebarUser
                   user={user.user}
-                  nickname={user.nickname}
                   roles={user.roles}
                   color={user.color}
                 />
