@@ -125,7 +125,7 @@ input CreateAccountInput {
 input CreateChannelInput {
   name: String!
   serverId: ID!
-  type: String = "Public"
+  type: ChannelType = Public
 }
 
 input CreateCommentInput {

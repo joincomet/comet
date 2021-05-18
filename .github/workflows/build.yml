@@ -67,6 +67,7 @@ jobs:
       - run: yarn run build:web
         env:
           VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
+          VITE_SENTRY_DSN: ${{ secrets.WEB_SENTRY_DSN }}
       - uses: actions/upload-artifact@v2
         with:
           name: dist-web
@@ -97,6 +98,7 @@ jobs:
           sed -i "s/<AWS_SECRET_ACCESS_KEY>/$AWS_SECRET_ACCESS_KEY/g" .do/app.yaml
           sed -i "s/<AWS_ENDPOINT>/${{ secrets.AWS_ENDPOINT }}/g" .do/app.yaml
           sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
+          sed -i "s/<SENTRY_DSN>/${{ secrets.SERVER_SENTRY_DSN }}/g" .do/app.yaml
       - name: Update app spec
         run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml
 

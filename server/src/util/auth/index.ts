@@ -1,3 +1,3 @@
 export * from './authChecker'
 export * from './createAccessToken'
-export * from './getUserId'
+export * from './getUserFromToken'

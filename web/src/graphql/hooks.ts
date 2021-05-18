@@ -148,7 +148,7 @@ export type CreateAccountInput = {
 export type CreateChannelInput = {
   name: Scalars['String'];
   serverId: Scalars['ID'];
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<ChannelType>;
 };
 
 export type CreateCommentInput = {

@@ -4,7 +4,7 @@ import Routes from '@/pages/Routes'
 import { ApolloProvider } from '@apollo/client/react'
 import ResponsiveToaster from '@/components/ui/ResponsiveToaster'
 import CustomDragLayer from '@/components/ui/CustomDragLayer'
-import { BrowserRouter, HashRouter } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 import { getOS } from '@/utils/getOS'
@@ -13,9 +13,9 @@ import ContextMenuProvider from '@/providers/ContextMenuProvider'
 import MobileComingSoon from '@/components/ui/MobileComingSoon'
 import LoginDialog from '@/components/LoginDialog'
 import UserDialog from '@/components/user/UserDialog'
+import * as Sentry from '@sentry/react'
 
-export default function App() {
-  const AppRouter = window.electron ? HashRouter : BrowserRouter
+function App({ history }) {
   const isMac = getOS() === 'Mac OS'
 
   return (
@@ -30,7 +30,7 @@ export default function App() {
           />
         </Helmet>
 
-        <AppRouter>
+        <Router history={history}>
           <ContextMenuProvider>
             <DndProvider
               backend={TouchBackend}
@@ -55,8 +55,10 @@ export default function App() {
               </div>
             </DndProvider>
           </ContextMenuProvider>
-        </AppRouter>
+        </Router>
       </HelmetProvider>
     </ApolloProvider>
   )
 }
+
+export default Sentry.withProfiler(App)

@@ -9,17 +9,23 @@ import { useServer } from 'graphql-ws/lib/use/ws'
 import { specifiedRules } from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { getUserId, MAX_FILE_SIZE, RedisLiveQueryStore } from '@/util'
+import { getUserFromToken, MAX_FILE_SIZE, RedisLiveQueryStore } from '@/util'
 import { Context } from '@/types'
 import { createLoaders } from '@/util/loaders/createLoaders'
 import cors from 'cors'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { Disposable } from 'graphql-ws'
 import { seed } from '@/seed/seed'
+import * as Sentry from '@sentry/node'
+import * as Tracing from '@sentry/tracing'
+import { version } from '../package.json'
 
 const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
 
 const RESET = true // set TRUE to WIPE AND RESET DATABASE in dev
+
+const shouldUseSentry =
+  process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -43,6 +49,31 @@ export async function bootstrap() {
   const schema = await buildSchema(typeGraphQLConf)
 
   const app = express()
+
+  if (shouldUseSentry) {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      integrations: [
+        // enable HTTP calls tracing
+        new Sentry.Integrations.Http({ tracing: true }),
+        // enable Express.js middleware tracing
+        new Tracing.Integrations.Express({ app })
+      ],
+      release: `server@${version}`,
+
+      // Set tracesSampleRate to 1.0 to capture 100%
+      // of transactions for performance monitoring.
+      // We recommend adjusting this value in production
+      tracesSampleRate: 1.0
+    })
+
+    // RequestHandler creates a separate execution context using domains, so that every
+    // transaction/span/breadcrumb is attached to its own Hub instance
+    app.use(Sentry.Handlers.requestHandler())
+    // TracingHandler creates a trace for every incoming request
+    app.use(Sentry.Handlers.tracingHandler())
+  }
+
   app.use(cors({ origin: true }))
   app.use(
     graphqlUploadExpress({
@@ -56,21 +87,43 @@ export async function bootstrap() {
     validationRules,
     context: ({ req }) => {
       const em = orm.em.fork()
-      const userId = getUserId(req.headers.token as string)
+      const { id, email, username } = getUserFromToken(
+        req.headers.token as string
+      )
+      ;(req as any).user = { id, email, username }
       return {
         em,
-        userId,
+        userId: id,
         liveQueryStore,
-        loaders: createLoaders(em, userId)
+        loaders: createLoaders(em, id)
       } as Context
     }
   })
   apolloServer.applyMiddleware({ app })
 
+  if (shouldUseSentry) {
+    app.get('/debug-sentry', function mainHandler(req, res) {
+      ;(req as any).user = { username: 'test', email: 'test@test.com', id: '0' }
+      throw new Error('My first Sentry error!')
+    })
+
+    // The error handler must be before any other error middleware and after all controllers
+    app.use(Sentry.Handlers.errorHandler())
+
+    // Optional fallthrough error handler
+    app.use(function onError(err, req, res, next) {
+      // The error id is attached to `res.sentry` to be returned
+      // and optionally displayed to the user for support.
+      res.statusCode = 500
+      res.end(res.sentry + '\n')
+    })
+  }
+
   const port = +process.env.PORT || 4000
 
   let graphqlWs: Disposable
   const server = app.listen(port, () => {
+    console.log(`Listening on port ${port}`)
     // create and use the websocket server
     const wsServer = new ws.Server({
       server,
@@ -82,13 +135,13 @@ export async function bootstrap() {
         schema,
         execute: args => liveQueryStore.execute(args),
         context: ({ connectionParams }) => {
-          const userId = getUserId(connectionParams?.token as string)
+          const { id } = getUserFromToken(connectionParams?.token as string)
           const em = orm.em.fork()
           return {
             em,
             liveQueryStore,
-            userId,
-            loaders: createLoaders(em, userId)
+            userId: id,
+            loaders: createLoaders(em, id)
           } as Context
         }
       },

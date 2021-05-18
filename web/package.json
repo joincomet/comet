@@ -1,7 +1,7 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.61",
+  "version": "0.0.62",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
@@ -28,6 +28,8 @@
     "@netlify/classnames-template-literals": "^1.0.0",
     "@popperjs/core": "^2.9.2",
     "@reach/observe-rect": "^1.2.0",
+    "@sentry/react": "^6.4.0",
+    "@sentry/tracing": "^6.4.0",
     "@tippyjs/react": "^4.2.5",
     "@tiptap/extension-link": "^2.0.0-beta.16",
     "@tiptap/extension-mention": "^2.0.0-beta.55",

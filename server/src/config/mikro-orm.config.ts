@@ -71,7 +71,7 @@ export const mikroOrmConf = {
   clientUrl:
     process.env.DATABASE_URL ??
     'postgresql://postgres:password@localhost:5432/postgres',
-  debug: true, // process.env.NODE_ENV !== 'production',
+  debug: process.env.NODE_ENV !== 'production',
   forceUtcTimezone: true,
   findOneOrFailHandler: (entityName: string) => {
     return new CustomError('error.entityNotFound', entityName)

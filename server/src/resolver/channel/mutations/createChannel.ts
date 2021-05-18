@@ -11,7 +11,7 @@ export class CreateChannelInput {
   @Field()
   name: string
 
-  @Field({ defaultValue: ChannelType.Public })
+  @Field(() => ChannelType, { defaultValue: ChannelType.Public })
   type: ChannelType = ChannelType.Public
 }
 

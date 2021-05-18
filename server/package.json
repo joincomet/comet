@@ -1,15 +1,14 @@
 {
   "name": "server",
-  "version": "0.0.61",
+  "version": "0.0.62",
   "private": true,
   "engines": {
     "node": "15.x.x"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
+    "start": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
     "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
-    "migrate": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/migrate.ts",
-    "build": "tsc"
+    "migrate": "cross-env NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register --transpile-only src/migrate.ts"
   },
   "dependencies": {
     "@mikro-orm/core": "^4.5.5",
@@ -18,6 +17,9 @@
     "@mikro-orm/sql-highlighter": "^1.0.1",
     "@n1ru4l/graphql-live-query": "^0.7.1",
     "@n1ru4l/in-memory-live-query-store": "^0.6.4",
+    "@sentry/node": "^6.4.0",
+    "@sentry/tracing": "^6.4.0",
+    "add": "^2.0.6",
     "apollo-server-express": "^2.24.0",
     "argon2": "^0.27.2",
     "aws-sdk": "^2.908.0",
