@@ -87,15 +87,15 @@ export async function bootstrap() {
     validationRules,
     context: ({ req }) => {
       const em = orm.em.fork()
-      const { id, email, username } = getUserFromToken(
-        req.headers.token as string
-      )
-      ;(req as any).user = { id, email, username }
+      const user = getUserFromToken(req.headers.token as string)
+      if (user) {
+        ;(req as any).user = user
+      }
       return {
         em,
-        userId: id,
+        userId: user?.id,
         liveQueryStore,
-        loaders: createLoaders(em, id)
+        loaders: createLoaders(em, user?.id)
       } as Context
     }
   })
@@ -135,13 +135,13 @@ export async function bootstrap() {
         schema,
         execute: args => liveQueryStore.execute(args),
         context: ({ connectionParams }) => {
-          const { id } = getUserFromToken(connectionParams?.token as string)
+          const user = getUserFromToken(connectionParams?.token as string)
           const em = orm.em.fork()
           return {
             em,
             liveQueryStore,
-            userId: id,
-            loaders: createLoaders(em, id)
+            userId: user?.id,
+            loaders: createLoaders(em, user?.id)
           } as Context
         }
       },

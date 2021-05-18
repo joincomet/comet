@@ -1,12 +1,12 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.63",
+  "version": "0.0.64",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
   "engines": {
-    "node": "15.x.x"
+    "node": "16.x.x"
   },
   "author": {
     "name": "Comet",

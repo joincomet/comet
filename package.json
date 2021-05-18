@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.63",
+	"version": "0.0.64",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -9,7 +9,7 @@
 	},
 	"repository": "github:joincomet/comet",
 	"engines": {
-		"node": "15.x.x"
+		"node": "16.x.x"
 	},
 	"workspaces": [
 		"server",
