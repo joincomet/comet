@@ -25,6 +25,7 @@ jobs:
           TAG=${{ steps.prep.outputs.tag }}
           ACCESS_TOKEN_SECRET=$(printf '%s\n' "${{ secrets.ACCESS_TOKEN_SECRET }}" | sed -e 's/[]\/$*.^[]/\\&/g');
           AWS_SECRET_ACCESS_KEY=$(printf '%s\n' "${{ secrets.AWS_SECRET_ACCESS_KEY }}" | sed -e 's/[]\/$*.^[]/\\&/g');
+          SENTRY_DSN=$(printf '%s\n' "${{ secrets.SERVER_SENTRY_DSN }}" | sed -e 's/[]\/$*.^[]/\\&/g');
           sed -i "s/<TAG>/$TAG/g" .do/app.yaml
           sed -i "s/<ACCESS_TOKEN_SECRET>/$ACCESS_TOKEN_SECRET/g" .do/app.yaml
           sed -i "s/<BUCKET>/${{ secrets.BUCKET }}/g" .do/app.yaml
@@ -32,5 +33,6 @@ jobs:
           sed -i "s/<AWS_SECRET_ACCESS_KEY>/$AWS_SECRET_ACCESS_KEY/g" .do/app.yaml
           sed -i "s/<AWS_ENDPOINT>/${{ secrets.AWS_ENDPOINT }}/g" .do/app.yaml
           sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
+          sed -i "s/<SENTRY_DSN>/$SENTRY_DSN/g" .do/app.yaml
       - name: Create app
         run: doctl apps create --spec .do/app.yaml
