@@ -18,7 +18,7 @@ export default function Header({
       className={`h-12 min-h-[3rem] items-center bg-white dark:bg-gray-750 border-b dark:border-gray-800 shadow flex`}
     >
       <div
-        className={`flex items-center font-semibold text-base text-primary pl-4 pr-4 ${
+        className={`flex items-center font-semibold text-base leading-5 text-primary pl-4 pr-4 ${
           showDivider ? 'border-r dark:border-gray-700 mr-4' : ''
         }`}
       >

@@ -39,9 +39,35 @@ export default function Messages({ channel, server, user, group, users }) {
 
     if (currentUser) {
       if (channel)
-        readChannel({ variables: { input: { channelId: channel.id } } })
-      if (group) readGroup({ variables: { input: { groupId: group.id } } })
-      if (user) readDm({ variables: { input: { userId: user.id } } })
+        readChannel({
+          variables: { input: { channelId: channel.id } },
+          optimisticResponse: {
+            readChannel: {
+              ...channel,
+              isUnread: false
+            }
+          }
+        })
+      if (group)
+        readGroup({
+          variables: { input: { groupId: group.id } },
+          optimisticResponse: {
+            readGroup: {
+              ...group,
+              unreadCount: 0
+            }
+          }
+        })
+      if (user)
+        readDm({
+          variables: { input: { userId: user.id } },
+          optimisticResponse: {
+            readDm: {
+              ...user,
+              unreadCount: 0
+            }
+          }
+        })
     }
   }, [channel, user, group])
 

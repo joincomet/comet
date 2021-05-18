@@ -1,7 +1,7 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.60",
+  "version": "0.0.61",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
@@ -30,17 +30,17 @@
     "@reach/observe-rect": "^1.2.0",
     "@tippyjs/react": "^4.2.5",
     "@tiptap/extension-link": "^2.0.0-beta.16",
-    "@tiptap/extension-mention": "^2.0.0-beta.54",
-    "@tiptap/extension-placeholder": "^2.0.0-beta.17",
+    "@tiptap/extension-mention": "^2.0.0-beta.55",
+    "@tiptap/extension-placeholder": "^2.0.0-beta.18",
     "@tiptap/extension-underline": "^2.0.0-beta.13",
-    "@tiptap/react": "^2.0.0-beta.37",
-    "@tiptap/starter-kit": "^2.0.0-beta.57",
+    "@tiptap/react": "^2.0.0-beta.38",
+    "@tiptap/starter-kit": "^2.0.0-beta.59",
     "cross-env": "^7.0.3",
     "date-fns": "^2.21.3",
     "dayjs": "^1.10.4",
     "dayjs-twitter": "^0.4.0",
     "extract-files": "^10.0.0",
-    "framer-motion": "^4.1.16",
+    "framer-motion": "^4.1.17",
     "fuse.js": "^6.4.6",
     "graphql": "^15.4.0-experimental-stream-defer.1",
     "graphql-ws": "^4.5.0",
@@ -96,7 +96,7 @@
     "string-hash": "^1.1.3",
     "tailwind-scrollbar": "^1.3.0",
     "tailwindcss": "^2.1.2",
-    "vite": "^2.3.2"
+    "vite": "^2.3.3"
   },
   "resolutions": {
     "prosemirror-model": "1.14.1"

@@ -14,7 +14,7 @@ function SortItem({ name, icon }) {
   const { push } = useHistory()
 
   const active =
-    postsSort === name && (pathname === '/home' || pathname === `/${server}`)
+    postsSort === name && (pathname === '/' || pathname === `/${server}`)
 
   const Icon = icon
 
@@ -22,7 +22,7 @@ function SortItem({ name, icon }) {
     <SidebarItem
       onClick={() => {
         setPostsSort(name)
-        push(server ? `/${server}` : '/home')
+        push(server ? `/${server}` : '/')
       }}
       active={active}
     >

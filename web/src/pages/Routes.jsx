@@ -27,6 +27,9 @@ import ChannelPage from '@/pages/server/channel/ChannelPage'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useServerQuery } from '@/graphql/hooks'
 
+const serverRegex = `\\+[A-Za-z0-9_]+`
+const usernameRegex = `@[A-Za-z0-9-_]+`
+
 export default function Routes() {
   const [currentUser] = useCurrentUser()
   const { pathname } = useLocation()
@@ -43,84 +46,79 @@ export default function Routes() {
   const matchedDm = matchPath(pathname, {
     path: '/dm/:username'
   })
-  const username = matchedFolder?.params?.username?.substring(1)
+  const username = matchedDm?.params?.username?.substring(1)
 
   return (
     <Switch>
-      <Route
-        path="/"
-        exact
-        render={() => {
-          if (window.electron || !!currentUser) {
-            return <Redirect to="/home" />
-          } else {
-            return <LandingPage />
-          }
-        }}
-      />
-
-      <Route
-        path={[
-          '/home',
-          '/friends',
-          '/explore',
-          '/inbox',
-          '/folder/:folderId',
-          '/dm/:username',
-          '/group/:groupId',
-          '/:server'
-        ]}
-      >
-        <Helmet titleTemplate="%s – Comet" />
-        <div className="flex-grow">
-          <div
-            className="flex h-full"
-            style={{ height: 'calc(100% - 1.375rem)' }}
+      <Route path="/">
+        <Switch>
+          <Route
+            path={[
+              '/',
+              '/friends',
+              '/inbox',
+              '/folder/:folderId',
+              `/dm/:username(${usernameRegex})`,
+              '/group/:groupId',
+              `/:server(${serverRegex})`,
+              `/:server(${serverRegex})/folder/:folderId`,
+              `/:server(${serverRegex})/post/:postId`,
+              '/explore'
+            ]}
+            exact
           >
-            <ServerList />
-            <Route path="/explore">
-              <ExplorePage />
-            </Route>
-            <Route path="/:server(\+[A-Za-z0-9-_]+)">
-              <ServerRoutes />
-            </Route>
-            <Route
-              path={[
-                '/home',
-                '/friends',
-                '/inbox',
-                '/folder/:folderId',
-                '/dm/:username(@[A-Za-z0-9-_]+)',
-                '/group/:groupId'
-              ]}
-            >
-              <HomeSidebar />
-              <Route path="/home">
-                <FeedPage />
-              </Route>
-              <Route path="/friends">
-                <FriendsPage />
-              </Route>
-              <Route path="/inbox">
-                <InboxPage />
-              </Route>
-              <Route path="/folder/:folderId">
-                <UserFolderPage folderId={folderId} />
-              </Route>
-              <Route path="/dm/:username(@[A-Za-z0-9-_]+)">
-                <DmPage username={username} />
-              </Route>
-              <Route path="/group/:groupId">
-                <GroupPage groupId={groupId} />
-              </Route>
-            </Route>
-          </div>
-          <BottomBar />
-        </div>
-      </Route>
+            <div className="flex-grow">
+              <div
+                className="flex h-full"
+                style={{ height: 'calc(100% - 1.375rem)' }}
+              >
+                <ServerList />
+                <Route path="/explore">
+                  <ExplorePage />
+                </Route>
+                <Route path={`/:server(${serverRegex})`}>
+                  <ServerRoutes />
+                </Route>
+                <Route
+                  exact
+                  path={[
+                    '/',
+                    '/friends',
+                    '/inbox',
+                    '/folder/:folderId',
+                    `/dm/:username(${usernameRegex})`,
+                    '/group/:groupId'
+                  ]}
+                >
+                  <HomeSidebar />
+                  <Route path="/" exact>
+                    <FeedPage />
+                  </Route>
+                  <Route path="/friends">
+                    <FriendsPage />
+                  </Route>
+                  <Route path="/inbox">
+                    <InboxPage />
+                  </Route>
+                  <Route path="/folder/:folderId">
+                    <UserFolderPage folderId={folderId} />
+                  </Route>
+                  <Route path={`/dm/:username(${usernameRegex})`}>
+                    <DmPage username={username} />
+                  </Route>
+                  <Route path="/group/:groupId">
+                    <GroupPage groupId={groupId} />
+                  </Route>
+                </Route>
+              </div>
+              <BottomBar />
+            </div>
+          </Route>
 
-      <Route>
-        <NotFound />
+          <Route>
+            <NotFound />
+          </Route>
+        </Switch>
       </Route>
     </Switch>
   )
@@ -153,7 +151,7 @@ function ServerRoutes() {
     <>
       <ServerSidebar server={server} />
       <Route
-        path="/:server(\+[A-Za-z0-9-_]+)"
+        path={`/:server(${serverRegex})`}
         exact
         render={({ location }) =>
           location.hash ? (
@@ -163,10 +161,10 @@ function ServerRoutes() {
           )
         }
       />
-      <Route path="/:server(\+[A-Za-z0-9-_]+)/folder/:folderId">
+      <Route path={`/:server(${serverRegex})/folder/:folderId`}>
         <ServerFolderPage server={server} folder={folder} />
       </Route>
-      <Route path="/:server(\+[A-Za-z0-9-_]+)/post/:postId">
+      <Route path={`/:server(${serverRegex})/post/:postId`}>
         <PostPage server={server} postId={postId} />
       </Route>
     </>

@@ -4,6 +4,7 @@ import { EntityManager } from '@mikro-orm/postgresql'
 
 export const channelUnreadLoader = (em: EntityManager, userId: string) => {
   return new DataLoader<string, boolean>(async (channelIds: string[]) => {
+    if (!userId) return channelIds.map(_ => false)
     const channelUsers = await em.find(
       ChannelUser,
       {

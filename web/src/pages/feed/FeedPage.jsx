@@ -20,7 +20,7 @@ export default function FeedPage() {
   const refreshPosts = () => {
     if (ref && ref.current) ref.current.refresh()
   }
-  useSetHomePage(`home`)
+  useSetHomePage(null)
 
   useEffect(() => {
     if (Notification.permission === 'default') {

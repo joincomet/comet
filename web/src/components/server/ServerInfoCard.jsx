@@ -3,7 +3,8 @@ import ServerAvatar from '@/components/server/ServerAvatar'
 import ctl from '@netlify/classnames-template-literals'
 import { CurrentUserDocument, useJoinServerMutation } from '@/graphql/hooks'
 import { IconSpinner } from '@/components/ui/icons/IconSpinner'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 const joinBtn = ctl(`
   absolute
@@ -36,6 +37,7 @@ export default function ServerInfoCard({
   shadow = false,
   className = ''
 }) {
+  const [currentUser] = useCurrentUser()
   const { t } = useTranslation()
 
   const [joinServer, { loading: joinLoading }] = useJoinServerMutation({
@@ -53,7 +55,8 @@ export default function ServerInfoCard({
   const { push } = useHistory()
 
   return (
-    <div
+    <Link
+      to={`/+${server.name}`}
       className={`${className} relative relative flex flex-col w-full rounded-lg group dark:bg-gray-800 dark:hover:bg-gray-850 duration-200 transform transition hover:shadow-xl ${
         shadow ? 'shadow-lg' : ''
       }`}
@@ -61,15 +64,17 @@ export default function ServerInfoCard({
       <button
         type="button"
         className={joinBtn}
-        onClick={() => {
-          if (!server.isJoined) {
+        onClick={e => {
+          e.stopPropagation()
+          e.preventDefault()
+          if (!!currentUser && !server.isJoined) {
             joinServer({ variables: { input: { serverId: server.id } } })
           } else {
             push(`/+${server.name}`)
           }
         }}
       >
-        {server.isJoined ? 'View' : 'Join'}
+        {!currentUser || server.isJoined ? 'View' : 'Join'}
         {joinLoading && <IconSpinner className="w-4 h-4 text-gray-900 ml-2" />}
       </button>
 
@@ -114,6 +119,6 @@ export default function ServerInfoCard({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

@@ -110,7 +110,7 @@ export default function LandingPage() {
                 </a>
 
                 <Link
-                  to="/home"
+                  to="/"
                   className="border border-gray-700 select-none h-12 px-6 rounded-full inline-flex items-center text-lg text-white transition transform shadow-md hover:-translate-y-0.5 cursor-pointer"
                 >
                   Open in Browser

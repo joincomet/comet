@@ -69,7 +69,9 @@ export default function CreateServerDialog({ open, setOpen, server }) {
   )
   const { handleSubmit, register, watch, reset, setValue } = useForm({
     shouldUnregister: true,
-    defaultValues: server ? { displayName: server.displayName } : {}
+    defaultValues: server
+      ? { displayName: server.displayName, description: server.description }
+      : {}
   })
   const avatarFile = watch('avatarFile')
   const bannerFile = watch('bannerFile')
@@ -119,13 +121,20 @@ export default function CreateServerDialog({ open, setOpen, server }) {
 
   const { push } = useHistory()
 
-  const onSubmit = ({ name, displayName, avatarFile, bannerFile }) => {
+  const onSubmit = ({
+    name,
+    displayName,
+    description,
+    avatarFile,
+    bannerFile
+  }) => {
     if (!server) {
       createServer({
         variables: {
           input: {
             name,
             displayName,
+            description,
             category,
             avatarFile: avatarFile ? avatarFile[0] : null,
             bannerFile: bannerFile ? bannerFile[0] : null
@@ -141,13 +150,13 @@ export default function CreateServerDialog({ open, setOpen, server }) {
           input: {
             serverId: server.id,
             displayName,
+            description,
             category,
             avatarFile: avatarFile ? avatarFile[0] : null,
             bannerFile: bannerFile ? bannerFile[0] : null
           }
         }
-      }).then(res => {
-        console.log(res)
+      }).then(() => {
         setOpen(false)
       })
     }
@@ -215,7 +224,7 @@ export default function CreateServerDialog({ open, setOpen, server }) {
           <input
             {...register('displayName', { maxLength: 100, required: true })}
             placeholder="Display Name"
-            className="h-9 px-1.5 w-full text-primary font-medium bg-transparent focus:outline-none border-b dark:border-gray-700 dark:focus:border-blue-500 transition"
+            className="h-9 px-1.5 rounded-none w-full text-primary font-medium bg-transparent focus:outline-none border-b dark:border-gray-700 dark:focus:border-blue-500 transition"
             maxLength={100}
           />
         </div>
@@ -234,6 +243,13 @@ export default function CreateServerDialog({ open, setOpen, server }) {
               />
             )}
           </div>
+
+          <textarea
+            {...register('description', { maxLength: 500 })}
+            placeholder="Description"
+            className="resize-none bg-transparent dark:border-gray-700 transition dark:focus:border-blue-500 border-b border-r-0 border-l-0 border-t-0 text-sm w-full focus:ring-0 px-0 scrollbar-custom text-primary"
+            maxLength={500}
+          />
 
           <div className="flex items-center">
             <div className="text-13 font-medium text-tertiary pr-1.5">
@@ -298,11 +314,13 @@ export default function CreateServerDialog({ open, setOpen, server }) {
         <div className="rounded-b-lg dark:bg-gray-750 h-9" />
       </form>
 
-      <DeleteServerDialog
-        open={deleteOpen}
-        setOpen={setDeleteOpen}
-        server={server}
-      />
+      {!!server && (
+        <DeleteServerDialog
+          open={deleteOpen}
+          setOpen={setDeleteOpen}
+          server={server}
+        />
+      )}
     </Dialog>
   )
 }
@@ -354,7 +372,7 @@ function DeleteServerDialog({ open, setOpen, server }) {
                 variables: { input: { password, serverId: server.id } }
               }).then(() => {
                 setOpen(false)
-                push('/home')
+                push('/')
               })
             }}
           >

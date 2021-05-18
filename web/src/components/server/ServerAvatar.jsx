@@ -6,7 +6,7 @@ export default forwardRef(
     { server, loading = 'eager', size = 12, className = '', style = {} },
     ref
   ) => {
-    const initials = server.displayName
+    const initials = (server?.displayName ?? '')
       .split(' ')
       .map(s => s[0])
       .join('')

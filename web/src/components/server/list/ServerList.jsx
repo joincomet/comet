@@ -42,7 +42,7 @@ export default function ServerList() {
           <div className="space-y-2 flex flex-col items-center py-2">
             <ServerListItem
               name={t('home')}
-              to={`${homePage ? `/${homePage}` : '/home'}`}
+              to={`${homePage ? `/${homePage}` : '/'}`}
               active={homeActive}
               className={`${
                 homeActive

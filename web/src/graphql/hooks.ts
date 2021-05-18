@@ -69,6 +69,11 @@ export type ChangeOnlineStatusInput = {
   onlineStatus: OnlineStatus;
 };
 
+export type ChangePasswordInput = {
+  currentPassword: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type ChangeUserAvatarInput = {
   avatarFile?: Maybe<Scalars['Upload']>;
 };
@@ -198,6 +203,7 @@ export type CreateServerInput = {
   avatarFile?: Maybe<Scalars['Upload']>;
   bannerFile?: Maybe<Scalars['Upload']>;
   category?: Maybe<ServerCategory>;
+  description?: Maybe<Scalars['String']>;
   displayName: Scalars['String'];
   name: Scalars['String'];
 };
@@ -436,6 +442,7 @@ export type Mutation = {
   banUserFromServer: Scalars['Boolean'];
   blockUser: User;
   changeOnlineStatus: User;
+  changePassword: User;
   changeUserAvatar: User;
   closeDm: User;
   createAccount: LoginResponse;
@@ -491,7 +498,6 @@ export type Mutation = {
   unpinPost: Post;
   unvoteComment: Comment;
   unvotePost: Post;
-  updateAccount: User;
   updateChannel: Channel;
   updateComment: Comment;
   updateFolder: Folder;
@@ -538,6 +544,11 @@ export type MutationBlockUserArgs = {
 
 export type MutationChangeOnlineStatusArgs = {
   input: ChangeOnlineStatusInput;
+};
+
+
+export type MutationChangePasswordArgs = {
+  input: ChangePasswordInput;
 };
 
 
@@ -813,11 +824,6 @@ export type MutationUnvoteCommentArgs = {
 
 export type MutationUnvotePostArgs = {
   input: UnvotePostInput;
-};
-
-
-export type MutationUpdateAccountArgs = {
-  input: UpdateAccountInput;
 };
 
 
@@ -1260,13 +1266,6 @@ export type UnvotePostInput = {
   postId: Scalars['ID'];
 };
 
-export type UpdateAccountInput = {
-  currentPassword: Scalars['String'];
-  email?: Maybe<Scalars['EmailAddress']>;
-  password?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-};
-
 export type UpdateChannelInput = {
   channelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
@@ -1335,7 +1334,6 @@ export type User = BaseEntity & {
   isAdmin: Scalars['Boolean'];
   isCurrentUser: Scalars['Boolean'];
   isOnline: Scalars['Boolean'];
-  isPremium: Scalars['Boolean'];
   lastLoginAt?: Maybe<Scalars['DateTime']>;
   lastMessageAt?: Maybe<Scalars['DateTime']>;
   onlineStatus: OnlineStatus;
@@ -2512,14 +2510,14 @@ export type CreateAccountMutation = (
   ) }
 );
 
-export type UpdateAccountMutationVariables = Exact<{
-  input: UpdateAccountInput;
+export type ChangePasswordMutationVariables = Exact<{
+  input: ChangePasswordInput;
 }>;
 
 
-export type UpdateAccountMutation = (
+export type ChangePasswordMutation = (
   { __typename?: 'Mutation' }
-  & { updateAccount: (
+  & { changePassword: (
     { __typename?: 'User' }
     & CurrentUserFragment
   ) }
@@ -5605,39 +5603,39 @@ export function useCreateAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccountMutation>;
 export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>;
 export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
-export const UpdateAccountDocument = gql`
-    mutation updateAccount($input: UpdateAccountInput!) {
-  updateAccount(input: $input) {
+export const ChangePasswordDocument = gql`
+    mutation changePassword($input: ChangePasswordInput!) {
+  changePassword(input: $input) {
     ...CurrentUser
   }
 }
     ${CurrentUserFragmentDoc}`;
-export type UpdateAccountMutationFn = Apollo.MutationFunction<UpdateAccountMutation, UpdateAccountMutationVariables>;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
 
 /**
- * __useUpdateAccountMutation__
+ * __useChangePasswordMutation__
  *
- * To run a mutation, you first call `useUpdateAccountMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateAccountMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateAccountMutation, { data, loading, error }] = useUpdateAccountMutation({
+ * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUpdateAccountMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAccountMutation, UpdateAccountMutationVariables>) {
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateAccountMutation, UpdateAccountMutationVariables>(UpdateAccountDocument, options);
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
       }
-export type UpdateAccountMutationHookResult = ReturnType<typeof useUpdateAccountMutation>;
-export type UpdateAccountMutationResult = Apollo.MutationResult<UpdateAccountMutation>;
-export type UpdateAccountMutationOptions = Apollo.BaseMutationOptions<UpdateAccountMutation, UpdateAccountMutationVariables>;
+export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
+export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const ChangeUserAvatarDocument = gql`
     mutation changeUserAvatar($input: ChangeUserAvatarInput!) {
   changeUserAvatar(input: $input) {

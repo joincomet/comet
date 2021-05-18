@@ -4,7 +4,6 @@ import {
   Authorized,
   Ctx,
   FieldResolver,
-  ID,
   Mutation,
   Query,
   Resolver,
@@ -26,8 +25,8 @@ import {
   login,
   LoginInput,
   LoginResponse,
-  updateAccount,
-  UpdateAccountInput
+  changePassword,
+  ChangePasswordInput
 } from '@/resolver/user/mutations'
 import { user, UserArgs } from '@/resolver/user/queries'
 import { GraphQLNonNegativeInt } from 'graphql-scalars'
@@ -123,12 +122,12 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => User)
-  async updateAccount(
+  async changePassword(
     @Ctx() ctx: Context,
     @Arg('input')
-    input: UpdateAccountInput
+    input: ChangePasswordInput
   ): Promise<User> {
-    return updateAccount(ctx, input)
+    return changePassword(ctx, input)
   }
 
   @Authorized()

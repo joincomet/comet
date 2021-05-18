@@ -9,14 +9,17 @@ import { useServer } from 'graphql-ws/lib/use/ws'
 import { specifiedRules } from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { getUserId, RedisLiveQueryStore } from '@/util'
+import { getUserId, MAX_FILE_SIZE, RedisLiveQueryStore } from '@/util'
 import { Context } from '@/types'
 import { createLoaders } from '@/util/loaders/createLoaders'
 import cors from 'cors'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { Disposable } from 'graphql-ws'
+import { seed } from '@/seed/seed'
 
 const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
+
+const RESET = true // set TRUE to WIPE AND RESET DATABASE in dev
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -25,8 +28,10 @@ export async function bootstrap() {
   if (process.env.NODE_ENV !== 'production') {
     console.log(`Setting up the database...`)
     const generator = orm.getSchemaGenerator()
-    // await generator.dropSchema(false)
-    // await generator.createSchema(false)
+    if (RESET) {
+      await generator.dropSchema(false)
+      await generator.createSchema(false)
+    }
     await generator.updateSchema(false)
   }
 
@@ -41,7 +46,7 @@ export async function bootstrap() {
   app.use(cors({ origin: true }))
   app.use(
     graphqlUploadExpress({
-      maxFileSize: 32 * 1024 * 1024, // 32MB limit
+      maxFileSize: MAX_FILE_SIZE,
       maxFiles: 20
     })
   )
@@ -97,4 +102,6 @@ export async function bootstrap() {
     server.close()
     orm.close()
   })
+
+  await seed(orm.em.fork())
 }

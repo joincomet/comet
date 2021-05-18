@@ -7,8 +7,8 @@ mutation createAccount($input: CreateAccountInput!) {
   }
 }
 
-mutation updateAccount($input: UpdateAccountInput!) {
-  updateAccount(input: $input) {
+mutation changePassword($input: ChangePasswordInput!) {
+  changePassword(input: $input) {
     ...CurrentUser
   }
 }

@@ -51,7 +51,7 @@ export default forwardRef(
       small = false,
       to,
       onClick,
-      active = false,
+      active,
       exact = false,
       light = false
     },

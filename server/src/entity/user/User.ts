@@ -82,9 +82,6 @@ export class User extends BaseEntity {
   @Property({ nullable: true, columnType: 'text' })
   banReason?: string
 
-  @Property({ nullable: true })
-  purchasedPremiumAt?: Date
-
   @OneToMany(() => UserFolder, 'user', {
     orderBy: { position: QueryOrder.ASC }
   })
@@ -130,13 +127,6 @@ export class User extends BaseEntity {
     if (!this.lastLoginAt) return false
     const timeout = 5 * 60 * 1000 // five minutes
     return new Date().getTime() - this.lastLoginAt.getTime() < timeout
-  }
-
-  @Field()
-  get isPremium(): boolean {
-    if (!this.purchasedPremiumAt) return false
-    const millis = 30 * 24 * 60 * 60 * 1000 // 30 days
-    return new Date().getTime() - this.purchasedPremiumAt.getTime() < millis
   }
 
   async isBannedFromServer(

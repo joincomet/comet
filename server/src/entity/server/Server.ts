@@ -108,9 +108,9 @@ export class Server extends BaseEntity {
   @Property()
   isFeatured: boolean = false
 
-  @Field()
-  isJoined: boolean
-
   @Property({ nullable: true, columnType: 'text' })
   featuredPosition?: string
+
+  @Field()
+  isJoined: boolean
 }

@@ -47,7 +47,6 @@ export const error = {
   server: {
     notJoined: 'You have not joined this planet',
     banned: 'You are banned from this planet',
-    joinLimit: 'Cannot join more than 100 planets',
     alreadyJoined: 'You have already joined this planet',
     missingPermission: 'Missing planet permission {{replace}}',
     notOwner: 'Must be planet owner',

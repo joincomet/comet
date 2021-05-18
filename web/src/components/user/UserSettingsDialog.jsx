@@ -4,11 +4,10 @@ import { IconEdit, IconSpinner, IconXLarge } from '@/components/ui/icons/Icons'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import UserAvatar from '@/components/user/UserAvatar'
-import ctl from '@netlify/classnames-template-literals'
 import {
   useChangeUserAvatarMutation,
   useDeleteAccountMutation,
-  useUpdateAccountMutation
+  useChangePasswordMutation
 } from '@/graphql/hooks'
 import { useForm } from 'react-hook-form'
 import isEmail from 'validator/es/lib/isEmail'
@@ -30,19 +29,16 @@ export default function UserSettingsDialog({ open, setOpen }) {
   } = useForm({
     mode: 'onChange'
   })
-  const name = watch('name')
-  const email = watch('email')
   const password = watch('password')
   const currentPassword = watch('currentPassword')
 
-  const [updateAccount, { loading: updateAccountLoading }] =
-    useUpdateAccountMutation()
+  const [changePassword, { loading: changePasswordLoading }] =
+    useChangePasswordMutation()
 
   const [changeAvatar] = useChangeUserAvatarMutation()
   const logout = () => {
     localStorage.removeItem('token')
   }
-  const { push } = useHistory()
   const apolloClient = useApolloClient()
 
   const close = () => {
@@ -50,13 +46,11 @@ export default function UserSettingsDialog({ open, setOpen }) {
     setTimeout(() => reset(), 300)
   }
 
-  const onSubmit = ({ name, email, password, currentPassword }) => {
-    updateAccount({
+  const onSubmit = ({ password, currentPassword }) => {
+    changePassword({
       variables: {
         input: {
-          name,
-          email,
-          password: password ? password : null,
+          password,
           currentPassword
         }
       }
@@ -88,7 +82,6 @@ export default function UserSettingsDialog({ open, setOpen }) {
                 <SidebarItem
                   onClick={() => {
                     setOpen(false)
-                    push('/home')
                     logout()
                     apolloClient.resetStore()
                     gracefullyRestart()
@@ -129,61 +122,12 @@ export default function UserSettingsDialog({ open, setOpen }) {
 
                     <div className="flex items-end ml-6">
                       <div className="font-semibold text-xl text-primary">
-                        {user.name}
-                      </div>
-                      <div
-                        className="text-base text-tertiary"
-                        style={{ marginBottom: '1px' }}
-                      >
-                        #{user.tag}
+                        {user.username}
                       </div>
                     </div>
                   </div>
 
                   <div className="mt-5 space-y-5">
-                    <div>
-                      <label htmlFor="name" className="label">
-                        Name
-                      </label>
-                      <input
-                        className="textbox"
-                        id="name"
-                        defaultValue={user.name}
-                        {...register('name', {
-                          required: true,
-                          maxLength: 32,
-                          minLength: 2
-                        })}
-                        maxLength={32}
-                        minLength={2}
-                        type="text"
-                      />
-                      {errors.name && (
-                        <div className="error">
-                          Name must be 2-32 characters
-                        </div>
-                      )}
-                    </div>
-
-                    <div>
-                      <label htmlFor="email" className="label">
-                        Email
-                      </label>
-                      <input
-                        className="textbox"
-                        id="email"
-                        defaultValue={user.email}
-                        {...register('email', {
-                          required: true,
-                          validate: e => isEmail(e)
-                        })}
-                        type="email"
-                      />
-                      {errors.email && (
-                        <div className="error">Invalid email</div>
-                      )}
-                    </div>
-
                     <div>
                       <label htmlFor="password" className="label">
                         New Password
@@ -191,7 +135,10 @@ export default function UserSettingsDialog({ open, setOpen }) {
                       <input
                         className="textbox"
                         id="password"
-                        {...register('password', { minLength: 6 })}
+                        {...register('password', {
+                          minLength: 6,
+                          required: true
+                        })}
                         type="password"
                         minLength={6}
                       />
@@ -220,20 +167,15 @@ export default function UserSettingsDialog({ open, setOpen }) {
                     <button
                       type="submit"
                       disabled={
-                        updateAccountLoading ||
+                        changePasswordLoading ||
                         !currentPassword ||
-                        name?.length < 2 ||
-                        name?.length > 32 ||
-                        !isEmail(email || '') ||
-                        (password && password?.length < 6) ||
-                        (!password &&
-                          email === user.email &&
-                          name === user.name)
+                        !password ||
+                        password?.length < 6
                       }
                       className="disabled:opacity-50 disabled:cursor-not-allowed rounded px-4 h-9 text-sm text-primary bg-green-600 focus:outline-none flex items-center"
                     >
                       Save Changes
-                      {updateAccountLoading && (
+                      {changePasswordLoading && (
                         <IconSpinner className="w-5 h-5 text-primary ml-3" />
                       )}
                     </button>
@@ -309,7 +251,7 @@ function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
             onClick={() => {
               deleteAccount({ variables: { input: { password } } }).then(() => {
                 setDeleteOpen(false)
-                push('/home')
+                push('/')
                 apolloClient.resetStore()
               })
             }}

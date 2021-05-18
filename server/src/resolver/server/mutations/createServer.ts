@@ -29,6 +29,10 @@ export class CreateServerInput {
   @Matches(serverRegex)
   displayName: string
 
+  @Field({ nullable: true })
+  @Length(0, 500)
+  description?: string
+
   @Field(() => ServerCategory, { defaultValue: ServerCategory.Other })
   category: ServerCategory = ServerCategory.Other
 
@@ -43,9 +47,6 @@ export async function createServer(
   { em, userId, liveQueryStore }: Context,
   { name, displayName, category, avatarFile, bannerFile }: CreateServerInput
 ): Promise<Server> {
-  if ((await em.count(ServerUser, { user: userId })) >= 100)
-    throw new Error('error.server.joinLimit')
-
   let avatarUrl = null
   if (avatarFile) {
     avatarUrl = await uploadImageFileSingle(

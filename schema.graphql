@@ -49,6 +49,11 @@ input ChangeOnlineStatusInput {
   onlineStatus: OnlineStatus!
 }
 
+input ChangePasswordInput {
+  currentPassword: String!
+  password: String!
+}
+
 input ChangeUserAvatarInput {
   avatarFile: Upload
 }
@@ -175,6 +180,7 @@ input CreateServerInput {
   avatarFile: Upload
   bannerFile: Upload
   category: ServerCategory = Other
+  description: String
   displayName: String!
   name: String!
 }
@@ -419,6 +425,7 @@ type Mutation {
   banUserFromServer(input: BanUserFromServerInput!): Boolean!
   blockUser(input: BlockUserInput!): User!
   changeOnlineStatus(input: ChangeOnlineStatusInput!): User!
+  changePassword(input: ChangePasswordInput!): User!
   changeUserAvatar(input: ChangeUserAvatarInput!): User!
   closeDm(input: CloseDmInput!): User!
   createAccount(input: CreateAccountInput!): LoginResponse!
@@ -474,7 +481,6 @@ type Mutation {
   unpinPost(input: UnpinPostInput!): Post!
   unvoteComment(input: UnvoteCommentInput!): Comment!
   unvotePost(input: UnvotePostInput!): Post!
-  updateAccount(input: UpdateAccountInput!): User!
   updateChannel(input: UpdateChannelInput!): Channel!
   updateComment(input: UpdateCommentInput!): Comment!
   updateFolder(input: UpdateFolderInput!): Folder!
@@ -787,13 +793,6 @@ input UnvotePostInput {
   postId: ID!
 }
 
-input UpdateAccountInput {
-  currentPassword: String!
-  email: EmailAddress
-  password: String
-  username: String
-}
-
 input UpdateChannelInput {
   channelId: ID!
   name: String
@@ -863,7 +862,6 @@ type User implements BaseEntity {
   isAdmin: Boolean!
   isCurrentUser: Boolean!
   isOnline: Boolean!
-  isPremium: Boolean!
   lastLoginAt: DateTime
   lastMessageAt: DateTime
   onlineStatus: OnlineStatus!
