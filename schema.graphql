@@ -123,6 +123,7 @@ input CreateAccountInput {
 }
 
 input CreateChannelInput {
+  description: String
   name: String!
   serverId: ID!
   type: ChannelType = Public
@@ -382,6 +383,7 @@ type MessageChangedResponse {
 
 enum MessageType {
   FriendRequestReceived
+  Initial
   Join
   Left
   Normal
@@ -795,6 +797,7 @@ input UnvotePostInput {
 
 input UpdateChannelInput {
   channelId: ID!
+  description: String
   name: String
   type: ChannelType
 }

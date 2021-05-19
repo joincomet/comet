@@ -49,7 +49,7 @@ function App({ history }) {
                     ? { height: isMac ? '100%' : 'calc(100% - 1.375rem)' }
                     : { height: '100%' }
                 }
-                className="hidden lg:flex"
+                className="hidden md:flex"
               >
                 <Routes />
               </div>

@@ -17,6 +17,7 @@ import { VectorLogo } from '@/components/ui/vectors'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { getCategoryIcon } from '@/hooks/getCategoryIcon'
 import ctl from '@netlify/classnames-template-literals'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 const joinButtonClass = isJoined =>
   ctl(`
@@ -34,6 +35,7 @@ const joinButtonClass = isJoined =>
 `)
 
 export default function ServerSidebar({ server }) {
+  const [currentUser] = useCurrentUser()
   const [editOpen, setEditOpen] = useState(false)
   const [inviteOpen, setInviteOpen] = useState(false)
   const [canManageServer, canViewPrivateChannels] = useHasServerPermissions({
@@ -87,9 +89,11 @@ export default function ServerSidebar({ server }) {
                 {server.displayName}
               </div>
 
-              <button className={joinButtonClass(server.isJoined)}>
-                {server.isJoined ? 'Leave' : 'Join'}
-              </button>
+              {!!currentUser && (
+                <button className={joinButtonClass(server.isJoined)}>
+                  {server.isJoined ? 'Leave' : 'Join'}
+                </button>
+              )}
             </div>
             <div className="text-13 text-secondary pb-1.5">
               {server.description || 'No description'}

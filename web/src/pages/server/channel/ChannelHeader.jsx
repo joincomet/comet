@@ -5,11 +5,12 @@ import Header from '@/components/ui/header/Header'
 export default function ChannelHeader({ channel }) {
   return (
     <Header
+      showDivider={!!channel?.description}
       icon={<IconChannel className="w-5 h-5" />}
       title={`${channel?.name ?? ''}`}
     >
       {channel?.description && (
-        <div className="text-13 text-tertiary font-medium leading-5">
+        <div className="text-13 text-tertiary font-medium leading-5 truncate">
           Description
         </div>
       )}

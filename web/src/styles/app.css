@@ -131,10 +131,6 @@ body {
   height: 0;
 }
 
-.messages-start {
-  min-height: calc(100vh - 23rem);
-}
-
 .cancel-button {
   @apply text-gray-600 dark:text-gray-400 px-2 h-10 text-sm font-medium focus:outline-none;
 }
@@ -173,4 +169,36 @@ span[data-spoiler] {
 
 .animate-float {
   animation: float 5s ease-in-out infinite;
+}
+
+.form-input {
+  @apply border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm rounded-none px-1.5 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
+}
+
+.form-input-icon {
+  @apply border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm pr-1.5 pl-9 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
+}
+
+.form-input-icon-icon {
+  @apply absolute left-1.5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-600 dark:text-gray-400;
+}
+
+.form-input-lg {
+  @apply h-9 px-1.5 rounded-none w-full text-gray-900 dark:text-gray-100 font-medium bg-transparent focus:outline-none border-b dark:border-gray-700 dark:focus:border-blue-500 transition;
+}
+
+.form-textarea {
+  @apply resize-none bg-transparent dark:border-gray-700 transition dark:focus:border-blue-500 border-b border-r-0 border-l-0 border-t-0 text-sm w-full focus:ring-0 px-1.5 scrollbar-thin dark:scrollbar-thumb-gray-850 dark:scrollbar-track-gray-775 scrollbar-thumb-rounded-md text-gray-900 dark:text-gray-100;
+}
+
+.form-error {
+  @apply text-red-400 text-xs pt-2.5 pl-1.5;
+}
+
+.form-button-submit {
+  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-green-600 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100;
+}
+
+.form-button-delete {
+  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-red-500 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100;
 }

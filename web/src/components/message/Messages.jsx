@@ -90,6 +90,9 @@ export default function Messages({ channel, server, user, group, users }) {
       return (
         <Message
           server={server}
+          channel={channel}
+          group={group}
+          user={user}
           message={message}
           index={messageIndex}
           prevMessage={prevMessage}
@@ -112,14 +115,6 @@ export default function Messages({ channel, server, user, group, users }) {
             }
           }}
           components={{
-            Header: () => (
-              <MessagesStart
-                user={user}
-                group={group}
-                channel={channel}
-                show={!hasMore}
-              />
-            ),
             Footer: () => <div className="h-5.5" />
           }}
           firstItemIndex={PREPEND_OFFSET - numItemsPrepended}

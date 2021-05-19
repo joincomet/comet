@@ -146,6 +146,7 @@ export type CreateAccountInput = {
 };
 
 export type CreateChannelInput = {
+  description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   serverId: Scalars['ID'];
   type?: Maybe<ChannelType>;
@@ -397,6 +398,7 @@ export type MessageChangedResponse = {
 
 export enum MessageType {
   FriendRequestReceived = 'FriendRequestReceived',
+  Initial = 'Initial',
   Join = 'Join',
   Left = 'Left',
   Normal = 'Normal'
@@ -1268,6 +1270,7 @@ export type UnvotePostInput = {
 
 export type UpdateChannelInput = {
   channelId: Scalars['ID'];
+  description?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   type?: Maybe<ChannelType>;
 };

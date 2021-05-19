@@ -2,6 +2,8 @@ import { EntityManager } from '@mikro-orm/postgresql'
 import {
   Channel,
   Folder,
+  Message,
+  MessageType,
   Role,
   Server,
   ServerCategory,
@@ -36,15 +38,27 @@ export async function seed(em: EntityManager) {
       featuredPosition: ReorderUtils.FIRST_POSITION,
       owner: cometUser
     })
+    const everyoneRole = em.create(Role, {
+      name: '@everyone',
+      server: cometServer
+    })
+    const cometServerUser = em.create(ServerUser, {
+      server: cometServer,
+      user: cometUser,
+      roles: [everyoneRole]
+    })
 
     const generalChannel = em.create(Channel, {
       name: 'general',
       server: cometServer
     })
-    const everyoneRole = em.create(Role, {
-      name: '@everyone',
-      server: cometServer
+    const initialMessage = em.create(Message, {
+      channel: generalChannel,
+      type: MessageType.Initial,
+      author: cometUser,
+      serverUser: cometServerUser
     })
+
     const announcementsFolder = em.create(Folder, {
       name: 'Announcements',
       server: cometServer
@@ -52,12 +66,6 @@ export async function seed(em: EntityManager) {
     const announcementsServerFolder = em.create(ServerFolder, {
       server: cometServer,
       folder: announcementsFolder
-    })
-
-    const cometServerUser = em.create(ServerUser, {
-      server: cometServer,
-      user: cometUser,
-      roles: [everyoneRole]
     })
 
     const readLaterFolder = em.create(Folder, {
@@ -82,6 +90,7 @@ export async function seed(em: EntityManager) {
       cometUser,
       cometServer,
       generalChannel,
+      initialMessage,
       everyoneRole,
       announcementsFolder,
       announcementsServerFolder,

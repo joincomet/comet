@@ -1,5 +1,5 @@
 import ctl from '@netlify/classnames-template-literals'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useDropZone } from '@/hooks/useDropZone'
 import {
   IconFileCode,
@@ -34,10 +34,16 @@ const popupClassName = show =>
   relative
 `)
 
-export default function MessageDropZone({ placeholder, setFiles }) {
+export default function MessageDropZone({ channel, user, group, setFiles }) {
   const [files, isDragging] = useDropZone()
 
   useEffect(() => setFiles(files), [files, setFiles])
+
+  const name = useMemo(() => {
+    if (channel) return `#${channel.name}`
+    else if (user) return `@${user.username}`
+    else if (group) return `${group.displayName}`
+  }, [channel, user, group])
 
   return (
     <>
@@ -73,7 +79,7 @@ export default function MessageDropZone({ placeholder, setFiles }) {
 
           <div className="rounded-xl border-dashed border-white border-2 px-4 pb-4 pt-16 text-center">
             <div className="text-xl font-bold text-primary">
-              Upload to <span className="text-white">{placeholder}</span>
+              Upload to <span className="text-white">{name}</span>
             </div>
           </div>
         </div>

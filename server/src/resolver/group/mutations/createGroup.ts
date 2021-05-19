@@ -1,6 +1,6 @@
 import { Context } from '@/types'
 import { Field, InputType } from 'type-graphql'
-import { Group, User } from '@/entity'
+import { Group, Message, MessageType, User } from '@/entity'
 import { ArrayMaxSize } from 'class-validator'
 
 @InputType()
@@ -24,7 +24,12 @@ export async function createGroup(
     users,
     owner: user
   })
-  await em.persistAndFlush(group)
+  const initialMessage = em.create(Message, {
+    type: MessageType.Initial,
+    author: user,
+    group
+  })
+  await em.persistAndFlush([group, initialMessage])
   liveQueryStore.invalidate(users.map(user => `User:${user.id}`))
   return group
 }

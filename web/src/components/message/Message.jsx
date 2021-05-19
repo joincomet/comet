@@ -10,8 +10,18 @@ import { ContextMenuType } from '@/types/ContextMenuType'
 import MessageImageDialog from '@/components/message/MessageImageDialog'
 import PostEmbed from '@/components/post/PostEmbed'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { MessageType } from '@/graphql/hooks'
+import MessagesStart from '@/components/message/MessagesStart'
 
-export default memo(function Message({ index, message, prevMessage, server }) {
+export default memo(function Message({
+  index,
+  message,
+  prevMessage,
+  server,
+  channel,
+  group,
+  user
+}) {
   const [currentUser] = useCurrentUser()
   const isMentioned =
     message.isEveryoneMentioned ||
@@ -33,7 +43,11 @@ export default memo(function Message({ index, message, prevMessage, server }) {
     (prevMessage &&
       (!prevMessage.text || prevMessage.author.id !== message.author.id))
 
-  if (message.type === 'Join') {
+  if (message.type === MessageType.Initial) {
+    return <MessagesStart channel={channel} group={group} user={user} />
+  }
+
+  if (message.type === MessageType.Join) {
     return (
       <ContextMenuTrigger
         className={prevMessage?.text ? 'pt-4' : ''}
@@ -67,110 +81,115 @@ export default memo(function Message({ index, message, prevMessage, server }) {
     )
   }
 
-  return (
-    <div className={`${showUser ? 'pt-4' : ''}`}>
-      <ContextMenuTrigger
-        data={{ type: ContextMenuType.Message, message, server }}
-      >
-        <div className={`flex py-1 px-4 dark:hover:bg-gray-775 group relative`}>
-          {isMentioned && (
-            <div className="bg-gray-500 group-hover:bg-opacity-30 bg-opacity-10 absolute inset-0 pointer-events-none border-l-2 border-gray-500" />
-          )}
+  if (message.type === MessageType.Normal) {
+    return (
+      <div className={`${showUser ? 'pt-4' : ''}`}>
+        <ContextMenuTrigger
+          data={{ type: ContextMenuType.Message, message, server }}
+        >
+          <div
+            className={`flex py-1 px-4 dark:hover:bg-gray-775 group relative`}
+          >
+            {isMentioned && (
+              <div className="bg-gray-500 group-hover:bg-opacity-30 bg-opacity-10 absolute inset-0 pointer-events-none border-l-2 border-gray-500" />
+            )}
 
-          {showUser ? (
-            <ContextMenuTrigger
-              data={{ type: ContextMenuType.User, user: message.author }}
-            >
-              <UserPopup
-                user={message.author}
-                roles={message.serverUser?.roles}
+            {showUser ? (
+              <ContextMenuTrigger
+                data={{ type: ContextMenuType.User, user: message.author }}
               >
-                <UserAvatar
+                <UserPopup
                   user={message.author}
-                  size={10}
-                  className="dark:bg-gray-700 cursor-pointer"
-                />
-              </UserPopup>
-            </ContextMenuTrigger>
-          ) : (
-            <div className="w-10 text-11 whitespace-nowrap text-mid group-hover:opacity-100 opacity-0 cursor-default select-none leading-6.5">
-              {shortTime(message.createdAt)}
-            </div>
-          )}
-
-          <div className="pl-4 w-full">
-            {showUser && (
-              <div className="flex items-end pb-0.5">
-                <ContextMenuTrigger
-                  data={{ type: ContextMenuType.User, user: message.author }}
+                  roles={message.serverUser?.roles}
                 >
-                  <UserPopup
+                  <UserAvatar
                     user={message.author}
-                    roles={message.serverUser?.roles}
-                  >
-                    <div className="text-base font-medium cursor-pointer hover:underline leading-none">
-                      {message.author.username}
-                    </div>
-                  </UserPopup>
-                </ContextMenuTrigger>
-
-                <div className="text-11 text-mid pl-2 leading-none cursor-default select-none">
-                  {calendarDate(message.createdAt)}
-                </div>
+                    size={10}
+                    className="dark:bg-gray-700 cursor-pointer"
+                  />
+                </UserPopup>
+              </ContextMenuTrigger>
+            ) : (
+              <div className="w-10 text-11 whitespace-nowrap text-mid group-hover:opacity-100 opacity-0 cursor-default select-none leading-6.5">
+                {shortTime(message.createdAt)}
               </div>
             )}
 
-            {!!message.text && (
-              <div
-                onClick={onClickMention}
-                className="prose prose-sm dark:prose-dark focus:outline-none max-w-none"
-                dangerouslySetInnerHTML={{ __html: message.text }}
-              />
-            )}
+            <div className="pl-4 w-full">
+              {showUser && (
+                <div className="flex items-end pb-0.5">
+                  <ContextMenuTrigger
+                    data={{ type: ContextMenuType.User, user: message.author }}
+                  >
+                    <UserPopup
+                      user={message.author}
+                      roles={message.serverUser?.roles}
+                    >
+                      <div className="text-base font-medium cursor-pointer hover:underline leading-none">
+                        {message.author.username}
+                      </div>
+                    </UserPopup>
+                  </ContextMenuTrigger>
 
-            {!!message.linkMetadatas?.length && (
-              <>
-                {message.linkMetadatas.map((lm, i) => (
-                  <div key={i} className="py-1.5 max-w-screen-sm w-full">
-                    <PostEmbed dark metadata={lm} linkUrl={lm.url} />
+                  <div className="text-11 text-mid pl-2 leading-none cursor-default select-none">
+                    {calendarDate(message.createdAt)}
                   </div>
-                ))}
-              </>
-            )}
+                </div>
+              )}
 
-            <MessageImageDialog message={message} />
+              {!!message.text && (
+                <div
+                  onClick={onClickMention}
+                  className="prose prose-sm dark:prose-dark focus:outline-none max-w-none"
+                  dangerouslySetInnerHTML={{ __html: message.text }}
+                />
+              )}
 
-            {!!message.file && (
-              <div className="pt-1 max-w-screen-sm w-full">
-                <div className="flex border dark:border-gray-850 dark:bg-gray-800 p-3 rounded w-full items-center">
-                  <FileIcon className="w-8 h-8 dark:text-white" />
-                  <div className="pl-3">
+              {!!message.linkMetadatas?.length && (
+                <>
+                  {message.linkMetadatas.map((lm, i) => (
+                    <div key={i} className="py-1.5 max-w-screen-sm w-full">
+                      <PostEmbed dark metadata={lm} linkUrl={lm.url} />
+                    </div>
+                  ))}
+                </>
+              )}
+
+              <MessageImageDialog message={message} />
+
+              {!!message.file && (
+                <div className="pt-1 max-w-screen-sm w-full">
+                  <div className="flex border dark:border-gray-850 dark:bg-gray-800 p-3 rounded w-full items-center">
+                    <FileIcon className="w-8 h-8 dark:text-white" />
+                    <div className="pl-3">
+                      <a
+                        href={message.file.url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="block text-base text-accent hover:underline cursor-pointer truncate"
+                      >
+                        {message.file.filename}
+                      </a>
+                      <div className="text-mid text-xs">
+                        {formatBytes(message.file.size)}
+                      </div>
+                    </div>
                     <a
+                      className="block ml-auto"
                       href={message.file.url}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="block text-base text-accent hover:underline cursor-pointer truncate"
                     >
-                      {message.file.filename}
+                      <IconDownloadLarge className="h-6 w-6 highlightable" />
                     </a>
-                    <div className="text-mid text-xs">
-                      {formatBytes(message.file.size)}
-                    </div>
                   </div>
-                  <a
-                    className="block ml-auto"
-                    href={message.file.url}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <IconDownloadLarge className="h-6 w-6 highlightable" />
-                  </a>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </ContextMenuTrigger>
-    </div>
-  )
+        </ContextMenuTrigger>
+      </div>
+    )
+  }
+  return null
 })

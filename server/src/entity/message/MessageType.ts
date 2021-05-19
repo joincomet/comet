@@ -4,7 +4,8 @@ export enum MessageType {
   Normal = 'Normal',
   Join = 'Join',
   Left = 'Left',
-  FriendRequestReceived = 'FriendRequestReceived'
+  FriendRequestReceived = 'FriendRequestReceived',
+  Initial = 'Initial'
 }
 
 registerEnumType(MessageType, { name: 'MessageType' })

@@ -17,7 +17,6 @@ import {
   useUnblockUserMutation,
   useUserQuery
 } from '@/graphql/hooks'
-import { useUserRelationships } from '@/hooks/useUserRelationships'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
@@ -253,106 +252,118 @@ export default memo(function UserDialog() {
             )}
           </div>
         </div>
-        <div className="px-5 dark:border-gray-775 border-t h-14 flex items-center space-x-10">
-          <button
-            className={tabClass(currentTab === tab.MutualServers)}
-            onClick={() => setCurrentTab(tab.MutualServers)}
-          >
-            <div className="transform translate-y-0.5">Mutual Planets</div>
-          </button>
+        {!currentUser ? (
+          <>
+            <div className="px-5 dark:border-gray-775 border-t h-14 flex items-center space-x-10">
+              <button
+                className={tabClass(currentTab === tab.MutualServers)}
+                onClick={() => setCurrentTab(tab.MutualServers)}
+              >
+                <div className="transform translate-y-0.5">Mutual Planets</div>
+              </button>
 
-          <button
-            className={tabClass(currentTab === tab.MutualFriends)}
-            onClick={() => setCurrentTab(tab.MutualFriends)}
-          >
-            <div className="transform translate-y-0.5">Mutual Friends</div>
-          </button>
+              <button
+                className={tabClass(currentTab === tab.MutualFriends)}
+                onClick={() => setCurrentTab(tab.MutualFriends)}
+              >
+                <div className="transform translate-y-0.5">Mutual Friends</div>
+              </button>
 
-          <button
-            className={tabClass(currentTab === tab.Folders)}
-            onClick={() => setCurrentTab(tab.Folders)}
-          >
-            <div className="transform translate-y-0.5">Folders</div>
-          </button>
-        </div>
-        <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar-custom">
-          {currentTab === tab.MutualServers &&
-            (mutualServers.length > 0 ? (
-              mutualServers.map(server => (
-                <Link
-                  to={`/+${server.name}`}
-                  key={server.id}
-                  className={itemClass}
-                  onClick={() => close()}
-                >
-                  <ServerAvatar
-                    server={server}
-                    size={10}
-                    className="dark:bg-gray-800 rounded-full"
-                  />
-                  <div className="pl-2.5 text-base text-secondary font-medium">
-                    {server.name}
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <EndReached className="h-36">No mutual planets</EndReached>
-            ))}
+              <button
+                className={tabClass(currentTab === tab.Folders)}
+                onClick={() => setCurrentTab(tab.Folders)}
+              >
+                <div className="transform translate-y-0.5">Folders</div>
+              </button>
+            </div>
+            <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar-custom">
+              {currentTab === tab.MutualServers &&
+                (mutualServers.length > 0 ? (
+                  mutualServers.map(server => (
+                    <Link
+                      to={`/+${server.name}`}
+                      key={server.id}
+                      className={itemClass}
+                      onClick={() => close()}
+                    >
+                      <ServerAvatar
+                        server={server}
+                        size={10}
+                        className="dark:bg-gray-800 rounded-full"
+                      />
+                      <div className="pl-2.5 text-base text-secondary font-medium">
+                        {server.name}
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <EndReached className="h-36">No mutual planets</EndReached>
+                ))}
 
-          {currentTab === tab.MutualFriends &&
-            (mutualFriends.length > 0 ? (
-              mutualFriends.map(friend => (
-                <div
-                  key={friend.id}
-                  className={itemClass}
-                  onClick={() => setUserId(friend.id)}
-                >
-                  <UserAvatar
-                    user={friend}
-                    size={10}
-                    showOnline
-                    dotClassName="ring-3 dark:ring-gray-750 w-2.5 h-2.5"
-                  />
-                  <div className="pl-2.5">
-                    <div className="text-base text-secondary font-medium">
-                      {friend.name}
-                      <span className="text-13 text-tertiary font-normal">
-                        #{friend.tag}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <EndReached className="h-36">No mutual friends</EndReached>
-            ))}
-
-          {currentTab === tab.Folders &&
-            (folders.length > 0 ? (
-              folders.map(folder => (
-                <Link
-                  to={`/folder/${folder.id}`}
-                  key={folder.id}
-                  className={itemClass}
-                  onClick={() => close()}
-                >
-                  {folder.avatarUrl ? (
+              {currentTab === tab.MutualFriends &&
+                (mutualFriends.length > 0 ? (
+                  mutualFriends.map(friend => (
                     <div
-                      className="h-10 w-10 rounded-full bg-cover bg-no-repeat bg-center"
-                      style={{ backgroundImage: `url(${folder.avatarUrl})` }}
-                    />
-                  ) : (
-                    <IconFolder className="text-gray-500 w-6 h-6 mx-2" />
-                  )}
-                  <div className="pl-2.5 text-base text-secondary font-medium">
-                    {folder.name}
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <EndReached className="h-36">No visible folders</EndReached>
-            ))}
-        </div>
+                      key={friend.id}
+                      className={itemClass}
+                      onClick={() => setUserId(friend.id)}
+                    >
+                      <UserAvatar
+                        user={friend}
+                        size={10}
+                        showOnline
+                        dotClassName="ring-3 dark:ring-gray-750 w-2.5 h-2.5"
+                      />
+                      <div className="pl-2.5">
+                        <div className="text-base text-secondary font-medium">
+                          {friend.name}
+                          <span className="text-13 text-tertiary font-normal">
+                            #{friend.tag}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <EndReached className="h-36">No mutual friends</EndReached>
+                ))}
+
+              {currentTab === tab.Folders &&
+                (folders.length > 0 ? (
+                  folders.map(folder => (
+                    <Link
+                      to={`/folder/${folder.id}`}
+                      key={folder.id}
+                      className={itemClass}
+                      onClick={() => close()}
+                    >
+                      {folder.avatarUrl ? (
+                        <div
+                          className="h-10 w-10 rounded-full bg-cover bg-no-repeat bg-center"
+                          style={{
+                            backgroundImage: `url(${folder.avatarUrl})`
+                          }}
+                        />
+                      ) : (
+                        <IconFolder className="text-gray-500 w-6 h-6 mx-2" />
+                      )}
+                      <div className="pl-2.5 text-base text-secondary font-medium">
+                        {folder.name}
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <EndReached className="h-36">No visible folders</EndReached>
+                ))}
+            </div>
+          </>
+        ) : (
+          <div className="h-36 dark:bg-gray-750 rounded-b-lg p-5 flex items-center justify-center">
+            <div className="text-lg font-medium text-tertiary">
+              Improved profile coming soon!
+            </div>
+          </div>
+        )}
       </div>
     </Dialog>
   )

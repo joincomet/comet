@@ -1,18 +1,14 @@
 import UserAvatar from '@/components/user/UserAvatar'
 import { IconChannel, IconUsers } from '@/components/ui/icons/Icons'
 
-export default function MessagesStart({ user, channel, group, show = false }) {
+export default function MessagesStart({ user, channel, group }) {
   return (
-    <div
-      className={`px-4 flex items-end messages-start ${
-        show ? 'opacity-100' : 'opacity-0'
-      }`}
-    >
+    <div className={`px-4 flex items-end`}>
       <div>
         {!!user && (
           <>
             <UserAvatar user={user} size={20} />
-            <div className="text-3xl font-bold pt-4 text-primary">
+            <div className="text-3xl font-semibold pt-4 text-primary">
               {user.name}
             </div>
             <div className="pt-2 text-tertiary select-none text-base">
@@ -27,7 +23,7 @@ export default function MessagesStart({ user, channel, group, show = false }) {
             <div className="rounded-full flex items-center justify-center w-20 h-20 dark:bg-gray-700">
               <IconChannel className="w-2/3 h-2/3 text-primary" />
             </div>
-            <div className="text-3xl font-bold pt-4 text-primary">
+            <div className="text-3xl font-semibold pt-4 text-primary">
               Welcome to #{channel.name}!
             </div>
             <div className="pt-2 text-tertiary select-none text-base">
@@ -41,7 +37,7 @@ export default function MessagesStart({ user, channel, group, show = false }) {
             <div className="rounded-full flex items-center justify-center w-20 h-20 dark:bg-gray-700">
               <IconUsers className="w-2/3 h-2/3 text-primary" />
             </div>
-            <div className="text-3xl font-bold pt-4 text-primary">
+            <div className="text-3xl font-semibold pt-4 text-primary">
               {group.name}
             </div>
             <div className="pt-2 text-tertiary select-none text-base">

@@ -18,37 +18,9 @@ import {
   useUpdateServerMutation
 } from '@/graphql/hooks'
 import CategorySelect from '@/components/server/CategorySelect'
-import ctl from '@netlify/classnames-template-literals'
 import Tippy from '@tippyjs/react'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-
-const buttonClass = ctl(`
-  disabled:opacity-50
-  focus:outline-none
-  shadow
-  rounded
-  bg-green-600
-  w-20
-  h-9
-  flex
-  items-center
-  justify-center
-  disabled:cursor-not-allowed
-`)
-
-const deleteButtonClass = ctl(`
-  disabled:opacity-50
-  focus:outline-none
-  shadow
-  rounded
-  bg-red-500
-  w-20
-  h-9
-  flex
-  items-center
-  justify-center
-  disabled:cursor-not-allowed
-`)
+import StyledDialog from '@/components/ui/dialog/StyledDialog'
 
 export default function CreateServerDialog({ open, setOpen, server }) {
   const [currentUser] = useCurrentUser()
@@ -170,158 +142,158 @@ export default function CreateServerDialog({ open, setOpen, server }) {
 
   const [deleteOpen, setDeleteOpen] = useState(false)
 
+  const close = () => {
+    setOpen(false)
+  }
+
+  if (!server) return null
+
   return (
-    <Dialog isOpen={open} close={() => setOpen(false)} closeOnOverlayClick>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="rounded-lg dark:bg-gray-800 max-w-lg w-full relative"
-        onClick={e => e.stopPropagation()}
-      >
-        <input
-          type="file"
-          {...register('bannerFile')}
-          className="hidden"
-          id="bannerFile"
-          accept="image/png,image/jpeg,image/webp,image/gif"
-        />
-
-        <label
-          htmlFor="bannerFile"
-          className={`h-24 block relative rounded-t-lg group cursor-pointer bg-center bg-cover ${
-            bannerSrc ? '' : 'bg-gradient-to-br from-red-400 to-indigo-600'
-          }`}
-          style={bannerSrc ? { backgroundImage: `url(${bannerSrc})` } : {}}
-        >
-          <div className="rounded-t-lg absolute inset-0 transition bg-black opacity-0 group-hover:opacity-50 flex items-center justify-center">
-            <IconEdit className="w-10 h-10" />
-          </div>
-        </label>
-
-        <input
-          type="file"
-          {...register('avatarFile')}
-          className="hidden"
-          id="avatarFile"
-          accept="image/png,image/jpeg,image/webp,image/gif"
-        />
-
-        <label
-          htmlFor="avatarFile"
-          className="flex items-center justify-center cursor-pointer rounded-3xl h-24 w-24 absolute left-3 top-24 transform -translate-y-1/2 dark:bg-gray-700 shadow group bg-center bg-cover"
-          style={avatarSrc ? { backgroundImage: `url(${avatarSrc})` } : {}}
-        >
-          {!avatarSrc && (
-            <div className="text-tertiary text-3xl font-medium overflow-hidden">
-              {initials}
-            </div>
+    <StyledDialog
+      open={open}
+      close={close}
+      closeOnOverlayClick
+      onSubmit={handleSubmit(onSubmit)}
+      buttons={
+        <>
+          {!!server && server.owner.id === currentUser?.id && (
+            <Tippy content="Delete Planet">
+              <button
+                type="button"
+                onClick={() => setDeleteOpen(true)}
+                className={`form-button-delete`}
+              >
+                <IconDelete className="w-5 h-5 text-primary" />
+              </button>
+            </Tippy>
           )}
-          <div className="absolute rounded-3xl inset-0 transition bg-black opacity-0 group-hover:opacity-50 flex items-center justify-center">
-            <IconEdit className="w-10 h-10" />
-          </div>
-        </label>
 
-        <div className="pl-30 pr-5 pt-2 text-left">
-          <input
-            {...register('displayName', { maxLength: 100, required: true })}
-            placeholder="Display Name"
-            className="h-9 px-1.5 rounded-none w-full text-primary font-medium bg-transparent focus:outline-none border-b dark:border-gray-700 dark:focus:border-blue-500 transition"
-            maxLength={100}
-          />
-        </div>
-
-        <div className="pb-5 space-y-3 pt-3 px-5 text-left">
-          <div className="text-sm text-accent flex items-center pt-3">
-            <span className={`h-7 flex items-center`}>
-              joincomet.app/+{server?.name ?? ''}
-            </span>
-            {!server && (
-              <input
-                {...register('name')}
-                placeholder="Name"
-                className="bg-transparent h-7 w-full border-b dark:border-gray-700 focus:outline-none transition dark:focus:border-blue-500"
-                onKeyPress={() => setNameChanged(true)}
-              />
-            )}
-          </div>
-
-          <textarea
-            {...register('description', { maxLength: 500 })}
-            placeholder="Description"
-            className="resize-none bg-transparent dark:border-gray-700 transition dark:focus:border-blue-500 border-b border-r-0 border-l-0 border-t-0 text-sm w-full focus:ring-0 px-0 scrollbar-custom text-primary"
-            maxLength={500}
-          />
-
-          <div className="flex items-center">
-            <div className="text-13 font-medium text-tertiary pr-1.5">
-              Category
-            </div>
-            <CategorySelect category={category} setCategory={setCategory} />
-          </div>
-        </div>
-
-        <div className="dark:bg-gray-800 rounded absolute right-5 bottom-9 transform translate-y-1/2">
-          <div className="flex items-center space-x-3">
-            {!!server && server.owner.id === currentUser?.id && (
-              <Tippy content="Delete Planet">
-                <button
-                  type="button"
-                  onClick={() => setDeleteOpen(true)}
-                  className={deleteButtonClass}
-                >
-                  <IconDelete className="w-5 h-5 text-primary" />
-                </button>
-              </Tippy>
-            )}
-
-            {!server ? (
+          {!server ? (
+            <button
+              type="submit"
+              className={`form-button-submit`}
+              disabled={
+                !displayName ||
+                !name ||
+                displayName?.length < 2 ||
+                name?.length < 3 ||
+                createLoading
+              }
+            >
+              {createLoading ? (
+                <IconSpinner className="w-5 h-5 text-primary" />
+              ) : (
+                <IconUserToServerArrow className="w-5 h-5 text-primary" />
+              )}
+            </button>
+          ) : (
+            <Tippy content="Save Changes">
               <button
                 type="submit"
-                className={buttonClass}
+                className={`form-button-submit`}
                 disabled={
-                  !displayName ||
-                  !name ||
-                  displayName?.length < 2 ||
-                  name?.length < 3 ||
-                  createLoading
+                  !displayName || updateLoading || displayName?.length < 2
                 }
               >
-                {createLoading ? (
+                {updateLoading ? (
                   <IconSpinner className="w-5 h-5 text-primary" />
                 ) : (
-                  <IconUserToServerArrow className="w-5 h-5 text-primary" />
+                  <IconCheck className="w-5 h-5 text-primary" />
                 )}
               </button>
-            ) : (
-              <Tippy content="Save Changes">
-                <button
-                  type="submit"
-                  className={buttonClass}
-                  disabled={
-                    !displayName || updateLoading || displayName?.length < 2
-                  }
-                >
-                  {updateLoading ? (
-                    <IconSpinner className="w-5 h-5 text-primary" />
-                  ) : (
-                    <IconCheck className="w-5 h-5 text-primary" />
-                  )}
-                </button>
-              </Tippy>
-            )}
+            </Tippy>
+          )}
+        </>
+      }
+    >
+      <DeleteServerDialog
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        server={server}
+      />
+
+      <input
+        type="file"
+        {...register('bannerFile')}
+        className="hidden"
+        id="bannerFile"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+      />
+
+      <label
+        htmlFor="bannerFile"
+        className={`h-24 block relative rounded-t-lg group cursor-pointer bg-center bg-cover ${
+          bannerSrc ? '' : 'bg-gradient-to-br from-red-400 to-indigo-600'
+        }`}
+        style={bannerSrc ? { backgroundImage: `url(${bannerSrc})` } : {}}
+      >
+        <div className="rounded-t-lg absolute inset-0 transition bg-black opacity-0 group-hover:opacity-50 flex items-center justify-center">
+          <IconEdit className="w-10 h-10" />
+        </div>
+      </label>
+
+      <input
+        type="file"
+        {...register('avatarFile')}
+        className="hidden"
+        id="avatarFile"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+      />
+
+      <label
+        htmlFor="avatarFile"
+        className="flex items-center justify-center cursor-pointer rounded-3xl h-24 w-24 absolute left-3 top-24 transform -translate-y-1/2 dark:bg-gray-700 shadow group bg-center bg-cover"
+        style={avatarSrc ? { backgroundImage: `url(${avatarSrc})` } : {}}
+      >
+        {!avatarSrc && (
+          <div className="text-tertiary text-3xl font-medium overflow-hidden">
+            {initials}
           </div>
+        )}
+        <div className="absolute rounded-3xl inset-0 transition bg-black opacity-0 group-hover:opacity-50 flex items-center justify-center">
+          <IconEdit className="w-10 h-10" />
+        </div>
+      </label>
+
+      <div className="pl-30 pr-5 pt-2 text-left">
+        <input
+          {...register('displayName', { maxLength: 100, required: true })}
+          placeholder="Display Name"
+          className="form-input-lg"
+          maxLength={100}
+        />
+      </div>
+
+      <div className="pb-5 space-y-3 pt-3 px-5 text-left">
+        <div className="text-sm text-accent flex items-center pt-3">
+          <span className={`h-7 flex items-center`}>
+            joincomet.app/+{server?.name ?? ''}
+          </span>
+          {!server && (
+            <input
+              {...register('name')}
+              placeholder="Name"
+              className="bg-transparent h-7 w-full border-b dark:border-gray-700 focus:outline-none transition dark:focus:border-blue-500"
+              onKeyPress={() => setNameChanged(true)}
+            />
+          )}
         </div>
 
-        <div className="rounded-b-lg dark:bg-gray-750 h-9" />
-      </form>
-
-      {!!server && (
-        <DeleteServerDialog
-          open={deleteOpen}
-          setOpen={setDeleteOpen}
-          server={server}
+        <textarea
+          {...register('description', { maxLength: 500 })}
+          placeholder="Description"
+          className="form-textarea"
+          maxLength={500}
         />
-      )}
-    </Dialog>
+
+        <div className="flex items-center">
+          <div className="text-13 font-medium text-tertiary pr-1.5">
+            Category
+          </div>
+          <CategorySelect category={category} setCategory={setCategory} />
+        </div>
+      </div>
+    </StyledDialog>
   )
 }
 

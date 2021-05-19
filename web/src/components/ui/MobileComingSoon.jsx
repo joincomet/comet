@@ -9,7 +9,7 @@ import {
 
 export default function MobileComingSoon() {
   return (
-    <div className="relative h-full w-full dark:bg-gray-750 flex flex-col items-center justify-center lg:hidden p-6 text-center">
+    <div className="relative h-full w-full dark:bg-gray-750 flex flex-col items-center justify-center md:hidden p-6 text-center">
       <Meteors />
       <div className="z-10 flex flex-col items-center">
         <VectorLogo className="w-48" />
