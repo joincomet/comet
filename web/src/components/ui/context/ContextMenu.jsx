@@ -86,6 +86,7 @@ export default function ContextMenu({
       {data?.type === ContextMenuType.Comment && (
         <CommentContextMenu
           comment={data?.comment}
+          post={data?.post}
           ContextMenuItem={ContextMenuItem}
         />
       )}
@@ -98,6 +99,7 @@ export default function ContextMenu({
       {data?.type === ContextMenuType.Channel && (
         <ChannelContextMenu
           channel={data?.channel}
+          server={data?.server}
           ContextMenuItem={ContextMenuItem}
         />
       )}

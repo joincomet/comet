@@ -3,7 +3,7 @@ import { IconChannel, IconUsers } from '@/components/ui/icons/Icons'
 
 export default function MessagesStart({ user, channel, group }) {
   return (
-    <div className={`px-4 flex items-end`}>
+    <div className={`px-4 py-5.5 flex items-end`}>
       <div>
         {!!user && (
           <>

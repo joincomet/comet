@@ -471,7 +471,7 @@ export type Mutation = {
   joinServer: Server;
   kickUserFromServer: Scalars['Boolean'];
   leaveGroup: Scalars['Boolean'];
-  leaveServer: Scalars['Boolean'];
+  leaveServer: Server;
   login: LoginResponse;
   markReplyRead: Reply;
   markReplyUnread: Reply;
@@ -1398,9 +1398,6 @@ export type CurrentUserFragment = (
       & UserFragment
     )> }
     & GroupFragment
-  )>, folders: Array<(
-    { __typename?: 'Folder' }
-    & FolderFragment
   )> }
   & UserFragment
 );
@@ -2440,7 +2437,21 @@ export type LeaveServerMutationVariables = Exact<{
 
 export type LeaveServerMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'leaveServer'>
+  & { leaveServer: (
+    { __typename?: 'Server' }
+    & Pick<Server, 'permissions'>
+    & { channels: Array<(
+      { __typename?: 'Channel' }
+      & ChannelFragment
+    )>, roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )> }
+    & ServerFragment
+  ) }
 );
 
 export type ReadServerMutationVariables = Exact<{
@@ -2774,16 +2785,6 @@ export type ServerQuery = (
     & { channels: Array<(
       { __typename?: 'Channel' }
       & ChannelFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & { owner?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'username'>
-      )>, server?: Maybe<(
-        { __typename?: 'Server' }
-        & Pick<Server, 'id' | 'name' | 'avatarUrl'>
-      )> }
-      & FolderFragment
     )>, roles: Array<(
       { __typename?: 'Role' }
       & RoleFragment
@@ -2814,10 +2815,7 @@ export type UserQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'User' }
-    & { folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )>, relatedUsers: Array<(
+    & { relatedUsers: Array<(
       { __typename?: 'User' }
       & UserFragment
     )>, servers: Array<(
@@ -3063,18 +3061,6 @@ export const GroupFragmentDoc = gql`
   lastMessageAt
 }
     `;
-export const FolderFragmentDoc = gql`
-    fragment Folder on Folder {
-  id
-  name
-  avatarUrl
-  description
-  postCount
-  followerCount
-  isCollaborative
-  visibility
-}
-    `;
 export const CurrentUserFragmentDoc = gql`
     fragment CurrentUser on User {
   ...User
@@ -3100,15 +3086,23 @@ export const CurrentUserFragmentDoc = gql`
       ...User
     }
   }
-  folders {
-    ...Folder
-  }
 }
     ${UserFragmentDoc}
 ${ServerFragmentDoc}
 ${RelatedUserFragmentDoc}
-${GroupFragmentDoc}
-${FolderFragmentDoc}`;
+${GroupFragmentDoc}`;
+export const FolderFragmentDoc = gql`
+    fragment Folder on Folder {
+  id
+  name
+  avatarUrl
+  description
+  postCount
+  followerCount
+  isCollaborative
+  visibility
+}
+    `;
 export const MessageFragmentDoc = gql`
     fragment Message on Message {
   id
@@ -5404,9 +5398,24 @@ export type JoinServerMutationResult = Apollo.MutationResult<JoinServerMutation>
 export type JoinServerMutationOptions = Apollo.BaseMutationOptions<JoinServerMutation, JoinServerMutationVariables>;
 export const LeaveServerDocument = gql`
     mutation leaveServer($input: LeaveServerInput!) {
-  leaveServer(input: $input)
+  leaveServer(input: $input) {
+    ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
+  }
 }
-    `;
+    ${ServerFragmentDoc}
+${ChannelFragmentDoc}
+${RoleFragmentDoc}
+${FolderFragmentDoc}`;
 export type LeaveServerMutationFn = Apollo.MutationFunction<LeaveServerMutation, LeaveServerMutationVariables>;
 
 /**
@@ -6197,18 +6206,6 @@ export const ServerDocument = gql`
     channels {
       ...Channel
     }
-    folders {
-      ...Folder
-      owner {
-        id
-        username
-      }
-      server {
-        id
-        name
-        avatarUrl
-      }
-    }
     roles {
       ...Role
     }
@@ -6216,7 +6213,6 @@ export const ServerDocument = gql`
 }
     ${ServerFragmentDoc}
 ${ChannelFragmentDoc}
-${FolderFragmentDoc}
 ${RoleFragmentDoc}`;
 
 /**
@@ -6286,9 +6282,6 @@ export const UserDocument = gql`
     query user($id: ID) @live {
   user(id: $id) {
     ...RelatedUser
-    folders {
-      ...Folder
-    }
     relatedUsers {
       ...User
     }
@@ -6300,7 +6293,6 @@ export const UserDocument = gql`
   }
 }
     ${RelatedUserFragmentDoc}
-${FolderFragmentDoc}
 ${UserFragmentDoc}`;
 
 /**

@@ -1,47 +1,32 @@
 import {
   matchPath,
-  Redirect,
   Route,
   Switch,
   useLocation,
   useParams
 } from 'react-router-dom'
-import LandingPage from '@/pages/LandingPage'
 import NotFound from '@/pages/NotFound'
-import { Helmet } from 'react-helmet-async'
 import FeedPage from '@/pages/feed/FeedPage'
 import FriendsPage from '@/pages/friends/FriendsPage'
 import ExplorePage from '@/pages/explore/ExplorePage'
 import InboxPage from '@/pages/inbox/InboxPage'
-import UserFolderPage from '@/pages/UserFolderPage'
 import DmPage from '@/pages/dm/DmPage'
-import GroupPage from '@/pages/group/GroupPage'
 import ServerPostsPage from '@/pages/server/ServerPostsPage'
-import ServerFolderPage from '@/pages/server/ServerFolderPage'
 import PostPage from '@/pages/post/PostPage'
 import HomeSidebar from '@/pages/HomeSidebar'
 import ServerList from '@/components/server/list/ServerList'
 import BottomBar from '@/components/BottomBar'
 import ServerSidebar from '@/pages/server/ServerSidebar'
 import ChannelPage from '@/pages/server/channel/ChannelPage'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useServerQuery } from '@/graphql/hooks'
+import { useMessagesSubscriptions } from '@/hooks/useMessagesSubscriptions'
 
 const serverRegex = `\\+[A-Za-z0-9_]+`
 const usernameRegex = `@[A-Za-z0-9-_]+`
 
 export default function Routes() {
-  const [currentUser] = useCurrentUser()
+  useMessagesSubscriptions()
   const { pathname } = useLocation()
-  const matchedGroup = matchPath(pathname, {
-    path: '/group/:groupId'
-  })
-  const groupId = matchedGroup?.params?.groupId
-
-  const matchedFolder = matchPath(pathname, {
-    path: '/folder/:folderId'
-  })
-  const folderId = matchedFolder?.params?.folderId
 
   const matchedDm = matchPath(pathname, {
     path: '/dm/:username'
@@ -57,12 +42,10 @@ export default function Routes() {
               '/',
               '/friends',
               '/inbox',
-              '/folder/:folderId',
               `/dm/:username(${usernameRegex})`,
-              '/group/:groupId',
               `/:server(${serverRegex})`,
-              `/:server(${serverRegex})/folder/:folderId`,
               `/:server(${serverRegex})/post/:postId`,
+              `/:server(${serverRegex})/post/:postId/:slug`,
               '/explore'
             ]}
             exact
@@ -85,9 +68,7 @@ export default function Routes() {
                     '/',
                     '/friends',
                     '/inbox',
-                    '/folder/:folderId',
-                    `/dm/:username(${usernameRegex})`,
-                    '/group/:groupId'
+                    `/dm/:username(${usernameRegex})`
                   ]}
                 >
                   <HomeSidebar />
@@ -100,14 +81,8 @@ export default function Routes() {
                   <Route path="/inbox">
                     <InboxPage />
                   </Route>
-                  <Route path="/folder/:folderId">
-                    <UserFolderPage folderId={folderId} />
-                  </Route>
                   <Route path={`/dm/:username(${usernameRegex})`}>
                     <DmPage username={username} />
-                  </Route>
-                  <Route path="/group/:groupId">
-                    <GroupPage groupId={groupId} />
                   </Route>
                 </Route>
               </div>
@@ -128,19 +103,15 @@ function ServerRoutes() {
   const { server: s } = useParams()
   const serverName = s.substring(1)
   const { data: serverData } = useServerQuery({
-    variables: { name: serverName }
+    variables: { name: serverName },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first'
   })
   const server = serverData?.server
 
   const { hash, pathname } = useLocation()
   const channelName = hash.substring(1)
   const channel = (server?.channels ?? []).find(c => c.name === channelName)
-
-  const matchedFolder = matchPath(pathname, {
-    path: '/:server/folder/:folderId'
-  })
-  const folderId = matchedFolder?.params?.folderId
-  const folder = (server?.folders ?? []).find(f => f.id === folderId)
 
   const matchedPost = matchPath(pathname, {
     path: '/:server/post/:postId'
@@ -161,10 +132,12 @@ function ServerRoutes() {
           )
         }
       />
-      <Route path={`/:server(${serverRegex})/folder/:folderId`}>
-        <ServerFolderPage server={server} folder={folder} />
-      </Route>
-      <Route path={`/:server(${serverRegex})/post/:postId`}>
+      <Route
+        path={[
+          `/:server(${serverRegex})/post/:postId`,
+          `/:server(${serverRegex})/post/:postId/:slug`
+        ]}
+      >
         <PostPage server={server} postId={postId} />
       </Route>
     </>

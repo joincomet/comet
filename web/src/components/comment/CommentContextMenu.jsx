@@ -27,12 +27,12 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
   const toggleVote = useToggleCommentVote(comment)
   const togglePin = useToggleCommentPin(comment)
 
-  const isAuthor = comment.author.id === currentUser.id
+  const isAuthor = !!currentUser && comment.author.id === currentUser.id
   const canDelete = canManageComments || isAuthor
   return (
     <>
       <ContextMenuSection>
-        {canVote && (
+        {!!currentUser && canVote && (
           <ContextMenuItem
             label={
               comment.isVoted
@@ -60,12 +60,12 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
           />
         )}
 
-        <ContextMenuItem
+        {/*<ContextMenuItem
           onClick={() => {
             copyToClipboard(`${comment.id}`)
           }}
           label={t('comment.context.copyLink')}
-        />
+        />*/}
         {canDelete && (
           <ContextMenuItem
             label={t('comment.context.delete')}

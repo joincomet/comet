@@ -17,7 +17,7 @@ export const usePosts = ({ serverId, folderId }) => {
   }
   const { data, loading, fetchMore } = usePostsQuery({
     variables,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first'
   })
   const hasMore = data?.posts.hasMore

@@ -20,19 +20,22 @@ export default function ChannelContextMenu({
   return (
     <>
       <ContextMenuSection>
-        <ContextMenuItem label={t('channel.context.markRead')} />
-        {/*<ContextMenuItem label={t('channel.context.mute')} />*/}
-        <ContextMenuItem label={t('channel.context.edit')} />
         {canManageChannels && (
-          <ContextMenuItem
-            label={t('channel.context.delete')}
-            red
-            onClick={() => {
-              if (pathname === `/+${server.name}/#${channel.name}`)
-                push(`/+${server.name}`)
-              deleteChannel({ variables: { input: { channelId: channel.id } } })
-            }}
-          />
+          <>
+            <ContextMenuItem label={t('channel.context.edit')} />
+
+            <ContextMenuItem
+              label={t('channel.context.delete')}
+              red
+              onClick={() => {
+                if (pathname === `/+${server.name}/#${channel.name}`)
+                  push(`/+${server.name}`)
+                deleteChannel({
+                  variables: { input: { channelId: channel.id } }
+                })
+              }}
+            />
+          </>
         )}
       </ContextMenuSection>
     </>

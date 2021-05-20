@@ -7,11 +7,6 @@ import {
 } from '@n1ru4l/push-pull-async-iterable-iterator'
 import { createApplyLiveQueryPatch } from '@n1ru4l/graphql-live-query-patch'
 
-let restartRequestedBeforeConnected = false
-export let gracefullyRestart = () => {
-  restartRequestedBeforeConnected = true
-}
-
 export const wsStatus = {
   status: 'connecting'
 }
@@ -38,19 +33,8 @@ export class WebSocketLink extends ApolloLink {
         }
       },
       on: {
-        connected: (socket: unknown) => {
+        connected: () => {
           wsStatus.status = 'connected'
-          gracefullyRestart = () => {
-            if ((socket as WebSocket).readyState === WebSocket.OPEN) {
-              ;(socket as WebSocket).close(4205, 'Client Restart')
-            }
-          }
-
-          // just in case you were eager to restart
-          if (restartRequestedBeforeConnected) {
-            restartRequestedBeforeConnected = false
-            gracefullyRestart()
-          }
         },
         error: () => {
           wsStatus.status = 'error'

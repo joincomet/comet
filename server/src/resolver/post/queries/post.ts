@@ -1,11 +1,8 @@
-import { Post, User } from '@/entity'
+import { Post } from '@/entity'
 import { Context } from '@/types'
 
-export async function post(
-  { em, userId }: Context,
-  postId: string
-): Promise<Post> {
-  const post = await em.findOneOrFail(Post, postId, [
+export async function post({ em }: Context, id: string): Promise<Post> {
+  const post = await em.findOneOrFail(Post, id, [
     'server',
     'author.user',
     'author.roles'

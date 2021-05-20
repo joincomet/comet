@@ -14,10 +14,12 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
   const userFolders = currentUser?.folders ?? []
-  const isFollowing = userFolders
-    .filter(f => f.owner?.id !== currentUser.id)
-    .map(f => f.id)
-    .includes(folder.id)
+  const isFollowing = !currentUser
+    ? false
+    : userFolders
+        .filter(f => f.owner?.id !== currentUser.id)
+        .map(f => f.id)
+        .includes(folder.id)
   const editable = folder.name !== 'Read Later' && folder.name !== 'Favorites'
   const [updateFolder] = useUpdateFolderMutation()
   const [followFolder] = useFollowFolderMutation()
@@ -33,7 +35,7 @@ export default function FolderContextMenu({ folder, ContextMenuItem }) {
       <ContextMenuSection>
         <ContextMenuItem label={t('folder.context.copyLink')} />
 
-        {folder.owner?.id !== currentUser.id && (
+        {!!currentUser && folder.owner?.id !== currentUser.id && (
           <>
             {isFollowing ? (
               <ContextMenuItem

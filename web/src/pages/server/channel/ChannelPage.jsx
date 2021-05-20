@@ -3,7 +3,10 @@ import Messages from '@/components/message/Messages'
 import { useSetServerPage } from '@/hooks/useSetServerPage'
 import Page from '@/components/ui/page/Page'
 import ChannelHeader from '@/pages/server/channel/ChannelHeader'
-import { useServerUsersQuery } from '@/graphql/hooks'
+import { useReadChannelMutation, useServerUsersQuery } from '@/graphql/hooks'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 
 export default function ChannelPage({ server, channel }) {
   useSetServerPage(`channel/${channel?.id}`)
@@ -13,6 +16,21 @@ export default function ChannelPage({ server, channel }) {
     fetchPolicy: 'cache-and-network'
   })
   const serverUsers = data?.serverUsers ?? []
+  const [readChannel] = useReadChannelMutation()
+  const [currentUser] = useCurrentUser()
+  useEffect(() => {
+    if (currentUser && channel && channel.isUnread) {
+      readChannel({
+        variables: { input: { channelId: channel.id } },
+        optimisticResponse: {
+          readChannel: {
+            ...channel,
+            isUnread: false
+          }
+        }
+      })
+    }
+  }, [channel, currentUser])
 
   return (
     <Page
@@ -25,6 +43,9 @@ export default function ChannelPage({ server, channel }) {
         />
       }
     >
+      <Helmet>
+        <title>{`#${channel?.name} – ${server?.displayName}`}</title>
+      </Helmet>
       {!!channel && (
         <Messages
           server={server}

@@ -76,7 +76,7 @@ export default function PostsHeader({ refreshPosts }) {
           </div>
         </Tippy>
 
-        <ShowFoldersButton />
+        {/*<ShowFoldersButton />*/}
       </div>
     </Header>
   )

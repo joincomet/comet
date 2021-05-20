@@ -6,6 +6,7 @@ import { matchPath, useLocation } from 'react-router-dom'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useToggleMessagePin } from '@/components/message/useToggleMessagePin'
 import {
+  MessageType,
   ServerPermission,
   useDeleteMessageMutation,
   usePinMessageMutation,
@@ -39,14 +40,16 @@ export default function MessageContextMenu({
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
 
-  const isAuthor = message.author.id === currentUser.id
-  const canDelete = canManageMessages || isAuthor
+  const isAuthor = !!currentUser && message.author.id === currentUser.id
+  const canDelete =
+    (canManageMessages || isAuthor) && message.type === MessageType.Normal
+  const canEdit = isAuthor && message.type === MessageType.Normal
   const canPin = canManageMessages || groupId || username
 
   return (
     <>
       <ContextMenuSection>
-        {isAuthor && <ContextMenuItem label={t('message.context.edit')} />}
+        {canEdit && <ContextMenuItem label={t('message.context.edit')} />}
         {/*{canPin && (
           <ContextMenuItem
             label={

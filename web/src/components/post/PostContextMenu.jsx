@@ -8,22 +8,11 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import toast from 'react-hot-toast'
 import { matchPath, useLocation } from 'react-router-dom'
-import {
-  useAddPostToFolderMutation,
-  useDeletePostMutation,
-  useRemovePostFromFolderMutation
-} from '@/graphql/hooks'
+import { useDeletePostMutation } from '@/graphql/hooks'
+import { useOpenLogin } from '@/hooks/useLoginDialog'
 
 export default function PostContextMenu({ post, ContextMenuItem }) {
   const { pathname } = useLocation()
-  const matchedUserFolder = matchPath(pathname, {
-    path: '/folder/:folderId'
-  })
-  const matchedServerFolder = matchPath(pathname, {
-    path: '/server/:serverId/folder/:folderId'
-  })
-  const folderId =
-    matchedUserFolder?.params?.folderId || matchedServerFolder?.params?.folderId
   const { t } = useTranslation()
 
   const [canManagePosts] = useHasServerPermissions({
@@ -39,31 +28,42 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
   const togglePin = useTogglePostPin(post)
 
   const [currentUser] = useCurrentUser()
-  const isAuthor = post?.author?.id === currentUser.id
+  const isAuthor = !!currentUser && post?.author?.id === currentUser.id
   const canDelete = isAuthor || canManagePosts
 
-  const userFolders = currentUser?.folders ?? []
-  const serverFolders =
-    currentUser.servers.find(s => s.id === post.server.id)?.folders ?? []
-  const friends = currentUser.relatedUsers.filter(
+  const friends = (currentUser?.relatedUsers ?? []).filter(
     rel => rel.relationshipStatus === 'Friends'
   )
 
+  /*const matchedUserFolder = matchPath(pathname, {
+    path: '/folder/:folder'
+  })
+  const matchedServerFolder = matchPath(pathname, {
+    path: '/:server/folder/:folder'
+  })
+  const folderName =
+    matchedUserFolder?.params?.folder || matchedServerFolder?.params?.folder
+  const userFolders = currentUser?.folders ?? []
+  const serverFolders =
+    currentUser.servers.find(s => s.id === post.server.id)?.folders ?? []
   const [addPostToFolder] = useAddPostToFolderMutation()
-  const [removePostFromFolder] = useRemovePostFromFolderMutation()
-
+  const [removePostFromFolder] = useRemovePostFromFolderMutation()*/
   if (!post) return null
   return (
     <>
       <ContextMenuSection>
-        <ContextMenuItem
-          onClick={() => toggleVote()}
-          label={
-            post.isVoted ? t('post.context.unvote') : t('post.context.vote')
-          }
-        />
+        {!!currentUser && (
+          <ContextMenuItem
+            onClick={() => {
+              toggleVote()
+            }}
+            label={
+              post.isVoted ? t('post.context.unvote') : t('post.context.vote')
+            }
+          />
+        )}
 
-        {userFolders.length > 0 && (
+        {/*{userFolders.length > 0 && (
           <ContextMenuItem label={t('post.context.addToUserFolder')}>
             {userFolders.map(folder => (
               <ContextMenuItem
@@ -109,7 +109,7 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
               />
             ))}
           </ContextMenuItem>
-        )}
+        )}*/}
 
         {friends.length > 0 && (
           <ContextMenuItem label={t('post.context.sendToFriend')}>
@@ -130,12 +130,12 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
         )}
         <ContextMenuItem
           onClick={() => {
-            copyToClipboard(`${post.relativeUrl}`)
+            copyToClipboard(`${location.origin}${post.relativeUrl}`)
           }}
           label={t('post.context.copyLink')}
         />
 
-        {folderId && (
+        {/*{folderId && (
           <ContextMenuItem
             label={t('post.context.removeFromFolder')}
             red
@@ -145,7 +145,7 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
               })
             }
           />
-        )}
+        )}*/}
 
         {canDelete && (
           <ContextMenuItem

@@ -4,6 +4,7 @@ import { EntityManager } from '@mikro-orm/postgresql'
 
 export const userServersLoader = (em: EntityManager, currentUserId: string) => {
   return new DataLoader<string, Server[]>(async (userIds: string[]) => {
+    if (!currentUserId) return userIds.map(_ => [])
     const serverUsers = await em.find(
       ServerUser,
       { user: userIds, status: ServerUserStatus.Joined },

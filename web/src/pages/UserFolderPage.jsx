@@ -10,7 +10,11 @@ import { useFolderQuery } from '@/graphql/hooks'
 export default function UserFolderPage({ folderId }) {
   const showFolders = useStore(s => s.showFolders)
 
-  const { data } = useFolderQuery({ variables: { id: folderId } })
+  const { data } = useFolderQuery({
+    variables: { id: folderId },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first'
+  })
   const folder = data?.folder
 
   useSetHomePage(`folder/${folderId}`)

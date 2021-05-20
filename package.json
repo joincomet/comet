@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.66",
+	"version": "0.0.67",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -32,7 +32,7 @@
 		"@graphql-codegen/typescript": "^1.22.0",
 		"@graphql-codegen/typescript-operations": "^1.17.16",
 		"@graphql-codegen/typescript-react-apollo": "^2.2.4",
-		"@types/node": "^15.3.0",
+		"@types/node": "^15.3.1",
 		"@typescript-eslint/eslint-plugin": "^4.24.0",
 		"@typescript-eslint/parser": "^4.24.0",
 		"concurrently": "^6.1.0",

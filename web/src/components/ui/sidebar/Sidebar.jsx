@@ -1,5 +1,3 @@
-import { CurrentUserInfo } from '@/components/user/CurrentUserInfo'
-
 export default function Sidebar({ children, right = false, show = true }) {
   return (
     <div
@@ -10,7 +8,6 @@ export default function Sidebar({ children, right = false, show = true }) {
       }`}
     >
       <div className="relative h-full w-full scrollbar-dark">{children}</div>
-      {/*{!right && <CurrentUserInfo />}*/}
     </div>
   )
 }

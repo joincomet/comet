@@ -23,7 +23,7 @@ export function useNewMessageNotification(messages) {
     if (atBottom.current) return
 
     /* if the new message belongs to current user scroll to bottom */
-    if (lastMessage.author?.id !== currentUser.id) {
+    if (currentUser && lastMessage.author?.id !== currentUser.id) {
       /* otherwise just show newMessage notification  */
       setNewMessagesNotification(true)
     }

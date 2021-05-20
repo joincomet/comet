@@ -10,12 +10,10 @@ import {
   useChangePasswordMutation
 } from '@/graphql/hooks'
 import { useForm } from 'react-hook-form'
-import isEmail from 'validator/es/lib/isEmail'
 import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useApolloClient } from '@apollo/client'
-import { gracefullyRestart } from '@/graphql/WebSocketLink'
 
 export default function UserSettingsDialog({ open, setOpen }) {
   const [user] = useCurrentUser()
@@ -38,9 +36,8 @@ export default function UserSettingsDialog({ open, setOpen }) {
   const [changeAvatar] = useChangeUserAvatarMutation()
   const logout = () => {
     localStorage.removeItem('token')
+    location.reload()
   }
-  const apolloClient = useApolloClient()
-
   const close = () => {
     setOpen(false)
     setTimeout(() => reset(), 300)
@@ -81,10 +78,7 @@ export default function UserSettingsDialog({ open, setOpen }) {
                 <SidebarItem>My Account</SidebarItem>
                 <SidebarItem
                   onClick={() => {
-                    setOpen(false)
                     logout()
-                    apolloClient.resetStore()
-                    gracefullyRestart()
                   }}
                 >
                   <span className="text-red-500">Log Out</span>

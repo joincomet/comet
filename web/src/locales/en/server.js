@@ -3,8 +3,8 @@ export const server = {
   feed: 'Feed',
   invitePeople: 'Invite People',
   onlineCount: '{{count}} online',
-  memberCount: '{{count}} member',
-  memberCount_plural: '{{count}} members',
+  memberCount: '{{count}} Member',
+  memberCount_plural: '{{count}} Members',
   context: {
     markRead: 'Mark As Read',
     mute: 'Mute Planet',

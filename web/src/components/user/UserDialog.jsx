@@ -160,7 +160,7 @@ export default memo(function UserDialog() {
     else if (user?.relationshipStatus === RelationshipStatus.Friends)
       return (
         <Link
-          to={`/dm/${userId}`}
+          to={`/dm/@${user?.username}`}
           onClick={() => close()}
           className={buttonClass(true)}
         >
@@ -359,6 +359,7 @@ export default memo(function UserDialog() {
           </>
         ) : (
           <div className="h-36 dark:bg-gray-750 rounded-b-lg p-5 flex items-center justify-center">
+            <button className="h-0 w-0 overflow-hidden" />
             <div className="text-lg font-medium text-tertiary">
               Improved profile coming soon!
             </div>

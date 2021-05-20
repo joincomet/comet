@@ -9,7 +9,12 @@ import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import SidebarChannel from '@/components/channel/SidebarChannel'
 import CreateChannel from '@/components/channel/CreateChannel'
-import { ServerPermission, ChannelType } from '@/graphql/hooks'
+import {
+  ServerPermission,
+  ChannelType,
+  useJoinServerMutation,
+  useLeaveServerMutation
+} from '@/graphql/hooks'
 import { useState } from 'react'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import CreateServerDialog from '@/components/server/create/CreateServerDialog'
@@ -19,7 +24,7 @@ import { getCategoryIcon } from '@/hooks/getCategoryIcon'
 import ctl from '@netlify/classnames-template-literals'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
-const joinButtonClass = isJoined =>
+const joinButtonClass = (isJoined, loading) =>
   ctl(`
   ml-auto
   px-3
@@ -27,17 +32,18 @@ const joinButtonClass = isJoined =>
   rounded
   text-13
   font-medium
+  focus:outline-none
   ${
     isJoined
       ? 'border border-gray-700 text-blue-500'
       : 'bg-blue-500 text-primary'
   }
+  ${loading ? 'opacity-50' : 'opacity-100'}
 `)
 
 export default function ServerSidebar({ server }) {
   const [currentUser] = useCurrentUser()
   const [editOpen, setEditOpen] = useState(false)
-  const [inviteOpen, setInviteOpen] = useState(false)
   const [canManageServer, canViewPrivateChannels] = useHasServerPermissions({
     server,
     permissions: [
@@ -45,6 +51,8 @@ export default function ServerSidebar({ server }) {
       ServerPermission.PrivateChannels
     ]
   })
+  const [joinServer, { loading: joinLoading }] = useJoinServerMutation()
+  const [leaveServer, { loading: leaveLoading }] = useLeaveServerMutation()
 
   const CategoryIcon = getCategoryIcon(server?.category)
 
@@ -89,8 +97,26 @@ export default function ServerSidebar({ server }) {
                 {server.displayName}
               </div>
 
-              {!!currentUser && (
-                <button className={joinButtonClass(server.isJoined)}>
+              {!!currentUser && currentUser.id !== server.owner.id && (
+                <button
+                  className={joinButtonClass(
+                    server.isJoined,
+                    joinLoading || leaveLoading
+                  )}
+                  type="button"
+                  onClick={() => {
+                    if (joinLoading || leaveLoading) return
+                    if (server.isJoined) {
+                      leaveServer({
+                        variables: { input: { serverId: server.id } }
+                      })
+                    } else {
+                      joinServer({
+                        variables: { input: { serverId: server.id } }
+                      })
+                    }
+                  }}
+                >
                   {server.isJoined ? 'Leave' : 'Join'}
                 </button>
               )}

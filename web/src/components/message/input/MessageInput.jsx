@@ -27,6 +27,13 @@ import { MentionList } from '@/components/message/input/MentionList'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
+import { Editor } from '@tiptap/react/src/Editor'
+
+function useForceUpdate() {
+  const [, setValue] = useState(0)
+
+  return () => setValue(value => value + 1)
+}
 
 export default function MessageInput({ channel, server, group, user, users }) {
   const { t } = useTranslation()
@@ -35,16 +42,18 @@ export default function MessageInput({ channel, server, group, user, users }) {
     !!user && user.relationshipStatus === RelationshipStatus.Blocked
   const isBlocking =
     !!user && user.relationshipStatus === RelationshipStatus.Blocking
-  const [canUseRestrictedChannel, canUsePrivateChannel] =
+  const [canSendMessages, canUseRestrictedChannel, canUsePrivateChannel] =
     useHasServerPermissions({
       server,
       permissions: [
+        ServerPermission.SendMessages,
         ServerPermission.RestrictedChannels,
         ServerPermission.PrivateChannels
       ]
     })
   const canUseChannel =
     !!channel &&
+    canSendMessages &&
     (channel.type === ChannelType.Public ||
       (channel.type === ChannelType.Restricted && canUseRestrictedChannel) ||
       (channel.type === ChannelType.Private && canUsePrivateChannel))
@@ -68,7 +77,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
     return ``
   }, [currentUser, channel, group, user, canUseChannel, isBlocked, isBlocking])
 
-  const editor = useEditor({
+  const editorOptions = {
     autofocus: true,
     extensions: [
       StarterKit.configure({
@@ -107,7 +116,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
       }),
       Mention.configure({
         suggestion: {
-          allowSpaces: true,
+          allowSpaces: false,
           render: () => {
             let reactRenderer
             let popup
@@ -185,7 +194,24 @@ export default function MessageInput({ channel, server, group, user, users }) {
       }
     },
     editable: canSendMessage
-  })
+  }
+
+  const [editor, setEditor] = useState(null)
+  const forceUpdate = useForceUpdate()
+  useEffect(() => {
+    if (editor) editor.destroy()
+    const instance = new Editor(editorOptions)
+
+    setEditor(instance)
+
+    instance.on('transaction', forceUpdate)
+
+    return () => {
+      instance.destroy()
+    }
+  }, [canSendMessage, placeholder])
+
+  // const editor = useEditor(editorOptions)
 
   const [startTyping, typingNames] = useTyping({
     channel,
@@ -239,6 +265,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
 
   const pasteListener = useCallback(
     e => {
+      if (!canSendMessage) return
       const files = e.clipboardData.files
       if (files && files.length > 0) {
         setFiles(files)
@@ -289,9 +316,9 @@ export default function MessageInput({ channel, server, group, user, users }) {
     setCurrentFileIndex(0)
   }, [setFiles, setCurrentFile, setCurrentFileIndex])
 
-  useEffect(() => {
+  /*useEffect(() => {
     setTimeout(() => editor?.commands?.clearContent())
-  }, [user, group, channel])
+  }, [user, group, channel])*/
 
   return (
     <>
@@ -320,7 +347,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
         }}
       >
         <div className="relative">
-          {!!currentUser && (
+          {canSendMessage && (
             <Tippy content={t('message.upload')}>
               <div className="block absolute left-4.5 top-1/2 transform -translate-y-1/2">
                 <input
@@ -342,8 +369,8 @@ export default function MessageInput({ channel, server, group, user, users }) {
             onClick={() => {
               if (!currentUser) openLogin()
             }}
-            className={`${
-              canSendMessage ? 'px-14 ' : 'px-4 cursor-pointer opacity-50'
+            className={`${canSendMessage ? 'px-14' : 'px-4 opacity-50'} ${
+              currentUser ? '' : 'cursor-pointer'
             } min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light dark:bg-gray-700 py-3 w-full  rounded-lg text-base focus:outline-none text-secondary border-none`}
           >
             <EditorContent editor={editor} />

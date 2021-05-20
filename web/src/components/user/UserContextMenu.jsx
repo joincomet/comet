@@ -72,11 +72,11 @@ export default function UserContextMenu({
           </>
         )}
 
-        {user.id !== currentUser.id ? (
+        {!!currentUser && user.id !== currentUser.id ? (
           <>
             {!isDm && (
               <ContextMenuItem
-                onClick={() => push(`/dm/${user.id}`)}
+                onClick={() => push(`/dm/@${user.username}`)}
                 label={t('user.context.sendMessage')}
               />
             )}

@@ -173,11 +173,11 @@ export class ServerResolver {
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => Server)
   async leaveServer(
     @Ctx() ctx: Context,
     @Arg('input') input: LeaveServerInput
-  ): Promise<boolean> {
+  ): Promise<Server> {
     return leaveServer(ctx, input)
   }
 

@@ -55,7 +55,19 @@ mutation joinServer($input: JoinServerInput!) {
 }
 
 mutation leaveServer($input: LeaveServerInput!) {
-  leaveServer(input: $input)
+  leaveServer(input: $input) {
+    ...Server
+    permissions
+    channels {
+      ...Channel
+    }
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
+  }
 }
 
 mutation readServer($input: ReadServerInput!) {

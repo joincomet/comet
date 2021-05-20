@@ -7,6 +7,7 @@ import { useRepliesQuery } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import Reply from '@/components/reply/Reply'
 import EndReached from '@/components/ui/EndReached'
+import { Helmet } from 'react-helmet-async'
 
 const label =
   'px-2 pb-2 text-11 text-tertiary uppercase tracking-widest font-semibold'
@@ -24,6 +25,10 @@ export default function InboxPage() {
   const replies = data?.replies ?? []
   return (
     <Page header={<InboxHeader />}>
+      <Helmet>
+        <title>{`(${replies.length}) Inbox – Comet`}</title>
+      </Helmet>
+
       <PageView>
         {inboxPage === 'Unread' && (
           <>

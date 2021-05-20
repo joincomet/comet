@@ -107,7 +107,7 @@ export const useMessagesSubscriptions = () => {
                   `${window.electron ? '.' : ''}/icons/icon.png`,
                 timestamp: message.createdAt,
                 onClick: () => {
-                  if (messageUserId) push(`/dm/${messageUserId}`)
+                  if (messageUserId) push(`/dm/@${message.author.username}`)
                   else if (messageGroupId) push(`/group/${messageGroupId}`)
                   else if (messageChannelId)
                     push(`/+${message.server.name}/#${message.channel.name}`)

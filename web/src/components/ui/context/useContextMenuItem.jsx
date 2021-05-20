@@ -30,7 +30,8 @@ const itemClass = red =>
   cursor-pointer
   w-full
   px-2
-  h-8
+  py-1.5
+  leading-5
   flex
   items-center
   text-13

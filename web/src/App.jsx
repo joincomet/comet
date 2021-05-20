@@ -21,13 +21,14 @@ function App({ history }) {
   return (
     <ApolloProvider client={apolloClient}>
       <HelmetProvider>
-        <Helmet titleTemplate="%s – Comet">
+        <Helmet>
           <meta charSet="UTF-8" />
           <link rel="icon" type="image/svg+xml" href="/logos/logo_icon.svg" />
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1.0"
           />
+          <title>Comet – All-in-one chat & forums for communities</title>
         </Helmet>
 
         <Router history={history}>

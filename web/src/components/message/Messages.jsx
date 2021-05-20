@@ -18,11 +18,6 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 const PREPEND_OFFSET = 10 ** 7
 
 export default function Messages({ channel, server, user, group, users }) {
-  const [currentUser] = useCurrentUser()
-  const [readDm] = useReadDmMutation()
-  const [readGroup] = useReadGroupMutation()
-  const [readChannel] = useReadChannelMutation()
-
   const virtuoso = useRef(null)
 
   const [messages, fetching, fetchMore, hasMore] = useMessages({
@@ -35,41 +30,8 @@ export default function Messages({ channel, server, user, group, users }) {
   const prevLength = usePrevious(length)
   useEffect(() => {
     setLength(messages?.length || 0)
-    if (prevLength === 0) virtuoso.current.scrollBy({ top: PREPEND_OFFSET })
-
-    if (currentUser) {
-      if (channel)
-        readChannel({
-          variables: { input: { channelId: channel.id } },
-          optimisticResponse: {
-            readChannel: {
-              ...channel,
-              isUnread: false
-            }
-          }
-        })
-      if (group)
-        readGroup({
-          variables: { input: { groupId: group.id } },
-          optimisticResponse: {
-            readGroup: {
-              ...group,
-              unreadCount: 0
-            }
-          }
-        })
-      if (user)
-        readDm({
-          variables: { input: { userId: user.id } },
-          optimisticResponse: {
-            readDm: {
-              ...user,
-              unreadCount: 0
-            }
-          }
-        })
-    }
-  }, [channel, user, group])
+    if (prevLength === 0) virtuoso?.current?.scrollBy({ top: PREPEND_OFFSET })
+  }, [channel, user, group, virtuoso])
 
   const { atBottom, newMessagesNotification, setNewMessagesNotification } =
     useNewMessageNotification(messages)
@@ -105,41 +67,44 @@ export default function Messages({ channel, server, user, group, users }) {
   return (
     <>
       <div className="relative flex-1 overflow-x-hidden overflow-y-auto dark:bg-gray-750 w-full h-full">
-        <Virtuoso
-          className="scrollbar-custom"
-          alignToBottom
-          atBottomStateChange={isAtBottom => {
-            atBottom.current = isAtBottom
-            if (isAtBottom && newMessagesNotification) {
-              setNewMessagesNotification(false)
+        {!!messages && (
+          <Virtuoso
+            className="scrollbar-custom"
+            alignToBottom
+            atBottomStateChange={isAtBottom => {
+              atBottom.current = isAtBottom
+              if (isAtBottom && newMessagesNotification) {
+                setNewMessagesNotification(false)
+              }
+            }}
+            components={{
+              Footer: () => <div className="h-5.5" />
+            }}
+            firstItemIndex={PREPEND_OFFSET - numItemsPrepended}
+            followOutput={isAtBottom => {
+              if (shouldForceScrollToBottom()) {
+                return 'auto'
+              }
+              // a message from another user has been received - don't scroll to bottom unless already there
+              return isAtBottom ? 'auto' : false
+            }}
+            initialTopMostItemIndex={
+              messages.length > 0 ? messages.length - 1 : 0
             }
-          }}
-          components={{
-            Footer: () => <div className="h-5.5" />
-          }}
-          firstItemIndex={PREPEND_OFFSET - numItemsPrepended}
-          followOutput={isAtBottom => {
-            if (shouldForceScrollToBottom()) {
-              return 'auto'
-            }
-            // a message from another user has been received - don't scroll to bottom unless already there
-            return isAtBottom ? 'auto' : false
-          }}
-          initialTopMostItemIndex={
-            messages && messages.length > 0 ? messages.length - 1 : 0
-          }
-          itemContent={i => messageRenderer(messages, i)}
-          overscan={0}
-          ref={virtuoso}
-          startReached={() => {
-            if (!fetching && hasMore) fetchMore()
-          }}
-          style={{ overflowX: 'hidden' }}
-          totalCount={messages?.length || 0}
-        />
+            itemContent={i => messageRenderer(messages, i)}
+            overscan={0}
+            ref={virtuoso}
+            startReached={() => {
+              if (!fetching && hasMore) fetchMore()
+            }}
+            style={{ overflowX: 'hidden' }}
+            totalCount={messages.length || 0}
+          />
+        )}
       </div>
       {!!users && (
         <MessageInput
+          server={server}
           channel={channel}
           user={user}
           group={group}

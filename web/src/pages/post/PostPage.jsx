@@ -9,6 +9,7 @@ import { ServerPermission } from '@/graphql/hooks'
 import PostHeader from '@/pages/post/PostHeader'
 import Page from '@/components/ui/page/Page'
 import { useCommentsQuery, usePostQuery } from '@/graphql/hooks'
+import { Helmet } from 'react-helmet-async'
 
 export default function PostPage({ server, postId }) {
   const [canCreateComment] = useHasServerPermissions({
@@ -37,6 +38,9 @@ export default function PostPage({ server, postId }) {
       header={<PostHeader post={post} />}
       rightSidebar={<PostUsersSidebar post={post} users={users} />}
     >
+      <Helmet>
+        <title>{`${post?.title} – ${server?.displayName}`}</title>
+      </Helmet>
       <div className="max-h-full h-full scrollbar-custom dark:bg-gray-750">
         <div className="pt-4 px-4">
           {!!post && <Post post={post} isPostPage />}

@@ -57,7 +57,7 @@ export default memo(function Message({
           <div className="w-10 flex justify-center">
             <IconUserJoin className="w-5 h-5 text-green-500" />
           </div>
-          <div className="pl-4 text-base text-tertiary">
+          <div className="pl-4 text-base text-tertiary flex items-center">
             <ContextMenuTrigger
               className="inline-block"
               data={{ type: ContextMenuType.User, user: message.author }}
@@ -66,12 +66,23 @@ export default memo(function Message({
                 user={message.author}
                 roles={message.serverUser?.roles}
               >
-                <span className="text-white cursor-pointer hover:underline">
+                <UserAvatar user={message.author} size={5} />
+              </UserPopup>
+            </ContextMenuTrigger>
+            <ContextMenuTrigger
+              className="inline-block"
+              data={{ type: ContextMenuType.User, user: message.author }}
+            >
+              <UserPopup
+                user={message.author}
+                roles={message.serverUser?.roles}
+              >
+                <span className="ml-2 text-white cursor-pointer hover:underline">
                   {message.author.username}
                 </span>
               </UserPopup>
-            </ContextMenuTrigger>{' '}
-            has joined the {message.serverUser ? 'planet' : 'group'}
+            </ContextMenuTrigger>
+            &nbsp;has joined the {message.serverUser ? 'planet' : 'group'}
             <span className="pl-2 text-11 whitespace-nowrap text-mid cursor-default leading-5 select-none">
               {shortTime(message.createdAt)}
             </span>

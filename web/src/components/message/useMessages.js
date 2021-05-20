@@ -11,9 +11,9 @@ export const useMessages = ({ channelId, groupId, userId }) => {
     nextFetchPolicy: 'cache-first'
   })
   const hasMore = data?.messages.hasMore
-  const messages = data?.messages.messages ?? []
+  const messages = data?.messages.messages
   const loadMore = () => {
-    if (!hasMore || messages.length === 0) return
+    if (!messages || !hasMore || messages.length === 0) return
     fetchMore({
       variables: {
         ...vars,

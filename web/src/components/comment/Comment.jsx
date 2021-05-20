@@ -14,6 +14,8 @@ import { useToggleCommentVote } from '@/components/comment/useToggleCommentVote'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import toast from 'react-hot-toast'
+import { useOpenLogin } from '@/hooks/useLoginDialog'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 const replyBtnClass = ctl(`
   ml-4
@@ -36,7 +38,7 @@ export default function Comment({
 }) {
   const { t } = useTranslation()
   const [canComment, canVote] = useHasServerPermissions({
-    server: post.server,
+    server: post?.server,
     permissions: [ServerPermission.CreateComment, ServerPermission.VoteComment]
   })
   const [collapse, setCollapse] = useState(false)
@@ -54,7 +56,9 @@ export default function Comment({
     >
       <div id={comment.id} />
 
-      <ContextMenuTrigger data={{ type: ContextMenuType.Comment, comment }}>
+      <ContextMenuTrigger
+        data={{ type: ContextMenuType.Comment, comment, post }}
+      >
         <div className="flex px-3 pt-3">
           <ContextMenuTrigger
             data={{ type: ContextMenuType.User, user: comment.author }}
@@ -176,11 +180,16 @@ export default function Comment({
 function VoteButton({ comment, canVote }) {
   const toggleVote = useToggleCommentVote(comment)
   const { t } = useTranslation()
-
+  const openLogin = useOpenLogin()
+  const [currentUser] = useCurrentUser()
   return (
     <div
       onClick={e => {
         e.stopPropagation()
+        if (!currentUser) {
+          openLogin()
+          return
+        }
         if (!canVote) {
           toast.error(t('comment.context.votePermission'))
           return

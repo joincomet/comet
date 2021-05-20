@@ -5,18 +5,6 @@ query server($id: ID, $name: String) @live {
     channels {
       ...Channel
     }
-    folders {
-      ...Folder
-      owner {
-        id
-        username
-      }
-      server {
-        id
-        name
-        avatarUrl
-      }
-    }
     roles {
       ...Role
     }

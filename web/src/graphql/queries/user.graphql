@@ -1,9 +1,6 @@
 query user($id: ID) @live {
   user(id: $id) {
     ...RelatedUser
-    folders {
-      ...Folder
-    }
     relatedUsers {
       ...User
     }

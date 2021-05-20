@@ -55,7 +55,11 @@ export async function joinServer(
   if (everyoneRole) serverUser.roles.set([everyoneRole])
   server.userCount++
   await em.persistAndFlush([serverUser, server])
-  liveQueryStore.invalidate([`User:${user.id}`, `Server:${server.id}`])
+  liveQueryStore.invalidate([
+    `User:${user.id}`,
+    `Server:${server.id}`,
+    `Query.serverUsers(serverId:"${server.id}")`
+  ])
   server.isJoined = true
   if (server.systemMessagesChannel) {
     const joinMessage = em.create(Message, {

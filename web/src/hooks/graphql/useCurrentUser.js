@@ -4,7 +4,10 @@ import * as Sentry from '@sentry/react'
 import { useEffect } from 'react'
 
 export const useCurrentUser = () => {
-  const { data, loading } = useCurrentUserQuery()
+  const { data, loading } = useCurrentUserQuery({
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first'
+  })
   const user = data?.user
   useEffect(() => {
     if (user) {
@@ -15,6 +18,10 @@ export const useCurrentUser = () => {
       })
     } else {
       Sentry.configureScope(scope => scope.setUser(null))
+      /*if (data && !data.user && localStorage.getItem('token')) {
+        localStorage.removeItem('token')
+        location.reload()
+      }*/
     }
   }, [user])
   return [user, (loading || wsStatus.status !== 'connected') && !user]

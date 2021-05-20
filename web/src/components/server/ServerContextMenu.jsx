@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import {
   CurrentUserDocument,
-  PostsDocument,
   ServerFragmentDoc,
   useLeaveServerMutation
 } from '@/graphql/hooks'
@@ -21,10 +20,22 @@ export default function ServerContextMenu({ server, ContextMenuItem }) {
   return (
     <>
       <ContextMenuSection>
-        <ContextMenuItem label={t('server.context.markRead')} />
-        {/*<ContextMenuItem label={t('server.context.mute')} />*/}
-        <ContextMenuItem label={t('server.context.invite')} />
-        {server.owner.id !== currentUser.id && (
+        {currentUser?.isAdmin && (
+          <>
+            <ContextMenuItem
+              label={
+                server.isFeatured ? 'Remove from Featured' : 'Make Featured'
+              }
+            />
+            {!server.isFeatured && (
+              <>
+                <ContextMenuItem label="Increment Featured Position" />
+                <ContextMenuItem label="Decrement Featured Position" />
+              </>
+            )}
+          </>
+        )}
+        {!!currentUser && server.owner.id !== currentUser.id && (
           <ContextMenuItem
             label={t('server.context.leave')}
             red

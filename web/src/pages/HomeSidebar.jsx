@@ -54,9 +54,11 @@ export default function HomeSidebar() {
               <SidebarItem to="/inbox">
                 <IconInbox className="mr-3 h-5 w-5" />
                 {t('inbox.title')}
-                <div className="ml-auto">
-                  <CountBadge count={replies.length} />
-                </div>
+                {!!replies.length && (
+                  <div className="ml-auto">
+                    <CountBadge count={replies.length} />
+                  </div>
+                )}
               </SidebarItem>
             </div>
           )}
@@ -104,7 +106,7 @@ function DirectMessage({ user }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DragItemTypes.Post,
     drop: (post, monitor) => {
-      push(`/dm/${user.id}`)
+      push(`/dm/@${user.username}`)
       sendMessage({
         variables: {
           input: {
@@ -129,7 +131,7 @@ function DirectMessage({ user }) {
         <SidebarItem
           ref={dropRef}
           large
-          to={`/dm/${user.id}`}
+          to={`/dm/@${user.username}`}
           key={`user-${user.id}`}
         >
           <UserAvatar
@@ -151,7 +153,7 @@ function DirectMessage({ user }) {
               e.stopPropagation()
               e.preventDefault()
               closeDm({ variables: { input: { userId: user.id } } })
-              if (pathname === `/dm/${user.id}`) push('/friends')
+              if (pathname === `/dm/@${user.username}`) push('/friends')
             }}
             className="group-hover:visible invisible w-5 h-5 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           />

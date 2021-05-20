@@ -19,7 +19,6 @@ import { VectorLogo } from '@/components/ui/vectors'
 import ctl from '@netlify/classnames-template-literals'
 import Tippy from '@tippyjs/react'
 import isEmail from 'validator/es/lib/isEmail'
-import { gracefullyRestart } from '@/graphql/WebSocketLink'
 import { useApolloClient } from '@apollo/client'
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
 
@@ -74,14 +73,7 @@ export default function LoginDialog() {
           }
         }) => {
           localStorage.setItem('token', accessToken)
-          apolloClient.resetStore()
-          apolloClient.cache.writeQuery({
-            query: CurrentUserDocument,
-            data: user
-          })
-          gracefullyRestart()
-          setOpen(false)
-          setCreateAccount(false)
+          location.reload()
         }
       )
     } else {
@@ -95,14 +87,7 @@ export default function LoginDialog() {
           }
         }) => {
           localStorage.setItem('token', accessToken)
-          apolloClient.resetStore()
-          apolloClient.cache.writeQuery({
-            query: CurrentUserDocument,
-            data: user
-          })
-          gracefullyRestart()
-          setOpen(false)
-          setCreateAccount(false)
+          location.reload()
         }
       )
     }

@@ -11,7 +11,7 @@ export class LeaveServerInput {
 export async function leaveServer(
   { em, userId, liveQueryStore }: Context,
   { serverId }: LeaveServerInput
-): Promise<boolean> {
+): Promise<Server> {
   const server = await em.findOneOrFail(Server, serverId, ['owner'])
   if (server.owner === em.getReference(User, userId))
     throw new Error('Cannot leave if owner')
@@ -24,6 +24,11 @@ export async function leaveServer(
   serverUser.status = ServerUserStatus.None
   server.userCount--
   await em.persistAndFlush([serverUser, server])
-  liveQueryStore.invalidate(`User:${userId}`)
-  return true
+  liveQueryStore.invalidate([
+    `User:${userId}`,
+    `Server:${server.id}`,
+    `Query.serverUsers(serverId:"${server.id}")`
+  ])
+  server.isJoined = false
+  return server
 }

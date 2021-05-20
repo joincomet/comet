@@ -9,6 +9,7 @@ import Page from '@/components/ui/page/Page'
 import PageView from '@/components/ui/page/PageView'
 import { useUserRelationships } from '@/hooks/useUserRelationships'
 import { RelationshipStatus } from '@/graphql/hooks'
+import { Helmet } from 'react-helmet-async'
 
 const label = ctl(`
   px-2
@@ -34,6 +35,10 @@ export default function FriendsPage() {
     <Page
       header={<FriendsHeader pendingCount={incomingFriendRequests.length} />}
     >
+      <Helmet>
+        <title>Friends – Comet</title>
+      </Helmet>
+
       <PageView>
         {friendsPage === 'Online' && (
           <>

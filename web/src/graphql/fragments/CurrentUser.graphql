@@ -22,7 +22,4 @@ fragment CurrentUser on User {
       ...User
     }
   }
-  folders {
-    ...Folder
-  }
 }

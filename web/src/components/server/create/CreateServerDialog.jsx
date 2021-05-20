@@ -146,8 +146,6 @@ export default function CreateServerDialog({ open, setOpen, server }) {
     setOpen(false)
   }
 
-  if (!server) return null
-
   return (
     <StyledDialog
       open={open}
@@ -206,11 +204,13 @@ export default function CreateServerDialog({ open, setOpen, server }) {
         </>
       }
     >
-      <DeleteServerDialog
-        open={deleteOpen}
-        setOpen={setDeleteOpen}
-        server={server}
-      />
+      {!!server && (
+        <DeleteServerDialog
+          open={deleteOpen}
+          setOpen={setDeleteOpen}
+          server={server}
+        />
+      )}
 
       <input
         type="file"

@@ -21,6 +21,8 @@ import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import PostEmbed from '@/components/post/PostEmbed'
 import Tippy from '@tippyjs/react'
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useOpenLogin } from '@/hooks/useLoginDialog'
 
 export default memo(function Post({
   post,
@@ -72,6 +74,8 @@ export default memo(function Post({
   }
 
   const [currentImage, setCurrentImage] = useState(0)
+  const [currentUser] = useCurrentUser()
+  const openLogin = useOpenLogin()
 
   return (
     <ContextMenuTrigger data={{ type: ContextMenuType.Post, post }}>
@@ -274,7 +278,7 @@ export default memo(function Post({
               </div>
             </div>
 
-            <div className="flex items-center ml-auto" onClick={onClick}>
+            <div className="flex items-center ml-auto">
               <div
                 className={`text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
               >
@@ -287,6 +291,11 @@ export default memo(function Post({
               <div
                 onClick={e => {
                   e.preventDefault()
+                  e.stopPropagation()
+                  if (!currentUser) {
+                    openLogin()
+                    return
+                  }
                   toggleVote()
                 }}
                 className={`${

@@ -454,7 +454,7 @@ type Mutation {
   joinServer(input: JoinServerInput!): Server!
   kickUserFromServer(input: KickUserFromServerInput!): Boolean!
   leaveGroup(input: LeaveGroupInput!): Boolean!
-  leaveServer(input: LeaveServerInput!): Boolean!
+  leaveServer(input: LeaveServerInput!): Server!
   login(input: LoginInput!): LoginResponse!
   markReplyRead(input: MarkReplyReadInput!): Reply!
   markReplyUnread(input: MarkReplyUnreadInput!): Reply!

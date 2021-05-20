@@ -12,10 +12,8 @@ import { version } from '../../package.json'
 import { useStore } from '@/hooks/useStore'
 import { useChangeOnlineStatusMutation } from '@/graphql/hooks'
 import { Link } from 'react-router-dom'
-import { useCopyToClipboard } from 'react-use'
-import toast from 'react-hot-toast'
 import { getDownloadLink } from '@/hooks/getDownloadLink'
-import { useLoginDialog, useOpenLogin } from '@/hooks/useLoginDialog'
+import { useLoginDialog } from '@/hooks/useLoginDialog'
 
 export default function BottomBar() {
   const [currentUser] = useCurrentUser()
@@ -36,7 +34,7 @@ export default function BottomBar() {
   const [changeOnlineStatus] = useChangeOnlineStatusMutation()
 
   // Update online status every 15 seconds
-  useEffect(() => {
+  /*useEffect(() => {
     if (currentUser) {
       const id = setInterval(() => {
         changeOnlineStatus({
@@ -47,7 +45,7 @@ export default function BottomBar() {
       }, 15000)
       return () => clearInterval(id)
     }
-  }, [currentUser])
+  }, [currentUser])*/
 
   const downloadLink = getDownloadLink()
   const [loginOpen, setLoginOpen, isCreateAccount, setCreateAccount] =
@@ -92,26 +90,24 @@ export default function BottomBar() {
         <div className="ml-auto flex items-center space-x-4 text-primary">
           <Tippy
             content={`${
-              !window.electron
-                ? 'Download Desktop App'
-                : updateAvailable
+              window.electron && updateAvailable
                 ? 'Update available'
                 : 'Up to date!'
             }`}
           >
             <div
-              className="flex items-center cursor-pointer"
+              className={`flex items-center ${
+                window.electron && updateAvailable ? 'cursor-pointer' : ''
+              }`}
               onClick={() => {
                 if (window.electron && updateAvailable) {
                   window.electron.restart()
-                } else if (!window.electron) {
-                  window.open(downloadLink, '_blank')
                 }
               }}
             >
               <div
                 className={`text-xs font-medium ${
-                  updateAvailable || !window.electron
+                  updateAvailable && window.electron
                     ? 'text-green-500'
                     : 'text-tertiary'
                 }`}
@@ -119,7 +115,7 @@ export default function BottomBar() {
                 v{version}
               </div>
 
-              {((window.electron && updateAvailable) || !window.electron) && (
+              {window.electron && updateAvailable && (
                 <div className="pl-2">
                   <IconDownload className="w-4.5 h-4.5 text-green-500 cursor-pointer" />
                 </div>
