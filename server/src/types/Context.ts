@@ -7,6 +7,7 @@ import {
   Role,
   Server,
   ServerPermission,
+  ServerUser,
   User
 } from '@/entity'
 import DataLoader from 'dataloader'
@@ -49,4 +50,8 @@ export interface Loaders {
   folderFollowingLoader: DataLoader<string, boolean>
   folderOwnerLoader: DataLoader<string, User>
   folderServerLoader: DataLoader<string, Server>
+
+  messageServerUserLoader: DataLoader<string, ServerUser>
+  postServerUserLoader: DataLoader<string, ServerUser>
+  commentServerUserLoader: DataLoader<string, ServerUser>
 }

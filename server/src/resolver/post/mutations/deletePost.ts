@@ -16,7 +16,7 @@ export async function deletePost(
 ): Promise<Post> {
   const user = await em.findOneOrFail(User, userId)
   const post = await em.findOneOrFail(Post, postId, ['author.user', 'server'])
-  if (post.author.user !== user)
+  if (post.author !== user)
     await user.checkServerPermission(
       em,
       post.server.id,

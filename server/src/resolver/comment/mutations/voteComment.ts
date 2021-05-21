@@ -22,11 +22,6 @@ export async function voteComment(
   ])
   let vote = await em.findOne(CommentVote, { comment, user })
   if (vote) throw new Error('Already voted this comment')
-  await user.checkServerPermission(
-    em,
-    comment.post.server.id,
-    ServerPermission.VoteComment
-  )
   vote = em.create(CommentVote, { comment, user })
   comment.voteCount++
   comment.isVoted = true

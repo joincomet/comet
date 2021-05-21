@@ -22,10 +22,7 @@ export default function FriendListItemBase({ friend, children }) {
           />
           <div>
             <div className="text-base text-secondary font-medium ml-3">
-              {friend.name}
-              <span className="hidden group-hover:inline-block text-13 text-tertiary font-medium">
-                #{friend.tag}
-              </span>
+              {friend.username}
             </div>
             <div className="text-13 text-tertiary font-medium ml-3 leading-5">
               {friend.isOnline ? t('user.online') : t('user.offline')}

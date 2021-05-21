@@ -1,5 +1,5 @@
-query user($id: ID) @live {
-  user(id: $id) {
+query user($id: ID, $username: String) @live {
+  user(id: $id, username: $username) {
     ...RelatedUser
     relatedUsers {
       ...User

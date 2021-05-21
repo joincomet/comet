@@ -3,13 +3,15 @@ import {
   Args,
   Authorized,
   Ctx,
+  FieldResolver,
   Mutation,
   Publisher,
   PubSub,
   Query,
-  Resolver
+  Resolver,
+  Root
 } from 'type-graphql'
-import { Message } from '@/entity'
+import { Message, ServerUser } from '@/entity'
 import { Context } from '@/types'
 import {
   ChangePayload,
@@ -30,8 +32,17 @@ import {
   UnpinMessageInput
 } from './mutations'
 
-@Resolver()
+@Resolver(() => Message)
 export class MessageResolver {
+  // --- Fields ---
+  @FieldResolver(() => ServerUser, { nullable: true })
+  async serverUser(
+    @Ctx() { loaders: { messageServerUserLoader } }: Context,
+    @Root() message: Message
+  ): Promise<ServerUser> {
+    return messageServerUserLoader.load(message.id)
+  }
+
   // --- Queries ---
   @Query(() => MessagesResponse)
   async messages(

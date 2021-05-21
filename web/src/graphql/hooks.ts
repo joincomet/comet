@@ -112,7 +112,7 @@ export enum Color {
 
 export type Comment = BaseEntity & {
   __typename?: 'Comment';
-  author?: Maybe<ServerUser>;
+  author?: Maybe<User>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   isDeleted: Scalars['Boolean'];
@@ -122,6 +122,7 @@ export type Comment = BaseEntity & {
   parentComment?: Maybe<Comment>;
   pinnedAt?: Maybe<Scalars['DateTime']>;
   post: Post;
+  serverUser?: Maybe<ServerUser>;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
   voteCount: Scalars['NonNegativeInt'];
@@ -910,7 +911,7 @@ export type PinPostInput = {
 
 export type Post = BaseEntity & {
   __typename?: 'Post';
-  author?: Maybe<ServerUser>;
+  author?: Maybe<User>;
   commentCount: Scalars['NonNegativeInt'];
   createdAt: Scalars['DateTime'];
   domain?: Maybe<Scalars['String']>;
@@ -926,6 +927,7 @@ export type Post = BaseEntity & {
   pinnedAt?: Maybe<Scalars['DateTime']>;
   relativeUrl: Scalars['String'];
   server: Server;
+  serverUser?: Maybe<ServerUser>;
   text?: Maybe<Scalars['String']>;
   thumbnailUrl?: Maybe<Scalars['String']>;
   title: Scalars['String'];
@@ -1180,8 +1182,6 @@ export enum ServerCategory {
 export enum ServerPermission {
   AddPostToFolder = 'AddPostToFolder',
   Admin = 'Admin',
-  CreateComment = 'CreateComment',
-  CreatePost = 'CreatePost',
   DisplayRoleSeparately = 'DisplayRoleSeparately',
   ManageChannels = 'ManageChannels',
   ManageComments = 'ManageComments',
@@ -1190,13 +1190,9 @@ export enum ServerPermission {
   ManagePosts = 'ManagePosts',
   ManageServer = 'ManageServer',
   ManageUsers = 'ManageUsers',
-  Mention = 'Mention',
-  Mentionable = 'Mentionable',
   PrivateChannels = 'PrivateChannels',
   RestrictedChannels = 'RestrictedChannels',
-  SendMessages = 'SendMessages',
-  VoteComment = 'VoteComment',
-  VotePost = 'VotePost'
+  SendMessages = 'SendMessages'
 }
 
 export type ServerUser = {
@@ -1379,11 +1375,6 @@ export type CurrentUserFragment = (
   & Pick<User, 'isAdmin' | 'email'>
   & { servers: Array<(
     { __typename?: 'Server' }
-    & Pick<Server, 'permissions'>
-    & { channels: Array<(
-      { __typename?: 'Channel' }
-      & Pick<Channel, 'isUnread' | 'mentionCount'>
-    )> }
     & ServerFragment
   )>, relatedUsers: Array<(
     { __typename?: 'User' }
@@ -1460,6 +1451,9 @@ export type ReplyFragment = (
     { __typename?: 'Comment' }
     & Pick<Comment, 'id' | 'text' | 'voteCount' | 'createdAt'>
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )>, post: (
@@ -1473,6 +1467,9 @@ export type ReplyFragment = (
       { __typename?: 'Comment' }
       & Pick<Comment, 'id' | 'text' | 'voteCount' | 'createdAt'>
       & { author?: Maybe<(
+        { __typename?: 'User' }
+        & UserFragment
+      )>, serverUser?: Maybe<(
         { __typename?: 'ServerUser' }
         & ServerUserFragment
       )> }
@@ -1487,11 +1484,20 @@ export type RoleFragment = (
 
 export type ServerFragment = (
   { __typename?: 'Server' }
-  & Pick<Server, 'id' | 'name' | 'displayName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isJoined'>
+  & Pick<Server, 'id' | 'name' | 'displayName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isJoined' | 'permissions'>
   & { owner: (
     { __typename?: 'User' }
     & Pick<User, 'id'>
-  ) }
+  ), channels: Array<(
+    { __typename?: 'Channel' }
+    & ChannelFragment
+  )>, roles: Array<(
+    { __typename?: 'Role' }
+    & RoleFragment
+  )>, folders: Array<(
+    { __typename?: 'Folder' }
+    & FolderFragment
+  )> }
 );
 
 export type ServerUserFragment = (
@@ -1583,6 +1589,9 @@ export type CreateCommentMutation = (
   & { createComment: (
     { __typename?: 'Comment' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -1600,6 +1609,9 @@ export type UpdateCommentMutation = (
   & { updateComment: (
     { __typename?: 'Comment' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -1617,6 +1629,9 @@ export type DeleteCommentMutation = (
   & { deleteComment: (
     { __typename?: 'Comment' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -1634,6 +1649,9 @@ export type VoteCommentMutation = (
   & { voteComment: (
     { __typename?: 'Comment' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -1651,6 +1669,9 @@ export type UnvoteCommentMutation = (
   & { unvoteComment: (
     { __typename?: 'Comment' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -1668,6 +1689,9 @@ export type PinCommentMutation = (
   & { pinComment: (
     { __typename?: 'Comment' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -1685,6 +1709,9 @@ export type UnpinCommentMutation = (
   & { unpinComment: (
     { __typename?: 'Comment' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -1991,6 +2018,9 @@ export type CreatePostMutation = (
   & { createPost: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -2008,6 +2038,9 @@ export type UpdatePostMutation = (
   & { updatePost: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -2025,6 +2058,9 @@ export type DeletePostMutation = (
   & { deletePost: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -2042,6 +2078,9 @@ export type VotePostMutation = (
   & { votePost: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -2059,6 +2098,9 @@ export type UnvotePostMutation = (
   & { unvotePost: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -2076,6 +2118,9 @@ export type PinPostMutation = (
   & { pinPost: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -2093,6 +2138,9 @@ export type UnpinPostMutation = (
   & { unpinPost: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -2347,17 +2395,6 @@ export type CreateServerMutation = (
   { __typename?: 'Mutation' }
   & { createServer: (
     { __typename?: 'Server' }
-    & Pick<Server, 'permissions'>
-    & { channels: Array<(
-      { __typename?: 'Channel' }
-      & ChannelFragment
-    )>, roles: Array<(
-      { __typename?: 'Role' }
-      & RoleFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )> }
     & ServerFragment
   ) }
 );
@@ -2371,17 +2408,6 @@ export type UpdateServerMutation = (
   { __typename?: 'Mutation' }
   & { updateServer: (
     { __typename?: 'Server' }
-    & Pick<Server, 'permissions'>
-    & { channels: Array<(
-      { __typename?: 'Channel' }
-      & ChannelFragment
-    )>, roles: Array<(
-      { __typename?: 'Role' }
-      & RoleFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )> }
     & ServerFragment
   ) }
 );
@@ -2415,17 +2441,6 @@ export type JoinServerMutation = (
   { __typename?: 'Mutation' }
   & { joinServer: (
     { __typename?: 'Server' }
-    & Pick<Server, 'permissions'>
-    & { channels: Array<(
-      { __typename?: 'Channel' }
-      & ChannelFragment
-    )>, roles: Array<(
-      { __typename?: 'Role' }
-      & RoleFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )> }
     & ServerFragment
   ) }
 );
@@ -2439,17 +2454,6 @@ export type LeaveServerMutation = (
   { __typename?: 'Mutation' }
   & { leaveServer: (
     { __typename?: 'Server' }
-    & Pick<Server, 'permissions'>
-    & { channels: Array<(
-      { __typename?: 'Channel' }
-      & ChannelFragment
-    )>, roles: Array<(
-      { __typename?: 'Role' }
-      & RoleFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )> }
     & ServerFragment
   ) }
 );
@@ -2463,17 +2467,7 @@ export type ReadServerMutation = (
   { __typename?: 'Mutation' }
   & { readServer: (
     { __typename?: 'Server' }
-    & Pick<Server, 'permissions'>
-    & { channels: Array<(
-      { __typename?: 'Channel' }
-      & ChannelFragment
-    )>, roles: Array<(
-      { __typename?: 'Role' }
-      & RoleFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )> }
+    & ServerFragment
   ) }
 );
 
@@ -2611,6 +2605,9 @@ export type CommentsQuery = (
   & { comments: Array<(
     { __typename?: 'Comment' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )> }
@@ -2701,6 +2698,9 @@ export type PostQuery = (
   & { post: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, serverUser?: Maybe<(
       { __typename?: 'ServerUser' }
       & ServerUserFragment
     )>, server: (
@@ -2731,6 +2731,9 @@ export type PostsQuery = (
     & { posts: Array<(
       { __typename?: 'Post' }
       & { author?: Maybe<(
+        { __typename?: 'User' }
+        & UserFragment
+      )>, serverUser?: Maybe<(
         { __typename?: 'ServerUser' }
         & ServerUserFragment
       )>, server: (
@@ -2788,6 +2791,9 @@ export type ServerQuery = (
     )>, roles: Array<(
       { __typename?: 'Role' }
       & RoleFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
     )> }
     & ServerFragment
   ) }
@@ -2808,6 +2814,7 @@ export type ServerUsersQuery = (
 
 export type UserQueryVariables = Exact<{
   id?: Maybe<Scalars['ID']>;
+  username?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -2974,16 +2981,6 @@ export type TypingUpdatedSubscription = (
   ) }
 );
 
-export const ChannelFragmentDoc = gql`
-    fragment Channel on Channel {
-  id
-  name
-  description
-  isUnread
-  mentionCount
-  type
-}
-    `;
 export const MetadataFragmentDoc = gql`
     fragment Metadata on LinkMetadata {
   author
@@ -3027,6 +3024,36 @@ export const UserFragmentDoc = gql`
   color
 }
     `;
+export const ChannelFragmentDoc = gql`
+    fragment Channel on Channel {
+  id
+  name
+  description
+  isUnread
+  mentionCount
+  type
+}
+    `;
+export const RoleFragmentDoc = gql`
+    fragment Role on Role {
+  id
+  name
+  color
+  permissions
+}
+    `;
+export const FolderFragmentDoc = gql`
+    fragment Folder on Folder {
+  id
+  name
+  avatarUrl
+  description
+  postCount
+  followerCount
+  isCollaborative
+  visibility
+}
+    `;
 export const ServerFragmentDoc = gql`
     fragment Server on Server {
   id
@@ -3041,8 +3068,20 @@ export const ServerFragmentDoc = gql`
   owner {
     id
   }
+  permissions
+  channels {
+    ...Channel
+  }
+  roles {
+    ...Role
+  }
+  folders {
+    ...Folder
+  }
 }
-    `;
+    ${ChannelFragmentDoc}
+${RoleFragmentDoc}
+${FolderFragmentDoc}`;
 export const RelatedUserFragmentDoc = gql`
     fragment RelatedUser on User {
   ...User
@@ -3068,11 +3107,6 @@ export const CurrentUserFragmentDoc = gql`
   email
   servers {
     ...Server
-    permissions
-    channels {
-      isUnread
-      mentionCount
-    }
   }
   relatedUsers {
     ...RelatedUser
@@ -3091,18 +3125,6 @@ export const CurrentUserFragmentDoc = gql`
 ${ServerFragmentDoc}
 ${RelatedUserFragmentDoc}
 ${GroupFragmentDoc}`;
-export const FolderFragmentDoc = gql`
-    fragment Folder on Folder {
-  id
-  name
-  avatarUrl
-  description
-  postCount
-  followerCount
-  isCollaborative
-  visibility
-}
-    `;
 export const MessageFragmentDoc = gql`
     fragment Message on Message {
   id
@@ -3161,14 +3183,6 @@ export const PostFragmentDoc = gql`
   }
 }
     ${MetadataFragmentDoc}`;
-export const RoleFragmentDoc = gql`
-    fragment Role on Role {
-  id
-  name
-  color
-  permissions
-}
-    `;
 export const ServerUserFragmentDoc = gql`
     fragment ServerUser on ServerUser {
   color
@@ -3191,6 +3205,9 @@ export const ReplyFragmentDoc = gql`
     voteCount
     createdAt
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
     post {
@@ -3209,12 +3226,16 @@ export const ReplyFragmentDoc = gql`
       voteCount
       createdAt
       author {
+        ...User
+      }
+      serverUser {
         ...ServerUser
       }
     }
   }
 }
-    ${ServerUserFragmentDoc}`;
+    ${UserFragmentDoc}
+${ServerUserFragmentDoc}`;
 export const CreateChannelDocument = gql`
     mutation createChannel($input: CreateChannelInput!) {
   createChannel(input: $input) {
@@ -3383,11 +3404,15 @@ export const CreateCommentDocument = gql`
   createComment(input: $input) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${CommentFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
 
@@ -3420,11 +3445,15 @@ export const UpdateCommentDocument = gql`
   updateComment(input: $input) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${CommentFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutation, UpdateCommentMutationVariables>;
 
@@ -3457,11 +3486,15 @@ export const DeleteCommentDocument = gql`
   deleteComment(input: $input) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${CommentFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type DeleteCommentMutationFn = Apollo.MutationFunction<DeleteCommentMutation, DeleteCommentMutationVariables>;
 
@@ -3494,11 +3527,15 @@ export const VoteCommentDocument = gql`
   voteComment(input: $input) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${CommentFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type VoteCommentMutationFn = Apollo.MutationFunction<VoteCommentMutation, VoteCommentMutationVariables>;
 
@@ -3531,11 +3568,15 @@ export const UnvoteCommentDocument = gql`
   unvoteComment(input: $input) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${CommentFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type UnvoteCommentMutationFn = Apollo.MutationFunction<UnvoteCommentMutation, UnvoteCommentMutationVariables>;
 
@@ -3568,11 +3609,15 @@ export const PinCommentDocument = gql`
   pinComment(input: $input) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${CommentFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type PinCommentMutationFn = Apollo.MutationFunction<PinCommentMutation, PinCommentMutationVariables>;
 
@@ -3605,11 +3650,15 @@ export const UnpinCommentDocument = gql`
   unpinComment(input: $input) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${CommentFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type UnpinCommentMutationFn = Apollo.MutationFunction<UnpinCommentMutation, UnpinCommentMutationVariables>;
 
@@ -4359,11 +4408,15 @@ export const CreatePostDocument = gql`
   createPost(input: $input) {
     ...Post
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
 
@@ -4396,11 +4449,15 @@ export const UpdatePostDocument = gql`
   updatePost(input: $input) {
     ...Post
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type UpdatePostMutationFn = Apollo.MutationFunction<UpdatePostMutation, UpdatePostMutationVariables>;
 
@@ -4433,11 +4490,15 @@ export const DeletePostDocument = gql`
   deletePost(input: $input) {
     ...Post
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type DeletePostMutationFn = Apollo.MutationFunction<DeletePostMutation, DeletePostMutationVariables>;
 
@@ -4470,11 +4531,15 @@ export const VotePostDocument = gql`
   votePost(input: $input) {
     ...Post
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type VotePostMutationFn = Apollo.MutationFunction<VotePostMutation, VotePostMutationVariables>;
 
@@ -4507,11 +4572,15 @@ export const UnvotePostDocument = gql`
   unvotePost(input: $input) {
     ...Post
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type UnvotePostMutationFn = Apollo.MutationFunction<UnvotePostMutation, UnvotePostMutationVariables>;
 
@@ -4544,11 +4613,15 @@ export const PinPostDocument = gql`
   pinPost(input: $input) {
     ...Post
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type PinPostMutationFn = Apollo.MutationFunction<PinPostMutation, PinPostMutationVariables>;
 
@@ -4581,11 +4654,15 @@ export const UnpinPostDocument = gql`
   unpinPost(input: $input) {
     ...Post
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 export type UnpinPostMutationFn = Apollo.MutationFunction<UnpinPostMutation, UnpinPostMutationVariables>;
 
@@ -5200,22 +5277,9 @@ export const CreateServerDocument = gql`
     mutation createServer($input: CreateServerInput!) {
   createServer(input: $input) {
     ...Server
-    permissions
-    channels {
-      ...Channel
-    }
-    roles {
-      ...Role
-    }
-    folders {
-      ...Folder
-    }
   }
 }
-    ${ServerFragmentDoc}
-${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}`;
+    ${ServerFragmentDoc}`;
 export type CreateServerMutationFn = Apollo.MutationFunction<CreateServerMutation, CreateServerMutationVariables>;
 
 /**
@@ -5246,22 +5310,9 @@ export const UpdateServerDocument = gql`
     mutation updateServer($input: UpdateServerInput!) {
   updateServer(input: $input) {
     ...Server
-    permissions
-    channels {
-      ...Channel
-    }
-    roles {
-      ...Role
-    }
-    folders {
-      ...Folder
-    }
   }
 }
-    ${ServerFragmentDoc}
-${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}`;
+    ${ServerFragmentDoc}`;
 export type UpdateServerMutationFn = Apollo.MutationFunction<UpdateServerMutation, UpdateServerMutationVariables>;
 
 /**
@@ -5354,22 +5405,9 @@ export const JoinServerDocument = gql`
     mutation joinServer($input: JoinServerInput!) {
   joinServer(input: $input) {
     ...Server
-    permissions
-    channels {
-      ...Channel
-    }
-    roles {
-      ...Role
-    }
-    folders {
-      ...Folder
-    }
   }
 }
-    ${ServerFragmentDoc}
-${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}`;
+    ${ServerFragmentDoc}`;
 export type JoinServerMutationFn = Apollo.MutationFunction<JoinServerMutation, JoinServerMutationVariables>;
 
 /**
@@ -5400,22 +5438,9 @@ export const LeaveServerDocument = gql`
     mutation leaveServer($input: LeaveServerInput!) {
   leaveServer(input: $input) {
     ...Server
-    permissions
-    channels {
-      ...Channel
-    }
-    roles {
-      ...Role
-    }
-    folders {
-      ...Folder
-    }
   }
 }
-    ${ServerFragmentDoc}
-${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}`;
+    ${ServerFragmentDoc}`;
 export type LeaveServerMutationFn = Apollo.MutationFunction<LeaveServerMutation, LeaveServerMutationVariables>;
 
 /**
@@ -5445,21 +5470,10 @@ export type LeaveServerMutationOptions = Apollo.BaseMutationOptions<LeaveServerM
 export const ReadServerDocument = gql`
     mutation readServer($input: ReadServerInput!) {
   readServer(input: $input) {
-    permissions
-    channels {
-      ...Channel
-    }
-    roles {
-      ...Role
-    }
-    folders {
-      ...Folder
-    }
+    ...Server
   }
 }
-    ${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}`;
+    ${ServerFragmentDoc}`;
 export type ReadServerMutationFn = Apollo.MutationFunction<ReadServerMutation, ReadServerMutationVariables>;
 
 /**
@@ -5817,11 +5831,15 @@ export const CommentsDocument = gql`
   comments(postId: $postId, sort: $sort) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }
 }
     ${CommentFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
 
 /**
@@ -6026,6 +6044,9 @@ export const PostDocument = gql`
   post(id: $id) {
     ...Post
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
     server {
@@ -6035,6 +6056,7 @@ export const PostDocument = gql`
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}
 ${ServerFragmentDoc}`;
 
@@ -6080,6 +6102,9 @@ export const PostsDocument = gql`
     posts {
       ...Post
       author {
+        ...User
+      }
+      serverUser {
         ...ServerUser
       }
       server {
@@ -6089,6 +6114,7 @@ export const PostsDocument = gql`
   }
 }
     ${PostFragmentDoc}
+${UserFragmentDoc}
 ${ServerUserFragmentDoc}
 ${ServerFragmentDoc}`;
 
@@ -6209,11 +6235,15 @@ export const ServerDocument = gql`
     roles {
       ...Role
     }
+    folders {
+      ...Folder
+    }
   }
 }
     ${ServerFragmentDoc}
 ${ChannelFragmentDoc}
-${RoleFragmentDoc}`;
+${RoleFragmentDoc}
+${FolderFragmentDoc}`;
 
 /**
  * __useServerQuery__
@@ -6279,8 +6309,8 @@ export type ServerUsersQueryHookResult = ReturnType<typeof useServerUsersQuery>;
 export type ServerUsersLazyQueryHookResult = ReturnType<typeof useServerUsersLazyQuery>;
 export type ServerUsersQueryResult = Apollo.QueryResult<ServerUsersQuery, ServerUsersQueryVariables>;
 export const UserDocument = gql`
-    query user($id: ID) @live {
-  user(id: $id) {
+    query user($id: ID, $username: String) @live {
+  user(id: $id, username: $username) {
     ...RelatedUser
     relatedUsers {
       ...User
@@ -6308,6 +6338,7 @@ ${UserFragmentDoc}`;
  * const { data, loading, error } = useUserQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      username: // value for 'username'
  *   },
  * });
  */

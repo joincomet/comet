@@ -91,7 +91,7 @@ export default function ServerSidebar({ server }) {
               <ServerAvatar
                 server={server}
                 size={6}
-                className="rounded-md mr-2"
+                className="rounded-md mr-2 dark:bg-gray-750"
               />
               <div className="font-semibold text-primary pr-2.5 truncate">
                 {server.displayName}

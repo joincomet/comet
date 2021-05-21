@@ -196,9 +196,13 @@ span[data-spoiler] {
 }
 
 .form-button-submit {
-  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-green-600 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100;
+  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-green-600 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
 }
 
 .form-button-delete {
-  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-red-500 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100;
+  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-red-500 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
+}
+
+.form-button-cancel {
+  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-gray-500 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
 }

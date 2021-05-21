@@ -7,16 +7,14 @@ import { ServerPermission, useDeleteChannelMutation } from '@/graphql/hooks'
 export default function ChannelContextMenu({
   channel,
   server,
+  openDelete,
   ContextMenuItem
 }) {
   const { t } = useTranslation()
-  const { push } = useHistory()
-  const { pathname } = useLocation()
   const [canManageChannels] = useHasServerPermissions({
     server,
     permissions: [ServerPermission.ManageChannels]
   })
-  const [deleteChannel] = useDeleteChannelMutation()
   return (
     <>
       <ContextMenuSection>
@@ -28,11 +26,7 @@ export default function ChannelContextMenu({
               label={t('channel.context.delete')}
               red
               onClick={() => {
-                if (pathname === `/+${server.name}/#${channel.name}`)
-                  push(`/+${server.name}`)
-                deleteChannel({
-                  variables: { input: { channelId: channel.id } }
-                })
+                openDelete()
               }}
             />
           </>

@@ -4,6 +4,7 @@ import { Context } from '@/types'
 import {
   Folder,
   FolderVisibility,
+  Role,
   Server,
   ServerUser,
   ServerUserStatus,
@@ -90,13 +91,18 @@ export async function createAccount(
     isDeleted: false
   })
   if (cometServer) {
+    const everyoneRole = await em.findOneOrFail(Role, {
+      server: cometServer,
+      name: '@everyone'
+    })
     cometServer.userCount++
     em.persist([
       cometServer,
       em.create(ServerUser, {
         user,
         server: cometServer,
-        status: ServerUserStatus.Joined
+        status: ServerUserStatus.Joined,
+        roles: [everyoneRole]
       })
     ])
   }

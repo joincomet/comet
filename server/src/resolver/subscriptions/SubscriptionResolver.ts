@@ -91,8 +91,6 @@ export class SubscriptionResolver {
   ): Promise<MessageChangedResponse> {
     const entity = await em.findOneOrFail(Message, id, [
       'author',
-      'serverUser.roles',
-      'serverUser.user',
       'channel.server',
       'group',
       'toUser',

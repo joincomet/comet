@@ -21,11 +21,6 @@ export async function unvotePost(
   ])
   const user = await em.findOneOrFail(User, userId)
   const vote = await em.findOneOrFail(PostVote, { post, user })
-  await user.checkServerPermission(
-    em,
-    post.server.id,
-    ServerPermission.VotePost
-  )
   post.voteCount--
   post.isVoted = false
   await em.remove(vote).persistAndFlush(post)

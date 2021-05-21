@@ -21,11 +21,6 @@ export async function unvoteComment(
   ])
   const user = await em.findOneOrFail(User, userId)
   const vote = await em.findOneOrFail(CommentVote, { comment, user })
-  await user.checkServerPermission(
-    em,
-    comment.post.server.id,
-    ServerPermission.VoteComment
-  )
   comment.voteCount--
   comment.isVoted = false
   await em.remove(vote).persistAndFlush(comment)

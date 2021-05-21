@@ -1,7 +1,7 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.67",
+  "version": "0.0.68",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
@@ -55,7 +55,7 @@
     "react-dropzone": "^11.3.2",
     "react-giphy-searchbox": "^1.5.4",
     "react-helmet-async": "^1.0.9",
-    "react-hook-form": "^7.6.2",
+    "react-hook-form": "^7.6.3",
     "react-hot-toast": "^1.0.2",
     "react-i18next": "^11.8.15",
     "react-icons": "^4.2.0",

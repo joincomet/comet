@@ -8,7 +8,6 @@ import { UploadLink } from '@/graphql/upload'
 import i18n from '@/locales/i18n'
 import { WebSocketLink } from '@/graphql/WebSocketLink'
 import { setContext } from '@apollo/client/link/context'
-import { offsetLimitPagination } from '@apollo/client/utilities'
 
 const url = import.meta.env.PROD
   ? `https://${import.meta.env.VITE_API_DOMAIN}/graphql`
@@ -75,6 +74,68 @@ export const apolloClient = new ApolloClient({
       User: {
         fields: {
           servers: {
+            merge: false
+          },
+          folders: {
+            merge: false
+          }
+        }
+      },
+      Server: {
+        fields: {
+          channels: {
+            merge: false
+          },
+          folders: {
+            merge: false
+          },
+          owner: {
+            merge: true
+          },
+          permissions: {
+            merge: false
+          },
+          roles: {
+            merge: false
+          }
+        }
+      },
+      Post: {
+        fields: {
+          author: {
+            merge: true
+          },
+          serverUser: {
+            merge: true
+          },
+          server: {
+            merge: true
+          }
+        }
+      },
+      Comment: {
+        fields: {
+          author: {
+            merge: true
+          },
+          serverUser: {
+            merge: true
+          }
+        }
+      },
+      Message: {
+        fields: {
+          author: {
+            merge: true
+          },
+          serverUser: {
+            merge: true
+          }
+        }
+      },
+      Query: {
+        fields: {
+          serverUsers: {
             merge: false
           }
         }

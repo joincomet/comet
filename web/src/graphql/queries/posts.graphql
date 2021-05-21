@@ -20,6 +20,9 @@ query posts(
     posts {
       ...Post
       author {
+        ...User
+      }
+      serverUser {
         ...ServerUser
       }
       server {

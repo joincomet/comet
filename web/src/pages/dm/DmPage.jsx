@@ -12,7 +12,9 @@ import { useEffect } from 'react'
 
 export default function DmPage({ username }) {
   const { data: userData } = useUserQuery({
-    variables: { username }
+    variables: { username },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first'
   })
   const [openDm] = useOpenDmMutation()
   const [readDm] = useReadDmMutation()

@@ -1,10 +1,10 @@
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
   ChannelType,
-  CurrentUserDocument,
+  ServerDocument,
   useCreateChannelMutation
 } from '@/graphql/hooks'
 import { IconChannel } from '@/components/ui/icons/IconChannel'
@@ -36,20 +36,45 @@ const typeClass = enabled =>
 `)
 
 export default function CreateChannelDialog({ open, setOpen, server }) {
-  const { handleSubmit, register } = useForm({ mode: 'onChange' })
+  const { handleSubmit, register, setValue, watch, reset } = useForm({
+    mode: 'onChange'
+  })
+  const name = watch('name')
+  useEffect(() => {
+    if (name) {
+      setValue(
+        'name',
+        name
+          .toLowerCase()
+          .replace(' ', '-')
+          .replace(/[^a-z0-9-_]+/, '')
+      )
+    }
+  }, [name])
   const [type, setType] = useState(ChannelType.Public)
 
   const { push } = useHistory()
 
   const [createChannel, { loading }] = useCreateChannelMutation({
     update(cache, { data: { createChannel } }) {
-      const data = cache.readQuery({ query: CurrentUserDocument })
-      const clone = JSON.parse(JSON.stringify(data))
-      const server = clone.user.servers.find(s => s.id === server.id)
-      server.channels = [createChannel].concat(server.channels)
-      cache.writeQuery({ query: CurrentUserDocument, data: clone })
+      cache.writeQuery({
+        query: ServerDocument,
+        variables: {
+          name: server.name
+        },
+        data: {
+          server: {
+            ...server,
+            channels: [...server.channels, createChannel]
+          }
+        }
+      })
     }
   })
+
+  const close = () => {
+    setOpen(false)
+  }
 
   const onSubmit = ({ name, description }) => {
     createChannel({
@@ -57,12 +82,14 @@ export default function CreateChannelDialog({ open, setOpen, server }) {
     }).then(({ data: { createChannel } }) => {
       close()
       push(`/+${server.name}/#${createChannel.name}`)
+      reset()
+      setType(ChannelType.Public)
     })
   }
 
-  const close = () => {
-    setOpen(false)
-  }
+  const channelAlreadyExists =
+    !!name && server.channels.map(c => c.name).includes(name)
+
   return (
     <StyledDialog
       onSubmit={handleSubmit(onSubmit)}
@@ -70,7 +97,11 @@ export default function CreateChannelDialog({ open, setOpen, server }) {
       close={close}
       closeOnOverlayClick
       buttons={
-        <button type="submit" className="form-button-submit">
+        <button
+          type="submit"
+          className="form-button-submit"
+          disabled={!name || channelAlreadyExists || loading}
+        >
           {loading ? (
             <IconSpinner className="w-5 h-5" />
           ) : (
@@ -79,28 +110,32 @@ export default function CreateChannelDialog({ open, setOpen, server }) {
         </button>
       }
     >
-      <div className="p-5 space-y-4 w-full">
+      <div className="p-5 space-y-4 w-full text-left">
         <div className="flex items-center font-semibold text-primary">
-          <IconChannel className="w-5 h-5 mr-2" />
-          Create Channel&nbsp;&nbsp;&middot;&nbsp;&nbsp;
           <ServerAvatar server={server} size={6} className="rounded-md mr-2" />
           <div className="truncate">{server.displayName}</div>
+          &nbsp;&nbsp;&middot;&nbsp;&nbsp;Create Channel
           <IconX
             className="h-5 w-5 highlightable ml-auto"
             onClick={() => close()}
           />
         </div>
-        <div className="relative">
-          <input
-            {...register('name', { required: true, maxLength: 100 })}
-            maxLength={100}
-            className="form-input"
-            spellCheck={false}
-            autoCapitalize="none"
-            id="name"
-            placeholder="Channel name"
-          />
-          {/*<IconChannel className="form-input-icon-icon" />*/}
+        <div>
+          <div className="relative">
+            <input
+              {...register('name', { required: true, maxLength: 100 })}
+              maxLength={100}
+              className="form-input-icon"
+              spellCheck={false}
+              autoCapitalize="none"
+              id="name"
+              placeholder="Channel name"
+            />
+            <IconChannel className="form-input-icon-icon" />
+          </div>
+          {channelAlreadyExists && (
+            <div className="form-error">Channel already exists</div>
+          )}
         </div>
 
         <textarea

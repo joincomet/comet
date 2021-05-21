@@ -11,7 +11,7 @@ export class UpdateChannelInput {
 
   @Field({ nullable: true })
   @MaxLength(100)
-  @Matches(/^[a-z0-9-_]+/i)
+  @Matches(/^[a-z0-9-_]+/)
   name?: string
 
   @Field({ nullable: true })

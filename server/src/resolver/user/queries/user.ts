@@ -17,12 +17,12 @@ export async function user(
   { username, id }: UserArgs
 ): Promise<User> {
   if (username && id) throw new Error('Must provide one of id or name')
-  if ((!id && !username) || id === currentUserId) {
+  if (!id && !username) {
     // Current user
     if (!currentUserId) return null
-    return em.findOne(User, currentUserId)
+    return em.findOne(User, currentUserId, { isDeleted: false })
   } else if (id) {
-    return em.findOne(User, id)
+    return em.findOne(User, { id, isDeleted: false })
   } else if (username) {
     return em.findOne(User, {
       username: { $ilike: handleUnderscore(username) },

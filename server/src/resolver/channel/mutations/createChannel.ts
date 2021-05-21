@@ -21,7 +21,7 @@ export class CreateChannelInput {
 
   @Field()
   @MaxLength(100)
-  @Matches(/^[a-z0-9-_]+/i)
+  @Matches(/^[a-z0-9-_]+/)
   name: string
 
   @Field({ nullable: true })
@@ -54,13 +54,14 @@ export async function createChannel(
 
   const foundChannel = await em.findOne(Channel, {
     server,
+    isDeleted: false,
     name: { $ilike: handleUnderscore(name) }
   })
   if (foundChannel) throw new Error('Channel with that name already exists')
 
   const firstChannel = await em.findOne(
     Channel,
-    { server },
+    { server, isDeleted: false },
     { orderBy: { position: 'ASC' } }
   )
 
@@ -76,7 +77,6 @@ export async function createChannel(
   const initialMessage = em.create(Message, {
     type: MessageType.Initial,
     author: user,
-    serverUser,
     channel
   })
 

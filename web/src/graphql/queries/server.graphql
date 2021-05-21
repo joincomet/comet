@@ -8,5 +8,8 @@ query server($id: ID, $name: String) @live {
     roles {
       ...Role
     }
+    folders {
+      ...Folder
+    }
   }
 }

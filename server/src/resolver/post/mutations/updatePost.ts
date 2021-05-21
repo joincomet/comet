@@ -21,7 +21,7 @@ export async function updatePost(
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
   const post = await em.findOneOrFail(Post, postId, ['author.user'])
-  if (post.author.user !== em.getReference(User, userId))
+  if (post.author !== em.getReference(User, userId))
     throw new Error('Must be post author to edit')
   post.text = handleText(text)
   await em.persistAndFlush(post)

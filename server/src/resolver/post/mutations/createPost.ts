@@ -3,7 +3,6 @@ import { ArrayMaxSize, Length, MaxLength, IsUrl } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import {
-  CommentVote,
   Post,
   PostImage,
   PostVote,
@@ -15,8 +14,6 @@ import {
 } from '@/entity'
 import { handleText, scrapeMetadata, uploadImageFileSingle } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
-import { GraphQLURL } from 'graphql-scalars'
-import { votePost } from '@/resolver/post/mutations/votePost'
 
 @InputType()
 export class CreatePostInput {
@@ -68,14 +65,9 @@ export async function createPost(
     if (!text) text = null
   }
 
-  const server = await em.findOne(Server, serverId, { isDeleted: false })
+  const server = await em.findOneOrFail(Server, serverId, { isDeleted: false })
   const user = await em.findOneOrFail(User, userId)
-  const serverUser = await em.findOneOrFail(ServerUser, {
-    user,
-    server,
-    status: ServerUserStatus.Joined
-  })
-  await user.checkServerPermission(em, serverId, ServerPermission.CreatePost)
+  await user.checkBannedFromServer(em, server.id)
 
   const postImages: PostImage[] = []
 
@@ -89,22 +81,16 @@ export async function createPost(
   const post = em.create(Post, {
     title,
     linkUrl,
-    author: serverUser,
+    author: user,
     server,
     linkMetadata: linkUrl ? await scrapeMetadata(linkUrl) : null,
     images: postImages,
-    text: text
+    text: text,
+    voteCount: 1
   })
-
-  if (
-    await user.hasServerPermission(em, server.id, ServerPermission.VotePost)
-  ) {
-    post.voteCount = 1
-    post.isVoted = true
-    const vote = em.create(PostVote, { post, user })
-    em.persist(vote)
-  }
-  await em.persistAndFlush(post)
+  post.isVoted = true
+  const vote = em.create(PostVote, { post, user })
+  await em.persistAndFlush([post, vote])
   await notifyPostChanged({ id: post.id, type: ChangeType.Added })
   return post
 }

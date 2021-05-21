@@ -6,7 +6,8 @@ import {
   LinkMetadata,
   PostImage,
   Server,
-  ServerUser
+  ServerUser,
+  User
 } from '@/entity'
 import { URL } from 'url'
 import {
@@ -73,9 +74,12 @@ export class Post extends BaseEntity {
     return null
   }
 
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User)
+  author?: User
+
   @Field(() => ServerUser, { nullable: true })
-  @ManyToOne(() => ServerUser)
-  author?: ServerUser
+  serverUser?: ServerUser
 
   @Field()
   @Property()

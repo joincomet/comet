@@ -140,7 +140,7 @@ function DirectMessage({ user }) {
             user={user}
             dotClassName="ring-3 w-2.5 h-2.5 dark:ring-gray-800"
           />
-          <span className="ml-3">{user.name}</span>
+          <span className="ml-3">{user.username}</span>
 
           <div className="ml-auto" />
 

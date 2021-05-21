@@ -28,6 +28,7 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
 import { Editor } from '@tiptap/react/src/Editor'
+import TypingAnimation from '@/components/message/input/TypingAnimation'
 
 function useForceUpdate() {
   const [, setValue] = useState(0)
@@ -72,7 +73,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
     else if (user) {
       if (isBlocked) return `This user has blocked you`
       if (isBlocking) return `You are blocking this user`
-      return `Message @${user.name}`
+      return `Message @${user.username}`
     }
     return ``
   }, [currentUser, channel, group, user, canUseChannel, isBlocked, isBlocking])
@@ -209,7 +210,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
     return () => {
       instance.destroy()
     }
-  }, [canSendMessage, placeholder])
+  }, [canSendMessage, placeholder, channel, user, group, server])
 
   // const editor = useEditor(editorOptions)
 
@@ -377,10 +378,34 @@ export default function MessageInput({ channel, server, group, user, users }) {
           </div>
         </div>
 
-        <div
-          className="h-6 flex items-center text-secondary text-xs"
-          dangerouslySetInnerHTML={{ __html: typingNames }}
-        />
+        <div className="h-6 flex items-center text-secondary text-13 font-medium">
+          {typingNames.length > 0 && <TypingAnimation />}
+          {typingNames.length === 1 && (
+            <>
+              <span className="font-bold text-primary">{typingNames[0]}</span>
+              &nbsp;is typing...
+            </>
+          )}
+          {typingNames.length === 2 && (
+            <>
+              <span className="font-bold text-primary">{typingNames[0]}</span>
+              &nbsp;and&nbsp;
+              <span className="font-bold text-primary">{typingNames[1]}</span>
+              &nbsp;are typing...
+            </>
+          )}
+          {typingNames.length === 3 && (
+            <>
+              <span className="font-bold text-primary">{typingNames[0]}</span>
+              ,&nbsp;
+              <span className="font-bold text-primary">{typingNames[1]}</span>
+              ,&nbsp;and&nbsp;
+              <span className="font-bold text-primary">{typingNames[2]}</span>
+              &nbsp;are typing...
+            </>
+          )}
+          {typingNames.length > 3 && <>Several people are typing...</>}
+        </div>
       </div>
     </>
   )

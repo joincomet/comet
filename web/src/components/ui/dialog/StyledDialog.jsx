@@ -7,7 +7,8 @@ export default function StyledDialog({
   open,
   close,
   closeOnOverlayClick,
-  onSubmit
+  onSubmit,
+  small = false
 }) {
   return (
     <Dialog
@@ -17,7 +18,9 @@ export default function StyledDialog({
     >
       <form
         onSubmit={onSubmit}
-        className="rounded-lg dark:bg-gray-800 max-w-lg w-full relative"
+        className={`rounded-lg dark:bg-gray-800 w-full relative text-left ${
+          small ? 'max-w-sm' : 'max-w-lg'
+        }`}
         onClick={e => e.stopPropagation()}
       >
         {children}

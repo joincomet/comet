@@ -90,7 +90,7 @@ enum Color {
 }
 
 type Comment implements BaseEntity {
-  author: ServerUser
+  author: User
   createdAt: DateTime!
   id: ID!
   isDeleted: Boolean!
@@ -100,6 +100,7 @@ type Comment implements BaseEntity {
   parentComment: Comment
   pinnedAt: DateTime
   post: Post!
+  serverUser: ServerUser
   text: String!
   updatedAt: DateTime
   voteCount: NonNegativeInt!
@@ -526,7 +527,7 @@ input PinPostInput {
 scalar PositiveInt
 
 type Post implements BaseEntity {
-  author: ServerUser
+  author: User
   commentCount: NonNegativeInt!
   createdAt: DateTime!
   domain: String
@@ -542,6 +543,7 @@ type Post implements BaseEntity {
   pinnedAt: DateTime
   relativeUrl: String!
   server: Server!
+  serverUser: ServerUser
   text: String
   thumbnailUrl: String
   title: String!
@@ -717,8 +719,6 @@ enum ServerCategory {
 enum ServerPermission {
   AddPostToFolder
   Admin
-  CreateComment
-  CreatePost
   DisplayRoleSeparately
   ManageChannels
   ManageComments
@@ -727,13 +727,9 @@ enum ServerPermission {
   ManagePosts
   ManageServer
   ManageUsers
-  Mention
-  Mentionable
   PrivateChannels
   RestrictedChannels
   SendMessages
-  VoteComment
-  VotePost
 }
 
 type ServerUser {

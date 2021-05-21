@@ -6,14 +6,7 @@ import Message from '@/components/message/Message'
 import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/input/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
-import MessagesStart from '@/components/message/MessagesStart'
 import { usePrevious } from 'react-use'
-import {
-  useReadChannelMutation,
-  useReadDmMutation,
-  useReadGroupMutation
-} from '@/graphql/hooks'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 const PREPEND_OFFSET = 10 ** 7
 
@@ -61,7 +54,7 @@ export default function Messages({ channel, server, user, group, users }) {
         />
       )
     },
-    [numItemsPrepended]
+    [numItemsPrepended, server, channel, group, user]
   )
 
   return (
@@ -102,7 +95,7 @@ export default function Messages({ channel, server, user, group, users }) {
           />
         )}
       </div>
-      {!!users && (
+      {!!users && (!!channel || !!user || !!group) && (
         <MessageInput
           server={server}
           channel={channel}

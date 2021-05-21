@@ -1,6 +1,6 @@
 import { ArgsType, Field, ID, ObjectType } from 'type-graphql'
 import { Max, Min } from 'class-validator'
-import { Message } from '@/entity'
+import { Message, User } from '@/entity'
 import { Context } from '@/types'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
 import { GraphQLPositiveInt } from 'graphql-scalars'
@@ -53,21 +53,18 @@ export async function messages(
   } else if (groupId) {
     where.group = groupId
   } else if (userId) {
+    const currentUser = await em.findOneOrFail(User, currentUserId)
+    const toUser = await em.findOneOrFail(User, userId)
     where['$or'] = [
-      { author: currentUserId, toUser: userId },
-      { author: userId, toUser: currentUserId }
+      { author: currentUser, toUser },
+      { author: toUser, toUser: currentUser }
     ]
   }
   if (cursor) where.id = { $lt: cursor }
 
   const messages = (
     await em.find(Message, where, {
-      populate: [
-        'author',
-        'serverUser.roles',
-        'serverUser.user',
-        'mentionedUsers'
-      ],
+      populate: ['author', 'mentionedUsers'],
       orderBy: { id: QueryOrder.DESC },
       limit: limit + 1
     })

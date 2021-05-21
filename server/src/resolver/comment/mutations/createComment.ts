@@ -37,20 +37,11 @@ export async function createComment(
   text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
   if (!text) throw new Error('error.comment.empty')
 
-  const post = await em.findOneOrFail(Post, postId, ['author.user'])
+  const post = await em.findOneOrFail(Post, postId, ['author'])
   const user = await em.findOneOrFail(User, userId)
-  const serverUser = await em.findOneOrFail(ServerUser, {
-    user,
-    server: post.server
-  })
-  await user.checkServerPermission(
-    em,
-    post.server.id,
-    ServerPermission.CreateComment
-  )
 
   const parentComment = parentCommentId
-    ? await em.findOneOrFail(Comment, parentCommentId, ['author.user'])
+    ? await em.findOneOrFail(Comment, parentCommentId, ['author'])
     : null
 
   text = handleText(text)
@@ -59,40 +50,28 @@ export async function createComment(
     text: text,
     parentComment,
     post,
-    author: serverUser
+    author: user,
+    voteCount: 1
   })
-
-  if (
-    await user.hasServerPermission(
-      em,
-      post.server.id,
-      ServerPermission.VoteComment
-    )
-  ) {
-    comment.voteCount = 1
-    comment.isVoted = true
-    const vote = em.create(CommentVote, { comment, user })
-    em.persist(vote)
-  }
-
+  comment.isVoted = true
+  const vote = em.create(CommentVote, { comment, user })
   post.commentCount++
-
-  await em.persistAndFlush([comment, post])
+  await em.persistAndFlush([comment, post, vote])
 
   let reply: Reply
   if (parentComment) {
-    if (parentComment.author.user !== user) {
+    if (parentComment.author !== user) {
       reply = em.create(Reply, {
         comment,
-        user: parentComment.author.user
+        user: parentComment.author
       })
     }
   } else {
     await em.populate(post, ['author.user'])
-    if (post.author.user !== user) {
+    if (post.author !== user) {
       reply = em.create(Reply, {
         comment,
-        user: post.author.user
+        user: post.author
       })
     }
   }

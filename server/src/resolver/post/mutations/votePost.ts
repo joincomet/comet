@@ -22,11 +22,6 @@ export async function votePost(
   ])
   let vote = await em.findOne(PostVote, { post, user })
   if (vote) throw new Error('Already voted this post')
-  await user.checkServerPermission(
-    em,
-    post.server.id,
-    ServerPermission.VotePost
-  )
   vote = em.create(PostVote, { post, user })
   post.voteCount++
   post.isVoted = true

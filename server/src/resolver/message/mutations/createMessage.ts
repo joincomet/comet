@@ -54,9 +54,6 @@ export async function createMessage(
   const group = groupId ? await em.findOneOrFail(Group, groupId) : null
   const toUser = userId ? await em.findOneOrFail(User, userId) : null
   const user = await em.findOneOrFail(User, currentUserId)
-  const serverUser = channel
-    ? await em.findOneOrFail(ServerUser, { user, server: channel.server })
-    : null
 
   if (channel) {
     await user.checkServerPermission(
@@ -110,7 +107,6 @@ export async function createMessage(
     group,
     toUser,
     author: user,
-    serverUser,
     image: upload && (upload as Image).originalUrl ? upload : null,
     file: upload && (upload as File).url ? upload : null,
     mentionedUsers: mentionIds,

@@ -104,8 +104,8 @@ function ServerRoutes() {
   const serverName = s.substring(1)
   const { data: serverData } = useServerQuery({
     variables: { name: serverName },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
+    // nextFetchPolicy: 'cache-first'
   })
   const server = serverData?.server
 

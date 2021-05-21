@@ -56,8 +56,7 @@ export async function seed(em: EntityManager) {
     const initialMessage = em.create(Message, {
       channel: generalChannel,
       type: MessageType.Initial,
-      author: cometUser,
-      serverUser: cometServerUser
+      author: cometUser
     })
 
     const announcementsFolder = em.create(Folder, {

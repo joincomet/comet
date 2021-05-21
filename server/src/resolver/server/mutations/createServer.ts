@@ -117,15 +117,20 @@ export async function createServer(
     serverUsers: [serverUser]
   })
 
-  await em.persistAndFlush([server, channel, serverUser, serverFolder, role])
-
-  const joinMessage = em.create(Message, {
+  const initialMessage = em.create(Message, {
     author: userId,
-    serverUser: serverUser,
-    type: MessageType.Join,
+    type: MessageType.Initial,
     channel
   })
-  await em.persistAndFlush(joinMessage)
+
+  await em.persistAndFlush([
+    server,
+    channel,
+    serverUser,
+    serverFolder,
+    role,
+    initialMessage
+  ])
   liveQueryStore.invalidate(`User:${userId}`)
   return server
 }

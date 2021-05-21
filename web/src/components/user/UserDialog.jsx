@@ -71,8 +71,8 @@ const itemClass = ctl(`
 
 const tab = {
   MutualServers: 'MutualServers',
-  MutualFriends: 'MutualFriends',
-  Folders: 'Folders'
+  MutualFriends: 'MutualFriends'
+  // Folders: 'Folders'
 }
 
 export default memo(function UserDialog() {
@@ -103,7 +103,7 @@ export default memo(function UserDialog() {
 
   const mutualFriends = userData?.user?.relatedUsers ?? []
   const mutualServers = userData?.user?.servers ?? []
-  const folders = userData?.user?.folders ?? []
+  // const folders = userData?.user?.folders ?? []
 
   const close = useCallback(() => {
     setOpen(false)
@@ -252,7 +252,7 @@ export default memo(function UserDialog() {
             )}
           </div>
         </div>
-        {!currentUser ? (
+        {!currentUser || user?.id !== currentUser.id ? (
           <>
             <div className="px-5 dark:border-gray-775 border-t h-14 flex items-center space-x-10">
               <button
@@ -269,12 +269,12 @@ export default memo(function UserDialog() {
                 <div className="transform translate-y-0.5">Mutual Friends</div>
               </button>
 
-              <button
+              {/*<button
                 className={tabClass(currentTab === tab.Folders)}
                 onClick={() => setCurrentTab(tab.Folders)}
               >
                 <div className="transform translate-y-0.5">Folders</div>
-              </button>
+              </button>*/}
             </div>
             <div className="rounded-b-lg dark:bg-gray-750 p-2 max-h-[15rem] min-h-[15rem] h-full scrollbar-custom">
               {currentTab === tab.MutualServers &&
@@ -316,10 +316,7 @@ export default memo(function UserDialog() {
                       />
                       <div className="pl-2.5">
                         <div className="text-base text-secondary font-medium">
-                          {friend.name}
-                          <span className="text-13 text-tertiary font-normal">
-                            #{friend.tag}
-                          </span>
+                          {friend.username}
                         </div>
                       </div>
                     </div>
@@ -328,7 +325,7 @@ export default memo(function UserDialog() {
                   <EndReached className="h-36">No mutual friends</EndReached>
                 ))}
 
-              {currentTab === tab.Folders &&
+              {/*{currentTab === tab.Folders &&
                 (folders.length > 0 ? (
                   folders.map(folder => (
                     <Link
@@ -354,7 +351,7 @@ export default memo(function UserDialog() {
                   ))
                 ) : (
                   <EndReached className="h-36">No visible folders</EndReached>
-                ))}
+                ))}*/}
             </div>
           </>
         ) : (

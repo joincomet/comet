@@ -11,4 +11,14 @@ fragment Server on Server {
   owner {
     id
   }
+  permissions
+  channels {
+    ...Channel
+  }
+  roles {
+    ...Role
+  }
+  folders {
+    ...Folder
+  }
 }

@@ -28,7 +28,6 @@ export class Message extends BaseEntity {
   author: User
 
   @Field(() => ServerUser, { nullable: true })
-  @ManyToOne(() => ServerUser, { nullable: true })
   serverUser?: ServerUser
 
   @Field(() => Channel, { nullable: true })

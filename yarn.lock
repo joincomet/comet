@@ -13019,12 +13019,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.6.2":
-  version: 7.6.2
-  resolution: "react-hook-form@npm:7.6.2"
+"react-hook-form@npm:^7.6.3":
+  version: 7.6.3
+  resolution: "react-hook-form@npm:7.6.3"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: d1c24084af13fb64d4733a040347971bcea4807b432666330a1eff810879f42117ed5ee375732d5f893768abfe363547cbca42a6aa72130eede1095e9329eec0
+  checksum: 92c2cff983e43ec38e891b628efae0c859d8ee53a3c60bb9a050db31addec2928f1a16b65d4d7711e325211303b46d259d831615738bf4704d10d514dfc330f1
   languageName: node
   linkType: hard
 
@@ -13961,9 +13961,9 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"sanitize-html@npm:^2.3.3":
-  version: 2.3.3
-  resolution: "sanitize-html@npm:2.3.3"
+"sanitize-html@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "sanitize-html@npm:2.4.0"
   dependencies:
     deepmerge: ^4.2.2
     escape-string-regexp: ^4.0.0
@@ -13972,7 +13972,7 @@ resolve@^2.0.0-next.3:
     klona: ^2.0.3
     parse-srcset: ^1.0.2
     postcss: ^8.0.2
-  checksum: 68cef1cf949bd58afb4c6fcfd55ba6ac9f342dcf5c8cf5aacd5fd532bca3c77d15c29c753eef7089923583a75e4877dede2fd72581ef535028651f8f144971e2
+  checksum: 1eb1d4a42d51be39b2c8a379b0b729d687d67986374415c3f565b4a6f9f8e86087c11c762ade78b96f4c0bfb4312fb389d3340b561971cc10d719ccfc2d7998e
   languageName: node
   linkType: hard
 
@@ -14204,7 +14204,7 @@ resolve@^2.0.0-next.3:
     nanoid: ^3.1.23
     node-html-parser: ^3.3.0
     reflect-metadata: ^0.1.13
-    sanitize-html: ^2.3.3
+    sanitize-html: ^2.4.0
     sharp: ^0.28.2
     ts-node: ^9.1.1
     ts-node-dev: ^1.1.6
@@ -16332,7 +16332,7 @@ typescript@^4.2.4:
     react-dropzone: ^11.3.2
     react-giphy-searchbox: ^1.5.4
     react-helmet-async: ^1.0.9
-    react-hook-form: ^7.6.2
+    react-hook-form: ^7.6.3
     react-hot-toast: ^1.0.2
     react-i18next: ^11.8.15
     react-icons: ^4.2.0

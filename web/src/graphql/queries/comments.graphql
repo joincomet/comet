@@ -2,6 +2,9 @@ query comments($postId: ID!, $sort: CommentsSort) {
   comments(postId: $postId, sort: $sort) {
     ...Comment
     author {
+      ...User
+    }
+    serverUser {
       ...ServerUser
     }
   }

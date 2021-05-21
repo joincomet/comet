@@ -1,0 +1,24 @@
+import { EntityManager } from '@mikro-orm/postgresql'
+import { Comment, ServerUser } from '@/entity'
+import DataLoader from 'dataloader'
+
+export const commentServerUserLoader = (em: EntityManager, userId: string) => {
+  return new DataLoader<string, ServerUser>(async (commentIds: string[]) => {
+    const comments = await em.find(Comment, commentIds, ['post.server'])
+    const serverIds = comments.map(c => c.post.server.id)
+    const serverUsers = await em.find(
+      ServerUser,
+      {
+        server: serverIds,
+        user: userId
+      },
+      ['user', 'roles']
+    )
+    const map: Record<string, ServerUser> = {}
+    commentIds.forEach(commentId => {
+      const comment = comments.find(c => c.id === commentId)
+      map[commentId] = serverUsers.find(su => su.server === comment.post.server)
+    })
+    return commentIds.map(commentId => map[commentId])
+  })
+}

@@ -229,7 +229,6 @@ export default function LoginDialog() {
             <input
               id="usernameOrEmail"
               {...register('usernameOrEmail', {
-                required: true,
                 shouldUnregister: true
               })}
               className={`form-input`}

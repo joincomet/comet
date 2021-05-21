@@ -15,9 +15,12 @@ import { GraphQLNonNegativeInt } from 'graphql-scalars'
 @ObjectType({ implements: BaseEntity })
 @Entity()
 export class Comment extends BaseEntity {
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User)
+  author?: User
+
   @Field(() => ServerUser, { nullable: true })
-  @ManyToOne(() => ServerUser)
-  author?: ServerUser
+  serverUser?: ServerUser
 
   @Field(() => Post)
   @ManyToOne(() => Post)

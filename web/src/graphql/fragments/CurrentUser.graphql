@@ -4,11 +4,6 @@ fragment CurrentUser on User {
   email
   servers {
     ...Server
-    permissions
-    channels {
-      isUnread
-      mentionCount
-    }
   }
   relatedUsers {
     ...RelatedUser

@@ -14,6 +14,7 @@ import MobileComingSoon from '@/components/ui/MobileComingSoon'
 import LoginDialog from '@/components/LoginDialog'
 import UserDialog from '@/components/user/UserDialog'
 import * as Sentry from '@sentry/react'
+import UserProvider from '@/providers/UserProvider'
 
 function App({ history }) {
   const isMac = getOS() === 'Mac OS'
@@ -31,32 +32,34 @@ function App({ history }) {
           <title>Comet – All-in-one chat & forums for communities</title>
         </Helmet>
 
-        <Router history={history}>
-          <ContextMenuProvider>
-            <DndProvider
-              backend={TouchBackend}
-              options={{ enableTouchEvents: false, enableMouseEvents: true }}
-            >
-              <MobileComingSoon />
-
-              <ResponsiveToaster />
-              <CustomDragLayer />
-              {window.electron && !isMac && <TitleBar />}
-              <LoginDialog />
-              <UserDialog />
-              <div
-                style={
-                  window.electron
-                    ? { height: isMac ? '100%' : 'calc(100% - 1.375rem)' }
-                    : { height: '100%' }
-                }
-                className="hidden md:flex"
+        <UserProvider>
+          <Router history={history}>
+            <ContextMenuProvider>
+              <DndProvider
+                backend={TouchBackend}
+                options={{ enableTouchEvents: false, enableMouseEvents: true }}
               >
-                <Routes />
-              </div>
-            </DndProvider>
-          </ContextMenuProvider>
-        </Router>
+                <MobileComingSoon />
+
+                <ResponsiveToaster />
+                <CustomDragLayer />
+                {window.electron && !isMac && <TitleBar />}
+                <LoginDialog />
+                <UserDialog />
+                <div
+                  style={
+                    window.electron
+                      ? { height: isMac ? '100%' : 'calc(100% - 1.375rem)' }
+                      : { height: '100%' }
+                  }
+                  className="hidden md:flex"
+                >
+                  <Routes />
+                </div>
+              </DndProvider>
+            </ContextMenuProvider>
+          </Router>
+        </UserProvider>
       </HelmetProvider>
     </ApolloProvider>
   )

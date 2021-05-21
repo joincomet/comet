@@ -74,13 +74,14 @@ export const useMessagesSubscriptions = () => {
           if (message.author.id !== currentUser.id) {
             if (
               (!window.electron || (window.electron && windowOpen)) &&
-              ((groupId && messageGroupId && groupId === messageGroupId) ||
-                (currentUserId &&
-                  messageUserId &&
-                  currentUserId === messageUserId) ||
-                (currentChannelId &&
-                  messageChannelId &&
-                  currentChannelId === messageChannelId))
+              ((groupId && message.group && groupId === message.group.id) ||
+                (username &&
+                  message.toUser &&
+                  username === message.toUser.username) ||
+                (channelName &&
+                  message.channel &&
+                  message.channel.server.name === server &&
+                  channelName === message.channel.name))
             )
               return
 
@@ -95,7 +96,7 @@ export const useMessagesSubscriptions = () => {
                     .map(u => u.id)
                     .includes(currentUser.id)))
             ) {
-              let title = `@${message.author.name}`
+              let title = `@${message.author.username}`
               if (message.channel) title += ` · #${message.channel.name}`
               if (message.group) title += ` · #${message.group.displayName}`
 
@@ -116,7 +117,7 @@ export const useMessagesSubscriptions = () => {
               })
             } else if (message.type === MessageType.FriendRequestReceived) {
               createNotification({
-                title: `@${message.author.name}`,
+                title: `@${message.author.username}`,
                 body: 'Sent a friend request',
                 icon:
                   message.author.avatarUrl ??

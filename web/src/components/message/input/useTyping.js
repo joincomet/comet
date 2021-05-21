@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useTranslation } from 'react-i18next'
 import {
@@ -6,12 +6,12 @@ import {
   useTypingUpdatedSubscription
 } from '@/graphql/hooks'
 
-const TYPING_TIMEOUT = 3000
+const TYPING_TIMEOUT = 1500
 
 export const useTyping = ({ channel, group, user, users }) => {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
-  const [typingIds, setTypingIds] = useState(new Set())
+  const [typingIds, setTypingIds] = useState([])
   const [updateTyping] = useUpdateTypingMutation()
 
   const variables = {
@@ -31,48 +31,42 @@ export const useTyping = ({ channel, group, user, users }) => {
       }
     }) {
       if (isTyping) {
-        setTypingIds(prev => new Set(prev.add(typingUserId)))
-        setTimeout(
-          () =>
-            setTypingIds(
-              prev => new Set([...prev].filter(id => id !== typingUserId))
-            ),
-          TYPING_TIMEOUT
-        )
+        const found = typingIds.find(obj => obj.id === typingUserId)
+        if (found) {
+          const index = typingIds.indexOf(found)
+          const newTypingIds = [...typingIds]
+          newTypingIds[index] = { id: found.id, time: new Date().getTime() }
+          setTypingIds(newTypingIds)
+        } else {
+          setTypingIds([
+            ...typingIds,
+            { id: typingUserId, time: new Date().getTime() }
+          ])
+        }
       } else {
-        setTypingIds(
-          prev => new Set([...prev].filter(id => id !== typingUserId))
-        )
+        setTypingIds(typingIds.filter(({ id }) => id !== typingUserId))
       }
     }
   })
 
-  const typingNamesDisplay = useMemo(() => {
-    const names = [...typingIds]
-      .filter(id => id !== currentUser.id)
-      .map(id => user.find(user => user.id === id)?.name)
-      .filter(name => !!name)
-      .map(
-        name =>
-          `<span style="font-weight: 600" class="text-primary">
-          &nbsp;${name}&nbsp;
-        </span>`
-      )
-    if (names.length === 0) return null
-    else if (names.length === 1)
-      return t('message.typing.one', { name: names[0] })
-    else if (names.length === 2)
-      return t('message.typing.two', { name1: names[0], name2: names[1] })
-    else if (names.length === 3)
-      return t('message.typing.three', {
-        name1: names[0],
-        name2: names[1],
-        name3: names[2]
-      })
-    else return t('message.typing.several')
-  }, [typingIds, currentUser, t])
+  const [typingUpdate, setTypingUpdate] = useState(0)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTypingUpdate(typingUpdate + 1)
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [typingUpdate, setTypingUpdate])
+
+  const typingNames = typingIds
+    .filter(
+      ({ id, time }) =>
+        (!currentUser || id !== currentUser.id) &&
+        new Date().getTime() - time <= TYPING_TIMEOUT
+    )
+    .map(({ id }) => users.find(user => user.id === id)?.username)
+    .filter(name => !!name)
 
   const typingFn = () => updateTyping({ variables: { input: variables } })
 
-  return [typingFn, typingNamesDisplay]
+  return [typingFn, typingNames]
 }

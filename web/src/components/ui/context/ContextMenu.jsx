@@ -38,6 +38,8 @@ export default function ContextMenu({
   const os = getOS()
   const isMac = os === 'Mac OS'
 
+  const props = { ...(data ?? {}), ContextMenuItem }
+
   return (
     <div
       style={{ ...style, zIndex: 999999 }}
@@ -65,49 +67,22 @@ export default function ContextMenu({
         </>
       )}
 
-      {data?.type === ContextMenuType.Post && (
-        <PostContextMenu post={data?.post} ContextMenuItem={ContextMenuItem} />
-      )}
-      {data?.type === ContextMenuType.User && (
-        <UserContextMenu
-          user={data?.user}
-          server={data?.server}
-          isDm={data?.isDm}
-          ContextMenuItem={ContextMenuItem}
-        />
-      )}
+      {data?.type === ContextMenuType.Post && <PostContextMenu {...props} />}
+      {data?.type === ContextMenuType.User && <UserContextMenu {...props} />}
       {data?.type === ContextMenuType.Message && (
-        <MessageContextMenu
-          message={data?.message}
-          server={data?.server}
-          ContextMenuItem={ContextMenuItem}
-        />
+        <MessageContextMenu {...props} />
       )}
       {data?.type === ContextMenuType.Comment && (
-        <CommentContextMenu
-          comment={data?.comment}
-          post={data?.post}
-          ContextMenuItem={ContextMenuItem}
-        />
+        <CommentContextMenu {...props} />
       )}
       {data?.type === ContextMenuType.Server && (
-        <ServerContextMenu
-          server={data?.server}
-          ContextMenuItem={ContextMenuItem}
-        />
+        <ServerContextMenu {...props} />
       )}
       {data?.type === ContextMenuType.Channel && (
-        <ChannelContextMenu
-          channel={data?.channel}
-          server={data?.server}
-          ContextMenuItem={ContextMenuItem}
-        />
+        <ChannelContextMenu {...props} />
       )}
       {data?.type === ContextMenuType.Folder && (
-        <FolderContextMenu
-          folder={data?.folder}
-          ContextMenuItem={ContextMenuItem}
-        />
+        <FolderContextMenu {...props} />
       )}
 
       {!!data?.href && !isCometLink && (
