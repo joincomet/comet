@@ -16,6 +16,7 @@ export async function user(
   { em, userId: currentUserId }: Context,
   { username, id }: UserArgs
 ): Promise<User> {
+  em = em.fork()
   if (username && id) throw new Error('Must provide one of id or name')
   if (!id && !username) {
     // Current user

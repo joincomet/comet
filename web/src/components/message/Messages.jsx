@@ -23,7 +23,7 @@ export default function Messages({ channel, server, user, group, users }) {
   const prevLength = usePrevious(length)
   useEffect(() => {
     setLength(messages?.length || 0)
-    if (prevLength === 0) virtuoso?.current?.scrollBy({ top: PREPEND_OFFSET })
+    virtuoso?.current?.scrollToIndex(length + PREPEND_OFFSET)
   }, [channel, user, group, virtuoso])
 
   const { atBottom, newMessagesNotification, setNewMessagesNotification } =

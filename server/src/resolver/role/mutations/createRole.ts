@@ -19,7 +19,7 @@ export async function createRole(
   { em, userId, liveQueryStore }: Context,
   { serverId, name }: CreateRoleInput
 ): Promise<Role> {
-  if (name === '@everyone') throw new Error('Cannot create @everyone role')
+  name = name.trim()
   const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
   const roles = await em.find(
@@ -27,18 +27,12 @@ export async function createRole(
     { server: serverId },
     { orderBy: { position: QueryOrder.DESC } }
   )
+  if (roles.map(r => r.name.toLowerCase()).includes(name.toLowerCase()))
+    throw new Error('That role already exists')
   const lastRole = roles[0]
-  const secondToLastRole = roles[1]
   let position = ReorderUtils.FIRST_POSITION
   if (lastRole) {
-    if (secondToLastRole) {
-      position = ReorderUtils.positionBetween(
-        secondToLastRole.position,
-        lastRole.position
-      )
-    } else {
-      position = ReorderUtils.positionBefore(lastRole.position)
-    }
+    position = ReorderUtils.positionAfter(lastRole.position)
   }
 
   const role = await em.create(Role, {

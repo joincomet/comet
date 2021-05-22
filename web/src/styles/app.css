@@ -135,18 +135,6 @@ body {
   @apply text-gray-600 dark:text-gray-400 px-2 h-10 text-sm font-medium focus:outline-none;
 }
 
-.save-button {
-  @apply disabled:opacity-50 disabled:cursor-not-allowed rounded px-4 h-10 text-sm dark:text-gray-100 text-gray-900 bg-green-600 focus:outline-none flex items-center;
-}
-
-.delete-button {
-  @apply text-red-500 border rounded border-red-500 px-4 h-10 text-sm font-medium transition hover:bg-red-500 hover:text-gray-100 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-red-500 flex items-center select-none;
-}
-
-.error {
-  @apply text-xs text-red-400 pt-1.5;
-}
-
 span[data-mention] {
   @apply text-blue-500 hover:underline cursor-pointer bg-blue-600 bg-opacity-10 rounded;
 }
@@ -172,8 +160,13 @@ span[data-spoiler] {
 }
 
 .form-input {
-  @apply border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm rounded-none px-1.5 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
+  @apply disabled:opacity-50 border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm rounded-none px-1.5 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
 }
+
+.form-input-password {
+  @apply border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm rounded-none pl-1.5 pr-9 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
+}
+
 
 .form-input-icon {
   @apply border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm pr-1.5 pl-9 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
@@ -196,13 +189,17 @@ span[data-spoiler] {
 }
 
 .form-button-submit {
-  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-green-600 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
+  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-green-600 min-w-[5rem] px-4 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
 }
 
 .form-button-delete {
-  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-red-500 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
+  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-red-500 min-w-[5rem] px-4 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
 }
 
 .form-button-cancel {
-  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-gray-500 w-20 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
+  @apply disabled:opacity-50 focus:outline-none shadow rounded bg-gray-500 min-w-[5rem] px-4 h-9 flex items-center justify-center disabled:cursor-not-allowed text-gray-900 dark:text-gray-100 text-sm;
+}
+
+.form-show-password-button {
+  @apply cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 absolute right-1.5 top-1/2 transform -translate-y-1/2;
 }

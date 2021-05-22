@@ -23,6 +23,8 @@ import ServerAvatar from '@/components/server/ServerAvatar'
 import { getCategoryIcon } from '@/hooks/getCategoryIcon'
 import ctl from '@netlify/classnames-template-literals'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
+import ManageRolesDialog from '@/components/server/settings/ManageRolesDialog'
 
 const joinButtonClass = (isJoined, loading) =>
   ctl(`
@@ -41,9 +43,11 @@ const joinButtonClass = (isJoined, loading) =>
   ${loading ? 'opacity-50' : 'opacity-100'}
 `)
 
-export default function ServerSidebar({ server }) {
+export default function ServerSidebar() {
+  const { server } = useCurrentServer()
   const [currentUser] = useCurrentUser()
   const [editOpen, setEditOpen] = useState(false)
+  const [rolesOpen, setRolesOpen] = useState(false)
   const [canManageServer, canViewPrivateChannels] = useHasServerPermissions({
     server,
     permissions: [
@@ -62,6 +66,12 @@ export default function ServerSidebar({ server }) {
       <CreateServerDialog
         open={editOpen}
         setOpen={setEditOpen}
+        server={server}
+      />
+
+      <ManageRolesDialog
+        open={rolesOpen}
+        setOpen={setRolesOpen}
         server={server}
       />
 
@@ -166,7 +176,7 @@ export default function ServerSidebar({ server }) {
                   <IconSettings className="mr-3 w-5 h-5" />
                   Edit Planet
                 </SidebarItem>
-                <SidebarItem>
+                <SidebarItem onClick={() => setRolesOpen(true)}>
                   <IconShield className="mr-3 w-5 h-5" />
                   Manage Roles
                 </SidebarItem>

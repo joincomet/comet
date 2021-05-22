@@ -25,10 +25,9 @@ export async function updateRole(
   { em, userId, liveQueryStore }: Context,
   { roleId, name, color, permissions }: UpdateRoleInput
 ): Promise<Role> {
+  name = name.trim()
   const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId, ['server'])
-  if (name && role.name === '@everyone' && name !== '@everyone')
-    throw new Error('Cannot change name of @everyone role')
   await user.checkServerPermission(
     em,
     role.server.id,

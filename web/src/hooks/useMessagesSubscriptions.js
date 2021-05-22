@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import {
+  ChannelFragmentDoc,
+  GroupFragmentDoc,
   MessagesDocument,
   MessageType,
-  useMessageChangedSubscription
+  useMessageChangedSubscription,
+  UserFragmentDoc
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { createNotification } from '@/utils/createNotification'
@@ -71,17 +74,67 @@ export const useMessagesSubscriptions = () => {
             })
           }
 
+          const isViewingUser =
+            username && message.toUser && username === message.toUser.username
+          const isViewingGroup =
+            groupId && message.group && groupId === message.group.id
+          const isViewingChannel =
+            channelName &&
+            message.channel &&
+            message.channel.server.name === server &&
+            channelName === message.channel.name
+
+          if (message.toUser && !isViewingUser) {
+            const data = client.cache.readFragment({
+              fragment: UserFragmentDoc,
+              id: `User:${message.author.id}`
+            })
+            client.cache.writeFragment({
+              fragment: UserFragmentDoc,
+              id: `User:${message.author.id}`,
+              data: {
+                ...data,
+                unreadCount: data.unreadCount + 1
+              }
+            })
+          } else if (message.group && !isViewingGroup) {
+            const data = client.cache.readFragment({
+              fragment: GroupFragmentDoc,
+              id: `User:${message.group.id}`
+            })
+            client.cache.writeFragment({
+              fragment: GroupFragmentDoc,
+              id: `Group:${message.group.id}`,
+              data: {
+                ...data,
+                unreadCount: data.unreadCount + 1
+              }
+            })
+          } else if (message.channel && !isViewingChannel) {
+            const data = client.cache.readFragment({
+              fragment: ChannelFragmentDoc,
+              id: `Channel:${message.channel.id}`
+            })
+            const newData = {
+              ...data,
+              isUnread: true
+            }
+            if (
+              message.isEveryoneMentioned ||
+              message.mentionedUsers.map(u => u.id).includes(currentUser.id)
+            )
+              newData.mentionCount = data.mentionCount + 1
+            client.cache.writeFragment({
+              fragment: ChannelFragmentDoc,
+              id: `Channel:${message.channel.id}`,
+              data: newData
+            })
+          }
+
           if (message.author.id !== currentUser.id) {
             if (
               (!window.electron || (window.electron && windowOpen)) &&
-              ((groupId && message.group && groupId === message.group.id) ||
-                (username &&
-                  message.toUser &&
-                  username === message.toUser.username) ||
-                (channelName &&
-                  message.channel &&
-                  message.channel.server.name === server &&
-                  channelName === message.channel.name))
+              (isViewingGroup || isViewingUser || isViewingChannel)
             )
               return
 
@@ -102,7 +155,7 @@ export const useMessagesSubscriptions = () => {
 
               createNotification({
                 title,
-                body: message.text,
+                body: stripHtml(message.text),
                 icon:
                   message.author.avatarUrl ??
                   `${window.electron ? '.' : ''}/icons/icon.png`,
@@ -136,4 +189,10 @@ export const useMessagesSubscriptions = () => {
       }
     }
   })
+}
+
+function stripHtml(html) {
+  let tmp = document.createElement('DIV')
+  tmp.innerHTML = html
+  return tmp.textContent || tmp.innerText || ''
 }

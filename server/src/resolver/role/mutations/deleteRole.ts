@@ -14,7 +14,7 @@ export async function deleteRole(
 ): Promise<string> {
   const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId, ['server'])
-  if (role.name === '@everyone') throw new Error('@everyone cannot be deleted')
+  if (role.isDefault) throw new Error('Default role cannot be deleted')
   await user.checkServerPermission(
     em,
     role.server.id,

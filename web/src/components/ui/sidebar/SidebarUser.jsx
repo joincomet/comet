@@ -7,7 +7,7 @@ import { ContextMenuType } from '@/types/ContextMenuType'
 export default function SidebarUser({ user, color, roles = [] }) {
   return (
     <ContextMenuTrigger data={{ type: ContextMenuType.User, user }}>
-      <UserPopup user={user} roles={roles} placement="left">
+      <UserPopup user={user} role={roles} placement="left">
         <SidebarItem small>
           <UserAvatar
             user={user}

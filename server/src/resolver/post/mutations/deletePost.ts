@@ -15,7 +15,7 @@ export async function deletePost(
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
   const user = await em.findOneOrFail(User, userId)
-  const post = await em.findOneOrFail(Post, postId, ['author.user', 'server'])
+  const post = await em.findOneOrFail(Post, postId, ['author', 'server'])
   if (post.author !== user)
     await user.checkServerPermission(
       em,

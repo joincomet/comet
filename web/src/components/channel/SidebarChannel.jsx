@@ -109,6 +109,7 @@ function DeleteChannelDialog({ server, channel, open, setOpen }) {
 
   return (
     <StyledDialog
+      closeOnOverlayClick
       small
       open={open}
       close={() => setOpen(false)}

@@ -6,7 +6,8 @@ export default function Switch({
   onChange,
   children,
   green = false,
-  className
+  className,
+  disabled
 }) {
   return (
     <HeadlessSwitch.Group as="div" className="flex items-center space-x-3">
@@ -17,6 +18,7 @@ export default function Switch({
       )}
 
       <HeadlessSwitch
+        disabled={disabled}
         as="button"
         checked={checked}
         onChange={onChange}

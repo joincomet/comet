@@ -6,7 +6,8 @@ export const relatedUsersLoader = (
   em: EntityManager,
   currentUserId: string
 ) => {
-  return new DataLoader<string, User[]>(async (userIds: string[]) => {
+  const loader = new DataLoader<string, User[]>(async (userIds: string[]) => {
+    loader.clearAll()
     const rels = await em.find(Relationship, { owner: userIds }, ['user'], {
       lastMessageAt: 'DESC'
     })
@@ -29,4 +30,5 @@ export const relatedUsersLoader = (
     })
     return userIds.map(userId => map[userId])
   })
+  return loader
 }

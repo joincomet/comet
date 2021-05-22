@@ -150,7 +150,7 @@ export async function posts(
         folder ? { folderPosts: { folder } } : {}
       ]
     },
-    ['author.roles', 'author.user', 'server'],
+    ['author', 'server'],
     orderBy,
     limit + 1,
     offset

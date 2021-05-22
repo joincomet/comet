@@ -23,7 +23,6 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
 
 export default function CreateServerDialog({ open, setOpen, server }) {
-  const [currentUser] = useCurrentUser()
   const [createServer, { loading: createLoading }] = useCreateServerMutation({
     update(cache, { data: { createServer } }) {
       const data = cache.readQuery({ query: CurrentUserDocument })
@@ -40,10 +39,7 @@ export default function CreateServerDialog({ open, setOpen, server }) {
     server?.category ?? ServerCategory.Other
   )
   const { handleSubmit, register, watch, reset, setValue } = useForm({
-    shouldUnregister: true,
-    defaultValues: server
-      ? { displayName: server.displayName, description: server.description }
-      : {}
+    mode: 'onChange'
   })
   const avatarFile = watch('avatarFile')
   const bannerFile = watch('bannerFile')
@@ -68,15 +64,16 @@ export default function CreateServerDialog({ open, setOpen, server }) {
 
   useEffect(() => {
     if (!server) {
+      reset()
       setAvatarSrc(null)
       setBannerSrc(null)
-      reset()
       setCategory(ServerCategory.Other)
     } else {
+      //reset()
       setAvatarSrc(server.avatarUrl)
       setBannerSrc(server.bannerUrl)
-      reset()
       setValue('displayName', server.displayName)
+      setValue('description', server.description)
       setCategory(server.category)
     }
   }, [server])
@@ -140,8 +137,6 @@ export default function CreateServerDialog({ open, setOpen, server }) {
     .join('')
     .toUpperCase()
 
-  const [deleteOpen, setDeleteOpen] = useState(false)
-
   const close = () => {
     setOpen(false)
   }
@@ -153,65 +148,43 @@ export default function CreateServerDialog({ open, setOpen, server }) {
       closeOnOverlayClick
       onSubmit={handleSubmit(onSubmit)}
       buttons={
-        <>
-          {!!server && server.owner.id === currentUser?.id && (
-            <Tippy content="Delete Planet">
-              <button
-                type="button"
-                onClick={() => setDeleteOpen(true)}
-                className={`form-button-delete`}
-              >
-                <IconDelete className="w-5 h-5 text-primary" />
-              </button>
-            </Tippy>
-          )}
-
-          {!server ? (
+        !server ? (
+          <button
+            type="submit"
+            className={`form-button-submit`}
+            disabled={
+              !displayName ||
+              !name ||
+              displayName?.length < 2 ||
+              name?.length < 3 ||
+              createLoading
+            }
+          >
+            {createLoading ? (
+              <IconSpinner className="w-5 h-5 text-primary" />
+            ) : (
+              <IconUserToServerArrow className="w-5 h-5 text-primary" />
+            )}
+          </button>
+        ) : (
+          <Tippy content="Save Changes">
             <button
               type="submit"
               className={`form-button-submit`}
               disabled={
-                !displayName ||
-                !name ||
-                displayName?.length < 2 ||
-                name?.length < 3 ||
-                createLoading
+                !displayName || updateLoading || displayName?.length < 2
               }
             >
-              {createLoading ? (
+              {updateLoading ? (
                 <IconSpinner className="w-5 h-5 text-primary" />
               ) : (
-                <IconUserToServerArrow className="w-5 h-5 text-primary" />
+                <IconCheck className="w-5 h-5 text-primary" />
               )}
             </button>
-          ) : (
-            <Tippy content="Save Changes">
-              <button
-                type="submit"
-                className={`form-button-submit`}
-                disabled={
-                  !displayName || updateLoading || displayName?.length < 2
-                }
-              >
-                {updateLoading ? (
-                  <IconSpinner className="w-5 h-5 text-primary" />
-                ) : (
-                  <IconCheck className="w-5 h-5 text-primary" />
-                )}
-              </button>
-            </Tippy>
-          )}
-        </>
+          </Tippy>
+        )
       }
     >
-      {!!server && (
-        <DeleteServerDialog
-          open={deleteOpen}
-          setOpen={setDeleteOpen}
-          server={server}
-        />
-      )}
-
       <input
         type="file"
         {...register('bannerFile')}
@@ -294,65 +267,5 @@ export default function CreateServerDialog({ open, setOpen, server }) {
         </div>
       </div>
     </StyledDialog>
-  )
-}
-
-function DeleteServerDialog({ open, setOpen, server }) {
-  const [password, setPassword] = useState('')
-  const [deleteServer, { loading }] = useDeleteServerMutation()
-  const { push } = useHistory()
-
-  return (
-    <Dialog isOpen={open} close={() => setOpen(false)}>
-      <div className="max-w-md w-full rounded-md dark:bg-gray-800 shadow-lg p-4">
-        <div className="text-red-400 text-2xl font-semibold">
-          Delete {server.name}
-        </div>
-
-        <div className="text-secondary pb-5 pt-3 text-base">
-          You will not be able to restore this planet.
-        </div>
-
-        <div className="text-left">
-          <label htmlFor="confirmPassword" className="label">
-            Password
-          </label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            className="textbox"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            type="password"
-          />
-        </div>
-
-        <div className="flex items-center justify-end space-x-4 pt-4">
-          <button
-            className="cancel-button"
-            type="button"
-            onClick={() => setOpen(false)}
-          >
-            Cancel
-          </button>
-          <button
-            className="delete-button"
-            type="button"
-            disabled={!password || loading}
-            onClick={() => {
-              deleteServer({
-                variables: { input: { password, serverId: server.id } }
-              }).then(() => {
-                setOpen(false)
-                push('/')
-              })
-            }}
-          >
-            Delete {server.name}
-            {loading && <IconSpinner className="w-5 h-5 text-primary ml-3" />}
-          </button>
-        </div>
-      </div>
-    </Dialog>
   )
 }

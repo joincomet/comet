@@ -4,6 +4,7 @@ import {
   Enum,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   Property
 } from '@mikro-orm/core'
 import { Server, ServerUser } from '@/entity'
@@ -25,11 +26,15 @@ export class Role extends BaseEntity {
   @ManyToOne({ entity: () => Server, inversedBy: 'roles' })
   server: Server
 
-  @ManyToMany(() => ServerUser, 'roles')
+  @OneToMany(() => ServerUser, 'role')
   serverUsers = new Collection<ServerUser>(this)
 
   @Property({ columnType: 'text' })
   position: string = ReorderUtils.FIRST_POSITION
+
+  @Field()
+  @Property({ default: false })
+  isDefault: boolean = false
 
   @Field({ nullable: true })
   @Property({ nullable: true })

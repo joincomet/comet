@@ -3,11 +3,16 @@ import { Server, ServerUser, ServerUserStatus, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 
 export const userServersLoader = (em: EntityManager, currentUserId: string) => {
-  return new DataLoader<string, Server[]>(async (userIds: string[]) => {
+  const loader = new DataLoader<string, Server[]>(async (userIds: string[]) => {
+    loader.clearAll()
     if (!currentUserId) return userIds.map(_ => [])
     const serverUsers = await em.find(
       ServerUser,
-      { user: userIds, status: ServerUserStatus.Joined },
+      {
+        user: userIds,
+        status: ServerUserStatus.Joined,
+        server: { isDeleted: false }
+      },
       ['server'],
       { position: 'ASC' }
     )
@@ -26,4 +31,5 @@ export const userServersLoader = (em: EntityManager, currentUserId: string) => {
     })
     return userIds.map(userId => map[userId])
   })
+  return loader
 }

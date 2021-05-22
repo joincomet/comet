@@ -108,11 +108,11 @@ function ReplyContent({ comment }) {
         <ContextMenuTrigger
           data={{
             type: ContextMenuType.User,
-            user: comment.author.user
+            user: comment.author
           }}
         >
-          <UserPopup user={comment.author.user} roles={comment.author.roles}>
-            <UserAvatar user={comment.author.user} size={7} />
+          <UserPopup user={comment.author} role={comment.serverUser?.role}>
+            <UserAvatar user={comment.author} size={7} />
           </UserPopup>
         </ContextMenuTrigger>
       </div>
@@ -131,17 +131,14 @@ function ReplyContent({ comment }) {
                 user: comment.author
               }}
             >
-              <UserPopup
-                user={comment.author?.user}
-                roles={comment.author?.roles}
-              >
+              <UserPopup user={comment.author} role={comment.serverUser?.role}>
                 <div
                   className={`text-sm font-medium cursor-pointer hover:underline leading-none ${
                     comment.author.color ? '' : 'text-primary'
                   }`}
-                  style={{ color: comment.author.color }}
+                  style={{ color: comment.serverUser?.color }}
                 >
-                  {comment.author?.user?.username ?? '[deleted]'}
+                  {comment.author?.username ?? '[deleted]'}
                 </div>
               </UserPopup>
             </ContextMenuTrigger>

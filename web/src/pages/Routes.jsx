@@ -20,6 +20,8 @@ import ServerSidebar from '@/pages/server/ServerSidebar'
 import ChannelPage from '@/pages/server/channel/ChannelPage'
 import { useServerQuery } from '@/graphql/hooks'
 import { useMessagesSubscriptions } from '@/hooks/useMessagesSubscriptions'
+import ServerProvider from '@/providers/ServerProvider'
+import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
 
 const serverRegex = `\\+[A-Za-z0-9_]+`
 const usernameRegex = `@[A-Za-z0-9-_]+`
@@ -102,33 +104,39 @@ export default function Routes() {
 function ServerRoutes() {
   const { server: s } = useParams()
   const serverName = s.substring(1)
-  const { data: serverData } = useServerQuery({
-    variables: { name: serverName },
-    fetchPolicy: 'cache-and-network'
-    // nextFetchPolicy: 'cache-first'
-  })
-  const server = serverData?.server
 
+  return (
+    <ServerProvider name={serverName}>
+      <ServerPages />
+    </ServerProvider>
+  )
+}
+
+function ServerPages() {
+  const { server, loading } = useCurrentServer()
   const { hash, pathname } = useLocation()
   const channelName = hash.substring(1)
-  const channel = (server?.channels ?? []).find(c => c.name === channelName)
 
   const matchedPost = matchPath(pathname, {
     path: '/:server/post/:postId'
   })
   const postId = matchedPost?.params?.postId
 
+  if (!server && !loading) {
+    return <NotFound />
+  }
+
   return (
     <>
-      <ServerSidebar server={server} />
+      <ServerSidebar />
       <Route
         path={`/:server(${serverRegex})`}
         exact
         render={({ location }) =>
           location.hash ? (
-            <ChannelPage server={server} channel={channel} />
+            <ChannelPage channelName={channelName} />
           ) : (
-            <ServerPostsPage server={server} />
+            <ServerPostsPage />
           )
         }
       />
@@ -138,7 +146,7 @@ function ServerRoutes() {
           `/:server(${serverRegex})/post/:postId/:slug`
         ]}
       >
-        <PostPage server={server} postId={postId} />
+        <PostPage postId={postId} />
       </Route>
     </>
   )

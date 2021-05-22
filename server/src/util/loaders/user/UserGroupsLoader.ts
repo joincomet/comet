@@ -3,7 +3,8 @@ import { Group, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 
 export const userGroupsLoader = (em: EntityManager, currentUserId: string) => {
-  return new DataLoader<string, Group[]>(async (userIds: string[]) => {
+  const loader = new DataLoader<string, Group[]>(async (userIds: string[]) => {
+    loader.clearAll()
     const groups = await em.find(Group, { users: userIds }, ['users'], {
       lastMessageAt: 'DESC'
     })
@@ -16,4 +17,5 @@ export const userGroupsLoader = (em: EntityManager, currentUserId: string) => {
     })
     return userIds.map(userId => map[userId])
   })
+  return loader
 }

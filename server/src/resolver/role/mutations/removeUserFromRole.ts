@@ -34,9 +34,9 @@ export async function removeUserFromRole(
     server: role.server,
     status: ServerUserStatus.Joined
   })
-  if (!role.serverUsers.contains(serverUser))
-    throw new Error('User does not have this role')
-  role.serverUsers.remove(serverUser)
+  if (serverUser.role !== role) throw new Error('User does not have this role')
+  serverUser.role = role
+  await em.persistAndFlush(serverUser)
   liveQueryStore.invalidate(`User:${userId}`)
   return serverUser
 }

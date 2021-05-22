@@ -16,15 +16,16 @@ export async function server(
   { em, userId }: Context,
   { id, name }: ServerArgs
 ): Promise<Server> {
+  em = em.fork()
   if (!id && !name) throw new Error('Must provide id or name')
   if (id && name) throw new Error('Must provide one of id or name')
   if (name) {
-    return em.findOneOrFail(
+    return em.findOne(
       Server,
       { name: { $ilike: handleUnderscore(name) }, isDeleted: false },
       ['owner']
     )
   } else if (id) {
-    return em.findOneOrFail(Server, { id, isDeleted: false }, ['owner'])
+    return em.findOne(Server, { id, isDeleted: false }, ['owner'])
   }
 }

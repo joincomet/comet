@@ -10,7 +10,8 @@ import {
 import { EntityManager } from '@mikro-orm/postgresql'
 
 export const userFoldersLoader = (em: EntityManager, currentUserId: string) => {
-  return new DataLoader<string, Folder[]>(async (userIds: string[]) => {
+  const loader = new DataLoader<string, Folder[]>(async (userIds: string[]) => {
+    loader.clearAll()
     const userFolders = await em.find(
       UserFolder,
       { user: userIds },
@@ -48,4 +49,5 @@ export const userFoldersLoader = (em: EntityManager, currentUserId: string) => {
     })
     return userIds.map(serverId => map[serverId])
   })
+  return loader
 }

@@ -79,6 +79,7 @@ export default forwardRef(
         className={`${className(large, small, light)} ${
           active ? activeClassName(light) : ''
         }`}
+        type="button"
       >
         {children}
       </button>

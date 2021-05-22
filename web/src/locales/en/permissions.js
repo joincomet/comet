@@ -23,9 +23,15 @@ export const permissions = {
       title: 'Send Messages',
       description: 'Allows members to send messages in text channels.'
     },
-    [ServerPermission.Mention]: {
-      title: 'Mention @everyone, @here, and All Roles',
-      description: `Allows members to use @everyone (everyone in the planet) or @here (only online members in that channel). They can also @mention all roles, even if the role's "Allow anyone to mention this role" permission is disabled.`
+    [ServerPermission.RestrictedChannels]: {
+      title: 'Send Messages in Restricted Channels',
+      description:
+        'Allows members to send messages in restricted text channels.'
+    },
+    [ServerPermission.PrivateChannels]: {
+      title: 'Use Private Channels',
+      description:
+        'Allows members to view and send messages in private text channels.'
     },
     [ServerPermission.ManageMessages]: {
       title: 'Manage Messages',
@@ -34,28 +40,12 @@ export const permissions = {
     },
 
     // Posts
-    [ServerPermission.CreatePost]: {
-      title: 'Create Posts',
-      description: 'Allows members to create posts.'
-    },
-    [ServerPermission.VotePost]: {
-      title: 'Vote on Posts',
-      description: 'Allows members to vote on posts.'
-    },
     [ServerPermission.ManagePosts]: {
       title: 'Manage Posts',
       description: 'Allows members to pin and remove posts.'
     },
 
     // Comments
-    [ServerPermission.CreateComment]: {
-      title: 'Create Comments',
-      description: 'Allows members to create comments.'
-    },
-    [ServerPermission.VoteComment]: {
-      title: 'Vote on Comments',
-      description: 'Allows members to vote on comments.'
-    },
     [ServerPermission.ManageComments]: {
       title: 'Manage Comments',
       description: 'Allows members to pin and remove comments.'
@@ -73,26 +63,18 @@ export const permissions = {
 
     // Other
     [ServerPermission.DisplayRoleSeparately]: {
-      title: 'Display role members separately from online members',
-      description: ''
-    },
-    [ServerPermission.Mentionable]: {
-      title: 'Allow anyone to @mention this role',
-      description: `Note: Members with the "Mention @everyone, @here, and All Roles" permission will always be able to ping this role.`
+      title: 'Display Role Separately',
+      description:
+        'Members with this role will appear separately in the users list'
     },
     [ServerPermission.Admin]: {
       title: 'Administrator',
-      description: `Members with this permission will have every permission and will also bypass all channel specific permissions or restrictions (for example, these members would get access to all private channels). **This is a dangerous permission to grant**.`
+      description: `Members with this role have every permission`
     },
 
     [ServerPermission.ManageUsers]: {
       title: 'Manage Users',
       description: `Ban and kick users`
-    },
-
-    [ServerPermission.ViewChannels]: {
-      title: 'View Channels',
-      description: `View channels`
     }
   }
 }

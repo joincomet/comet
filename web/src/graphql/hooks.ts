@@ -986,7 +986,7 @@ export type Query = {
   posts: PostsResponse;
   publicServers: Array<Server>;
   replies: Array<Reply>;
-  server: Server;
+  server?: Maybe<Server>;
   serverUsers: Array<ServerUser>;
   user?: Maybe<User>;
 };
@@ -1130,6 +1130,7 @@ export type Role = BaseEntity & {
   color?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
+  isDefault: Scalars['Boolean'];
   name: Scalars['String'];
   permissions: Array<ServerPermission>;
 };
@@ -1198,7 +1199,7 @@ export enum ServerPermission {
 export type ServerUser = {
   __typename?: 'ServerUser';
   color?: Maybe<Scalars['String']>;
-  roles: Array<Role>;
+  role: Role;
   user: User;
 };
 
@@ -1378,7 +1379,7 @@ export type CurrentUserFragment = (
     & ServerFragment
   )>, relatedUsers: Array<(
     { __typename?: 'User' }
-    & RelatedUserFragment
+    & UserFragment
   )>, groups: Array<(
     { __typename?: 'Group' }
     & { owner: (
@@ -1479,7 +1480,7 @@ export type ReplyFragment = (
 
 export type RoleFragment = (
   { __typename?: 'Role' }
-  & Pick<Role, 'id' | 'name' | 'color' | 'permissions'>
+  & Pick<Role, 'id' | 'name' | 'color' | 'permissions' | 'isDefault'>
 );
 
 export type ServerFragment = (
@@ -1491,22 +1492,16 @@ export type ServerFragment = (
   ), channels: Array<(
     { __typename?: 'Channel' }
     & ChannelFragment
-  )>, roles: Array<(
-    { __typename?: 'Role' }
-    & RoleFragment
-  )>, folders: Array<(
-    { __typename?: 'Folder' }
-    & FolderFragment
   )> }
 );
 
 export type ServerUserFragment = (
   { __typename?: 'ServerUser' }
   & Pick<ServerUser, 'color'>
-  & { roles: Array<(
+  & { role: (
     { __typename?: 'Role' }
     & RoleFragment
-  )>, user: (
+  ), user: (
     { __typename?: 'User' }
     & UserFragment
   ) }
@@ -2162,7 +2157,7 @@ export type CreateFriendRequestMutation = (
       & FolderFragment
     )>, relatedUsers: Array<(
       { __typename?: 'User' }
-      & UserFragment
+      & RelatedUserFragment
     )>, servers: Array<(
       { __typename?: 'Server' }
       & Pick<Server, 'id' | 'avatarUrl' | 'name'>
@@ -2185,7 +2180,7 @@ export type DeleteFriendRequestMutation = (
       & FolderFragment
     )>, relatedUsers: Array<(
       { __typename?: 'User' }
-      & UserFragment
+      & RelatedUserFragment
     )>, servers: Array<(
       { __typename?: 'Server' }
       & Pick<Server, 'id' | 'avatarUrl' | 'name'>
@@ -2395,6 +2390,13 @@ export type CreateServerMutation = (
   { __typename?: 'Mutation' }
   & { createServer: (
     { __typename?: 'Server' }
+    & { roles: Array<(
+      { __typename?: 'Role' }
+      & RoleFragment
+    )>, folders: Array<(
+      { __typename?: 'Folder' }
+      & FolderFragment
+    )> }
     & ServerFragment
   ) }
 );
@@ -2782,7 +2784,7 @@ export type ServerQueryVariables = Exact<{
 
 export type ServerQuery = (
   { __typename?: 'Query' }
-  & { server: (
+  & { server?: Maybe<(
     { __typename?: 'Server' }
     & Pick<Server, 'permissions'>
     & { channels: Array<(
@@ -2796,7 +2798,7 @@ export type ServerQuery = (
       & FolderFragment
     )> }
     & ServerFragment
-  ) }
+  )> }
 );
 
 export type ServerUsersQueryVariables = Exact<{
@@ -2829,7 +2831,7 @@ export type UserQuery = (
       { __typename?: 'Server' }
       & Pick<Server, 'id' | 'avatarUrl' | 'name'>
     )> }
-    & RelatedUserFragment
+    & UserFragment
   )> }
 );
 
@@ -2878,17 +2880,17 @@ export type MessageChangedSubscription = (
         & ServerUserFragment
       )>, channel?: Maybe<(
         { __typename?: 'Channel' }
-        & Pick<Channel, 'id' | 'name'>
+        & Pick<Channel, 'name' | 'id'>
         & { server: (
           { __typename?: 'Server' }
           & Pick<Server, 'id' | 'name'>
         ) }
       )>, group?: Maybe<(
         { __typename?: 'Group' }
-        & Pick<Group, 'id' | 'displayName'>
+        & Pick<Group, 'displayName' | 'id'>
       )>, toUser?: Maybe<(
         { __typename?: 'User' }
-        & Pick<User, 'id' | 'username'>
+        & Pick<User, 'username' | 'id'>
       )> }
       & MessageFragment
     )>, updated?: Maybe<(
@@ -3034,26 +3036,6 @@ export const ChannelFragmentDoc = gql`
   type
 }
     `;
-export const RoleFragmentDoc = gql`
-    fragment Role on Role {
-  id
-  name
-  color
-  permissions
-}
-    `;
-export const FolderFragmentDoc = gql`
-    fragment Folder on Folder {
-  id
-  name
-  avatarUrl
-  description
-  postCount
-  followerCount
-  isCollaborative
-  visibility
-}
-    `;
 export const ServerFragmentDoc = gql`
     fragment Server on Server {
   id
@@ -3072,24 +3054,8 @@ export const ServerFragmentDoc = gql`
   channels {
     ...Channel
   }
-  roles {
-    ...Role
-  }
-  folders {
-    ...Folder
-  }
 }
-    ${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}`;
-export const RelatedUserFragmentDoc = gql`
-    fragment RelatedUser on User {
-  ...User
-  showChat
-  unreadCount
-  lastMessageAt
-}
-    ${UserFragmentDoc}`;
+    ${ChannelFragmentDoc}`;
 export const GroupFragmentDoc = gql`
     fragment Group on Group {
   id
@@ -3109,7 +3075,7 @@ export const CurrentUserFragmentDoc = gql`
     ...Server
   }
   relatedUsers {
-    ...RelatedUser
+    ...User
   }
   groups {
     ...Group
@@ -3123,8 +3089,19 @@ export const CurrentUserFragmentDoc = gql`
 }
     ${UserFragmentDoc}
 ${ServerFragmentDoc}
-${RelatedUserFragmentDoc}
 ${GroupFragmentDoc}`;
+export const FolderFragmentDoc = gql`
+    fragment Folder on Folder {
+  id
+  name
+  avatarUrl
+  description
+  postCount
+  followerCount
+  isCollaborative
+  visibility
+}
+    `;
 export const MessageFragmentDoc = gql`
     fragment Message on Message {
   id
@@ -3183,10 +3160,27 @@ export const PostFragmentDoc = gql`
   }
 }
     ${MetadataFragmentDoc}`;
+export const RelatedUserFragmentDoc = gql`
+    fragment RelatedUser on User {
+  ...User
+  showChat
+  unreadCount
+  lastMessageAt
+}
+    ${UserFragmentDoc}`;
+export const RoleFragmentDoc = gql`
+    fragment Role on Role {
+  id
+  name
+  color
+  permissions
+  isDefault
+}
+    `;
 export const ServerUserFragmentDoc = gql`
     fragment ServerUser on ServerUser {
   color
-  roles {
+  role {
     ...Role
   }
   user {
@@ -4698,7 +4692,7 @@ export const CreateFriendRequestDocument = gql`
       ...Folder
     }
     relatedUsers {
-      ...User
+      ...RelatedUser
     }
     servers {
       id
@@ -4708,7 +4702,8 @@ export const CreateFriendRequestDocument = gql`
   }
 }
     ${UserFragmentDoc}
-${FolderFragmentDoc}`;
+${FolderFragmentDoc}
+${RelatedUserFragmentDoc}`;
 export type CreateFriendRequestMutationFn = Apollo.MutationFunction<CreateFriendRequestMutation, CreateFriendRequestMutationVariables>;
 
 /**
@@ -4743,7 +4738,7 @@ export const DeleteFriendRequestDocument = gql`
       ...Folder
     }
     relatedUsers {
-      ...User
+      ...RelatedUser
     }
     servers {
       id
@@ -4753,7 +4748,8 @@ export const DeleteFriendRequestDocument = gql`
   }
 }
     ${UserFragmentDoc}
-${FolderFragmentDoc}`;
+${FolderFragmentDoc}
+${RelatedUserFragmentDoc}`;
 export type DeleteFriendRequestMutationFn = Apollo.MutationFunction<DeleteFriendRequestMutation, DeleteFriendRequestMutationVariables>;
 
 /**
@@ -5277,9 +5273,17 @@ export const CreateServerDocument = gql`
     mutation createServer($input: CreateServerInput!) {
   createServer(input: $input) {
     ...Server
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
-    ${ServerFragmentDoc}`;
+    ${ServerFragmentDoc}
+${RoleFragmentDoc}
+${FolderFragmentDoc}`;
 export type CreateServerMutationFn = Apollo.MutationFunction<CreateServerMutation, CreateServerMutationVariables>;
 
 /**
@@ -6311,7 +6315,7 @@ export type ServerUsersQueryResult = Apollo.QueryResult<ServerUsersQuery, Server
 export const UserDocument = gql`
     query user($id: ID, $username: String) @live {
   user(id: $id, username: $username) {
-    ...RelatedUser
+    ...User
     relatedUsers {
       ...User
     }
@@ -6322,8 +6326,7 @@ export const UserDocument = gql`
     }
   }
 }
-    ${RelatedUserFragmentDoc}
-${UserFragmentDoc}`;
+    ${UserFragmentDoc}`;
 
 /**
  * __useUserQuery__
@@ -6408,20 +6411,20 @@ export const MessageChangedDocument = gql`
         ...ServerUser
       }
       channel {
-        id
         name
+        id
         server {
           id
           name
         }
       }
       group {
-        id
         displayName
+        id
       }
       toUser {
-        id
         username
+        id
       }
     }
     updated {

@@ -3,7 +3,8 @@ import { Group, GroupUser, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 
 export const groupUnreadCountLoader = (em: EntityManager, userId: string) => {
-  return new DataLoader<string, number>(async (groupIds: string[]) => {
+  const loader = new DataLoader<string, number>(async (groupIds: string[]) => {
+    loader.clearAll()
     const groupUsers = await em.find(GroupUser, {
       user: userId,
       group: groupIds
@@ -17,4 +18,5 @@ export const groupUnreadCountLoader = (em: EntityManager, userId: string) => {
     )
     return groupIds.map(groupId => map[groupId])
   })
+  return loader
 }

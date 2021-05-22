@@ -31,12 +31,9 @@ export class ServerUser {
   @Property()
   createdAt: Date = new Date()
 
-  @Field(() => [Role])
-  @ManyToMany(() => Role, 'serverUsers', {
-    owner: true,
-    orderBy: { position: QueryOrder.ASC }
-  })
-  roles = new Collection<Role>(this)
+  @Field(() => Role)
+  @ManyToOne({ entity: () => Role, inversedBy: 'serverUsers' })
+  role: Role
 
   @Enum({
     items: () => ServerUserStatus
@@ -45,8 +42,6 @@ export class ServerUser {
 
   @Field({ nullable: true })
   get color(): string {
-    if (!this.roles || !this.roles.isInitialized() || this.roles.length === 0)
-      return null
-    return this.roles[0].color
+    return this.role.color
   }
 }

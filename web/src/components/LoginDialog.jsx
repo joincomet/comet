@@ -1,14 +1,8 @@
 import { useLoginDialog } from '@/hooks/useLoginDialog'
 import { useForm } from 'react-hook-form'
-import {
-  CurrentUserDocument,
-  useCreateAccountMutation,
-  useLoginMutation
-} from '@/graphql/hooks'
+import { useCreateAccountMutation, useLoginMutation } from '@/graphql/hooks'
 import {
   IconEmail,
-  IconHide,
-  IconShow,
   IconSpinner,
   IconUser,
   IconUserToServerArrow,
@@ -16,20 +10,9 @@ import {
 } from '@/components/ui/icons/Icons'
 import { useState } from 'react'
 import { VectorLogo } from '@/components/ui/vectors'
-import ctl from '@netlify/classnames-template-literals'
-import Tippy from '@tippyjs/react'
 import isEmail from 'validator/es/lib/isEmail'
-import { useApolloClient } from '@apollo/client'
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
-
-const showPasswordClass = ctl(`
-  highlightable
-  absolute
-  right-1.5
-  top-1/2
-  transform
-  -translate-y-1/2
-`)
+import ShowPasswordButton from '@/components/ui/ShowPasswordButton'
 
 const usernameRegex = /^[A-Za-z0-9-_]+$/gi
 
@@ -55,7 +38,6 @@ export default function LoginDialog() {
   const [createAccount, { loading: createAccountLoading }] =
     useCreateAccountMutation()
   const [login, { loading: loginLoading }] = useLoginMutation()
-  const apolloClient = useApolloClient()
   const onSubmit = ({ usernameOrEmail, email, username, password }) => {
     if (isCreateAccount) {
       createAccount({
@@ -246,7 +228,7 @@ export default function LoginDialog() {
                       required: true,
                       minLength: 6
                     })}
-                    className={`form-input`}
+                    className={`form-input-password`}
                     placeholder="Password"
                     type={showPassword ? 'text' : 'password'}
                     minLength={6}
@@ -276,7 +258,7 @@ export default function LoginDialog() {
                         }
                       }
                     })}
-                    className={`form-input`}
+                    className={`form-input-password`}
                     placeholder="Confirm Password"
                     type={showPassword ? 'text' : 'password'}
                   />
@@ -310,22 +292,5 @@ export default function LoginDialog() {
         </div>
       </div>
     </StyledDialog>
-  )
-}
-
-function ShowPasswordButton({ showPassword, setShowPassword }) {
-  return (
-    <Tippy content={showPassword ? 'Hide Password' : 'Show Password'}>
-      <div className={showPasswordClass}>
-        {showPassword ? (
-          <IconHide
-            onClick={() => setShowPassword(false)}
-            className="w-5 h-5"
-          />
-        ) : (
-          <IconShow onClick={() => setShowPassword(true)} className="w-5 h-5" />
-        )}
-      </div>
-    </Tippy>
   )
 }

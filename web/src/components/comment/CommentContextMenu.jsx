@@ -14,13 +14,9 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
   const setReplyingCommentId = useStore(s => s.setReplyingCommentId)
-  const [canManageComments, canVote, canComment] = useHasServerPermissions({
+  const [canManageComments] = useHasServerPermissions({
     server: post.server,
-    permissions: [
-      ServerPermission.ManageComments,
-      ServerPermission.VoteComment,
-      ServerPermission.CreateComment
-    ]
+    permissions: [ServerPermission.ManageComments]
   })
   const copyToClipboard = useCopyToClipboard()[1]
   const [deleteComment] = useDeleteCommentMutation()
@@ -32,7 +28,7 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
   return (
     <>
       <ContextMenuSection>
-        {!!currentUser && canVote && (
+        {!!currentUser && (
           <ContextMenuItem
             label={
               comment.isVoted
@@ -53,7 +49,7 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
             onClick={() => togglePin()}
           />
         )}
-        {canComment && (
+        {!!currentUser && (
           <ContextMenuItem
             onClick={() => setReplyingCommentId(comment?.id)}
             label={t('comment.context.reply')}

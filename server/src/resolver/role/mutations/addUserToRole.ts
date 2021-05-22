@@ -33,9 +33,9 @@ export async function addUserToRole(
     server: role.server,
     status: ServerUserStatus.Joined
   })
-  if (role.serverUsers.contains(serverUser))
-    throw new Error('User already has this role')
-  role.serverUsers.add(serverUser)
+  if (serverUser.role === role) throw new Error('User already has this role')
+  serverUser.role = role
+  await em.persistAndFlush(serverUser)
   liveQueryStore.invalidate(`User:${userId}`)
   return serverUser
 }

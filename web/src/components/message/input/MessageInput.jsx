@@ -29,6 +29,7 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
 import { Editor } from '@tiptap/react/src/Editor'
 import TypingAnimation from '@/components/message/input/TypingAnimation'
+import { useDebounce } from 'react-use'
 
 function useForceUpdate() {
   const [, setValue] = useState(0)
@@ -288,6 +289,32 @@ export default function MessageInput({ channel, server, group, user, users }) {
     }
   }, [pasteListener])
 
+  const [lastKeypressAt, setLastKeypressAt] = useState(null)
+
+  const keypressListener = useCallback(
+    e => {
+      if (!canSendMessage) return
+      const currentTime = new Date().getTime()
+      if (lastKeypressAt) {
+        if (currentTime - lastKeypressAt > 500) {
+          startTyping()
+          setLastKeypressAt(currentTime)
+        }
+      } else {
+        setLastKeypressAt(currentTime)
+      }
+      editor?.commands.focus()
+    },
+    [editor]
+  )
+
+  useEffect(() => {
+    document.body.addEventListener('keypress', keypressListener)
+    return () => {
+      document.body.removeEventListener('keypress', keypressListener)
+    }
+  }, [pasteListener])
+
   useEffect(() => {
     if (files) {
       setCurrentFile(files[0])
@@ -317,10 +344,6 @@ export default function MessageInput({ channel, server, group, user, users }) {
     setCurrentFileIndex(0)
   }, [setFiles, setCurrentFile, setCurrentFileIndex])
 
-  /*useEffect(() => {
-    setTimeout(() => editor?.commands?.clearContent())
-  }, [user, group, channel])*/
-
   return (
     <>
       {!!currentUser && (
@@ -339,14 +362,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
         </>
       )}
 
-      <div
-        className="px-4 dark:bg-gray-750 relative"
-        onKeyPress={() => {
-          if (currentUser) {
-            startTyping()
-          }
-        }}
-      >
+      <div className="px-4 dark:bg-gray-750 relative">
         <div className="relative">
           {canSendMessage && (
             <Tippy content={t('message.upload')}>

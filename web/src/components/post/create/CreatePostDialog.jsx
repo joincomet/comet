@@ -106,9 +106,7 @@ export default function CreatePostDialog({ open, setOpen, serverId }) {
   const { t } = useTranslation()
   const { push } = useHistory()
   const [currentUser] = useCurrentUser()
-  const servers = (currentUser?.servers ?? []).filter(s =>
-    s.permissions.includes(ServerPermission.CreatePost)
-  )
+  const servers = currentUser?.servers ?? []
   const [server, setServer] = useState(
     serverId ? servers?.find(s => s.id === serverId) : null
   )

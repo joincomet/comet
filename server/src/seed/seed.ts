@@ -38,14 +38,15 @@ export async function seed(em: EntityManager) {
       featuredPosition: ReorderUtils.FIRST_POSITION,
       owner: cometUser
     })
-    const everyoneRole = em.create(Role, {
-      name: '@everyone',
-      server: cometServer
+    const defaultRole = em.create(Role, {
+      name: 'Default',
+      server: cometServer,
+      isDefault: true
     })
     const cometServerUser = em.create(ServerUser, {
       server: cometServer,
       user: cometUser,
-      roles: [everyoneRole]
+      role: defaultRole
     })
 
     const generalChannel = em.create(Channel, {
@@ -91,7 +92,7 @@ export async function seed(em: EntityManager) {
       cometServer,
       generalChannel,
       initialMessage,
-      everyoneRole,
+      defaultRole,
       announcementsFolder,
       announcementsServerFolder,
       cometServerUser,

@@ -59,10 +59,7 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<CommentChangedResponse> {
-    const entity = await em.findOneOrFail(Comment, id, [
-      'author.user',
-      'author.roles'
-    ])
+    const entity = await em.findOneOrFail(Comment, id, ['author'])
     return getResult(entity, type)
   }
 
@@ -73,11 +70,7 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<PostChangedResponse> {
-    const entity = await em.findOneOrFail(Post, id, [
-      'author.roles',
-      'author.user',
-      'server'
-    ])
+    const entity = await em.findOneOrFail(Post, id, ['author', 'server'])
     return getResult(entity, type)
   }
 
@@ -110,10 +103,8 @@ export class SubscriptionResolver {
   ): Promise<ReplyChangedResponse> {
     const entity = await em.findOneOrFail(Reply, { id, user: userId }, [
       'user',
-      'comment.author.roles',
-      'comment.author.user',
-      'comment.post.author.roles',
-      'comment.post.author.user',
+      'comment.author',
+      'comment.post.author',
       'comment.post.server'
     ])
     return getResult(entity, type)

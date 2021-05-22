@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import {
+  Role,
   Server,
   ServerPermission,
   ServerUser,
@@ -31,7 +32,7 @@ export async function banUserFromServer(
     server,
     status: ServerUserStatus.Joined
   })
-  serverUser.roles.set([])
+  serverUser.role = await em.findOne(Role, { server, isDefault: true })
   serverUser.status = ServerUserStatus.Banned
   server.userCount--
   await em.persistAndFlush([serverUser, server])

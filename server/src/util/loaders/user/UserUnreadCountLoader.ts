@@ -6,7 +6,8 @@ export const userUnreadCountLoader = (
   em: EntityManager,
   currentUserId: string
 ) => {
-  return new DataLoader<string, number>(async (userIds: string[]) => {
+  const loader = new DataLoader<string, number>(async (userIds: string[]) => {
+    loader.clearAll()
     const relationships = await em.find(Relationship, {
       owner: currentUserId,
       user: userIds
@@ -20,4 +21,5 @@ export const userUnreadCountLoader = (
     )
     return userIds.map(userId => map[userId])
   })
+  return loader
 }

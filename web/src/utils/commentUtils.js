@@ -34,7 +34,11 @@ export const createCommentTree = flatComments => {
 export const getParticipants = flatComments =>
   flatComments
     .filter(c => !!c.author)
-    .map(c => c.author)
+    .map(c => ({
+      user: c.author,
+      serverUser: c.serverUser
+    }))
     .filter(
-      (user, index, self) => self.findIndex(t => t.id === user.id) === index
+      (obj, index, self) =>
+        self.findIndex(other => other.user.id === obj.user.id) === index
     )

@@ -3,8 +3,9 @@ import { Folder, Server } from '@/entity'
 import DataLoader from 'dataloader'
 
 export const folderServerLoader = (em: EntityManager) => {
-  return new DataLoader<string, Server | null | undefined>(
+  const loader = new DataLoader<string, Server | null | undefined>(
     async (folderIds: string[]) => {
+      loader.clearAll()
       const folders = await em.find(Folder, folderIds, ['server'])
       const map: Record<string, Server | null | undefined> = {}
       folderIds.forEach(
@@ -16,4 +17,5 @@ export const folderServerLoader = (em: EntityManager) => {
       return folderIds.map(postId => map[postId])
     }
   )
+  return loader
 }

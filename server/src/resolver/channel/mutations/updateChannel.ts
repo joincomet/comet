@@ -26,6 +26,8 @@ export async function updateChannel(
   { em, userId, liveQueryStore }: Context,
   { channelId, name, description, type }: UpdateChannelInput
 ): Promise<Channel> {
+  name = name.trim()
+  description = description.trim()
   const user = await em.findOneOrFail(User, userId)
   const channel = await em.findOneOrFail(Channel, channelId, ['server'])
   await user.checkServerPermission(

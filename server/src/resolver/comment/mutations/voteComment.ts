@@ -16,8 +16,7 @@ export async function voteComment(
 ): Promise<Comment> {
   const user = await em.findOneOrFail(User, userId)
   const comment = await em.findOneOrFail(Comment, commentId, [
-    'author.user',
-    'author.roles',
+    'author',
     'post.server'
   ])
   let vote = await em.findOne(CommentVote, { comment, user })

@@ -23,7 +23,7 @@ export const authChecker: AuthChecker<Context> = async (
     if (!root || !(root instanceof User))
       throw new Error('error.invalidUserAuth')
 
-    return user === root
+    return userId === root.id
   }
 
   return false

@@ -55,6 +55,8 @@ export async function updateServer(
     systemMessagesChannelId
   }: UpdateServerInput
 ): Promise<Server> {
+  displayName = displayName.trim()
+  description = description.trim()
   const user = await em.findOneOrFail(User, userId)
   const server = await em.findOneOrFail(Server, serverId, ['owner'])
   if ((isFeatured || featuredPosition) && !user.isAdmin)

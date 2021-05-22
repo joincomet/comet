@@ -9,20 +9,20 @@ subscription MessageChanged {
         ...ServerUser
       }
       channel {
-        id
         name
+        id
         server {
           id
           name
         }
       }
       group {
-        id
         displayName
+        id
       }
       toUser {
-        id
         username
+        id
       }
     }
     updated {

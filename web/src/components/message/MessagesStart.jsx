@@ -9,11 +9,11 @@ export default function MessagesStart({ user, channel, group }) {
           <>
             <UserAvatar user={user} size={20} />
             <div className="text-3xl font-semibold pt-4 text-primary">
-              {user.name}
+              {user.username}
             </div>
             <div className="pt-2 text-tertiary select-none text-base">
               This is the beginning of your direct message history with{' '}
-              <span className="font-semibold">@{user.name}</span>
+              <span className="font-semibold">@{user.username}</span>
             </div>
           </>
         )}

@@ -15,11 +15,7 @@ export async function votePost(
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
   const user = await em.findOneOrFail(User, userId)
-  const post = await em.findOneOrFail(Post, postId, [
-    'author.roles',
-    'author.user',
-    'server'
-  ])
+  const post = await em.findOneOrFail(Post, postId, ['author', 'server'])
   let vote = await em.findOne(PostVote, { post, user })
   if (vote) throw new Error('Already voted this post')
   vote = em.create(PostVote, { post, user })

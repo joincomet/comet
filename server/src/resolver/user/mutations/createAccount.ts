@@ -4,6 +4,8 @@ import { Context } from '@/types'
 import {
   Folder,
   FolderVisibility,
+  Message,
+  MessageType,
   Role,
   Server,
   ServerUser,
@@ -86,14 +88,18 @@ export async function createAccount(
     })
   )
 
-  const cometServer = await em.findOne(Server, {
-    name: 'Comet',
-    isDeleted: false
-  })
+  const cometServer = await em.findOne(
+    Server,
+    {
+      name: 'Comet',
+      isDeleted: false
+    },
+    ['systemMessagesChannel']
+  )
   if (cometServer) {
-    const everyoneRole = await em.findOneOrFail(Role, {
+    const defaultRole = await em.findOneOrFail(Role, {
       server: cometServer,
-      name: '@everyone'
+      isDefault: true
     })
     cometServer.userCount++
     em.persist([
@@ -102,9 +108,18 @@ export async function createAccount(
         user,
         server: cometServer,
         status: ServerUserStatus.Joined,
-        roles: [everyoneRole]
+        role: defaultRole
       })
     ])
+    if (cometServer.systemMessagesChannel) {
+      em.persist(
+        em.create(Message, {
+          type: MessageType.Join,
+          author: user,
+          channel: cometServer.systemMessagesChannel
+        })
+      )
+    }
   }
 
   await em.persistAndFlush(user)

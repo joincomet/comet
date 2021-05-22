@@ -1,9 +1,10 @@
 import { EntityManager } from '@mikro-orm/postgresql'
-import { Post, PostVote, User } from '@/entity'
+import { Post, PostVote } from '@/entity'
 import DataLoader from 'dataloader'
 
 export const postVoteLoader = (em: EntityManager, userId: string) => {
-  return new DataLoader<string, boolean>(async (postIds: string[]) => {
+  const loader = new DataLoader<string, boolean>(async (postIds: string[]) => {
+    loader.clearAll()
     const postVotes = await em.find(PostVote, {
       post: postIds,
       user: userId
@@ -17,4 +18,5 @@ export const postVoteLoader = (em: EntityManager, userId: string) => {
     )
     return postIds.map(postId => map[postId])
   })
+  return loader
 }

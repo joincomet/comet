@@ -6,7 +6,8 @@ export const userShowChatLoader = (
   em: EntityManager,
   currentUserId: string
 ) => {
-  return new DataLoader<string, boolean>(async (userIds: string[]) => {
+  const loader = new DataLoader<string, boolean>(async (userIds: string[]) => {
+    loader.clearAll()
     const relationships = await em.find(Relationship, {
       owner: currentUserId,
       user: userIds
@@ -20,4 +21,5 @@ export const userShowChatLoader = (
     )
     return userIds.map(userId => map[userId])
   })
+  return loader
 }

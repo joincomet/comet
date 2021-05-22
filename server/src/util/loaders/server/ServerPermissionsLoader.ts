@@ -9,8 +9,9 @@ import {
 import { EntityManager } from '@mikro-orm/postgresql'
 
 export const serverPermissionsLoader = (em: EntityManager, userId: string) => {
-  return new DataLoader<string, ServerPermission[]>(
+  const loader = new DataLoader<string, ServerPermission[]>(
     async (serverIds: string[]) => {
+      loader.clearAll()
       if (!userId) return serverIds.map(_ => [])
       const currentUser = await em.findOneOrFail(User, userId)
       const serverUsers = await em.find(
@@ -20,7 +21,7 @@ export const serverPermissionsLoader = (em: EntityManager, userId: string) => {
           user: currentUser,
           status: ServerUserStatus.Joined
         },
-        ['roles', 'server']
+        ['role', 'server']
       )
       const map: Record<string, ServerPermission[]> = {}
       serverIds.forEach(serverId => {
@@ -36,11 +37,12 @@ export const serverPermissionsLoader = (em: EntityManager, userId: string) => {
           return
         }
         const perms: ServerPermission[] = []
-        const roles = serverUser?.roles.getItems() ?? []
-        roles.forEach(role => perms.push(...role.permissions))
+        const role = serverUser?.role
+        perms.push(...role.permissions)
         map[serverId] = [...new Set(perms)]
       })
       return serverIds.map(serverId => map[serverId])
     }
   )
+  return loader
 }

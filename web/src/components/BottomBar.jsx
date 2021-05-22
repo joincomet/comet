@@ -112,7 +112,7 @@ export default function BottomBar() {
                     : 'text-tertiary'
                 }`}
               >
-                v{version}
+                Comet v{version}
               </div>
 
               {window.electron && updateAvailable && (

@@ -17,11 +17,9 @@ export async function replies(
     unreadOnly ? { user: userId, isRead: false } : { user: userId },
     [
       'user',
-      'comment.author.user',
-      'comment.author.roles',
+      'comment.author',
       'comment.post.server',
-      'comment.parentComment.author.user',
-      'comment.parentComment.author.roles'
+      'comment.parentComment.author'
     ],
     { id: 'DESC' }
   )

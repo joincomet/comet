@@ -1,6 +1,6 @@
-import { IconExplore, IconHome } from '@/components/ui/icons/Icons'
+import { IconExplore, IconHome, IconSpinner } from '@/components/ui/icons/Icons'
 import ServerAvatar from '@/components/server/ServerAvatar'
-import { matchPath, useLocation } from 'react-router-dom'
+import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ServerListItem from '@/components/server/list/ServerListItem'
 import { useStore } from '@/hooks/useStore'
@@ -11,10 +11,15 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import {
   ServerPermission,
   usePublicServersQuery,
-  ChannelType
+  ChannelType,
+  useDeleteServerMutation
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import CreateServerButton from '@/components/server/create/CreateServerButton'
+import { useState } from 'react'
+import Dialog from '@/components/ui/dialog/Dialog'
+import StyledDialog from '@/components/ui/dialog/StyledDialog'
+import ShowPasswordButton from '@/components/ui/ShowPasswordButton'
 
 export default function ServerList() {
   const { pathname } = useLocation()
@@ -26,7 +31,9 @@ export default function ServerList() {
   const [currentUser] = useCurrentUser()
 
   const { data: publicServersData } = usePublicServersQuery({
-    variables: { featured: true }
+    variables: { featured: true },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first'
   })
   const servers = currentUser
     ? currentUser.servers
@@ -105,28 +112,111 @@ function ServerListServer({ server }) {
     )
     .find(c => c.isUnread)
   const active = serverName === server.name
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   return (
-    <ContextMenuTrigger
-      className="h-12"
-      data={{ type: ContextMenuType.Server, server }}
-    >
-      <ServerListItem
-        to={`/+${server.name}${
-          serverPages[server.id] ? `/${serverPages[server.id]}` : ''
-        }`}
-        name={server.displayName}
-        active={active}
-        unread={unread}
+    <>
+      <DeleteServerDialog
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        server={server}
+      />
+
+      <ContextMenuTrigger
+        className="h-12"
+        data={{
+          type: ContextMenuType.Server,
+          server,
+          openDelete: () => setDeleteOpen(true)
+        }}
       >
-        <ServerAvatar
-          server={server}
-          size={12}
-          className={`bg-gray-200 h-12 w-12 dark:bg-gray-800 group-hover:rounded-2xl transition-all ${
-            active ? 'rounded-2xl' : 'rounded-3xl'
+        <ServerListItem
+          to={`/+${server.name}${
+            serverPages[server.id] ? `/${serverPages[server.id]}` : ''
           }`}
-        />
-      </ServerListItem>
-    </ContextMenuTrigger>
+          name={server.displayName}
+          active={active}
+          unread={unread}
+        >
+          <ServerAvatar
+            server={server}
+            size={12}
+            className={`bg-gray-200 h-12 w-12 dark:bg-gray-800 group-hover:rounded-2xl transition-all ${
+              active ? 'rounded-2xl' : 'rounded-3xl'
+            }`}
+          />
+        </ServerListItem>
+      </ContextMenuTrigger>
+    </>
+  )
+}
+
+function DeleteServerDialog({ open, setOpen, server }) {
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [deleteServer, { loading }] = useDeleteServerMutation()
+  const { push } = useHistory()
+
+  return (
+    <StyledDialog
+      open={open}
+      close={() => setOpen(false)}
+      closeOnOverlayClick
+      small
+      buttons={
+        <>
+          <button
+            className="form-button-cancel"
+            type="button"
+            onClick={() => setOpen(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="form-button-delete"
+            type="button"
+            disabled={!password || loading}
+            onClick={() => {
+              deleteServer({
+                variables: { input: { password, serverId: server.id } }
+              }).then(() => {
+                setOpen(false)
+                push('/')
+              })
+            }}
+          >
+            Delete
+            {loading && <IconSpinner className="w-5 h-5 text-primary ml-3" />}
+          </button>
+        </>
+      }
+    >
+      <div className="max-w-md w-full rounded-md dark:bg-gray-800 shadow-lg px-5 pt-5 pb-10">
+        <div className="text-red-400 text-lg font-semibold">
+          Delete {server.name}
+        </div>
+
+        <div className="text-tertiary pb-3 pt-3 text-sm">
+          All posts, comments, and messages will be lost. Enter your password to
+          continue.
+        </div>
+
+        <div className="relative">
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            className="form-input-password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            type={showPassword ? 'text' : 'password'}
+          />
+          <ShowPasswordButton
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+          />
+        </div>
+      </div>
+    </StyledDialog>
   )
 }

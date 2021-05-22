@@ -3,7 +3,8 @@ import { Server, ServerUser, ServerUserStatus } from '@/entity'
 import DataLoader from 'dataloader'
 
 export const serverOnlineCountLoader = (em: EntityManager) => {
-  return new DataLoader<string, number>(async (serverIds: string[]) => {
+  const loader = new DataLoader<string, number>(async (serverIds: string[]) => {
+    loader.clearAll()
     const serverUsers = await em.find(
       ServerUser,
       {
@@ -22,4 +23,5 @@ export const serverOnlineCountLoader = (em: EntityManager) => {
     )
     return serverIds.map(postId => map[postId])
   })
+  return loader
 }

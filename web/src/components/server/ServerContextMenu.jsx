@@ -9,7 +9,13 @@ import { useApolloClient } from '@apollo/client'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
-export default function ServerContextMenu({ server, ContextMenuItem }) {
+export default function ServerContextMenu({
+  server,
+  enableFeatured,
+  enableFeaturedPosition,
+  openDelete,
+  ContextMenuItem
+}) {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
   const apolloClient = useApolloClient()
@@ -22,12 +28,14 @@ export default function ServerContextMenu({ server, ContextMenuItem }) {
       <ContextMenuSection>
         {currentUser?.isAdmin && (
           <>
-            <ContextMenuItem
-              label={
-                server.isFeatured ? 'Remove from Featured' : 'Make Featured'
-              }
-            />
-            {!server.isFeatured && (
+            {!!enableFeatured && (
+              <ContextMenuItem
+                label={
+                  server.isFeatured ? 'Remove from Featured' : 'Make Featured'
+                }
+              />
+            )}
+            {!!enableFeaturedPosition && server.isFeatured && (
               <>
                 <ContextMenuItem label="Increment Featured Position" />
                 <ContextMenuItem label="Decrement Featured Position" />
@@ -66,6 +74,15 @@ export default function ServerContextMenu({ server, ContextMenuItem }) {
             }}
           />
         )}
+        {!!currentUser &&
+          !!openDelete &&
+          (currentUser.isAdmin || server.owner.id === currentUser.id) && (
+            <ContextMenuItem
+              label="Delete Planet"
+              red
+              onClick={() => openDelete()}
+            />
+          )}
       </ContextMenuSection>
     </>
   )

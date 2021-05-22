@@ -232,22 +232,22 @@ export default memo(function Post({
           <div className="flex items-center pt-2 mt-auto">
             <div className="flex items-center" onClick={onClick}>
               <ContextMenuTrigger
-                data={{ type: ContextMenuType.User, user: post.author?.user }}
+                data={{ type: ContextMenuType.User, user: post.author }}
               >
-                <UserPopup user={post.author?.user} roles={post.author?.roles}>
-                  <UserAvatar user={post.author.user} size={5} />
+                <UserPopup user={post.author} role={post.serverUser?.role}>
+                  <UserAvatar user={post.author} size={5} />
                 </UserPopup>
               </ContextMenuTrigger>
 
               <ContextMenuTrigger
-                data={{ type: ContextMenuType.User, user: post.author?.user }}
+                data={{ type: ContextMenuType.User, user: post.author }}
               >
-                <UserPopup user={post.author?.user} roles={post.author?.roles}>
+                <UserPopup user={post.author} role={post.serverUser?.role}>
                   <div
-                    className="ml-2 hover:underline cursor-pointer text-tertiary text-xs font-medium leading-none"
-                    style={{ color: post.author?.color }}
+                    className="ml-2 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-xs font-medium leading-none"
+                    style={{ color: post.serverUser?.color }}
                   >
-                    {post.author?.user.username ?? '[deleted]'}
+                    {post.author?.username ?? '[deleted]'}
                   </div>
                 </UserPopup>
               </ContextMenuTrigger>
@@ -264,8 +264,8 @@ export default memo(function Post({
                       size={5}
                       className="dark:bg-gray-750 rounded-full"
                     />
-                    <span className="ml-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                      {post.server.name}
+                    <span className="ml-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                      {post.server.displayName}
                     </span>
                   </Link>
                 </div>

@@ -37,10 +37,7 @@ export default function Comment({
   isLast
 }) {
   const { t } = useTranslation()
-  const [canComment, canVote] = useHasServerPermissions({
-    server: post?.server,
-    permissions: [ServerPermission.CreateComment, ServerPermission.VoteComment]
-  })
+  const [currentUser] = useCurrentUser()
   const [collapse, setCollapse] = useState(false)
   const [replyingCommentId, setReplyingCommentId] = useStore(s => [
     s.replyingCommentId,
@@ -63,14 +60,11 @@ export default function Comment({
           <ContextMenuTrigger
             data={{ type: ContextMenuType.User, user: comment.author }}
           >
-            <UserPopup
-              user={comment.author?.user}
-              roles={comment.author?.roles}
-            >
+            <UserPopup user={comment.author} role={comment.serverUser?.role}>
               <UserAvatar
                 size={7}
                 className="cursor-pointer transition hover:opacity-90"
-                user={comment.author?.user}
+                user={comment.author}
               />
             </UserPopup>
           </ContextMenuTrigger>
@@ -87,16 +81,16 @@ export default function Comment({
                 data={{ type: ContextMenuType.User, user: comment.author }}
               >
                 <UserPopup
-                  user={comment.author?.user}
-                  roles={comment.author?.roles}
+                  user={comment.author}
+                  role={comment.serverUser?.role}
                 >
                   <div
                     className={`text-sm font-medium cursor-pointer hover:underline leading-none ${
-                      comment.author.color ? '' : 'text-primary'
+                      comment.serverUser?.color ? '' : 'text-primary'
                     }`}
-                    style={{ color: comment.author.color }}
+                    style={{ color: comment.serverUser?.color }}
                   >
-                    {comment.author?.user?.username ?? '[deleted]'}
+                    {comment.author?.username ?? '[deleted]'}
                   </div>
                 </UserPopup>
               </ContextMenuTrigger>
@@ -112,22 +106,20 @@ export default function Comment({
             />
 
             <div className="flex items-center pt-2">
-              <VoteButton comment={comment} canVote={canVote} />
+              <VoteButton comment={comment} />
 
-              {canComment && (
-                <div
-                  className={replyBtnClass}
-                  onClick={() => {
-                    if (isReplying) {
-                      setReplyingCommentId(null)
-                    } else {
-                      setReplyingCommentId(comment.id)
-                    }
-                  }}
-                >
-                  {isReplying ? t('comment.cancelReply') : t('comment.reply')}
-                </div>
-              )}
+              <div
+                className={replyBtnClass}
+                onClick={() => {
+                  if (isReplying) {
+                    setReplyingCommentId(null)
+                  } else {
+                    setReplyingCommentId(comment.id)
+                  }
+                }}
+              >
+                {isReplying ? t('comment.cancelReply') : t('comment.reply')}
+              </div>
 
               {!!comment.childCount && (
                 <div
@@ -177,9 +169,8 @@ export default function Comment({
   )
 }
 
-function VoteButton({ comment, canVote }) {
+function VoteButton({ comment }) {
   const toggleVote = useToggleCommentVote(comment)
-  const { t } = useTranslation()
   const openLogin = useOpenLogin()
   const [currentUser] = useCurrentUser()
   return (
@@ -188,10 +179,6 @@ function VoteButton({ comment, canVote }) {
         e.stopPropagation()
         if (!currentUser) {
           openLogin()
-          return
-        }
-        if (!canVote) {
-          toast.error(t('comment.context.votePermission'))
           return
         }
         toggleVote()

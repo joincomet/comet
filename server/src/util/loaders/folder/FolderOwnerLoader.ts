@@ -3,8 +3,9 @@ import { Folder, User } from '@/entity'
 import DataLoader from 'dataloader'
 
 export const folderOwnerLoader = (em: EntityManager) => {
-  return new DataLoader<string, User | null | undefined>(
+  const loader = new DataLoader<string, User | null | undefined>(
     async (folderIds: string[]) => {
+      loader.clearAll()
       const folders = await em.find(Folder, folderIds, ['owner'])
       const map: Record<string, User | null | undefined> = {}
       folderIds.forEach(
@@ -16,4 +17,5 @@ export const folderOwnerLoader = (em: EntityManager) => {
       return folderIds.map(postId => map[postId])
     }
   )
+  return loader
 }

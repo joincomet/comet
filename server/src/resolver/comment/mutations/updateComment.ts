@@ -20,7 +20,7 @@ export async function updateComment(
   { commentId, text }: UpdateCommentInput,
   notifyCommentChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
-  const comment = await em.findOneOrFail(Comment, commentId, ['author.user'])
+  const comment = await em.findOneOrFail(Comment, commentId, ['author'])
   if (comment.author !== em.getReference(User, userId))
     throw new Error('Not author')
   comment.text = handleText(text)

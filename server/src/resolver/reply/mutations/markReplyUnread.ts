@@ -16,11 +16,9 @@ export async function markReplyUnread(
 ): Promise<Reply> {
   const reply = await em.findOneOrFail(Reply, replyId, [
     'user',
-    'comment.author.user',
-    'comment.author.roles',
+    'comment.author',
     'comment.post.server',
-    'comment.parentComment.author.user',
-    'comment.parentComment.author.roles'
+    'comment.parentComment.author'
   ])
   if (reply.user !== em.getReference(User, userId))
     throw new Error('Not your reply')

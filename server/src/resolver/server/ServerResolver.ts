@@ -128,7 +128,7 @@ export class ServerResolver {
     return serverUsers(ctx, serverId)
   }
 
-  @Query(() => Server)
+  @Query(() => Server, { nullable: true })
   async server(@Ctx() ctx: Context, @Args() args: ServerArgs): Promise<Server> {
     return server(ctx, args)
   }

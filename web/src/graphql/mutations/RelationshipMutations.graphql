@@ -5,7 +5,7 @@ mutation createFriendRequest($input: CreateFriendRequestInput!) {
       ...Folder
     }
     relatedUsers {
-      ...User
+      ...RelatedUser
     }
     servers {
       id
@@ -22,7 +22,7 @@ mutation deleteFriendRequest($input: DeleteFriendRequestInput!) {
       ...Folder
     }
     relatedUsers {
-      ...User
+      ...RelatedUser
     }
     servers {
       id

@@ -6,7 +6,7 @@ fragment CurrentUser on User {
     ...Server
   }
   relatedUsers {
-    ...RelatedUser
+    ...User
   }
   groups {
     ...Group

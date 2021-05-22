@@ -78,6 +78,9 @@ export const apolloClient = new ApolloClient({
           },
           folders: {
             merge: false
+          },
+          relatedUsers: {
+            merge: false
           }
         }
       },
@@ -136,6 +139,18 @@ export const apolloClient = new ApolloClient({
       Query: {
         fields: {
           serverUsers: {
+            merge: false
+          },
+          user: {
+            merge: true
+          },
+          server: {
+            merge: true
+          },
+          folder: {
+            merge: true
+          },
+          publicServers: {
             merge: false
           }
         }

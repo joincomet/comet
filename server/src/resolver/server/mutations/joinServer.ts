@@ -51,8 +51,7 @@ export async function joinServer(
   serverUser.position = firstServerJoin
     ? ReorderUtils.positionBefore(firstServerJoin.position)
     : ReorderUtils.FIRST_POSITION
-  const everyoneRole = await em.findOne(Role, { server, name: '@everyone' })
-  if (everyoneRole) serverUser.roles.set([everyoneRole])
+  serverUser.role = await em.findOne(Role, { server, isDefault: true })
   server.userCount++
   await em.persistAndFlush([serverUser, server])
   liveQueryStore.invalidate([

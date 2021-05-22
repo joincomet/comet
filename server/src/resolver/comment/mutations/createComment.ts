@@ -67,7 +67,7 @@ export async function createComment(
       })
     }
   } else {
-    await em.populate(post, ['author.user'])
+    await em.populate(post, ['author'])
     if (post.author !== user) {
       reply = em.create(Reply, {
         comment,

@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $n: 7;
 
 $shadow: ();
@@ -5,7 +7,7 @@ $shadow: ();
 @for $i from 1 through $n {
   $v: random(90) + 9;
   $h: random(250) + 50;
-  $d: random(70)/10 + 3;
+  $d: math.div(random(70), 10) + 3;
   .meteor-#{$i} {
     z-index: 10;
     position: absolute;

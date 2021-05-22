@@ -3,4 +3,5 @@ fragment Role on Role {
   name
   color
   permissions
+  isDefault
 }

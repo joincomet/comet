@@ -27,7 +27,7 @@ export default function ExplorePage() {
       page,
       pageSize: 20
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first'
   })
   const servers = data?.publicServers ?? []

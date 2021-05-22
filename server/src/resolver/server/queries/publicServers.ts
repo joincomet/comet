@@ -27,7 +27,7 @@ export async function publicServers(
   { em }: Context,
   { sort, category, featured }: PublicServersArgs
 ): Promise<Server[]> {
-  let where: any = {}
+  let where: any = { isDeleted: false }
   let orderBy = {}
 
   if (sort === PublicServersSort.New) {

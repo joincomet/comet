@@ -45,8 +45,17 @@ export class CreateServerInput {
 
 export async function createServer(
   { em, userId, liveQueryStore }: Context,
-  { name, displayName, category, avatarFile, bannerFile }: CreateServerInput
+  {
+    name,
+    displayName,
+    description,
+    category,
+    avatarFile,
+    bannerFile
+  }: CreateServerInput
 ): Promise<Server> {
+  displayName = displayName.trim()
+  description = description.trim()
   let avatarUrl = null
   if (avatarFile) {
     avatarUrl = await uploadImageFileSingle(
@@ -80,6 +89,7 @@ export async function createServer(
   const server = em.create(Server, {
     name,
     displayName,
+    description,
     owner: userId,
     avatarUrl,
     bannerUrl,
@@ -112,7 +122,8 @@ export async function createServer(
   })
   const role = em.create(Role, {
     server,
-    name: '@everyone',
+    name: 'Default',
+    isDefault: true,
     permissions: defaultServerPermissions,
     serverUsers: [serverUser]
   })

@@ -187,11 +187,10 @@ export class User extends BaseEntity {
     const serverUser = await em.findOne(
       ServerUser,
       { server, user: this, status: ServerUserStatus.Joined },
-      ['roles']
+      ['role']
     )
     if (!serverUser) return false
-    const roles = serverUser.roles.getItems()
-    return !!roles.find(r => r.hasPermission(permission))
+    return serverUser.role.hasPermission(permission)
   }
 
   async checkServerPermission(

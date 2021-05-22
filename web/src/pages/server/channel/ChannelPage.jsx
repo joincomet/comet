@@ -5,21 +5,28 @@ import Page from '@/components/ui/page/Page'
 import ChannelHeader from '@/pages/server/channel/ChannelHeader'
 import { useReadChannelMutation, useServerUsersQuery } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
+import { usePrevious } from 'react-use'
+import { Redirect } from 'react-router-dom'
 
-export default function ChannelPage({ server, channel }) {
+export default function ChannelPage({ channelName }) {
+  const { server, users: serverUsers } = useCurrentServer()
+  const channel = (server?.channels ?? []).find(c => c.name === channelName)
   useSetServerPage(`channel/${channel?.id}`)
-  const { data } = useServerUsersQuery({
-    variables: { serverId: server?.id },
-    skip: !server,
-    fetchPolicy: 'cache-and-network'
-  })
-  const serverUsers = data?.serverUsers ?? []
   const [readChannel] = useReadChannelMutation()
   const [currentUser] = useCurrentUser()
+  const [hasRead, setHasRead] = useState(false)
+  const previousChannel = usePrevious(channel)
   useEffect(() => {
-    if (currentUser && channel && channel.isUnread) {
+    if (channel && previousChannel && channel.id !== previousChannel.id) {
+      setHasRead(false)
+    }
+  }, [channel, previousChannel])
+  useEffect(() => {
+    if (currentUser && channel && channel.isUnread && !hasRead) {
+      setHasRead(true)
       readChannel({
         variables: { input: { channelId: channel.id } },
         optimisticResponse: {
@@ -31,6 +38,8 @@ export default function ChannelPage({ server, channel }) {
       })
     }
   }, [channel, currentUser])
+
+  if (!!server && !channel) return <Redirect to={`/+${server.name}`} />
 
   return (
     <Page
@@ -44,7 +53,11 @@ export default function ChannelPage({ server, channel }) {
       }
     >
       <Helmet>
-        <title>{`#${channel?.name} – ${server?.displayName}`}</title>
+        <title>
+          {!!channel && !!server
+            ? `#${channel?.name} – ${server?.displayName}`
+            : null}
+        </title>
       </Helmet>
       {!!channel && (
         <Messages

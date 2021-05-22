@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Server, ServerUser, ServerUserStatus, User } from '@/entity'
+import { Role, Server, ServerUser, ServerUserStatus, User } from '@/entity'
 
 @InputType()
 export class LeaveServerInput {
@@ -20,7 +20,7 @@ export async function leaveServer(
     server: serverId,
     status: ServerUserStatus.Joined
   })
-  serverUser.roles.set([])
+  serverUser.role = await em.findOne(Role, { server, isDefault: true })
   serverUser.status = ServerUserStatus.None
   server.userCount--
   await em.persistAndFlush([serverUser, server])

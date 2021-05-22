@@ -5,7 +5,7 @@ import { IconPlus } from '@/components/ui/icons/Icons'
 
 export default function UserPopup({
   user,
-  roles,
+  role,
   children,
   placement = 'right'
 }) {
@@ -46,25 +46,20 @@ export default function UserPopup({
             </div>
 
             <div className="p-4 dark:bg-gray-800 rounded-b-md">
-              {roles && (
+              {role && (
                 <div>
                   <div className="text-11 font-semibold uppercase tracking-widest text-secondary pb-2">
                     Roles
                   </div>
                   <div className="flex space-x-1">
-                    {roles.map(role => (
-                      <div
-                        key={role.id}
-                        style={{ color: role.color, borderColor: role.color }}
-                        className={`text-xs font-medium px-2 h-5.5 rounded-full border inline-flex items-center ${
-                          role.color
-                            ? ''
-                            : 'dark:border-gray-700 text-secondary'
-                        }`}
-                      >
-                        {role.name}
-                      </div>
-                    ))}
+                    <div
+                      style={{ color: role.color, borderColor: role.color }}
+                      className={`text-xs font-medium px-2 h-5.5 rounded-full border inline-flex items-center ${
+                        role.color ? '' : 'dark:border-gray-700 text-secondary'
+                      }`}
+                    >
+                      {role.name}
+                    </div>
 
                     <div className="text-xs font-medium h-5.5 w-5.5 rounded-full border inline-flex items-center justify-center dark:border-gray-700 text-secondary">
                       <IconPlus className="w-5 h-5" />

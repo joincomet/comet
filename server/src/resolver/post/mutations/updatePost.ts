@@ -20,7 +20,7 @@ export async function updatePost(
   { postId, text }: UpdatePostInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
-  const post = await em.findOneOrFail(Post, postId, ['author.user'])
+  const post = await em.findOneOrFail(Post, postId, ['author'])
   if (post.author !== em.getReference(User, userId))
     throw new Error('Must be post author to edit')
   post.text = handleText(text)

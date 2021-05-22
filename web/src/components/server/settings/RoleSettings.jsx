@@ -19,7 +19,7 @@ export default function RoleSettings({ server }) {
   const { t } = useTranslation()
   const [createRoleOpen, setCreateRoleOpen] = useState(false)
   const [selectedRoleId, setSelectedRoleId] = useState(
-    server.roles.find(r => r.name === '@everyone')?.id
+    server.roles.find(r => r.isDefault)?.id
   )
   const selectedRole = server.roles.find(r => r.id === selectedRoleId)
   const [color, setColor] = useState(selectedRole.color)

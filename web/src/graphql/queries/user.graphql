@@ -1,6 +1,6 @@
 query user($id: ID, $username: String) @live {
   user(id: $id, username: $username) {
-    ...RelatedUser
+    ...User
     relatedUsers {
       ...User
     }

@@ -36,6 +36,8 @@ export async function createChannel(
   { em, userId, liveQueryStore }: Context,
   { serverId, name, description, type }: CreateChannelInput
 ): Promise<Channel> {
+  name = name.trim()
+  description = description.trim()
   const user = await em.findOneOrFail(User, userId)
   const server = await em.findOneOrFail(Server, serverId, [
     'systemMessagesChannel'

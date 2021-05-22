@@ -6,8 +6,9 @@ export const relationshipStatusLoader = (
   em: EntityManager,
   currentUserId: string
 ) => {
-  return new DataLoader<string, RelationshipStatus>(
+  const loader = new DataLoader<string, RelationshipStatus>(
     async (userIds: string[]) => {
+      loader.clearAll()
       const rels = await em.find(Relationship, {
         owner: currentUserId,
         user: userIds
@@ -21,4 +22,5 @@ export const relationshipStatusLoader = (
       return userIds.map(userId => map[userId])
     }
   )
+  return loader
 }

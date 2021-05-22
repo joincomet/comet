@@ -3,7 +3,8 @@ import { Role, Server, ServerUser, ServerUserStatus, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 
 export const serverRolesLoader = (em: EntityManager) => {
-  return new DataLoader<string, Role[]>(async (serverIds: string[]) => {
+  const loader = new DataLoader<string, Role[]>(async (serverIds: string[]) => {
+    loader.clearAll()
     const roles = await em.find(
       Role,
       { server: serverIds },
@@ -20,4 +21,5 @@ export const serverRolesLoader = (em: EntityManager) => {
     )
     return serverIds.map(serverId => map[serverId])
   })
+  return loader
 }

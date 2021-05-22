@@ -598,7 +598,7 @@ type Query {
   posts(folderId: ID, limit: PositiveInt = 20, offset: NonNegativeInt = 0, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): PostsResponse!
   publicServers(category: ServerCategory, featured: Boolean = false, sort: PublicServersSort = Top): [Server!]!
   replies(input: RepliesInput!): [Reply!]!
-  server(id: ID, name: String): Server!
+  server(id: ID, name: String): Server
   serverUsers(serverId: ID!): [ServerUser!]!
   user(id: ID, username: String): User
 }
@@ -668,6 +668,7 @@ type Role implements BaseEntity {
   color: String
   createdAt: DateTime!
   id: ID!
+  isDefault: Boolean!
   name: String!
   permissions: [ServerPermission!]!
 }
@@ -734,7 +735,7 @@ enum ServerPermission {
 
 type ServerUser {
   color: String
-  roles: [Role!]!
+  role: Role!
   user: User!
 }
 

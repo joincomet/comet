@@ -62,10 +62,7 @@ export default memo(function Message({
               className="inline-block"
               data={{ type: ContextMenuType.User, user: message.author }}
             >
-              <UserPopup
-                user={message.author}
-                roles={message.serverUser?.roles}
-              >
+              <UserPopup user={message.author} role={message.serverUser?.role}>
                 <UserAvatar user={message.author} size={5} />
               </UserPopup>
             </ContextMenuTrigger>
@@ -73,10 +70,7 @@ export default memo(function Message({
               className="inline-block"
               data={{ type: ContextMenuType.User, user: message.author }}
             >
-              <UserPopup
-                user={message.author}
-                roles={message.serverUser?.roles}
-              >
+              <UserPopup user={message.author} role={message.serverUser?.role}>
                 <span className="ml-2 text-white cursor-pointer hover:underline">
                   {message.author.username}
                 </span>
@@ -111,7 +105,7 @@ export default memo(function Message({
               >
                 <UserPopup
                   user={message.author}
-                  roles={message.serverUser?.roles}
+                  role={message.serverUser?.role}
                 >
                   <UserAvatar
                     user={message.author}
@@ -134,7 +128,7 @@ export default memo(function Message({
                   >
                     <UserPopup
                       user={message.author}
-                      roles={message.serverUser?.roles}
+                      role={message.serverUser?.role}
                     >
                       <div className="text-base font-medium cursor-pointer hover:underline leading-none">
                         {message.author.username}

@@ -6,7 +6,8 @@ export const userLastMessageAtLoader = (
   em: EntityManager,
   currentUserId: string
 ) => {
-  return new DataLoader<string, Date>(async (userIds: string[]) => {
+  const loader = new DataLoader<string, Date>(async (userIds: string[]) => {
+    loader.clearAll()
     const relationships = await em.find(Relationship, {
       owner: currentUserId,
       user: userIds
@@ -20,4 +21,5 @@ export const userLastMessageAtLoader = (
     )
     return userIds.map(userId => map[userId])
   })
+  return loader
 }

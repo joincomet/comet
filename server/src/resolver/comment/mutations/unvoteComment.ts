@@ -15,8 +15,7 @@ export async function unvoteComment(
   notifyCommentChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
   const comment = await em.findOneOrFail(Comment, commentId, [
-    'author.user',
-    'author.roles',
+    'author',
     'post.server'
   ])
   const user = await em.findOneOrFail(User, userId)

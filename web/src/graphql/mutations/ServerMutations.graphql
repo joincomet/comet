@@ -1,6 +1,12 @@
 mutation createServer($input: CreateServerInput!) {
   createServer(input: $input) {
     ...Server
+    roles {
+      ...Role
+    }
+    folders {
+      ...Folder
+    }
   }
 }
 

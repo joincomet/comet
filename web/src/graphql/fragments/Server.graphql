@@ -15,10 +15,4 @@ fragment Server on Server {
   channels {
     ...Channel
   }
-  roles {
-    ...Role
-  }
-  folders {
-    ...Folder
-  }
 }
