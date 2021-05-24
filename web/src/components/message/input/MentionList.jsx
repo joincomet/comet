@@ -56,13 +56,13 @@ export class MentionList extends Component {
   }
 
   selectItem(index) {
-    const item = this.props.users[index]
+    const user = this.props.users[index]
 
-    if (item) {
+    if (user) {
       this.props.command(
-        typeof item === 'string'
-          ? { id: `<${item}>`, name: item.substring(1) }
-          : { id: `<@${item.user.id}>`, name: item.name }
+        typeof user === 'string'
+          ? { id: `<${user}>`, name: user.substring(1) }
+          : { id: `<@${user.id}>`, name: user.username }
       )
     }
   }

@@ -6,7 +6,9 @@ import {
   ServerCategory,
   ServerFolder,
   ServerPermission,
-  User
+  User,
+  ServerUser,
+  Role
 } from '@/entity'
 import { BaseEntity } from '@/entity/BaseEntity'
 import {
@@ -19,8 +21,6 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
-import { ServerUser } from '@/entity/server/ServerUser'
-import { Role } from '@/entity/server/Role'
 import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })

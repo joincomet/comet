@@ -41,11 +41,6 @@ export type AddUserToGroupInput = {
   userId: Scalars['ID'];
 };
 
-export type AddUserToRoleInput = {
-  roleId: Scalars['ID'];
-  userId: Scalars['ID'];
-};
-
 export type AnswerFriendRequestInput = {
   accept: Scalars['Boolean'];
   userId: Scalars['ID'];
@@ -343,6 +338,7 @@ export type LinkMetadata = {
   image?: Maybe<Scalars['String']>;
   logo?: Maybe<Scalars['String']>;
   publisher?: Maybe<Scalars['String']>;
+  themeColor?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   twitterCard?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
@@ -416,11 +412,6 @@ export type MoveChannelInput = {
   channelId: Scalars['ID'];
 };
 
-export type MoveRoleInput = {
-  beforeRoleId?: Maybe<Scalars['ID']>;
-  roleId: Scalars['ID'];
-};
-
 export type MoveServerFolderInput = {
   beforeFolderId?: Maybe<Scalars['ID']>;
   folderId: Scalars['ID'];
@@ -440,7 +431,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   addPostToFolder: Folder;
   addUserToGroup: Group;
-  addUserToRole: ServerUser;
   answerFriendRequest: User;
   banUserFromServer: Scalars['Boolean'];
   blockUser: User;
@@ -477,7 +467,6 @@ export type Mutation = {
   markReplyRead: Reply;
   markReplyUnread: Reply;
   moveChannel: Channel;
-  moveRole: Role;
   moveServer: Scalars['Void'];
   moveServerFolder: Folder;
   moveUserFolder: Folder;
@@ -492,7 +481,7 @@ export type Mutation = {
   removeFriend: User;
   removePostFromFolder: Folder;
   removeUserFromGroup: Group;
-  removeUserFromRole: ServerUser;
+  setUserRole: ServerUser;
   unbanUserFromServer: Scalars['Boolean'];
   unblockUser: User;
   unfollowFolder: Folder;
@@ -522,11 +511,6 @@ export type MutationAddPostToFolderArgs = {
 
 export type MutationAddUserToGroupArgs = {
   input: AddUserToGroupInput;
-};
-
-
-export type MutationAddUserToRoleArgs = {
-  input: AddUserToRoleInput;
 };
 
 
@@ -710,11 +694,6 @@ export type MutationMoveChannelArgs = {
 };
 
 
-export type MutationMoveRoleArgs = {
-  input: MoveRoleInput;
-};
-
-
 export type MutationMoveServerArgs = {
   input: MoveServerInput;
 };
@@ -785,8 +764,8 @@ export type MutationRemoveUserFromGroupArgs = {
 };
 
 
-export type MutationRemoveUserFromRoleArgs = {
-  input: RemoveUserFromRoleInput;
+export type MutationSetUserRoleArgs = {
+  input: SetUserRoleInput;
 };
 
 
@@ -1101,11 +1080,6 @@ export type RemoveUserFromGroupInput = {
   userId: Scalars['ID'];
 };
 
-export type RemoveUserFromRoleInput = {
-  roleId: Scalars['ID'];
-  userId: Scalars['ID'];
-};
-
 export type RepliesInput = {
   unreadOnly?: Maybe<Scalars['Boolean']>;
 };
@@ -1127,7 +1101,7 @@ export type ReplyChangedResponse = {
 
 export type Role = BaseEntity & {
   __typename?: 'Role';
-  color?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['HexColorCode']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   isDefault: Scalars['Boolean'];
@@ -1198,9 +1172,13 @@ export enum ServerPermission {
 
 export type ServerUser = {
   __typename?: 'ServerUser';
-  color?: Maybe<Scalars['String']>;
   role: Role;
   user: User;
+};
+
+export type SetUserRoleInput = {
+  roleId: Scalars['ID'];
+  userId: Scalars['ID'];
 };
 
 export type Subscription = {
@@ -1424,7 +1402,7 @@ export type MessageFragment = (
 
 export type MetadataFragment = (
   { __typename?: 'LinkMetadata' }
-  & Pick<LinkMetadata, 'author' | 'date' | 'description' | 'image' | 'logo' | 'publisher' | 'title' | 'twitterCard' | 'url' | 'domain'>
+  & Pick<LinkMetadata, 'author' | 'date' | 'description' | 'image' | 'logo' | 'publisher' | 'title' | 'twitterCard' | 'url' | 'domain' | 'themeColor'>
 );
 
 export type PostFragment = (
@@ -1497,7 +1475,6 @@ export type ServerFragment = (
 
 export type ServerUserFragment = (
   { __typename?: 'ServerUser' }
-  & Pick<ServerUser, 'color'>
   & { role: (
     { __typename?: 'Role' }
     & RoleFragment
@@ -2342,40 +2319,14 @@ export type DeleteRoleMutation = (
   & Pick<Mutation, 'deleteRole'>
 );
 
-export type MoveRoleMutationVariables = Exact<{
-  input: MoveRoleInput;
+export type SetUserRoleMutationVariables = Exact<{
+  input: SetUserRoleInput;
 }>;
 
 
-export type MoveRoleMutation = (
+export type SetUserRoleMutation = (
   { __typename?: 'Mutation' }
-  & { moveRole: (
-    { __typename?: 'Role' }
-    & RoleFragment
-  ) }
-);
-
-export type AddUserToRoleMutationVariables = Exact<{
-  input: AddUserToRoleInput;
-}>;
-
-
-export type AddUserToRoleMutation = (
-  { __typename?: 'Mutation' }
-  & { addUserToRole: (
-    { __typename?: 'ServerUser' }
-    & ServerUserFragment
-  ) }
-);
-
-export type RemoveUserFromRoleMutationVariables = Exact<{
-  input: RemoveUserFromRoleInput;
-}>;
-
-
-export type RemoveUserFromRoleMutation = (
-  { __typename?: 'Mutation' }
-  & { removeUserFromRole: (
+  & { setUserRole: (
     { __typename?: 'ServerUser' }
     & ServerUserFragment
   ) }
@@ -2995,6 +2946,7 @@ export const MetadataFragmentDoc = gql`
   twitterCard
   url
   domain
+  themeColor
 }
     `;
 export const CommentFragmentDoc = gql`
@@ -3179,7 +3131,6 @@ export const RoleFragmentDoc = gql`
     `;
 export const ServerUserFragmentDoc = gql`
     fragment ServerUser on ServerUser {
-  color
   role {
     ...Role
   }
@@ -5170,105 +5121,39 @@ export function useDeleteRoleMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteRoleMutationHookResult = ReturnType<typeof useDeleteRoleMutation>;
 export type DeleteRoleMutationResult = Apollo.MutationResult<DeleteRoleMutation>;
 export type DeleteRoleMutationOptions = Apollo.BaseMutationOptions<DeleteRoleMutation, DeleteRoleMutationVariables>;
-export const MoveRoleDocument = gql`
-    mutation moveRole($input: MoveRoleInput!) {
-  moveRole(input: $input) {
-    ...Role
-  }
-}
-    ${RoleFragmentDoc}`;
-export type MoveRoleMutationFn = Apollo.MutationFunction<MoveRoleMutation, MoveRoleMutationVariables>;
-
-/**
- * __useMoveRoleMutation__
- *
- * To run a mutation, you first call `useMoveRoleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useMoveRoleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [moveRoleMutation, { data, loading, error }] = useMoveRoleMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useMoveRoleMutation(baseOptions?: Apollo.MutationHookOptions<MoveRoleMutation, MoveRoleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<MoveRoleMutation, MoveRoleMutationVariables>(MoveRoleDocument, options);
-      }
-export type MoveRoleMutationHookResult = ReturnType<typeof useMoveRoleMutation>;
-export type MoveRoleMutationResult = Apollo.MutationResult<MoveRoleMutation>;
-export type MoveRoleMutationOptions = Apollo.BaseMutationOptions<MoveRoleMutation, MoveRoleMutationVariables>;
-export const AddUserToRoleDocument = gql`
-    mutation addUserToRole($input: AddUserToRoleInput!) {
-  addUserToRole(input: $input) {
+export const SetUserRoleDocument = gql`
+    mutation setUserRole($input: SetUserRoleInput!) {
+  setUserRole(input: $input) {
     ...ServerUser
   }
 }
     ${ServerUserFragmentDoc}`;
-export type AddUserToRoleMutationFn = Apollo.MutationFunction<AddUserToRoleMutation, AddUserToRoleMutationVariables>;
+export type SetUserRoleMutationFn = Apollo.MutationFunction<SetUserRoleMutation, SetUserRoleMutationVariables>;
 
 /**
- * __useAddUserToRoleMutation__
+ * __useSetUserRoleMutation__
  *
- * To run a mutation, you first call `useAddUserToRoleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddUserToRoleMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSetUserRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetUserRoleMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addUserToRoleMutation, { data, loading, error }] = useAddUserToRoleMutation({
+ * const [setUserRoleMutation, { data, loading, error }] = useSetUserRoleMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useAddUserToRoleMutation(baseOptions?: Apollo.MutationHookOptions<AddUserToRoleMutation, AddUserToRoleMutationVariables>) {
+export function useSetUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<SetUserRoleMutation, SetUserRoleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddUserToRoleMutation, AddUserToRoleMutationVariables>(AddUserToRoleDocument, options);
+        return Apollo.useMutation<SetUserRoleMutation, SetUserRoleMutationVariables>(SetUserRoleDocument, options);
       }
-export type AddUserToRoleMutationHookResult = ReturnType<typeof useAddUserToRoleMutation>;
-export type AddUserToRoleMutationResult = Apollo.MutationResult<AddUserToRoleMutation>;
-export type AddUserToRoleMutationOptions = Apollo.BaseMutationOptions<AddUserToRoleMutation, AddUserToRoleMutationVariables>;
-export const RemoveUserFromRoleDocument = gql`
-    mutation removeUserFromRole($input: RemoveUserFromRoleInput!) {
-  removeUserFromRole(input: $input) {
-    ...ServerUser
-  }
-}
-    ${ServerUserFragmentDoc}`;
-export type RemoveUserFromRoleMutationFn = Apollo.MutationFunction<RemoveUserFromRoleMutation, RemoveUserFromRoleMutationVariables>;
-
-/**
- * __useRemoveUserFromRoleMutation__
- *
- * To run a mutation, you first call `useRemoveUserFromRoleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemoveUserFromRoleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [removeUserFromRoleMutation, { data, loading, error }] = useRemoveUserFromRoleMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useRemoveUserFromRoleMutation(baseOptions?: Apollo.MutationHookOptions<RemoveUserFromRoleMutation, RemoveUserFromRoleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RemoveUserFromRoleMutation, RemoveUserFromRoleMutationVariables>(RemoveUserFromRoleDocument, options);
-      }
-export type RemoveUserFromRoleMutationHookResult = ReturnType<typeof useRemoveUserFromRoleMutation>;
-export type RemoveUserFromRoleMutationResult = Apollo.MutationResult<RemoveUserFromRoleMutation>;
-export type RemoveUserFromRoleMutationOptions = Apollo.BaseMutationOptions<RemoveUserFromRoleMutation, RemoveUserFromRoleMutationVariables>;
+export type SetUserRoleMutationHookResult = ReturnType<typeof useSetUserRoleMutation>;
+export type SetUserRoleMutationResult = Apollo.MutationResult<SetUserRoleMutation>;
+export type SetUserRoleMutationOptions = Apollo.BaseMutationOptions<SetUserRoleMutation, SetUserRoleMutationVariables>;
 export const CreateServerDocument = gql`
     mutation createServer($input: CreateServerInput!) {
   createServer(input: $input) {

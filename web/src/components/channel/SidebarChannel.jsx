@@ -54,13 +54,15 @@ export default function SidebarChannel({ channel, server }) {
 
           <div className="ml-auto" />
           {!!channel.mentionCount && (
-            <div className="pr-2">
+            <div
+              className={canManageChannels ? 'group-hover:hidden block' : ''}
+            >
               <CountBadge count={channel.mentionCount} />
             </div>
           )}
           {canManageChannels && (
             <Tippy content={t('channel.edit')}>
-              <div className="group-hover:visible invisible">
+              <div className="group-hover:block hidden">
                 <IconSettings className="w-4 h-4 text-tertiary" />
               </div>
             </Tippy>

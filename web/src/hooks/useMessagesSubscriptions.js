@@ -3,6 +3,7 @@ import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import {
   ChannelFragmentDoc,
   GroupFragmentDoc,
+  MessageFragmentDoc,
   MessagesDocument,
   MessageType,
   useMessageChangedSubscription,
@@ -18,7 +19,7 @@ export const useMessagesSubscriptions = () => {
   const matchedServer = matchPath(pathname, {
     path: '/:server'
   })
-  const server = matchedServer?.params?.server
+  const server = matchedServer?.params?.server.substring(1)
   const channelName = server && hash ? hash.substring(1) : null
 
   const matchedDm = matchPath(pathname, { path: '/dm/:username' })
@@ -42,6 +43,7 @@ export const useMessagesSubscriptions = () => {
         const data = subscriptionData.data.messageChanged
         const addedMessage = data?.added
         const deletedMessage = data?.deleted
+        const updatedMessage = data?.updated
         let message
 
         if (addedMessage) {
@@ -89,46 +91,55 @@ export const useMessagesSubscriptions = () => {
               fragment: UserFragmentDoc,
               id: `User:${message.author.id}`
             })
-            client.cache.writeFragment({
-              fragment: UserFragmentDoc,
-              id: `User:${message.author.id}`,
-              data: {
-                ...data,
-                unreadCount: data.unreadCount + 1
-              }
-            })
+            if (data) {
+              client.cache.writeFragment({
+                fragment: UserFragmentDoc,
+                id: `User:${message.author.id}`,
+                data: {
+                  ...data,
+                  unreadCount: data.unreadCount + 1
+                }
+              })
+            }
           } else if (message.group && !isViewingGroup) {
             const data = client.cache.readFragment({
               fragment: GroupFragmentDoc,
               id: `User:${message.group.id}`
             })
-            client.cache.writeFragment({
-              fragment: GroupFragmentDoc,
-              id: `Group:${message.group.id}`,
-              data: {
-                ...data,
-                unreadCount: data.unreadCount + 1
-              }
-            })
+            if (data) {
+              client.cache.writeFragment({
+                fragment: GroupFragmentDoc,
+                id: `Group:${message.group.id}`,
+                data: {
+                  ...data,
+                  unreadCount: data.unreadCount + 1
+                }
+              })
+            }
           } else if (message.channel && !isViewingChannel) {
             const data = client.cache.readFragment({
               fragment: ChannelFragmentDoc,
               id: `Channel:${message.channel.id}`
             })
-            const newData = {
-              ...data,
-              isUnread: true
+            if (data) {
+              const newData = {
+                ...data,
+                isUnread: true
+              }
+              if (
+                message.isEveryoneMentioned ||
+                (!!currentUser &&
+                  message.mentionedUsers
+                    .map(u => u.id)
+                    .includes(currentUser.id))
+              )
+                newData.mentionCount = data.mentionCount + 1
+              client.cache.writeFragment({
+                fragment: ChannelFragmentDoc,
+                id: `Channel:${message.channel.id}`,
+                data: newData
+              })
             }
-            if (
-              message.isEveryoneMentioned ||
-              message.mentionedUsers.map(u => u.id).includes(currentUser.id)
-            )
-              newData.mentionCount = data.mentionCount + 1
-            client.cache.writeFragment({
-              fragment: ChannelFragmentDoc,
-              id: `Channel:${message.channel.id}`,
-              data: newData
-            })
           }
 
           if (message.author.id !== currentUser.id) {

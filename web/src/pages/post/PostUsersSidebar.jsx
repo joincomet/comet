@@ -16,7 +16,7 @@ export default function PostUsersSidebar({ post, users = [] }) {
             <SidebarLabel>{t('post.creator')}</SidebarLabel>
             <SidebarUser
               user={post.author}
-              color={post.serverUser?.color}
+              color={post.serverUser?.role?.color}
               role={post.serverUser?.role}
             />
           </>
@@ -31,7 +31,7 @@ export default function PostUsersSidebar({ post, users = [] }) {
               <SidebarUser
                 key={user.user.id}
                 user={user.user}
-                color={user.serverUser?.color}
+                color={user.serverUser?.role?.color}
                 role={user.serverUser?.role}
               />
             ))}

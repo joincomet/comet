@@ -29,16 +29,10 @@ export async function createRole(
   )
   if (roles.map(r => r.name.toLowerCase()).includes(name.toLowerCase()))
     throw new Error('That role already exists')
-  const lastRole = roles[0]
-  let position = ReorderUtils.FIRST_POSITION
-  if (lastRole) {
-    position = ReorderUtils.positionAfter(lastRole.position)
-  }
 
   const role = await em.create(Role, {
     server: serverId,
-    name,
-    position
+    name
   })
   await em.persistAndFlush(role)
   liveQueryStore.invalidate(`Server:${serverId}`)

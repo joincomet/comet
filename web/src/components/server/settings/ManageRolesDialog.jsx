@@ -1,5 +1,10 @@
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
-import { IconCheck, IconSpinner } from '@/components/ui/icons/Icons'
+import {
+  IconCheck,
+  IconDelete,
+  IconSettings,
+  IconSpinner
+} from '@/components/ui/icons/Icons'
 import SidebarItem from '@/components/ui/sidebar/SidebarItem'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +21,7 @@ import { realColors } from '@/utils/colorsMap'
 import Switch from '@/components/ui/Switch'
 import { AnimatePresence, motion } from 'framer-motion'
 import { HiPlus } from 'react-icons/all'
+import Tippy from '@tippyjs/react'
 
 export default function ManageRolesDialog({ open, setOpen, server }) {
   const { t } = useTranslation()
@@ -116,6 +122,13 @@ export default function ManageRolesDialog({ open, setOpen, server }) {
               onClick={() => setSelectedRoleId(role.id)}
             >
               <span style={{ color: role.color }}>{role.name}</span>
+              {role.isDefault && (
+                <Tippy content="Delete Role">
+                  <div className="group-hover:visible invisible ml-auto highlightable">
+                    <IconDelete className="w-4 h-4" />
+                  </div>
+                </Tippy>
+              )}
             </SidebarItem>
           ))}
           {isAddingRole && (
@@ -145,34 +158,34 @@ export default function ManageRolesDialog({ open, setOpen, server }) {
         </div>
 
         <div className="relative py-5 px-7 w-full h-[40rem] max-h-screen scrollbar-thin dark:scrollbar-thumb-gray-850 scrollbar-track-transparent scrollbar-thumb-rounded-md rounded-tr-lg">
-          <div className="flex items-center justify-between">
-            <div className="text-primary text-base mb-6 font-semibold">
+          <div className="flex items-center justify-between pb-5">
+            <div className="text-primary text-base font-semibold">
               Edit Role - {selectedRole.name}
+              {!!selectedRole?.isDefault && ' (Default)'}
             </div>
 
-            {!selectedRole.isDefault && (
-              <button
-                type="button"
-                className="delete-button"
-                onClick={() => {
-                  const cache = apolloClient.cache
-                  const data = cache.readQuery({ query: CurrentUserDocument })
-                  const clone = JSON.parse(JSON.stringify(data))
-                  const serv = clone.user.servers.find(s => s.id === server.id)
-                  serv.roles = serv.roles.filter(c => c.id !== selectedRoleId)
-                  cache.writeQuery({
-                    query: CurrentUserDocument,
-                    data: clone
-                  })
-                  setSelectedRoleId(server.roles.find(r => r.isDefault)?.id)
-                  deleteRole({
-                    variables: { input: { roleId: selectedRoleId } }
-                  })
-                }}
-              >
-                Delete Role
-              </button>
-            )}
+            {/*<button
+              type="button"
+              className="form-button-delete"
+              disabled
+              onClick={() => {
+                const cache = apolloClient.cache
+                const data = cache.readQuery({ query: CurrentUserDocument })
+                const clone = JSON.parse(JSON.stringify(data))
+                const serv = clone.user.servers.find(s => s.id === server.id)
+                serv.roles = serv.roles.filter(c => c.id !== selectedRoleId)
+                cache.writeQuery({
+                  query: CurrentUserDocument,
+                  data: clone
+                })
+                setSelectedRoleId(server.roles.find(r => r.isDefault)?.id)
+                deleteRole({
+                  variables: { input: { roleId: selectedRoleId } }
+                })
+              }}
+            >
+              Delete Role
+            </button>*/}
           </div>
 
           <div className="mb-6">

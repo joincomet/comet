@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20210521052025 extends Migration {
+export class Migration20210522053630 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table "user" ("id" bigserial primary key, "created_at" timestamptz(0) not null, "username" text not null, "email" text null, "last_login_at" timestamptz(0) null, "avatar_url" text null, "online_status" text check ("online_status" in (\'Online\', \'Away\', \'DoNotDisturb\', \'Offline\')) not null, "is_admin" bool not null, "color" text check ("color" in (\'Red\', \'Yellow\', \'Green\', \'Blue\', \'Indigo\', \'Purple\', \'Pink\')) not null, "password_hash" text not null, "is_deleted" bool not null, "is_banned" bool not null, "ban_reason" text null);');
@@ -53,13 +53,10 @@ export class Migration20210521052025 extends Migration {
     this.addSql('create table "post_vote" ("user_id" bigint not null, "post_id" bigint not null, "created_at" timestamptz(0) not null);');
     this.addSql('alter table "post_vote" add constraint "post_vote_pkey" primary key ("user_id", "post_id");');
 
-    this.addSql('create table "role" ("id" bigserial primary key, "created_at" timestamptz(0) not null, "name" text not null, "server_id" bigint not null, "position" text not null, "color" varchar(255) null, "permissions" text[] not null);');
+    this.addSql('create table "role" ("id" bigserial primary key, "created_at" timestamptz(0) not null, "name" text not null, "server_id" bigint not null, "position" text not null, "is_default" bool not null default false, "color" varchar(255) null, "permissions" text[] not null);');
 
-    this.addSql('create table "server_user" ("user_id" bigint not null, "server_id" bigint not null, "position" text not null, "created_at" timestamptz(0) not null, "status" text check ("status" in (\'None\', \'Joined\', \'Banned\')) not null);');
+    this.addSql('create table "server_user" ("user_id" bigint not null, "server_id" bigint not null, "position" text not null, "created_at" timestamptz(0) not null, "role_id" bigint not null, "status" text check ("status" in (\'None\', \'Joined\', \'Banned\')) not null);');
     this.addSql('alter table "server_user" add constraint "server_user_pkey" primary key ("user_id", "server_id");');
-
-    this.addSql('create table "server_user_roles" ("server_user_user_id" bigint not null, "server_user_server_id" bigint not null, "role_id" bigint not null);');
-    this.addSql('alter table "server_user_roles" add constraint "server_user_roles_pkey" primary key ("server_user_user_id", "server_user_server_id", "role_id");');
 
     this.addSql('alter table "relationship" add constraint "relationship_owner_id_foreign" foreign key ("owner_id") references "user" ("id") on update cascade;');
     this.addSql('alter table "relationship" add constraint "relationship_user_id_foreign" foreign key ("user_id") references "user" ("id") on update cascade;');
@@ -121,11 +118,7 @@ export class Migration20210521052025 extends Migration {
 
     this.addSql('alter table "server_user" add constraint "server_user_user_id_foreign" foreign key ("user_id") references "user" ("id") on update cascade;');
     this.addSql('alter table "server_user" add constraint "server_user_server_id_foreign" foreign key ("server_id") references "server" ("id") on update cascade;');
-
-    this.addSql('alter table "server_user_roles" add constraint "server_user_roles_server_user_user_id_server_user_server_id_foreign" foreign key ("server_user_user_id", "server_user_server_id") references "server_user" ("user_id", "server_id") on update cascade on delete cascade;');
-    this.addSql('alter table "server_user_roles" add constraint "server_user_roles_role_id_foreign" foreign key ("role_id") references "role" ("id") on update cascade on delete cascade;');
-
-    this.addSql('create index "server_user_roles_server_user_user_id_server_user_server_id_index" on "server_user_roles" ("server_user_user_id", "server_user_server_id");');
+    this.addSql('alter table "server_user" add constraint "server_user_role_id_foreign" foreign key ("role_id") references "role" ("id") on update cascade;');
   }
 
 }

@@ -9,7 +9,7 @@ import {
 } from '@/entity'
 
 @InputType()
-export class AddUserToRoleInput {
+export class SetUserRoleInput {
   @Field(() => ID)
   roleId: string
 
@@ -17,9 +17,9 @@ export class AddUserToRoleInput {
   userId: string
 }
 
-export async function addUserToRole(
+export async function setUserRole(
   { em, userId: currentUserId, liveQueryStore }: Context,
-  { roleId, userId }: AddUserToRoleInput
+  { roleId, userId }: SetUserRoleInput
 ): Promise<ServerUser> {
   const role = await em.findOneOrFail(Role, roleId, ['server'])
   const currentUser = await em.findOneOrFail(User, currentUserId)

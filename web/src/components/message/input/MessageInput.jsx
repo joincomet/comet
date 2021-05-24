@@ -12,14 +12,9 @@ import {
   ServerPermission,
   useCreateMessageMutation
 } from '@/graphql/hooks'
-import {
-  EditorContent,
-  useEditor,
-  ReactRenderer,
-  Extension
-} from '@tiptap/react'
+import { EditorContent, ReactRenderer, Extension } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import Link from '@tiptap/extension-link'
+import Link from '@/components/ui/editor/Link'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Mention } from '@/components/ui/editor/Mention'
 import tippy from 'tippy.js/headless'
@@ -29,7 +24,6 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
 import { Editor } from '@tiptap/react/src/Editor'
 import TypingAnimation from '@/components/message/input/TypingAnimation'
-import { useDebounce } from 'react-use'
 
 function useForceUpdate() {
   const [, setValue] = useState(0)

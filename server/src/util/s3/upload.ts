@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid'
 import mime from 'mime'
 import sharp, { ResizeOptions } from 'sharp'
-import s3 from '@/config/s3'
+import s3 from '@/config/s3.config'
 import { FileUpload } from 'graphql-upload'
 import got from 'got'
 import FileType from 'file-type'

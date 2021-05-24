@@ -203,3 +203,11 @@ span[data-spoiler] {
 .form-show-password-button {
   @apply cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 absolute right-1.5 top-1/2 transform -translate-y-1/2;
 }
+
+.youtube iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

@@ -133,6 +133,15 @@ export const apolloClient = new ApolloClient({
           },
           serverUser: {
             merge: true
+          },
+          channel: {
+            merge: true
+          },
+          group: {
+            merge: true
+          },
+          toUser: {
+            merge: true
           }
         }
       },

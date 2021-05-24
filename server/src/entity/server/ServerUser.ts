@@ -1,17 +1,13 @@
 import {
-  Collection,
   Entity,
   Enum,
-  ManyToMany,
   ManyToOne,
   PrimaryKeyType,
-  Property,
-  QueryOrder
+  Property
 } from '@mikro-orm/core'
-import { Role, Server, User } from '@/entity'
+import { Role, Server, User, ServerUserStatus } from '@/entity'
 import { ReorderUtils } from '@/util/ReorderUtils'
 import { Field, ObjectType } from 'type-graphql'
-import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
 
 @ObjectType()
 @Entity()
@@ -39,9 +35,4 @@ export class ServerUser {
     items: () => ServerUserStatus
   })
   status: ServerUserStatus = ServerUserStatus.Joined
-
-  @Field({ nullable: true })
-  get color(): string {
-    return this.role.color
-  }
 }

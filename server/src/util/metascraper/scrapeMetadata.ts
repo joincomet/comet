@@ -7,11 +7,14 @@ import UserAgent from 'user-agents'
 
 const metascraperTwitterCard = () => ({
   twitterCard: [
-    // They receive as parameter:
-    // - `htmlDom`: the cheerio HTML instance.
-    // - `url`: The input URL used for extact the content.
     ({ htmlDom: $ }) => $('meta[name="twitter:card"]').attr('content'),
     ({ htmlDom: $ }) => $('meta[property="twitter:card"]').attr('content')
+  ]
+})
+
+const metascraperThemeColor = () => ({
+  themeColor: [
+    ({ htmlDom: $ }) => $('meta[name="theme-color"]').attr('content')
   ]
 })
 
@@ -26,7 +29,8 @@ const metascraper = require('metascraper')([
   require('metascraper-title')(),
   require('metascraper-url')(),
   require('metascraper-youtube')(),
-  metascraperTwitterCard()
+  metascraperTwitterCard(),
+  metascraperThemeColor()
 ])
 
 const timeout = 5000
@@ -59,6 +63,8 @@ export const scrapeMetadata = async (
     return null
   }
 
+  if (!meta.title) return null
+
   // Strip HTML tags
   if (meta.description)
     meta.description = sanitizeHtml(meta.description, {
@@ -70,14 +76,9 @@ export const scrapeMetadata = async (
 
   const { image, logo } = meta
 
-  const resize = {
-    width: 128,
-    height: 128
-  }
-
   if (image) {
     try {
-      meta.image = await uploadImageUrl(image, resize)
+      meta.image = await uploadImageUrl(image)
     } catch (e) {
       delete meta.image
     }
@@ -85,7 +86,7 @@ export const scrapeMetadata = async (
 
   if (logo) {
     try {
-      meta.logo = await uploadImageUrl(logo, resize)
+      meta.logo = await uploadImageUrl(logo, { width: 256, height: 256 })
     } catch (e) {
       delete meta.logo
     }

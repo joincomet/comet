@@ -19,12 +19,12 @@ import {
   Server,
   ServerPermission,
   ServerUser,
-  UserFolder
+  UserFolder,
+  ServerUserStatus,
+  OnlineStatus
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { CustomError } from '@/types/CustomError'
-import { ServerUserStatus } from '@/entity/server/ServerUserStatus'
-import { OnlineStatus } from '@/entity/user/OnlineStatus'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLEmailAddress, GraphQLNonNegativeInt } from 'graphql-scalars'
 import { Color } from '@/types'

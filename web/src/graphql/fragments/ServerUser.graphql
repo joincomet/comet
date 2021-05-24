@@ -1,5 +1,4 @@
 fragment ServerUser on ServerUser {
-  color
   role {
     ...Role
   }

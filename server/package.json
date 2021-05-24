@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.69",
+  "version": "0.0.70",
   "private": true,
   "engines": {
     "node": "16.x.x"
@@ -55,13 +55,13 @@
     "mime": "^2.5.2",
     "mudder": "^1.0.10",
     "nanoid": "^3.1.23",
-    "node-html-parser": "^3.3.0",
+    "node-html-parser": "^3.3.3",
     "reflect-metadata": "^0.1.13",
     "sanitize-html": "^2.4.0",
     "sharp": "^0.28.2",
     "type-graphql": "^1.1.1",
     "typescript": "^4.2.4",
-    "user-agents": "^1.0.659",
+    "user-agents": "^1.0.661",
     "validator": "^13.6.0",
     "ws": "^7.4.5",
     "xss": "^1.0.9"
@@ -78,7 +78,7 @@
     "@types/sanitize-html": "^2.3.1",
     "@types/sharp": "^0.28.1",
     "@types/user-agents": "^1.0.1",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.0.0",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0"
   },

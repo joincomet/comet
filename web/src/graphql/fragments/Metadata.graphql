@@ -9,4 +9,5 @@ fragment Metadata on LinkMetadata {
   twitterCard
   url
   domain
+  themeColor
 }

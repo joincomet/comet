@@ -8,12 +8,8 @@ import {
   UpdateRoleInput,
   deleteRole,
   DeleteRoleInput,
-  moveRole,
-  MoveRoleInput,
-  addUserToRole,
-  AddUserToRoleInput,
-  removeUserFromRole,
-  RemoveUserFromRoleInput
+  setUserRole,
+  SetUserRoleInput
 } from './mutations'
 
 @Resolver()
@@ -46,29 +42,11 @@ export class RoleResolver {
   }
 
   @Authorized()
-  @Mutation(() => Role)
-  async moveRole(
-    @Ctx() ctx: Context,
-    @Arg('input') input: MoveRoleInput
-  ): Promise<Role> {
-    return moveRole(ctx, input)
-  }
-
-  @Authorized()
   @Mutation(() => ServerUser)
-  async addUserToRole(
+  async setUserRole(
     @Ctx() ctx: Context,
-    @Arg('input') input: AddUserToRoleInput
+    @Arg('input') input: SetUserRoleInput
   ): Promise<ServerUser> {
-    return addUserToRole(ctx, input)
-  }
-
-  @Authorized()
-  @Mutation(() => ServerUser)
-  async removeUserFromRole(
-    @Ctx() ctx: Context,
-    @Arg('input') input: RemoveUserFromRoleInput
-  ): Promise<ServerUser> {
-    return removeUserFromRole(ctx, input)
+    return setUserRole(ctx, input)
   }
 }

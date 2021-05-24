@@ -3,6 +3,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import {
   Channel,
   ChannelType,
+  ChannelUser,
   File,
   Group,
   GroupUser,
@@ -10,12 +11,10 @@ import {
   Message,
   RelationshipStatus,
   ServerPermission,
-  ServerUser,
   User
 } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { uploadFileOrImage } from '@/util'
-import { getLinkMetas } from '@/util/getLinkMetas'
+import { setMessageLinkMetas, uploadFileOrImage } from '@/util'
 import {
   ChangePayload,
   ChangeType,
@@ -113,7 +112,7 @@ export async function createMessage(
     isEveryoneMentioned
   })
 
-  if (text) message.linkMetadatas = await getLinkMetas(text)
+  // if (text) message.linkMetadatas = await getLinkMetas(text)
   await em.persistAndFlush(message)
 
   if (toUser) {
@@ -139,6 +138,16 @@ export async function createMessage(
 
   if (channel) {
     channel.lastMessageAt = new Date()
+    const qb = em.createQueryBuilder(ChannelUser)
+    const mentionCount = qb.raw('mention_count + 1')
+    if (isEveryoneMentioned) {
+      await qb
+        .update({ mentionCount })
+        .where({ user: { $ne: user } })
+        .execute()
+    } else if (mentionIds.length > 0) {
+      await qb.update({ mentionCount }).where({ user: mentionIds }).execute()
+    }
     await em.persistAndFlush(channel)
   }
 
@@ -154,6 +163,8 @@ export async function createMessage(
     channelId,
     isTyping: false
   })
+
+  setMessageLinkMetas(em.fork(), message.id, notifyMessageChanged)
 
   return message
 }

@@ -2,19 +2,19 @@ import {
   Collection,
   Entity,
   Enum,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { Server, ServerUser } from '@/entity'
 import {
+  Server,
+  ServerUser,
   defaultServerPermissions,
   ServerPermission
-} from '@/entity/server/ServerPermission'
-import { ReorderUtils } from '@/util/ReorderUtils'
+} from '@/entity'
 import { Field, ObjectType } from 'type-graphql'
 import { BaseEntity } from '@/entity/BaseEntity'
+import { GraphQLHexColorCode } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -29,14 +29,11 @@ export class Role extends BaseEntity {
   @OneToMany(() => ServerUser, 'role')
   serverUsers = new Collection<ServerUser>(this)
 
-  @Property({ columnType: 'text' })
-  position: string = ReorderUtils.FIRST_POSITION
-
   @Field()
-  @Property({ default: false })
+  @Property()
   isDefault: boolean = false
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLHexColorCode, { nullable: true })
   @Property({ nullable: true })
   color?: string
 

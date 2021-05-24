@@ -11,11 +11,7 @@ import {
 } from '@/components/ui/icons/Icons'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  ServerPermission,
-  useCreatePostMutation,
-  useGetLinkMetaQuery
-} from '@/graphql/hooks'
+import { useCreatePostMutation, useGetLinkMetaQuery } from '@/graphql/hooks'
 import Dialog from '@/components/ui/dialog/Dialog'
 import { useForm } from 'react-hook-form'
 import ServerSelect from '@/components/post/create/ServerSelect'
@@ -352,13 +348,11 @@ export default function CreatePostDialog({ open, setOpen, serverId }) {
                 </div>
               )}
 
-              {debouncedLinkUrl &&
-                isURL(debouncedLinkUrl) &&
-                (linkMeta || canEmbed(debouncedLinkUrl)) && (
-                  <div className="mt-5">
-                    <PostEmbed linkUrl={debouncedLinkUrl} metadata={linkMeta} />
-                  </div>
-                )}
+              {debouncedLinkUrl && isURL(debouncedLinkUrl) && !!linkMeta && (
+                <div className="mt-5">
+                  <PostEmbed dark metadata={linkMeta} />
+                </div>
+              )}
             </>
           )}
 

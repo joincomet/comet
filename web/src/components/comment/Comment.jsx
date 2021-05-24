@@ -86,9 +86,9 @@ export default function Comment({
                 >
                   <div
                     className={`text-sm font-medium cursor-pointer hover:underline leading-none ${
-                      comment.serverUser?.color ? '' : 'text-primary'
+                      comment.serverUser?.role?.color ? '' : 'text-primary'
                     }`}
-                    style={{ color: comment.serverUser?.color }}
+                    style={{ color: comment.serverUser?.role?.color }}
                   >
                     {comment.author?.username ?? '[deleted]'}
                   </div>

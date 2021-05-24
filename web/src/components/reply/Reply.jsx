@@ -136,7 +136,7 @@ function ReplyContent({ comment }) {
                   className={`text-sm font-medium cursor-pointer hover:underline leading-none ${
                     comment.author.color ? '' : 'text-primary'
                   }`}
-                  style={{ color: comment.serverUser?.color }}
+                  style={{ color: comment.serverUser?.role?.color }}
                 >
                   {comment.author?.username ?? '[deleted]'}
                 </div>

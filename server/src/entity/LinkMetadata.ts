@@ -1,6 +1,5 @@
 import { Field, ObjectType } from 'type-graphql'
 import { Embeddable, Property } from '@mikro-orm/core'
-import { GraphQLURL } from 'graphql-scalars'
 import { URL } from 'url'
 import isURL from 'validator/lib/isURL'
 
@@ -52,4 +51,8 @@ export class LinkMetadata {
   @Property({ nullable: true, columnType: 'text' })
   @Field({ nullable: true })
   twitterCard?: string
+
+  @Property({ nullable: true, columnType: 'text' })
+  @Field({ nullable: true })
+  themeColor?: string
 }

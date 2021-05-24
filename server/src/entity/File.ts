@@ -1,6 +1,5 @@
 import { Field, ObjectType } from 'type-graphql'
 import { Embeddable, Property } from '@mikro-orm/core'
-import { GraphQLURL } from 'graphql-scalars'
 
 @Embeddable()
 @ObjectType()

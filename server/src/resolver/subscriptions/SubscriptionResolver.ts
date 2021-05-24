@@ -15,7 +15,10 @@ import { SubscriptionTopic } from '@/resolver/subscriptions/SubscriptionTopic'
 import { Context } from '@/types'
 import { ChangePayload } from '@/resolver/subscriptions/ChangePayload'
 import { ChangeType } from '@/resolver/subscriptions/ChangeType'
-import { Comment, Message, Post, Reply } from '@/entity'
+import { Comment } from '@/entity/comment/Comment'
+import { Message } from '@/entity/message/Message'
+import { Post } from '@/entity/post/Post'
+import { Reply } from '@/entity/comment/Reply'
 import ChangeResponse from '@/resolver/subscriptions/ChangeResponse'
 import { TypingFilter } from '@/resolver/subscriptions/typing/TypingFilter'
 import { TypingPayload } from '@/resolver/subscriptions/typing/TypingPayload'
@@ -59,6 +62,7 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<CommentChangedResponse> {
+    em = em.fork()
     const entity = await em.findOneOrFail(Comment, id, ['author'])
     return getResult(entity, type)
   }
@@ -70,6 +74,7 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<PostChangedResponse> {
+    em = em.fork()
     const entity = await em.findOneOrFail(Post, id, ['author', 'server'])
     return getResult(entity, type)
   }
@@ -82,6 +87,7 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<MessageChangedResponse> {
+    em = em.fork()
     const entity = await em.findOneOrFail(Message, id, [
       'author',
       'channel.server',
@@ -101,6 +107,7 @@ export class SubscriptionResolver {
     @Ctx() { em, userId }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<ReplyChangedResponse> {
+    em = em.fork()
     const entity = await em.findOneOrFail(Reply, { id, user: userId }, [
       'user',
       'comment.author',

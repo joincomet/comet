@@ -82,7 +82,7 @@ export default memo(function Post({
       <div
         ref={dragRef}
         style={{ opacity }}
-        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 pt-3 px-3 pb-3 rounded flex`}
+        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 pt-4 px-4 pb-4 rounded flex`}
         onClick={() => {
           if (!isDragging) {
             push(post.relativeUrl)
@@ -110,7 +110,7 @@ export default memo(function Post({
 
         {!isPostPage && (
           <div
-            className="w-26 h-18 rounded dark:bg-gray-700 mr-3 flex items-center justify-center bg-center bg-cover bg-no-repeat"
+            className="w-26 h-18 rounded dark:bg-gray-700 mr-4 flex items-center justify-center bg-center bg-cover bg-no-repeat"
             style={
               post.thumbnailUrl
                 ? { backgroundImage: `url(${post.thumbnailUrl})` }
@@ -129,14 +129,14 @@ export default memo(function Post({
           </div>
         )}
 
-        <div className="pr-3 py-0.5 flex-grow flex flex-col">
+        <div className="pr-4 flex-grow flex flex-col">
           <Link to={post.relativeUrl} className="text-secondary font-medium">
             {post.title}
             <span className="text-xs text-mid">&nbsp;&nbsp;{type}</span>
           </Link>
 
           {isPostPage && type && (
-            <div className="border-b dark:border-gray-750 mt-0.5 pb-2">
+            <div className="mt-0.5 pb-2">
               {!!post.text && (
                 <div
                   dangerouslySetInnerHTML={{ __html: post.text }}
@@ -147,11 +147,8 @@ export default memo(function Post({
               {!!post.linkUrl && (
                 <>
                   {post.linkMetadata ? (
-                    <div className="max-w-screen-md w-full mt-2">
-                      <PostEmbed
-                        linkUrl={post.linkUrl}
-                        metadata={post.linkMetadata}
-                      />
+                    <div className="max-w-screen-sm w-full mt-2">
+                      <PostEmbed dark metadata={post.linkMetadata} />
                     </div>
                   ) : (
                     <a
@@ -245,7 +242,7 @@ export default memo(function Post({
                 <UserPopup user={post.author} role={post.serverUser?.role}>
                   <div
                     className="ml-2 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-xs font-medium leading-none"
-                    style={{ color: post.serverUser?.color }}
+                    style={{ color: post.serverUser?.role?.color }}
                   >
                     {post.author?.username ?? '[deleted]'}
                   </div>

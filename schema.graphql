@@ -21,11 +21,6 @@ input AddUserToGroupInput {
   userId: ID!
 }
 
-input AddUserToRoleInput {
-  roleId: ID!
-  userId: ID!
-}
-
 input AnswerFriendRequestInput {
   accept: Boolean!
   userId: ID!
@@ -331,6 +326,7 @@ type LinkMetadata {
   image: String
   logo: String
   publisher: String
+  themeColor: String
   title: String
   twitterCard: String
   url: String
@@ -400,11 +396,6 @@ input MoveChannelInput {
   channelId: ID!
 }
 
-input MoveRoleInput {
-  beforeRoleId: ID
-  roleId: ID!
-}
-
 input MoveServerFolderInput {
   beforeFolderId: ID
   folderId: ID!
@@ -423,7 +414,6 @@ input MoveUserFolderInput {
 type Mutation {
   addPostToFolder(input: AddPostToFolderInput!): Folder!
   addUserToGroup(input: AddUserToGroupInput!): Group!
-  addUserToRole(input: AddUserToRoleInput!): ServerUser!
   answerFriendRequest(input: AnswerFriendRequestInput!): User!
   banUserFromServer(input: BanUserFromServerInput!): Boolean!
   blockUser(input: BlockUserInput!): User!
@@ -460,7 +450,6 @@ type Mutation {
   markReplyRead(input: MarkReplyReadInput!): Reply!
   markReplyUnread(input: MarkReplyUnreadInput!): Reply!
   moveChannel(input: MoveChannelInput!): Channel!
-  moveRole(input: MoveRoleInput!): Role!
   moveServer(input: MoveServerInput!): Void!
   moveServerFolder(input: MoveServerFolderInput!): Folder!
   moveUserFolder(input: MoveUserFolderInput!): Folder!
@@ -475,7 +464,7 @@ type Mutation {
   removeFriend(input: RemoveFriendInput!): User!
   removePostFromFolder(input: RemovePostFromFolderInput!): Folder!
   removeUserFromGroup(input: RemoveUserFromGroupInput!): Group!
-  removeUserFromRole(input: RemoveUserFromRoleInput!): ServerUser!
+  setUserRole(input: SetUserRoleInput!): ServerUser!
   unbanUserFromServer(input: UnbanUserFromServerInput!): Boolean!
   unblockUser(input: UnblockUserInput!): User!
   unfollowFolder(input: UnfollowFolderInput!): Folder!
@@ -642,11 +631,6 @@ input RemoveUserFromGroupInput {
   userId: ID!
 }
 
-input RemoveUserFromRoleInput {
-  roleId: ID!
-  userId: ID!
-}
-
 input RepliesInput {
   unreadOnly: Boolean = true
 }
@@ -665,7 +649,7 @@ type ReplyChangedResponse {
 }
 
 type Role implements BaseEntity {
-  color: String
+  color: HexColorCode
   createdAt: DateTime!
   id: ID!
   isDefault: Boolean!
@@ -734,9 +718,13 @@ enum ServerPermission {
 }
 
 type ServerUser {
-  color: String
   role: Role!
   user: User!
+}
+
+input SetUserRoleInput {
+  roleId: ID!
+  userId: ID!
 }
 
 type Subscription {

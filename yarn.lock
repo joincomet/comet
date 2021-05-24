@@ -2493,6 +2493,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/node10@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@tsconfig/node10@npm:1.0.7"
+  checksum: a1ca75224357c60829533061f9be6898a2df02cb0e360a356112070596ffa6102c56964d195023d5abb451e22473ceb7e138c82025ae84c7b5a1f69259e5f8a4
+  languageName: node
+  linkType: hard
+
+"@tsconfig/node12@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@tsconfig/node12@npm:1.0.7"
+  checksum: 82b0352f66bb84afcf4fe4d771d25dcdc2fbfd0dcd6c5efe475830e0df6806d687bdde3aba52d5c4d2d4dfee252093ed5cfc27a3fc47dc389a3f4fb0ea323390
+  languageName: node
+  linkType: hard
+
+"@tsconfig/node14@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@tsconfig/node14@npm:1.0.0"
+  checksum: 3eda14250ed8a03910ce822056f0d2fc2bcf41d9f1f3c6b202a6b32277dc638f475425fe7a1c03fbdba4e7f3b89668ecbac92d101c9e9fb56018c098393759ec
+  languageName: node
+  linkType: hard
+
+"@tsconfig/node16@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@tsconfig/node16@npm:1.0.1"
+  checksum: c389a4a81c291a27b96705de7fbe46d29aa4eb771450a41dfc075d89e1fdd63141898043a0d9f627460a1c409d06635a044dc4b3a4516173769a7d0a1558c51d
+  languageName: node
+  linkType: hard
+
 "@types/accepts@npm:*, @types/accepts@npm:^1.3.5":
   version: 1.3.5
   resolution: "@types/accepts@npm:1.3.5"
@@ -5924,7 +5952,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:2.6.9, debug@npm:^2.2.0, debug@npm:^2.3.3, debug@npm:^2.6.9":
+"debug@npm:2.6.9, debug@npm:^2.2.0, debug@npm:^2.3.3, debug@npm:^2.6.6, debug@npm:^2.6.9":
   version: 2.6.9
   resolution: "debug@npm:2.6.9"
   dependencies:
@@ -7342,17 +7370,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-deep-equal@npm:3.1.3, fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3, fast-deep-equal@npm:~3.1.3":
+  version: 3.1.3
+  resolution: "fast-deep-equal@npm:3.1.3"
+  checksum: 451526766b219503131d11e823eaadd1533080b0be4860e316670b039dcaf31cd1007c2fe036a9b922abba7c040dfad5e942ed79d21f2ff849e50049f36e0fb7
+  languageName: node
+  linkType: hard
+
 "fast-deep-equal@npm:^2.0.1":
   version: 2.0.1
   resolution: "fast-deep-equal@npm:2.0.1"
   checksum: ad315b79abe335f25271821447bdbbca5d7a6e5930da498fbb2628d28399e958a679adddbb665f5b2943bfd83d9dd375ac5fb45e9004c9516177008ebb7efc16
-  languageName: node
-  linkType: hard
-
-"fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3, fast-deep-equal@npm:~3.1.3":
-  version: 3.1.3
-  resolution: "fast-deep-equal@npm:3.1.3"
-  checksum: 451526766b219503131d11e823eaadd1533080b0be4860e316670b039dcaf31cd1007c2fe036a9b922abba7c040dfad5e942ed79d21f2ff849e50049f36e0fb7
   languageName: node
   linkType: hard
 
@@ -8898,12 +8926,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"i18next@npm:^20.2.4":
-  version: 20.2.4
-  resolution: "i18next@npm:20.2.4"
+"i18next@npm:^20.3.0":
+  version: 20.3.0
+  resolution: "i18next@npm:20.3.0"
   dependencies:
     "@babel/runtime": ^7.12.0
-  checksum: ba2a6b06508227b924d1e0f1af049e5c9a2cd311478dfd096adf8b4f4e5705d28b742e1009a7ee8d3692cd083c1b5645151a33b53e78cafa59cf8c649b5aede8
+  checksum: 76752afd104577d15f413f93ab37189efd69111ba38b3dac525e464fc3e5a0ba118d9a1b2481f4d82d34de4e8d7fdb1fdb1639c6743f1a3e103a4f65160a08be
   languageName: node
   linkType: hard
 
@@ -11421,13 +11449,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"node-html-parser@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "node-html-parser@npm:3.3.0"
+"node-html-parser@npm:^3.3.3":
+  version: 3.3.3
+  resolution: "node-html-parser@npm:3.3.3"
   dependencies:
     css-select: ^3.1.2
     he: 1.2.0
-  checksum: 77abb1e1624638f74e9d1944719372943b61f80de4e49bb5c91437964343a4f68d92c25daf943bb08a98a1dace5e98db94d919a96a7c1f23cb29a84b237fa961
+  checksum: 3f084279558dcb92bcd42c524ddb3f06dc2e8fd82fab3401d6ab38f957e574e2fa2c2e33ac61815d58d89aa3026d75471c631957804f91a240cbdc9b25ff74e3
   languageName: node
   linkType: hard
 
@@ -12607,7 +12635,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.8, prop-types@npm:^15.6.2, prop-types@npm:^15.7.1, prop-types@npm:^15.7.2":
+"prop-types@npm:15.7.2, prop-types@npm:^15.5.8, prop-types@npm:^15.6.2, prop-types@npm:^15.7.1, prop-types@npm:^15.7.2":
   version: 15.7.2
   resolution: "prop-types@npm:15.7.2"
   dependencies:
@@ -13040,12 +13068,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.6.4":
-  version: 7.6.4
-  resolution: "react-hook-form@npm:7.6.4"
+"react-hook-form@npm:^7.6.6":
+  version: 7.6.6
+  resolution: "react-hook-form@npm:7.6.6"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 84005118bfcc54b3acd1a3de1a0932b58b39a1fd180a746ba45b92a0962da0186b4940c6d03998b09994e39bdbf0ae1573c9fb76f752540043c5ca0ad9528a00
+  checksum: 74573be336df3be2e0d876d0340054ba380533b763a26b6f65b00848ffb536891c234cd8255bc04ce7bc2b4f4f0e2f38cf744e04f9adadc945a0234091d3de87
   languageName: node
   linkType: hard
 
@@ -13196,6 +13224,18 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"react-twitch-embed-video@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "react-twitch-embed-video@npm:3.0.0"
+  dependencies:
+    window-or-global: ^1.0.1
+  peerDependencies:
+    react: 17.0.1
+    react-dom: 17.0.1
+  checksum: 5d9761726fe55ffc20932e40c44436583f5de4089a179723e0f4b90649f13ad0166d2eabecba30cd89240b6ab87af96655396eb7034c0a801ddd1d42c6068339
+  languageName: node
+  linkType: hard
+
 "react-twitter-widgets@npm:^1.10.0":
   version: 1.10.0
   resolution: "react-twitter-widgets@npm:1.10.0"
@@ -13264,6 +13304,19 @@ fsevents@~2.3.1:
   peerDependencies:
     react: ">=16"
   checksum: 219961e7135db4995c009f08ec09f358e0404d52722279cfc3d87fef4e4f3e53292b357e0a51514267173c660a01062a3d1fca7e023f967ef936a91e76b3b8bf
+  languageName: node
+  linkType: hard
+
+"react-youtube@npm:^7.13.1":
+  version: 7.13.1
+  resolution: "react-youtube@npm:7.13.1"
+  dependencies:
+    fast-deep-equal: 3.1.3
+    prop-types: 15.7.2
+    youtube-player: 5.5.2
+  peerDependencies:
+    react: ">=0.14.1"
+  checksum: 125eff75aa241c31cbb66dd587bffccd2aa6c702bbb919391d62468a1ff2bdeba9126edd3b7388e82eeeb423b0d3958e061db168b721726a3dbfabc2f2d24eb4
   languageName: node
   linkType: hard
 
@@ -13997,14 +14050,14 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.33.0":
-  version: 1.33.0
-  resolution: "sass@npm:1.33.0"
+"sass@npm:^1.34.0":
+  version: 1.34.0
+  resolution: "sass@npm:1.34.0"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
   bin:
     sass: sass.js
-  checksum: 581f2dfe519b27f3fc7766ff032cc29011f0420e6518ddc7b3c25da7c972f14a42b88e12f887cab55688e6d138701605d3c849dfc368023e2ab11180df5f6615
+  checksum: abc3e39a8500cb7d3498b69aaa9ba8af391a186956bf9121790f5f27497a5d6a245273476d5b6b1fd8b696b490c44b05a7bfcc8334fe4ae7e3d894fe9d161ac6
   languageName: node
   linkType: hard
 
@@ -14223,16 +14276,16 @@ resolve@^2.0.0-next.3:
     mime: ^2.5.2
     mudder: ^1.0.10
     nanoid: ^3.1.23
-    node-html-parser: ^3.3.0
+    node-html-parser: ^3.3.3
     reflect-metadata: ^0.1.13
     sanitize-html: ^2.4.0
     sharp: ^0.28.2
-    ts-node: ^9.1.1
+    ts-node: ^10.0.0
     ts-node-dev: ^1.1.6
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
     typescript: ^4.2.4
-    user-agents: ^1.0.659
+    user-agents: ^1.0.661
     validator: ^13.6.0
     ws: ^7.4.5
     xss: ^1.0.9
@@ -14387,6 +14440,13 @@ resolve@^2.0.0-next.3:
   dependencies:
     is-arrayish: ^0.3.1
   checksum: a5a2c1c86cea94f42ab843508e7c68b5bbfd15acb08056d600ac2e9c7f7c41bc417e71160ea3034a5411d3cce186c801f7a56badfb3a854906ce163120318875
+  languageName: node
+  linkType: hard
+
+"sister@npm:^3.0.0":
+  version: 3.0.2
+  resolution: "sister@npm:3.0.2"
+  checksum: 32bfe26361014a3a0e41140cb2bf2f2beb172c4e9fc1919f06d46cc8a3399a563012cecfc128b7833f160d9570285878de162f056d84673443ac05d078cc7f9f
   languageName: node
   linkType: hard
 
@@ -15553,7 +15613,41 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^9, ts-node@npm:^9.0.0, ts-node@npm:^9.1.1":
+"ts-node@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "ts-node@npm:10.0.0"
+  dependencies:
+    "@tsconfig/node10": ^1.0.7
+    "@tsconfig/node12": ^1.0.7
+    "@tsconfig/node14": ^1.0.0
+    "@tsconfig/node16": ^1.0.1
+    arg: ^4.1.0
+    create-require: ^1.1.0
+    diff: ^4.0.1
+    make-error: ^1.1.1
+    source-map-support: ^0.5.17
+    yn: 3.1.1
+  peerDependencies:
+    "@swc/core": ">=1.2.45"
+    "@swc/wasm": ">=1.2.45"
+    "@types/node": "*"
+    typescript: ">=2.7"
+  peerDependenciesMeta:
+    "@swc/core":
+      optional: true
+    "@swc/wasm":
+      optional: true
+  bin:
+    ts-node: dist/bin.js
+    ts-node-cwd: dist/bin-cwd.js
+    ts-node-script: dist/bin-script.js
+    ts-node-transpile-only: dist/bin-transpile.js
+    ts-script: dist/bin-script-deprecated.js
+  checksum: dc461e2b9b931b00ff065530a0247f86da1d035e72a7ef6d7ed072dd8e6b236d1879f113dcc73a354d240c81b6b845445c3d32b16eeb68022ed27ab6d130c049
+  languageName: node
+  linkType: hard
+
+"ts-node@npm:^9, ts-node@npm:^9.0.0":
   version: 9.1.1
   resolution: "ts-node@npm:9.1.1"
   dependencies:
@@ -16088,13 +16182,13 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"user-agents@npm:^1.0.659":
-  version: 1.0.659
-  resolution: "user-agents@npm:1.0.659"
+"user-agents@npm:^1.0.661":
+  version: 1.0.661
+  resolution: "user-agents@npm:1.0.661"
   dependencies:
     dot-json: ^1.2.2
     lodash.clonedeep: ^4.5.0
-  checksum: 6eaa119dcf121c9b4da34d1a0f2fec8ddf94a0a73f4857ab92706f4fe2c9f2919208373a368cba92c7ed36792d8fc717ea4c9f50d8a20ea9eccfc720a935fade
+  checksum: eca0e34483cf133c2b1425acbd401e581a5c8e8cef494bc887277b7ecf67d63f76e6d27a7a675301956296d7189d892d019d5da03074442e912d072dfa5a69e0
   languageName: node
   linkType: hard
 
@@ -16349,7 +16443,7 @@ typescript@^4.2.4:
     graphql: ^15.4.0-experimental-stream-defer.1
     graphql-tag: ^2.12.4
     graphql-ws: ^4.5.1
-    i18next: ^20.2.4
+    i18next: ^20.3.0
     i18next-browser-languagedetector: ^6.1.1
     meros: ^1.1.4
     postcss: ^8.3.0
@@ -16362,7 +16456,7 @@ typescript@^4.2.4:
     react-dropzone: ^11.3.2
     react-giphy-searchbox: ^1.5.4
     react-helmet-async: ^1.0.9
-    react-hook-form: ^7.6.4
+    react-hook-form: ^7.6.6
     react-hot-toast: ^1.0.2
     react-i18next: ^11.8.15
     react-icons: ^4.2.0
@@ -16371,11 +16465,13 @@ typescript@^4.2.4:
     react-popper: ^2.2.5
     react-router-dom: ^5.2.0
     react-twemoji: ^0.3.0
+    react-twitch-embed-video: ^3.0.0
     react-twitter-widgets: ^1.10.0
     react-use: ^17.2.4
     react-virtual: ^2.7.1
     react-virtuoso: ^1.8.6
-    sass: ^1.33.0
+    react-youtube: ^7.13.1
+    sass: ^1.34.0
     string-hash: ^1.1.3
     tailwind-scrollbar: ^1.3.0
     tailwindcss: ^2.1.2
@@ -16515,6 +16611,13 @@ typescript@^4.2.4:
   dependencies:
     string-width: ^4.0.0
   checksum: 729c30582e49bdcb1372216eedfd71d1640a1344a4b4e970bc9f33d575b56b130f530b383fbab2cf2bcffb76ea4357e6a66939778d8de91ca66037651d94e01a
+  languageName: node
+  linkType: hard
+
+"window-or-global@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "window-or-global@npm:1.0.1"
+  checksum: 7bb01361ba381144fe9852965f594815872e403581129c20801d31888d3d0222b8a6dac9723991a487b9c220952668e5c7f79edbe1840001ee6a13d98e629dab
   languageName: node
   linkType: hard
 
@@ -16829,6 +16932,17 @@ typescript@^4.2.4:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 096c3b40beb2804659539be1605a35c58eb0c85285f94b77b3e924f42ee265c1a40bf9f4153770039517146b469a964d51742395f35ca8135fc9f7e4982b785d
+  languageName: node
+  linkType: hard
+
+"youtube-player@npm:5.5.2":
+  version: 5.5.2
+  resolution: "youtube-player@npm:5.5.2"
+  dependencies:
+    debug: ^2.6.6
+    load-script: ^1.0.0
+    sister: ^3.0.0
+  checksum: 2d62315551137a9cdf963e42d7d3d3b589da4811569762441946eb37716cf5c8d364e72d5639c61beeddf6ec82063154aa485bc401edc086232bcbcb32f657c3
   languageName: node
   linkType: hard
 

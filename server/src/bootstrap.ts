@@ -1,7 +1,7 @@
 import { MikroORM } from '@mikro-orm/core'
 import { mikroOrmConf } from '@/config/mikro-orm.config'
 import { buildSchema } from 'type-graphql'
-import { typeGraphQLConf } from '@/config/typeGraphQL'
+import { typeGraphQLConf } from '@/config/typegraphql.config'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import ws from 'ws' // yarn add ws
@@ -22,7 +22,7 @@ import { version } from '../package.json'
 
 const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
 
-const RESET = true // set TRUE to WIPE AND RESET DATABASE in dev
+const RESET = false // set TRUE to WIPE AND RESET DATABASE in dev
 
 const shouldUseSentry =
   process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN

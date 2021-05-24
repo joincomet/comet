@@ -106,7 +106,7 @@ module.exports = {
           css: {
             color: theme('colors.gray.900'),
             a: {
-              color: theme('colors.blue.500'),
+              color: theme('colors.blue.400'),
               'text-decoration': 'none',
               'font-weight': 400,
               '&:hover': {
@@ -115,6 +115,9 @@ module.exports = {
             },
             strong: {
               color: theme('colors.gray.900')
+            },
+            'a > strong': {
+              color: theme('colors.blue.400')
             },
             h2: {
               color: theme('colors.gray.900')
@@ -160,14 +163,14 @@ module.exports = {
           css: {
             color: theme('colors.gray.100'),
             a: {
-              color: theme('colors.blue.500'),
+              color: theme('colors.blue.400'),
               'text-decoration': 'none'
             },
             strong: {
               color: theme('colors.gray.100')
             },
             'a > strong': {
-              color: theme('colors.blue.500')
+              color: theme('colors.blue.400')
             },
             h2: {
               color: theme('colors.gray.100')

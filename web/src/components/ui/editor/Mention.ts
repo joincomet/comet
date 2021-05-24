@@ -17,12 +17,20 @@ export const Mention = Node.create<MentionOptions>({
         editor
           .chain()
           .focus()
-          .replaceRange(range, 'mention', props)
-          .insertContent(' ')
+          .insertContentAt(range, [
+            {
+              type: 'mention',
+              attrs: props
+            },
+            {
+              type: 'text',
+              text: ' '
+            }
+          ])
           .run()
       },
       allow: ({ editor, range }) => {
-        return editor.can().replaceRange(range, 'mention')
+        return editor.can().insertContentAt(range, { type: 'mention' })
       }
     }
   },
@@ -78,12 +86,12 @@ export const Mention = Node.create<MentionOptions>({
     return [
       'span',
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
-      `@${node.attrs.name}`
+      `${this.options.suggestion.char}${node.attrs.name}`
     ]
   },
 
   renderText({ node }) {
-    return `@${node.attrs.name}`
+    return `${this.options.suggestion.char}${node.attrs.name}`
   },
 
   addKeyboardShortcuts() {

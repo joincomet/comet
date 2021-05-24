@@ -93,7 +93,7 @@ export default memo(function Message({
           data={{ type: ContextMenuType.Message, message, server }}
         >
           <div
-            className={`flex py-1 px-4 dark:hover:bg-gray-775 group relative`}
+            className={`flex py-1 pl-4 pr-18 dark:hover:bg-gray-775 group relative`}
           >
             {isMentioned && (
               <div className="bg-gray-500 group-hover:bg-opacity-30 bg-opacity-10 absolute inset-0 pointer-events-none border-l-2 border-gray-500" />
@@ -151,13 +151,11 @@ export default memo(function Message({
               )}
 
               {!!message.linkMetadatas?.length && (
-                <>
+                <div className="space-y-1 pt-1 max-w-screen-sm">
                   {message.linkMetadatas.map((lm, i) => (
-                    <div key={i} className="py-1.5 max-w-screen-sm w-full">
-                      <PostEmbed dark metadata={lm} linkUrl={lm.url} />
-                    </div>
+                    <PostEmbed key={i} metadata={lm} linkUrl={lm.url} />
                   ))}
-                </>
+                </div>
               )}
 
               <MessageImageDialog message={message} />

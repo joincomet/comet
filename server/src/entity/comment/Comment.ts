@@ -1,5 +1,5 @@
-import { Field, Int, ObjectType } from 'type-graphql'
-import { LinkMetadata, Post, ServerUser, User } from '@/entity'
+import { Field, ObjectType } from 'type-graphql'
+import { LinkMetadata, Post, ServerUser, User, CommentVote } from '@/entity'
 import {
   Collection,
   Embedded,
@@ -8,7 +8,6 @@ import {
   OneToMany,
   Property
 } from '@mikro-orm/core'
-import { CommentVote } from '@/entity/comment/CommentVote'
 import { BaseEntity } from '@/entity/BaseEntity'
 import { GraphQLNonNegativeInt } from 'graphql-scalars'
 

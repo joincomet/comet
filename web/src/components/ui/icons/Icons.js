@@ -1,5 +1,6 @@
 export {
   RiPushpinFill as IconPin,
+  RiPlayFill as IconPlay,
   // RiRocketFill as IconVote,
   RiFireFill as IconHot,
   RiCodeBoxFill as IconFormatCodeBlock,
@@ -46,6 +47,7 @@ export {
   HiCheckCircle as IconFeatured,
   HiSearch as IconSearch,
   HiAnnotation as IconReply,
+  HiOutlineExternalLink as IconLinkExternal,
   HiUserGroup as IconFriends,
   HiX as IconX,
   HiOutlineX as IconXLarge,

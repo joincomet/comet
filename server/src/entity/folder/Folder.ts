@@ -1,8 +1,8 @@
-import { Field, Int, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql'
 import { FolderVisibility, Server, User } from '@/entity'
 import { BaseEntity } from '@/entity/BaseEntity'
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core'
-import { GraphQLNonNegativeInt, GraphQLURL } from 'graphql-scalars'
+import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

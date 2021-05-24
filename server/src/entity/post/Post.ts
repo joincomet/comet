@@ -7,7 +7,8 @@ import {
   PostImage,
   Server,
   ServerUser,
-  User
+  User,
+  PostVote
 } from '@/entity'
 import { URL } from 'url'
 import {
@@ -20,7 +21,6 @@ import {
   Property,
   QueryOrder
 } from '@mikro-orm/core'
-import { PostVote } from '@/entity/post/PostVote'
 import { BaseEntity } from '@/entity/BaseEntity'
 import { GraphQLNonNegativeInt } from 'graphql-scalars'
 import isURL from 'validator/lib/isURL'
