@@ -2,6 +2,7 @@ import { markInputRule } from '@tiptap/react'
 import { Link } from '@tiptap/extension-link'
 import { InputRule, inputRules } from 'prosemirror-inputrules'
 import { MarkType } from 'prosemirror-model'
+import { Plugin, PluginKey } from 'prosemirror-state'
 
 // These are almost the same as pasteRegex and pasteRegexWithBrackets but with
 // additional [\s\n] at the end so they apply after adding white space or a new line
@@ -51,6 +52,16 @@ export default Link.extend({
       if ($cursor) return run(view, $cursor.pos, $cursor.pos, '\n')
       return false
     }
-    return [plugin]
+    return [
+      plugin,
+      new Plugin({
+        key: new PluginKey('handlePaste'),
+        props: {
+          handlePaste: () => {
+            return true
+          }
+        }
+      })
+    ]
   }
 })

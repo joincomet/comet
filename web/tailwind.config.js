@@ -12,6 +12,12 @@ module.exports = {
   purge: ['./src/index.html', './src/**/*.{js,jsx,html}'],
   theme: {
     extend: {
+      lineClamp: {
+        7: '7',
+        8: '8',
+        9: '9',
+        10: '10'
+      },
       lineHeight: {
         6.5: '1.625rem'
       },

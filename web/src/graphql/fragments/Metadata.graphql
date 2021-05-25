@@ -2,8 +2,9 @@ fragment Metadata on LinkMetadata {
   author
   date
   description
-  image
-  logo
+  image {
+    ...Image
+  }
   publisher
   title
   twitterCard

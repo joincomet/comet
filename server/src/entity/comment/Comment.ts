@@ -1,5 +1,12 @@
 import { Field, ObjectType } from 'type-graphql'
-import { LinkMetadata, Post, ServerUser, User, CommentVote } from '@/entity'
+import {
+  LinkMetadata,
+  Post,
+  ServerUser,
+  User,
+  CommentVote,
+  VoteType
+} from '@/entity'
 import {
   Collection,
   Embedded,
@@ -37,8 +44,8 @@ export class Comment extends BaseEntity {
   @Property({ unsigned: true })
   voteCount: number = 0
 
-  @Field()
-  isVoted: boolean
+  @Field(() => VoteType)
+  voteType: VoteType = VoteType.None
 
   @OneToMany(() => CommentVote, 'comment')
   votes = new Collection<CommentVote>(this)

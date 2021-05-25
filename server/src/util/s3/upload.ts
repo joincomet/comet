@@ -13,7 +13,7 @@ const imageMimeTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
 
 const genKey = (ext: string) => `${nanoid()}.${ext}`
 
-const initSharp = () => sharp({ pages: -1 }).webp({ quality: 75 })
+const initSharp = () => sharp({ pages: -1 }).webp({ quality: 80 })
 
 export const uploadFileOrImage = async (
   file: FileUpload
@@ -38,21 +38,13 @@ export const uploadFileOrImage = async (
   }
 }
 
-export const uploadImageUrl = async (
-  linkUrl: string,
-  resize: ResizeOptions | null = null
-): Promise<string> => {
+export const uploadImageUrl = async (linkUrl: string): Promise<Image> => {
   const createStream = () => got.stream(linkUrl)
   const fileType = await FileType.fromStream(createStream())
   if (!imageMimeTypes.includes(fileType.mime))
     throw new Error('error.upload.invalidMime')
   const ext = fileType.ext
-  const s = initSharp()
-  const body = createStream().pipe(s)
-  if (resize) {
-    s.resize(resize)
-  }
-  return s3upload(ext, body, fileType.mime)
+  return uploadImageFile(createStream, ext)
 }
 
 export const uploadImageFile = async (

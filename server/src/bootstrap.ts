@@ -22,7 +22,7 @@ import { version } from '../package.json'
 
 const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
 
-const RESET = false // set TRUE to WIPE AND RESET DATABASE in dev
+const RESET = true // set TRUE to WIPE AND RESET DATABASE in dev
 
 const shouldUseSentry =
   process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN

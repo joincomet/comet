@@ -8,7 +8,8 @@ import {
   Server,
   ServerUser,
   User,
-  PostVote
+  PostVote,
+  VoteType
 } from '@/entity'
 import { URL } from 'url'
 import {
@@ -57,9 +58,9 @@ export class Post extends BaseEntity {
     if (this.images && this.images.length > 0) return this.images[0].url
     if (!this.linkUrl) return null
     if (this.linkMetadata && this.linkMetadata.image)
-      return this.linkMetadata.image
+      return this.linkMetadata.image.smallUrl
     if (this.linkMetadata && this.linkMetadata.logo)
-      return this.linkMetadata.logo
+      return this.linkMetadata.logo.smallUrl
     return null
   }
 
@@ -108,8 +109,8 @@ export class Post extends BaseEntity {
   @Property({ unsigned: true })
   voteCount: number = 0
 
-  @Field()
-  isVoted: boolean
+  @Field(() => VoteType)
+  voteType: VoteType = VoteType.None
 
   @OneToMany(() => PostVote, 'post')
   votes = new Collection<PostVote>(this)

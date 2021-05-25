@@ -10,7 +10,8 @@ const spotifyRegex =
   /^https?:\/\/open\.(?:spotify\.com\/)(?:embed\/)?(track|playlist|album)\/((?:\w){22})/
 const gfycatRegex = /^https?:\/\/gfycat\.com\/(\w+)/
 const bitchuteRegex = /^https?:\/\/www\.bitchute\.com\/video\/(\w+)/
-const youtubeRegex = /^https?:\/\/www\.youtube\.com\/watch\?v=(\w+)/
+const youtubeRegex = /^https?:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/
+const youtubeShortRegex = /^https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/
 const twitchRegex = /^https?:\/\/www\.twitch\.tv\/([a-zA-Z0-9_-]+)/
 const twitchVideoRegex = /^https?:\/\/www\.twitch\.tv\/videos\/(\d+)/
 const twitchClipsRegex = /^https?:\/\/clips\.twitch\.tv\/([a-zA-Z0-9_-]+)/
@@ -21,6 +22,7 @@ const isSpotify = url => spotifyRegex.test(url)
 const isGfycat = url => gfycatRegex.test(url)
 const isBitchute = url => bitchuteRegex.test(url)
 const isYoutube = url => youtubeRegex.test(url)
+const isYoutubeShort = url => youtubeShortRegex.test(url)
 const isTwitch = url => twitchRegex.test(url)
 const isTwitchVideo = url => twitchVideoRegex.test(url)
 const isTwitchClips = url => twitchClipsRegex.test(url)
@@ -115,8 +117,10 @@ export default function CustomEmbed({ url }) {
     )
   }
 
-  if (isYoutube(url)) {
-    const videoId = url.match(youtubeRegex)[1]
+  if (isYoutube(url) || isYoutubeShort(url)) {
+    const videoId = isYoutube(url)
+      ? url.match(youtubeRegex)[1]
+      : url.match(youtubeShortRegex)[1]
     return (
       <YouTube
         videoId={videoId}

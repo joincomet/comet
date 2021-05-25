@@ -8,7 +8,8 @@ import {
   Server,
   ServerPermission,
   ServerUser,
-  User
+  User,
+  VoteType
 } from '@/entity'
 import DataLoader from 'dataloader'
 import { LiveQueryStore } from '@/util'
@@ -24,11 +25,11 @@ export interface Loaders {
   channelMentionCountLoader: DataLoader<string, number>
   channelUnreadLoader: DataLoader<string, boolean>
 
-  commentVoteLoader: DataLoader<string, boolean>
+  commentVoteLoader: DataLoader<string, VoteType>
 
   groupUnreadCountLoader: DataLoader<string, number>
 
-  postVoteLoader: DataLoader<string, boolean>
+  postVoteLoader: DataLoader<string, VoteType>
 
   serverChannelsLoader: DataLoader<string, Channel[]>
   serverFoldersLoader: DataLoader<string, Folder[]>

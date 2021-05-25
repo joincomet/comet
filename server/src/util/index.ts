@@ -5,7 +5,7 @@ export * from './text'
 
 export * from './checkEnv'
 export * from './checkFileSize'
-export * from './getLinkMetas'
+export * from './handleMessageLinks'
 export * from './getReorderPosition'
 export * from './randomEnum'
 export * from './ReorderUtils'

@@ -6,14 +6,9 @@ import { calendarDate } from '@/utils/timeUtils'
 import ctl from '@netlify/classnames-template-literals'
 import CommentEditor from '@/components/comment/CommentEditor'
 import { useTranslation } from 'react-i18next'
-import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { ServerPermission } from '@/graphql/hooks'
-import { useParams } from 'react-router-dom'
 import { useStore } from '@/hooks/useStore'
-import { useToggleCommentVote } from '@/components/comment/useToggleCommentVote'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
-import toast from 'react-hot-toast'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
@@ -170,7 +165,6 @@ export default function Comment({
 }
 
 function VoteButton({ comment }) {
-  const toggleVote = useToggleCommentVote(comment)
   const openLogin = useOpenLogin()
   const [currentUser] = useCurrentUser()
   return (

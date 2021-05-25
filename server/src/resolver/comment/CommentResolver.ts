@@ -12,7 +12,7 @@ import {
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import { Comment, ServerUser } from '@/entity'
+import { Comment, ServerUser, VoteType } from '@/entity'
 import {
   createComment,
   CreateCommentInput,
@@ -24,10 +24,8 @@ import {
   PinCommentInput,
   unpinComment,
   UnpinCommentInput,
-  voteComment,
-  VoteCommentInput,
-  unvoteComment,
-  UnvoteCommentInput
+  updateCommentVote,
+  UpdateCommentVoteInput
 } from './mutations'
 import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 import { CommentsArgs, comments } from '@/resolver/comment/queries/comments'
@@ -44,10 +42,10 @@ export class CommentResolver {
   }
 
   @FieldResolver()
-  async isVoted(
+  async voteType(
     @Ctx() { loaders: { commentVoteLoader } }: Context,
     @Root() comment: Comment
-  ): Promise<boolean> {
+  ): Promise<VoteType> {
     return commentVoteLoader.load(comment.id)
   }
 
@@ -100,24 +98,13 @@ export class CommentResolver {
 
   @Authorized()
   @Mutation(() => Comment)
-  async voteComment(
+  async updateCommentVote(
     @Ctx() ctx: Context,
-    @Arg('input') input: VoteCommentInput,
+    @Arg('input') input: UpdateCommentVoteInput,
     @PubSub(SubscriptionTopic.CommentChanged)
     notifyCommentChanged: Publisher<ChangePayload>
   ): Promise<Comment> {
-    return voteComment(ctx, input, notifyCommentChanged)
-  }
-
-  @Authorized()
-  @Mutation(() => Comment)
-  async unvoteComment(
-    @Ctx() ctx: Context,
-    @Arg('input') input: UnvoteCommentInput,
-    @PubSub(SubscriptionTopic.CommentChanged)
-    notifyCommentChanged: Publisher<ChangePayload>
-  ): Promise<Comment> {
-    return unvoteComment(ctx, input, notifyCommentChanged)
+    return updateCommentVote(ctx, input, notifyCommentChanged)
   }
 
   @Authorized()

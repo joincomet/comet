@@ -2,17 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { ServerPermission } from '@/graphql/hooks'
 import { useCopyToClipboard } from 'react-use'
-import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import { useTogglePostPin } from '@/components/post/useTogglePostPin'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import toast from 'react-hot-toast'
-import { matchPath, useLocation } from 'react-router-dom'
 import { useDeletePostMutation } from '@/graphql/hooks'
-import { useOpenLogin } from '@/hooks/useLoginDialog'
 
 export default function PostContextMenu({ post, ContextMenuItem }) {
-  const { pathname } = useLocation()
   const { t } = useTranslation()
 
   const [canManagePosts] = useHasServerPermissions({
@@ -24,7 +20,6 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
 
   const [deletePost] = useDeletePostMutation()
 
-  const toggleVote = useTogglePostVote(post)
   const togglePin = useTogglePostPin(post)
 
   const [currentUser] = useCurrentUser()
@@ -55,7 +50,7 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
         {!!currentUser && (
           <ContextMenuItem
             onClick={() => {
-              toggleVote()
+              // toggleVote()
             }}
             label={
               post.isVoted ? t('post.context.unvote') : t('post.context.vote')
@@ -120,14 +115,14 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
         )}
 
         {isAuthor && <ContextMenuItem label={t('post.context.edit')} />}
-        {canManagePosts && (
+        {/*{canManagePosts && (
           <ContextMenuItem
             onClick={() => togglePin()}
             label={
               post.isPinned ? t('post.context.unpin') : t('post.context.pin')
             }
           />
-        )}
+        )}*/}
         <ContextMenuItem
           onClick={() => {
             copyToClipboard(`${location.origin}${post.relativeUrl}`)

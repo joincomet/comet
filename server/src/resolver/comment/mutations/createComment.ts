@@ -8,7 +8,8 @@ import {
   Reply,
   ServerPermission,
   ServerUser,
-  User
+  User,
+  VoteType
 } from '@/entity'
 import { handleText } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
@@ -53,8 +54,8 @@ export async function createComment(
     author: user,
     voteCount: 1
   })
-  comment.isVoted = true
-  const vote = em.create(CommentVote, { comment, user })
+  comment.voteType = VoteType.Up
+  const vote = em.create(CommentVote, { comment, user, type: VoteType.Up })
   post.commentCount++
   await em.persistAndFlush([comment, post, vote])
 

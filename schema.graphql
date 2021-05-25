@@ -90,7 +90,6 @@ type Comment implements BaseEntity {
   id: ID!
   isDeleted: Boolean!
   isPinned: Boolean!
-  isVoted: Boolean!
   linkMetadatas: [LinkMetadata!]!
   parentComment: Comment
   pinnedAt: DateTime
@@ -99,6 +98,7 @@ type Comment implements BaseEntity {
   text: String!
   updatedAt: DateTime
   voteCount: NonNegativeInt!
+  voteType: VoteType!
 }
 
 type CommentChangedResponse {
@@ -179,6 +179,7 @@ input CreateServerInput {
   category: ServerCategory = Other
   description: String
   displayName: String!
+  isDownvotesEnabled: Boolean = false
   name: String!
 }
 
@@ -323,8 +324,10 @@ type LinkMetadata {
   date: DateTime
   description: String
   domain: String
-  image: String
-  logo: String
+  image: Image
+  imageUrl: String
+  logo: Image
+  logoUrl: String
   publisher: String
   themeColor: String
   title: String
@@ -358,7 +361,7 @@ type Message implements BaseEntity {
   file: File
   group: Group
   id: ID!
-  image: Image
+  images: [Image!]!
   isDeleted: Boolean!
   isEveryoneMentioned: Boolean!
   isPinned: Boolean!
@@ -471,19 +474,17 @@ type Mutation {
   unpinComment(input: UnpinCommentInput!): Comment!
   unpinMessage(input: UnpinMessageInput!): Message!
   unpinPost(input: UnpinPostInput!): Post!
-  unvoteComment(input: UnvoteCommentInput!): Comment!
-  unvotePost(input: UnvotePostInput!): Post!
   updateChannel(input: UpdateChannelInput!): Channel!
   updateComment(input: UpdateCommentInput!): Comment!
+  updateCommentVote(input: UpdateCommentVoteInput!): Comment!
   updateFolder(input: UpdateFolderInput!): Folder!
   updateGroup(input: UpdateGroupInput!): Group!
   updateMessage(input: UpdateMessageInput!): Message!
   updatePost(input: UpdatePostInput!): Post!
+  updatePostVote(input: UpdatePostVoteInput!): Post!
   updateRole(input: UpdateRoleInput!): Role!
   updateServer(input: UpdateServerInput!): Server!
   updateTyping(input: TypingInput!): Boolean!
-  voteComment(input: VoteCommentInput!): Comment!
-  votePost(input: VotePostInput!): Post!
 }
 
 """Integers that will have a value of 0 or more."""
@@ -525,7 +526,6 @@ type Post implements BaseEntity {
   images: [PostImage!]!
   isDeleted: Boolean!
   isPinned: Boolean!
-  isVoted: Boolean!
   linkMetadata: LinkMetadata
   linkMetadatas: [LinkMetadata!]!
   linkUrl: String
@@ -538,6 +538,7 @@ type Post implements BaseEntity {
   title: String!
   updatedAt: DateTime
   voteCount: NonNegativeInt!
+  voteType: VoteType!
 }
 
 type PostChangedResponse {
@@ -668,9 +669,12 @@ type Server implements BaseEntity {
   folders: [Folder!]!
   id: ID!
   isBanned: Boolean!
+  isChatEnabled: Boolean!
   isDeleted: Boolean!
+  isDownvotesEnabled: Boolean!
   isFeatured: Boolean!
   isJoined: Boolean!
+  isPublic: Boolean!
   name: String!
   onlineCount: NonNegativeInt!
   owner: User!
@@ -772,14 +776,6 @@ input UnpinPostInput {
   postId: ID!
 }
 
-input UnvoteCommentInput {
-  commentId: ID!
-}
-
-input UnvotePostInput {
-  postId: ID!
-}
-
 input UpdateChannelInput {
   channelId: ID!
   description: String
@@ -790,6 +786,11 @@ input UpdateChannelInput {
 input UpdateCommentInput {
   commentId: ID!
   text: String!
+}
+
+input UpdateCommentVoteInput {
+  commentId: ID!
+  type: VoteType!
 }
 
 input UpdateFolderInput {
@@ -816,6 +817,11 @@ input UpdatePostInput {
   text: String!
 }
 
+input UpdatePostVoteInput {
+  postId: ID!
+  type: VoteType!
+}
+
 input UpdateRoleInput {
   color: HexColorCode
   name: String
@@ -830,6 +836,7 @@ input UpdateServerInput {
   description: String
   displayName: String
   featuredPosition: String
+  isDownvotesEnabled: Boolean
   isFeatured: Boolean
   ownerId: ID
   serverId: ID!
@@ -864,10 +871,8 @@ type User implements BaseEntity {
 """Represents NULL values"""
 scalar Void
 
-input VoteCommentInput {
-  commentId: ID!
-}
-
-input VotePostInput {
-  postId: ID!
+enum VoteType {
+  Down
+  None
+  Up
 }

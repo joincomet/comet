@@ -34,20 +34,8 @@ mutation deletePost($input: DeletePostInput!) {
   }
 }
 
-mutation votePost($input: VotePostInput!) {
-  votePost(input: $input) {
-    ...Post
-    author {
-      ...User
-    }
-    serverUser {
-      ...ServerUser
-    }
-  }
-}
-
-mutation unvotePost($input: UnvotePostInput!) {
-  unvotePost(input: $input) {
+mutation updatePostVote($input: UpdatePostVoteInput!) {
+  updatePostVote(input: $input) {
     ...Post
     author {
       ...User

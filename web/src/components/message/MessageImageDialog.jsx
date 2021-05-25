@@ -1,19 +1,18 @@
 import Dialog from '@/components/ui/dialog/Dialog'
 import { useState } from 'react'
 
-export default function MessageImageDialog({ message }) {
+export default function MessageImageDialog({ image, width, height }) {
   const [showImagePopup, setShowImagePopup] = useState(false)
 
-  if (!message.image) return null
   return (
     <div className="pt-1">
       <img
         onClick={() => setShowImagePopup(true)}
-        src={message.image.smallUrl}
+        src={image.smallUrl}
         alt=""
         className="rounded cursor-pointer"
-        width={message.image.smallWidth}
-        height={message.image.smallHeight}
+        width={width || image.smallWidth}
+        height={height || image.smallHeight}
       />
 
       <Dialog
@@ -25,14 +24,14 @@ export default function MessageImageDialog({ message }) {
           <div className="text-left">
             <img
               onClick={e => e.stopPropagation()}
-              src={message.image.popupUrl}
+              src={image.popupUrl}
               alt=""
-              width={message.image.popupWidth}
-              height={message.image.popupHeight}
+              width={image.popupWidth}
+              height={image.popupHeight}
             />
             <div className="pt-1">
               <a
-                href={message.image.originalUrl}
+                href={image.originalUrl}
                 className="hover:underline cursor-pointer text-mid font-semibold text-13 focus:outline-none"
                 target="_blank"
                 rel="noreferrer noopener"

@@ -91,6 +91,18 @@ export class Server extends BaseEntity {
   @Property()
   isDeleted: boolean = false
 
+  @Field()
+  @Property()
+  isPublic: boolean = true
+
+  @Field()
+  @Property()
+  isChatEnabled: boolean = true
+
+  @Field()
+  @Property()
+  isDownvotesEnabled: boolean = false
+
   @Field(() => [Channel])
   @OneToMany(() => Channel, 'server', {
     orderBy: { position: QueryOrder.ASC }

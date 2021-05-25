@@ -58,7 +58,7 @@ export const scrapeMetadata = async (
 
   let meta
   try {
-    meta = (await metascraper({ html, url })) as LinkMetadata
+    meta = await metascraper({ html, url })
   } catch (e) {
     return null
   }
@@ -74,23 +74,20 @@ export const scrapeMetadata = async (
 
   if (meta.date) meta.date = new Date(meta.date)
 
-  const { image, logo } = meta
+  meta.imageUrl = meta.image
+  meta.logoUrl = meta.logo
+  delete meta.image
+  delete meta.logo
+  const { imageUrl } = meta
 
-  if (image) {
+  if (imageUrl) {
     try {
-      meta.image = await uploadImageUrl(image)
+      meta.image = await uploadImageUrl(imageUrl)
     } catch (e) {
+      delete meta.imageUrl
       delete meta.image
     }
   }
 
-  if (logo) {
-    try {
-      meta.logo = await uploadImageUrl(logo, { width: 256, height: 256 })
-    } catch (e) {
-      delete meta.logo
-    }
-  }
-
-  return meta
+  return meta as LinkMetadata
 }

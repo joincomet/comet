@@ -1,0 +1,9 @@
+fragment Image on Image {
+  originalUrl
+  popupUrl
+  popupWidth
+  popupHeight
+  smallUrl
+  smallWidth
+  smallHeight
+}

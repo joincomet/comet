@@ -5,7 +5,7 @@ fragment Comment on Comment {
   }
   text
   voteCount
-  isVoted
+  voteType
   isDeleted
   createdAt
   updatedAt

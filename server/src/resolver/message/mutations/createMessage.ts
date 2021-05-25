@@ -14,7 +14,7 @@ import {
   User
 } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { setMessageLinkMetas, uploadFileOrImage } from '@/util'
+import { handleMessageLinks, uploadFileOrImage } from '@/util'
 import {
   ChangePayload,
   ChangeType,
@@ -106,7 +106,7 @@ export async function createMessage(
     group,
     toUser,
     author: user,
-    image: upload && (upload as Image).originalUrl ? upload : null,
+    images: upload && (upload as Image).originalUrl ? [upload] : null,
     file: upload && (upload as File).url ? upload : null,
     mentionedUsers: mentionIds,
     isEveryoneMentioned
@@ -164,7 +164,7 @@ export async function createMessage(
     isTyping: false
   })
 
-  setMessageLinkMetas(em.fork(), message.id, notifyMessageChanged)
+  handleMessageLinks(em.fork(), message.id, notifyMessageChanged)
 
   return message
 }

@@ -5,7 +5,6 @@ import { ServerPermission } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
-import { useToggleCommentVote } from '@/components/comment/useToggleCommentVote'
 import { useToggleCommentPin } from '@/components/comment/useToggleCommentPin'
 import { useStore } from '@/hooks/useStore'
 import { useDeleteCommentMutation } from '@/graphql/hooks'
@@ -20,7 +19,6 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
   })
   const copyToClipboard = useCopyToClipboard()[1]
   const [deleteComment] = useDeleteCommentMutation()
-  const toggleVote = useToggleCommentVote(comment)
   const togglePin = useToggleCommentPin(comment)
 
   const isAuthor = !!currentUser && comment.author.id === currentUser.id

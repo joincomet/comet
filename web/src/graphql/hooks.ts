@@ -112,7 +112,6 @@ export type Comment = BaseEntity & {
   id: Scalars['ID'];
   isDeleted: Scalars['Boolean'];
   isPinned: Scalars['Boolean'];
-  isVoted: Scalars['Boolean'];
   linkMetadatas: Array<LinkMetadata>;
   parentComment?: Maybe<Comment>;
   pinnedAt?: Maybe<Scalars['DateTime']>;
@@ -121,6 +120,7 @@ export type Comment = BaseEntity & {
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
   voteCount: Scalars['NonNegativeInt'];
+  voteType: VoteType;
 };
 
 export type CommentChangedResponse = {
@@ -202,6 +202,7 @@ export type CreateServerInput = {
   category?: Maybe<ServerCategory>;
   description?: Maybe<Scalars['String']>;
   displayName: Scalars['String'];
+  isDownvotesEnabled?: Maybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
 
@@ -335,8 +336,10 @@ export type LinkMetadata = {
   date?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
   domain?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  logo?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+  imageUrl?: Maybe<Scalars['String']>;
+  logo?: Maybe<Image>;
+  logoUrl?: Maybe<Scalars['String']>;
   publisher?: Maybe<Scalars['String']>;
   themeColor?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
@@ -372,7 +375,7 @@ export type Message = BaseEntity & {
   file?: Maybe<File>;
   group?: Maybe<Group>;
   id: Scalars['ID'];
-  image?: Maybe<Image>;
+  images: Array<Image>;
   isDeleted: Scalars['Boolean'];
   isEveryoneMentioned: Scalars['Boolean'];
   isPinned: Scalars['Boolean'];
@@ -488,19 +491,17 @@ export type Mutation = {
   unpinComment: Comment;
   unpinMessage: Message;
   unpinPost: Post;
-  unvoteComment: Comment;
-  unvotePost: Post;
   updateChannel: Channel;
   updateComment: Comment;
+  updateCommentVote: Comment;
   updateFolder: Folder;
   updateGroup: Group;
   updateMessage: Message;
   updatePost: Post;
+  updatePostVote: Post;
   updateRole: Role;
   updateServer: Server;
   updateTyping: Scalars['Boolean'];
-  voteComment: Comment;
-  votePost: Post;
 };
 
 
@@ -799,16 +800,6 @@ export type MutationUnpinPostArgs = {
 };
 
 
-export type MutationUnvoteCommentArgs = {
-  input: UnvoteCommentInput;
-};
-
-
-export type MutationUnvotePostArgs = {
-  input: UnvotePostInput;
-};
-
-
 export type MutationUpdateChannelArgs = {
   input: UpdateChannelInput;
 };
@@ -816,6 +807,11 @@ export type MutationUpdateChannelArgs = {
 
 export type MutationUpdateCommentArgs = {
   input: UpdateCommentInput;
+};
+
+
+export type MutationUpdateCommentVoteArgs = {
+  input: UpdateCommentVoteInput;
 };
 
 
@@ -839,6 +835,11 @@ export type MutationUpdatePostArgs = {
 };
 
 
+export type MutationUpdatePostVoteArgs = {
+  input: UpdatePostVoteInput;
+};
+
+
 export type MutationUpdateRoleArgs = {
   input: UpdateRoleInput;
 };
@@ -851,16 +852,6 @@ export type MutationUpdateServerArgs = {
 
 export type MutationUpdateTypingArgs = {
   input: TypingInput;
-};
-
-
-export type MutationVoteCommentArgs = {
-  input: VoteCommentInput;
-};
-
-
-export type MutationVotePostArgs = {
-  input: VotePostInput;
 };
 
 
@@ -899,7 +890,6 @@ export type Post = BaseEntity & {
   images: Array<PostImage>;
   isDeleted: Scalars['Boolean'];
   isPinned: Scalars['Boolean'];
-  isVoted: Scalars['Boolean'];
   linkMetadata?: Maybe<LinkMetadata>;
   linkMetadatas: Array<LinkMetadata>;
   linkUrl?: Maybe<Scalars['String']>;
@@ -912,6 +902,7 @@ export type Post = BaseEntity & {
   title: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
   voteCount: Scalars['NonNegativeInt'];
+  voteType: VoteType;
 };
 
 export type PostChangedResponse = {
@@ -1121,9 +1112,12 @@ export type Server = BaseEntity & {
   folders: Array<Folder>;
   id: Scalars['ID'];
   isBanned: Scalars['Boolean'];
+  isChatEnabled: Scalars['Boolean'];
   isDeleted: Scalars['Boolean'];
+  isDownvotesEnabled: Scalars['Boolean'];
   isFeatured: Scalars['Boolean'];
   isJoined: Scalars['Boolean'];
+  isPublic: Scalars['Boolean'];
   name: Scalars['String'];
   onlineCount: Scalars['NonNegativeInt'];
   owner: User;
@@ -1235,14 +1229,6 @@ export type UnpinPostInput = {
   postId: Scalars['ID'];
 };
 
-export type UnvoteCommentInput = {
-  commentId: Scalars['ID'];
-};
-
-export type UnvotePostInput = {
-  postId: Scalars['ID'];
-};
-
 export type UpdateChannelInput = {
   channelId: Scalars['ID'];
   description?: Maybe<Scalars['String']>;
@@ -1253,6 +1239,11 @@ export type UpdateChannelInput = {
 export type UpdateCommentInput = {
   commentId: Scalars['ID'];
   text: Scalars['String'];
+};
+
+export type UpdateCommentVoteInput = {
+  commentId: Scalars['ID'];
+  type: VoteType;
 };
 
 export type UpdateFolderInput = {
@@ -1279,6 +1270,11 @@ export type UpdatePostInput = {
   text: Scalars['String'];
 };
 
+export type UpdatePostVoteInput = {
+  postId: Scalars['ID'];
+  type: VoteType;
+};
+
 export type UpdateRoleInput = {
   color?: Maybe<Scalars['HexColorCode']>;
   name?: Maybe<Scalars['String']>;
@@ -1293,6 +1289,7 @@ export type UpdateServerInput = {
   description?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
   featuredPosition?: Maybe<Scalars['String']>;
+  isDownvotesEnabled?: Maybe<Scalars['Boolean']>;
   isFeatured?: Maybe<Scalars['Boolean']>;
   ownerId?: Maybe<Scalars['ID']>;
   serverId: Scalars['ID'];
@@ -1324,13 +1321,11 @@ export type User = BaseEntity & {
 };
 
 
-export type VoteCommentInput = {
-  commentId: Scalars['ID'];
-};
-
-export type VotePostInput = {
-  postId: Scalars['ID'];
-};
+export enum VoteType {
+  Down = 'Down',
+  None = 'None',
+  Up = 'Up'
+}
 
 export type ChannelFragment = (
   { __typename?: 'Channel' }
@@ -1339,7 +1334,7 @@ export type ChannelFragment = (
 
 export type CommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'text' | 'voteCount' | 'isVoted' | 'isDeleted' | 'createdAt' | 'updatedAt'>
+  & Pick<Comment, 'id' | 'text' | 'voteCount' | 'voteType' | 'isDeleted' | 'createdAt' | 'updatedAt'>
   & { parentComment?: Maybe<(
     { __typename?: 'Comment' }
     & Pick<Comment, 'id'>
@@ -1382,12 +1377,17 @@ export type GroupFragment = (
   & Pick<Group, 'id' | 'name' | 'displayName' | 'avatarUrl' | 'unreadCount' | 'lastMessageAt'>
 );
 
+export type ImageFragment = (
+  { __typename?: 'Image' }
+  & Pick<Image, 'originalUrl' | 'popupUrl' | 'popupWidth' | 'popupHeight' | 'smallUrl' | 'smallWidth' | 'smallHeight'>
+);
+
 export type MessageFragment = (
   { __typename?: 'Message' }
   & Pick<Message, 'id' | 'text' | 'createdAt' | 'updatedAt' | 'type' | 'isEveryoneMentioned' | 'isPinned'>
-  & { image?: Maybe<(
+  & { images: Array<(
     { __typename?: 'Image' }
-    & Pick<Image, 'originalUrl' | 'popupUrl' | 'popupWidth' | 'popupHeight' | 'smallUrl' | 'smallWidth' | 'smallHeight'>
+    & ImageFragment
   )>, file?: Maybe<(
     { __typename?: 'File' }
     & Pick<File, 'url' | 'mime' | 'filename' | 'size'>
@@ -1402,12 +1402,16 @@ export type MessageFragment = (
 
 export type MetadataFragment = (
   { __typename?: 'LinkMetadata' }
-  & Pick<LinkMetadata, 'author' | 'date' | 'description' | 'image' | 'logo' | 'publisher' | 'title' | 'twitterCard' | 'url' | 'domain' | 'themeColor'>
+  & Pick<LinkMetadata, 'author' | 'date' | 'description' | 'publisher' | 'title' | 'twitterCard' | 'url' | 'domain' | 'themeColor'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageFragment
+  )> }
 );
 
 export type PostFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'title' | 'isPinned' | 'text' | 'linkUrl' | 'relativeUrl' | 'commentCount' | 'voteCount' | 'isVoted' | 'thumbnailUrl' | 'domain' | 'isDeleted' | 'createdAt' | 'updatedAt'>
+  & Pick<Post, 'id' | 'title' | 'isPinned' | 'text' | 'linkUrl' | 'relativeUrl' | 'commentCount' | 'voteCount' | 'voteType' | 'thumbnailUrl' | 'domain' | 'isDeleted' | 'createdAt' | 'updatedAt'>
   & { linkMetadata?: Maybe<(
     { __typename?: 'LinkMetadata' }
     & MetadataFragment
@@ -1463,7 +1467,7 @@ export type RoleFragment = (
 
 export type ServerFragment = (
   { __typename?: 'Server' }
-  & Pick<Server, 'id' | 'name' | 'displayName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isJoined' | 'permissions'>
+  & Pick<Server, 'id' | 'name' | 'displayName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isJoined' | 'isDownvotesEnabled' | 'permissions'>
   & { owner: (
     { __typename?: 'User' }
     & Pick<User, 'id'>
@@ -1611,34 +1615,14 @@ export type DeleteCommentMutation = (
   ) }
 );
 
-export type VoteCommentMutationVariables = Exact<{
-  input: VoteCommentInput;
+export type UpdateCommentVoteMutationVariables = Exact<{
+  input: UpdateCommentVoteInput;
 }>;
 
 
-export type VoteCommentMutation = (
+export type UpdateCommentVoteMutation = (
   { __typename?: 'Mutation' }
-  & { voteComment: (
-    { __typename?: 'Comment' }
-    & { author?: Maybe<(
-      { __typename?: 'User' }
-      & UserFragment
-    )>, serverUser?: Maybe<(
-      { __typename?: 'ServerUser' }
-      & ServerUserFragment
-    )> }
-    & CommentFragment
-  ) }
-);
-
-export type UnvoteCommentMutationVariables = Exact<{
-  input: UnvoteCommentInput;
-}>;
-
-
-export type UnvoteCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { unvoteComment: (
+  & { updateCommentVote: (
     { __typename?: 'Comment' }
     & { author?: Maybe<(
       { __typename?: 'User' }
@@ -2040,34 +2024,14 @@ export type DeletePostMutation = (
   ) }
 );
 
-export type VotePostMutationVariables = Exact<{
-  input: VotePostInput;
+export type UpdatePostVoteMutationVariables = Exact<{
+  input: UpdatePostVoteInput;
 }>;
 
 
-export type VotePostMutation = (
+export type UpdatePostVoteMutation = (
   { __typename?: 'Mutation' }
-  & { votePost: (
-    { __typename?: 'Post' }
-    & { author?: Maybe<(
-      { __typename?: 'User' }
-      & UserFragment
-    )>, serverUser?: Maybe<(
-      { __typename?: 'ServerUser' }
-      & ServerUserFragment
-    )> }
-    & PostFragment
-  ) }
-);
-
-export type UnvotePostMutationVariables = Exact<{
-  input: UnvotePostInput;
-}>;
-
-
-export type UnvotePostMutation = (
-  { __typename?: 'Mutation' }
-  & { unvotePost: (
+  & { updatePostVote: (
     { __typename?: 'Post' }
     & { author?: Maybe<(
       { __typename?: 'User' }
@@ -2691,7 +2655,7 @@ export type PostsQuery = (
         & ServerUserFragment
       )>, server: (
         { __typename?: 'Server' }
-        & ServerFragment
+        & Pick<Server, 'id' | 'name' | 'avatarUrl' | 'isDownvotesEnabled'>
       ) }
       & PostFragment
     )> }
@@ -2934,13 +2898,25 @@ export type TypingUpdatedSubscription = (
   ) }
 );
 
+export const ImageFragmentDoc = gql`
+    fragment Image on Image {
+  originalUrl
+  popupUrl
+  popupWidth
+  popupHeight
+  smallUrl
+  smallWidth
+  smallHeight
+}
+    `;
 export const MetadataFragmentDoc = gql`
     fragment Metadata on LinkMetadata {
   author
   date
   description
-  image
-  logo
+  image {
+    ...Image
+  }
   publisher
   title
   twitterCard
@@ -2948,7 +2924,7 @@ export const MetadataFragmentDoc = gql`
   domain
   themeColor
 }
-    `;
+    ${ImageFragmentDoc}`;
 export const CommentFragmentDoc = gql`
     fragment Comment on Comment {
   id
@@ -2957,7 +2933,7 @@ export const CommentFragmentDoc = gql`
   }
   text
   voteCount
-  isVoted
+  voteType
   isDeleted
   createdAt
   updatedAt
@@ -2999,6 +2975,7 @@ export const ServerFragmentDoc = gql`
   category
   userCount
   isJoined
+  isDownvotesEnabled
   owner {
     id
   }
@@ -3061,14 +3038,8 @@ export const MessageFragmentDoc = gql`
   createdAt
   updatedAt
   type
-  image {
-    originalUrl
-    popupUrl
-    popupWidth
-    popupHeight
-    smallUrl
-    smallWidth
-    smallHeight
+  images {
+    ...Image
   }
   file {
     url
@@ -3085,7 +3056,8 @@ export const MessageFragmentDoc = gql`
   isEveryoneMentioned
   isPinned
 }
-    ${MetadataFragmentDoc}`;
+    ${ImageFragmentDoc}
+${MetadataFragmentDoc}`;
 export const PostFragmentDoc = gql`
     fragment Post on Post {
   id
@@ -3096,7 +3068,7 @@ export const PostFragmentDoc = gql`
   relativeUrl
   commentCount
   voteCount
-  isVoted
+  voteType
   thumbnailUrl
   domain
   isDeleted
@@ -3467,9 +3439,9 @@ export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
 export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
 export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
-export const VoteCommentDocument = gql`
-    mutation voteComment($input: VoteCommentInput!) {
-  voteComment(input: $input) {
+export const UpdateCommentVoteDocument = gql`
+    mutation updateCommentVote($input: UpdateCommentVoteInput!) {
+  updateCommentVote(input: $input) {
     ...Comment
     author {
       ...User
@@ -3482,73 +3454,32 @@ export const VoteCommentDocument = gql`
     ${CommentFragmentDoc}
 ${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
-export type VoteCommentMutationFn = Apollo.MutationFunction<VoteCommentMutation, VoteCommentMutationVariables>;
+export type UpdateCommentVoteMutationFn = Apollo.MutationFunction<UpdateCommentVoteMutation, UpdateCommentVoteMutationVariables>;
 
 /**
- * __useVoteCommentMutation__
+ * __useUpdateCommentVoteMutation__
  *
- * To run a mutation, you first call `useVoteCommentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useVoteCommentMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateCommentVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCommentVoteMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [voteCommentMutation, { data, loading, error }] = useVoteCommentMutation({
+ * const [updateCommentVoteMutation, { data, loading, error }] = useUpdateCommentVoteMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useVoteCommentMutation(baseOptions?: Apollo.MutationHookOptions<VoteCommentMutation, VoteCommentMutationVariables>) {
+export function useUpdateCommentVoteMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCommentVoteMutation, UpdateCommentVoteMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<VoteCommentMutation, VoteCommentMutationVariables>(VoteCommentDocument, options);
+        return Apollo.useMutation<UpdateCommentVoteMutation, UpdateCommentVoteMutationVariables>(UpdateCommentVoteDocument, options);
       }
-export type VoteCommentMutationHookResult = ReturnType<typeof useVoteCommentMutation>;
-export type VoteCommentMutationResult = Apollo.MutationResult<VoteCommentMutation>;
-export type VoteCommentMutationOptions = Apollo.BaseMutationOptions<VoteCommentMutation, VoteCommentMutationVariables>;
-export const UnvoteCommentDocument = gql`
-    mutation unvoteComment($input: UnvoteCommentInput!) {
-  unvoteComment(input: $input) {
-    ...Comment
-    author {
-      ...User
-    }
-    serverUser {
-      ...ServerUser
-    }
-  }
-}
-    ${CommentFragmentDoc}
-${UserFragmentDoc}
-${ServerUserFragmentDoc}`;
-export type UnvoteCommentMutationFn = Apollo.MutationFunction<UnvoteCommentMutation, UnvoteCommentMutationVariables>;
-
-/**
- * __useUnvoteCommentMutation__
- *
- * To run a mutation, you first call `useUnvoteCommentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnvoteCommentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unvoteCommentMutation, { data, loading, error }] = useUnvoteCommentMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUnvoteCommentMutation(baseOptions?: Apollo.MutationHookOptions<UnvoteCommentMutation, UnvoteCommentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UnvoteCommentMutation, UnvoteCommentMutationVariables>(UnvoteCommentDocument, options);
-      }
-export type UnvoteCommentMutationHookResult = ReturnType<typeof useUnvoteCommentMutation>;
-export type UnvoteCommentMutationResult = Apollo.MutationResult<UnvoteCommentMutation>;
-export type UnvoteCommentMutationOptions = Apollo.BaseMutationOptions<UnvoteCommentMutation, UnvoteCommentMutationVariables>;
+export type UpdateCommentVoteMutationHookResult = ReturnType<typeof useUpdateCommentVoteMutation>;
+export type UpdateCommentVoteMutationResult = Apollo.MutationResult<UpdateCommentVoteMutation>;
+export type UpdateCommentVoteMutationOptions = Apollo.BaseMutationOptions<UpdateCommentVoteMutation, UpdateCommentVoteMutationVariables>;
 export const PinCommentDocument = gql`
     mutation pinComment($input: PinCommentInput!) {
   pinComment(input: $input) {
@@ -4471,9 +4402,9 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
-export const VotePostDocument = gql`
-    mutation votePost($input: VotePostInput!) {
-  votePost(input: $input) {
+export const UpdatePostVoteDocument = gql`
+    mutation updatePostVote($input: UpdatePostVoteInput!) {
+  updatePostVote(input: $input) {
     ...Post
     author {
       ...User
@@ -4486,73 +4417,32 @@ export const VotePostDocument = gql`
     ${PostFragmentDoc}
 ${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
-export type VotePostMutationFn = Apollo.MutationFunction<VotePostMutation, VotePostMutationVariables>;
+export type UpdatePostVoteMutationFn = Apollo.MutationFunction<UpdatePostVoteMutation, UpdatePostVoteMutationVariables>;
 
 /**
- * __useVotePostMutation__
+ * __useUpdatePostVoteMutation__
  *
- * To run a mutation, you first call `useVotePostMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useVotePostMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdatePostVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePostVoteMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [votePostMutation, { data, loading, error }] = useVotePostMutation({
+ * const [updatePostVoteMutation, { data, loading, error }] = useUpdatePostVoteMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useVotePostMutation(baseOptions?: Apollo.MutationHookOptions<VotePostMutation, VotePostMutationVariables>) {
+export function useUpdatePostVoteMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePostVoteMutation, UpdatePostVoteMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<VotePostMutation, VotePostMutationVariables>(VotePostDocument, options);
+        return Apollo.useMutation<UpdatePostVoteMutation, UpdatePostVoteMutationVariables>(UpdatePostVoteDocument, options);
       }
-export type VotePostMutationHookResult = ReturnType<typeof useVotePostMutation>;
-export type VotePostMutationResult = Apollo.MutationResult<VotePostMutation>;
-export type VotePostMutationOptions = Apollo.BaseMutationOptions<VotePostMutation, VotePostMutationVariables>;
-export const UnvotePostDocument = gql`
-    mutation unvotePost($input: UnvotePostInput!) {
-  unvotePost(input: $input) {
-    ...Post
-    author {
-      ...User
-    }
-    serverUser {
-      ...ServerUser
-    }
-  }
-}
-    ${PostFragmentDoc}
-${UserFragmentDoc}
-${ServerUserFragmentDoc}`;
-export type UnvotePostMutationFn = Apollo.MutationFunction<UnvotePostMutation, UnvotePostMutationVariables>;
-
-/**
- * __useUnvotePostMutation__
- *
- * To run a mutation, you first call `useUnvotePostMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnvotePostMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unvotePostMutation, { data, loading, error }] = useUnvotePostMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUnvotePostMutation(baseOptions?: Apollo.MutationHookOptions<UnvotePostMutation, UnvotePostMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UnvotePostMutation, UnvotePostMutationVariables>(UnvotePostDocument, options);
-      }
-export type UnvotePostMutationHookResult = ReturnType<typeof useUnvotePostMutation>;
-export type UnvotePostMutationResult = Apollo.MutationResult<UnvotePostMutation>;
-export type UnvotePostMutationOptions = Apollo.BaseMutationOptions<UnvotePostMutation, UnvotePostMutationVariables>;
+export type UpdatePostVoteMutationHookResult = ReturnType<typeof useUpdatePostVoteMutation>;
+export type UpdatePostVoteMutationResult = Apollo.MutationResult<UpdatePostVoteMutation>;
+export type UpdatePostVoteMutationOptions = Apollo.BaseMutationOptions<UpdatePostVoteMutation, UpdatePostVoteMutationVariables>;
 export const PinPostDocument = gql`
     mutation pinPost($input: PinPostInput!) {
   pinPost(input: $input) {
@@ -5997,15 +5887,17 @@ export const PostsDocument = gql`
         ...ServerUser
       }
       server {
-        ...Server
+        id
+        name
+        avatarUrl
+        isDownvotesEnabled
       }
     }
   }
 }
     ${PostFragmentDoc}
 ${UserFragmentDoc}
-${ServerUserFragmentDoc}
-${ServerFragmentDoc}`;
+${ServerUserFragmentDoc}`;
 
 /**
  * __usePostsQuery__

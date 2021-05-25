@@ -1,5 +1,12 @@
-import { Entity, ManyToOne, PrimaryKeyType, Property } from '@mikro-orm/core'
-import { Post, User } from '@/entity'
+import {
+  Entity,
+  Enum,
+  ManyToOne,
+  PrimaryKeyType,
+  Property
+} from '@mikro-orm/core'
+import { Post, User, VoteType } from '@/entity'
+import { Field } from 'type-graphql'
 
 @Entity()
 export class PostVote {
@@ -13,4 +20,10 @@ export class PostVote {
 
   @Property()
   createdAt: Date = new Date()
+
+  @Field(() => VoteType)
+  @Enum({
+    items: () => VoteType
+  })
+  type: VoteType = VoteType.None
 }

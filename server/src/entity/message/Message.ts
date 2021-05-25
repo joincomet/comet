@@ -53,9 +53,9 @@ export class Message extends BaseEntity {
   @Property({ columnType: 'text', nullable: true })
   text?: string
 
-  @Field(() => Image, { nullable: true })
-  @Embedded(() => Image, { object: true, nullable: true })
-  image?: Image
+  @Field(() => [Image])
+  @Embedded(() => Image, { object: true, array: true })
+  images: Image[] = []
 
   @Field({ nullable: true })
   @Embedded(() => File, { object: true, nullable: true })

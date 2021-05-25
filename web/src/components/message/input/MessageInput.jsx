@@ -259,16 +259,29 @@ export default function MessageInput({ channel, server, group, user, users }) {
 
   const openLogin = useOpenLogin()
 
+  const pasteRegexExact =
+    /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z]{2,}\b(?:[-a-zA-Z0-9@:%._+~#=?!&/]*)(?:[-a-zA-Z0-9@:%._+~#=?!&/]*)$/i
+
+  const pasteRegex =
+    /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z]{2,}\b(?:[-a-zA-Z0-9@:%._+~#=?!&/]*)(?:[-a-zA-Z0-9@:%._+~#=?!&/]*)/i
+
   const pasteListener = useCallback(
     e => {
       if (!canSendMessage) return
       const files = e.clipboardData.files
+      e.preventDefault()
       if (files && files.length > 0) {
         setFiles(files)
-        e.preventDefault()
       } else {
-        const text = e.clipboardData.getData('text')
-        if (text) {
+        const plain = e.clipboardData?.getData('text/plain')
+        if (plain) {
+          if (pasteRegex.test(plain)) {
+            editor?.commands.insertContent(
+              `<a href="${plain}" target="_blank" rel="noopener noreferrer nofollow">${plain}</a>`
+            )
+          } else {
+            editor?.commands.insertContent(plain)
+          }
           editor?.commands.focus()
         }
       }

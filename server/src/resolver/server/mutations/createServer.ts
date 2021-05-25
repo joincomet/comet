@@ -41,6 +41,9 @@ export class CreateServerInput {
 
   @Field(() => GraphQLUpload, { nullable: true })
   bannerFile?: FileUpload
+
+  @Field(() => Boolean, { defaultValue: false })
+  isDownvotesEnabled: boolean = false
 }
 
 export async function createServer(
@@ -51,7 +54,8 @@ export async function createServer(
     description,
     category,
     avatarFile,
-    bannerFile
+    bannerFile,
+    isDownvotesEnabled
   }: CreateServerInput
 ): Promise<Server> {
   displayName = displayName.trim()
@@ -90,6 +94,7 @@ export async function createServer(
     name,
     displayName,
     description,
+    isDownvotesEnabled,
     owner: userId,
     avatarUrl,
     bannerUrl,

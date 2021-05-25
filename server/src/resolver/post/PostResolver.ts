@@ -14,7 +14,7 @@ import {
   Resolver,
   Root
 } from 'type-graphql'
-import { LinkMetadata, Post, ServerUser } from '@/entity'
+import { LinkMetadata, Post, ServerUser, VoteType } from '@/entity'
 import { Context } from '@/types'
 import {
   createPost,
@@ -27,10 +27,8 @@ import {
   PinPostInput,
   unpinPost,
   UnpinPostInput,
-  votePost,
-  VotePostInput,
-  unvotePost,
-  UnvotePostInput
+  updatePostVote,
+  UpdatePostVoteInput
 } from './mutations'
 import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
 import { PostsArgs, posts, post, PostsResponse } from '@/resolver/post/queries'
@@ -57,10 +55,10 @@ export class PostResolver {
   }
 
   @FieldResolver()
-  async isVoted(
+  async voteType(
     @Ctx() { loaders: { postVoteLoader } }: Context,
     @Root() post: Post
-  ) {
+  ): Promise<VoteType> {
     return postVoteLoader.load(post.id)
   }
 
@@ -122,26 +120,14 @@ export class PostResolver {
 
   @Authorized()
   @Mutation(() => Post)
-  async votePost(
+  async updatePostVote(
     @Ctx() ctx: Context,
     @Arg('input')
-    input: VotePostInput,
+    input: UpdatePostVoteInput,
     @PubSub(SubscriptionTopic.PostChanged)
     notifyPostChanged: Publisher<ChangePayload>
   ): Promise<Post> {
-    return votePost(ctx, input, notifyPostChanged)
-  }
-
-  @Authorized()
-  @Mutation(() => Post)
-  async unvotePost(
-    @Ctx() ctx: Context,
-    @Arg('input')
-    input: UnvotePostInput,
-    @PubSub(SubscriptionTopic.PostChanged)
-    notifyPostChanged: Publisher<ChangePayload>
-  ): Promise<Post> {
-    return unvotePost(ctx, input, notifyPostChanged)
+    return updatePostVote(ctx, input, notifyPostChanged)
   }
 
   @Authorized()

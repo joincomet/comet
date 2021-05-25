@@ -2,27 +2,24 @@ import { memo, useEffect, useMemo, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useDrag, useDragDropManager } from 'react-dnd'
 import { DragItemTypes } from '@/types/DragItemTypes'
-import UserAvatar from '@/components/user/UserAvatar'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import UserPopup from '@/components/user/UserPopup'
-import { calendarDate, shortDate } from '@/utils/timeUtils'
 import {
   IconChat,
+  IconChevronDown,
   IconChevrownLeft,
   IconChevrownRight,
+  IconChevrownUp,
   IconDotsVertical,
   IconLinkWeb,
-  IconText,
-  IconUserToServerArrow,
-  IconVote
+  IconText
 } from '@/components/ui/icons/Icons'
-import { useTogglePostVote } from '@/components/post/useTogglePostVote'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import PostEmbed from '@/components/post/PostEmbed'
-import Tippy from '@tippyjs/react'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
+import { formatDistanceToNowStrict } from 'date-fns'
 
 export default memo(function Post({
   post,
@@ -32,8 +29,6 @@ export default memo(function Post({
   index
 }) {
   const { push } = useHistory()
-
-  const toggleVote = useTogglePostVote(post)
 
   const [{ opacity }, dragRef] = useDrag({
     type: DragItemTypes.Post,
@@ -80,9 +75,8 @@ export default memo(function Post({
   return (
     <ContextMenuTrigger data={{ type: ContextMenuType.Post, post }}>
       <div
-        ref={dragRef}
         style={{ opacity }}
-        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 pt-4 px-4 pb-4 rounded flex`}
+        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 px-2 py-3 rounded flex`}
         onClick={() => {
           if (!isDragging) {
             push(post.relativeUrl)
@@ -108,9 +102,27 @@ export default memo(function Post({
           )}
         </div>*/}
 
+        <div className="flex flex-col items-center pr-2">
+          <button
+            type="button"
+            className="focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer"
+          >
+            <IconChevrownUp className="w-5 h-5 text-mid" />
+          </button>
+          <div className="text-tertiary text-13 leading-none font-semibold">
+            {post.voteCount}
+          </div>
+          <button
+            type="button"
+            className="focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer"
+          >
+            <IconChevronDown className="w-5 h-5 text-mid" />
+          </button>
+        </div>
+
         {!isPostPage && (
           <div
-            className="w-26 h-18 rounded dark:bg-gray-700 mr-4 flex items-center justify-center bg-center bg-cover bg-no-repeat"
+            className="w-26 h-18 rounded dark:bg-gray-750 mr-4 flex items-center justify-center bg-center bg-cover bg-no-repeat"
             style={
               post.thumbnailUrl
                 ? { backgroundImage: `url(${post.thumbnailUrl})` }
@@ -120,9 +132,9 @@ export default memo(function Post({
             {!post.thumbnailUrl && (
               <>
                 {post.linkUrl ? (
-                  <IconLinkWeb className="w-8 h-8 text-tertiary" />
+                  <IconLinkWeb className="w-8 h-8 text-mid" />
                 ) : (
-                  <IconText className="w-8 h-8 text-tertiary" />
+                  <IconText className="w-8 h-8 text-mid" />
                 )}
               </>
             )}
@@ -130,197 +142,160 @@ export default memo(function Post({
         )}
 
         <div className="pr-4 flex-grow flex flex-col">
-          <Link to={post.relativeUrl} className="text-secondary font-medium">
+          <div className="flex items-center pb-1.5" onClick={onClick}>
+            <Link to={`/+${post.server.name}`} className="flex items-center">
+              <ServerAvatar
+                server={post.server}
+                size={5}
+                className="dark:bg-gray-750 rounded-full"
+              />
+              <span className="ml-1.5 text-xs font-medium text-secondary">
+                {post.server.displayName}
+              </span>
+            </Link>
+            <span className="text-xs text-tertiary">
+              &nbsp;&middot;&nbsp;
+              {formatDistanceToNowStrict(new Date(post.createdAt))}
+              &nbsp;ago&nbsp;by
+            </span>
+            <ContextMenuTrigger
+              data={{ type: ContextMenuType.User, user: post.author }}
+            >
+              <UserPopup user={post.author} role={post.serverUser?.role}>
+                <div
+                  className="ml-1 cursor-pointer text-tertiary text-xs font-medium leading-none"
+                  style={{ color: post.serverUser?.role?.color }}
+                >
+                  {post.author?.username ?? '[deleted]'}
+                </div>
+              </UserPopup>
+            </ContextMenuTrigger>
+            <div className="text-xs text-mid font-medium">
+              &nbsp;&middot;&nbsp;
+              <span className="text-xs text-mid">({type})</span>
+            </div>
+          </div>
+
+          <Link
+            to={post.relativeUrl}
+            className="text-secondary font-medium text-base"
+          >
             {post.title}
-            <span className="text-xs text-mid">&nbsp;&nbsp;{type}</span>
           </Link>
 
-          {isPostPage && type && (
-            <div className="mt-0.5 pb-2">
-              {!!post.text && (
-                <div
-                  dangerouslySetInnerHTML={{ __html: post.text }}
-                  className="prose prose-sm dark:prose-dark max-w-none pt-0.5"
-                />
-              )}
+          {isPostPage &&
+            type &&
+            (!!post.text || !!post.linkUrl || !!post.images.length) && (
+              <div className="mt-0.5 pb-2">
+                {!!post.text && (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: post.text }}
+                    className="prose prose-sm dark:prose-dark max-w-none pt-0.5"
+                  />
+                )}
 
-              {!!post.linkUrl && (
-                <>
-                  {post.linkMetadata ? (
-                    <div className="max-w-screen-sm w-full mt-2">
-                      <PostEmbed dark metadata={post.linkMetadata} />
-                    </div>
-                  ) : (
-                    <a
-                      href={post.linkUrl}
-                      target="_blank"
-                      rel="noopener nofollow noreferrer"
-                      className="text-sm text-blue-400 hover:underline cursor-pointer pt-0.5"
-                    >
-                      {post.linkUrl}
-                    </a>
-                  )}
-                </>
-              )}
-
-              {post.images?.length >= 1 && (
-                <div className="max-w-screen-md w-full mt-2">
-                  <div className="flex relative">
-                    <div className="aspect-h-9 aspect-w-16 relative flex w-full dark:bg-gray-775">
-                      {post.images.map((image, i) => (
-                        <img
-                          key={i}
-                          alt=""
-                          src={image.url}
-                          className={`w-full h-full object-contain select-none ${
-                            i === currentImage ? 'block' : 'hidden'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    {post.images.length > 1 && (
-                      <>
-                        {currentImage > 0 && (
-                          <div
-                            onClick={() => setCurrentImage(currentImage - 1)}
-                            className="absolute left-3 top-1/2 transform -translate-y-1/2 rounded-full shadow flex items-center justify-center w-10 h-10 dark:bg-white"
-                          >
-                            <IconChevrownLeft className="w-5 h-5 dark:text-black" />
-                          </div>
-                        )}
-
-                        {currentImage < post.images.length - 1 && (
-                          <div
-                            onClick={() => setCurrentImage(currentImage + 1)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full shadow flex items-center justify-center w-10 h-10 dark:bg-white"
-                          >
-                            <IconChevrownRight className="w-5 h-5 dark:text-black" />
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                  <div className="h-12 dark:bg-gray-750 flex items-center px-5 text-13 select-none">
-                    {post.images[currentImage].caption && (
-                      <div
-                        className="text-primary truncate pr-3"
-                        title={post.images[currentImage].caption}
-                      >
-                        {post.images[currentImage].caption}
+                {!!post.linkUrl && (
+                  <>
+                    {post.linkMetadata ? (
+                      <div className="max-w-screen-sm w-full mt-2">
+                        <PostEmbed dark metadata={post.linkMetadata} />
                       </div>
-                    )}
-
-                    {post.images[currentImage].linkUrl && (
+                    ) : (
                       <a
-                        href={post.images[currentImage].linkUrl}
+                        href={post.linkUrl}
                         target="_blank"
                         rel="noopener nofollow noreferrer"
-                        className="ml-auto text-blue-400 hover:underline cursor-pointer"
+                        className="text-sm text-blue-400 hover:underline cursor-pointer pt-0.5"
                       >
-                        {post.images[currentImage].linkUrl}
+                        {post.linkUrl}
                       </a>
                     )}
+                  </>
+                )}
+
+                {!!post.images.length && (
+                  <div className="max-w-screen-md w-full mt-2">
+                    <div className="flex relative">
+                      <div className="aspect-h-9 aspect-w-16 relative flex w-full dark:bg-gray-775">
+                        {post.images.map((image, i) => (
+                          <img
+                            key={i}
+                            alt=""
+                            src={image.url}
+                            className={`w-full h-full object-contain select-none ${
+                              i === currentImage ? 'block' : 'hidden'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      {post.images.length > 1 && (
+                        <>
+                          {currentImage > 0 && (
+                            <div
+                              onClick={() => setCurrentImage(currentImage - 1)}
+                              className="absolute left-3 top-1/2 transform -translate-y-1/2 rounded-full shadow flex items-center justify-center w-10 h-10 dark:bg-white"
+                            >
+                              <IconChevrownLeft className="w-5 h-5 dark:text-black" />
+                            </div>
+                          )}
+
+                          {currentImage < post.images.length - 1 && (
+                            <div
+                              onClick={() => setCurrentImage(currentImage + 1)}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full shadow flex items-center justify-center w-10 h-10 dark:bg-white"
+                            >
+                              <IconChevrownRight className="w-5 h-5 dark:text-black" />
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div className="h-12 dark:bg-gray-750 flex items-center px-5 text-13 select-none">
+                      {post.images[currentImage].caption && (
+                        <div
+                          className="text-primary truncate pr-3"
+                          title={post.images[currentImage].caption}
+                        >
+                          {post.images[currentImage].caption}
+                        </div>
+                      )}
+
+                      {post.images[currentImage].linkUrl && (
+                        <a
+                          href={post.images[currentImage].linkUrl}
+                          target="_blank"
+                          rel="noopener nofollow noreferrer"
+                          className="ml-auto text-blue-400 hover:underline cursor-pointer"
+                        >
+                          {post.images[currentImage].linkUrl}
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            )}
 
-          <div className="flex items-center pt-2 mt-auto">
-            <div className="flex items-center" onClick={onClick}>
-              <ContextMenuTrigger
-                data={{ type: ContextMenuType.User, user: post.author }}
-              >
-                <UserPopup user={post.author} role={post.serverUser?.role}>
-                  <UserAvatar user={post.author} size={5} />
-                </UserPopup>
-              </ContextMenuTrigger>
-
-              <ContextMenuTrigger
-                data={{ type: ContextMenuType.User, user: post.author }}
-              >
-                <UserPopup user={post.author} role={post.serverUser?.role}>
-                  <div
-                    className="ml-2 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-xs font-medium leading-none"
-                    style={{ color: post.serverUser?.role?.color }}
-                  >
-                    {post.author?.username ?? '[deleted]'}
-                  </div>
-                </UserPopup>
-              </ContextMenuTrigger>
-
-              {showServerName && (
-                <div className="ml-1 flex items-center" onClick={onClick}>
-                  <IconUserToServerArrow className="w-4.5 h-4.5 text-mid mr-1" />
-                  <Link
-                    to={`/+${post.server.name}`}
-                    className="flex items-center"
-                  >
-                    <ServerAvatar
-                      server={post.server}
-                      size={5}
-                      className="dark:bg-gray-750 rounded-full"
-                    />
-                    <span className="ml-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                      {post.server.displayName}
-                    </span>
-                  </Link>
-                </div>
-              )}
-              <div className="text-xs text-mid font-medium">
-                &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                <Tippy content={calendarDate(post.createdAt)}>
-                  <span>{shortDate(post.createdAt)}</span>
-                </Tippy>
+          <div className="flex items-center pt-1.5">
+            <div
+              className={`text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+            >
+              <IconChat className="w-5 h-5" />
+              <div className="ml-2 text-xs font-medium">
+                {post.commentCount}
               </div>
             </div>
 
-            <div className="flex items-center ml-auto">
+            <ContextMenuTrigger
+              data={{ type: ContextMenuType.Post, post }}
+              leftClick
+            >
               <div
-                className={`text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+                className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
               >
-                <IconChat className="w-5 h-5" />
-                <div className="ml-2 text-xs font-medium">
-                  {post.commentCount}
-                </div>
+                <IconDotsVertical className="text-disabled w-4 h-4" />
               </div>
-
-              <div
-                onClick={e => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  if (!currentUser) {
-                    openLogin()
-                    return
-                  }
-                  toggleVote()
-                }}
-                className={`${
-                  post.isVoted
-                    ? 'text-red-400'
-                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-                } flex items-center cursor-pointer ml-6`}
-              >
-                <IconVote className="w-4 h-4" />
-                <div className="ml-2 text-xs font-medium">{post.voteCount}</div>
-                {/*<IconChevrownUp className="w-5 h-5" />
-              <div className="mx-2 text-xs text-blue-400 font-medium">
-                {post.voteCount}
-              </div>
-              <IconChevronDown className="w-5 h-5 text-blue-400" />*/}
-              </div>
-
-              <ContextMenuTrigger
-                data={{ type: ContextMenuType.Post, post }}
-                leftClick
-              >
-                <div
-                  className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
-                >
-                  <IconDotsVertical className="text-disabled w-4 h-4" />
-                </div>
-              </ContextMenuTrigger>
-            </div>
+            </ContextMenuTrigger>
           </div>
         </div>
       </div>

@@ -38,6 +38,9 @@ export class UpdateServerInput {
 
   @Field(() => ID, { nullable: true })
   systemMessagesChannelId?: string
+
+  @Field(() => Boolean, { nullable: true })
+  isDownvotesEnabled?: boolean
 }
 
 export async function updateServer(
@@ -52,7 +55,8 @@ export async function updateServer(
     avatarFile,
     bannerFile,
     ownerId,
-    systemMessagesChannelId
+    systemMessagesChannelId,
+    isDownvotesEnabled
   }: UpdateServerInput
 ): Promise<Server> {
   displayName = displayName.trim()
@@ -77,7 +81,8 @@ export async function updateServer(
       ? await uploadImageFileSingle(bannerFile, { width: 920, height: 540 })
       : server.bannerUrl,
     systemMessagesChannel:
-      systemMessagesChannelId ?? server.systemMessagesChannel
+      systemMessagesChannelId ?? server.systemMessagesChannel,
+    isDownvotesEnabled: isDownvotesEnabled ?? server.isDownvotesEnabled
   })
   await em.persistAndFlush(server)
   liveQueryStore.invalidate(`Server:${serverId}`)

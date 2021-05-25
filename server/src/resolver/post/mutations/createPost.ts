@@ -10,7 +10,8 @@ import {
   ServerPermission,
   ServerUser,
   ServerUserStatus,
-  User
+  User,
+  VoteType
 } from '@/entity'
 import { handleText, scrapeMetadata, uploadImageFileSingle } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
@@ -88,8 +89,8 @@ export async function createPost(
     text: text,
     voteCount: 1
   })
-  post.isVoted = true
-  const vote = em.create(PostVote, { post, user })
+  post.voteType = VoteType.Up
+  const vote = em.create(PostVote, { post, user, type: VoteType.Up })
   await em.persistAndFlush([post, vote])
   await notifyPostChanged({ id: post.id, type: ChangeType.Added })
   return post

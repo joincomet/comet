@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/icons/Icons'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import Link from './Link'
+import Link from '@/components/ui/editor/Link'
 import Underline from '@tiptap/extension-underline'
 import { Spoiler } from './Spoiler'
 import { useEffect } from 'react'

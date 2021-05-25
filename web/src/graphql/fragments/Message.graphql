@@ -4,14 +4,8 @@ fragment Message on Message {
   createdAt
   updatedAt
   type
-  image {
-    originalUrl
-    popupUrl
-    popupWidth
-    popupHeight
-    smallUrl
-    smallWidth
-    smallHeight
+  images {
+    ...Image
   }
   file {
     url

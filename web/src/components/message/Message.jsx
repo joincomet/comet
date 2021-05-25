@@ -151,14 +151,16 @@ export default memo(function Message({
               )}
 
               {!!message.linkMetadatas?.length && (
-                <div className="space-y-1 pt-1 max-w-screen-sm">
+                <div className="space-y-1 pt-1">
                   {message.linkMetadatas.map((lm, i) => (
                     <PostEmbed key={i} metadata={lm} linkUrl={lm.url} />
                   ))}
                 </div>
               )}
 
-              <MessageImageDialog message={message} />
+              {message.images.map((image, i) => (
+                <MessageImageDialog key={i} image={image} />
+              ))}
 
               {!!message.file && (
                 <div className="pt-1 max-w-screen-sm w-full">

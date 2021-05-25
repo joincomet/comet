@@ -1,7 +1,8 @@
 import { Field, ObjectType } from 'type-graphql'
-import { Embeddable, Property } from '@mikro-orm/core'
+import { Embeddable, Embedded, Property } from '@mikro-orm/core'
 import { URL } from 'url'
 import isURL from 'validator/lib/isURL'
+import { Image } from '@/entity/Image'
 
 @Embeddable()
 @ObjectType()
@@ -28,11 +29,19 @@ export class LinkMetadata {
 
   @Property({ nullable: true, columnType: 'text' })
   @Field({ nullable: true })
-  image?: string
+  imageUrl?: string
+
+  @Field(() => Image, { nullable: true })
+  @Embedded(() => Image, { object: true, nullable: true })
+  image?: Image
 
   @Property({ nullable: true, columnType: 'text' })
   @Field({ nullable: true })
-  logo?: string
+  logoUrl?: string
+
+  @Field(() => Image, { nullable: true })
+  @Embedded(() => Image, { object: true, nullable: true })
+  logo?: Image
 
   @Property({ nullable: true, columnType: 'text' })
   @Field({ nullable: true })
