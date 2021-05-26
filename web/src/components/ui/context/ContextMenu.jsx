@@ -26,9 +26,14 @@ export default function ContextMenu({
   bindMenu: { style, ref, role, tabIndex },
   data,
   bindMenuItem,
-  hideMenu
+  hideMenu,
+  isRight
 }) {
-  const ContextMenuItem = useContextMenuItem({ bindMenuItem, hideMenu })
+  const ContextMenuItem = useContextMenuItem({
+    bindMenuItem,
+    hideMenu,
+    isRight
+  })
 
   const copyToClipboard = useCopyToClipboard()[1]
 

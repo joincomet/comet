@@ -97,7 +97,7 @@ type Comment implements BaseEntity {
   serverUser: ServerUser
   text: String!
   updatedAt: DateTime
-  voteCount: NonNegativeInt!
+  voteCount: Int!
   voteType: VoteType!
 }
 
@@ -229,6 +229,10 @@ input DeleteServerInput {
 A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
 """
 scalar EmailAddress @specifiedBy(url: "https://www.w3.org/Protocols/rfc822/")
+
+input FeatureServerInput {
+  serverId: ID!
+}
 
 type File {
   filename: String!
@@ -443,6 +447,7 @@ type Mutation {
   deletePost(input: DeletePostInput!): Post!
   deleteRole(input: DeleteRoleInput!): ID!
   deleteServer(input: DeleteServerInput!): ID!
+  featureServer(input: FeatureServerInput!): Server!
   followFolder(input: FollowFolderInput!): Folder!
   globalBan(input: GlobalBanInput!): Boolean!
   joinServer(input: JoinServerInput!): Server!
@@ -470,6 +475,7 @@ type Mutation {
   setUserRole(input: SetUserRoleInput!): ServerUser!
   unbanUserFromServer(input: UnbanUserFromServerInput!): Boolean!
   unblockUser(input: UnblockUserInput!): User!
+  unfeatureServer(input: UnfeatureServerInput!): Server!
   unfollowFolder(input: UnfollowFolderInput!): Folder!
   unpinComment(input: UnpinCommentInput!): Comment!
   unpinMessage(input: UnpinMessageInput!): Message!
@@ -537,7 +543,7 @@ type Post implements BaseEntity {
   thumbnailUrl: String
   title: String!
   updatedAt: DateTime
-  voteCount: NonNegativeInt!
+  voteCount: Int!
   voteType: VoteType!
 }
 
@@ -549,8 +555,8 @@ type PostChangedResponse {
 
 type PostImage {
   caption: String
+  image: Image!
   linkUrl: String
-  url: String!
 }
 
 type PostsResponse {
@@ -722,6 +728,7 @@ enum ServerPermission {
 }
 
 type ServerUser {
+  id: ID!
   role: Role!
   user: User!
 }
@@ -758,6 +765,10 @@ input UnbanUserFromServerInput {
 
 input UnblockUserInput {
   userId: ID!
+}
+
+input UnfeatureServerInput {
+  serverId: ID!
 }
 
 input UnfollowFolderInput {
@@ -835,9 +846,7 @@ input UpdateServerInput {
   category: ServerCategory
   description: String
   displayName: String
-  featuredPosition: String
   isDownvotesEnabled: Boolean
-  isFeatured: Boolean
   ownerId: ID
   serverId: ID!
   systemMessagesChannelId: ID
@@ -856,6 +865,7 @@ type User implements BaseEntity {
   id: ID!
   isAdmin: Boolean!
   isCurrentUser: Boolean!
+  isOg: Boolean!
   isOnline: Boolean!
   lastLoginAt: DateTime
   lastMessageAt: DateTime

@@ -3,18 +3,24 @@ import { ArrayMaxSize, Length, MaxLength, IsUrl } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import {
+  Image,
   Post,
   PostImage,
   PostVote,
   Server,
-  ServerPermission,
-  ServerUser,
-  ServerUserStatus,
   User,
   VoteType
 } from '@/entity'
-import { handleText, scrapeMetadata, uploadImageFileSingle } from '@/util'
+import {
+  handleText,
+  imageMimeTypes,
+  scrapeMetadata,
+  uploadFileOrImage,
+  uploadImageFile,
+  uploadImageFileSingle
+} from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+import mime from 'mime'
 
 @InputType()
 export class CreatePostInput {
@@ -74,8 +80,16 @@ export async function createPost(
 
   if (images && images.length > 0) {
     for (const image of images) {
-      const url = await uploadImageFileSingle(image.file)
-      postImages.push({ url, linkUrl: image.linkUrl, caption: image.caption })
+      const { createReadStream, mimetype } = await image.file
+      const ext = mime.getExtension(mimetype)
+      if (!imageMimeTypes.includes(mimetype))
+        throw new Error('Files must be images')
+      const i = await uploadImageFile(createReadStream, ext)
+      postImages.push({
+        image: i,
+        linkUrl: image.linkUrl,
+        caption: image.caption
+      })
     }
   }
 

@@ -9,7 +9,12 @@ import { File, Image } from '@/entity'
 import { Readable } from 'stream'
 
 const Bucket = process.env.BUCKET
-const imageMimeTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
+export const imageMimeTypes = [
+  'image/gif',
+  'image/jpeg',
+  'image/png',
+  'image/webp'
+]
 
 const genKey = (ext: string) => `${nanoid()}.${ext}`
 

@@ -25,7 +25,7 @@ export async function createRole(
   const roles = await em.find(
     Role,
     { server: serverId },
-    { orderBy: { position: QueryOrder.DESC } }
+    { orderBy: { createdAt: QueryOrder.DESC } }
   )
   if (roles.map(r => r.name.toLowerCase()).includes(name.toLowerCase()))
     throw new Error('That role already exists')

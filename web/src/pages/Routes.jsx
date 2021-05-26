@@ -7,7 +7,6 @@ import {
 } from 'react-router-dom'
 import NotFound from '@/pages/NotFound'
 import FeedPage from '@/pages/feed/FeedPage'
-import FriendsPage from '@/pages/friends/FriendsPage'
 import ExplorePage from '@/pages/explore/ExplorePage'
 import InboxPage from '@/pages/inbox/InboxPage'
 import DmPage from '@/pages/dm/DmPage'
@@ -18,7 +17,6 @@ import ServerList from '@/components/server/list/ServerList'
 import BottomBar from '@/components/BottomBar'
 import ServerSidebar from '@/pages/server/ServerSidebar'
 import ChannelPage from '@/pages/server/channel/ChannelPage'
-import { useServerQuery } from '@/graphql/hooks'
 import { useMessagesSubscriptions } from '@/hooks/useMessagesSubscriptions'
 import ServerProvider from '@/providers/ServerProvider'
 import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
@@ -42,7 +40,6 @@ export default function Routes() {
           <Route
             path={[
               '/',
-              '/friends',
               '/inbox',
               `/dm/:username(${usernameRegex})`,
               `/:server(${serverRegex})`,
@@ -66,19 +63,11 @@ export default function Routes() {
                 </Route>
                 <Route
                   exact
-                  path={[
-                    '/',
-                    '/friends',
-                    '/inbox',
-                    `/dm/:username(${usernameRegex})`
-                  ]}
+                  path={['/', '/inbox', `/dm/:username(${usernameRegex})`]}
                 >
                   <HomeSidebar />
                   <Route path="/" exact>
                     <FeedPage />
-                  </Route>
-                  <Route path="/friends">
-                    <FriendsPage />
                   </Route>
                   <Route path="/inbox">
                     <InboxPage />

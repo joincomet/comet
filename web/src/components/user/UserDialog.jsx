@@ -1,26 +1,19 @@
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import Dialog from '@/components/ui/dialog/Dialog'
 import UserAvatar from '@/components/user/UserAvatar'
-import { IconDotsVertical, IconFolder } from '@/components/ui/icons/Icons'
+import { IconDotsVertical } from '@/components/ui/icons/Icons'
 import ctl from '@netlify/classnames-template-literals'
 import { useTranslation } from 'react-i18next'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { Link } from 'react-router-dom'
 import { useStore } from '@/hooks/useStore'
-import {
-  RelationshipStatus,
-  useAnswerFriendRequestMutation,
-  useBlockUserMutation,
-  useCreateFriendRequestMutation,
-  useDeleteFriendRequestMutation,
-  useRemoveFriendMutation,
-  useUnblockUserMutation,
-  useUserQuery
-} from '@/graphql/hooks'
+import { useUserQuery } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import EndReached from '@/components/ui/EndReached'
+import Tippy from '@tippyjs/react'
+import { VectorLogoIcon } from '@/components/ui/vectors'
 
 const tabClass = active =>
   ctl(`
@@ -70,8 +63,8 @@ const itemClass = ctl(`
 `)
 
 const tab = {
-  MutualServers: 'MutualServers',
-  MutualFriends: 'MutualFriends'
+  MutualServers: 'MutualServers'
+  // MutualFriends: 'MutualFriends'
   // Folders: 'Folders'
 }
 
@@ -94,14 +87,14 @@ export default memo(function UserDialog() {
 
   const user = userData?.user
 
-  const [createFriendRequest] = useCreateFriendRequestMutation()
+  /*const [createFriendRequest] = useCreateFriendRequestMutation()
   const [deleteFriendRequest] = useDeleteFriendRequestMutation()
   const [answerFriendRequest] = useAnswerFriendRequestMutation()
   const [blockUser] = useBlockUserMutation()
   const [unblockUser] = useUnblockUserMutation()
-  const [removeFriend] = useRemoveFriendMutation()
+  const [removeFriend] = useRemoveFriendMutation()*/
 
-  const mutualFriends = userData?.user?.relatedUsers ?? []
+  // const mutualFriends = userData?.user?.relatedUsers ?? []
   const mutualServers = userData?.user?.servers ?? []
   // const folders = userData?.user?.folders ?? []
 
@@ -110,7 +103,7 @@ export default memo(function UserDialog() {
     // setTimeout(() => setUserId(null), 300)
   }, [setOpen])
 
-  const buttons = useMemo(() => {
+  /*const buttons = useMemo(() => {
     if (user?.relationshipStatus === RelationshipStatus.FriendRequestIncoming)
       return (
         <>
@@ -214,7 +207,7 @@ export default memo(function UserDialog() {
     close,
     unblockUser,
     createFriendRequest
-  ])
+  ])*/
 
   return (
     <Dialog closeOnOverlayClick isOpen={open} close={close}>
@@ -230,16 +223,24 @@ export default memo(function UserDialog() {
             dotClassName="ring-5 dark:ring-gray-850 w-4 h-4"
           />
           <div className="ml-5 flex w-full pt-5">
-            <div className="font-semibold text-lg text-primary">
+            <div className="font-semibold text-lg text-primary leading-none">
               {user?.username}
             </div>
+
+            {user?.isOg && (
+              <Tippy content="Veteran">
+                <div className="cursor-pointer ml-3 h-5 w-5">
+                  <VectorLogoIcon className="w-5 h-5" />
+                </div>
+              </Tippy>
+            )}
 
             {userId !== currentUser?.id && (
               <>
                 <div className="ml-auto" />
-                <div className="flex items-center space-x-2.5 h-8">
+                {/*<div className="flex items-center space-x-2.5 h-8">
                   {buttons}
-                </div>
+                </div>*/}
                 <ContextMenuTrigger
                   data={{ type: ContextMenuType.User, user }}
                   leftClick
@@ -262,12 +263,12 @@ export default memo(function UserDialog() {
                 <div className="transform translate-y-0.5">Mutual Planets</div>
               </button>
 
-              <button
+              {/*<button
                 className={tabClass(currentTab === tab.MutualFriends)}
                 onClick={() => setCurrentTab(tab.MutualFriends)}
               >
                 <div className="transform translate-y-0.5">Mutual Friends</div>
-              </button>
+              </button>*/}
 
               {/*<button
                 className={tabClass(currentTab === tab.Folders)}
@@ -300,7 +301,7 @@ export default memo(function UserDialog() {
                   <EndReached className="h-36">No mutual planets</EndReached>
                 ))}
 
-              {currentTab === tab.MutualFriends &&
+              {/*{currentTab === tab.MutualFriends &&
                 (mutualFriends.length > 0 ? (
                   mutualFriends.map(friend => (
                     <div
@@ -323,7 +324,7 @@ export default memo(function UserDialog() {
                   ))
                 ) : (
                   <EndReached className="h-36">No mutual friends</EndReached>
-                ))}
+                ))}*/}
 
               {/*{currentTab === tab.Folders &&
                 (folders.length > 0 ? (

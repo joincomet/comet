@@ -53,3 +53,15 @@ mutation unbanUserFromServer($input: UnbanUserFromServerInput!) {
 mutation kickUserFromServer($input: KickUserFromServerInput!) {
   kickUserFromServer(input: $input)
 }
+
+mutation featureServer($input: FeatureServerInput!) {
+  featureServer(input: $input) {
+    ...Server
+  }
+}
+
+mutation unfeatureServer($input: UnfeatureServerInput!) {
+  unfeatureServer(input: $input) {
+    ...Server
+  }
+}

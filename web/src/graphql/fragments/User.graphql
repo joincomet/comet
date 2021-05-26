@@ -7,4 +7,5 @@ fragment User on User {
   isCurrentUser
   relationshipStatus
   color
+  isOg
 }

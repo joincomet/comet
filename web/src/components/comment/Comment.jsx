@@ -1,4 +1,9 @@
-import { IconDotsHorizontal, IconVote } from '@/components/ui/icons/Icons'
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconDotsHorizontal,
+  IconDotsVertical
+} from '@/components/ui/icons/Icons'
 import { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
@@ -11,10 +16,12 @@ import ContextMenuTrigger from '@/components/ui/context/ContextMenuTrigger'
 import { ContextMenuType } from '@/types/ContextMenuType'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useUpdateCommentVoteMutation, VoteType } from '@/graphql/hooks'
+import { formatDistanceToNowStrict } from 'date-fns'
 
 const replyBtnClass = ctl(`
-  ml-4
-  text-xs
+  ml-2
+  text-13
   text-gray-500
   hover:text-gray-700
   dark:hover:text-gray-300
@@ -33,6 +40,8 @@ export default function Comment({
 }) {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
+  const openLogin = useOpenLogin()
+  const [updateCommentVote] = useUpdateCommentVoteMutation()
   const [collapse, setCollapse] = useState(false)
   const [replyingCommentId, setReplyingCommentId] = useStore(s => [
     s.replyingCommentId,
@@ -91,7 +100,8 @@ export default function Comment({
               </ContextMenuTrigger>
 
               <div className="text-11 text-mid font-medium pl-2 leading-none">
-                {calendarDate(comment.createdAt)}
+                {formatDistanceToNowStrict(new Date(post.createdAt))}
+                &nbsp;ago
               </div>
             </div>
 
@@ -100,8 +110,108 @@ export default function Comment({
               dangerouslySetInnerHTML={{ __html: comment.text }}
             />
 
-            <div className="flex items-center pt-2">
-              <VoteButton comment={comment} />
+            <div className="flex items-center pt-1 -ml-2">
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer ${
+                    comment.voteType === VoteType.Up
+                      ? 'text-red-400'
+                      : 'text-mid'
+                  }`}
+                  onClick={() => {
+                    if (!currentUser) {
+                      openLogin()
+                      return
+                    }
+                    let voteCount = comment.voteCount
+                    if (comment.voteType === VoteType.Up) {
+                      voteCount--
+                    } else if (comment.voteType === VoteType.None) {
+                      voteCount++
+                    } else if (comment.voteType === VoteType.Down) {
+                      voteCount += 2
+                    }
+                    updateCommentVote({
+                      variables: {
+                        input: {
+                          commentId: comment.id,
+                          type:
+                            comment.voteType === VoteType.Up
+                              ? VoteType.None
+                              : VoteType.Up
+                        }
+                      },
+                      optimisticResponse: {
+                        ...comment,
+                        voteType:
+                          comment.voteType === VoteType.Up
+                            ? VoteType.None
+                            : VoteType.Up,
+                        voteCount
+                      }
+                    })
+                  }}
+                >
+                  <IconChevronUp className="w-5 h-5" />
+                </button>
+                <div
+                  className={`text-13 leading-none font-semibold ${
+                    comment.voteType === VoteType.Up ? 'text-red-400' : ''
+                  } ${
+                    comment.voteType === VoteType.Down ? 'text-blue-400' : ''
+                  } ${
+                    comment.voteType === VoteType.None ? 'text-tertiary' : ''
+                  }`}
+                >
+                  {comment.voteCount}
+                </div>
+                {post.server.isDownvotesEnabled && (
+                  <button
+                    type="button"
+                    className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer ${
+                      comment.voteType === VoteType.Down
+                        ? 'text-blue-400'
+                        : 'text-mid'
+                    }`}
+                    onClick={() => {
+                      if (!currentUser) {
+                        openLogin()
+                        return
+                      }
+                      let voteCount = comment.voteCount
+                      if (comment.voteType === VoteType.Down) {
+                        voteCount++
+                      } else if (comment.voteType === VoteType.None) {
+                        voteCount--
+                      } else if (comment.voteType === VoteType.Up) {
+                        voteCount -= 2
+                      }
+                      updateCommentVote({
+                        variables: {
+                          input: {
+                            commentId: comment.id,
+                            type:
+                              comment.voteType === VoteType.Down
+                                ? VoteType.None
+                                : VoteType.Down
+                          }
+                        },
+                        optimisticResponse: {
+                          ...comment,
+                          voteType:
+                            comment.voteType === VoteType.Down
+                              ? VoteType.None
+                              : VoteType.Down,
+                          voteCount
+                        }
+                      })
+                    }}
+                  >
+                    <IconChevronDown className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
 
               <div
                 className={replyBtnClass}
@@ -127,11 +237,16 @@ export default function Comment({
                 </div>
               )}
 
-              <div
-                className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+              <ContextMenuTrigger
+                leftClick
+                data={{ type: ContextMenuType.Comment, comment, post }}
               >
-                <IconDotsHorizontal className="w-5 h-5" />
-              </div>
+                <div
+                  className={`ml-2 text-disabled flex items-center cursor-pointer`}
+                >
+                  <IconDotsVertical className="w-4 h-4" />
+                </div>
+              </ContextMenuTrigger>
             </div>
 
             {isReplying && (
@@ -160,31 +275,6 @@ export default function Comment({
             />
           ))}
       </div>
-    </div>
-  )
-}
-
-function VoteButton({ comment }) {
-  const openLogin = useOpenLogin()
-  const [currentUser] = useCurrentUser()
-  return (
-    <div
-      onClick={e => {
-        e.stopPropagation()
-        if (!currentUser) {
-          openLogin()
-          return
-        }
-        toggleVote()
-      }}
-      className={`${
-        comment.isVoted
-          ? 'text-red-400'
-          : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-      } flex items-center cursor-pointer`}
-    >
-      <IconVote className="w-4 h-4" />
-      <div className="ml-2 text-xs font-medium">{comment.voteCount}</div>
     </div>
   )
 }

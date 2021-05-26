@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Relationship, User } from '@/entity'
+import { User } from '@/entity'
 
 @InputType()
 export class ReadDmInput {
@@ -17,6 +17,6 @@ export async function readDm(
   myData.unreadCount = 0
   myData.lastViewAt = new Date()
   await em.persistAndFlush(myData)
-  liveQueryStore.invalidate(`User:${userId}`)
+  // liveQueryStore.invalidate(`User:${userId}`)
   return myData.user
 }

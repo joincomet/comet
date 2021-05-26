@@ -119,7 +119,7 @@ export type Comment = BaseEntity & {
   serverUser?: Maybe<ServerUser>;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
-  voteCount: Scalars['NonNegativeInt'];
+  voteCount: Scalars['Int'];
   voteType: VoteType;
 };
 
@@ -244,6 +244,10 @@ export type DeleteServerInput = {
   serverId: Scalars['ID'];
 };
 
+
+export type FeatureServerInput = {
+  serverId: Scalars['ID'];
+};
 
 export type File = {
   __typename?: 'File';
@@ -460,6 +464,7 @@ export type Mutation = {
   deletePost: Post;
   deleteRole: Scalars['ID'];
   deleteServer: Scalars['ID'];
+  featureServer: Server;
   followFolder: Folder;
   globalBan: Scalars['Boolean'];
   joinServer: Server;
@@ -487,6 +492,7 @@ export type Mutation = {
   setUserRole: ServerUser;
   unbanUserFromServer: Scalars['Boolean'];
   unblockUser: User;
+  unfeatureServer: Server;
   unfollowFolder: Folder;
   unpinComment: Comment;
   unpinMessage: Message;
@@ -645,6 +651,11 @@ export type MutationDeleteServerArgs = {
 };
 
 
+export type MutationFeatureServerArgs = {
+  input: FeatureServerInput;
+};
+
+
 export type MutationFollowFolderArgs = {
   input: FollowFolderInput;
 };
@@ -780,6 +791,11 @@ export type MutationUnblockUserArgs = {
 };
 
 
+export type MutationUnfeatureServerArgs = {
+  input: UnfeatureServerInput;
+};
+
+
 export type MutationUnfollowFolderArgs = {
   input: UnfollowFolderInput;
 };
@@ -901,7 +917,7 @@ export type Post = BaseEntity & {
   thumbnailUrl?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
-  voteCount: Scalars['NonNegativeInt'];
+  voteCount: Scalars['Int'];
   voteType: VoteType;
 };
 
@@ -915,8 +931,8 @@ export type PostChangedResponse = {
 export type PostImage = {
   __typename?: 'PostImage';
   caption?: Maybe<Scalars['String']>;
+  image: Image;
   linkUrl?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
 };
 
 export type PostsResponse = {
@@ -1166,6 +1182,7 @@ export enum ServerPermission {
 
 export type ServerUser = {
   __typename?: 'ServerUser';
+  id: Scalars['ID'];
   role: Role;
   user: User;
 };
@@ -1211,6 +1228,10 @@ export type UnbanUserFromServerInput = {
 
 export type UnblockUserInput = {
   userId: Scalars['ID'];
+};
+
+export type UnfeatureServerInput = {
+  serverId: Scalars['ID'];
 };
 
 export type UnfollowFolderInput = {
@@ -1288,9 +1309,7 @@ export type UpdateServerInput = {
   category?: Maybe<ServerCategory>;
   description?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
-  featuredPosition?: Maybe<Scalars['String']>;
   isDownvotesEnabled?: Maybe<Scalars['Boolean']>;
-  isFeatured?: Maybe<Scalars['Boolean']>;
   ownerId?: Maybe<Scalars['ID']>;
   serverId: Scalars['ID'];
   systemMessagesChannelId?: Maybe<Scalars['ID']>;
@@ -1308,6 +1327,7 @@ export type User = BaseEntity & {
   id: Scalars['ID'];
   isAdmin: Scalars['Boolean'];
   isCurrentUser: Scalars['Boolean'];
+  isOg: Scalars['Boolean'];
   isOnline: Scalars['Boolean'];
   lastLoginAt?: Maybe<Scalars['DateTime']>;
   lastMessageAt?: Maybe<Scalars['DateTime']>;
@@ -1417,7 +1437,11 @@ export type PostFragment = (
     & MetadataFragment
   )>, images: Array<(
     { __typename?: 'PostImage' }
-    & Pick<PostImage, 'url' | 'linkUrl' | 'caption'>
+    & Pick<PostImage, 'linkUrl' | 'caption'>
+    & { image: (
+      { __typename?: 'Image' }
+      & ImageFragment
+    ) }
   )> }
 );
 
@@ -1467,7 +1491,7 @@ export type RoleFragment = (
 
 export type ServerFragment = (
   { __typename?: 'Server' }
-  & Pick<Server, 'id' | 'name' | 'displayName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isJoined' | 'isDownvotesEnabled' | 'permissions'>
+  & Pick<Server, 'id' | 'name' | 'displayName' | 'description' | 'avatarUrl' | 'bannerUrl' | 'category' | 'userCount' | 'isJoined' | 'isFeatured' | 'isDownvotesEnabled' | 'permissions'>
   & { owner: (
     { __typename?: 'User' }
     & Pick<User, 'id'>
@@ -1479,6 +1503,7 @@ export type ServerFragment = (
 
 export type ServerUserFragment = (
   { __typename?: 'ServerUser' }
+  & Pick<ServerUser, 'id'>
   & { role: (
     { __typename?: 'Role' }
     & RoleFragment
@@ -1490,7 +1515,7 @@ export type ServerUserFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus' | 'color'>
+  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus' | 'color' | 'isOg'>
 );
 
 export type CreateChannelMutationVariables = Exact<{
@@ -2418,6 +2443,32 @@ export type KickUserFromServerMutation = (
   & Pick<Mutation, 'kickUserFromServer'>
 );
 
+export type FeatureServerMutationVariables = Exact<{
+  input: FeatureServerInput;
+}>;
+
+
+export type FeatureServerMutation = (
+  { __typename?: 'Mutation' }
+  & { featureServer: (
+    { __typename?: 'Server' }
+    & ServerFragment
+  ) }
+);
+
+export type UnfeatureServerMutationVariables = Exact<{
+  input: UnfeatureServerInput;
+}>;
+
+
+export type UnfeatureServerMutation = (
+  { __typename?: 'Mutation' }
+  & { unfeatureServer: (
+    { __typename?: 'Server' }
+    & ServerFragment
+  ) }
+);
+
 export type CreateAccountMutationVariables = Exact<{
   input: CreateAccountInput;
 }>;
@@ -2622,8 +2673,7 @@ export type PostQuery = (
       & ServerUserFragment
     )>, server: (
       { __typename?: 'Server' }
-      & Pick<Server, 'permissions'>
-      & ServerFragment
+      & Pick<Server, 'id' | 'name' | 'avatarUrl' | 'isDownvotesEnabled' | 'displayName' | 'permissions'>
     ) }
     & PostFragment
   ) }
@@ -2655,7 +2705,7 @@ export type PostsQuery = (
         & ServerUserFragment
       )>, server: (
         { __typename?: 'Server' }
-        & Pick<Server, 'id' | 'name' | 'avatarUrl' | 'isDownvotesEnabled'>
+        & Pick<Server, 'id' | 'name' | 'avatarUrl' | 'isDownvotesEnabled' | 'displayName' | 'permissions'>
       ) }
       & PostFragment
     )> }
@@ -2952,6 +3002,7 @@ export const UserFragmentDoc = gql`
   isCurrentUser
   relationshipStatus
   color
+  isOg
 }
     `;
 export const ChannelFragmentDoc = gql`
@@ -2975,6 +3026,7 @@ export const ServerFragmentDoc = gql`
   category
   userCount
   isJoined
+  isFeatured
   isDownvotesEnabled
   owner {
     id
@@ -3078,12 +3130,15 @@ export const PostFragmentDoc = gql`
     ...Metadata
   }
   images {
-    url
+    image {
+      ...Image
+    }
     linkUrl
     caption
   }
 }
-    ${MetadataFragmentDoc}`;
+    ${MetadataFragmentDoc}
+${ImageFragmentDoc}`;
 export const RelatedUserFragmentDoc = gql`
     fragment RelatedUser on User {
   ...User
@@ -3103,6 +3158,7 @@ export const RoleFragmentDoc = gql`
     `;
 export const ServerUserFragmentDoc = gql`
     fragment ServerUser on ServerUser {
+  id
   role {
     ...Role
   }
@@ -5372,6 +5428,72 @@ export function useKickUserFromServerMutation(baseOptions?: Apollo.MutationHookO
 export type KickUserFromServerMutationHookResult = ReturnType<typeof useKickUserFromServerMutation>;
 export type KickUserFromServerMutationResult = Apollo.MutationResult<KickUserFromServerMutation>;
 export type KickUserFromServerMutationOptions = Apollo.BaseMutationOptions<KickUserFromServerMutation, KickUserFromServerMutationVariables>;
+export const FeatureServerDocument = gql`
+    mutation featureServer($input: FeatureServerInput!) {
+  featureServer(input: $input) {
+    ...Server
+  }
+}
+    ${ServerFragmentDoc}`;
+export type FeatureServerMutationFn = Apollo.MutationFunction<FeatureServerMutation, FeatureServerMutationVariables>;
+
+/**
+ * __useFeatureServerMutation__
+ *
+ * To run a mutation, you first call `useFeatureServerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFeatureServerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [featureServerMutation, { data, loading, error }] = useFeatureServerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFeatureServerMutation(baseOptions?: Apollo.MutationHookOptions<FeatureServerMutation, FeatureServerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FeatureServerMutation, FeatureServerMutationVariables>(FeatureServerDocument, options);
+      }
+export type FeatureServerMutationHookResult = ReturnType<typeof useFeatureServerMutation>;
+export type FeatureServerMutationResult = Apollo.MutationResult<FeatureServerMutation>;
+export type FeatureServerMutationOptions = Apollo.BaseMutationOptions<FeatureServerMutation, FeatureServerMutationVariables>;
+export const UnfeatureServerDocument = gql`
+    mutation unfeatureServer($input: UnfeatureServerInput!) {
+  unfeatureServer(input: $input) {
+    ...Server
+  }
+}
+    ${ServerFragmentDoc}`;
+export type UnfeatureServerMutationFn = Apollo.MutationFunction<UnfeatureServerMutation, UnfeatureServerMutationVariables>;
+
+/**
+ * __useUnfeatureServerMutation__
+ *
+ * To run a mutation, you first call `useUnfeatureServerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnfeatureServerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unfeatureServerMutation, { data, loading, error }] = useUnfeatureServerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUnfeatureServerMutation(baseOptions?: Apollo.MutationHookOptions<UnfeatureServerMutation, UnfeatureServerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnfeatureServerMutation, UnfeatureServerMutationVariables>(UnfeatureServerDocument, options);
+      }
+export type UnfeatureServerMutationHookResult = ReturnType<typeof useUnfeatureServerMutation>;
+export type UnfeatureServerMutationResult = Apollo.MutationResult<UnfeatureServerMutation>;
+export type UnfeatureServerMutationOptions = Apollo.BaseMutationOptions<UnfeatureServerMutation, UnfeatureServerMutationVariables>;
 export const CreateAccountDocument = gql`
     mutation createAccount($input: CreateAccountInput!) {
   createAccount(input: $input) {
@@ -5829,15 +5951,18 @@ export const PostDocument = gql`
       ...ServerUser
     }
     server {
-      ...Server
+      id
+      name
+      avatarUrl
+      isDownvotesEnabled
+      displayName
       permissions
     }
   }
 }
     ${PostFragmentDoc}
 ${UserFragmentDoc}
-${ServerUserFragmentDoc}
-${ServerFragmentDoc}`;
+${ServerUserFragmentDoc}`;
 
 /**
  * __usePostQuery__
@@ -5891,6 +6016,8 @@ export const PostsDocument = gql`
         name
         avatarUrl
         isDownvotesEnabled
+        displayName
+        permissions
       }
     }
   }

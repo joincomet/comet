@@ -9,8 +9,6 @@ import EndReached from '@/components/ui/EndReached'
 import { Helmet } from 'react-helmet-async'
 
 export default function ExplorePage() {
-  const [page, setPage] = useState(0)
-
   const [exploreCategory, exploreSort] = useStore(s => [
     s.exploreCategory,
     s.exploreSort
@@ -23,12 +21,10 @@ export default function ExplorePage() {
         exploreCategory && exploreCategory !== 'Featured'
           ? exploreCategory
           : null,
-      featured: exploreCategory === 'Featured',
-      page,
-      pageSize: 20
+      featured: exploreCategory === 'Featured'
     },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
+    //nextFetchPolicy: 'cache-first'
   })
   const servers = data?.publicServers ?? []
 

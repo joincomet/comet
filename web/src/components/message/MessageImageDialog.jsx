@@ -1,16 +1,21 @@
 import Dialog from '@/components/ui/dialog/Dialog'
 import { useState } from 'react'
 
-export default function MessageImageDialog({ image, width, height }) {
+export default function MessageImageDialog({
+  image,
+  width,
+  height,
+  rounded = true
+}) {
   const [showImagePopup, setShowImagePopup] = useState(false)
 
   return (
-    <div className="pt-1">
+    <div>
       <img
         onClick={() => setShowImagePopup(true)}
         src={image.smallUrl}
         alt=""
-        className="rounded cursor-pointer"
+        className={`${rounded ? 'rounded' : ''} cursor-pointer`}
         width={width || image.smallWidth}
         height={height || image.smallHeight}
       />

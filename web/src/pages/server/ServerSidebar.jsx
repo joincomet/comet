@@ -73,6 +73,7 @@ export default function ServerSidebar() {
         open={rolesOpen}
         setOpen={setRolesOpen}
         server={server}
+        key={server.id}
       />
 
       <Sidebar>

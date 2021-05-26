@@ -30,6 +30,8 @@ query posts(
         name
         avatarUrl
         isDownvotesEnabled
+        displayName
+        permissions
       }
     }
   }

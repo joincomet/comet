@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Role, ServerPermission, User } from '@/entity'
+import { Role, ServerPermission, ServerUser, User } from '@/entity'
 
 @InputType()
 export class DeleteRoleInput {
@@ -20,6 +20,15 @@ export async function deleteRole(
     role.server.id,
     ServerPermission.ManageServer
   )
+  const defaultRole = await em.findOneOrFail(Role, {
+    server: role.server,
+    isDefault: true
+  })
+  await em
+    .createQueryBuilder(ServerUser)
+    .update({ role: defaultRole })
+    .where({ server: role.server, role })
+    .execute()
   await em.remove(role).flush()
   liveQueryStore.invalidate(`Role:${roleId}`)
   return roleId

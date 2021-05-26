@@ -1,7 +1,6 @@
 import Popup from '@/components/ui/Popup'
 import UserAvatar from '@/components/user/UserAvatar'
 import { useStore } from '@/hooks/useStore'
-import { IconPlus } from '@/components/ui/icons/Icons'
 
 export default function UserPopup({
   user,
@@ -51,19 +50,19 @@ export default function UserPopup({
                   <div className="text-11 font-semibold uppercase tracking-widest text-secondary pb-2">
                     Roles
                   </div>
-                  <div className="flex space-x-1">
+                  <div
+                    style={{ borderColor: role.color }}
+                    className={`text-xs text-secondary font-medium pl-1 py-1 pr-2 leading-none rounded-full border inline-flex items-center ${
+                      role.color ? '' : 'dark:border-gray-700'
+                    }`}
+                  >
                     <div
-                      style={{ color: role.color, borderColor: role.color }}
-                      className={`text-xs font-medium px-2 h-5.5 rounded-full border inline-flex items-center ${
-                        role.color ? '' : 'dark:border-gray-700 text-secondary'
+                      className={`w-3 h-3 rounded-full mr-1 ${
+                        !role.color ? 'dark:bg-gray-700' : ''
                       }`}
-                    >
-                      {role.name}
-                    </div>
-
-                    <div className="text-xs font-medium h-5.5 w-5.5 rounded-full border inline-flex items-center justify-center dark:border-gray-700 text-secondary">
-                      <IconPlus className="w-5 h-5" />
-                    </div>
+                      style={{ backgroundColor: role.color }}
+                    />
+                    {role.name}
                   </div>
                 </div>
               )}

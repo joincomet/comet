@@ -134,7 +134,7 @@ function ReplyContent({ comment }) {
               <UserPopup user={comment.author} role={comment.serverUser?.role}>
                 <div
                   className={`text-sm font-medium cursor-pointer hover:underline leading-none ${
-                    comment.author.color ? '' : 'text-primary'
+                    comment.serverUser?.role?.color ? '' : 'text-primary'
                   }`}
                   style={{ color: comment.serverUser?.role?.color }}
                 >

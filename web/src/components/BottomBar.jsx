@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import UserSettingsDialog from '@/components/user/UserSettingsDialog'
 import { version } from '../../package.json'
 import { useStore } from '@/hooks/useStore'
-import { useChangeOnlineStatusMutation } from '@/graphql/hooks'
+import { OnlineStatus, useChangeOnlineStatusMutation } from '@/graphql/hooks'
 import { Link } from 'react-router-dom'
 import { getDownloadLink } from '@/hooks/getDownloadLink'
 import { useLoginDialog } from '@/hooks/useLoginDialog'
@@ -34,18 +34,18 @@ export default function BottomBar() {
   const [changeOnlineStatus] = useChangeOnlineStatusMutation()
 
   // Update online status every 15 seconds
-  /*useEffect(() => {
+  useEffect(() => {
     if (currentUser) {
       const id = setInterval(() => {
         changeOnlineStatus({
           variables: {
-            input: { onlineStatus: currentUser.onlineStatus }
+            input: { onlineStatus: OnlineStatus.Online }
           }
         })
       }, 15000)
       return () => clearInterval(id)
     }
-  }, [currentUser])*/
+  }, [currentUser])
 
   const downloadLink = getDownloadLink()
   const [loginOpen, setLoginOpen, isCreateAccount, setCreateAccount] =

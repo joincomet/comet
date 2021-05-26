@@ -37,14 +37,20 @@ export default function ManageRolesDialog({ open, setOpen, server }) {
     setName(selectedRole.name)
     setColor(selectedRole.color)
   }, [selectedRole])
-  const apolloClient = useApolloClient()
   const [deleteRole] = useDeleteRoleMutation({
     update(cache, { data: { deleteRole } }) {
-      const data = cache.readQuery({ query: CurrentUserDocument })
-      const clone = JSON.parse(JSON.stringify(data))
-      const serv = clone.user.servers.find(s => s.id === server.id)
-      serv.roles = server.roles.filter(r => r.id !== deleteRole)
-      cache.writeQuery({ query: CurrentUserDocument, data: clone })
+      cache.writeQuery({
+        query: ServerDocument,
+        variables: {
+          name: server.name
+        },
+        data: {
+          server: {
+            ...server,
+            roles: server.roles.filter(r => r.id !== deleteRole)
+          }
+        }
+      })
     }
   })
   const [updateRole, { loading: updateRoleLoading }] = useUpdateRoleMutation()
@@ -93,7 +99,7 @@ export default function ManageRolesDialog({ open, setOpen, server }) {
         data: {
           server: {
             ...server,
-            roles: [...server.roles, createRole]
+            roles: [createRole, ...server.roles]
           }
         }
       })
@@ -101,11 +107,15 @@ export default function ManageRolesDialog({ open, setOpen, server }) {
   })
 
   const doCreateRole = () => {
-    if (!newRoleName) return
+    if (!newRoleName) {
+      setIsAddingRole(false)
+      return
+    }
     createRole({
       variables: { input: { serverId: server.id, name: newRoleName } }
     }).then(res => {
       setNewRoleName('')
+      setIsAddingRole(false)
       setSelectedRoleId(res.data.createRole.id)
     })
   }
@@ -113,25 +123,8 @@ export default function ManageRolesDialog({ open, setOpen, server }) {
   return (
     <StyledDialog open={open} close={close} closeOnOverlayClick large>
       <div className="flex">
-        <div className="h-[40rem] max-h-screen w-60 dark:bg-gray-750 rounded-l-lg space-y-0.5 scrollbar-custom p-1.5">
-          {server?.roles.map(role => (
-            <SidebarItem
-              key={role.id}
-              light
-              active={selectedRoleId === role.id}
-              onClick={() => setSelectedRoleId(role.id)}
-            >
-              <span style={{ color: role.color }}>{role.name}</span>
-              {role.isDefault && (
-                <Tippy content="Delete Role">
-                  <div className="group-hover:visible invisible ml-auto highlightable">
-                    <IconDelete className="w-4 h-4" />
-                  </div>
-                </Tippy>
-              )}
-            </SidebarItem>
-          ))}
-          {isAddingRole && (
+        <div className="h-[40rem] max-h-screen w-60 dark:bg-gray-750 rounded-l-lg space-y-0.5 overflow-y-auto scrollbar-custom p-1.5">
+          {isAddingRole ? (
             <div className="relative py-1 px-1.5">
               <input
                 className="form-input-password"
@@ -145,19 +138,50 @@ export default function ManageRolesDialog({ open, setOpen, server }) {
                 type="text"
                 maxLength={100}
               />
-              <IconCheck
-                onClick={doCreateRole}
-                className="form-show-password-button"
-              />
+              {createRoleLoading ? (
+                <IconSpinner className="form-show-password-button" />
+              ) : (
+                <IconCheck
+                  onClick={doCreateRole}
+                  className="form-show-password-button"
+                />
+              )}
             </div>
+          ) : (
+            <SidebarItem light onClick={() => setIsAddingRole(true)}>
+              Add Role
+              <HiPlus className="w-5 h-5 ml-auto" />
+            </SidebarItem>
           )}
-          <SidebarItem light onClick={() => setIsAddingRole(true)}>
-            Add Role
-            <HiPlus className="w-5 h-5 ml-auto" />
-          </SidebarItem>
+
+          {server?.roles.map(role => (
+            <SidebarItem
+              key={role.id}
+              light
+              active={selectedRoleId === role.id}
+              onClick={() => setSelectedRoleId(role.id)}
+            >
+              <span style={{ color: role.color }}>{role.name}</span>
+              {!role.isDefault && (
+                <Tippy content="Delete Role">
+                  <div
+                    onClick={() => {
+                      deleteRole({ variables: { input: { roleId: role.id } } })
+                      if (selectedRoleId === role.id) {
+                        setSelectedRoleId(server.roles.find(r => r.isDefault))
+                      }
+                    }}
+                    className="group-hover:visible invisible ml-auto highlightable"
+                  >
+                    <IconDelete className="w-4 h-4" />
+                  </div>
+                </Tippy>
+              )}
+            </SidebarItem>
+          ))}
         </div>
 
-        <div className="relative py-5 px-7 w-full h-[40rem] max-h-screen scrollbar-thin dark:scrollbar-thumb-gray-850 scrollbar-track-transparent scrollbar-thumb-rounded-md rounded-tr-lg">
+        <div className="relative py-5 px-7 w-full h-[40rem] overflow-y-auto max-h-screen scrollbar-thin dark:scrollbar-thumb-gray-850 scrollbar-track-transparent scrollbar-thumb-rounded-md rounded-tr-lg">
           <div className="flex items-center justify-between pb-5">
             <div className="text-primary text-base font-semibold">
               Edit Role - {selectedRole.name}

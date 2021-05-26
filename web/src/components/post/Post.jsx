@@ -7,9 +7,9 @@ import UserPopup from '@/components/user/UserPopup'
 import {
   IconChat,
   IconChevronDown,
-  IconChevrownLeft,
-  IconChevrownRight,
-  IconChevrownUp,
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronUp,
   IconDotsVertical,
   IconLinkWeb,
   IconText
@@ -20,6 +20,8 @@ import PostEmbed from '@/components/post/PostEmbed'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
 import { formatDistanceToNowStrict } from 'date-fns'
+import { useUpdatePostVoteMutation, VoteType } from '@/graphql/hooks'
+import MessageImageDialog from '@/components/message/MessageImageDialog'
 
 export default memo(function Post({
   post,
@@ -29,6 +31,7 @@ export default memo(function Post({
   index
 }) {
   const { push } = useHistory()
+  const [updatePostVote] = useUpdatePostVoteMutation()
 
   const [{ opacity }, dragRef] = useDrag({
     type: DragItemTypes.Post,
@@ -57,10 +60,10 @@ export default memo(function Post({
         !post.linkUrl &&
         (!post.images || post.images.length === 0))
     )
-      return 'Text'
+      return 'text post'
     else if (post.linkUrl) return post.domain
-    else if (post.images?.length === 1) return 'Image'
-    else if (post.images?.length > 1) return 'Image Album'
+    else if (post.images?.length === 1) return 'image post'
+    else if (post.images?.length > 1) return 'image album'
   }, [post.domain, post.images, post.linkUrl, post.text])
 
   const onClick = e => {
@@ -105,19 +108,95 @@ export default memo(function Post({
         <div className="flex flex-col items-center pr-2">
           <button
             type="button"
-            className="focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer"
+            className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer ${
+              post.voteType === VoteType.Up ? 'text-red-400' : 'text-mid'
+            }`}
+            onClick={() => {
+              if (!currentUser) {
+                openLogin()
+                return
+              }
+              let voteCount = post.voteCount
+              if (post.voteType === VoteType.Up) {
+                voteCount--
+              } else if (post.voteType === VoteType.None) {
+                voteCount++
+              } else if (post.voteType === VoteType.Down) {
+                voteCount += 2
+              }
+              updatePostVote({
+                variables: {
+                  input: {
+                    postId: post.id,
+                    type:
+                      post.voteType === VoteType.Up
+                        ? VoteType.None
+                        : VoteType.Up
+                  }
+                },
+                optimisticResponse: {
+                  ...post,
+                  voteType:
+                    post.voteType === VoteType.Up ? VoteType.None : VoteType.Up,
+                  voteCount
+                }
+              })
+            }}
           >
-            <IconChevrownUp className="w-5 h-5 text-mid" />
+            <IconChevronUp className="w-5 h-5" />
           </button>
-          <div className="text-tertiary text-13 leading-none font-semibold">
-            {post.voteCount}
+          <div
+            className={`text-13 leading-none font-semibold ${
+              post.voteType === VoteType.Up ? 'text-red-400' : ''
+            } ${post.voteType === VoteType.Down ? 'text-blue-400' : ''} ${
+              post.voteType === VoteType.None ? 'text-tertiary' : ''
+            }`}
+          >
+            {post.voteCount < 0 ? 0 : post.voteCount}
           </div>
-          <button
-            type="button"
-            className="focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer"
-          >
-            <IconChevronDown className="w-5 h-5 text-mid" />
-          </button>
+          {post.server.isDownvotesEnabled && (
+            <button
+              type="button"
+              className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer ${
+                post.voteType === VoteType.Down ? 'text-blue-400' : 'text-mid'
+              }`}
+              onClick={() => {
+                if (!currentUser) {
+                  openLogin()
+                  return
+                }
+                let voteCount = post.voteCount
+                if (post.voteType === VoteType.Down) {
+                  voteCount++
+                } else if (post.voteType === VoteType.None) {
+                  voteCount--
+                } else if (post.voteType === VoteType.Up) {
+                  voteCount -= 2
+                }
+                updatePostVote({
+                  variables: {
+                    input: {
+                      postId: post.id,
+                      type:
+                        post.voteType === VoteType.Down
+                          ? VoteType.None
+                          : VoteType.Down
+                    }
+                  },
+                  optimisticResponse: {
+                    ...post,
+                    voteType:
+                      post.voteType === VoteType.Down
+                        ? VoteType.None
+                        : VoteType.Down,
+                    voteCount
+                  }
+                })
+              }}
+            >
+              <IconChevronDown className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {!isPostPage && (
@@ -214,18 +293,31 @@ export default memo(function Post({
                 )}
 
                 {!!post.images.length && (
-                  <div className="max-w-screen-md w-full mt-2">
+                  <div className="mt-2 w-[400px]">
                     <div className="flex relative">
-                      <div className="aspect-h-9 aspect-w-16 relative flex w-full dark:bg-gray-775">
+                      <div className="w-full h-[300px] relative flex items-center justify-center dark:bg-gray-775">
                         {post.images.map((image, i) => (
-                          <img
+                          <div
                             key={i}
-                            alt=""
-                            src={image.url}
-                            className={`w-full h-full object-contain select-none ${
+                            className={`${
                               i === currentImage ? 'block' : 'hidden'
                             }`}
-                          />
+                          >
+                            <MessageImageDialog
+                              rounded={false}
+                              image={image.image}
+                              key={i}
+                            />
+                          </div>
+
+                          /*<img
+                              key={i}
+                              alt=""
+                              src={image.url}
+                              className={`w-full h-full object-contain select-none ${
+                                i === currentImage ? 'block' : 'hidden'
+                              }`}
+                            />*/
                         ))}
                       </div>
                       {post.images.length > 1 && (
@@ -235,7 +327,7 @@ export default memo(function Post({
                               onClick={() => setCurrentImage(currentImage - 1)}
                               className="absolute left-3 top-1/2 transform -translate-y-1/2 rounded-full shadow flex items-center justify-center w-10 h-10 dark:bg-white"
                             >
-                              <IconChevrownLeft className="w-5 h-5 dark:text-black" />
+                              <IconChevronLeft className="w-5 h-5 dark:text-black" />
                             </div>
                           )}
 
@@ -244,33 +336,37 @@ export default memo(function Post({
                               onClick={() => setCurrentImage(currentImage + 1)}
                               className="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full shadow flex items-center justify-center w-10 h-10 dark:bg-white"
                             >
-                              <IconChevrownRight className="w-5 h-5 dark:text-black" />
+                              <IconChevronRight className="w-5 h-5 dark:text-black" />
                             </div>
                           )}
                         </>
                       )}
                     </div>
-                    <div className="h-12 dark:bg-gray-750 flex items-center px-5 text-13 select-none">
-                      {post.images[currentImage].caption && (
-                        <div
-                          className="text-primary truncate pr-3"
-                          title={post.images[currentImage].caption}
-                        >
-                          {post.images[currentImage].caption}
-                        </div>
-                      )}
+                    {!!post.images.find(
+                      image => image.caption || image.linkUrl
+                    ) && (
+                      <div className="h-12 dark:bg-gray-750 flex items-center px-5 text-sm select-none">
+                        {post.images[currentImage].caption && (
+                          <div
+                            className="text-primary truncate pr-3"
+                            title={post.images[currentImage].caption}
+                          >
+                            {post.images[currentImage].caption}
+                          </div>
+                        )}
 
-                      {post.images[currentImage].linkUrl && (
-                        <a
-                          href={post.images[currentImage].linkUrl}
-                          target="_blank"
-                          rel="noopener nofollow noreferrer"
-                          className="ml-auto text-blue-400 hover:underline cursor-pointer"
-                        >
-                          {post.images[currentImage].linkUrl}
-                        </a>
-                      )}
-                    </div>
+                        {post.images[currentImage].linkUrl && (
+                          <a
+                            href={post.images[currentImage].linkUrl}
+                            target="_blank"
+                            rel="noopener nofollow noreferrer"
+                            className="ml-auto text-blue-400 hover:underline cursor-pointer"
+                          >
+                            {post.images[currentImage].linkUrl}
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -291,7 +387,7 @@ export default memo(function Post({
               leftClick
             >
               <div
-                className={`ml-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
+                className={`ml-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center cursor-pointer`}
               >
                 <IconDotsVertical className="text-disabled w-4 h-4" />
               </div>

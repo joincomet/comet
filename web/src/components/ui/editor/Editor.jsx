@@ -22,7 +22,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Link from '@/components/ui/editor/Link'
 import Underline from '@tiptap/extension-underline'
 import { Spoiler } from './Spoiler'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 
 export default function Editor({ text, setText }) {
   const editor = useEditor({
@@ -51,6 +51,33 @@ export default function Editor({ text, setText }) {
     if (html === `<p></p>`) setText('')
     else setText(html)
   }, [editor, html, setText])
+
+  const pasteRegex =
+    /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z]{2,}\b(?:[-a-zA-Z0-9@:%._+~#=?!&/]*)(?:[-a-zA-Z0-9@:%._+~#=?!&/]*)/i
+
+  const pasteListener = useCallback(
+    e => {
+      const plain = e.clipboardData?.getData('text/plain')
+      if (plain) {
+        if (pasteRegex.test(plain)) {
+          editor?.commands.insertContent(
+            `<a href="${plain}" target="_blank" rel="noopener noreferrer nofollow">${plain}</a>`
+          )
+        } else {
+          editor?.commands.insertContent(plain)
+        }
+        editor?.commands.focus()
+      }
+    },
+    [editor]
+  )
+
+  useEffect(() => {
+    document.body.addEventListener('paste', pasteListener)
+    return () => {
+      document.body.removeEventListener('paste', pasteListener)
+    }
+  }, [pasteListener])
 
   return (
     <div className="dark:bg-gray-750 rounded">

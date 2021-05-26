@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import ctl from '@netlify/classnames-template-literals'
-import { IconChevrownRight } from '@/components/ui/icons/Icons'
+import { IconChevronRight } from '@/components/ui/icons/Icons'
 
 export const useContextMenuItem = item =>
   useCallback(
@@ -49,7 +49,7 @@ const itemClass = red =>
   )
 
 function ContextMenuItem({
-  item: { bindMenuItem, hideMenu },
+  item: { bindMenuItem, hideMenu, isRight },
   onClick,
   red,
   checked = null,
@@ -78,14 +78,20 @@ function ContextMenuItem({
       {children && (
         <>
           <div className="ml-auto">
-            <IconChevrownRight className="w-5 h-5 -mr-0.5" />
+            <IconChevronRight className="w-5 h-5 -mr-0.5" />
           </div>
 
           <div
-            className={`absolute left-full -top-2 -ml-2 hidden group-hover:block`}
+            className={`absolute -top-2 hidden group-hover:block ${
+              isRight ? 'right-full -mr-2' : 'left-full -ml-2'
+            }`}
           >
-            <div className="pl-2">
-              <div className="p-2 ml-3 dark:bg-gray-900 rounded w-48 shadow-lg">
+            <div className={`${isRight ? 'pr-2' : 'pl-2'}`}>
+              <div
+                className={`${
+                  isRight ? 'mr-3' : 'ml-3'
+                } p-2 dark:bg-gray-900 rounded w-48 shadow-lg`}
+              >
                 {children}
               </div>
             </div>

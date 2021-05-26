@@ -2,17 +2,21 @@ import { useTranslation } from 'react-i18next'
 import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import {
   CurrentUserDocument,
+  PublicServersDocument,
+  PublicServersSort,
   ServerFragmentDoc,
-  useLeaveServerMutation
+  useFeatureServerMutation,
+  useLeaveServerMutation,
+  useUnfeatureServerMutation
 } from '@/graphql/hooks'
 import { useApolloClient } from '@apollo/client'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useStore } from '@/hooks/useStore'
 
 export default function ServerContextMenu({
   server,
   enableFeatured,
-  enableFeaturedPosition,
   openDelete,
   ContextMenuItem
 }) {
@@ -22,6 +26,22 @@ export default function ServerContextMenu({
   const [leaveServer] = useLeaveServerMutation()
   const { push } = useHistory()
   const { pathname } = useLocation()
+  const sort = useStore(s => s.exploreSort)
+  const refetchQueries = [
+    {
+      query: PublicServersDocument,
+      variables: {
+        featured: true,
+        sort
+      }
+    }
+  ]
+  const [featureServer] = useFeatureServerMutation({
+    refetchQueries
+  })
+  const [unfeatureServer] = useUnfeatureServerMutation({
+    refetchQueries
+  })
 
   return (
     <>
@@ -33,13 +53,18 @@ export default function ServerContextMenu({
                 label={
                   server.isFeatured ? 'Remove from Featured' : 'Make Featured'
                 }
+                onClick={() => {
+                  if (server.isFeatured) {
+                    unfeatureServer({
+                      variables: { input: { serverId: server.id } }
+                    })
+                  } else {
+                    featureServer({
+                      variables: { input: { serverId: server.id } }
+                    })
+                  }
+                }}
               />
-            )}
-            {!!enableFeaturedPosition && server.isFeatured && (
-              <>
-                <ContextMenuItem label="Increment Featured Position" />
-                <ContextMenuItem label="Decrement Featured Position" />
-              </>
             )}
           </>
         )}

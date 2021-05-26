@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, Int, ObjectType } from 'type-graphql'
 import {
   Comment,
   Folder,
@@ -55,7 +55,8 @@ export class Post extends BaseEntity {
 
   @Field({ nullable: true })
   get thumbnailUrl(): string | null {
-    if (this.images && this.images.length > 0) return this.images[0].url
+    if (this.images && this.images.length > 0)
+      return this.images[0].image.smallUrl
     if (!this.linkUrl) return null
     if (this.linkMetadata && this.linkMetadata.image)
       return this.linkMetadata.image.smallUrl
@@ -105,8 +106,8 @@ export class Post extends BaseEntity {
   @Field(() => [Folder], { nullable: true })
   folders?: Folder[]
 
-  @Field(() => GraphQLNonNegativeInt)
-  @Property({ unsigned: true })
+  @Field(() => Int)
+  @Property()
   voteCount: number = 0
 
   @Field(() => VoteType)

@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
-import Dialog from '@/components/ui/dialog/Dialog'
 import {
   IconCheck,
-  IconDelete,
   IconEdit,
   IconSpinner,
   IconUserToServerArrow
@@ -14,15 +12,17 @@ import {
   CurrentUserDocument,
   ServerCategory,
   useCreateServerMutation,
-  useDeleteServerMutation,
   useUpdateServerMutation
 } from '@/graphql/hooks'
 import CategorySelect from '@/components/server/CategorySelect'
 import Tippy from '@tippyjs/react'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
+import Switch from '@/components/ui/Switch'
 
 export default function CreateServerDialog({ open, setOpen, server }) {
+  const [isDownvotesEnabled, setIsDownvotesEnabled] = useState(
+    server?.isDownvotesEnabled ?? false
+  )
   const [createServer, { loading: createLoading }] = useCreateServerMutation({
     update(cache, { data: { createServer } }) {
       const data = cache.readQuery({ query: CurrentUserDocument })
@@ -68,6 +68,7 @@ export default function CreateServerDialog({ open, setOpen, server }) {
       setAvatarSrc(null)
       setBannerSrc(null)
       setCategory(ServerCategory.Other)
+      setIsDownvotesEnabled(false)
     } else {
       //reset()
       setAvatarSrc(server.avatarUrl)
@@ -75,6 +76,7 @@ export default function CreateServerDialog({ open, setOpen, server }) {
       setValue('displayName', server.displayName)
       setValue('description', server.description)
       setCategory(server.category)
+      setIsDownvotesEnabled(server.isDownvotesEnabled)
     }
   }, [server])
 
@@ -106,7 +108,8 @@ export default function CreateServerDialog({ open, setOpen, server }) {
             description,
             category,
             avatarFile: avatarFile ? avatarFile[0] : null,
-            bannerFile: bannerFile ? bannerFile[0] : null
+            bannerFile: bannerFile ? bannerFile[0] : null,
+            isDownvotesEnabled
           }
         }
       }).then(({ data: { createServer } }) => {
@@ -122,7 +125,8 @@ export default function CreateServerDialog({ open, setOpen, server }) {
             description,
             category,
             avatarFile: avatarFile ? avatarFile[0] : null,
-            bannerFile: bannerFile ? bannerFile[0] : null
+            bannerFile: bannerFile ? bannerFile[0] : null,
+            isDownvotesEnabled
           }
         }
       }).then(() => {
@@ -264,6 +268,18 @@ export default function CreateServerDialog({ open, setOpen, server }) {
             Category
           </div>
           <CategorySelect category={category} setCategory={setCategory} />
+        </div>
+
+        <div className="pt-2">
+          <Switch
+            checked={isDownvotesEnabled}
+            onChange={() => setIsDownvotesEnabled(!isDownvotesEnabled)}
+            green
+          >
+            <div className="text-13 font-medium text-tertiary">
+              Downvotes enabled
+            </div>
+          </Switch>
         </div>
       </div>
     </StyledDialog>

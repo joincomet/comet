@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, Int, ObjectType } from 'type-graphql'
 import {
   LinkMetadata,
   Post,
@@ -16,7 +16,6 @@ import {
   Property
 } from '@mikro-orm/core'
 import { BaseEntity } from '@/entity/BaseEntity'
-import { GraphQLNonNegativeInt } from 'graphql-scalars'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -40,8 +39,8 @@ export class Comment extends BaseEntity {
   @ManyToOne({ entity: () => Comment, nullable: true })
   parentComment?: Comment
 
-  @Field(() => GraphQLNonNegativeInt)
-  @Property({ unsigned: true })
+  @Field(() => Int)
+  @Property()
   voteCount: number = 0
 
   @Field(() => VoteType)

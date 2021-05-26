@@ -1,7 +1,7 @@
 import { memo } from 'react'
 
 export default memo(function EndReached({
-  children = 'You have reached the end!',
+  children = 'No more posts loaded!',
   className = 'h-48'
 }) {
   return (

@@ -8,7 +8,11 @@ query post($id: ID!) {
       ...ServerUser
     }
     server {
-      ...Server
+      id
+      name
+      avatarUrl
+      isDownvotesEnabled
+      displayName
       permissions
     }
   }

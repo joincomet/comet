@@ -17,7 +17,9 @@ fragment Post on Post {
     ...Metadata
   }
   images {
-    url
+    image {
+      ...Image
+    }
     linkUrl
     caption
   }

@@ -26,9 +26,9 @@ export default function Header({
         {title}
       </div>
       <div className="flex-grow flex items-center min-w-0 pr-4">{children}</div>
-      <div className="flex w-60 min-w-[15rem] pr-4">
+      {/*<div className="flex w-60 min-w-[15rem] pr-4">
         <HeaderSearchBar />
-      </div>
+      </div>*/}
     </header>
   )
 }

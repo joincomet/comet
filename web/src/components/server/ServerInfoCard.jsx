@@ -20,8 +20,7 @@ export default function ServerInfoCard({
       data={{
         type: ContextMenuType.Server,
         server,
-        enableFeatured: true,
-        enableFeaturedPosition: exploreCategory === 'Featured'
+        enableFeatured: true
       }}
     >
       <Link

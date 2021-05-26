@@ -7,7 +7,7 @@ import {
 } from '@mikro-orm/core'
 import { Role, Server, User, ServerUserStatus } from '@/entity'
 import { ReorderUtils } from '@/util/ReorderUtils'
-import { Field, ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType } from 'type-graphql'
 
 @ObjectType()
 @Entity()
@@ -35,4 +35,9 @@ export class ServerUser {
     items: () => ServerUserStatus
   })
   status: ServerUserStatus = ServerUserStatus.Joined
+
+  @Field(() => ID)
+  get id() {
+    return `u${this.user.id}-s${this.server.id}`
+  }
 }

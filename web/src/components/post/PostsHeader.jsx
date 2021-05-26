@@ -7,17 +7,14 @@ import {
 } from '@/components/ui/icons/Icons'
 import { useStore } from '@/hooks/useStore'
 import Tippy from '@tippyjs/react'
-import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import HeaderTab from '@/components/ui/header/HeaderTab'
-import { HiNewspaper } from 'react-icons/hi'
-import ShowFoldersButton from '@/components/ui/header/buttons/ShowFoldersButton'
-import Switch from '@/components/ui/Switch'
+import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
 
 const iconClassName = 'w-5 h-5'
 
-export default function PostsHeader({ refreshPosts }) {
-  const [postsSort, showFolders, liveMode] = useStore(s => [
+export default function PostsHeader() {
+  const [postsSort, showFolders] = useStore(s => [
     s.postsSort,
     s.showFolders,
     s.liveMode
@@ -70,13 +67,7 @@ export default function PostsHeader({ refreshPosts }) {
       )}*/}
 
       <div className="ml-auto space-x-5 flex items-center">
-        <Tippy content={t('post.feed.refresh')}>
-          <div className="highlightable" onClick={refreshPosts}>
-            <IconRefresh className="w-5 h-5" />
-          </div>
-        </Tippy>
-
-        {/*<ShowFoldersButton />*/}
+        <ShowUsersButton />
       </div>
     </Header>
   )

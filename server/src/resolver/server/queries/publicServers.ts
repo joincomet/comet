@@ -38,12 +38,11 @@ export async function publicServers(
 
   if (featured) {
     where.isFeatured = true
-    orderBy = { featuredPosition: 'ASC' }
   }
 
   if (category) {
     where.category = category
   }
 
-  return (await em.find(Server, where, ['userJoins.user'], orderBy)) as Server[]
+  return (await em.find(Server, where, ['owner'], orderBy)) as Server[]
 }

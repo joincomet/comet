@@ -1,4 +1,5 @@
 fragment ServerUser on ServerUser {
+  id
   role {
     ...Role
   }

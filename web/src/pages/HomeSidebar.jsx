@@ -46,10 +46,10 @@ export default function HomeSidebar() {
         <div className="px-1.5">
           {!!currentUser && (
             <div className="space-y-0.5 pt-3">
-              <SidebarItem to="/friends">
+              {/*<SidebarItem to="/friends">
                 <IconFriends className="mr-3 h-5 w-5" />
                 {t('user.friends.title')}
-              </SidebarItem>
+              </SidebarItem>*/}
 
               <SidebarItem to="/inbox">
                 <IconInbox className="mr-3 h-5 w-5" />
@@ -153,7 +153,7 @@ function DirectMessage({ user }) {
               e.stopPropagation()
               e.preventDefault()
               closeDm({ variables: { input: { userId: user.id } } })
-              if (pathname === `/dm/@${user.username}`) push('/friends')
+              if (pathname === `/dm/@${user.username}`) push('/')
             }}
             className="group-hover:visible invisible w-5 h-5 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           />

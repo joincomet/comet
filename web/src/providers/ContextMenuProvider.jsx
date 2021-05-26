@@ -12,7 +12,7 @@ export default function ContextMenuProvider({ children }) {
     bindMenu,
     bindMenuItem,
     useContextTrigger,
-    { data, coords, setVisible }
+    { data, coords, setVisible, isRight }
   ] = useContextMenu()
   const hideMenu = () => setVisible(false)
 
@@ -25,6 +25,7 @@ export default function ContextMenuProvider({ children }) {
           data={data}
           bindMenuItem={bindMenuItem}
           hideMenu={hideMenu}
+          isRight={isRight}
         />
       </ContextMenuContext.Provider>
     </>

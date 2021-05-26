@@ -1,16 +1,7 @@
 import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
-import {
-  Comment,
-  CommentVote,
-  Post,
-  Reply,
-  ServerPermission,
-  ServerUser,
-  User,
-  VoteType
-} from '@/entity'
+import { Comment, CommentVote, Post, Reply, User, VoteType } from '@/entity'
 import { handleText } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 

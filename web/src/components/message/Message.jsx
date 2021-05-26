@@ -124,13 +124,21 @@ export default memo(function Message({
               {showUser && (
                 <div className="flex items-end pb-0.5">
                   <ContextMenuTrigger
-                    data={{ type: ContextMenuType.User, user: message.author }}
+                    data={{
+                      type: ContextMenuType.User,
+                      user: message.author,
+                      server,
+                      role: message.serverUser?.role
+                    }}
                   >
                     <UserPopup
                       user={message.author}
                       role={message.serverUser?.role}
                     >
-                      <div className="text-base font-medium cursor-pointer hover:underline leading-none">
+                      <div
+                        className="text-base font-medium cursor-pointer hover:underline leading-none"
+                        style={{ color: message.serverUser?.role?.color }}
+                      >
                         {message.author.username}
                       </div>
                     </UserPopup>
@@ -159,7 +167,9 @@ export default memo(function Message({
               )}
 
               {message.images.map((image, i) => (
-                <MessageImageDialog key={i} image={image} />
+                <div key={i} className="pt-1">
+                  <MessageImageDialog image={image} />
+                </div>
               ))}
 
               {!!message.file && (

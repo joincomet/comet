@@ -47,7 +47,7 @@ export class Server extends BaseEntity {
 
   @Field(() => [Role])
   @OneToMany(() => Role, 'server', {
-    orderBy: { position: QueryOrder.ASC }
+    orderBy: { createdAt: QueryOrder.DESC }
   })
   roles = new Collection<Role>(this)
 
@@ -119,9 +119,6 @@ export class Server extends BaseEntity {
   @Field()
   @Property()
   isFeatured: boolean = false
-
-  @Property({ nullable: true, columnType: 'text' })
-  featuredPosition?: string
 
   @Field()
   isJoined: boolean

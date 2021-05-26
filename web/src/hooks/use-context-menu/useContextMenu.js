@@ -5,7 +5,7 @@ import {
   useEffect,
   useCallback
 } from 'react'
-import { getMenuPosition, getRTLMenuPosition } from './helpers'
+import { getMenuPosition } from './helpers'
 import buildUseContextMenuTrigger from './buildUseContextMenuTrigger'
 
 export const keyCodes = {
@@ -20,7 +20,7 @@ const baseStyles = {
   pointerEvents: 'none'
 }
 const focusElement = el => el.focus()
-const useContextMenu = ({ rtl, handleElementSelect = focusElement } = {}) => {
+const useContextMenu = ({ handleElementSelect = focusElement } = {}) => {
   const menuRef = useRef()
   const selectables = useRef([])
   const [style, setStyles] = useState(baseStyles)
@@ -106,12 +106,13 @@ const useContextMenu = ({ rtl, handleElementSelect = focusElement } = {}) => {
     isVisible
   ])
 
+  const [right, setRight] = useState(false)
+
   useLayoutEffect(() => {
     if (isVisible) {
       const rect = menuRef.current.getBoundingClientRect()
-      const { top, left } = rtl
-        ? getRTLMenuPosition(rect, coords)
-        : getMenuPosition(rect, coords)
+      const { top, left, isRight } = getMenuPosition(rect, coords)
+      setRight(isRight)
       setStyles(st => ({
         ...st,
         top: `${top}px`,
@@ -139,7 +140,8 @@ const useContextMenu = ({ rtl, handleElementSelect = focusElement } = {}) => {
       isVisible,
       setVisible,
       coords,
-      setCoords
+      setCoords,
+      isRight: right
     }
   ]
 }

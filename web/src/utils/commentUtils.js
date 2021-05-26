@@ -31,9 +31,9 @@ export const createCommentTree = flatComments => {
   return flatComments
 }
 
-export const getParticipants = flatComments =>
+export const getParticipants = (flatComments, post) =>
   flatComments
-    .filter(c => !!c.author)
+    .filter(c => !!c.author && c.author.id !== post.author.id)
     .map(c => ({
       user: c.author,
       serverUser: c.serverUser

@@ -21,6 +21,6 @@ export async function readChannel(
   channel.isUnread = false
   channel.mentionCount = 0
   await em.persistAndFlush(channelUser)
-  liveQueryStore.invalidate(`Channel:${channelId}`)
+  // liveQueryStore.invalidate(`Channel:${channelId}`)
   return channel
 }

@@ -18,12 +18,6 @@ export class UpdateServerInput {
   @Length(0, 500)
   description?: string
 
-  @Field({ nullable: true })
-  isFeatured?: boolean
-
-  @Field({ nullable: true })
-  featuredPosition?: string
-
   @Field(() => ServerCategory, { nullable: true })
   category?: ServerCategory
 
@@ -49,8 +43,6 @@ export async function updateServer(
     serverId,
     displayName,
     description,
-    isFeatured,
-    featuredPosition,
     category,
     avatarFile,
     bannerFile,
@@ -63,16 +55,12 @@ export async function updateServer(
   description = description.trim()
   const user = await em.findOneOrFail(User, userId)
   const server = await em.findOneOrFail(Server, serverId, ['owner'])
-  if ((isFeatured || featuredPosition) && !user.isAdmin)
-    throw new Error('Must be global admin to set featured servers')
   if (ownerId && server.owner !== user)
     throw new Error('Must be server owner to change owner')
   await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)
   em.assign(server, {
     displayName: displayName ?? server.displayName,
     description: description ?? server.description,
-    isFeatured: isFeatured ?? server.isFeatured,
-    featuredPosition: featuredPosition ?? server.featuredPosition,
     category: category ?? server.category,
     avatarUrl: avatarFile
       ? await uploadImageFileSingle(avatarFile, { width: 256, height: 256 })

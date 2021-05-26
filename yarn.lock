@@ -2661,7 +2661,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:4.17.11, @types/express@npm:^4.17.11":
+"@types/express@npm:*, @types/express@npm:4.17.11":
   version: 4.17.11
   resolution: "@types/express@npm:4.17.11"
   dependencies:
@@ -2670,6 +2670,18 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 2818120a0fd8b7982215864929cdc6cd14942dd44849f93054fe2a90b4233dff67aadc34c73b5937922a02c688b0263d00a4807aa2e59307ac859a1458d73669
+  languageName: node
+  linkType: hard
+
+"@types/express@npm:^4.17.12":
+  version: 4.17.12
+  resolution: "@types/express@npm:4.17.12"
+  dependencies:
+    "@types/body-parser": "*"
+    "@types/express-serve-static-core": ^4.17.18
+    "@types/qs": "*"
+    "@types/serve-static": "*"
+  checksum: b1ab50e0373095283f5a58c8c1aa7e206182d241d24279e24d754819ae39959b35996d34633b1e4b3a9d3817559abad00ec33c94b96da945a9c3d1546f3e4f70
   languageName: node
   linkType: hard
 
@@ -3167,14 +3179,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^17.0.6":
-  version: 17.0.6
-  resolution: "@types/react@npm:17.0.6"
+"@types/react@npm:^17.0.8":
+  version: 17.0.8
+  resolution: "@types/react@npm:17.0.8"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: dcd8e559f758de7c856bd24136d9005e2b6fbae3d6d81704ba33c6a8ba787874f738b7aae8cfffd89ee35f05658800c43d7fdb9493b79c06a3bcdc1e37ea4635
+  checksum: b59a3abafd240b2880f9e6a11b2b7f75165888260c56e95a77ed10a7dd55570b307fb2356eda7fde2a8e1255d2def11797e4ae9800ae114a1f578546acabda67
   languageName: node
   linkType: hard
 
@@ -3249,12 +3261,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/sharp@npm:^0.28.1":
-  version: 0.28.1
-  resolution: "@types/sharp@npm:0.28.1"
+"@types/sharp@npm:^0.28.2":
+  version: 0.28.2
+  resolution: "@types/sharp@npm:0.28.2"
   dependencies:
     "@types/node": "*"
-  checksum: 82338588b9536b42d0d3a5e9b3e8316f46a6fb173ea794d92f069f971439ea92fc407825b0bc82a6ce0b07c6a5bcee94435ef06a630491b36693179b80668500
+  checksum: 573b250f2af81c5d2d4cd771025102b62ecf86738cfe4f2c8543550c2a9fdb01f1efb0e73367b8401fd1204ea48f483e393f17a6c5d9e2c0f91a0d6278388871
   languageName: node
   linkType: hard
 
@@ -4364,9 +4376,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.913.0":
-  version: 2.913.0
-  resolution: "aws-sdk@npm:2.913.0"
+"aws-sdk@npm:^2.914.0":
+  version: 2.914.0
+  resolution: "aws-sdk@npm:2.914.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4377,7 +4389,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: b9850321a09176683ccf19f40c2de04d6d775a169c0485c9a92322b55cd90c68b987f57f412dd12dd1a887438328d630cd4f3621f22489c9953c6fb901bcd0c9
+  checksum: c161552dd3053c02e22fe1ef6930034f4ecc033a54f885af5d32c2fa71b07dae7e7d34374d6bc2a0b77c5148b9f6a3d1f49ac0ae299cfe0fd6b9e2917c41132a
   languageName: node
   linkType: hard
 
@@ -6690,16 +6702,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:13.0.0":
-  version: 13.0.0
-  resolution: "electron@npm:13.0.0"
+"electron@npm:13.0.1":
+  version: 13.0.1
+  resolution: "electron@npm:13.0.1"
   dependencies:
     "@electron/get": ^1.0.1
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 0e5dbfc9a94262f9fd711c44d3a548f3fa2e39462e7205576a9cc8e557a0b577ea9185bf3261a86c3da410b7115b95d429ad830c1edf45b75b133a0734475343
+  checksum: e1fe7027fb80377fbce02602d0c490616b32c3eb29d814547c04d174ba3667b16f3b460c4c93a9547bf36c44a9c57951a32f52ec18e66478a2e21893fb1f35ed
   languageName: node
   linkType: hard
 
@@ -6710,7 +6722,7 @@ __metadata:
     "@electron/remote": ^1.1.0
     cross-env: ^7.0.3
     discord-rpc: ^3.2.0
-    electron: 13.0.0
+    electron: 13.0.1
     electron-builder: ^22.11.5
     electron-builder-notarize: ^1.2.0
     electron-context-menu: ^3.1.0
@@ -13103,16 +13115,16 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^11.8.15":
-  version: 11.8.15
-  resolution: "react-i18next@npm:11.8.15"
+"react-i18next@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "react-i18next@npm:11.9.0"
   dependencies:
     "@babel/runtime": ^7.13.6
     html-parse-stringify: ^3.0.1
   peerDependencies:
     i18next: ">= 19.0.0"
     react: ">= 16.8.0"
-  checksum: 1b4014a52e62ca56a84789fbc8d890a8534fbaeba5f996403deb9e675cdf51209ccddbc2ef352cdeec6ef463a39aee3c6b673252e2f1648ff0548d0fe8f91fb9
+  checksum: 812c48291ed43604dbd575fd31cab327dff6236605ce4dbbc4d8ffe12f32cbc6bd87c38994d7c203b8c0da4359139bfb4c02d1d73c9e018881333558c90a9b55
   languageName: node
   linkType: hard
 
@@ -14221,19 +14233,19 @@ resolve@^2.0.0-next.3:
     "@sentry/tracing": ^6.4.1
     "@types/async": ^3.2.6
     "@types/cookie-parser": ^1.4.2
-    "@types/express": ^4.17.11
+    "@types/express": ^4.17.12
     "@types/faker": ^5.5.5
     "@types/graphql-upload": ^8.0.4
     "@types/ioredis": ^4.26.4
     "@types/jsonwebtoken": ^8.5.1
     "@types/mime": ^2.0.3
     "@types/sanitize-html": ^2.3.1
-    "@types/sharp": ^0.28.1
+    "@types/sharp": ^0.28.2
     "@types/user-agents": ^1.0.1
     add: ^2.0.6
     apollo-server-express: ^2.24.1
     argon2: ^0.27.2
-    aws-sdk: ^2.913.0
+    aws-sdk: ^2.914.0
     class-validator: ^0.13.1
     cors: ^2.8.5
     cross-env: ^7.0.3
@@ -14275,9 +14287,9 @@ resolve@^2.0.0-next.3:
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
     typescript: ^4.2.4
-    user-agents: ^1.0.662
+    user-agents: ^1.0.664
     validator: ^13.6.0
-    ws: ^7.4.5
+    ws: ^7.4.6
     xss: ^1.0.9
   languageName: unknown
   linkType: soft
@@ -16165,13 +16177,13 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"user-agents@npm:^1.0.662":
-  version: 1.0.662
-  resolution: "user-agents@npm:1.0.662"
+"user-agents@npm:^1.0.664":
+  version: 1.0.664
+  resolution: "user-agents@npm:1.0.664"
   dependencies:
     dot-json: ^1.2.2
     lodash.clonedeep: ^4.5.0
-  checksum: 44328948cbfe987cb286eb169b024161a64628fd13b24c4ba400832992766e9ed2bf9353c3bd11948dcd5e939b76c27ae706964cfffc0cc2e1569af84d371d9b
+  checksum: 3542170faae25c8e4b536b916922f773e77a3e4669d44d53ee75f54af7a6164e9986875579f9fbd9c6f82959b1ee79577174bbd81fd40a8a1e7153958385bcfb
   languageName: node
   linkType: hard
 
@@ -16315,9 +16327,9 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.3.3":
-  version: 2.3.3
-  resolution: "vite@npm:2.3.3"
+"vite@npm:^2.3.4":
+  version: 2.3.4
+  resolution: "vite@npm:2.3.4"
   dependencies:
     esbuild: ^0.11.23
     fsevents: ~2.3.1
@@ -16329,7 +16341,7 @@ typescript@^4.2.4:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 5f552de62f5fc36f49fae6d22672efa170ae8dfe1551a9cb38fd89f222e1941e9b10a39b8f65461c91654ef5d7c4b20f6d0cefe8dda28d2e186cb1cd92458e5f
+  checksum: 8f5c60cd48d85bae1a842c9cfe981da5b98fbba8bbf45c2ebed7d4dcf96f44ca5b5f2aad5d4c51ca1207ccdf3dca762c3395d934ac5427710d1a05351f029997
   languageName: node
   linkType: hard
 
@@ -16407,7 +16419,7 @@ typescript@^4.2.4:
     "@tiptap/extension-underline": ^2.0.0-beta.14
     "@tiptap/react": ^2.0.0-beta.42
     "@tiptap/starter-kit": ^2.0.0-beta.65
-    "@types/react": ^17.0.6
+    "@types/react": ^17.0.8
     "@types/react-dom": ^17.0.5
     "@types/react-router-dom": ^5.1.7
     "@types/react-virtualized": ^9.21.11
@@ -16441,7 +16453,7 @@ typescript@^4.2.4:
     react-helmet-async: ^1.0.9
     react-hook-form: ^7.6.6
     react-hot-toast: ^1.0.2
-    react-i18next: ^11.8.15
+    react-i18next: ^11.9.0
     react-icons: ^4.2.0
     react-intersection-observer: ^8.32.0
     react-player: ^2.9.0
@@ -16463,7 +16475,7 @@ typescript@^4.2.4:
     typescript: ^4.2.4
     use-dark-mode: ^2.3.1
     validator: ^13.6.0
-    vite: ^2.3.3
+    vite: ^2.3.4
     zustand: ^3.5.1
   languageName: unknown
   linkType: soft
@@ -16707,6 +16719,21 @@ typescript@^4.2.4:
     utf-8-validate:
       optional: true
   checksum: 20731aa1075336b94677f6741b674469c3c7fce9b70115bb535827c7c108a9d714f0b38ce39289b63c652870f9801afaf096f8aab32da96be62d919e80e4ed32
+  languageName: node
+  linkType: hard
+
+"ws@npm:^7.4.6":
+  version: 7.4.6
+  resolution: "ws@npm:7.4.6"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: ffeb626d92f14aa3a67aa3784824c1d290131e25d225f4ca6b1b6b6d7ea754fca67694d89a5b99b144382365e1bccf1f7ec2f92df56f0d25f44939b070452f06
   languageName: node
   linkType: hard
 

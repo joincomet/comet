@@ -33,7 +33,7 @@ export async function setUserRole(
     server: role.server,
     status: ServerUserStatus.Joined
   })
-  if (serverUser.role === role) throw new Error('User already has this role')
+  if (serverUser.role === role) return serverUser
   serverUser.role = role
   await em.persistAndFlush(serverUser)
   liveQueryStore.invalidate(`User:${userId}`)

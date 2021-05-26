@@ -7,6 +7,11 @@ import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/input/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
 import { usePrevious } from 'react-use'
+import {
+  useReadChannelMutation,
+  useReadDmMutation,
+  useReadGroupMutation
+} from '@/graphql/hooks'
 
 const PREPEND_OFFSET = 10 ** 7
 
@@ -56,6 +61,43 @@ export default function Messages({ channel, server, user, group, users }) {
     },
     [numItemsPrepended, server, channel, group, user]
   )
+
+  const [readChannel] = useReadChannelMutation()
+  const [readGroup] = useReadGroupMutation()
+  const [readDm] = useReadDmMutation()
+
+  useEffect(() => {
+    if (channel)
+      readChannel({
+        variables: { input: { channelId: channel.id } },
+        optimisticResponse: {
+          readChannel: {
+            ...channel,
+            isUnread: false
+          }
+        }
+      })
+    else if (group)
+      readGroup({
+        variables: { input: { groupId: group.id } },
+        optimisticResponse: {
+          readGroup: {
+            ...group,
+            unreadCount: 0
+          }
+        }
+      })
+    else if (user)
+      readDm({
+        variables: { input: { userId: user.id } },
+        optimisticResponse: {
+          readDm: {
+            ...user,
+            unreadCount: 0
+          }
+        }
+      })
+  }, [messages?.length])
 
   return (
     <>

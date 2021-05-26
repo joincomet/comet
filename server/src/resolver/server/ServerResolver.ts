@@ -33,6 +33,8 @@ import {
   CreateServerInput,
   deleteServer,
   DeleteServerInput,
+  featureServer,
+  FeatureServerInput,
   joinServer,
   JoinServerInput,
   kickUserFromServer,
@@ -45,6 +47,8 @@ import {
   ReadServerInput,
   unbanUserFromServer,
   UnbanUserFromServerInput,
+  unfeatureServer,
+  UnfeatureServerInput,
   updateServer,
   UpdateServerInput
 } from './mutations'
@@ -224,5 +228,23 @@ export class ServerResolver {
     @Arg('input') input: KickUserFromServerInput
   ): Promise<boolean> {
     return kickUserFromServer(ctx, input)
+  }
+
+  @Authorized('ADMIN')
+  @Mutation(() => Server)
+  async featureServer(
+    @Ctx() ctx: Context,
+    @Arg('input') input: FeatureServerInput
+  ): Promise<Server> {
+    return featureServer(ctx, input)
+  }
+
+  @Authorized('ADMIN')
+  @Mutation(() => Server)
+  async unfeatureServer(
+    @Ctx() ctx: Context,
+    @Arg('input') input: UnfeatureServerInput
+  ): Promise<Server> {
+    return unfeatureServer(ctx, input)
   }
 }

@@ -1,5 +1,21 @@
 export default function Page({ children, header, rightSidebar, leftSidebar }) {
   return (
+    <div className="flex flex-grow">
+      {leftSidebar}
+      <div className="flex flex-col flex-grow">
+        {header}
+        <div
+          className="flex flex-col flex-grow"
+          style={{ maxHeight: header ? 'calc(100% - 3rem)' : '100%' }}
+        >
+          {children}
+        </div>
+      </div>
+      {rightSidebar}
+    </div>
+  )
+
+  /*return (
     <div className="flex flex-col flex-grow">
       {header}
       <div
@@ -11,5 +27,5 @@ export default function Page({ children, header, rightSidebar, leftSidebar }) {
         {rightSidebar}
       </div>
     </div>
-  )
+  )*/
 }

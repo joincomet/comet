@@ -33,6 +33,8 @@ services:
         value: <MEDIA_DOMAIN>
       - key: SENTRY_DSN
         value: <SENTRY_DSN>
+      - key: COMET_USER_PASSWORD
+        value: <COMET_USER_PASSWORD>
 databases:
   - name: db
     engine: PG

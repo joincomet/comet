@@ -21,6 +21,6 @@ export async function readGroup(
   groupUser.unreadCount = 0
   await em.persist(groupUser)
   group.unreadCount = 0
-  liveQueryStore.invalidate(`Group:${groupId}`)
+  // liveQueryStore.invalidate(`Group:${groupId}`)
   return group
 }

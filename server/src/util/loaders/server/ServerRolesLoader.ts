@@ -1,11 +1,16 @@
 import DataLoader from 'dataloader'
 import { Role, Server } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
+import { QueryOrder } from '@mikro-orm/core'
 
 export const serverRolesLoader = (em: EntityManager) => {
   const loader = new DataLoader<string, Role[]>(async (serverIds: string[]) => {
     loader.clearAll()
-    const roles = await em.find(Role, { server: serverIds })
+    const roles = await em.find(
+      Role,
+      { server: serverIds },
+      { orderBy: { createdAt: QueryOrder.DESC } }
+    )
 
     const map: Record<string, Role[]> = {}
     serverIds.forEach(

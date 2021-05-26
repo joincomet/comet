@@ -1,9 +1,9 @@
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import {
-  RelationshipStatus,
   ServerPermission,
-  useRemoveFriendMutation
+  useRemoveFriendMutation,
+  useSetUserRoleMutation
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
@@ -21,6 +21,7 @@ import {
 export default function UserContextMenu({
   user,
   server,
+  role,
   isDm,
   ContextMenuItem
 }) {
@@ -38,6 +39,8 @@ export default function UserContextMenu({
   const [kickUser] = useKickUserFromServerMutation()
   const [createFriendRequest] = useCreateFriendRequestMutation()
   const [removeFriend] = useRemoveFriendMutation()
+
+  const [setUserRole] = useSetUserRoleMutation()
 
   const setDialogUserId = useStore(s => s.setDialogUserId)
   const { push } = useHistory()
@@ -86,6 +89,36 @@ export default function UserContextMenu({
         )}
         {!!server && canManageUsers && (
           <>
+            <ContextMenuItem label="Set Role">
+              {server.roles.map(r => (
+                <ContextMenuItem
+                  key={r.id}
+                  checked={role && role.id === r.id}
+                  label={
+                    <div className="flex items-center ">
+                      <div
+                        className={`w-3 h-3 rounded-full mr-2.5 ${
+                          r.color ? '' : 'dark:bg-gray-700'
+                        }`}
+                        style={{ backgroundColor: r.color }}
+                      />
+                      {r.name}
+                    </div>
+                  }
+                  onClick={() => {
+                    setUserRole({
+                      variables: {
+                        input: {
+                          userId: user.id,
+                          roleId: r.id
+                        }
+                      }
+                    })
+                  }}
+                />
+              ))}
+            </ContextMenuItem>
+
             <ContextMenuItem
               label={t('user.context.kickUser', { user: user })}
               red

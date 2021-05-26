@@ -62,8 +62,8 @@ export default function ChannelUsersSidebar({ server, serverUsers }) {
               <div className={`${user.user.isOnline ? '' : 'opacity-35'}`}>
                 <SidebarUser
                   user={user.user}
-                  role={user.roles}
-                  color={user.color}
+                  role={user.role}
+                  server={server}
                 />
               </div>
             )}

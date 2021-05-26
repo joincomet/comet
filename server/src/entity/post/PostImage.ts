@@ -1,13 +1,13 @@
 import { Field, ObjectType } from 'type-graphql'
-import { Embeddable, Property } from '@mikro-orm/core'
-import { GraphQLURL } from 'graphql-scalars'
+import { Embeddable, Embedded, Property } from '@mikro-orm/core'
+import { Image } from '@/entity'
 
 @Embeddable()
 @ObjectType()
 export class PostImage {
-  @Property({ columnType: 'text' })
-  @Field()
-  url: string
+  @Field(() => Image)
+  @Embedded({ entity: () => Image, object: true })
+  image: Image
 
   @Property({ nullable: true, columnType: 'text' })
   @Field({ nullable: true })

@@ -26,18 +26,8 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
   return (
     <>
       <ContextMenuSection>
-        {!!currentUser && (
-          <ContextMenuItem
-            label={
-              comment.isVoted
-                ? t('comment.context.unvote')
-                : t('comment.context.vote')
-            }
-            onClick={() => toggleVote()}
-          />
-        )}
         {isAuthor && <ContextMenuItem label={t('comment.context.edit')} />}
-        {canManageComments && (
+        {/*{canManageComments && (
           <ContextMenuItem
             label={
               comment.isPinned
@@ -46,7 +36,7 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
             }
             onClick={() => togglePin()}
           />
-        )}
+        )}*/}
         {!!currentUser && (
           <ContextMenuItem
             onClick={() => setReplyingCommentId(comment?.id)}

@@ -123,6 +123,10 @@ export class User extends BaseEntity {
   relationshipStatus: RelationshipStatus
 
   @Field()
+  @Property({ default: false })
+  isOg: boolean = false
+
+  @Field()
   get isOnline(): boolean {
     if (!this.lastLoginAt) return false
     const timeout = 5 * 60 * 1000 // five minutes

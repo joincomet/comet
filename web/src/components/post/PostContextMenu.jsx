@@ -47,17 +47,6 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
   return (
     <>
       <ContextMenuSection>
-        {!!currentUser && (
-          <ContextMenuItem
-            onClick={() => {
-              // toggleVote()
-            }}
-            label={
-              post.isVoted ? t('post.context.unvote') : t('post.context.vote')
-            }
-          />
-        )}
-
         {/*{userFolders.length > 0 && (
           <ContextMenuItem label={t('post.context.addToUserFolder')}>
             {userFolders.map(folder => (
