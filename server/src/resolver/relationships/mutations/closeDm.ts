@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Relationship, User } from '@/entity'
+import { User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class CloseDmInput {
@@ -12,6 +13,7 @@ export async function closeDm(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: CloseDmInput
 ): Promise<User> {
+  logger('closeDm')
   const user = await em.findOneOrFail(User, currentUserId)
   const [myData] = await user.getFriendData(em, userId)
   if (!myData.showChat) throw new Error('DM already closed')

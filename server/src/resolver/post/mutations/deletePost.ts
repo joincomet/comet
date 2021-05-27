@@ -2,6 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Post, ServerPermission, User } from '@/entity'
 import { Context } from '@/types'
+import {logger} from "@/util";
 
 @InputType()
 export class DeletePostInput {
@@ -14,6 +15,7 @@ export async function deletePost(
   { postId }: DeletePostInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
+  logger('deletePost')
   const user = await em.findOneOrFail(User, userId)
   const post = await em.findOneOrFail(Post, postId, ['author', 'server'])
   if (post.author !== user)

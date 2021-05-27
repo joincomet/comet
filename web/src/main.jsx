@@ -11,24 +11,24 @@ import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import App from './App'
 import { version } from '../package.json'
+import { excludeGraphQLFetch } from 'apollo-link-sentry';
 
 const history = createBrowserHistory()
 
-Sentry.init({
-  dsn: import.meta.env.VITE_SENTRY_DSN,
-  integrations: [
-    new Integrations.BrowserTracing({
-      routingInstrumentation: Sentry.reactRouterV5Instrumentation(history)
-    })
-  ],
-  release: `web@${version}`,
-
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
-  enabled: import.meta.PROD && import.meta.env.VITE_SENTRY_DSN
-})
+if (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN) {
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    integrations: [
+      new Integrations.BrowserTracing({
+        routingInstrumentation: Sentry.reactRouterV5Instrumentation(history),
+        traceFetch: false
+      })
+    ],
+    release: `web@${version}`,
+    tracesSampleRate: 1.0,
+    beforeBreadcrumb: excludeGraphQLFetch
+  })
+}
 
 if (window.electron) document.documentElement.classList.add('electron')
 

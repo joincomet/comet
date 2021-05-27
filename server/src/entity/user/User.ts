@@ -28,7 +28,7 @@ import { CustomError } from '@/types/CustomError'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLEmailAddress, GraphQLNonNegativeInt } from 'graphql-scalars'
 import { Color } from '@/types'
-import { randomEnum } from '@/util'
+import {logger, randomEnum} from '@/util'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()
@@ -137,6 +137,7 @@ export class User extends BaseEntity {
     em: EntityManager,
     serverId: string
   ): Promise<boolean> {
+    logger('isBannedFromServer')
     return !!(await em.count(ServerUser, {
       server: serverId,
       user: this,
@@ -145,6 +146,7 @@ export class User extends BaseEntity {
   }
 
   async hasJoinedServer(em: EntityManager, serverId: string): Promise<boolean> {
+    logger('hasJoinedServer')
     return !!(await em.count(ServerUser, {
       server: serverId,
       user: this,
@@ -162,29 +164,12 @@ export class User extends BaseEntity {
       throw new Error('error.server.banned')
   }
 
-  async leaveServer(
-    em: EntityManager,
-    serverId: string,
-    liveQueryStore: InMemoryLiveQueryStore
-  ) {
-    const server = await em.findOneOrFail(Server, serverId, ['owner'])
-    if (server.owner === this) throw new Error('error.server.owner')
-    const join = await em.findOneOrFail(ServerUser, {
-      server,
-      user: this,
-      status: ServerUserStatus.Joined
-    })
-    server.userCount--
-    join.status = ServerUserStatus.None
-    await em.persistAndFlush([server, join])
-    liveQueryStore.invalidate(`Server:${serverId}`)
-  }
-
   async hasServerPermission(
     em: EntityManager,
     serverId: string,
     permission: ServerPermission
   ): Promise<boolean> {
+    logger('hasServerPermission')
     if (this.isAdmin) return true
     const server = await em.findOneOrFail(Server, serverId, ['owner'])
     if (server.owner === this) return true
@@ -208,6 +193,7 @@ export class User extends BaseEntity {
   }
 
   async isInGroup(em: EntityManager, groupId: string) {
+    logger('isInGroup')
     const group = await em.findOneOrFail(Group, groupId, ['users'])
     return group.users.contains(this)
   }
@@ -220,6 +206,7 @@ export class User extends BaseEntity {
     em: EntityManager,
     userId: string
   ): Promise<[Relationship, Relationship]> {
+    logger('getFriendData')
     const user = await em.findOneOrFail(User, userId)
     let myData = await em.findOne(Relationship, { owner: this, user })
     let theirData = await em.findOne(Relationship, {
@@ -247,6 +234,7 @@ export class User extends BaseEntity {
     em: EntityManager,
     folderId: string
   ): Promise<void> {
+    logger('checkCanAddToFolder')
     const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
     if (folder.owner && folder.owner !== this) {
       if (!folder.isCollaborative)
@@ -271,6 +259,7 @@ export class User extends BaseEntity {
   }
 
   async checkCanViewFolder(em: EntityManager, folderId: string): Promise<void> {
+    logger('checkCanViewFolder')
     const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
     if (folder.owner && folder.owner !== this) {
       if (folder.visibility === FolderVisibility.Private)

@@ -15,7 +15,6 @@ import { relatedUsersLoader } from '@/util/loaders/user/RelatedUsersLoader'
 import { relationshipStatusLoader } from '@/util/loaders/user/RelationshipStatusLoader'
 import { userGroupsLoader } from '@/util/loaders/user/UserGroupsLoader'
 import { userUnreadCountLoader } from '@/util/loaders/user/UserUnreadCountLoader'
-import { serverSystemMessagesChannelLoader } from '@/util/loaders/server'
 import { serverOnlineCountLoader } from '@/util/loaders/server'
 import {
   folderFollowingLoader,
@@ -44,7 +43,6 @@ export function createLoaders(em: EntityManager, userId: string): Loaders {
     serverFoldersLoader: serverFoldersLoader(em),
     serverPermissionsLoader: serverPermissionsLoader(em, userId),
     serverRolesLoader: serverRolesLoader(em),
-    serverSystemMessagesChannelLoader: serverSystemMessagesChannelLoader(em),
     serverOnlineCountLoader: serverOnlineCountLoader(em),
     serverJoinedLoader: serverJoinedLoader(em, userId),
 

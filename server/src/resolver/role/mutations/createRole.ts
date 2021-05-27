@@ -3,7 +3,7 @@ import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Length } from 'class-validator'
 import { QueryOrder } from '@mikro-orm/core'
-import { ReorderUtils } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class CreateRoleInput {
@@ -19,6 +19,7 @@ export async function createRole(
   { em, userId, liveQueryStore }: Context,
   { serverId, name }: CreateRoleInput
 ): Promise<Role> {
+  logger('createRole')
   name = name.trim()
   const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(em, serverId, ServerPermission.ManageServer)

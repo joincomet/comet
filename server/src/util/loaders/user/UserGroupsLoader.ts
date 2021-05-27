@@ -1,9 +1,11 @@
 import DataLoader from 'dataloader'
 import { Group, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
+import {logger} from "@/util";
 
 export const userGroupsLoader = (em: EntityManager, currentUserId: string) => {
   const loader = new DataLoader<string, Group[]>(async (userIds: string[]) => {
+    logger('userGroupsLoader', userIds)
     loader.clearAll()
     const groups = await em.find(Group, { users: userIds }, ['users'], {
       lastMessageAt: 'DESC'

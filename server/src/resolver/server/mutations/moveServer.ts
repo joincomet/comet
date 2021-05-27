@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { ServerUser, ServerUserStatus } from '@/entity'
-import { getReorderPosition } from '@/util'
+import {getReorderPosition, logger} from '@/util'
 
 @InputType()
 export class MoveServerInput {
@@ -16,6 +16,7 @@ export async function moveServer(
   { em, userId, liveQueryStore }: Context,
   { serverId, beforeServerId }: MoveServerInput
 ): Promise<void> {
+  logger('moveServer')
   const serverUsers = await em.find(
     ServerUser,
     { user: userId, status: ServerUserStatus.Joined },

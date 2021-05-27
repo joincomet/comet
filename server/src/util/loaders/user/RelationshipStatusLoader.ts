@@ -1,6 +1,7 @@
 import DataLoader from 'dataloader'
 import { Relationship, RelationshipStatus, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
+import {logger} from "@/util";
 
 export const relationshipStatusLoader = (
   em: EntityManager,
@@ -8,6 +9,7 @@ export const relationshipStatusLoader = (
 ) => {
   const loader = new DataLoader<string, RelationshipStatus>(
     async (userIds: string[]) => {
+      logger('relationshipStatusLoader', userIds)
       loader.clearAll()
       const rels = await em.find(Relationship, {
         owner: currentUserId,

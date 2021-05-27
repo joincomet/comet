@@ -1,37 +1,23 @@
-import { Channel, ChannelType, Group, ServerPermission, User } from '@/entity'
 import { TypingPayload } from '@/resolver/subscriptions/typing/TypingPayload'
 import { SubscriptionFilter } from '@/resolver/subscriptions/filters/SubscriptionFilter'
 
-export async function TypingFilter({
+export function TypingFilter({
   payload: {
     channelId: typingChannelId,
     groupId: typingGroupId,
     userId: typingUserId
   },
-  context: { userId: currentUserId, em },
+  context: { userId: currentUserId },
   args: { channelId, groupId, userId }
-}: SubscriptionFilter<TypingPayload>): Promise<boolean> {
+}: SubscriptionFilter<TypingPayload>): boolean {
   if (typingChannelId && channelId === typingChannelId) {
-    const channel = await em.findOneOrFail(Channel, typingChannelId, ['server'])
-    const user = currentUserId
-      ? await em.findOneOrFail(User, currentUserId)
-      : null
-    if (channel.type === ChannelType.Private) {
-      return (
-        !!user &&
-        (await user.hasServerPermission(
-          em,
-          channel.id,
-          ServerPermission.PrivateChannels
-        ))
-      )
-    } else return true
+    return true
   } else if (typingGroupId && groupId === typingGroupId) {
+    return !!currentUserId;
+  } else if (typingUserId) {
     if (!currentUserId) return false
-    const group = await em.findOneOrFail(Group, typingGroupId)
-    return group.users.contains(em.getReference(User, currentUserId))
-  } else if (typingUserId) if (!currentUserId) return false
-  return (
-    typingUserId && (userId === typingUserId || currentUserId === typingUserId)
-  )
+    return (
+      typingUserId && (userId === typingUserId || currentUserId === typingUserId)
+    )
+  }
 }

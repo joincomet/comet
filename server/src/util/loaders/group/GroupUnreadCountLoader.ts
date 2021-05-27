@@ -1,9 +1,11 @@
 import DataLoader from 'dataloader'
-import { Group, GroupUser, User } from '@/entity'
+import { Group, GroupUser } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
+import {logger} from "@/util";
 
 export const groupUnreadCountLoader = (em: EntityManager, userId: string) => {
   const loader = new DataLoader<string, number>(async (groupIds: string[]) => {
+    logger('groupUnreadCountLoader', groupIds)
     loader.clearAll()
     const groupUsers = await em.find(GroupUser, {
       user: userId,

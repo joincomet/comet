@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Group, Message, MessageType, User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class RemoveUserFromGroupInput {
@@ -15,6 +16,7 @@ export async function removeUserFromGroup(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { groupId, userId }: RemoveUserFromGroupInput
 ): Promise<Group> {
+  logger('removeUserFromGroup')
   const group = await em.findOneOrFail(Group, groupId, ['users', 'owner'])
   const user = await em.findOneOrFail(User, userId)
   if (group.owner !== em.getReference(User, currentUserId))

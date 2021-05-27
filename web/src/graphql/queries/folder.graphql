@@ -6,7 +6,11 @@ query folder($id: ID!) @live {
       ...User
     }
     server {
-      ...Server
+      id
+      displayName
+      name
+      avatarUrl
+      permissions
     }
   }
 }

@@ -1,9 +1,11 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Server, ServerUser, ServerUserStatus } from '@/entity'
 import DataLoader from 'dataloader'
+import {logger} from "@/util";
 
 export const serverOnlineCountLoader = (em: EntityManager) => {
   const loader = new DataLoader<string, number>(async (serverIds: string[]) => {
+    logger('serverOnlineCountLoader', serverIds)
     loader.clearAll()
     const serverUsers = await em.find(
       ServerUser,

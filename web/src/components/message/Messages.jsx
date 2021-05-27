@@ -6,7 +6,6 @@ import Message from '@/components/message/Message'
 import { useMessages } from '@/components/message/useMessages'
 import MessageInput from '@/components/message/input/MessageInput'
 import { useShouldForceScrollToBottom } from '@/components/message/useShouldForceScrollToBottom'
-import { usePrevious } from 'react-use'
 import {
   useReadChannelMutation,
   useReadDmMutation,
@@ -25,7 +24,6 @@ export default function Messages({ channel, server, user, group, users }) {
   })
 
   const [length, setLength] = useState(messages?.length || 0)
-  const prevLength = usePrevious(length)
   useEffect(() => {
     setLength(messages?.length || 0)
     virtuoso?.current?.scrollToIndex(length + PREPEND_OFFSET)
@@ -67,6 +65,7 @@ export default function Messages({ channel, server, user, group, users }) {
   const [readDm] = useReadDmMutation()
 
   useEffect(() => {
+    if (!messages?.length) return
     if (channel)
       readChannel({
         variables: { input: { channelId: channel.id } },
@@ -97,7 +96,7 @@ export default function Messages({ channel, server, user, group, users }) {
           }
         }
       })
-  }, [messages?.length])
+  }, [channel?.id, group?.id, user?.id, messages?.length])
 
   return (
     <>

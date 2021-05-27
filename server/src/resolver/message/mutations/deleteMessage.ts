@@ -2,6 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Context } from '@/types'
 import { Message, ServerPermission, User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class DeleteMessageInput {
@@ -14,6 +15,7 @@ export async function deleteMessage(
   { messageId }: DeleteMessageInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<boolean> {
+  logger('deleteMessage')
   const user = await em.findOneOrFail(User, userId)
   const message = await em.findOneOrFail(Message, messageId, [
     'author',

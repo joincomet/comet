@@ -9,7 +9,7 @@ import {
   UserFolder
 } from '@/entity'
 import { Context } from '@/types'
-import { uploadImageFileSingle } from '@/util'
+import {logger, uploadImageFileSingle} from '@/util'
 
 @InputType()
 export class UpdateFolderInput {
@@ -34,6 +34,7 @@ export async function updateFolder(
   { em, userId, liveQueryStore }: Context,
   { folderId, name, avatarFile, isCollaborative, visibility }: UpdateFolderInput
 ): Promise<Folder> {
+  logger('updateFolder')
   const user = await em.findOneOrFail(User, userId)
   const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
 

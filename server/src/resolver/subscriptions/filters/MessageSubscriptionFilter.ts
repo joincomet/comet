@@ -6,10 +6,11 @@ export async function MessageSubscriptionFilter({
   payload: { id },
   context: { userId, em }
 }: SubscriptionFilter<ChangePayload>): Promise<boolean> {
-  const message = await em.findOneOrFail(Message, id, ['channel.server'])
-  const user = userId ? await em.findOneOrFail(User, userId) : null
+  const message = await em.findOneOrFail(Message, id)
   if (message.channel) {
     if (message.channel.type === ChannelType.Private) {
+      if (!userId) return false
+      const user = await em.findOneOrFail(User, userId)
       return (
         !!user &&
         (await user.hasServerPermission(
@@ -19,8 +20,13 @@ export async function MessageSubscriptionFilter({
         ))
       )
     } else return true
-  } else if (message.group)
-    return !!user && (await user.isInGroup(em, message.group.id))
-  else if (message.toUser)
-    return !!user && (message.toUser === user || message.author === user)
+  } else if (message.group) {
+    if (!userId) return false
+    const user = await em.findOneOrFail(User, userId)
+    return user.isInGroup(em, message.group.id)
+  }
+  else if (message.toUser){
+    if (!userId) return false
+    return (message.toUser === em.getReference(User, userId) || message.author === em.getReference(User, userId))
+  }
 }

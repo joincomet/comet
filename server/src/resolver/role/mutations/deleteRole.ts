@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Role, ServerPermission, ServerUser, User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class DeleteRoleInput {
@@ -12,6 +13,7 @@ export async function deleteRole(
   { em, userId, liveQueryStore }: Context,
   { roleId }: DeleteRoleInput
 ): Promise<string> {
+  logger('deleteRole')
   const user = await em.findOneOrFail(User, userId)
   const role = await em.findOneOrFail(Role, roleId, ['server'])
   if (role.isDefault) throw new Error('Default role cannot be deleted')

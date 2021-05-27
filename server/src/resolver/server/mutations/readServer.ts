@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { ChannelUser, Server } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class ReadServerInput {
@@ -12,6 +13,7 @@ export async function readServer(
   { em, userId, liveQueryStore }: Context,
   { serverId }: ReadServerInput
 ): Promise<Server> {
+  logger('readServer')
   const server = await em.findOneOrFail(Server, serverId)
   await em
     .createQueryBuilder(ChannelUser)

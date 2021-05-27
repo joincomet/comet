@@ -8,14 +8,22 @@ import { UploadLink } from '@/graphql/upload'
 import i18n from '@/locales/i18n'
 import { WebSocketLink } from '@/graphql/WebSocketLink'
 import { setContext } from '@apollo/client/link/context'
+import { SentryLink } from 'apollo-link-sentry';
+import * as Sentry from '@sentry/react'
 
 const url = import.meta.env.PROD
   ? `https://${import.meta.env.VITE_API_DOMAIN}/graphql`
   : 'http://localhost:4000/graphql'
 
+const enableSentry = (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN)
+
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
-    graphQLErrors.map(({ message, locations, path }) => {
+    graphQLErrors.forEach((error) => {
+      const { message, locations, path } = error
+      if (enableSentry) {
+        Sentry.captureException(error)
+      }
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       )
@@ -65,7 +73,16 @@ const splitLink = new RetryLink().split(
   authLink.concat(httpLink)
 )
 
-const finalLink = from([errorLink, splitLink])
+const sentryLink = new SentryLink({
+  uri: url
+})
+
+const finalLink = from(enableSentry ? [sentryLink, errorLink, splitLink] : [errorLink, splitLink])
+
+function merge(existing, incoming) {
+  if (existing) return existing
+  return incoming
+}
 
 export const apolloClient = new ApolloClient({
   link: finalLink,
@@ -106,42 +123,42 @@ export const apolloClient = new ApolloClient({
       Post: {
         fields: {
           author: {
-            merge: true
+            merge
           },
           serverUser: {
-            merge: true
+            merge
           },
           server: {
-            merge: true
+            merge
           }
         }
       },
       Comment: {
         fields: {
           author: {
-            merge: true
+            merge
           },
           serverUser: {
-            merge: true
+            merge
           }
         }
       },
       Message: {
         fields: {
           author: {
-            merge: true
+            merge
           },
           serverUser: {
-            merge: true
+            merge
           },
           channel: {
-            merge: true
+            merge
           },
           group: {
-            merge: true
+            merge
           },
           toUser: {
-            merge: true
+            merge
           }
         }
       },

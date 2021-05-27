@@ -2,6 +2,7 @@ import { Field, InputType } from 'type-graphql'
 import { IsEmail, Length, Matches } from 'class-validator'
 import { Context } from '@/types'
 import {
+  Channel,
   Folder,
   FolderVisibility,
   Message,
@@ -13,7 +14,7 @@ import {
   User,
   UserFolder
 } from '@/entity'
-import { createAccessToken, handleUnderscore, ReorderUtils } from '@/util'
+import {createAccessToken, handleUnderscore, logger, ReorderUtils} from '@/util'
 import * as argon2 from 'argon2'
 import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
 import { GraphQLEmailAddress } from 'graphql-scalars'
@@ -39,6 +40,7 @@ export async function createAccount(
   ctx: Context,
   { username, email, password }: CreateAccountInput
 ): Promise<LoginResponse> {
+  logger('createAccount')
   const { em, liveQueryStore } = ctx
   if (email) {
     email = email.toLowerCase()
@@ -93,8 +95,7 @@ export async function createAccount(
     {
       name: 'Comet',
       isDeleted: false
-    },
-    ['systemMessagesChannel']
+    }
   )
   if (cometServer) {
     const defaultRole = await em.findOneOrFail(Role, {
@@ -111,12 +112,13 @@ export async function createAccount(
         role: defaultRole
       })
     ])
-    if (cometServer.systemMessagesChannel) {
+    const defaultChannel = await em.findOne(Channel, { server: cometServer, isDefault: true })
+    if (defaultChannel) {
       em.persist(
         em.create(Message, {
           type: MessageType.Join,
           author: user,
-          channel: cometServer.systemMessagesChannel
+          channel: defaultChannel
         })
       )
     }

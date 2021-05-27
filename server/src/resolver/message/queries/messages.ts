@@ -4,6 +4,7 @@ import { Message, User } from '@/entity'
 import { Context } from '@/types'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
 import { GraphQLPositiveInt } from 'graphql-scalars'
+import {logger} from "@/util";
 
 @ArgsType()
 export class MessagesArgs {
@@ -41,6 +42,7 @@ export async function messages(
   { em, userId: currentUserId }: Context,
   { channelId, groupId, userId, pinned, limit, cursor }: MessagesArgs
 ): Promise<MessagesResponse> {
+  logger('messages')
   if (!channelId && !groupId && !userId)
     throw new Error('error.message.missingArgs')
 

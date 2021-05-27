@@ -42,8 +42,8 @@ export default function PostPage({ postId }) {
           {post ? `${post.title} – ${post.server.displayName}` : null}
         </title>
       </Helmet>
-      {!!post ? (
-        <div className="max-h-full h-full scrollbar-custom dark:bg-gray-750">
+      {post ? (
+        <div className="max-h-full h-full scrollbar-custom dark:bg-gray-750 overflow-y-auto">
           <div className="pt-4 px-4">
             {!!post && <Post post={post} isPostPage />}
           </div>

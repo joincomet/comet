@@ -2,6 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { Comment, Reply, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+import {logger} from "@/util";
 
 @InputType()
 export class DeleteCommentInput {
@@ -15,6 +16,7 @@ export async function deleteComment(
   notifyCommentChanged: Publisher<ChangePayload>,
   notifyReplyChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
+  logger('deleteComment')
   const user = await em.findOneOrFail(User, userId)
   const comment = await em.findOneOrFail(Comment, commentId, [
     'post.server.owner',

@@ -14,7 +14,7 @@ import {
   User
 } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { handleMessageLinks, uploadFileOrImage } from '@/util'
+import {handleMessageLinks, logger, uploadFileOrImage} from '@/util'
 import {
   ChangePayload,
   ChangeType,
@@ -45,6 +45,7 @@ export async function createMessage(
   notifyMessageChanged: Publisher<ChangePayload>,
   notifyTypingUpdated: Publisher<TypingPayload>
 ): Promise<Message> {
+  logger('createMessage')
   if (!text && !file) throw new Error('Must provide text and/or file')
 
   const channel = channelId

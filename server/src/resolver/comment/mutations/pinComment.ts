@@ -2,6 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { Comment, ServerPermission, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+import {logger} from "@/util";
 
 @InputType()
 export class PinCommentInput {
@@ -14,6 +15,7 @@ export async function pinComment(
   { commentId }: PinCommentInput,
   notifyCommentChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
+  logger('pinComment')
   const user = await em.findOneOrFail(User, userId)
   const comment = await em.findOneOrFail(Comment, commentId, ['post.server'])
   if (comment.isPinned) throw new Error('Comment already pinned')

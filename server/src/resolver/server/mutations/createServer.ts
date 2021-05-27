@@ -15,18 +15,18 @@ import {
   ServerUser,
   ServerUserStatus
 } from '@/entity'
-import { handleUnderscore, ReorderUtils, uploadImageFileSingle } from '@/util'
+import {handleUnderscore, logger, ReorderUtils, uploadImageFileSingle} from '@/util'
 import { serverRegex } from '@/util/text/serverRegex'
 
 @InputType()
 export class CreateServerInput {
   @Field()
   @Length(3, 21)
+  @Matches(serverRegex)
   name: string
 
   @Field()
   @Length(2, 100)
-  @Matches(serverRegex)
   displayName: string
 
   @Field({ nullable: true })
@@ -58,6 +58,8 @@ export async function createServer(
     isDownvotesEnabled
   }: CreateServerInput
 ): Promise<Server> {
+  logger('createServer')
+  name = name.trim()
   displayName = displayName.trim()
   description = description.trim()
   let avatarUrl = null
@@ -104,9 +106,9 @@ export async function createServer(
 
   const channel = em.create(Channel, {
     name: 'general',
-    server
+    server,
+    isDefault: true
   })
-  server.systemMessagesChannel = channel
 
   const serverFolder = em.create(ServerFolder, {
     server,

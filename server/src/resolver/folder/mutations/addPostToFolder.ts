@@ -2,6 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { Folder, FolderPost, Post, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
+import {logger} from "@/util";
 
 @InputType()
 export class AddPostToFolderInput {
@@ -17,6 +18,7 @@ export async function addPostToFolder(
   { postId, folderId }: AddPostToFolderInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Folder> {
+  logger('addPostToFolder')
   const post = await em.findOneOrFail(Post, postId)
   const folder = await em.findOneOrFail(Folder, folderId, ['owner', 'server'])
   const user = await em.findOneOrFail(User, userId)
@@ -27,6 +29,5 @@ export async function addPostToFolder(
   folder.postCount++
   await em.persistAndFlush([folder, folderPost])
   await notifyPostChanged({ id: post.id, type: ChangeType.Added })
-  liveQueryStore.invalidate(`Folder:${folderId}`)
   return folder
 }

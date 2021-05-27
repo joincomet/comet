@@ -8,6 +8,7 @@ import {
   ServerUserStatus,
   User
 } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class KickUserFromServerInput {
@@ -22,6 +23,7 @@ export async function kickUserFromServer(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { serverId, userId }: KickUserFromServerInput
 ): Promise<boolean> {
+  logger('kickUserFromServer')
   const user = await em.findOneOrFail(User, currentUserId)
   if (user.id === userId) throw new Error('Cannot kick yourself')
   const server = await em.findOneOrFail(Server, serverId, ['owner'])

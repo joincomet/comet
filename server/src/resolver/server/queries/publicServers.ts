@@ -1,6 +1,7 @@
 import { ArgsType, Field, registerEnumType } from 'type-graphql'
 import { Context } from '@/types'
 import { Server, ServerCategory } from '@/entity'
+import {logger} from "@/util";
 
 @ArgsType()
 export class PublicServersArgs {
@@ -27,6 +28,7 @@ export async function publicServers(
   { em }: Context,
   { sort, category, featured }: PublicServersArgs
 ): Promise<Server[]> {
+  logger('publicServers')
   let where: any = { isDeleted: false }
   let orderBy = {}
 
@@ -44,5 +46,5 @@ export async function publicServers(
     where.category = category
   }
 
-  return (await em.find(Server, where, ['owner'], orderBy)) as Server[]
+  return (await em.find(Server, where, {orderBy})) as Server[]
 }

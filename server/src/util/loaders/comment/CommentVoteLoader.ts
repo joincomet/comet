@@ -1,10 +1,12 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Comment, CommentVote, VoteType } from '@/entity'
 import DataLoader from 'dataloader'
+import {logger} from "@/util";
 
 export const commentVoteLoader = (em: EntityManager, userId: string) => {
   const loader = new DataLoader<string, VoteType>(
     async (commentIds: string[]) => {
+      logger('commentVoteLoader', commentIds)
       loader.clearAll()
       if (!userId) return commentIds.map(_ => VoteType.None)
       const commentVotes = await em.find(CommentVote, {

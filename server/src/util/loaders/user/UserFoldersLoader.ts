@@ -8,9 +8,11 @@ import {
   UserFolder
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
+import {logger} from "@/util";
 
 export const userFoldersLoader = (em: EntityManager, currentUserId: string) => {
   const loader = new DataLoader<string, Folder[]>(async (userIds: string[]) => {
+    logger('userFoldersLoader', userIds)
     loader.clearAll()
     const userFolders = await em.find(
       UserFolder,

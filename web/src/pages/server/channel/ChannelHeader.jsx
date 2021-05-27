@@ -11,7 +11,7 @@ export default function ChannelHeader({ channel }) {
     >
       {channel?.description && (
         <div className="text-13 text-tertiary font-medium leading-5 truncate">
-          Description
+          {channel?.description}
         </div>
       )}
 

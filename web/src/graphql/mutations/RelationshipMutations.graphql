@@ -1,9 +1,6 @@
 mutation createFriendRequest($input: CreateFriendRequestInput!) {
   createFriendRequest(input: $input) {
     ...User
-    folders {
-      ...Folder
-    }
     relatedUsers {
       ...RelatedUser
     }
@@ -18,9 +15,6 @@ mutation createFriendRequest($input: CreateFriendRequestInput!) {
 mutation deleteFriendRequest($input: DeleteFriendRequestInput!) {
   deleteFriendRequest(input: $input) {
     ...User
-    folders {
-      ...Folder
-    }
     relatedUsers {
       ...RelatedUser
     }

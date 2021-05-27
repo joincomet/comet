@@ -7,6 +7,7 @@ import {
   ServerUserStatus,
   User
 } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class SetUserRoleInput {
@@ -21,6 +22,7 @@ export async function setUserRole(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { roleId, userId }: SetUserRoleInput
 ): Promise<ServerUser> {
+  logger('setUserRole')
   const role = await em.findOneOrFail(Role, roleId, ['server'])
   const currentUser = await em.findOneOrFail(User, currentUserId)
   await currentUser.checkServerPermission(
@@ -36,6 +38,6 @@ export async function setUserRole(
   if (serverUser.role === role) return serverUser
   serverUser.role = role
   await em.persistAndFlush(serverUser)
-  liveQueryStore.invalidate(`User:${userId}`)
+  liveQueryStore.invalidate(`Query.serverUsers(serverId:"${role.server.id}")`)
   return serverUser
 }

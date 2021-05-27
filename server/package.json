@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.72",
+  "version": "0.0.73",
   "private": true,
   "engines": {
     "node": "16.x.x"
@@ -27,7 +27,7 @@
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dataloader": "^2.0.0",
-    "dayjs": "^1.10.4",
+    "dayjs": "^1.10.5",
     "express": "^4.17.1",
     "faker": "^5.5.3",
     "file-type": "^16.4.0",

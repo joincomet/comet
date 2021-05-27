@@ -2,6 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Post, PostVote, User, VoteType } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class UpdatePostVoteInput {
@@ -17,6 +18,7 @@ export async function updatePostVote(
   { postId, type }: UpdatePostVoteInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
+  logger('updatePostVote')
   const user = await em.findOneOrFail(User, userId)
   const post = await em.findOneOrFail(Post, postId, ['author', 'server'])
   if (type === VoteType.Down && !post.server.isDownvotesEnabled)

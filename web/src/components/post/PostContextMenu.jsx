@@ -20,15 +20,15 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
 
   const [deletePost] = useDeletePostMutation()
 
-  const togglePin = useTogglePostPin(post)
+  // const togglePin = useTogglePostPin(post)
 
   const [currentUser] = useCurrentUser()
   const isAuthor = !!currentUser && post?.author?.id === currentUser.id
   const canDelete = isAuthor || canManagePosts
 
-  const friends = (currentUser?.relatedUsers ?? []).filter(
+  /*const friends = (currentUser?.relatedUsers ?? []).filter(
     rel => rel.relationshipStatus === 'Friends'
-  )
+  )*/
 
   /*const matchedUserFolder = matchPath(pathname, {
     path: '/folder/:folder'
@@ -95,13 +95,13 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
           </ContextMenuItem>
         )}*/}
 
-        {friends.length > 0 && (
+        {/*{friends.length > 0 && (
           <ContextMenuItem label={t('post.context.sendToFriend')}>
             {friends.map(friend => (
               <ContextMenuItem key={friend.id} label={friend.name} />
             ))}
           </ContextMenuItem>
-        )}
+        )}*/}
 
         {isAuthor && <ContextMenuItem label={t('post.context.edit')} />}
         {/*{canManagePosts && (

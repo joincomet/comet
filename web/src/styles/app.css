@@ -169,7 +169,7 @@ span[data-spoiler] {
 
 
 .form-input-icon {
-  @apply border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm pr-1.5 pl-9 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
+  @apply disabled:opacity-50 border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm pr-1.5 pl-9 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
 }
 
 .form-input-icon-icon {

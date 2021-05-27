@@ -2,6 +2,7 @@ import { ArgsType, Field, ID, registerEnumType } from 'type-graphql'
 import { Comment, Post } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 import { Context } from '@/types'
+import {logger} from "@/util";
 
 @ArgsType()
 export class CommentsArgs {
@@ -29,8 +30,8 @@ export async function comments(
   { em }: Context,
   { postId, sort }: CommentsArgs
 ): Promise<Comment[]> {
+  logger('comments')
   const post = await em.findOneOrFail(Post, postId)
-
   const comments = await em.find(
     Comment,
     { post },
@@ -39,13 +40,11 @@ export async function comments(
       ? { voteCount: QueryOrder.DESC, createdAt: QueryOrder.DESC }
       : { createdAt: QueryOrder.DESC }
   )
-
   comments.forEach(comment => {
     if (comment.isDeleted) {
       comment.text = `<p>[deleted]</p>`
       comment.author = null
     }
   })
-
   return comments
 }

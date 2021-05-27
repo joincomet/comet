@@ -1,9 +1,11 @@
 import DataLoader from 'dataloader'
 import { Server, ServerUser, ServerUserStatus, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
+import {logger} from "@/util";
 
 export const userServersLoader = (em: EntityManager, currentUserId: string) => {
   const loader = new DataLoader<string, Server[]>(async (userIds: string[]) => {
+    logger('userServersLoader', userIds)
     loader.clearAll()
     if (!currentUserId) return userIds.map(_ => [])
     const serverUsers = await em.find(

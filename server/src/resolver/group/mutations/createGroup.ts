@@ -2,6 +2,7 @@ import { Context } from '@/types'
 import { Field, InputType } from 'type-graphql'
 import { Group, Message, MessageType, User } from '@/entity'
 import { ArrayMaxSize } from 'class-validator'
+import {logger} from "@/util";
 
 @InputType()
 export class CreateGroupInput {
@@ -14,6 +15,7 @@ export async function createGroup(
   { em, userId, liveQueryStore }: Context,
   { usernames }: CreateGroupInput
 ): Promise<Group> {
+  logger('createGroup')
   if (usernames.length > 9) throw new Error('error.group.maxSize')
   const user = await em.findOneOrFail(User, userId)
   const users = [user]

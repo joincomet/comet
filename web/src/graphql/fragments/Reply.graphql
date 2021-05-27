@@ -18,6 +18,7 @@ fragment Reply on Reply {
       relativeUrl
       server {
         id
+        displayName
         name
         avatarUrl
       }

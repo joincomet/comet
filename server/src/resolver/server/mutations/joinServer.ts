@@ -1,4 +1,5 @@
 import {
+  Channel,
   Message,
   MessageType,
   Role,
@@ -9,7 +10,7 @@ import {
 } from '@/entity'
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { ReorderUtils } from '@/util'
+import {logger, ReorderUtils} from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Publisher } from 'type-graphql/dist/interfaces/Publisher'
 
@@ -24,10 +25,9 @@ export async function joinServer(
   { serverId }: JoinServerInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<Server> {
+  logger('joinServer')
   const user = await em.findOneOrFail(User, userId)
-  let server = await em.findOneOrFail(Server, serverId, [
-    'systemMessagesChannel'
-  ])
+  let server = await em.findOneOrFail(Server, serverId)
   await user.checkBannedFromServer(em, serverId)
   const firstServerJoin = await em.findOne(
     ServerUser,
@@ -54,18 +54,15 @@ export async function joinServer(
   serverUser.role = await em.findOne(Role, { server, isDefault: true })
   server.userCount++
   await em.persistAndFlush([serverUser, server])
-  liveQueryStore.invalidate([
-    `User:${user.id}`,
-    `Server:${server.id}`,
-    `Query.serverUsers(serverId:"${server.id}")`
-  ])
+  liveQueryStore.invalidate(`Query.serverUsers(serverId:"${server.id}")`)
   server.isJoined = true
-  if (server.systemMessagesChannel) {
+  const defaultChannel = await em.findOne(Channel, { server, isDefault: true })
+  if (defaultChannel) {
     const joinMessage = em.create(Message, {
       author: user,
       serverUser: serverUser,
       type: MessageType.Join,
-      channel: server.systemMessagesChannel
+      channel: defaultChannel
     })
     await em.persistAndFlush(joinMessage)
     await notifyMessageChanged({ type: ChangeType.Added, id: joinMessage.id })

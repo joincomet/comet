@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
-import { Relationship, RelationshipStatus, User } from '@/entity'
+import { RelationshipStatus, User } from '@/entity'
 import { Context } from '@/types'
+import {logger} from "@/util";
 
 @InputType()
 export class AnswerFriendRequestInput {
@@ -15,6 +16,7 @@ export async function answerFriendRequest(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId, accept }: AnswerFriendRequestInput
 ): Promise<User> {
+  logger('answerFriendRequest')
   const user = await em.findOneOrFail(User, currentUserId)
   const [myData, theirData] = await user.getFriendData(em, userId)
   if (

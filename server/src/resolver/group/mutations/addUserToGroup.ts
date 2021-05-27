@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Group, Message, MessageType, User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class AddUserToGroupInput {
@@ -15,6 +16,7 @@ export async function addUserToGroup(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { groupId, userId }: AddUserToGroupInput
 ): Promise<Group> {
+  logger('addUserToGroup')
   const group = await em.findOneOrFail(Group, groupId, ['users', 'owner'])
   const user = await em.findOneOrFail(User, userId)
   const currentUser = await em.findOneOrFail(User, currentUserId)

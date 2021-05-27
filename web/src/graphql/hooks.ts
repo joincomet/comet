@@ -78,6 +78,7 @@ export type Channel = BaseEntity & {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  isDefault: Scalars['Boolean'];
   isUnread: Scalars['Boolean'];
   mentionCount: Scalars['NonNegativeInt'];
   name?: Maybe<Scalars['String']>;
@@ -1139,7 +1140,6 @@ export type Server = BaseEntity & {
   owner: User;
   permissions: Array<ServerPermission>;
   roles: Array<Role>;
-  systemMessagesChannel: Channel;
   userCount: Scalars['NonNegativeInt'];
 };
 
@@ -1253,7 +1253,6 @@ export type UnpinPostInput = {
 export type UpdateChannelInput = {
   channelId: Scalars['ID'];
   description?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
   type?: Maybe<ChannelType>;
 };
 
@@ -1312,7 +1311,6 @@ export type UpdateServerInput = {
   isDownvotesEnabled?: Maybe<Scalars['Boolean']>;
   ownerId?: Maybe<Scalars['ID']>;
   serverId: Scalars['ID'];
-  systemMessagesChannelId?: Maybe<Scalars['ID']>;
 };
 
 
@@ -1369,9 +1367,17 @@ export type CurrentUserFragment = (
   & Pick<User, 'isAdmin' | 'email'>
   & { servers: Array<(
     { __typename?: 'Server' }
-    & ServerFragment
+    & Pick<Server, 'id' | 'name' | 'displayName' | 'avatarUrl' | 'permissions'>
+    & { owner: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ), channels: Array<(
+      { __typename?: 'Channel' }
+      & Pick<Channel, 'isUnread' | 'mentionCount'>
+    )> }
   )>, relatedUsers: Array<(
     { __typename?: 'User' }
+    & Pick<User, 'showChat' | 'unreadCount'>
     & UserFragment
   )>, groups: Array<(
     { __typename?: 'Group' }
@@ -1468,7 +1474,7 @@ export type ReplyFragment = (
       & Pick<Post, 'id' | 'title' | 'relativeUrl'>
       & { server: (
         { __typename?: 'Server' }
-        & Pick<Server, 'id' | 'name' | 'avatarUrl'>
+        & Pick<Server, 'id' | 'displayName' | 'name' | 'avatarUrl'>
       ) }
     ), parentComment?: Maybe<(
       { __typename?: 'Comment' }
@@ -1495,10 +1501,7 @@ export type ServerFragment = (
   & { owner: (
     { __typename?: 'User' }
     & Pick<User, 'id'>
-  ), channels: Array<(
-    { __typename?: 'Channel' }
-    & ChannelFragment
-  )> }
+  ) }
 );
 
 export type ServerUserFragment = (
@@ -1515,7 +1518,7 @@ export type ServerUserFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'relationshipStatus' | 'color' | 'isOg'>
+  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'color' | 'isOg'>
 );
 
 export type CreateChannelMutationVariables = Exact<{
@@ -2118,10 +2121,7 @@ export type CreateFriendRequestMutation = (
   { __typename?: 'Mutation' }
   & { createFriendRequest: (
     { __typename?: 'User' }
-    & { folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )>, relatedUsers: Array<(
+    & { relatedUsers: Array<(
       { __typename?: 'User' }
       & RelatedUserFragment
     )>, servers: Array<(
@@ -2141,10 +2141,7 @@ export type DeleteFriendRequestMutation = (
   { __typename?: 'Mutation' }
   & { deleteFriendRequest: (
     { __typename?: 'User' }
-    & { folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
-    )>, relatedUsers: Array<(
+    & { relatedUsers: Array<(
       { __typename?: 'User' }
       & RelatedUserFragment
     )>, servers: Array<(
@@ -2333,9 +2330,6 @@ export type CreateServerMutation = (
     & { roles: Array<(
       { __typename?: 'Role' }
       & RoleFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
     )> }
     & ServerFragment
   ) }
@@ -2609,7 +2603,7 @@ export type FolderQuery = (
       & UserFragment
     )>, server?: Maybe<(
       { __typename?: 'Server' }
-      & ServerFragment
+      & Pick<Server, 'id' | 'displayName' | 'name' | 'avatarUrl' | 'permissions'>
     )> }
     & FolderFragment
   ) }
@@ -2723,8 +2717,7 @@ export type PublicServersQuery = (
   { __typename?: 'Query' }
   & { publicServers: Array<(
     { __typename?: 'Server' }
-    & Pick<Server, 'onlineCount'>
-    & ServerFragment
+    & Pick<Server, 'id' | 'name' | 'displayName' | 'avatarUrl' | 'bannerUrl' | 'description' | 'userCount' | 'category' | 'isFeatured'>
   )> }
 );
 
@@ -2758,9 +2751,6 @@ export type ServerQuery = (
     )>, roles: Array<(
       { __typename?: 'Role' }
       & RoleFragment
-    )>, folders: Array<(
-      { __typename?: 'Folder' }
-      & FolderFragment
     )> }
     & ServerFragment
   )> }
@@ -2894,20 +2884,12 @@ export type PostChangedSubscription = (
     { __typename?: 'PostChangedResponse' }
     & { added?: Maybe<(
       { __typename?: 'Post' }
-      & { folders?: Maybe<Array<(
-        { __typename?: 'Folder' }
-        & Pick<Folder, 'id'>
-      )>> }
       & PostFragment
     )>, updated?: Maybe<(
       { __typename?: 'Post' }
       & PostFragment
     )>, deleted?: Maybe<(
       { __typename?: 'Post' }
-      & { folders?: Maybe<Array<(
-        { __typename?: 'Folder' }
-        & Pick<Folder, 'id'>
-      )>> }
       & PostFragment
     )> }
   ) }
@@ -2948,6 +2930,16 @@ export type TypingUpdatedSubscription = (
   ) }
 );
 
+export const ChannelFragmentDoc = gql`
+    fragment Channel on Channel {
+  id
+  name
+  description
+  isUnread
+  mentionCount
+  type
+}
+    `;
 export const ImageFragmentDoc = gql`
     fragment Image on Image {
   originalUrl
@@ -3000,43 +2992,10 @@ export const UserFragmentDoc = gql`
   isOnline
   onlineStatus
   isCurrentUser
-  relationshipStatus
   color
   isOg
 }
     `;
-export const ChannelFragmentDoc = gql`
-    fragment Channel on Channel {
-  id
-  name
-  description
-  isUnread
-  mentionCount
-  type
-}
-    `;
-export const ServerFragmentDoc = gql`
-    fragment Server on Server {
-  id
-  name
-  displayName
-  description
-  avatarUrl
-  bannerUrl
-  category
-  userCount
-  isJoined
-  isFeatured
-  isDownvotesEnabled
-  owner {
-    id
-  }
-  permissions
-  channels {
-    ...Channel
-  }
-}
-    ${ChannelFragmentDoc}`;
 export const GroupFragmentDoc = gql`
     fragment Group on Group {
   id
@@ -3053,10 +3012,23 @@ export const CurrentUserFragmentDoc = gql`
   isAdmin
   email
   servers {
-    ...Server
+    id
+    name
+    displayName
+    avatarUrl
+    owner {
+      id
+    }
+    permissions
+    channels {
+      isUnread
+      mentionCount
+    }
   }
   relatedUsers {
     ...User
+    showChat
+    unreadCount
   }
   groups {
     ...Group
@@ -3069,7 +3041,6 @@ export const CurrentUserFragmentDoc = gql`
   }
 }
     ${UserFragmentDoc}
-${ServerFragmentDoc}
 ${GroupFragmentDoc}`;
 export const FolderFragmentDoc = gql`
     fragment Folder on Folder {
@@ -3189,6 +3160,7 @@ export const ReplyFragmentDoc = gql`
       relativeUrl
       server {
         id
+        displayName
         name
         avatarUrl
       }
@@ -3209,6 +3181,25 @@ export const ReplyFragmentDoc = gql`
 }
     ${UserFragmentDoc}
 ${ServerUserFragmentDoc}`;
+export const ServerFragmentDoc = gql`
+    fragment Server on Server {
+  id
+  name
+  displayName
+  description
+  avatarUrl
+  bannerUrl
+  category
+  userCount
+  isJoined
+  isFeatured
+  isDownvotesEnabled
+  owner {
+    id
+  }
+  permissions
+}
+    `;
 export const CreateChannelDocument = gql`
     mutation createChannel($input: CreateChannelInput!) {
   createChannel(input: $input) {
@@ -4585,9 +4576,6 @@ export const CreateFriendRequestDocument = gql`
     mutation createFriendRequest($input: CreateFriendRequestInput!) {
   createFriendRequest(input: $input) {
     ...User
-    folders {
-      ...Folder
-    }
     relatedUsers {
       ...RelatedUser
     }
@@ -4599,7 +4587,6 @@ export const CreateFriendRequestDocument = gql`
   }
 }
     ${UserFragmentDoc}
-${FolderFragmentDoc}
 ${RelatedUserFragmentDoc}`;
 export type CreateFriendRequestMutationFn = Apollo.MutationFunction<CreateFriendRequestMutation, CreateFriendRequestMutationVariables>;
 
@@ -4631,9 +4618,6 @@ export const DeleteFriendRequestDocument = gql`
     mutation deleteFriendRequest($input: DeleteFriendRequestInput!) {
   deleteFriendRequest(input: $input) {
     ...User
-    folders {
-      ...Folder
-    }
     relatedUsers {
       ...RelatedUser
     }
@@ -4645,7 +4629,6 @@ export const DeleteFriendRequestDocument = gql`
   }
 }
     ${UserFragmentDoc}
-${FolderFragmentDoc}
 ${RelatedUserFragmentDoc}`;
 export type DeleteFriendRequestMutationFn = Apollo.MutationFunction<DeleteFriendRequestMutation, DeleteFriendRequestMutationVariables>;
 
@@ -5107,14 +5090,10 @@ export const CreateServerDocument = gql`
     roles {
       ...Role
     }
-    folders {
-      ...Folder
-    }
   }
 }
     ${ServerFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}`;
+${RoleFragmentDoc}`;
 export type CreateServerMutationFn = Apollo.MutationFunction<CreateServerMutation, CreateServerMutationVariables>;
 
 /**
@@ -5814,13 +5793,16 @@ export const FolderDocument = gql`
       ...User
     }
     server {
-      ...Server
+      id
+      displayName
+      name
+      avatarUrl
+      permissions
     }
   }
 }
     ${FolderFragmentDoc}
-${UserFragmentDoc}
-${ServerFragmentDoc}`;
+${UserFragmentDoc}`;
 
 /**
  * __useFolderQuery__
@@ -6062,11 +6044,18 @@ export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariable
 export const PublicServersDocument = gql`
     query publicServers($sort: PublicServersSort, $category: ServerCategory, $featured: Boolean) {
   publicServers(sort: $sort, category: $category, featured: $featured) {
-    ...Server
-    onlineCount
+    id
+    name
+    displayName
+    avatarUrl
+    bannerUrl
+    description
+    userCount
+    category
+    isFeatured
   }
 }
-    ${ServerFragmentDoc}`;
+    `;
 
 /**
  * __usePublicServersQuery__
@@ -6143,15 +6132,11 @@ export const ServerDocument = gql`
     roles {
       ...Role
     }
-    folders {
-      ...Folder
-    }
   }
 }
     ${ServerFragmentDoc}
 ${ChannelFragmentDoc}
-${RoleFragmentDoc}
-${FolderFragmentDoc}`;
+${RoleFragmentDoc}`;
 
 /**
  * __useServerQuery__
@@ -6384,18 +6369,12 @@ export const PostChangedDocument = gql`
   postChanged {
     added {
       ...Post
-      folders {
-        id
-      }
     }
     updated {
       ...Post
     }
     deleted {
       ...Post
-      folders {
-        id
-      }
     }
   }
 }

@@ -2,7 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { Message, User } from '@/entity'
-import { handleText } from '@/util'
+import {handleText, logger} from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -20,6 +20,7 @@ export async function updateMessage(
   { messageId, text }: UpdateMessageInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<Message> {
+  logger('updateMessage')
   const message = await em.findOneOrFail(Message, messageId, ['author'])
   if (message.author !== em.getReference(User, userId))
     throw new Error('Must be author to edit')

@@ -1,10 +1,12 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Message, ServerUser } from '@/entity'
 import DataLoader from 'dataloader'
+import {logger} from "@/util";
 
 export const messageServerUserLoader = (em: EntityManager, userId: string) => {
   const loader = new DataLoader<string, ServerUser>(
     async (messageIds: string[]) => {
+      logger('messageServerUserLoader', messageIds)
       loader.clearAll()
       const messages = await em.find(Message, messageIds, ['channel.server'])
       const serverIds = messages

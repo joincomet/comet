@@ -5,7 +5,6 @@ fragment User on User {
   isOnline
   onlineStatus
   isCurrentUser
-  relationshipStatus
   color
   isOg
 }

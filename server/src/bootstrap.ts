@@ -3,7 +3,7 @@ import { mikroOrmConf } from '@/config/mikro-orm.config'
 import { buildSchema } from 'type-graphql'
 import { typeGraphQLConf } from '@/config/typegraphql.config'
 import express from 'express'
-import { ApolloServer } from 'apollo-server-express'
+import {ApolloError, ApolloServer} from 'apollo-server-express'
 import ws from 'ws' // yarn add ws
 import { useServer } from 'graphql-ws/lib/use/ws'
 import { specifiedRules } from 'graphql'
@@ -17,7 +17,6 @@ import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { Disposable } from 'graphql-ws'
 import { seed } from '@/seed/seed'
 import * as Sentry from '@sentry/node'
-import * as Tracing from '@sentry/tracing'
 import { version } from '../package.json'
 
 const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
@@ -50,30 +49,6 @@ export async function bootstrap() {
 
   const app = express()
 
-  if (shouldUseSentry) {
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      integrations: [
-        // enable HTTP calls tracing
-        new Sentry.Integrations.Http({ tracing: true }),
-        // enable Express.js middleware tracing
-        new Tracing.Integrations.Express({ app })
-      ],
-      release: `server@${version}`,
-
-      // Set tracesSampleRate to 1.0 to capture 100%
-      // of transactions for performance monitoring.
-      // We recommend adjusting this value in production
-      tracesSampleRate: 1.0
-    })
-
-    // RequestHandler creates a separate execution context using domains, so that every
-    // transaction/span/breadcrumb is attached to its own Hub instance
-    app.use(Sentry.Handlers.requestHandler())
-    // TracingHandler creates a trace for every incoming request
-    app.use(Sentry.Handlers.tracingHandler())
-  }
-
   app.use(cors({ origin: true }))
   app.use(
     graphqlUploadExpress({
@@ -97,25 +72,68 @@ export async function bootstrap() {
         liveQueryStore,
         loaders: createLoaders(em, user?.id)
       } as Context
-    }
+    },
+    plugins: shouldUseSentry ? [
+      {
+        requestDidStart(_) {
+          /* Within this returned object, define functions that respond
+             to request-specific lifecycle events. */
+          return {
+            didEncounterErrors(ctx) {
+              // If we couldn't parse the operation, don't
+              // do anything here
+              if (!ctx.operation) {
+                return;
+              }
+
+              for (const err of ctx.errors) {
+                // Only report internal server errors,
+                // all errors extending ApolloError should be user-facing
+                if (err instanceof ApolloError) {
+                  continue;
+                }
+
+                // Add scoped report details and send to Sentry
+                Sentry.withScope(scope => {
+                  // Annotate whether failing operation was query/mutation/subscription
+                  scope.setTag("kind", ctx.operation.operation);
+
+                  // Log query and variables as extras (make sure to strip out sensitive data!)
+                  scope.setExtra("query", ctx.request.query);
+                  scope.setExtra("variables", ctx.request.variables);
+
+                  if (err.path) {
+                    // We can also add the path as breadcrumb
+                    scope.addBreadcrumb({
+                      category: "query-path",
+                      message: err.path.join(" > "),
+                      level: Sentry.Severity.Debug
+                    });
+                  }
+
+                  const transactionId = ctx.request.http.headers.get(
+                    "x-transaction-id"
+                  );
+                  if (transactionId) {
+                    scope.setTransactionName(transactionId);
+                  }
+
+                  Sentry.captureException(err);
+                });
+              }
+            }
+          };
+        }
+      }
+    ] : []
   })
   apolloServer.applyMiddleware({ app })
 
   if (shouldUseSentry) {
-    app.get('/debug-sentry', function mainHandler(req, res) {
-      ;(req as any).user = { username: 'test', email: 'test@test.com', id: '0' }
-      throw new Error('My first Sentry error!')
-    })
-
-    // The error handler must be before any other error middleware and after all controllers
-    app.use(Sentry.Handlers.errorHandler())
-
-    // Optional fallthrough error handler
-    app.use(function onError(err, req, res, next) {
-      // The error id is attached to `res.sentry` to be returned
-      // and optionally displayed to the user for support.
-      res.statusCode = 500
-      res.end(res.sentry + '\n')
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      release: `server@${version}`,
+      tracesSampleRate: 1.0
     })
   }
 

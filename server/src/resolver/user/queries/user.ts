@@ -1,7 +1,7 @@
 import { Context } from '@/types'
 import { User } from '@/entity'
 import { ArgsType, Field, ID } from 'type-graphql'
-import { handleUnderscore } from '@/util'
+import {handleUnderscore, logger} from '@/util'
 
 @ArgsType()
 export class UserArgs {
@@ -16,6 +16,7 @@ export async function user(
   { em, userId: currentUserId }: Context,
   { username, id }: UserArgs
 ): Promise<User> {
+  logger('user')
   em = em.fork()
   if (username && id) throw new Error('Must provide one of id or name')
   if (!id && !username) {

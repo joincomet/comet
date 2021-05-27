@@ -2,6 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Comment, CommentVote, User, VoteType } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class UpdateCommentVoteInput {
@@ -17,6 +18,7 @@ export async function updateCommentVote(
   { commentId, type }: UpdateCommentVoteInput,
   notifyCommentChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
+  logger('updateCommentVote')
   const user = await em.findOneOrFail(User, userId)
   const comment = await em.findOneOrFail(Comment, commentId, [
     'author',

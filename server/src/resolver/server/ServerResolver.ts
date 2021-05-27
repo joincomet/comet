@@ -91,14 +91,6 @@ export class ServerResolver {
     return serverPermissionsLoader.load(server.id)
   }
 
-  @FieldResolver(() => Channel)
-  async systemMessagesChannel(
-    @Ctx() { loaders: { serverSystemMessagesChannelLoader } }: Context,
-    @Root() server: Server
-  ): Promise<Channel> {
-    return serverSystemMessagesChannelLoader.load(server.id)
-  }
-
   @FieldResolver(() => GraphQLNonNegativeInt)
   async onlineCount(
     @Ctx() { loaders: { serverOnlineCountLoader } }: Context,

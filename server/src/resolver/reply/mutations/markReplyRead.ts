@@ -2,6 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Context } from '@/types'
 import { Reply, User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class MarkReplyReadInput {
@@ -14,6 +15,7 @@ export async function markReplyRead(
   { replyId }: MarkReplyReadInput,
   notifyReplyChanged: Publisher<ChangePayload>
 ): Promise<Reply> {
+  logger('markReplyRead')
   const reply = await em.findOneOrFail(Reply, replyId, [
     'user',
     'comment.author',

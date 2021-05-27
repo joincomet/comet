@@ -2,18 +2,12 @@ subscription PostChanged {
   postChanged {
     added {
       ...Post
-      folders {
-        id
-      }
     }
     updated {
       ...Post
     }
     deleted {
       ...Post
-      folders {
-        id
-      }
     }
   }
 }

@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Role, Server, ServerUser, ServerUserStatus, User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class LeaveServerInput {
@@ -12,6 +13,7 @@ export async function leaveServer(
   { em, userId, liveQueryStore }: Context,
   { serverId }: LeaveServerInput
 ): Promise<Server> {
+  logger('leaveServer')
   const server = await em.findOneOrFail(Server, serverId, ['owner'])
   if (server.owner === em.getReference(User, userId))
     throw new Error('Cannot leave if owner')
@@ -25,8 +27,6 @@ export async function leaveServer(
   server.userCount--
   await em.persistAndFlush([serverUser, server])
   liveQueryStore.invalidate([
-    `User:${userId}`,
-    `Server:${server.id}`,
     `Query.serverUsers(serverId:"${server.id}")`
   ])
   server.isJoined = false

@@ -112,10 +112,6 @@ export class Server extends BaseEntity {
   @Field(() => [ServerPermission])
   permissions: ServerPermission[]
 
-  @Field(() => Channel)
-  @OneToOne(() => Channel, undefined, { nullable: true })
-  systemMessagesChannel?: Channel
-
   @Field()
   @Property()
   isFeatured: boolean = false

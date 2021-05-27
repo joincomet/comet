@@ -17,7 +17,6 @@ export default function DmPage({ username }) {
     nextFetchPolicy: 'cache-first'
   })
   const [openDm] = useOpenDmMutation()
-  const [readDm] = useReadDmMutation()
   const user = userData?.user
   useEffect(() => {
     if (!user) return
@@ -27,19 +26,6 @@ export default function DmPage({ username }) {
   }, [user])
   useSetHomePage(`dm/@${username}`)
   const [currentUser] = useCurrentUser()
-  useEffect(() => {
-    if (currentUser && user && user.unreadCount > 0) {
-      readDm({
-        variables: { input: { userId: user.id } },
-        optimisticResponse: {
-          readDm: {
-            ...user,
-            unreadCount: 0
-          }
-        }
-      })
-    }
-  }, [user, currentUser])
   return (
     <Page header={<DmHeader user={user} />}>
       {!!user && <Messages user={user} users={[user, currentUser]} />}

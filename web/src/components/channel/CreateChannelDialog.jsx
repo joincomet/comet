@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import {
   ChannelType,
   ServerDocument,
-  useCreateChannelMutation
+  useCreateChannelMutation, useUpdateChannelMutation
 } from '@/graphql/hooks'
 import { IconChannel } from '@/components/ui/icons/IconChannel'
 import ServerAvatar from '@/components/server/ServerAvatar'
@@ -35,7 +35,7 @@ const typeClass = enabled =>
   }
 `)
 
-export default function CreateChannelDialog({ open, setOpen, server }) {
+export default function CreateChannelDialog({ open, setOpen, server, channel }) {
   const { handleSubmit, register, setValue, watch, reset } = useForm({
     mode: 'onChange'
   })
@@ -51,7 +51,7 @@ export default function CreateChannelDialog({ open, setOpen, server }) {
       )
     }
   }, [name])
-  const [type, setType] = useState(ChannelType.Public)
+  const [type, setType] = useState(channel?.type ?? ChannelType.Public)
 
   const { push } = useHistory()
 
@@ -72,23 +72,46 @@ export default function CreateChannelDialog({ open, setOpen, server }) {
     }
   })
 
+  const [updateChannel, { loading: updateLoading }] = useUpdateChannelMutation()
+
   const close = () => {
     setOpen(false)
   }
 
   const onSubmit = ({ name, description }) => {
-    createChannel({
-      variables: { input: { name, description, serverId: server.id, type } }
-    }).then(({ data: { createChannel } }) => {
-      close()
-      push(`/+${server.name}/#${createChannel.name}`)
-      reset()
-      setType(ChannelType.Public)
-    })
+    if (!channel) {
+      createChannel({
+        variables: { input: { name, description, serverId: server.id, type } }
+      }).then(({ data: { createChannel } }) => {
+        close()
+        push(`/+${server.name}/#${createChannel.name}`)
+        reset()
+        setType(ChannelType.Public)
+      })
+    } else {
+      updateChannel({
+        variables: {
+          input: { description, channelId: channel.id, type }
+        }
+      }).then(() => {
+        close()
+      })
+    }
   }
 
+  useEffect(() => {
+    if (!channel) {
+      reset()
+      setType(ChannelType.Public)
+    } else {
+      setValue('name', channel.name)
+      setValue('description', channel.description || '')
+      setType(channel.type)
+    }
+  }, [channel])
+
   const channelAlreadyExists =
-    !!name && server.channels.map(c => c.name).includes(name)
+    !channel && !!name && server.channels.map(c => c.name).includes(name)
 
   return (
     <StyledDialog
@@ -100,9 +123,9 @@ export default function CreateChannelDialog({ open, setOpen, server }) {
         <button
           type="submit"
           className="form-button-submit"
-          disabled={!name || channelAlreadyExists || loading}
+          disabled={(!channel && !name) || channelAlreadyExists || loading || updateLoading}
         >
-          {loading ? (
+          {(loading || updateLoading) ? (
             <IconSpinner className="w-5 h-5" />
           ) : (
             <IconCheck className="w-5 h-5" />
@@ -114,7 +137,7 @@ export default function CreateChannelDialog({ open, setOpen, server }) {
         <div className="flex items-center font-semibold text-primary">
           <ServerAvatar server={server} size={6} className="rounded-md mr-2" />
           <div className="truncate">{server.displayName}</div>
-          &nbsp;&nbsp;&middot;&nbsp;&nbsp;Create Channel
+          &nbsp;&nbsp;&middot;&nbsp;&nbsp;{channel ? 'Edit' : 'Create'} Channel
           <IconX
             className="h-5 w-5 highlightable ml-auto"
             onClick={() => close()}
@@ -130,6 +153,7 @@ export default function CreateChannelDialog({ open, setOpen, server }) {
               autoCapitalize="none"
               id="name"
               placeholder="Channel name"
+              disabled={!!channel}
             />
             <IconChannel className="form-input-icon-icon" />
           </div>

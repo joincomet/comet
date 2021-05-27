@@ -41,8 +41,17 @@ export default function CreateServerDialog({ open, setOpen, server }) {
   const { handleSubmit, register, watch, reset, setValue } = useForm({
     mode: 'onChange'
   })
-  const avatarFile = watch('avatarFile')
-  const bannerFile = watch('bannerFile')
+  watch((values, { type, value, name }) => {
+    if (name === 'avatarFile') {
+      const {avatarFile} = values
+      if (!avatarFile || !avatarFile[0]) return
+      readURL(avatarFile[0]).then(url => setAvatarSrc(url))
+    } else if (name === 'bannerFile') {
+      const {bannerFile} = values
+      if (!bannerFile || !bannerFile[0]) return
+      readURL(bannerFile[0]).then(url => setBannerSrc(url))
+    }
+  })
   const name = watch('name')
   const displayName = watch('displayName')
   const [nameChanged, setNameChanged] = useState(false)
@@ -74,21 +83,11 @@ export default function CreateServerDialog({ open, setOpen, server }) {
       setAvatarSrc(server.avatarUrl)
       setBannerSrc(server.bannerUrl)
       setValue('displayName', server.displayName)
-      setValue('description', server.description)
+      setValue('description', server.description || '')
       setCategory(server.category)
       setIsDownvotesEnabled(server.isDownvotesEnabled)
     }
   }, [server])
-
-  useEffect(() => {
-    if (!avatarFile || !avatarFile[0]) return
-    readURL(avatarFile[0]).then(url => setAvatarSrc(url))
-  }, [avatarFile])
-
-  useEffect(() => {
-    if (!bannerFile || !bannerFile[0]) return
-    readURL(bannerFile[0]).then(url => setBannerSrc(url))
-  }, [bannerFile])
 
   const { push } = useHistory()
 

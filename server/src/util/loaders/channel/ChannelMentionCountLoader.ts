@@ -1,6 +1,7 @@
 import DataLoader from 'dataloader'
-import { Channel, ChannelUser, User } from '@/entity'
+import { Channel, ChannelUser } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
+import {logger} from "@/util";
 
 export const channelMentionCountLoader = (
   em: EntityManager,
@@ -8,6 +9,7 @@ export const channelMentionCountLoader = (
 ) => {
   const loader = new DataLoader<string, number>(
     async (channelIds: string[]) => {
+      logger('channelMentionCountLoader', channelIds)
       loader.clearAll()
       const channelUsers = await em.find(ChannelUser, {
         user: userId,

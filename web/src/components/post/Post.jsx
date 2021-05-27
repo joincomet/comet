@@ -111,7 +111,9 @@ export default memo(function Post({
             className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer ${
               post.voteType === VoteType.Up ? 'text-red-400' : 'text-mid'
             }`}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
               if (!currentUser) {
                 openLogin()
                 return
@@ -160,7 +162,9 @@ export default memo(function Post({
               className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer ${
                 post.voteType === VoteType.Down ? 'text-blue-400' : 'text-mid'
               }`}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
                 if (!currentUser) {
                   openLogin()
                   return

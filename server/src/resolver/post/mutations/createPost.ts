@@ -3,7 +3,6 @@ import { ArrayMaxSize, Length, MaxLength, IsUrl } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import {
-  Image,
   Post,
   PostImage,
   PostVote,
@@ -13,11 +12,9 @@ import {
 } from '@/entity'
 import {
   handleText,
-  imageMimeTypes,
+  imageMimeTypes, logger,
   scrapeMetadata,
-  uploadFileOrImage,
   uploadImageFile,
-  uploadImageFileSingle
 } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import mime from 'mime'
@@ -67,6 +64,7 @@ export async function createPost(
   { title, linkUrl, text, serverId, images }: CreatePostInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
+  logger('createPost')
   if (text) {
     text = handleText(text)
     if (!text) text = null

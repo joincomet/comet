@@ -3,7 +3,7 @@ import { Length } from 'class-validator'
 import { Server, ServerCategory, ServerPermission, User } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import { uploadImageFileSingle } from '@/util'
+import {logger, uploadImageFileSingle} from '@/util'
 
 @InputType()
 export class UpdateServerInput {
@@ -30,9 +30,6 @@ export class UpdateServerInput {
   @Field(() => ID, { nullable: true })
   ownerId?: string
 
-  @Field(() => ID, { nullable: true })
-  systemMessagesChannelId?: string
-
   @Field(() => Boolean, { nullable: true })
   isDownvotesEnabled?: boolean
 }
@@ -47,10 +44,10 @@ export async function updateServer(
     avatarFile,
     bannerFile,
     ownerId,
-    systemMessagesChannelId,
     isDownvotesEnabled
   }: UpdateServerInput
 ): Promise<Server> {
+  logger('updateServer')
   displayName = displayName.trim()
   description = description.trim()
   const user = await em.findOneOrFail(User, userId)
@@ -68,8 +65,6 @@ export async function updateServer(
     bannerUrl: bannerFile
       ? await uploadImageFileSingle(bannerFile, { width: 920, height: 540 })
       : server.bannerUrl,
-    systemMessagesChannel:
-      systemMessagesChannelId ?? server.systemMessagesChannel,
     isDownvotesEnabled: isDownvotesEnabled ?? server.isDownvotesEnabled
   })
   await em.persistAndFlush(server)

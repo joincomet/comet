@@ -3,10 +3,23 @@ fragment CurrentUser on User {
   isAdmin
   email
   servers {
-    ...Server
+    id
+    name
+    displayName
+    avatarUrl
+    owner {
+      id
+    }
+    permissions
+    channels {
+      isUnread
+      mentionCount
+    }
   }
   relatedUsers {
     ...User
+    showChat
+    unreadCount
   }
   groups {
     ...Group

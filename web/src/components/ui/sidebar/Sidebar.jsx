@@ -7,7 +7,7 @@ export default function Sidebar({ children, right = false, show = true }) {
         right ? '' : 'rounded-tl-lg'
       }`}
     >
-      <div className="relative h-full w-full scrollbar-dark">{children}</div>
+      <div className="relative h-full w-full scrollbar-dark overflow-y-auto">{children}</div>
     </div>
   )
 }

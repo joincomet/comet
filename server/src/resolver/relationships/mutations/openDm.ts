@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Message, MessageType, Relationship, User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class OpenDmInput {
@@ -12,6 +13,7 @@ export async function openDm(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: OpenDmInput
 ): Promise<User> {
+  logger('openDm')
   const owner = await em.findOneOrFail(User, currentUserId)
   const user = await em.findOneOrFail(User, userId)
   let myData = await em.findOne(Relationship, { owner, user })

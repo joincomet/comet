@@ -49,7 +49,7 @@ export default function MessageContextMenu({
   return (
     <>
       <ContextMenuSection>
-        {canEdit && <ContextMenuItem label={t('message.context.edit')} />}
+        {/*{canEdit && <ContextMenuItem label={t('message.context.edit')} />}*/}
         {/*{canPin && (
           <ContextMenuItem
             label={

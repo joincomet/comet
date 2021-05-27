@@ -29,6 +29,7 @@ import {
 import { MessageSubscriptionFilter } from '@/resolver/subscriptions/filters/MessageSubscriptionFilter'
 import { RepliesSubscriptionFilter } from '@/resolver/subscriptions/filters/RepliesSubscriptionFilter'
 import { TypingResponse } from '@/resolver/subscriptions/typing/TypingResponse'
+import {logger} from "@/util";
 
 @ObjectType()
 class CommentChangedResponse extends ChangeResponse(Comment) {}
@@ -62,6 +63,7 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<CommentChangedResponse> {
+    logger('commentChanged')
     em = em.fork()
     const entity = await em.findOneOrFail(Comment, id, ['author'])
     return getResult(entity, type)
@@ -74,6 +76,7 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<PostChangedResponse> {
+    logger('postChanged')
     em = em.fork()
     const entity = await em.findOneOrFail(Post, id, ['author', 'server'])
     return getResult(entity, type)
@@ -87,6 +90,7 @@ export class SubscriptionResolver {
     @Ctx() { em }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<MessageChangedResponse> {
+    logger('messageChanged')
     em = em.fork()
     const entity = await em.findOneOrFail(Message, id, [
       'author',
@@ -107,6 +111,7 @@ export class SubscriptionResolver {
     @Ctx() { em, userId }: Context,
     @Root() { id, type }: ChangePayload
   ): Promise<ReplyChangedResponse> {
+    logger('replyChanged')
     em = em.fork()
     const entity = await em.findOneOrFail(Reply, { id, user: userId }, [
       'user',
@@ -126,6 +131,7 @@ export class SubscriptionResolver {
     { typingUserId, isTyping }: TypingPayload,
     @Args() {}: TypingArgs
   ): TypingResponse {
+    logger('typingUpdated')
     return {
       typingUserId,
       isTyping
@@ -140,6 +146,7 @@ export class SubscriptionResolver {
     @PubSub(SubscriptionTopic.TypingUpdated)
     notifyTypingUpdated: Publisher<TypingPayload>
   ): Promise<boolean> {
+    logger('updateTyping')
     await notifyTypingUpdated({
       typingUserId: currentUserId,
       userId,

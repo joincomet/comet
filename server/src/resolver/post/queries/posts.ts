@@ -21,6 +21,7 @@ import { Context } from '@/types'
 import { QueryOrder } from '@mikro-orm/core'
 import dayjs from 'dayjs'
 import { GraphQLNonNegativeInt, GraphQLPositiveInt } from 'graphql-scalars'
+import {logger} from "@/util";
 
 @ArgsType()
 export class PostsArgs {
@@ -96,6 +97,7 @@ export async function posts(
   { em, userId }: Context,
   { offset, limit, sort, time, folderId, serverId, search }: PostsArgs
 ): Promise<PostsResponse> {
+  logger('posts')
   const user = userId ? await em.findOneOrFail(User, userId) : null
   let orderBy = {}
   if (sort === PostsSort.New) orderBy = { createdAt: QueryOrder.DESC }

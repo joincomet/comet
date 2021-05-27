@@ -14,7 +14,4 @@ fragment Server on Server {
     id
   }
   permissions
-  channels {
-    ...Channel
-  }
 }

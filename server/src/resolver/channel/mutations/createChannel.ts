@@ -7,11 +7,9 @@ import {
   MessageType,
   Server,
   ServerPermission,
-  ServerUser,
-  ServerUserStatus,
   User
 } from '@/entity'
-import { handleUnderscore, ReorderUtils } from '@/util'
+import {handleUnderscore, logger, ReorderUtils} from '@/util'
 import { Matches, MaxLength } from 'class-validator'
 
 @InputType()
@@ -36,17 +34,11 @@ export async function createChannel(
   { em, userId, liveQueryStore }: Context,
   { serverId, name, description, type }: CreateChannelInput
 ): Promise<Channel> {
+  logger('createChannel')
   name = name.trim()
   description = description.trim()
   const user = await em.findOneOrFail(User, userId)
-  const server = await em.findOneOrFail(Server, serverId, [
-    'systemMessagesChannel'
-  ])
-  const serverUser = await em.findOneOrFail(ServerUser, {
-    user,
-    server,
-    status: ServerUserStatus.Joined
-  })
+  const server = await em.findOneOrFail(Server, serverId)
 
   await user.checkServerPermission(
     em,
@@ -82,7 +74,8 @@ export async function createChannel(
     channel
   })
 
-  if (!server.systemMessagesChannel) server.systemMessagesChannel = channel
+  const defaultChannel = await em.findOne(Channel, { server, isDefault: true })
+  if (!defaultChannel) channel.isDefault = true
 
   await em.persistAndFlush([channel, server, initialMessage])
   liveQueryStore.invalidate(`Server:${serverId}`)

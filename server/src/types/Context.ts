@@ -35,7 +35,6 @@ export interface Loaders {
   serverFoldersLoader: DataLoader<string, Folder[]>
   serverPermissionsLoader: DataLoader<string, ServerPermission[]>
   serverRolesLoader: DataLoader<string, Role[]>
-  serverSystemMessagesChannelLoader: DataLoader<string, Channel>
   serverOnlineCountLoader: DataLoader<string, number>
   serverJoinedLoader: DataLoader<string, boolean>
 

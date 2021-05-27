@@ -4,9 +4,6 @@ mutation createServer($input: CreateServerInput!) {
     roles {
       ...Role
     }
-    folders {
-      ...Folder
-    }
   }
 }
 

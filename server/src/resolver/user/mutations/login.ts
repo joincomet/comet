@@ -3,7 +3,7 @@ import { Field, InputType } from 'type-graphql'
 import { User } from '@/entity'
 import * as argon2 from 'argon2'
 import { CustomError } from '@/types/CustomError'
-import { createAccessToken, handleUnderscore } from '@/util'
+import {createAccessToken, handleUnderscore, logger} from '@/util'
 import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
 import { createLoaders } from '@/util/loaders'
 import { GraphQLEmailAddress } from 'graphql-scalars'
@@ -24,6 +24,7 @@ export async function login(
   ctx: Context,
   { email, username, password }: LoginInput
 ): Promise<LoginResponse> {
+  logger('login')
   const { em, liveQueryStore } = ctx
 
   if (!email && !username) throw new Error('Must provide email or username')

@@ -3,7 +3,7 @@ import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Post, User } from '@/entity'
-import { handleText } from '@/util'
+import {handleText, logger} from '@/util'
 
 @InputType()
 export class UpdatePostInput {
@@ -20,6 +20,7 @@ export async function updatePost(
   { postId, text }: UpdatePostInput,
   notifyPostChanged: Publisher<ChangePayload>
 ): Promise<Post> {
+  logger('updatePost')
   const post = await em.findOneOrFail(Post, postId, ['author'])
   if (post.author !== em.getReference(User, userId))
     throw new Error('Must be post author to edit')

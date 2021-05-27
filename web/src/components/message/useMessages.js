@@ -7,7 +7,7 @@ export const useMessages = ({ channelId, groupId, userId }) => {
       ...vars,
       cursor: null
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first'
   })
   const hasMore = data?.messages.hasMore

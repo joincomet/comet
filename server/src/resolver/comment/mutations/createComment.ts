@@ -2,7 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { Comment, CommentVote, Post, Reply, User, VoteType } from '@/entity'
-import { handleText } from '@/util'
+import {handleText, logger} from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -26,6 +26,7 @@ export async function createComment(
   notifyCommentChanged: Publisher<ChangePayload>,
   notifyReplyChanged: Publisher<ChangePayload>
 ): Promise<Comment> {
+  logger('createComment')
   text = text.replace(/<[^/>][^>]*><\/[^>]+>/, '')
   if (!text) throw new Error('error.comment.empty')
 

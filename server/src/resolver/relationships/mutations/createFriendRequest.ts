@@ -3,6 +3,7 @@ import { Context } from '@/types'
 import { Message, MessageType, RelationshipStatus, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Publisher } from 'type-graphql/dist/interfaces/Publisher'
+import {logger} from "@/util";
 
 @InputType()
 export class CreateFriendRequestInput {
@@ -15,6 +16,7 @@ export async function createFriendRequest(
   { userId }: CreateFriendRequestInput,
   notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<User> {
+  logger('createFriendRequest')
   const currentUser = await em.findOneOrFail(User, currentUserId)
   const [myData, theirData] = await currentUser.getFriendData(em, userId)
   if (

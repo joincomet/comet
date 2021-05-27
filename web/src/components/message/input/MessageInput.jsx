@@ -205,7 +205,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
     return () => {
       instance.destroy()
     }
-  }, [canSendMessage, placeholder, channel, user, group, server])
+  }, [canSendMessage, placeholder])
 
   // const editor = useEditor(editorOptions)
 
@@ -397,7 +397,9 @@ export default function MessageInput({ channel, server, group, user, users }) {
               currentUser ? '' : 'cursor-pointer'
             } min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light dark:bg-gray-700 py-3 w-full  rounded-lg text-base focus:outline-none text-secondary border-none`}
           >
-            <EditorContent editor={editor} />
+            {!editor?.isDestroyed && (
+              <EditorContent editor={editor} />
+            )}
           </div>
         </div>
 

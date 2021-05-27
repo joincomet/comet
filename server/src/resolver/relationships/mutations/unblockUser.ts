@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import { Relationship, RelationshipStatus, User } from '@/entity'
+import { RelationshipStatus, User } from '@/entity'
+import {logger} from "@/util";
 
 @InputType()
 export class UnblockUserInput {
@@ -12,6 +13,7 @@ export async function unblockUser(
   { em, userId: currentUserId, liveQueryStore }: Context,
   { userId }: UnblockUserInput
 ): Promise<User> {
+  logger('unblockUser')
   const user = await em.findOneOrFail(User, currentUserId)
   const [myData, theirData] = await user.getFriendData(em, userId)
   if (myData.status !== RelationshipStatus.Blocking)

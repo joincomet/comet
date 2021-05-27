@@ -1,18 +1,13 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Channel, ChannelType, ServerPermission, User } from '@/entity'
-import { handleUnderscore } from '@/util'
-import { Matches, MaxLength } from 'class-validator'
+import { MaxLength } from 'class-validator'
+import {logger} from "@/util";
 
 @InputType()
 export class UpdateChannelInput {
   @Field(() => ID)
   channelId: string
-
-  @Field({ nullable: true })
-  @MaxLength(100)
-  @Matches(/^[a-z0-9-_]+/)
-  name?: string
 
   @Field({ nullable: true })
   @MaxLength(500)
@@ -24,9 +19,9 @@ export class UpdateChannelInput {
 
 export async function updateChannel(
   { em, userId, liveQueryStore }: Context,
-  { channelId, name, description, type }: UpdateChannelInput
+  { channelId, description, type }: UpdateChannelInput
 ): Promise<Channel> {
-  name = name.trim()
+  logger('updateChannel')
   description = description.trim()
   const user = await em.findOneOrFail(User, userId)
   const channel = await em.findOneOrFail(Channel, channelId, ['server'])
@@ -36,16 +31,7 @@ export async function updateChannel(
     ServerPermission.ManageChannels
   )
 
-  if (name) {
-    const foundChannel = await em.findOne(Channel, {
-      server: channel.server,
-      name: { $ilike: handleUnderscore(name) }
-    })
-    if (foundChannel) throw new Error('Channel with that name already exists')
-  }
-
   em.assign(channel, {
-    name: name ?? channel.name,
     description,
     type: type ?? channel.type
   })

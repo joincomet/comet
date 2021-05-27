@@ -1,6 +1,13 @@
 query publicServers($sort: PublicServersSort, $category: ServerCategory, $featured: Boolean) {
   publicServers(sort: $sort, category: $category, featured: $featured) {
-    ...Server
-    onlineCount
+    id
+    name
+    displayName
+    avatarUrl
+    bannerUrl
+    description
+    userCount
+    category
+    isFeatured
   }
 }

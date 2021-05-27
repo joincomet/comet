@@ -51,9 +51,9 @@ export async function seed(em: EntityManager) {
 
     const generalChannel = em.create(Channel, {
       name: 'general',
-      server: cometServer
+      server: cometServer,
+      isDefault: true
     })
-    cometServer.systemMessagesChannel = generalChannel
     const initialMessage = em.create(Message, {
       channel: generalChannel,
       type: MessageType.Initial,

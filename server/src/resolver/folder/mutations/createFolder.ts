@@ -10,6 +10,7 @@ import {
   UserFolder
 } from '@/entity'
 import { Length } from 'class-validator'
+import {logger} from "@/util";
 
 @InputType()
 export class CreateFolderInput {
@@ -33,6 +34,7 @@ export async function createFolder(
   { em, userId, liveQueryStore }: Context,
   { serverId, name, isCollaborative, visibility }: CreateFolderInput
 ): Promise<Folder> {
+  logger('createFolder')
   if (name.length > 100) throw new Error('error.folder.nameTooLong')
   if (name === 'Favorites' || name === 'Read Later')
     throw new Error('error.folder.cannotCreate')
