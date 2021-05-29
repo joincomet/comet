@@ -100,7 +100,7 @@ export default function Comment({
               </ContextMenuTrigger>
 
               <div className="text-11 text-mid font-medium pl-2 leading-none">
-                {formatDistanceToNowStrict(new Date(post.createdAt))}
+                {formatDistanceToNowStrict(new Date(comment.createdAt))}
                 &nbsp;ago
               </div>
             </div>
