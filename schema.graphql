@@ -594,7 +594,7 @@ type Query {
   post(id: ID!): Post!
   posts(folderId: ID, limit: PositiveInt = 20, offset: NonNegativeInt = 0, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): PostsResponse!
   publicServers(category: ServerCategory, featured: Boolean = false, sort: PublicServersSort = Top): [Server!]!
-  replies(input: RepliesInput!): [Reply!]!
+  replies: [Reply!]!
   server(id: ID, name: String): Server
   serverUsers(serverId: ID!): [ServerUser!]!
   user(id: ID, username: String): User
@@ -637,10 +637,6 @@ input RemovePostFromFolderInput {
 input RemoveUserFromGroupInput {
   groupId: ID!
   userId: ID!
-}
-
-input RepliesInput {
-  unreadOnly: Boolean = true
 }
 
 type Reply implements BaseEntity {

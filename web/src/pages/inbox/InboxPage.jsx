@@ -17,12 +17,10 @@ export default function InboxPage() {
   useSetHomePage(`inbox`)
   const [currentUser] = useCurrentUser()
   const { data } = useRepliesQuery({
-    variables: {
-      input: { unreadOnly: inboxPage === 'Unread' }
-    },
-    skip: !currentUser
+    skip: !currentUser,
+    fetchPolicy: 'cache-and-network'
   })
-  const replies = data?.replies ?? []
+  const replies = (data?.replies ?? []).filter(r => inboxPage === 'Unread' ? !r.isRead : true)
   return (
     <Page header={<InboxHeader />}>
       <Helmet>

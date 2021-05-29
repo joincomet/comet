@@ -32,10 +32,10 @@ export default function HomeSidebar() {
         (b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0)
     )
   const { data } = useRepliesQuery({
-    variables: { input: { unreadOnly: true } },
-    skip: !currentUser
+    skip: !currentUser,
+    fetchPolicy: 'cache-and-network'
   })
-  const replies = data?.replies ?? []
+  const repliesCount = (data?.replies ?? []).filter(r => !r.isRead).length
   return (
     <>
       <Sidebar>
@@ -54,9 +54,9 @@ export default function HomeSidebar() {
               <SidebarItem to="/inbox">
                 <IconInbox className="mr-3 h-5 w-5" />
                 {t('inbox.title')}
-                {!!replies.length && (
+                {!!repliesCount && (
                   <div className="ml-auto">
-                    <CountBadge count={replies.length} />
+                    <CountBadge count={repliesCount} />
                   </div>
                 )}
               </SidebarItem>

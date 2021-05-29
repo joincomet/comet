@@ -6,43 +6,25 @@ import { calendarDate } from '@/utils/timeUtils'
 import { Link } from 'react-router-dom'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { IconCheck } from '@/components/ui/icons/Icons'
-import { RepliesDocument, useMarkReplyReadMutation } from '@/graphql/hooks'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { useStore } from '@/hooks/useStore'
+import {useMarkReplyReadMutation, useMarkReplyUnreadMutation} from '@/graphql/hooks'
 
 export default function Reply({ reply }) {
-  const inboxPage = useStore(s => s.inboxPage)
   const { comment } = reply
   const { parentComment, post } = comment
-  const [currentUser] = useCurrentUser()
   const [markReplyRead] = useMarkReplyReadMutation({
     optimisticResponse: {
       markReplyRead: {
         ...reply,
         isRead: true
       }
-    },
-    update(cache, { data: { markReplyRead } }) {
-      const queryOptions = {
-        query: RepliesDocument,
-        variables: {
-          input: {
-            userId: currentUser.id,
-            unreadOnly: inboxPage === 'Unread'
-          }
-        }
-      }
-      const queryData = cache.readQuery(queryOptions)
-      if (
-        queryData &&
-        queryData.replies.map(r => r.id).includes(markReplyRead.id)
-      ) {
-        cache.writeQuery({
-          ...queryOptions,
-          data: {
-            replies: queryData.replies.filter(r => r.id !== markReplyRead.id)
-          }
-        })
+    }
+  })
+
+  const [markReplyUnread] = useMarkReplyUnreadMutation({
+    optimisticResponse: {
+      markReplyUnread: {
+        ...reply,
+        isRead: false
       }
     }
   })
@@ -85,11 +67,15 @@ export default function Reply({ reply }) {
           onClick={e => {
             e.stopPropagation()
             e.preventDefault()
-            markReplyRead({ variables: { input: { replyId: reply.id } } })
+            if (reply.isRead) {
+              markReplyUnread({ variables: { input: { replyId: reply.id } } })
+            } else {
+              markReplyRead({ variables: { input: { replyId: reply.id } } })
+            }
           }}
         >
           <IconCheck className="h-5 w-5" />
-          <div className="ml-2 text-xs font-medium">Mark Read</div>
+          <div className="ml-2 text-xs font-medium">{reply.isRead ? 'Mark Unread' : 'Mark Read'}</div>
         </div>
       </div>
     </Link>

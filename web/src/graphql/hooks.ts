@@ -1028,11 +1028,6 @@ export type QueryPublicServersArgs = {
 };
 
 
-export type QueryRepliesArgs = {
-  input: RepliesInput;
-};
-
-
 export type QueryServerArgs = {
   id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
@@ -1086,10 +1081,6 @@ export type RemovePostFromFolderInput = {
 export type RemoveUserFromGroupInput = {
   groupId: Scalars['ID'];
   userId: Scalars['ID'];
-};
-
-export type RepliesInput = {
-  unreadOnly?: Maybe<Scalars['Boolean']>;
 };
 
 export type Reply = BaseEntity & {
@@ -2721,9 +2712,7 @@ export type PublicServersQuery = (
   )> }
 );
 
-export type RepliesQueryVariables = Exact<{
-  input: RepliesInput;
-}>;
+export type RepliesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type RepliesQuery = (
@@ -6087,8 +6076,8 @@ export type PublicServersQueryHookResult = ReturnType<typeof usePublicServersQue
 export type PublicServersLazyQueryHookResult = ReturnType<typeof usePublicServersLazyQuery>;
 export type PublicServersQueryResult = Apollo.QueryResult<PublicServersQuery, PublicServersQueryVariables>;
 export const RepliesDocument = gql`
-    query replies($input: RepliesInput!) {
-  replies(input: $input) {
+    query replies {
+  replies {
     ...Reply
   }
 }
@@ -6106,11 +6095,10 @@ export const RepliesDocument = gql`
  * @example
  * const { data, loading, error } = useRepliesQuery({
  *   variables: {
- *      input: // value for 'input'
  *   },
  * });
  */
-export function useRepliesQuery(baseOptions: Apollo.QueryHookOptions<RepliesQuery, RepliesQueryVariables>) {
+export function useRepliesQuery(baseOptions?: Apollo.QueryHookOptions<RepliesQuery, RepliesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<RepliesQuery, RepliesQueryVariables>(RepliesDocument, options);
       }

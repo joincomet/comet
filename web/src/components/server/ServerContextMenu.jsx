@@ -3,7 +3,6 @@ import ContextMenuSection from '@/components/ui/context/ContextMenuSection'
 import {
   CurrentUserDocument,
   PublicServersDocument,
-  PublicServersSort,
   ServerFragmentDoc,
   useFeatureServerMutation,
   useLeaveServerMutation,
@@ -68,7 +67,7 @@ export default function ServerContextMenu({
             )}
           </>
         )}
-        {!!currentUser && server.owner.id !== currentUser.id && (
+        {!!currentUser && !!server.owner && server.owner.id !== currentUser.id && (
           <ContextMenuItem
             label={t('server.context.leave')}
             red
@@ -99,7 +98,7 @@ export default function ServerContextMenu({
             }}
           />
         )}
-        {!!currentUser &&
+        {!!currentUser && !!server.owner &&
           !!openDelete &&
           (currentUser.isAdmin || server.owner.id === currentUser.id) && (
             <ContextMenuItem

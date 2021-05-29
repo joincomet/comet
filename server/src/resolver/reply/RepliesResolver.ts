@@ -2,7 +2,6 @@ import {
   Arg,
   Authorized,
   Ctx,
-  ID,
   Mutation,
   Publisher,
   PubSub,
@@ -11,7 +10,7 @@ import {
 } from 'type-graphql'
 import { Reply } from '@/entity'
 import { Context } from '@/types'
-import { replies, RepliesInput } from '@/resolver/reply/queries/replies'
+import { replies } from '@/resolver/reply/queries/replies'
 import {
   MarkReplyReadInput,
   markReplyRead,
@@ -26,10 +25,9 @@ export class RepliesResolver {
   @Authorized()
   @Query(() => [Reply])
   async replies(
-    @Ctx() ctx: Context,
-    @Arg('input') input: RepliesInput
+    @Ctx() ctx: Context
   ): Promise<Reply[]> {
-    return replies(ctx, input)
+    return replies(ctx)
   }
 
   // --- Mutations ---
