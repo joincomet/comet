@@ -28,7 +28,7 @@ export async function deleteRole(
   })
   await em
     .createQueryBuilder(ServerUser)
-    .update({ role: defaultRole })
+    .update({ role: defaultRole.id })
     .where({ server: role.server, role })
     .execute()
   await em.remove(role).flush()

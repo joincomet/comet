@@ -24,7 +24,7 @@ export const messageServerUserLoader = (em: EntityManager, userId: string) => {
       messageIds.forEach(messageId => {
         const message = messages.find(c => c.id === messageId)
         map[messageId] = message.channel
-          ? serverUsers.find(su => su.server === message.channel.server)
+          ? serverUsers.find(su => su.server === message.channel.server && su.user === message.author)
           : null
       })
       return messageIds.map(messageId => map[messageId])

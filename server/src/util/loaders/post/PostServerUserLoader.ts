@@ -21,7 +21,7 @@ export const postServerUserLoader = (em: EntityManager, userId: string) => {
       const map: Record<string, ServerUser> = {}
       postIds.forEach(postId => {
         const post = posts.find(p => p.id === postId)
-        map[postId] = serverUsers.find(su => su.server === post.server)
+        map[postId] = serverUsers.find(su => su.server === post.server && su.user === post.author)
       })
       return postIds.map(postId => map[postId])
     }

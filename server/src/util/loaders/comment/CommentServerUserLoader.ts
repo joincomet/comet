@@ -22,7 +22,7 @@ export const commentServerUserLoader = (em: EntityManager, userId: string) => {
       commentIds.forEach(commentId => {
         const comment = comments.find(c => c.id === commentId)
         map[commentId] = serverUsers.find(
-          su => su.server === comment.post.server
+          su => su.server === comment.post.server && su.user === comment.author
         )
       })
       return commentIds.map(commentId => map[commentId])

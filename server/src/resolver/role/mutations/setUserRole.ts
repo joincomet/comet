@@ -34,7 +34,7 @@ export async function setUserRole(
     user: userId,
     server: role.server,
     status: ServerUserStatus.Joined
-  })
+  }, ['user', 'role'])
   if (serverUser.role === role) return serverUser
   serverUser.role = role
   await em.persistAndFlush(serverUser)
