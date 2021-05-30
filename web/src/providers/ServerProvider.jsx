@@ -21,7 +21,7 @@ export default function ServerProvider({ children, name }) {
   const { data: usersData } = useServerUsersQuery({
     variables: { serverId: server?.id },
     skip: !server,
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only'
   })
   const users = usersData?.serverUsers ?? []
 

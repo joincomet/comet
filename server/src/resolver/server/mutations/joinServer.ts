@@ -60,7 +60,6 @@ export async function joinServer(
   if (defaultChannel) {
     const joinMessage = em.create(Message, {
       author: user,
-      serverUser: serverUser,
       type: MessageType.Join,
       channel: defaultChannel
     })

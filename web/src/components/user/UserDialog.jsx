@@ -228,7 +228,7 @@ export default memo(function UserDialog() {
             </div>
 
             {user?.isOg && (
-              <Tippy content="Veteran">
+              <Tippy content="OG">
                 <div className="cursor-pointer ml-3 h-5 w-5">
                   <VectorLogoIcon className="w-5 h-5" />
                 </div>

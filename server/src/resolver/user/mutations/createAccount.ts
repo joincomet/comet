@@ -90,6 +90,8 @@ export async function createAccount(
     })
   )
 
+  await em.persistAndFlush(user)
+
   const cometServer = await em.findOne(
     Server,
     {
@@ -103,7 +105,7 @@ export async function createAccount(
       isDefault: true
     })
     cometServer.userCount++
-    em.persist([
+    await em.persistAndFlush([
       cometServer,
       em.create(ServerUser, {
         user,
@@ -124,7 +126,6 @@ export async function createAccount(
     }
   }
 
-  await em.persistAndFlush(user)
   const accessToken = createAccessToken(user)
   ctx.userId = user.id
   return {

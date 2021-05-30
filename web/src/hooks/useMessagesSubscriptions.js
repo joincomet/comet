@@ -3,7 +3,6 @@ import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import {
   ChannelFragmentDoc,
   GroupFragmentDoc,
-  MessageFragmentDoc,
   MessagesDocument,
   MessageType,
   useMessageChangedSubscription,
@@ -196,6 +195,33 @@ export const useMessagesSubscriptions = () => {
           }
         } else if (deletedMessage) {
           message = deletedMessage
+          const messageChannelId = message.channel?.id
+          const messageGroupId = message.group?.id
+          const messageUserId = message.toUser ? message.author?.id : undefined
+          const queryOptions = {
+            query: MessagesDocument,
+            variables: {
+              userId: messageUserId,
+              groupId: messageGroupId,
+              channelId: messageChannelId,
+              cursor: null
+            }
+          }
+          const queryData = client.cache.readQuery(queryOptions)
+          if (
+            queryData &&
+            queryData.messages.messages.map(m => m.id).includes(message.id)
+          ) {
+            client.cache.writeQuery({
+              ...queryOptions,
+              data: {
+                messages: {
+                  ...queryData.messages,
+                  messages: queryData.messages.messages.filter(m => m.id !== message.id)
+                }
+              }
+            })
+          }
         }
       }
     }

@@ -19,6 +19,8 @@ import Tippy from '@tippyjs/react'
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
 import Switch from '@/components/ui/Switch'
 
+const serverRegex = /^[A-Za-z0-9_]+$/i
+
 export default function CreateServerDialog({ open, setOpen, server }) {
   const [isDownvotesEnabled, setIsDownvotesEnabled] = useState(
     server?.isDownvotesEnabled ?? false
@@ -38,7 +40,7 @@ export default function CreateServerDialog({ open, setOpen, server }) {
   const [category, setCategory] = useState(
     server?.category ?? ServerCategory.Other
   )
-  const { handleSubmit, register, watch, reset, setValue } = useForm({
+  const { handleSubmit, register, watch, reset, setValue, formState: { errors, isValid } } = useForm({
     mode: 'onChange'
   })
   watch((values, { type, value, name }) => {
@@ -160,7 +162,7 @@ export default function CreateServerDialog({ open, setOpen, server }) {
               !name ||
               displayName?.length < 2 ||
               name?.length < 3 ||
-              createLoading
+              createLoading || !serverRegex.test(name)
             }
           >
             {createLoading ? (
@@ -241,19 +243,27 @@ export default function CreateServerDialog({ open, setOpen, server }) {
       </div>
 
       <div className="pb-5 space-y-3 pt-3 px-5 text-left">
-        <div className="text-sm text-accent flex items-center pt-3">
+        <div>
+          <div className="text-sm text-accent flex items-center pt-3">
           <span className={`h-7 flex items-center`}>
             joincomet.app/+{server?.name ?? ''}
           </span>
-          {!server && (
-            <input
-              {...register('name')}
-              placeholder="Name"
-              className="bg-transparent h-7 w-full border-b dark:border-gray-700 focus:outline-none transition dark:focus:border-blue-500"
-              onKeyPress={() => setNameChanged(true)}
-            />
+            {!server && (
+              <input
+                {...register('name', { pattern: serverRegex, required: true, minLength: 3, maxLength: 21 })}
+                minLength={3}
+                maxLength={21}
+                placeholder="Name"
+                className="bg-transparent h-7 w-full border-b dark:border-gray-700 focus:outline-none transition dark:focus:border-blue-500"
+                onKeyPress={() => setNameChanged(true)}
+              />
+            )}
+          </div>
+          {errors.name?.type === 'pattern' && (
+            <div className="form-error">Letters, numbers and underscores only</div>
           )}
         </div>
+
 
         <textarea
           {...register('description', { maxLength: 500 })}

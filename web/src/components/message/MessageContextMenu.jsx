@@ -70,7 +70,16 @@ export default function MessageContextMenu({
           <ContextMenuItem
             label={t('message.context.delete')}
             red
-            onClick={() => toast.error(t('message.context.deleted'))}
+            onClick={() => {
+              deleteMessage({
+                variables: {
+                  input: {
+                    messageId: message.id
+                  }
+                }
+              })
+              toast.error(t('Message deleted!'))
+            }}
           />
         )}
       </ContextMenuSection>

@@ -59,8 +59,8 @@ export function createLoaders(em: EntityManager, userId: string): Loaders {
     folderOwnerLoader: folderOwnerLoader(em),
     folderServerLoader: folderServerLoader(em),
 
-    messageServerUserLoader: messageServerUserLoader(em, userId),
-    postServerUserLoader: postServerUserLoader(em, userId),
-    commentServerUserLoader: commentServerUserLoader(em, userId)
+    messageServerUserLoader: messageServerUserLoader(em),
+    postServerUserLoader: postServerUserLoader(em),
+    commentServerUserLoader: commentServerUserLoader(em)
   }
 }

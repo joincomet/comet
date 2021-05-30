@@ -22,7 +22,7 @@ import { serverRegex } from '@/util/text/serverRegex'
 export class CreateServerInput {
   @Field()
   @Length(3, 21)
-  @Matches(serverRegex)
+  @Matches(serverRegex, { message: 'Letters, numbers and underscores only' })
   name: string
 
   @Field()
@@ -59,6 +59,10 @@ export async function createServer(
   }: CreateServerInput
 ): Promise<Server> {
   logger('createServer')
+
+  const ownerCount = await em.count(Server, { owner: userId })
+  if (ownerCount >= 10) throw new Error('Cannot own more than 10 planets')
+
   name = name.trim()
   displayName = displayName.trim()
   description = description.trim()
