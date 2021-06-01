@@ -2193,9 +2193,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/core@npm:^2.0.0-beta.74":
-  version: 2.0.0-beta.74
-  resolution: "@tiptap/core@npm:2.0.0-beta.74"
+"@tiptap/core@npm:^2.0.0-beta.76":
+  version: 2.0.0-beta.76
+  resolution: "@tiptap/core@npm:2.0.0-beta.76"
   dependencies:
     "@types/prosemirror-commands": ^1.0.4
     "@types/prosemirror-inputrules": ^1.0.4
@@ -2213,7 +2213,7 @@ __metadata:
     prosemirror-state: ^1.3.4
     prosemirror-transform: ^1.3.2
     prosemirror-view: ^1.18.7
-  checksum: 5d572e5d8846f1401ca19628a227831b0a0984dbae8ba93a386add5379b92cd480ee84f0e0d3dc63c1d00d7f48b083ac785389e1850d7b6d76b29f5cc17ebd00
+  checksum: fedb77d4c944b07fcfe72803c06cc17804c607db72ee5e5fc9cb6d445facab97658dbcfec7caccc6bbf1f2fc237d335f1ed434e8548a04c6196f8415f633db9d
   languageName: node
   linkType: hard
 
@@ -2485,11 +2485,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/starter-kit@npm:^2.0.0-beta.71":
-  version: 2.0.0-beta.71
-  resolution: "@tiptap/starter-kit@npm:2.0.0-beta.71"
+"@tiptap/starter-kit@npm:^2.0.0-beta.73":
+  version: 2.0.0-beta.73
+  resolution: "@tiptap/starter-kit@npm:2.0.0-beta.73"
   dependencies:
-    "@tiptap/core": ^2.0.0-beta.74
+    "@tiptap/core": ^2.0.0-beta.76
     "@tiptap/extension-blockquote": ^2.0.0-beta.13
     "@tiptap/extension-bold": ^2.0.0-beta.13
     "@tiptap/extension-bullet-list": ^2.0.0-beta.13
@@ -2508,7 +2508,7 @@ __metadata:
     "@tiptap/extension-paragraph": ^2.0.0-beta.14
     "@tiptap/extension-strike": ^2.0.0-beta.15
     "@tiptap/extension-text": ^2.0.0-beta.12
-  checksum: 42c7cf70bd0ab4a317646b6dedd579c94cae617a28b05357bb7d34452dddeccd7b2a13e8c49fc59163dee0caf6720532fb3d71a74c4da1ee5f2ee624ba747b30
+  checksum: f3e51a9630cfe9de91fd498d6d433d52327785b4e8656990d4113b70ef8b30550d9dde75e0fc798d52e702d1250c7d3b770bfe72a04a40031b6b26fe23ec3411
   languageName: node
   linkType: hard
 
@@ -13454,9 +13454,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^1.8.6":
-  version: 1.8.6
-  resolution: "react-virtuoso@npm:1.8.6"
+"react-virtuoso@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "react-virtuoso@npm:1.9.0"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.5
     "@virtuoso.dev/urx": ^0.2.5
@@ -13464,7 +13464,7 @@ fsevents@~2.3.1:
     resize-observer-polyfill: ^1.5.1
   peerDependencies:
     react: ">=16"
-  checksum: d98d59c80d844ac9b713fd068b29defb4d946778c36654b35c7608b792726db7918d1bc9ca14bf2d2c0c42d411c22eade31166a8b274886ef8c1a56267e07be6
+  checksum: b43c683d5bc06b792ab823421962d7f87b3f8f2b2a297047b3bdb9b36b388c066282d479a2aed621438c58ac2543d3c757d11c3d63839e82d945004ef5f6a08e
   languageName: node
   linkType: hard
 
@@ -14422,7 +14422,7 @@ resolve@^2.0.0-next.3:
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
     typescript: ^4.3.2
-    user-agents: ^1.0.669
+    user-agents: ^1.0.670
     validator: ^13.6.0
     ws: ^7.4.6
     xss: ^1.0.9
@@ -16334,13 +16334,13 @@ typescript@^4.3.2:
   languageName: node
   linkType: hard
 
-"user-agents@npm:^1.0.669":
-  version: 1.0.669
-  resolution: "user-agents@npm:1.0.669"
+"user-agents@npm:^1.0.670":
+  version: 1.0.670
+  resolution: "user-agents@npm:1.0.670"
   dependencies:
     dot-json: ^1.2.2
     lodash.clonedeep: ^4.5.0
-  checksum: e69e18fd9e27f13b00e8267f9624e1ae32035cfd4c88057e1750d110bc6d84d6ba416074f3cb07d403d2f56c0e5ed58a2dc54587fb818715eb1c497462798b2b
+  checksum: 1749538a496664c89fa0a7a711420829b7297057c84d51e644677ca17dc178085307a13528223bf72009fc24076766eb2ebbe0ab5056f120c87cb098ada0aedf
   languageName: node
   linkType: hard
 
@@ -16575,7 +16575,7 @@ typescript@^4.3.2:
     "@tiptap/extension-placeholder": ^2.0.0-beta.21
     "@tiptap/extension-underline": ^2.0.0-beta.14
     "@tiptap/react": ^2.0.0-beta.45
-    "@tiptap/starter-kit": ^2.0.0-beta.71
+    "@tiptap/starter-kit": ^2.0.0-beta.73
     "@types/react": ^17.0.8
     "@types/react-dom": ^17.0.5
     "@types/react-router-dom": ^5.1.7
@@ -16622,7 +16622,7 @@ typescript@^4.3.2:
     react-twitter-widgets: ^1.10.0
     react-use: ^17.2.4
     react-virtual: ^2.7.1
-    react-virtuoso: ^1.8.6
+    react-virtuoso: ^1.9.0
     react-youtube: ^7.13.1
     sass: ^1.34.0
     string-hash: ^1.1.3

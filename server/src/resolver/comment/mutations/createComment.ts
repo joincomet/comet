@@ -37,6 +37,8 @@ export async function createComment(
     ? await em.findOneOrFail(Comment, parentCommentId, ['author'])
     : null
 
+  if (parentComment && parentComment.isDeleted) throw new Error('Cannot reply to deleted comment')
+
   text = handleText(text)
 
   const comment = em.create(Comment, {

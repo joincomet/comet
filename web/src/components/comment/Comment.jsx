@@ -1,13 +1,11 @@
 import {
   IconChevronDown,
   IconChevronUp,
-  IconDotsHorizontal,
   IconDotsVertical
 } from '@/components/ui/icons/Icons'
 import { useState } from 'react'
 import UserAvatar from '@/components/user/UserAvatar'
 import UserPopup from '@/components/user/UserPopup'
-import { calendarDate } from '@/utils/timeUtils'
 import ctl from '@netlify/classnames-template-literals'
 import CommentEditor from '@/components/comment/CommentEditor'
 import { useTranslation } from 'react-i18next'
@@ -35,8 +33,7 @@ export default function Comment({
   comment,
   post,
   level = 0,
-  setParentComment,
-  isLast
+  setParentComment
 }) {
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
@@ -48,6 +45,8 @@ export default function Comment({
     s.setReplyingCommentId
   ])
   const isReplying = replyingCommentId === comment.id
+
+  if(comment.isDeleted && !comment.childCount) return null
 
   return (
     <div
@@ -67,7 +66,7 @@ export default function Comment({
             <UserPopup user={comment.author} role={comment.serverUser?.role}>
               <UserAvatar
                 size={7}
-                className="cursor-pointer transition hover:opacity-90"
+                className={`cursor-pointer transition ${!comment.author ? 'opacity-40 dark:bg-gray-700' : 'hover:opacity-90'}`}
                 user={comment.author}
               />
             </UserPopup>
@@ -75,7 +74,7 @@ export default function Comment({
 
           <div
             className={`pl-3 pb-3 w-full ${
-              (!!comment.childComments.length || isLast) && !collapse
+              (!!comment.childCount) && !collapse
                 ? 'border-b dark:border-gray-750'
                 : ''
             }`}
@@ -94,7 +93,7 @@ export default function Comment({
                     }`}
                     style={{ color: comment.serverUser?.role?.color }}
                   >
-                    {comment.author?.username ?? '[deleted]'}
+                    {comment.author?.username ?? <span className="text-mid">[deleted]</span>}
                   </div>
                 </UserPopup>
               </ContextMenuTrigger>
@@ -213,18 +212,20 @@ export default function Comment({
                 )}
               </div>
 
-              <div
-                className={replyBtnClass}
-                onClick={() => {
-                  if (isReplying) {
-                    setReplyingCommentId(null)
-                  } else {
-                    setReplyingCommentId(comment.id)
-                  }
-                }}
-              >
-                {isReplying ? t('comment.cancelReply') : t('comment.reply')}
-              </div>
+              {!comment.isDeleted && (
+                <div
+                  className={replyBtnClass}
+                  onClick={() => {
+                    if (isReplying) {
+                      setReplyingCommentId(null)
+                    } else {
+                      setReplyingCommentId(comment.id)
+                    }
+                  }}
+                >
+                  {isReplying ? t('comment.cancelReply') : t('comment.reply')}
+                </div>
+              )}
 
               {!!comment.childCount && (
                 <div
@@ -264,14 +265,13 @@ export default function Comment({
 
       <div className="pl-3">
         {!collapse &&
-          comment.childComments.map((childComment, index) => (
+          comment.childComments.map((childComment) => (
             <Comment
               key={childComment.id}
               comment={childComment}
               level={level + 1}
               setParentComment={setParentComment}
               post={post}
-              isLast={index < comment.childComments.length - 1}
             />
           ))}
       </div>

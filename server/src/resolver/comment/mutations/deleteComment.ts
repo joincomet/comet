@@ -19,8 +19,7 @@ export async function deleteComment(
   logger('deleteComment')
   const user = await em.findOneOrFail(User, userId)
   const comment = await em.findOneOrFail(Comment, commentId, [
-    'post.server.owner',
-    'author'
+    'post.server.owner'
   ])
   if (comment.isDeleted) throw new Error('Comment already deleted')
   if (comment.author !== user)
@@ -40,8 +39,6 @@ export async function deleteComment(
     })
   }
   await em.persistAndFlush(comment)
-  comment.text = '[deleted]'
-  comment.author = null
   await notifyCommentChanged({ id: commentId, type: ChangeType.Deleted })
   return comment
 }

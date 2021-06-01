@@ -259,12 +259,11 @@ export default memo(function Post({
             </div>
           </div>
 
-          <Link
-            to={post.relativeUrl}
+          <div
             className="text-secondary font-medium text-base"
           >
             {post.title}
-          </Link>
+          </div>
 
           {isPostPage &&
             type &&

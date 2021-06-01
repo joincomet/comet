@@ -32,19 +32,11 @@ export async function comments(
 ): Promise<Comment[]> {
   logger('comments')
   const post = await em.findOneOrFail(Post, postId)
-  const comments = await em.find(
+  return em.find(
     Comment,
     { post },
-    ['author'],
-    sort === CommentsSort.Top
-      ? { voteCount: QueryOrder.DESC, createdAt: QueryOrder.DESC }
-      : { createdAt: QueryOrder.DESC }
+    {orderBy: sort === CommentsSort.Top
+        ? { voteCount: QueryOrder.DESC, createdAt: QueryOrder.DESC }
+        : { createdAt: QueryOrder.DESC }}
   )
-  comments.forEach(comment => {
-    if (comment.isDeleted) {
-      comment.text = `<p>[deleted]</p>`
-      comment.author = null
-    }
-  })
-  return comments
 }

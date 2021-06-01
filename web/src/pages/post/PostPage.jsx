@@ -17,7 +17,8 @@ export default function PostPage({ postId }) {
   const { data } = usePostQuery({
     variables: {
       id: postId
-    }
+    },
+    fetchPolicy: 'cache-and-network'
   })
   const post = data?.post
 
@@ -55,12 +56,11 @@ export default function PostPage({ postId }) {
           )}
 
           <div className="space-y-2 px-4 pt-4 pb-96">
-            {comments.map((comment, index) => (
+            {comments.map((comment) => (
               <Comment
                 key={comment.id}
                 comment={comment}
                 post={post}
-                isLast={index < comments.length - 1}
               />
             ))}
           </div>

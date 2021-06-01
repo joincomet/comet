@@ -18,7 +18,7 @@ const countChildren = comment => {
   if (!comment.childComments || comment.childComments.length === 0) return 0
   let count = 0
   comment.childComments.forEach(c => {
-    count++
+    if (!c.isDeleted) count++
     c.childCount = countChildren(c)
     count += c.childCount
   })
@@ -33,7 +33,7 @@ export const createCommentTree = flatComments => {
 
 export const getParticipants = (flatComments, post) =>
   flatComments
-    .filter(c => !!c.author && c.author.id !== post.author.id)
+    .filter(c => !!c.author && c.author.id !== post?.author?.id)
     .map(c => ({
       user: c.author,
       serverUser: c.serverUser

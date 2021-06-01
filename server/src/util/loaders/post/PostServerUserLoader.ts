@@ -8,7 +8,7 @@ export const postServerUserLoader = (em: EntityManager) => {
     async (postIds: string[]) => {
       logger('postServerUserLoader', postIds)
       loader.clearAll()
-      const posts = await em.find(Post, postIds, ['server'])
+      const posts = (await em.find(Post, {id:postIds, isDeleted: false}, ['server'])).filter(p => !!p.author)
       const serverIds = posts.map(p => p.server.id)
       const authorIds = posts.map(p => p.author.id)
       const serverUsers = await em.find(
@@ -22,7 +22,11 @@ export const postServerUserLoader = (em: EntityManager) => {
       const map: Record<string, ServerUser> = {}
       postIds.forEach(postId => {
         const post = posts.find(post => post.id === postId)
-        map[postId] = serverUsers.find(su => su.server === post.server && su.user === post.author)
+        if (!post) {
+          map[postId] = null
+        } else {
+          map[postId] = serverUsers.find(su => su.server === post.server && su.user === post.author)
+        }
       })
       return postIds.map(postId => map[postId])
     }

@@ -14,7 +14,7 @@ import {
   Resolver,
   Root
 } from 'type-graphql'
-import { LinkMetadata, Post, ServerUser, VoteType } from '@/entity'
+import {LinkMetadata, Post, ServerUser, User, VoteType} from '@/entity'
 import { Context } from '@/types'
 import {
   createPost,
@@ -46,6 +46,14 @@ class GetLinkMetaArgs {
 @Resolver(() => Post)
 export class PostResolver {
   // --- Fields ---
+  @FieldResolver(() => User, { nullable: true })
+  async author(
+    @Ctx() { loaders: { postAuthorLoader }}: Context,
+    @Root() post: Post
+  ): Promise<User> {
+    return postAuthorLoader.load(post.id)
+  }
+
   @FieldResolver(() => ServerUser, { nullable: true })
   async serverUser(
     @Ctx() { loaders: { postServerUserLoader } }: Context,

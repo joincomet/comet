@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.80",
+  "version": "0.0.81",
   "private": true,
   "engines": {
     "node": "16.x.x"
@@ -61,7 +61,7 @@
     "sharp": "^0.28.3",
     "type-graphql": "^1.1.1",
     "typescript": "^4.3.2",
-    "user-agents": "^1.0.669",
+    "user-agents": "^1.0.670",
     "validator": "^13.6.0",
     "ws": "^7.4.6",
     "xss": "^1.0.9"

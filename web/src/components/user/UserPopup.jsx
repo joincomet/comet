@@ -9,6 +9,7 @@ export default function UserPopup({
   placement = 'right'
 }) {
   const setDialogUserId = useStore(s => s.setDialogUserId)
+  if (!user) return children
   return (
     <>
       <Popup

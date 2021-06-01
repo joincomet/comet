@@ -12,7 +12,7 @@ import {
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import { Comment, ServerUser, VoteType } from '@/entity'
+import {Comment, ServerUser, User, VoteType} from '@/entity'
 import {
   createComment,
   CreateCommentInput,
@@ -33,6 +33,22 @@ import { CommentsArgs, comments } from '@/resolver/comment/queries/comments'
 @Resolver(() => Comment)
 export class CommentResolver {
   // --- Fields ---
+  @FieldResolver(() => User, { nullable: true })
+  async author(
+    @Ctx() { loaders: { commentAuthorLoader } }: Context,
+    @Root() comment: Comment
+  ): Promise<User> {
+    return commentAuthorLoader.load(comment.id)
+  }
+
+  @FieldResolver(() => String)
+  async text(
+    @Ctx() { loaders: { commentTextLoader } }: Context,
+    @Root() comment: Comment
+  ): Promise<string> {
+    return commentTextLoader.load(comment.id)
+  }
+
   @FieldResolver(() => ServerUser, { nullable: true })
   async serverUser(
     @Ctx() { loaders: { commentServerUserLoader } }: Context,

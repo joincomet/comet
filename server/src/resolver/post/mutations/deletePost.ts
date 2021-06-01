@@ -25,7 +25,6 @@ export async function deletePost(
       ServerPermission.ManagePosts
     )
   post.isDeleted = true
-  post.text = '[deleted]'
   await em.persistAndFlush(post)
   await notifyPostChanged({ id: postId, type: ChangeType.Deleted })
   return post

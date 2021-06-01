@@ -54,4 +54,7 @@ export interface Loaders {
   messageServerUserLoader: DataLoader<string, ServerUser>
   postServerUserLoader: DataLoader<string, ServerUser>
   commentServerUserLoader: DataLoader<string, ServerUser>
+  commentAuthorLoader: DataLoader<string, User>
+  commentTextLoader: DataLoader<string, string>
+  postAuthorLoader: DataLoader<string, User>
 }
