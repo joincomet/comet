@@ -21,7 +21,7 @@
     },
     "jsx": "preserve",
     "esModuleInterop": true,
-    "target": "es5",
+    "target": "es2018",
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
