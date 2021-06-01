@@ -6,6 +6,7 @@ query posts(
   $folderId: ID
   $serverId: ID
   $search: String
+  $feed: PostsFeed
 ) {
   posts(
     sort: $sort
@@ -15,6 +16,7 @@ query posts(
     search: $search
     offset: $offset
     limit: $limit
+    feed: $feed
   ) {
     hasMore
     posts {

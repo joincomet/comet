@@ -936,6 +936,12 @@ export type PostImage = {
   linkUrl?: Maybe<Scalars['String']>;
 };
 
+export enum PostsFeed {
+  All = 'All',
+  Featured = 'Featured',
+  Joined = 'Joined'
+}
+
 export type PostsResponse = {
   __typename?: 'PostsResponse';
   hasMore: Scalars['Boolean'];
@@ -1011,6 +1017,7 @@ export type QueryPostArgs = {
 
 
 export type QueryPostsArgs = {
+  feed?: Maybe<PostsFeed>;
   folderId?: Maybe<Scalars['ID']>;
   limit?: Maybe<Scalars['PositiveInt']>;
   offset?: Maybe<Scalars['NonNegativeInt']>;
@@ -2672,6 +2679,7 @@ export type PostsQueryVariables = Exact<{
   folderId?: Maybe<Scalars['ID']>;
   serverId?: Maybe<Scalars['ID']>;
   search?: Maybe<Scalars['String']>;
+  feed?: Maybe<PostsFeed>;
 }>;
 
 
@@ -5963,7 +5971,7 @@ export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
 export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
 export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
 export const PostsDocument = gql`
-    query posts($sort: PostsSort, $offset: NonNegativeInt, $limit: PositiveInt, $time: PostsTime, $folderId: ID, $serverId: ID, $search: String) {
+    query posts($sort: PostsSort, $offset: NonNegativeInt, $limit: PositiveInt, $time: PostsTime, $folderId: ID, $serverId: ID, $search: String, $feed: PostsFeed) {
   posts(
     sort: $sort
     time: $time
@@ -5972,6 +5980,7 @@ export const PostsDocument = gql`
     search: $search
     offset: $offset
     limit: $limit
+    feed: $feed
   ) {
     hasMore
     posts {
@@ -6016,6 +6025,7 @@ ${ServerUserFragmentDoc}`;
  *      folderId: // value for 'folderId'
  *      serverId: // value for 'serverId'
  *      search: // value for 'search'
+ *      feed: // value for 'feed'
  *   },
  * });
  */

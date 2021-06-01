@@ -20,7 +20,8 @@ export default function InfoSidebar() {
 
   return (
     <Sidebar right show={showUsers}>
-      <div className="px-2.5 py-2.5">
+      <div className="px-2.5 py-2.5 flex flex-col">
+        <div className="mt-auto" />
         <div className="dark:border-gray-750 border rounded p-2.5 text-xs text-tertiary leading-5">
           <div className="space-x-3">
             <Link to="/help/terms" target="_blank" className={linkClass}>

@@ -1,19 +1,24 @@
 import { useState } from 'react'
 import { useStore } from '@/hooks/useStore'
 import { usePostsQuery } from '@/graphql/hooks'
+import { useCurrentUser } from "@/hooks/graphql/useCurrentUser";
 
 export const usePosts = ({ serverId, folderId }) => {
-  const [postsSort, postsTime, folderSort] = useStore(s => [
+  const [currentUser] = useCurrentUser()
+  const [postsSort, postsTime, folderSort, postsFeed] = useStore(s => [
     s.postsSort,
     s.postsTime,
-    s.folderSort
+    s.folderSort,
+    s.postsFeed
   ])
   const [page, setPage] = useState(0)
+  const feed = !currentUser && postsFeed === 'Joined' ? 'Featured' : postsFeed
   const variables = {
     sort: folderId ? folderSort : postsSort,
     time: postsSort === 'Top' && !folderId ? postsTime : null,
     serverId,
-    folderId
+    folderId,
+    feed
   }
   const { data, loading, fetchMore } = usePostsQuery({
     variables,

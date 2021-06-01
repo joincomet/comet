@@ -44,6 +44,11 @@ export class PostsArgs {
   })
   time: PostsTime = PostsTime.All
 
+  @Field(() => PostsFeed, {
+    defaultValue: 'Joined'
+  })
+  feed: PostsFeed = PostsFeed.Joined
+
   @Field(() => ID, {
     nullable: true
   })
@@ -59,6 +64,16 @@ export class PostsArgs {
   })
   search?: string
 }
+
+export enum PostsFeed {
+  Joined = 'Joined',
+  Featured = 'Featured',
+  All = 'All'
+}
+
+registerEnumType(PostsFeed, {
+  name: 'PostsFeed'
+})
 
 export enum PostsSort {
   New = 'New',
@@ -95,7 +110,7 @@ export class PostsResponse {
 
 export async function posts(
   { em, userId }: Context,
-  { offset, limit, sort, time, folderId, serverId, search }: PostsArgs
+  { offset, limit, sort, time, folderId, serverId, search, feed }: PostsArgs
 ): Promise<PostsResponse> {
   logger('posts')
   const user = userId ? await em.findOneOrFail(User, userId) : null
@@ -104,20 +119,12 @@ export async function posts(
   else if (sort === PostsSort.Hot) orderBy = { hotRank: QueryOrder.DESC }
   else if (sort === PostsSort.Top) orderBy = { voteCount: QueryOrder.DESC }
 
-  const joinedOnly = !folderId && !serverId
-  const server = serverId ? await em.findOneOrFail(Server, serverId) : null
+  let servers: Server[] = []
+  let folder: Folder
 
-  let servers = []
-  if (joinedOnly) {
-    const serverJoins = await em.find(
-      ServerUser,
-      { user, status: ServerUserStatus.Joined },
-      ['server']
-    )
-    servers = serverJoins.map(join => join.server)
-  }
-  let folder
-  if (folderId) {
+  if (serverId) {
+    servers = [await em.findOneOrFail(Server, { id: serverId, isDeleted: false })]
+  } else if (folderId) {
     folder = await em.findOneOrFail(Folder, folderId, ['owner'])
     if (!sort || sort === PostsSort.Added)
       orderBy = { folderPosts: { addedAt: QueryOrder.DESC } }
@@ -131,6 +138,21 @@ export async function posts(
       if (myData.status !== RelationshipStatus.Friends)
         throw new Error('error.folder.friends')
     }
+  } else if (feed === PostsFeed.Joined) {
+    if (user) {
+      const serverJoins = await em.find(
+        ServerUser,
+        { user, status: ServerUserStatus.Joined },
+        ['server']
+      )
+      servers = serverJoins.map(join => join.server).filter(server => !server.isDeleted)
+    } else {
+      servers = await em.find(Server, {isFeatured: true, isDeleted: false})
+    }
+  } else if (feed === PostsFeed.Featured) {
+    servers = await em.find(Server, {isFeatured: true, isDeleted: false})
+  } else if (feed === PostsFeed.All) {
+    servers = await em.find(Server, {isDeleted: false})
   }
 
   const posts = await em.find(
@@ -146,9 +168,7 @@ export async function posts(
                 $gt: dayjs().subtract(1, time.toLowerCase()).toDate()
               }
             },
-        { server: { $ne: null } },
-        joinedOnly ? { server: servers } : {},
-        server ? { server } : {},
+        servers.length ? { server: servers } : {},
         folder ? { folderPosts: { folder } } : {}
       ]
     },

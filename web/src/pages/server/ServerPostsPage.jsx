@@ -1,4 +1,3 @@
-import { useRef } from 'react'
 import PostsHeader from '@/components/post/PostsHeader'
 import Posts from '@/components/post/Posts'
 import { useSetServerPage } from '@/hooks/useSetServerPage'
@@ -6,7 +5,6 @@ import Page from '@/components/ui/page/Page'
 import CreatePostHeader from '@/components/post/create/CreatePostHeader'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import ChannelUsersSidebar from '@/pages/server/channel/ChannelUsersSidebar'
-import { useServerUsersQuery } from '@/graphql/hooks'
 import { Helmet } from 'react-helmet-async'
 import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
 

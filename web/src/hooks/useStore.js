@@ -1,14 +1,16 @@
 import create from 'zustand'
 
 export const useStore = create((set, get) => ({
-  friendsPage: 'Online',
+  friendsPage: 'Online', // Online, All, Pending, Blocked, Add
   setFriendsPage: friendsPage => set({ friendsPage }),
-  inboxPage: 'Unread',
+  inboxPage: 'Unread', // Unread, All
   setInboxPage: inboxPage => set({ inboxPage }),
-  postsSort: 'Hot',
+  postsSort: 'Hot', // Hot, Top, New
   setPostsSort: postsSort => set({ postsSort }),
-  postsTime: 'Day',
+  postsTime: 'Day', // Hour, Day, Week, Month, Year, All
   setPostsTime: postsTime => set({ postsTime }),
+  postsFeed: 'Joined', // Joined, Featured, All
+  setPostsFeed: postsFeed => set({ postsFeed }),
   commentsSort: 'Top',
   setCommentsSort: commentsSort => set({ commentsSort }),
   liveMode: false,

@@ -560,6 +560,12 @@ type PostImage {
   linkUrl: String
 }
 
+enum PostsFeed {
+  All
+  Featured
+  Joined
+}
+
 type PostsResponse {
   hasMore: Boolean!
   posts: [Post!]!
@@ -592,7 +598,7 @@ type Query {
   getLinkMeta(linkUrl: String!): LinkMetadata
   messages(channelId: ID, cursor: ID, groupId: ID, limit: PositiveInt = 100, pinned: Boolean = false, userId: ID): MessagesResponse!
   post(id: ID!): Post!
-  posts(folderId: ID, limit: PositiveInt = 20, offset: NonNegativeInt = 0, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): PostsResponse!
+  posts(feed: PostsFeed = Joined, folderId: ID, limit: PositiveInt = 20, offset: NonNegativeInt = 0, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): PostsResponse!
   publicServers(category: ServerCategory, featured: Boolean = false, sort: PublicServersSort = Top): [Server!]!
   replies: [Reply!]!
   server(id: ID, name: String): Server
