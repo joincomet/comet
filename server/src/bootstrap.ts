@@ -42,7 +42,7 @@ export async function bootstrap() {
 
   console.log(`Bootstraping schema and server...`)
   const liveQueryStore =
-    process.env.NODE_ENV === 'production'
+    process.env.NODE_ENV === 'production' && process.env.REDIS_URL
       ? new RedisLiveQueryStore(process.env.REDIS_URL)
       : new InMemoryLiveQueryStore()
   const schema = await buildSchema(typeGraphQLConf)

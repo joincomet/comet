@@ -83,7 +83,7 @@ export const mikroOrmConf = {
         }
       : {},
   resultCache:
-    process.env.NODE_ENV === 'production'
+    process.env.NODE_ENV === 'production' && process.env.REDIS_URL
       ? {
           adapter: RedisCacheAdapter,
           options: {

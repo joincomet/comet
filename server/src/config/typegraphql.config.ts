@@ -73,7 +73,7 @@ export const typeGraphQLConf = {
   directives: [GraphQLLiveDirective],
   globalMiddlewares: [ErrorInterceptor],
   pubSub:
-    process.env.NODE_ENV === 'production'
+    process.env.NODE_ENV === 'production' && process.env.REDIS_URL
       ? new RedisPubSub({
           publisher: new Redis(process.env.REDIS_URL, redisOptions),
           subscriber: new Redis(process.env.REDIS_URL, redisOptions)
