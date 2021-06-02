@@ -121,6 +121,7 @@ export const useMessagesSubscriptions = () => {
               id: `Channel:${message.channel.id}`
             })
             if (data) {
+              console.log(data)
               const newData = {
                 ...data,
                 isUnread: true

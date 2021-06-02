@@ -144,10 +144,10 @@ export async function createMessage(
     if (isEveryoneMentioned) {
       await qb
         .update({ mentionCount })
-        .where({ user: { $ne: user } })
+        .where({ user: { $ne: user }, channel })
         .execute()
     } else if (mentionIds.length > 0) {
-      await qb.update({ mentionCount }).where({ user: mentionIds }).execute()
+      await qb.update({ mentionCount }).where({ user: mentionIds, channel }).execute()
     }
     await em.persistAndFlush(channel)
   }

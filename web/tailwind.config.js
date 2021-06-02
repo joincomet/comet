@@ -12,6 +12,9 @@ module.exports = {
   purge: ['./src/index.html', './src/**/*.{js,jsx,html}'],
   theme: {
     extend: {
+      borderWidth: {
+        '3': '3px'
+      },
       lineClamp: {
         7: '7',
         8: '8',
@@ -214,7 +217,7 @@ module.exports = {
       current: 'currentColor',
       black: colors.black,
       white: colors.white,
-      /*blueGray: {
+      gray: {
         50: '#FAFAFB',
         100: '#F4F4F6',
         200: '#F4F4F6',
@@ -232,8 +235,8 @@ module.exports = {
         850: '#1C2029',
         900: '#151821',
         950: '#0B0C11'
-      },*/
-      gray: {
+      },
+      /*gray: {
         50: '#FAFAFB',
         100: '#F4F4F6',
         200: '#ECECEF',
@@ -251,7 +254,7 @@ module.exports = {
         850: '#1E2026',
         900: '#17181E',
         950: '#0C0C10'
-      },
+      },*/
       /*normalGray: {
         650: '#494951',
         725: '#39393F',

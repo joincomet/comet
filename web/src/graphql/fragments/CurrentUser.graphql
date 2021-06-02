@@ -12,6 +12,7 @@ fragment CurrentUser on User {
     }
     permissions
     channels {
+      id
       isUnread
       mentionCount
     }

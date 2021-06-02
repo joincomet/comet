@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import UserAvatar from "@/components/user/UserAvatar";
 
 export class MentionList extends Component {
   constructor(props) {
@@ -10,11 +11,21 @@ export class MentionList extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    if (this.props.users !== oldProps.users) {
+    if (oldProps.users.length < this.props.selectedIndex + 1) {
       this.setState({
-        selectedIndex: 0
+        selectedIndex: oldProps.users.length - 1
       })
     }
+  }
+
+  users() {
+    return this.props.users
+      .filter(user =>
+        (typeof user === 'string' ? user.substring(1) : user.username)
+          .toLowerCase()
+          .startsWith(this.props.query.toLowerCase())
+      )
+      .slice(0, 5)
   }
 
   onKeyDown({ event }) {
@@ -38,16 +49,18 @@ export class MentionList extends Component {
   }
 
   upHandler() {
+    let i = this.state.selectedIndex - 1
+    if (i < 0) i = this.users().length - 1
     this.setState({
-      selectedIndex:
-        (this.state.selectedIndex + this.props.users.length - 1) %
-        this.props.users.length
+      selectedIndex: i
     })
   }
 
   downHandler() {
+    let i = this.state.selectedIndex + 1
+    if (i >= this.users().length) i = 0
     this.setState({
-      selectedIndex: (this.state.selectedIndex + 1) % this.props.users.length
+      selectedIndex: i
     })
   }
 
@@ -56,7 +69,7 @@ export class MentionList extends Component {
   }
 
   selectItem(index) {
-    const user = this.props.users[index]
+    const user = this.users()[index]
 
     if (user) {
       this.props.command(
@@ -69,23 +82,23 @@ export class MentionList extends Component {
 
   render() {
     return (
-      <div className="relative w-full w-72 rounded dark:bg-gray-800 text-primary overflow-hidden text-sm shadow-md">
-        {this.props.users
-          .filter(user =>
-            (typeof user === 'string' ? user.substring(1) : user.username)
-              .toLowerCase()
-              .startsWith(this.props.query.toLowerCase())
-          )
-          .slice(0, 5)
+      <div className="relative w-full w-72 rounded-md dark:bg-gray-800 overflow-hidden shadow-lg p-2 border dark:border-gray-850">
+        {this.users()
           .map((user, index) => (
             <button
-              className={`block w-full text-left bg-transparent border-none px-2 py-2 dark:hover:bg-gray-775 focus:outline-none ${
+              className={`flex items-center rounded w-full text-left text-primary text-base bg-transparent border-none px-2 h-10 focus:outline-none ${
                 index === this.state.selectedIndex ? 'dark:bg-gray-775' : ''
               }`}
               key={typeof user === 'string' ? user : user.id}
               onClick={() => this.selectItem(index)}
+              onMouseMove={() => this.setState({
+                selectedIndex: index
+              })}
             >
-              {typeof user === 'string' ? user : user.username}
+              {typeof user === 'string' ? user : <>
+              <UserAvatar user={user} size={6} className="mr-2" />
+                {user.username}
+              </>}
             </button>
           ))}
       </div>

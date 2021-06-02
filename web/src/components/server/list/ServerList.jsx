@@ -20,6 +20,7 @@ import { useState } from 'react'
 import Dialog from '@/components/ui/dialog/Dialog'
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
 import ShowPasswordButton from '@/components/ui/ShowPasswordButton'
+import CountBadge from "@/components/ui/CountBadge";
 
 export default function ServerList() {
   const { pathname } = useLocation()
@@ -106,11 +107,13 @@ function ServerListServer({ server }) {
     server,
     permissions: [ServerPermission.PrivateChannels]
   })
-  const unread = !!(server.channels ?? [])
+  const channels = (server.channels ?? [])
     .filter(channel =>
       channel.type === ChannelType.Private ? canViewPrivateChannels : true
     )
+  const unread = !!channels
     .find(c => c.isUnread)
+  const mentionCount = channels.map(c => c.mentionCount).reduce((acc, cur) => acc + cur)
   const active = serverName === server.name
   const [deleteOpen, setDeleteOpen] = useState(false)
 
@@ -145,6 +148,12 @@ function ServerListServer({ server }) {
               active ? 'rounded-2xl' : 'rounded-3xl'
             }`}
           />
+
+          {!!mentionCount && (
+            <div className="absolute -bottom-1 -right-1 rounded-full border-3 dark:border-gray-900">
+              <CountBadge count={mentionCount} />
+            </div>
+          )}
         </ServerListItem>
       </ContextMenuTrigger>
     </>

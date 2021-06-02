@@ -1371,7 +1371,7 @@ export type CurrentUserFragment = (
       & Pick<User, 'id'>
     ), channels: Array<(
       { __typename?: 'Channel' }
-      & Pick<Channel, 'isUnread' | 'mentionCount'>
+      & Pick<Channel, 'id' | 'isUnread' | 'mentionCount'>
     )> }
   )>, relatedUsers: Array<(
     { __typename?: 'User' }
@@ -3018,6 +3018,7 @@ export const CurrentUserFragmentDoc = gql`
     }
     permissions
     channels {
+      id
       isUnread
       mentionCount
     }

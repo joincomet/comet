@@ -15,7 +15,7 @@ export const serverPermissionsLoader = (em: EntityManager, userId: string) => {
       logger('serverPermissionsLoader', serverIds)
       loader.clearAll()
       if (!userId) return serverIds.map(_ => [])
-      const currentUser = await em.findOneOrFail(User, userId)
+      const currentUser = em.getReference(User, userId)
       const serverUsers = await em.find(
         ServerUser,
         {
@@ -34,12 +34,12 @@ export const serverPermissionsLoader = (em: EntityManager, userId: string) => {
           map[serverId] = []
           return
         }
-        if (currentUser.isAdmin || serverUser.server.owner === currentUser) {
+        const role = serverUser.role
+        if (currentUser.isAdmin || serverUser.server.owner === currentUser || role.permissions.includes(ServerPermission.Admin)) {
           map[serverId] = Object.values(ServerPermission)
           return
         }
         const perms: ServerPermission[] = []
-        const role = serverUser?.role
         perms.push(...role.permissions)
         map[serverId] = [...new Set(perms)]
       })

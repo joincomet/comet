@@ -116,7 +116,7 @@ export async function createAccount(
     ])
     const defaultChannel = await em.findOne(Channel, { server: cometServer, isDefault: true })
     if (defaultChannel) {
-      em.persist(
+      await em.persistAndFlush(
         em.create(Message, {
           type: MessageType.Join,
           author: user,

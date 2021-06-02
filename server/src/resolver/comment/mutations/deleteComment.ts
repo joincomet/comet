@@ -29,6 +29,7 @@ export async function deleteComment(
       ServerPermission.ManageComments
     )
   comment.isDeleted = true
+  comment.post.commentCount--
   // Delete replies associated with deleted comment
   const replies = await em.find(Reply, { comment })
   em.remove(replies)
