@@ -113,7 +113,7 @@ function ServerListServer({ server }) {
     )
   const unread = !!channels
     .find(c => c.isUnread)
-  const mentionCount = channels.map(c => c.mentionCount).reduce((acc, cur) => acc + cur)
+  const mentionCount = channels.length > 0 ? channels.map(c => c.mentionCount).reduce((acc, cur) => acc + cur) : 0
   const active = serverName === server.name
   const [deleteOpen, setDeleteOpen] = useState(false)
 

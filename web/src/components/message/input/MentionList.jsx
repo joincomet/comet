@@ -45,6 +45,12 @@ export class MentionList extends Component {
       return true
     }
 
+    if (event.key === ' ') {
+      event.stopPropagation()
+      this.spaceHandler()
+      return true
+    }
+
     return false
   }
 
@@ -65,6 +71,12 @@ export class MentionList extends Component {
   }
 
   enterHandler() {
+    this.selectItem(this.state.selectedIndex)
+  }
+
+  spaceHandler() {
+    console.log('space')
+    console.log(this.state.selectedIndex)
     this.selectItem(this.state.selectedIndex)
   }
 

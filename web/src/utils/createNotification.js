@@ -1,3 +1,8 @@
+export const isNotificationsSupported = () =>
+  'Notification' in window &&
+  'serviceWorker' in navigator &&
+  'PushManager' in window
+
 export const createNotification = ({
   onClick,
   title,
@@ -5,6 +10,7 @@ export const createNotification = ({
   icon,
   timestamp
 }) => {
+  if (!isNotificationsSupported()) return
   if (Notification.permission !== 'granted') return
   const notification = new Notification(title, {
     body,

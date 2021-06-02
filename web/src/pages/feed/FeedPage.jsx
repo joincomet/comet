@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import Page from '@/components/ui/page/Page'
 import CreatePostHeader from '@/components/post/create/CreatePostHeader'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import { createNotification } from '@/utils/createNotification'
+import {createNotification, isNotificationsSupported} from '@/utils/createNotification'
 import InfoSidebar from '@/components/ui/InfoSidebar'
 
 export default function FeedPage() {
@@ -24,6 +24,7 @@ export default function FeedPage() {
   useSetHomePage(null)
 
   useEffect(() => {
+    if (!isNotificationsSupported()) return
     if (Notification.permission === 'default') {
       Notification.requestPermission().then(function (permission) {
         // If the user accepts, let's create a notification
@@ -35,7 +36,7 @@ export default function FeedPage() {
         }
       })
     }
-  })
+  }, [])
 
   return (
     <>
