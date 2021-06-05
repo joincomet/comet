@@ -15,6 +15,7 @@ const sidebarClass = ctl(`
   dark:bg-gray-800
   transform
   z-50
+  md:z-0
 `)
 
 const leftClass = show => ctl(`
