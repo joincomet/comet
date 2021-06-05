@@ -39,8 +39,6 @@ function App({ history }) {
                 backend={TouchBackend}
                 options={{ enableTouchEvents: false, enableMouseEvents: true }}
               >
-                <MobileComingSoon />
-
                 <ResponsiveToaster />
                 <CustomDragLayer />
                 {window.electron && !isMac && <TitleBar />}
@@ -52,7 +50,7 @@ function App({ history }) {
                       ? { height: isMac ? '100%' : 'calc(100% - 1.375rem)' }
                       : { height: '100%' }
                   }
-                  className="hidden md:flex"
+                  className="flex"
                 >
                   <Routes />
                 </div>

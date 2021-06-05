@@ -24,6 +24,8 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
 import { Editor } from '@tiptap/react/src/Editor'
 import TypingAnimation from '@/components/message/input/TypingAnimation'
+import Tenor from "@/components/tenor/Tenor";
+import TenorPopover from "@/components/tenor/TenorPopover";
 
 function useForceUpdate() {
   const [, setValue] = useState(0)
@@ -401,6 +403,8 @@ export default function MessageInput({ channel, server, group, user, users }) {
               <EditorContent editor={editor} />
             )}
           </div>
+
+          <TenorPopover onSelect={(e) => console.log(e)} />
         </div>
 
         <div className="h-6 flex items-center text-secondary text-13 font-medium">

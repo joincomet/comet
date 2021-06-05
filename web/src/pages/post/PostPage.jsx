@@ -45,7 +45,7 @@ export default function PostPage({ postId }) {
       </Helmet>
       {post ? (
         <div className="max-h-full h-full scrollbar-custom dark:bg-gray-750 overflow-y-auto">
-          <div className="pt-4 px-4">
+          <div className="md:pt-4 md:px-4 px-0 pt-0">
             {!!post && <Post post={post} isPostPage />}
           </div>
 
@@ -55,7 +55,7 @@ export default function PostPage({ postId }) {
             </div>
           )}
 
-          <div className="space-y-2 px-4 pt-4 pb-96">
+          <div className="space-y-2 md:px-4 pt-4 px-0 pb-96">
             {comments.map((comment) => (
               <Comment
                 key={comment.id}

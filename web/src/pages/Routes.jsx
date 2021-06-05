@@ -54,7 +54,7 @@ export default function Routes() {
                 className="flex h-full"
                 style={{ height: 'calc(100% - 1.375rem)' }}
               >
-                <ServerList />
+                <ServerList hide />
                 <Route path="/explore">
                   <ExplorePage />
                 </Route>

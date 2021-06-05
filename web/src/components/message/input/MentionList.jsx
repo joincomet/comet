@@ -75,8 +75,6 @@ export class MentionList extends Component {
   }
 
   spaceHandler() {
-    console.log('space')
-    console.log(this.state.selectedIndex)
     this.selectItem(this.state.selectedIndex)
   }
 

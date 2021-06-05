@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 
 export default function ShowFoldersButton() {
   const [showFolders, setShowFolders] = useStore(s => [
-    s.showFolders,
-    s.setShowFolders
+    s.showRightSidebar,
+    s.setShowRightSidebar
   ])
   const { t } = useTranslation()
 

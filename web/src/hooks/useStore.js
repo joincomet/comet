@@ -16,12 +16,6 @@ export const useStore = create((set, get) => ({
   liveMode: false,
   setLiveMode: liveMode => set({ liveMode }),
 
-  // Right Sidebar Toggles
-  showFolders: true,
-  setShowFolders: showFolders => set({ showFolders }),
-  showUsers: true,
-  setShowUsers: showUsers => set({ showUsers }),
-
   serverPages: {},
   setServerPage: (serverId, page) =>
     set({ serverPages: { ...get().serverPages, [serverId]: page } }),
@@ -55,5 +49,11 @@ export const useStore = create((set, get) => ({
   setLoginDialog: open => set({ loginDialog: open }),
 
   createAccount: false,
-  setCreateAccount: createAccount => set({ createAccount })
+  setCreateAccount: createAccount => set({ createAccount }),
+
+  showLeftSidebar: false,
+  setShowLeftSidebar: showLeftSidebar => set({showLeftSidebar}),
+
+  showRightSidebar: false,
+  setShowRightSidebar: showRightSidebar => set({showRightSidebar})
 }))

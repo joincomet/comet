@@ -1,9 +1,5 @@
-import HeaderSearchBar from '@/components/ui/header/HeaderSearchBar'
-import { useEffect } from 'react'
-import { useStore } from '@/hooks/useStore'
-import { IconDownloadLarge } from '@/components/ui/icons/Icons'
-import Tippy from '@tippyjs/react'
-import { useTranslation } from 'react-i18next'
+import {IconMenu} from "@/components/ui/icons/Icons";
+import {useStore} from "@/hooks/useStore";
 
 export default function Header({
   children,
@@ -12,6 +8,7 @@ export default function Header({
   title,
   showDivider = false
 }) {
+  const [setShowLeftSidebar] = useStore(s => [s.setShowLeftSidebar])
   return (
     <header
       id="header"
@@ -22,6 +19,7 @@ export default function Header({
           showDivider ? 'border-r dark:border-gray-700 mr-4' : ''
         }`}
       >
+        <IconMenu className="md:hidden mr-3 w-5 h-5 text-tertiary" onClick={() => setShowLeftSidebar(true)} />
         <div className="text-tertiary mr-3">{icon}</div>
         {title}
       </div>

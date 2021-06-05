@@ -70,6 +70,7 @@ jobs:
           VITE_SENTRY_DSN: ${{ secrets.WEB_SENTRY_DSN }}
           VITE_BTC_ADDRESS: ${{ secrets.BTC_ADDRESS }}
           VITE_ETH_ADDRESS: ${{ secrets.ETH_ADDRESS }}
+          VITE_TENOR_API_KEY: ${{ secrets.TENOR_API_KEY }}
       - uses: actions/upload-artifact@v2
         with:
           name: dist-web

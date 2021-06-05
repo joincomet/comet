@@ -24,6 +24,7 @@ export {
   HiLink as IconLinkChain,
   HiGlobeAlt as IconLinkWeb,
   HiMenuAlt2 as IconText,
+  HiMenu as IconMenu,
   HiChatAlt2 as IconChat,
   HiArrowNarrowRight as IconUserJoin,
   HiDotsHorizontal as IconDotsHorizontal,

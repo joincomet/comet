@@ -5,6 +5,7 @@ import './locales/i18n'
 import './styles/index.css'
 import './styles/app.css'
 import './styles/tippy.css'
+import './components/tenor/styles.css'
 
 import { createBrowserHistory } from 'history'
 import * as Sentry from '@sentry/react'

@@ -50,7 +50,7 @@ export default function Comment({
 
   return (
     <div
-      className={`relative rounded dark:bg-gray-800 ${
+      className={`relative md:rounded dark:bg-gray-800 ${
         level === 0 ? '' : 'pl-4'
       }`}
     >

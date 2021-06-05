@@ -15,7 +15,7 @@ export default function MessageImageDialog({
         onClick={() => setShowImagePopup(true)}
         src={image.smallUrl}
         alt=""
-        className={`${rounded ? 'rounded' : ''} cursor-pointer`}
+        className={`${rounded ? 'rounded' : ''} cursor-pointer max-w-full`}
         width={width || image.smallWidth}
         height={height || image.smallHeight}
       />

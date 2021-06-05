@@ -20,7 +20,7 @@ import {
 import { realColors } from '@/utils/colorsMap'
 import Switch from '@/components/ui/Switch'
 import { AnimatePresence, motion } from 'framer-motion'
-import { HiPlus } from 'react-icons/all'
+import { HiPlus } from 'react-icons/hi'
 import Tippy from '@tippyjs/react'
 
 export default function ManageRolesDialog({ open, setOpen, server }) {

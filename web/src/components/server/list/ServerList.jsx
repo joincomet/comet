@@ -22,7 +22,7 @@ import StyledDialog from '@/components/ui/dialog/StyledDialog'
 import ShowPasswordButton from '@/components/ui/ShowPasswordButton'
 import CountBadge from "@/components/ui/CountBadge";
 
-export default function ServerList() {
+export default function ServerList({ hide = false }) {
   const { pathname } = useLocation()
   const { t } = useTranslation()
   const homePage = useStore(s => s.homePage)
@@ -43,7 +43,7 @@ export default function ServerList() {
   return (
     <>
       <div
-        className={`flex flex-col items-center min-w-[4.5rem] w-18 bg-white dark:bg-gray-900 overflow-y-auto scrollbar-none`}
+        className={`${hide ? 'hidden md:flex' : 'flex'} h-full flex-col items-center min-w-[4.5rem] w-18 bg-white dark:bg-gray-900 overflow-y-auto scrollbar-none`}
       >
         {isMac && <div className="h-5" />}
         <div className="h-full flex flex-col items-center w-full divide-y dark:divide-gray-800 divide-gray-200">

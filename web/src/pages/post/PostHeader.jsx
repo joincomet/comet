@@ -33,9 +33,6 @@ export default function PostHeader({ post }) {
       <div className="ml-auto pl-6 pr-4">
         <ShowUsersButton />
       </div>
-      <div className="flex w-60 min-w-[15rem] pr-4">
-        <HeaderSearchBar />
-      </div>
     </header>
   )
 }

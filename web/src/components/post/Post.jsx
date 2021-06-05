@@ -79,7 +79,7 @@ export default memo(function Post({
     <ContextMenuTrigger data={{ type: ContextMenuType.Post, post }}>
       <div
         style={{ opacity }}
-        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 px-2 py-3 rounded flex`}
+        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 px-2 py-3 md:rounded flex`}
         onClick={() => {
           if (!isDragging) {
             push(post.relativeUrl)
@@ -205,7 +205,7 @@ export default memo(function Post({
 
         {!isPostPage && (
           <div
-            className="w-26 h-18 rounded dark:bg-gray-750 mr-4 flex items-center justify-center bg-center bg-cover bg-no-repeat"
+            className="w-26 min-w-[6.5rem] h-18 min-h-[4.5rem] rounded dark:bg-gray-750 mr-4 flex items-center justify-center bg-center bg-cover bg-no-repeat"
             style={
               post.thumbnailUrl
                 ? { backgroundImage: `url(${post.thumbnailUrl})` }
@@ -225,7 +225,7 @@ export default memo(function Post({
         )}
 
         <div className="pr-4 flex-grow flex flex-col">
-          <div className="flex items-center pb-1.5" onClick={onClick}>
+          <div className="flex flex-wrap items-center pb-1.5" onClick={onClick}>
             <Link to={`/+${post.server.name}`} className="flex items-center">
               <ServerAvatar
                 server={post.server}
@@ -296,7 +296,7 @@ export default memo(function Post({
                 )}
 
                 {!!post.images.length && (
-                  <div className="mt-2 w-[400px]">
+                  <div className="mt-2 max-w-[400px]">
                     <div className="flex relative">
                       <div className="w-full h-[300px] relative flex items-center justify-center dark:bg-gray-775">
                         {post.images.map((image, i) => (

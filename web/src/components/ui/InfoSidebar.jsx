@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { useCopyToClipboard } from 'react-use'
 import Tippy from '@tippyjs/react'
 import toast from 'react-hot-toast'
-import {useStore} from "@/hooks/useStore";
 
 const linkClass = ctl(`
   cursor-pointer
@@ -16,10 +15,9 @@ const ethAddress = import.meta.env.VITE_ETH_ADDRESS
 
 export default function InfoSidebar() {
   const copyToClipboard = useCopyToClipboard()[1]
-  const showUsers = useStore(s => s.showUsers)
 
   return (
-    <Sidebar right show={showUsers}>
+    <Sidebar right>
       <div className="px-2.5 py-2.5 flex flex-col">
         <div className="mt-auto" />
         <div className="dark:border-gray-750 border rounded p-2.5 text-xs text-tertiary leading-5">
