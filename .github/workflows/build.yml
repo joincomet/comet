@@ -76,36 +76,7 @@ jobs:
           name: dist-web
           path: web/dist/
 
-  web-electron:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 15
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-      - uses: actions/cache@v2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install dependencies
-        run: yarn
-      - run: yarn run build:web
-        env:
-          VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
-          ELECTRON: true
-      - uses: actions/upload-artifact@v2
-        with:
-          name: dist-electron
-          path: electron/dist/
-
   electron:
-    needs: [web-electron]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -116,7 +87,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
         with:
-          node-version: 15
+          node-version: 16
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
@@ -127,12 +98,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Install dependencies
-        run: yarn
-      - uses: actions/download-artifact@v2
-        with:
-          name: dist-electron
-          path: electron/dist
       - name: Prepare for app notarization
         if: startsWith(matrix.os, 'macos')
         # Import Apple API key for app notarization on macOS
@@ -140,10 +105,9 @@ jobs:
           mkdir -p ~/private_keys/
           echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
       - name: Build/release Electron app
-        uses: CryogenicPlanet/action-electron-builder@v2 # Using CryogenicPlanet until the main action adds skip_install
+        uses: samuelmeuli/action-electron-builder@v1
         with:
-          skip_build: true
-          skip_install: true
+          build_script_name: yarn run build
           package_root: electron
           github_token: ${{ secrets.github_token }}
           max_attempts: 3
