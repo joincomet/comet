@@ -99,43 +99,41 @@ export default function Messages({ channel, server, user, group, users }) {
   }, [channel?.id, group?.id, user?.id, messages?.length])
 
   return (
-    <>
-      <div className="relative flex-1 overflow-x-hidden overflow-y-auto dark:bg-gray-750 w-full h-full">
-        {!!messages && (
-          <Virtuoso
-            className="scrollbar-custom"
-            alignToBottom
-            atBottomStateChange={isAtBottom => {
-              atBottom.current = isAtBottom
-              if (isAtBottom && newMessagesNotification) {
-                setNewMessagesNotification(false)
-              }
-            }}
-            components={{
-              Footer: () => <div className="h-5.5" />
-            }}
-            firstItemIndex={PREPEND_OFFSET - numItemsPrepended}
-            followOutput={isAtBottom => {
-              if (shouldForceScrollToBottom()) {
-                return 'auto'
-              }
-              // a message from another user has been received - don't scroll to bottom unless already there
-              return isAtBottom ? 'auto' : false
-            }}
-            initialTopMostItemIndex={
-              messages.length > 0 ? messages.length - 1 : 0
+    <div className="flex flex-col h-full">
+      {!!messages && (
+        <Virtuoso
+          className="scrollbar-custom dark:bg-gray-750"
+          alignToBottom
+          atBottomStateChange={isAtBottom => {
+            atBottom.current = isAtBottom
+            if (isAtBottom && newMessagesNotification) {
+              setNewMessagesNotification(false)
             }
-            itemContent={i => messageRenderer(messages, i)}
-            overscan={0}
-            ref={virtuoso}
-            startReached={() => {
-              if (!fetching && hasMore) fetchMore()
-            }}
-            style={{ overflowX: 'hidden' }}
-            totalCount={messages.length || 0}
-          />
-        )}
-      </div>
+          }}
+          components={{
+            Footer: () => <div className="h-5.5" />
+          }}
+          firstItemIndex={PREPEND_OFFSET - numItemsPrepended}
+          followOutput={isAtBottom => {
+            if (shouldForceScrollToBottom()) {
+              return 'auto'
+            }
+            // a message from another user has been received - don't scroll to bottom unless already there
+            return isAtBottom ? 'auto' : false
+          }}
+          initialTopMostItemIndex={
+            messages.length > 0 ? messages.length - 1 : 0
+          }
+          itemContent={i => messageRenderer(messages, i)}
+          overscan={0}
+          ref={virtuoso}
+          startReached={() => {
+            if (!fetching && hasMore) fetchMore()
+          }}
+          style={{ overflowX: 'hidden' }}
+          totalCount={messages.length || 0}
+        />
+      )}
       {!!users && (!!channel || !!user || !!group) && (
         <MessageInput
           server={server}
@@ -145,6 +143,6 @@ export default function Messages({ channel, server, user, group, users }) {
           users={users}
         />
       )}
-    </>
+    </div>
   )
 }
