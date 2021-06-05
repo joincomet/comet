@@ -14,6 +14,7 @@ import { OnlineStatus, useChangeOnlineStatusMutation } from '@/graphql/hooks'
 import { Link } from 'react-router-dom'
 import { getDownloadLink } from '@/hooks/getDownloadLink'
 import { useLoginDialog } from '@/hooks/useLoginDialog'
+import {getOS} from "@/utils/getOS";
 
 export default function BottomBar() {
   const [currentUser] = useCurrentUser()
@@ -48,6 +49,7 @@ export default function BottomBar() {
   }, [currentUser])
 
   const downloadLink = getDownloadLink()
+  const os = getOS()
   const [loginOpen, setLoginOpen, isCreateAccount, setCreateAccount] =
     useLoginDialog()
   return (
@@ -88,6 +90,14 @@ export default function BottomBar() {
         )}
 
         <div className="ml-auto flex items-center space-x-4 text-primary">
+          {os === 'Windows' && !window.electron && (
+            <Tippy content="Download Comet for Desktop">
+              <a className="block" target="_blank" rel="noopener noreferrer" href={downloadLink}>
+                <IconDownload className="w-4.5 h-4.5 text-tertiary cursor-pointer" />
+              </a>
+            </Tippy>
+          )}
+
           <Tippy
             content={`${
               window.electron && updateAvailable

@@ -51,7 +51,7 @@ export default function Routes() {
           >
             <div className="flex-grow">
               <div
-                className="flex h-full"
+                className="flex items-stretch"
                 style={{ height: 'calc(100% - 1.375rem)' }}
               >
                 <ServerList hide />

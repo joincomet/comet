@@ -76,8 +76,88 @@ jobs:
           name: dist-web
           path: web/dist/
 
+  web-electron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 15
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn
+      - run: yarn run build:web
+        env:
+          VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
+          ELECTRON: true
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist-electron
+          path: electron/dist/
+
+  electron:
+    needs: [web-electron]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist-electron
+          path: electron/dist
+      - name: Prepare for app notarization
+        if: startsWith(matrix.os, 'macos')
+        # Import Apple API key for app notarization on macOS
+        run: |
+          mkdir -p ~/private_keys/
+          echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
+      - name: Build/release Electron app
+        uses: CryogenicPlanet/action-electron-builder@v2 # Using CryogenicPlanet until the main action adds skip_install
+        with:
+          skip_build: true
+          skip_install: true
+          package_root: electron
+          github_token: ${{ secrets.github_token }}
+          max_attempts: 3
+          # If the commit is tagged with a version (e.g. "v1.0.0"), release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
+        env:
+          # macOS notarization API key
+          API_KEY_ID: ${{ secrets.api_key_id }}
+          API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
+
   deploy:
-    needs: [web, server]
+    needs: [server]
     runs-on: ubuntu-latest
     steps:
       - name: Prepare
@@ -109,7 +189,7 @@ jobs:
         run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml
 
   pages:
-    needs: [deploy]
+    needs: [web]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -126,3 +206,18 @@ jobs:
           clean: true
           clean-exclude: |
             404.html
+
+  release:
+    needs: [electron]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get version from ref
+        id: get-version
+        run: |
+          ver=$(echo ${GITHUB_REF/refs\/tags\//} | cut -c 2-)
+          echo ::set-output name=VERSION::$ver
+      - name: Publish release on GitHub
+        uses: test-room-7/action-publish-release-drafts@v0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tag-name: ${{ steps.get-version.outputs.VERSION }}

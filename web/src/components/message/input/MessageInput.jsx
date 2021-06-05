@@ -397,14 +397,14 @@ export default function MessageInput({ channel, server, group, user, users }) {
             }}
             className={`${canSendMessage ? 'px-14' : 'px-4 opacity-50'} ${
               currentUser ? '' : 'cursor-pointer'
-            } min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light dark:bg-gray-700 py-3 w-full  rounded-lg text-base focus:outline-none text-secondary border-none`}
+            } min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light dark:bg-gray-700 py-3 w-full rounded-lg text-base focus:outline-none text-secondary border-none`}
           >
             {!editor?.isDestroyed && (
               <EditorContent editor={editor} />
             )}
           </div>
 
-          <TenorPopover onSelect={(e) => console.log(e)} />
+          {/*<TenorPopover onSelect={(e) => console.log(e)} />*/}
         </div>
 
         <div className="h-6 flex items-center text-secondary text-13 font-medium">
