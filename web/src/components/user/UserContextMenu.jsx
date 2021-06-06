@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import {
-  ServerPermission,
+  ServerPermission, useGlobalBanMutation,
   useRemoveFriendMutation,
   useSetUserRoleMutation
 } from '@/graphql/hooks'
@@ -37,6 +37,7 @@ export default function UserContextMenu({
   const [readDm] = useReadDmMutation()
   const [banUser] = useBanUserFromServerMutation()
   const [kickUser] = useKickUserFromServerMutation()
+  const [globalBan] = useGlobalBanMutation()
   const [createFriendRequest] = useCreateFriendRequestMutation()
   const [removeFriend] = useRemoveFriendMutation()
 
@@ -136,20 +137,38 @@ export default function UserContextMenu({
               label={t('user.context.banUser', { user: user })}
               red
               onClick={() => {
-                const reason = window.prompt(t('user.context.banPrompt'))
-                if (reason === null) return
+                const confirmed = window.confirm(`Are you sure you want to ban ${user.username} from +${server.name}?`)
+                if (!confirmed) return
                 banUser({
                   variables: {
                     input: {
                       serverId: server.id,
-                      userId: user.id,
-                      reason
+                      userId: user.id
                     }
                   }
                 })
-                toast.success(t('user.context.bannedUser', { user: user }))
+                toast.success(`Banned ${user.username} from +${server.name}!`)
               }}
             />
+
+            {currentUser.isAdmin && (
+              <ContextMenuItem label={`Global ban ${user.username}`}
+                               red
+                               onClick={() => {
+                                 const confirmed = window.confirm(`Are you sure you want to global ban ${user.username}?`)
+                                 if (!confirmed) return
+                                 banUser({
+                                   variables: {
+                                     input: {
+                                       serverId: server.id,
+                                       userId: user.id
+                                     }
+                                   }
+                                 })
+                                 toast.success(`Global banned ${user.username}!`)
+                               }}
+              />
+            )}
           </>
         )}
       </ContextMenuSection>

@@ -1,4 +1,5 @@
 import create from 'zustand'
+import {getOS} from "@/utils/getOS";
 
 export const useStore = create((set, get) => ({
   friendsPage: 'Online', // Online, All, Pending, Blocked, Add
@@ -54,6 +55,6 @@ export const useStore = create((set, get) => ({
   showLeftSidebar: false,
   setShowLeftSidebar: showLeftSidebar => set({showLeftSidebar}),
 
-  showRightSidebar: false,
+  showRightSidebar: !['iOS', 'Android'].includes(getOS()),
   setShowRightSidebar: showRightSidebar => set({showRightSidebar})
 }))

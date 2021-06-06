@@ -51,7 +51,7 @@ export default memo(function Message({
     return (
       <ContextMenuTrigger
         className={prevMessage?.text ? 'pt-4' : ''}
-        data={{ type: ContextMenuType.Message, message }}
+        data={{ type: ContextMenuType.Message, message, server }}
       >
         <div className="flex dark:hover:bg-gray-775 py-1 px-4">
           <div className="w-10 flex justify-center">
@@ -60,7 +60,7 @@ export default memo(function Message({
           <div className="pl-4 text-base text-tertiary flex items-center">
             <ContextMenuTrigger
               className="inline-block"
-              data={{ type: ContextMenuType.User, user: message.author }}
+              data={{ type: ContextMenuType.User, user: message.author, server, role: message.serverUser?.role }}
             >
               <UserPopup user={message.author} role={message.serverUser?.role}>
                 <UserAvatar user={message.author} size={5} />
@@ -68,7 +68,7 @@ export default memo(function Message({
             </ContextMenuTrigger>
             <ContextMenuTrigger
               className="inline-block"
-              data={{ type: ContextMenuType.User, user: message.author }}
+              data={{ type: ContextMenuType.User, user: message.author, server, role: message.serverUser?.role }}
             >
               <UserPopup user={message.author} role={message.serverUser?.role}>
                 <span className="ml-2 text-white cursor-pointer hover:underline">
@@ -101,7 +101,7 @@ export default memo(function Message({
 
             {showUser ? (
               <ContextMenuTrigger
-                data={{ type: ContextMenuType.User, user: message.author }}
+                data={{ type: ContextMenuType.User, user: message.author, server, role: message.serverUser?.role }}
               >
                 <UserPopup
                   user={message.author}

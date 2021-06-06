@@ -55,6 +55,7 @@ export async function messages(
   } else if (groupId) {
     where.group = groupId
   } else if (userId) {
+    if (!currentUserId) throw new Error('Must be logged in to use DMs')
     const currentUser = await em.findOneOrFail(User, currentUserId)
     const toUser = await em.findOneOrFail(User, userId)
     where['$or'] = [
