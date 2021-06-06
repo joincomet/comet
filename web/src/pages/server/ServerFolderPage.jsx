@@ -6,7 +6,7 @@ import FolderInfoCard from '@/components/folder/FolderInfoCard'
 import FolderHeader from '@/components/folder/FolderHeader'
 
 export default function ServerFolderPage({ server, folder }) {
-  useSetServerPage(`folder/${folder.id}`)
+  useSetServerPage(folder ? `/folder/${folder.id}` : null)
 
   return (
     <Page

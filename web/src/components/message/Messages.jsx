@@ -11,6 +11,7 @@ import {
   useReadDmMutation,
   useReadGroupMutation
 } from '@/graphql/hooks'
+import {useCurrentUser} from "@/hooks/graphql/useCurrentUser";
 
 const PREPEND_OFFSET = 10 ** 7
 
@@ -63,8 +64,10 @@ export default function Messages({ channel, server, user, group, users }) {
   const [readChannel] = useReadChannelMutation()
   const [readGroup] = useReadGroupMutation()
   const [readDm] = useReadDmMutation()
+  const [currentUser] = useCurrentUser()
 
   useEffect(() => {
+    if (!currentUser) return
     if (!messages?.length) return
     if (channel)
       readChannel({
@@ -96,7 +99,7 @@ export default function Messages({ channel, server, user, group, users }) {
           }
         }
       })
-  }, [channel?.id, group?.id, user?.id, messages?.length])
+  }, [channel?.id, group?.id, user?.id, currentUser?.id, messages?.length])
 
   return (
     <div className="flex flex-col h-full">

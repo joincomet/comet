@@ -17,8 +17,8 @@ export const useStore = create((set, get) => ({
   setLiveMode: liveMode => set({ liveMode }),
 
   serverPages: {},
-  setServerPage: (serverId, page) =>
-    set({ serverPages: { ...get().serverPages, [serverId]: page } }),
+  setServerPage: (name, page) =>
+    set({ serverPages: { ...get().serverPages, [name]: page } }),
   homePage: null,
   setHomePage: page => set({ homePage: page }),
 

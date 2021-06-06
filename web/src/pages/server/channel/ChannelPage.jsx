@@ -5,13 +5,11 @@ import Page from '@/components/ui/page/Page'
 import ChannelHeader from '@/pages/server/channel/ChannelHeader'
 import { Helmet } from 'react-helmet-async'
 import { useCurrentServer } from '@/hooks/graphql/useCurrentServer'
-import { Redirect } from 'react-router-dom'
 
 export default function ChannelPage({ channelName }) {
   const { server, users: serverUsers } = useCurrentServer()
   const channel = (server?.channels ?? []).find(c => c.name === channelName)
-  useSetServerPage(`channel/${channel?.id}`)
-  if (!!server && !channel) return <Redirect to={`/+${server.name}`} />
+  useSetServerPage(channel ? `/#${channelName}` : null)
   return (
     <Page
       header={<ChannelHeader channel={channel} />}

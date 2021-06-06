@@ -2,11 +2,9 @@ import Header from '@/components/ui/header/Header'
 import {
   IconHot,
   IconNew,
-  IconRefresh,
   IconTop
 } from '@/components/ui/icons/Icons'
 import { useStore } from '@/hooks/useStore'
-import Tippy from '@tippyjs/react'
 import { useTranslation } from 'react-i18next'
 import HeaderTab from '@/components/ui/header/HeaderTab'
 import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
@@ -14,13 +12,9 @@ import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
 const iconClassName = 'w-5 h-5'
 
 export default function PostsHeader() {
-  const [postsSort, showFolders] = useStore(s => [
-    s.postsSort,
-    s.showFolders,
-    s.liveMode
+  const [postsSort] = useStore(s => [
+    s.postsSort
   ])
-
-  const { t } = useTranslation()
 
   let icon
   switch (postsSort) {
@@ -37,7 +31,6 @@ export default function PostsHeader() {
 
   return (
     <Header
-      isRightSidebar={showFolders}
       title={postsSort}
       icon={icon}
       showDivider={postsSort === 'Top'}

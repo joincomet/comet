@@ -6,7 +6,7 @@ import express from 'express'
 import {ApolloError, ApolloServer} from 'apollo-server-express'
 import ws from 'ws' // yarn add ws
 import { useServer } from 'graphql-ws/lib/use/ws'
-import { specifiedRules } from 'graphql'
+import { ExecutionArgs, parse, specifiedRules, validate } from 'graphql'
 import { NoLiveMixedWithDeferStreamRule } from '@n1ru4l/graphql-live-query'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { getUserFromToken, MAX_FILE_SIZE, RedisLiveQueryStore } from '@/util'
@@ -152,15 +152,32 @@ export async function bootstrap() {
       {
         schema,
         execute: args => liveQueryStore.execute(args),
-        context: ({ connectionParams }) => {
+        onSubscribe: ({ connectionParams }, msg) => {
           const user = getUserFromToken(connectionParams?.token as string)
           const em = orm.em.fork()
-          return {
+          const contextValue = {
             em,
             liveQueryStore,
             userId: user?.id,
             loaders: createLoaders(em, user?.id)
           } as Context
+
+          const args: ExecutionArgs = {
+            schema,
+            operationName: msg.payload.operationName,
+            document: parse(msg.payload.query),
+            variableValues: msg.payload.variables,
+            contextValue,
+          };
+
+          const errors = validate(args.schema, args.document, [
+            ...specifiedRules,
+            NoLiveMixedWithDeferStreamRule,
+          ]);
+
+          if (errors.length) return errors;
+
+          return args;
         }
       },
       wsServer

@@ -16,7 +16,7 @@ export default function ServerPostsPage() {
 
   return (
     <Page
-      header={<PostsHeader refreshPosts={() => {}} />}
+      header={<PostsHeader />}
       rightSidebar={
         <ChannelUsersSidebar server={server} serverUsers={serverUsers} />
       }
@@ -26,7 +26,7 @@ export default function ServerPostsPage() {
       </Helmet>
       <Posts
         serverId={server?.id}
-        header={currentUser ? <CreatePostHeader server={server} /> : null}
+        header={currentUser ? <CreatePostHeader server={server} /> : <div className="h-4" />}
       />
     </Page>
   )

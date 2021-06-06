@@ -135,7 +135,7 @@ function ServerListServer({ server }) {
       >
         <ServerListItem
           to={`/+${server.name}${
-            serverPages[server.id] ? `/${serverPages[server.id]}` : ''
+            serverPages[server.name] ?? ''
           }`}
           name={server.displayName}
           active={active}

@@ -5,7 +5,7 @@ export default memo(function EndReached({
   className = 'h-48'
 }) {
   return (
-    <div className="flex flex-col items-center justify-center text-primary pt-6">
+    <div className="flex flex-col items-center justify-center text-primary py-6">
       <img
         alt="astronaut"
         src="/astronaut.png"

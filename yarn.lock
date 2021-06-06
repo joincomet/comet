@@ -1675,9 +1675,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/core@npm:^4.5.5":
-  version: 4.5.5
-  resolution: "@mikro-orm/core@npm:4.5.5"
+"@mikro-orm/core@npm:^4.5.6":
+  version: 4.5.6
+  resolution: "@mikro-orm/core@npm:4.5.6"
   dependencies:
     ansi-colors: 4.1.1
     clone: 2.1.2
@@ -1710,25 +1710,31 @@ __metadata:
       optional: true
     "@mikro-orm/sqlite":
       optional: true
-  checksum: fe27d61d2a85780e5c46bdf102f38f6129b69345ae51f4d46955560f88d2d35b3d081bcd992976efd60326bf578c5c0b392c6d181178cead769f4caffdb1857d
+  checksum: 0f629c27eb6aa49f0ab9766811c4bc28cf96b041e84924c8961917c087cd5595e172f36b67ad77ac67e52faa70df96420ce2795cfd5d2ffa5e0ee811184467ed
   languageName: node
   linkType: hard
 
-"@mikro-orm/knex@npm:^4.5.5":
-  version: 4.5.5
-  resolution: "@mikro-orm/knex@npm:4.5.5"
+"@mikro-orm/knex@npm:^4.5.6":
+  version: 4.5.6
+  resolution: "@mikro-orm/knex@npm:4.5.6"
   dependencies:
     fs-extra: 9.1.0
     knex: 0.21.19
     sqlstring: 2.3.2
   peerDependencies:
     "@mikro-orm/core": ^4.0.0
-    mssql: ^6.2.0
+    "@mikro-orm/entity-generator": ^4.0.0
+    "@mikro-orm/migrations": ^4.0.0
+    mssql: ^7.0.0
     mysql: ^2.18.1
     mysql2: ^2.1.0
     pg: ^8.0.3
     sqlite3: ^5.0.0
   peerDependenciesMeta:
+    "@mikro-orm/entity-generator":
+      optional: true
+    "@mikro-orm/migrations":
+      optional: true
     mssql:
       optional: true
     mysql:
@@ -1739,34 +1745,34 @@ __metadata:
       optional: true
     sqlite3:
       optional: true
-  checksum: dc7290f65838282c23b0346f7434f5a5dfb4cd4524b38d3b93851bd28916f5edbc5e16409cb9369708b5a7d2f56867923a9110cb4cf8e85001077f2d341de73f
+  checksum: dfab523fc138cc09ba128e09f37be1c93def2b8a6b6759a66c5cd56f3507320c94262e80036e54b99f630446f9f74279d907dc65572e958ad3898c6daf7cf715
   languageName: node
   linkType: hard
 
-"@mikro-orm/migrations@npm:^4.5.5":
-  version: 4.5.5
-  resolution: "@mikro-orm/migrations@npm:4.5.5"
+"@mikro-orm/migrations@npm:^4.5.6":
+  version: 4.5.6
+  resolution: "@mikro-orm/migrations@npm:4.5.6"
   dependencies:
-    "@mikro-orm/knex": ^4.5.5
+    "@mikro-orm/knex": ^4.5.6
     "@types/umzug": 2.3.0
     fs-extra: 9.1.0
     knex: 0.21.19
     umzug: 2.3.0
   peerDependencies:
     "@mikro-orm/core": ^4.0.0
-  checksum: 39977a4f0d39929c2d98f2b4c3af02283a9be72b243a5702fdab3ddfd23b861bee2a9baa9895effd97dfcd972ddd886c794ff8ea59c0fba69ef94ae665bcdbc2
+  checksum: 2b511cb223e8bc4733d22c1be89863aea95c0bc6589dc11f97a8a4e4f3fc56ba81b9f03113296c0ee35ae27c16acf720ec308f6ca6c72545c9f40d5e73a365d3
   languageName: node
   linkType: hard
 
-"@mikro-orm/postgresql@npm:^4.5.5":
-  version: 4.5.5
-  resolution: "@mikro-orm/postgresql@npm:4.5.5"
+"@mikro-orm/postgresql@npm:^4.5.6":
+  version: 4.5.6
+  resolution: "@mikro-orm/postgresql@npm:4.5.6"
   dependencies:
-    "@mikro-orm/knex": ^4.5.5
+    "@mikro-orm/knex": ^4.5.6
     pg: 8.6.0
   peerDependencies:
     "@mikro-orm/core": ^4.0.0
-  checksum: 6d7df3132ef714f9347293b9689e268a395de15f07568c746d4daf289962f1c4502aac75cb27a5b41188f9de33b2bca172886c506c759da7d1c9bfbc536057a3
+  checksum: 0a3ba3fb077907f05c144db370e18fc0d3f5dc59e056af323b67e3d56c0a26cdd96d05db397d8f98be2dc6a3f4af5219fd655c44550faa4ac7b5acea1959f23d
   languageName: node
   linkType: hard
 
@@ -1799,16 +1805,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@n1ru4l/in-memory-live-query-store@npm:^0.6.4":
-  version: 0.6.4
-  resolution: "@n1ru4l/in-memory-live-query-store@npm:0.6.4"
+"@n1ru4l/in-memory-live-query-store@npm:^0.6.5":
+  version: 0.6.5
+  resolution: "@n1ru4l/in-memory-live-query-store@npm:0.6.5"
   dependencies:
     "@graphql-tools/utils": ^7.7.1
     "@n1ru4l/graphql-live-query": 0.7.1
     "@n1ru4l/push-pull-async-iterable-iterator": ^2.1.4
   peerDependencies:
     graphql: ^15.4.0
-  checksum: 803520ab7bf5aadd177f965c093540682f4f5537538b2f327be6c4b077c4950921f2e19b8e82ec22895da90cdb94d327c55d208e5e491cbe4a0485dde3bac3d5
+  checksum: 5e8d5aba6d99f11d0b624c6a73a40528fa14f4bc2f3d7278f0bc8cefe87fa83f0ce85d0803287395f20e010d44ab469a60e3c08031defa8b66e9ff3bfd848ba1
   languageName: node
   linkType: hard
 
@@ -5453,7 +5459,7 @@ __metadata:
     eslint: ^7.28.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^3.4.0
-    prettier: ^2.3.0
+    prettier: ^2.3.1
     rimraf: ^3.0.2
     ts-invariant: ^0.7.3
   languageName: unknown
@@ -8673,12 +8679,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"graphql-ws@npm:^4.8.0":
-  version: 4.8.0
-  resolution: "graphql-ws@npm:4.8.0"
+"graphql-ws@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "graphql-ws@npm:4.9.0"
   peerDependencies:
     graphql: ">=0.11 <=15"
-  checksum: 1f107e539e4c56598efcec9bfd6730ee0af669ceb0df8326cd7bd0cec8c0871375879affc73300f968ea268df529c38833e7a9c0d3325cc1185c0e519721bc68
+  checksum: f74f5d42843798136202bed9766d2ac6ce614950d31a69d5b935b4f41255d3ace8329b659658fe88a45a4dad43c0d668361b826889d0191859839856084c1eb9
   languageName: node
   linkType: hard
 
@@ -9313,9 +9319,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"ioredis@npm:^4.27.4":
-  version: 4.27.4
-  resolution: "ioredis@npm:4.27.4"
+"ioredis@npm:^4.27.5":
+  version: 4.27.5
+  resolution: "ioredis@npm:4.27.5"
   dependencies:
     cluster-key-slot: ^1.1.0
     debug: ^4.3.1
@@ -9327,7 +9333,7 @@ fsevents@~2.3.1:
     redis-errors: ^1.2.0
     redis-parser: ^3.0.0
     standard-as-callback: ^2.1.0
-  checksum: 980337fe9694afc2d2247f0a836240ce4b7ba81cd073a6b4bada2851a59f797f534133f9e6b201d22f0ec78f33e1d24aa504cf0253a0e72be7323c6b0e9cfe47
+  checksum: a53e0948c33a1b269b76491774e3a1548aa6745e7ae5203d4d010c834ce2bc43c5015f2b6cb196e86362c57dd21cbd4438d132ef349acc1f07be421680753619
   languageName: node
   linkType: hard
 
@@ -12741,12 +12747,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "prettier@npm:2.3.0"
+"prettier@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "prettier@npm:2.3.1"
   bin:
     prettier: bin-prettier.js
-  checksum: e8851a45f60f2994775f96e07964646c299b8a8f9c64da4fbd8efafc20db3458bdcedac79aed34e1d5477540b3aa04f6499adc4979cb7937f8ebd058a767d8ff
+  checksum: 3b37731ff7150feecf19736c77c790e7e276b404ac9af81cbaf87cfecefc48ef9a864f34c2a5caf5955378b8f2525984b8611703a0d9c1f052b4cfa6eb35899f
   languageName: node
   linkType: hard
 
@@ -13210,12 +13216,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.7.1":
-  version: 7.7.1
-  resolution: "react-hook-form@npm:7.7.1"
+"react-hook-form@npm:^7.8.1":
+  version: 7.8.1
+  resolution: "react-hook-form@npm:7.8.1"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 6d590b8e9bddb72e568250be5a6e86844149fd5800cae548207e9e206cc31dd531e5298991b0d1da34b9428bade9e5c1af71dbcf9dddbfe3eb3d7a89662ebf01
+  checksum: 8eb67a49c2a27853397f55b51c18d1640ed65236cd4b53d630f1428625016fb6d51928652d420dd654eef5ff4e8467b37859a8ca410969243ec2ce484807bb92
   languageName: node
   linkType: hard
 
@@ -14328,12 +14334,12 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "server@workspace:server"
   dependencies:
-    "@mikro-orm/core": ^4.5.5
-    "@mikro-orm/migrations": ^4.5.5
-    "@mikro-orm/postgresql": ^4.5.5
+    "@mikro-orm/core": ^4.5.6
+    "@mikro-orm/migrations": ^4.5.6
+    "@mikro-orm/postgresql": ^4.5.6
     "@mikro-orm/sql-highlighter": ^1.0.1
     "@n1ru4l/graphql-live-query": ^0.7.1
-    "@n1ru4l/in-memory-live-query-store": ^0.6.4
+    "@n1ru4l/in-memory-live-query-store": ^0.6.5
     "@sentry/node": ^6.5.1
     "@sentry/tracing": ^6.5.1
     "@types/async": ^3.2.6
@@ -14365,8 +14371,8 @@ resolve@^2.0.0-next.3:
     graphql-scalars: ^1.9.3
     graphql-subscriptions: ^1.2.1
     graphql-upload: ^12.0.0
-    graphql-ws: ^4.8.0
-    ioredis: ^4.27.4
+    graphql-ws: ^4.9.0
+    ioredis: ^4.27.5
     jsonwebtoken: ^8.5.1
     metascraper: ^5.22.0
     metascraper-author: ^5.22.0
@@ -14392,7 +14398,7 @@ resolve@^2.0.0-next.3:
     tsconfig-paths: ^3.9.0
     type-graphql: ^1.1.1
     typescript: ^4.3.2
-    user-agents: ^1.0.673
+    user-agents: ^1.0.675
     validator: ^13.6.0
     ws: ^7.4.6
     xss: ^1.0.9
@@ -16345,13 +16351,13 @@ typescript@^4.3.2:
   languageName: node
   linkType: hard
 
-"user-agents@npm:^1.0.673":
-  version: 1.0.673
-  resolution: "user-agents@npm:1.0.673"
+"user-agents@npm:^1.0.675":
+  version: 1.0.675
+  resolution: "user-agents@npm:1.0.675"
   dependencies:
     dot-json: ^1.2.2
     lodash.clonedeep: ^4.5.0
-  checksum: 935d3fbc66cf0017f435c9800cb7d8ad947008ecc7fd6ee2c57b68c4bb6a7ea65696e20c75deb6d9494600cb4e06f98285ecac787db6b29cfd1d5d4018939163
+  checksum: 187d4b0cc63c94ad5728eae5e423b9ad2532abf7d57966af87a5f788fccbe0388f4a921d1cd26d35d06964ecb5a987d9df4d6bed09c02072096ca3c800306895
   languageName: node
   linkType: hard
 
@@ -16606,7 +16612,7 @@ typescript@^4.3.2:
     graphiql: ^1.4.2
     graphql: ^15.4.0-experimental-stream-defer.1
     graphql-tag: ^2.12.4
-    graphql-ws: ^4.8.0
+    graphql-ws: ^4.9.0
     i18next: ^20.3.1
     i18next-browser-languagedetector: ^6.1.1
     meros: ^1.1.4
@@ -16619,7 +16625,7 @@ typescript@^4.3.2:
     react-dom: ^17.0.2
     react-dropzone: ^11.3.2
     react-helmet-async: ^1.0.9
-    react-hook-form: ^7.7.1
+    react-hook-form: ^7.8.1
     react-hot-toast: ^2.0.0
     react-i18next: ^11.10.0
     react-icons: ^4.2.0
@@ -16644,7 +16650,7 @@ typescript@^4.3.2:
     use-dark-mode: ^2.3.1
     validator: ^13.6.0
     vite: ^2.3.6
-    zustand: ^3.5.1
+    zustand: ^3.5.2
   languageName: unknown
   linkType: soft
 
@@ -17141,11 +17147,14 @@ typescript@^4.3.2:
   languageName: node
   linkType: hard
 
-"zustand@npm:^3.5.1":
-  version: 3.5.1
-  resolution: "zustand@npm:3.5.1"
+"zustand@npm:^3.5.2":
+  version: 3.5.2
+  resolution: "zustand@npm:3.5.2"
   peerDependencies:
     react: ">=16.8"
-  checksum: 3df791088265ca2ae6168a7b0ebda0221b89e693ba38bbd7e9a084bc7eb56d0918bbbec9937f800b406c0f03e871a9526e190409c37171e19bf912e4afe214a5
+  peerDependenciesMeta:
+    react:
+      optional: true
+  checksum: 7459e7e6b7c76b8d0c2687c6576ac7a7e651d15e2d3a448927e2aa826e857c534f13a461d99fa90cc822424966e951ae38f2021e0d7b7ac4e8e66ec815454d05
   languageName: node
   linkType: hard

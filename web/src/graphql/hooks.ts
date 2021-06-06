@@ -1516,7 +1516,7 @@ export type ServerUserFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'color' | 'isOg'>
+  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'color' | 'isOg' | 'showChat'>
 );
 
 export type CreateChannelMutationVariables = Exact<{
@@ -2991,6 +2991,7 @@ export const UserFragmentDoc = gql`
   isCurrentUser
   color
   isOg
+  showChat
 }
     `;
 export const GroupFragmentDoc = gql`

@@ -4,7 +4,6 @@ import { useSetHomePage } from '@/hooks/useSetHomePage'
 import Page from '@/components/ui/page/Page'
 import {
   useOpenDmMutation,
-  useReadDmMutation,
   useUserQuery
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
@@ -23,7 +22,7 @@ export default function DmPage({ username }) {
     if (!user.showChat) {
       openDm({ variables: { input: { userId: user.id } } })
     }
-  }, [user])
+  }, [user?.id])
   useSetHomePage(`dm/@${username}`)
   const [currentUser] = useCurrentUser()
   return (

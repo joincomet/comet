@@ -13,14 +13,7 @@ import {createNotification, isNotificationsSupported} from '@/utils/createNotifi
 import InfoSidebar from '@/components/ui/InfoSidebar'
 
 export default function FeedPage() {
-  const { t } = useTranslation()
-  const showFolders = useStore(s => s.showFolders)
   const [currentUser] = useCurrentUser()
-  const ref = useRef(null)
-
-  const refreshPosts = () => {
-    if (ref && ref.current) ref.current.refresh()
-  }
   useSetHomePage(null)
 
   useEffect(() => {
@@ -45,12 +38,12 @@ export default function FeedPage() {
       </Helmet>
 
       <Page
-        header={<PostsHeader refreshPosts={refreshPosts} />}
+        header={<PostsHeader />}
         rightSidebar={<InfoSidebar />}
       >
         <Posts
           showServerName
-          header={currentUser ? <CreatePostHeader /> : null}
+          header={currentUser ? <CreatePostHeader /> : <div className="h-4" />}
         />
       </Page>
     </>

@@ -1,7 +1,7 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.89",
+  "version": "0.0.90",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
@@ -46,7 +46,7 @@
     "framer-motion": "^4.1.17",
     "fuse.js": "^6.4.6",
     "graphql": "^15.4.0-experimental-stream-defer.1",
-    "graphql-ws": "^4.8.0",
+    "graphql-ws": "^4.9.0",
     "i18next": "^20.3.1",
     "i18next-browser-languagedetector": "^6.1.1",
     "react-contenteditable": "^3.3.5",
@@ -55,7 +55,7 @@
     "react-dnd-touch-backend": "^14.0.0",
     "react-dropzone": "^11.3.2",
     "react-helmet-async": "^1.0.9",
-    "react-hook-form": "^7.7.1",
+    "react-hook-form": "^7.8.1",
     "react-hot-toast": "^2.0.0",
     "react-i18next": "^11.10.0",
     "react-icons": "^4.2.0",
@@ -75,7 +75,7 @@
     "typescript": "^4.3.2",
     "use-dark-mode": "^2.3.1",
     "validator": "^13.6.0",
-    "zustand": "^3.5.1"
+    "zustand": "^3.5.2"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.2.1",
