@@ -1,4 +1,4 @@
-import { Field, InputType } from 'type-graphql'
+import {Field, InputType, Publisher} from 'type-graphql'
 import { IsEmail, Length, Matches } from 'class-validator'
 import { Context } from '@/types'
 import {
@@ -19,6 +19,7 @@ import * as argon2 from 'argon2'
 import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { usernameRegex } from '@/util/text/usernameRegex'
+import {ChangePayload, ChangeType} from "@/resolver/subscriptions";
 
 @InputType()
 export class CreateAccountInput {
@@ -38,7 +39,8 @@ export class CreateAccountInput {
 
 export async function createAccount(
   ctx: Context,
-  { username, email, password }: CreateAccountInput
+  { username, email, password }: CreateAccountInput,
+  notifyMessageChanged: Publisher<ChangePayload>
 ): Promise<LoginResponse> {
   logger('createAccount')
   const { em, liveQueryStore } = ctx
@@ -116,13 +118,13 @@ export async function createAccount(
     ])
     const defaultChannel = await em.findOne(Channel, { server: cometServer, isDefault: true })
     if (defaultChannel) {
-      await em.persistAndFlush(
-        em.create(Message, {
-          type: MessageType.Join,
-          author: user,
-          channel: defaultChannel
-        })
-      )
+      const message = em.create(Message, {
+        type: MessageType.Join,
+        author: user,
+        channel: defaultChannel
+      })
+      await em.persistAndFlush(message)
+      await notifyMessageChanged({ id: message.id, type: ChangeType.Added })
     }
   }
 

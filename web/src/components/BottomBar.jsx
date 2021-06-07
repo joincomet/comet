@@ -90,13 +90,13 @@ export default function BottomBar() {
         )}
 
         <div className="ml-auto flex items-center space-x-4 text-primary">
-          {os === 'Windows' && !window.electron && (
+          {/*{os === 'Windows' && !window.electron && (
             <Tippy content="Download Comet for Desktop">
               <a className="block" target="_blank" rel="noopener noreferrer" href={downloadLink}>
                 <IconDownload className="w-4.5 h-4.5 text-tertiary cursor-pointer" />
               </a>
             </Tippy>
-          )}
+          )}*/}
 
           <Tippy
             content={`${
