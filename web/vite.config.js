@@ -2,10 +2,14 @@ import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import { resolve } from 'path'
 import stringHash from 'string-hash'
+import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig(({ command }) => ({
   base: process.env.ELECTRON === 'true' ? './' : '/',
-  plugins: [reactRefresh()],
+  plugins: [reactRefresh(), VitePWA({
+    manifest: {},
+    workbox: {}
+  })],
   resolve: {
     alias: {
       '@': resolve(__dirname, '/src')
