@@ -8,8 +8,8 @@ export default defineConfig(({ command }) => ({
   base: process.env.ELECTRON === 'true' ? './' : '/',
   plugins: [reactRefresh(), VitePWA({
     manifest: {
-      "theme_color": "#f69435",
-      "background_color": "#f69435",
+      "theme_color": "#1C2027",
+      "background_color": "#262A32",
       "display": "browser",
       "scope": "/",
       "start_url": "/",
