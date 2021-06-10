@@ -10,7 +10,7 @@ export default defineConfig(({ command }) => ({
     manifest: {
       "theme_color": "#1C2027",
       "background_color": "#262A32",
-      "display": "browser",
+      "display": "standalone",
       "scope": "/",
       "start_url": "/",
       "name": "Comet",
