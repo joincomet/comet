@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <!--<meta http-equiv="Content-Security-Policy" content="script-src 'self';">-->
   <link rel="shortcut icon" href="/favicon/favicon.ico">
   <link rel="icon" sizes="16x16 32x32 64x64" href="/favicon/favicon.ico">
@@ -20,10 +21,11 @@
   <link rel="apple-touch-icon" sizes="76x76" href="/favicon/favicon-76.png">
   <link rel="apple-touch-icon" sizes="152x152" href="/favicon/favicon-152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/favicon-180.png">
+  <meta name="theme-color" content="#1C2027" />
   <meta name="msapplication-TileColor" content="#FFFFFF">
   <meta name="msapplication-TileImage" content="/favicon/favicon-144.png">
   <meta name="msapplication-config" content="/favicon/browserconfig.xml">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="thumbnail" content="/banner.png">
   <meta property="og:image" content="https://joincomet.app/banner.png">
   <meta property="og:site_name" content="Comet">
@@ -33,6 +35,7 @@
   <title>Comet – All-in-one chat and forums for communities.</title>
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <!-- Start Single Page Apps for GitHub Pages -->
+  <script src="/registerSW.js"></script>
   <script type="text/javascript">
     // Single Page Apps for GitHub Pages
     // MIT License
@@ -44,9 +47,9 @@
     // When the single page app is loaded further down in this file,
     // the correct url will be waiting in the browser's history for
     // the single page app to route accordingly.
-    (function(l) {
-      if (l.search[1] === '/' ) {
-        var decoded = l.search.slice(1).split('&').map(function(s) {
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
           return s.replace(/~and~/g, '&')
         }).join('?');
         window.history.replaceState(null, null,
@@ -58,10 +61,12 @@
   <!-- End Single Page Apps for GitHub Pages -->
   <script async defer data-domain="joincomet.app" src="https://stats.joincomet.app/js/index.js"></script>
 </head>
+
 <body>
-<script src="/loadDarkMode.js"></script>
-<noscript> You need to enable JavaScript to run this app.</noscript>
-<div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
+  <script src="/loadDarkMode.js"></script>
+  <noscript> You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
 </body>
+
 </html>
