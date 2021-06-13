@@ -1325,6 +1325,7 @@ export type User = BaseEntity & {
   isCurrentUser: Scalars['Boolean'];
   isOg: Scalars['Boolean'];
   isOnline: Scalars['Boolean'];
+  isStaff: Scalars['Boolean'];
   lastLoginAt?: Maybe<Scalars['DateTime']>;
   lastMessageAt?: Maybe<Scalars['DateTime']>;
   onlineStatus: OnlineStatus;
@@ -1516,7 +1517,7 @@ export type ServerUserFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'color' | 'isOg' | 'showChat'>
+  & Pick<User, 'id' | 'username' | 'avatarUrl' | 'isOnline' | 'onlineStatus' | 'isCurrentUser' | 'color' | 'isOg' | 'isStaff' | 'showChat'>
 );
 
 export type CreateChannelMutationVariables = Exact<{
@@ -2991,6 +2992,7 @@ export const UserFragmentDoc = gql`
   isCurrentUser
   color
   isOg
+  isStaff
   showChat
 }
     `;

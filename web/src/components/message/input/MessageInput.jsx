@@ -24,8 +24,6 @@ import { useHasServerPermissions } from '@/hooks/useHasServerPermissions'
 import { useOpenLogin } from '@/hooks/useLoginDialog'
 import { Editor } from '@tiptap/react/src/Editor'
 import TypingAnimation from '@/components/message/input/TypingAnimation'
-import Tenor from "@/components/tenor/Tenor";
-import TenorPopover from "@/components/tenor/TenorPopover";
 
 function useForceUpdate() {
   const [, setValue] = useState(0)
@@ -34,6 +32,11 @@ function useForceUpdate() {
 }
 
 export default function MessageInput({ channel, server, group, user, users }) {
+  const variables = {
+    channelId: channel?.id,
+    groupId: group?.id,
+    userId: user?.id
+  }
   const { t } = useTranslation()
   const [currentUser] = useCurrentUser()
   const isBlocked =
@@ -207,7 +210,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
     return () => {
       instance.destroy()
     }
-  }, [canSendMessage, placeholder])
+  }, [canSendMessage, placeholder, variables?.channelId, variables?.groupId, variables?.userId])
 
   // const editor = useEditor(editorOptions)
 
@@ -252,12 +255,6 @@ export default function MessageInput({ channel, server, group, user, users }) {
       }
     }
   })
-
-  const variables = {
-    channelId: channel?.id,
-    groupId: group?.id,
-    userId: user?.id
-  }
 
   const openLogin = useOpenLogin()
 

@@ -127,6 +127,10 @@ export class User extends BaseEntity {
   isOg: boolean = false
 
   @Field()
+  @Property({ default: false })
+  isStaff: boolean = false
+
+  @Field()
   get isOnline(): boolean {
     if (!this.lastLoginAt) return false
     const timeout = 5 * 60 * 1000 // five minutes

@@ -107,7 +107,7 @@ jobs:
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          build_script_name: yarn run build
+          build_script_name: build
           package_root: electron
           github_token: ${{ secrets.github_token }}
           max_attempts: 3

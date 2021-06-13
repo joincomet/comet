@@ -1,8 +1,6 @@
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import Dialog from '@/components/ui/dialog/Dialog'
-import { IconEdit, IconSpinner, IconXLarge } from '@/components/ui/icons/Icons'
-import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
-import SidebarItem from '@/components/ui/sidebar/SidebarItem'
+import {IconCheck, IconDelete, IconEdit, IconImage, IconLogout, IconSpinner, IconX} from '@/components/ui/icons/Icons'
 import UserAvatar from '@/components/user/UserAvatar'
 import {
   useChangeUserAvatarMutation,
@@ -14,10 +12,15 @@ import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useApolloClient } from '@apollo/client'
+import StyledDialog from "@/components/ui/dialog/StyledDialog";
+import Tippy from "@tippyjs/react";
+import ShowPasswordButton from "@/components/ui/ShowPasswordButton";
+import ServerAvatar from "@/components/server/ServerAvatar";
 
 export default function UserSettingsDialog({ open, setOpen }) {
   const [user] = useCurrentUser()
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const {
     register,
     handleSubmit,
@@ -59,142 +62,118 @@ export default function UserSettingsDialog({ open, setOpen }) {
 
   return (
     <>
-      <Dialog isOpen={open} close={close}>
-        <div
-          className="min-w-full h-full min-h-full h-screen dark:bg-gray-800 scrollbar-custom"
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="w-full relative flex">
-            <button
-              className="absolute top-3 right-3 focus:outline-none rounded-full transition dark:hover:bg-gray-700 p-2"
-              onClick={close}
-            >
-              <IconXLarge className="w-6 h-6 text-tertiary" />
+      <StyledDialog onSubmit={handleSubmit(onSubmit)} open={open} close={close} closeOnOverlayClick
+        buttons={
+          <>
+            <button onClick={() => logout()} className="form-button-delete">
+              Log Out
+              <IconLogout className="ml-2 w-5 h-5" />
             </button>
-
-            <div className="w-1/3 min-w-[14rem] dark:bg-gray-800 flex justify-end px-4 py-12">
-              <div className="w-56">
-                <SidebarLabel>User Settings</SidebarLabel>
-                <SidebarItem>My Account</SidebarItem>
-                <SidebarItem
-                  onClick={() => {
-                    logout()
-                  }}
-                >
-                  <span className="text-red-500">Log Out</span>
-                </SidebarItem>
-              </div>
-            </div>
-            <div className="w-2/3 px-10 py-16 dark:bg-gray-750 min-h-screen">
-              <div className="max-w-screen-sm text-left">
-                <div className="font-semibold text-primary uppercase mb-6">
-                  My Account
-                </div>
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="rounded-lg dark:bg-gray-800 p-4"
-                >
-                  <div className="flex items-center">
-                    <input
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp,image/gif"
-                      name="avatarFile"
-                      id="avatarFile"
-                      hidden
-                      onChange={e => {
-                        const avatarFile = e.target.files[0]
-                        if (!avatarFile) return
-                        changeAvatar({ variables: { input: { avatarFile } } })
-                      }}
-                    />
-                    <label htmlFor="avatarFile" className="relative group">
-                      <UserAvatar user={user} size={20} />
-                      <div className="absolute rounded-full cursor-pointer inset-0 bg-black opacity-0 group-hover:opacity-100 bg-opacity-50 z-10 transition flex items-center justify-center">
-                        <IconEdit className="w-1/2 h-1/2" />
-                      </div>
-                    </label>
-
-                    <div className="flex items-end ml-6">
-                      <div className="font-semibold text-xl text-primary">
-                        {user.username}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 space-y-5">
-                    <div>
-                      <label htmlFor="password" className="label">
-                        New Password
-                      </label>
-                      <input
-                        className="textbox"
-                        id="password"
-                        {...register('password', {
-                          minLength: 6,
-                          required: true
-                        })}
-                        type="password"
-                        minLength={6}
-                      />
-                      {errors.password && (
-                        <div className="error">
-                          Password must be at least 6 characters
-                        </div>
-                      )}
-                    </div>
-
-                    <div>
-                      <label htmlFor="currentPassword" className="label">
-                        Current Password
-                      </label>
-                      <input
-                        className="textbox"
-                        id="currentPassword"
-                        {...register('currentPassword', { required: true })}
-                        type="password"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center mt-5">
-                    <div className="ml-auto" />
-                    <button
-                      type="submit"
-                      disabled={
-                        changePasswordLoading ||
-                        !currentPassword ||
-                        !password ||
-                        password?.length < 6
-                      }
-                      className="disabled:opacity-50 disabled:cursor-not-allowed rounded px-4 h-9 text-sm text-primary bg-green-600 focus:outline-none flex items-center"
-                    >
-                      Save Changes
-                      {changePasswordLoading && (
-                        <IconSpinner className="w-5 h-5 text-primary ml-3" />
-                      )}
-                    </button>
-                  </div>
-                </form>
-
-                <div className="mt-10 flex items-center justify-end">
-                  <button
-                    type="button"
-                    onClick={() => setDeleteOpen(true)}
-                    className="delete-button"
-                  >
-                    Delete Account
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+            <button onClick={() => close()} className="form-button-submit">
+              Done
+              <IconCheck className="ml-2 w-5 h-5" />
+            </button>
+          </>
+        }
+      >
         <DeleteAccountDialog
           deleteOpen={deleteOpen}
           setDeleteOpen={setDeleteOpen}
         />
-      </Dialog>
+
+        <div className="px-5 pt-5 pb-10">
+          <div className="flex items-center font-semibold text-primary">
+            <UserAvatar user={user} size={6} className="rounded-md mr-2" />
+            User Settings&nbsp;&nbsp;–&nbsp;&nbsp;
+            <div className="truncate">{user.username}</div>
+            <IconX
+              className="h-5 w-5 highlightable ml-auto"
+              onClick={() => close()}
+            />
+          </div>
+
+          <div className="py-5 flex items-center">
+            <UserAvatar user={user} size={20} />
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              name="avatarFile"
+              id="avatarFile"
+              hidden
+              onChange={e => {
+                const avatarFile = e.target.files[0]
+                if (!avatarFile) return
+                changeAvatar({ variables: { input: { avatarFile } } })
+              }}
+            />
+            <label htmlFor="avatarFile" className="h-9 transition hover:bg-gray-200 cursor-pointer flex items-center justify-center text-sm font-medium border rounded dark:border-gray-600 px-3 bg-gray-300 text-gray-800 ml-3">
+              <IconImage className="w-5 h-5 mr-2" />
+              Upload Avatar
+            </label>
+          </div>
+
+          <div className="border dark:border-gray-750 rounded space-y-3 p-3">
+            <div className="text-xs font-medium text-tertiary">Change Password</div>
+            <div>
+              <div className="relative">
+                <input
+                  className="form-input-password"
+                  placeholder="New Password"
+                  id="password"
+                  {...register('password', {
+                    minLength: 6,
+                    required: true
+                  })}
+                  type={showPassword ? 'text' : 'password'}
+                  minLength={6}
+                />
+                <ShowPasswordButton setShowPassword={setShowPassword} showPassword={showPassword} />
+              </div>
+              {!!password && errors.password && (
+                <div className="form-error">
+                  Password must be at least 6 characters
+                </div>
+              )}
+            </div>
+
+            <div>
+              <div className="relative">
+                <input
+                  className="form-input-password"
+                  placeholder="Current Password"
+                  id="currentPassword"
+                  {...register('currentPassword', { required: true })}
+                  type={showPassword ? 'text' : 'password'}
+                />
+                <ShowPasswordButton setShowPassword={setShowPassword} showPassword={showPassword} />
+              </div>
+            </div>
+
+            <button
+              disabled={
+                changePasswordLoading ||
+                !currentPassword ||
+                !password ||
+                password?.length < 6
+              }
+              className="form-button-submit ml-auto">
+              Change Password
+              {changePasswordLoading && <IconSpinner className="w-5 h-5 ml-2" />}
+            </button>
+          </div>
+
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => setDeleteOpen(true)}
+              className="form-button-delete"
+            >
+              Delete Account
+              <IconDelete className="ml-2 w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </StyledDialog>
     </>
   )
 }
@@ -202,8 +181,10 @@ export default function UserSettingsDialog({ open, setOpen }) {
 function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
   const [password, setPassword] = useState('')
   const [deleteAccount, { loading }] = useDeleteAccountMutation()
-  const { push } = useHistory()
-  const apolloClient = useApolloClient()
+  const logout = () => {
+    localStorage.removeItem('token')
+    location.reload()
+  }
 
   return (
     <Dialog isOpen={deleteOpen} close={() => setDeleteOpen(false)}>
@@ -232,21 +213,19 @@ function DeleteAccountDialog({ deleteOpen, setDeleteOpen }) {
 
         <div className="flex items-center justify-end space-x-4 pt-4">
           <button
-            className="cancel-button"
+            className="form-button-cancel"
             type="button"
             onClick={() => setDeleteOpen(false)}
           >
             Cancel
           </button>
           <button
-            className="delete-button"
+            className="form-button-delete"
             type="button"
             disabled={!password || loading}
             onClick={() => {
               deleteAccount({ variables: { input: { password } } }).then(() => {
-                setDeleteOpen(false)
-                push('/')
-                apolloClient.resetStore()
+                logout()
               })
             }}
           >
