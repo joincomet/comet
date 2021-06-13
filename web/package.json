@@ -1,7 +1,7 @@
 {
   "name": "web",
   "description": "All-in-one chat and forums for communities.",
-  "version": "0.0.92",
+  "version": "0.0.94",
   "private": true,
   "repository": "github:joincomet/comet",
   "homepage": "https://joincomet.app",
@@ -100,7 +100,6 @@
     "string-hash": "^1.1.3",
     "tailwind-scrollbar": "^1.3.1",
     "tailwindcss": "^2.1.4",
-    "vite": "^2.3.6",
     "vite": "^2.3.7",
     "vite-plugin-pwa": "^0.7.3"
   },
