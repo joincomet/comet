@@ -22,8 +22,8 @@ export async function deleteAccount(
   await em.persistAndFlush(user)
   await em
     .createQueryBuilder(ServerUser)
-    .where({ user, status: ServerUserStatus.Joined })
     .update({ status: ServerUserStatus.None })
+    .where({ user, status: ServerUserStatus.Joined })
     .execute()
   return true
 }

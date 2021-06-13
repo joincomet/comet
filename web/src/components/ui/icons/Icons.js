@@ -25,6 +25,7 @@ export {
   HiGlobeAlt as IconLinkWeb,
   HiMenuAlt2 as IconText,
   HiMenu as IconMenu,
+  HiLogout as IconLogout,
   HiChatAlt2 as IconChat,
   HiArrowNarrowRight as IconUserJoin,
   HiDotsHorizontal as IconDotsHorizontal,
@@ -47,6 +48,7 @@ export {
   HiSortAscending as IconTop,
   HiCheckCircle as IconFeatured,
   HiSearch as IconSearch,
+  HiLightningBolt as IconEarlyAdopter,
   HiAnnotation as IconReply,
   HiOutlineExternalLink as IconLinkExternal,
   HiUserGroup as IconFriends,
@@ -142,3 +144,4 @@ export * from './IconCategoryTechnology'
 export * from './IconCreateServer'
 export * from './IconSpinner'
 export * from './IconChannel'
+export * from './IconImage'

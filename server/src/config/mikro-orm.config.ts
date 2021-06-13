@@ -77,7 +77,7 @@ export const mikroOrmConf = {
     return new CustomError('error.entityNotFound', entityName)
   },
   driverOptions:
-    process.env.NODE_ENV === 'production'
+    process.env.NODE_ENV === 'production' && process.env.SSL !== 'false'
       ? {
           connection: { ssl: { rejectUnauthorized: false } }
         }

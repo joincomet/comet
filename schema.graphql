@@ -867,6 +867,7 @@ type User implements BaseEntity {
   isCurrentUser: Boolean!
   isOg: Boolean!
   isOnline: Boolean!
+  isStaff: Boolean!
   lastLoginAt: DateTime
   lastMessageAt: DateTime
   onlineStatus: OnlineStatus!

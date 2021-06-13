@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from 'react'
 import Dialog from '@/components/ui/dialog/Dialog'
 import UserAvatar from '@/components/user/UserAvatar'
-import { IconDotsVertical } from '@/components/ui/icons/Icons'
+import {IconDotsVertical, IconEarlyAdopter} from '@/components/ui/icons/Icons'
 import ctl from '@netlify/classnames-template-literals'
 import { useTranslation } from 'react-i18next'
 import ServerAvatar from '@/components/server/ServerAvatar'
@@ -227,10 +227,18 @@ export default memo(function UserDialog() {
               {user?.username}
             </div>
 
-            {user?.isOg && (
-              <Tippy content="OG">
+            {user?.isStaff && (
+              <Tippy content="Staff">
                 <div className="cursor-pointer ml-3 h-5 w-5">
                   <VectorLogoIcon className="w-5 h-5" />
+                </div>
+              </Tippy>
+            )}
+
+            {user?.isOg && (
+              <Tippy content="Early Adopter">
+                <div className="cursor-pointer ml-3 h-5 w-5">
+                  <IconEarlyAdopter className="w-5 h-5 text-blue-500" />
                 </div>
               </Tippy>
             )}

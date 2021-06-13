@@ -45,7 +45,7 @@ export class MentionList extends Component {
       return true
     }
 
-    if (event.key === ' ') {
+    if (event.key === ' ' && this.props.query) {
       event.stopPropagation()
       this.spaceHandler()
       return true

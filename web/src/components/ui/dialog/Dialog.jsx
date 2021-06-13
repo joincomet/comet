@@ -44,7 +44,7 @@ export default function Dialog({
                 onClick={() => {
                   if (closeOnOverlayClick) close()
                 }}
-                className="overflow-y-auto scrollbar dark:scrollbar-thumb-gray-800 dark:scrollbar-track-transparent inline-block h-screen transform transition-all align-middle w-full"
+                className="overflow-y-auto scrollbar dark:scrollbar-thumb-gray-800 dark:scrollbar-track-transparent inline-block h-screen transform transition-all align-middle w-screen"
               >
                 <div className="flex min-h-full w-full items-center justify-center">
                   {children}
