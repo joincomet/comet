@@ -400,8 +400,6 @@ export default function MessageInput({ channel, server, group, user, users }) {
               <EditorContent editor={editor} />
             )}
           </div>
-
-          {/*<TenorPopover onSelect={(e) => console.log(e)} />*/}
         </div>
 
         <div className="h-6 flex items-center text-secondary text-13 font-medium">

@@ -1,6 +1,6 @@
 {
 	"name": "comet",
-	"version": "0.0.94",
+	"version": "0.0.95",
 	"private": true,
 	"license": "MPL-2.0",
 	"author": {
@@ -28,23 +28,23 @@
 		"dev:electron": "yarn workspace electron run dev"
 	},
 	"devDependencies": {
-		"@graphql-codegen/cli": "^1.21.5",
-		"@graphql-codegen/typescript": "^1.22.1",
-		"@graphql-codegen/typescript-operations": "^1.18.0",
-		"@graphql-codegen/typescript-react-apollo": "^2.2.5",
-		"@types/node": "^15.12.2",
-		"@typescript-eslint/eslint-plugin": "^4.26.1",
-		"@typescript-eslint/parser": "^4.26.1",
+		"@graphql-codegen/cli": "^1.21.6",
+		"@graphql-codegen/typescript": "^1.22.4",
+		"@graphql-codegen/typescript-operations": "^1.18.3",
+		"@graphql-codegen/typescript-react-apollo": "^2.3.0",
+		"@types/node": "^16.0.1",
+		"@typescript-eslint/eslint-plugin": "^4.28.2",
+		"@typescript-eslint/parser": "^4.28.2",
 		"concurrently": "^6.2.0",
 		"cross-env": "^7.0.3",
-		"eslint": "^7.28.0",
+		"eslint": "^7.30.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.0",
-		"prettier": "^2.3.1",
+		"prettier": "^2.3.2",
 		"rimraf": "^3.0.2"
 	},
 	"dependencies": {
-		"ts-invariant": "^0.7.3"
+		"ts-invariant": "^0.8.2"
 	},
 	"resolutions": {
 		"prosemirror-model": "1.14.1"

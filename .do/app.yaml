@@ -31,8 +31,6 @@ services:
         value: <AWS_ENDPOINT>
       - key: MEDIA_DOMAIN
         value: <MEDIA_DOMAIN>
-      - key: SENTRY_DSN
-        value: <SENTRY_DSN>
       - key: COMET_USER_PASSWORD
         value: <COMET_USER_PASSWORD>
 databases:
@@ -42,10 +40,6 @@ databases:
     cluster_name: comet
     db_name: defaultdb
     db_user: doadmin
-  - name: redis
-    engine: REDIS
-    production: true
-    cluster_name: comet-redis
 domains:
   - domain: api.joincomet.app
     type: PRIMARY

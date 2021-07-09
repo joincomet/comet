@@ -67,10 +67,8 @@ jobs:
       - run: yarn run build:web
         env:
           VITE_API_DOMAIN: ${{ secrets.API_DOMAIN }}
-          VITE_SENTRY_DSN: ${{ secrets.WEB_SENTRY_DSN }}
           VITE_BTC_ADDRESS: ${{ secrets.BTC_ADDRESS }}
           VITE_ETH_ADDRESS: ${{ secrets.ETH_ADDRESS }}
-          VITE_TENOR_API_KEY: ${{ secrets.TENOR_API_KEY }}
       - uses: actions/upload-artifact@v2
         with:
           name: dist-web
@@ -138,7 +136,6 @@ jobs:
           TAG=${{ steps.prep.outputs.tag }}
           ACCESS_TOKEN_SECRET=$(printf '%s\n' "${{ secrets.ACCESS_TOKEN_SECRET }}" | sed -e 's/[]\/$*.^[]/\\&/g');
           AWS_SECRET_ACCESS_KEY=$(printf '%s\n' "${{ secrets.AWS_SECRET_ACCESS_KEY }}" | sed -e 's/[]\/$*.^[]/\\&/g');
-          SENTRY_DSN=$(printf '%s\n' "${{ secrets.SERVER_SENTRY_DSN }}" | sed -e 's/[]\/$*.^[]/\\&/g');
           COMET_USER_PASSWORD=$(printf '%s\n' "${{ secrets.COMET_USER_PASSWORD }}" | sed -e 's/[]\/$*.^[]/\\&/g');
           sed -i "s/<TAG>/$TAG/g" .do/app.yaml
           sed -i "s/<ACCESS_TOKEN_SECRET>/$ACCESS_TOKEN_SECRET/g" .do/app.yaml
@@ -147,7 +144,6 @@ jobs:
           sed -i "s/<AWS_SECRET_ACCESS_KEY>/$AWS_SECRET_ACCESS_KEY/g" .do/app.yaml
           sed -i "s/<AWS_ENDPOINT>/${{ secrets.AWS_ENDPOINT }}/g" .do/app.yaml
           sed -i "s/<MEDIA_DOMAIN>/${{ secrets.MEDIA_DOMAIN }}/g" .do/app.yaml
-          sed -i "s/<SENTRY_DSN>/$SENTRY_DSN/g" .do/app.yaml
           sed -i "s/<COMET_USER_PASSWORD>/$COMET_USER_PASSWORD/g" .do/app.yaml
       - name: Update app spec
         run: doctl apps update ${{ secrets.DIGITALOCEAN_APP_ID }} --spec .do/app.yaml

@@ -3,7 +3,7 @@ import { mikroOrmConf } from '@/config/mikro-orm.config'
 import { buildSchema } from 'type-graphql'
 import { typeGraphQLConf } from '@/config/typegraphql.config'
 import express from 'express'
-import {ApolloError, ApolloServer} from 'apollo-server-express'
+import { ApolloServer } from 'apollo-server-express'
 import ws from 'ws' // yarn add ws
 import { useServer } from 'graphql-ws/lib/use/ws'
 import { ExecutionArgs, parse, specifiedRules, validate } from 'graphql'
@@ -16,15 +16,10 @@ import cors from 'cors'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { Disposable } from 'graphql-ws'
 import { seed } from '@/seed/seed'
-import * as Sentry from '@sentry/node'
-import { version } from '../package.json'
 
 const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
 
 const RESET = false // set TRUE to WIPE AND RESET DATABASE in dev
-
-const shouldUseSentry =
-  process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -72,70 +67,9 @@ export async function bootstrap() {
         liveQueryStore,
         loaders: createLoaders(em, user?.id)
       } as Context
-    },
-    plugins: shouldUseSentry ? [
-      {
-        requestDidStart(_) {
-          /* Within this returned object, define functions that respond
-             to request-specific lifecycle events. */
-          return {
-            didEncounterErrors(ctx) {
-              // If we couldn't parse the operation, don't
-              // do anything here
-              if (!ctx.operation) {
-                return;
-              }
-
-              for (const err of ctx.errors) {
-                // Only report internal server errors,
-                // all errors extending ApolloError should be user-facing
-                if (err instanceof ApolloError) {
-                  continue;
-                }
-
-                // Add scoped report details and send to Sentry
-                Sentry.withScope(scope => {
-                  // Annotate whether failing operation was query/mutation/subscription
-                  scope.setTag("kind", ctx.operation.operation);
-
-                  // Log query and variables as extras (make sure to strip out sensitive data!)
-                  scope.setExtra("query", ctx.request.query);
-                  scope.setExtra("variables", ctx.request.variables);
-
-                  if (err.path) {
-                    // We can also add the path as breadcrumb
-                    scope.addBreadcrumb({
-                      category: "query-path",
-                      message: err.path.join(" > "),
-                      level: Sentry.Severity.Debug
-                    });
-                  }
-
-                  const transactionId = ctx.request.http.headers.get(
-                    "x-transaction-id"
-                  );
-                  if (transactionId) {
-                    scope.setTransactionName(transactionId);
-                  }
-
-                  Sentry.captureException(err);
-                });
-              }
-            }
-          };
-        }
-      }
-    ] : []
+    }
   })
   apolloServer.applyMiddleware({ app })
-
-  if (shouldUseSentry) {
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      release: `server@${version}`,
-      tracesSampleRate: 1.0
-    })
-  }
 
   const port = +process.env.PORT || 4000
 
@@ -167,17 +101,17 @@ export async function bootstrap() {
             operationName: msg.payload.operationName,
             document: parse(msg.payload.query),
             variableValues: msg.payload.variables,
-            contextValue,
-          };
+            contextValue
+          }
 
           const errors = validate(args.schema, args.document, [
             ...specifiedRules,
-            NoLiveMixedWithDeferStreamRule,
-          ]);
+            NoLiveMixedWithDeferStreamRule
+          ])
 
-          if (errors.length) return errors;
+          if (errors.length) return errors
 
-          return args;
+          return args
         }
       },
       wsServer

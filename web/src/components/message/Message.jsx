@@ -12,6 +12,7 @@ import PostEmbed from '@/components/post/PostEmbed'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { MessageType } from '@/graphql/hooks'
 import MessagesStart from '@/components/message/MessagesStart'
+import { format } from 'date-fns'
 
 export default memo(function Message({
   index,
@@ -43,6 +44,16 @@ export default memo(function Message({
     (prevMessage &&
       (!prevMessage.text || prevMessage.author.id !== message.author.id))
 
+  const day = Math.floor(
+    new Date(message.createdAt).getTime() / (1000 * 60 * 60 * 24)
+  )
+
+  const prevDay = prevMessage
+    ? Math.floor(
+        new Date(prevMessage.createdAt).getTime() / (1000 * 60 * 60 * 24)
+      )
+    : null
+
   if (message.type === MessageType.Initial) {
     return <MessagesStart channel={channel} group={group} user={user} />
   }
@@ -60,7 +71,12 @@ export default memo(function Message({
           <div className="pl-4 text-base text-tertiary flex items-center">
             <ContextMenuTrigger
               className="inline-block"
-              data={{ type: ContextMenuType.User, user: message.author, server, role: message.serverUser?.role }}
+              data={{
+                type: ContextMenuType.User,
+                user: message.author,
+                server,
+                role: message.serverUser?.role
+              }}
             >
               <UserPopup user={message.author} role={message.serverUser?.role}>
                 <UserAvatar user={message.author} size={5} />
@@ -68,7 +84,12 @@ export default memo(function Message({
             </ContextMenuTrigger>
             <ContextMenuTrigger
               className="inline-block"
-              data={{ type: ContextMenuType.User, user: message.author, server, role: message.serverUser?.role }}
+              data={{
+                type: ContextMenuType.User,
+                user: message.author,
+                server,
+                role: message.serverUser?.role
+              }}
             >
               <UserPopup user={message.author} role={message.serverUser?.role}>
                 <span className="ml-2 text-white cursor-pointer hover:underline">
@@ -78,7 +99,7 @@ export default memo(function Message({
             </ContextMenuTrigger>
             &nbsp;has joined the {message.serverUser ? 'planet' : 'group'}
             <span className="pl-2 text-11 whitespace-nowrap text-mid cursor-default leading-5 select-none">
-              {shortTime(message.createdAt)}
+              {calendarDate(message.createdAt)}
             </span>
           </div>
         </div>
@@ -89,6 +110,16 @@ export default memo(function Message({
   if (message.type === MessageType.Normal) {
     return (
       <div className={`${showUser ? 'pt-4' : ''}`}>
+        {day > prevDay && (
+          <div className="pt-1 pb-4">
+            <div className="text-mid text-xs font-medium h-0 border-t border-gray-700 flex items-center justify-center">
+              <span className="dark:bg-gray-750 px-1 py-0.5">
+                {format(new Date(message.createdAt), 'MMMM d, y')}
+              </span>
+            </div>
+          </div>
+        )}
+
         <ContextMenuTrigger
           data={{ type: ContextMenuType.Message, message, server }}
         >
@@ -101,7 +132,12 @@ export default memo(function Message({
 
             {showUser ? (
               <ContextMenuTrigger
-                data={{ type: ContextMenuType.User, user: message.author, server, role: message.serverUser?.role }}
+                data={{
+                  type: ContextMenuType.User,
+                  user: message.author,
+                  server,
+                  role: message.serverUser?.role
+                }}
               >
                 <UserPopup
                   user={message.author}
