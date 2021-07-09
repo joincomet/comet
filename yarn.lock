@@ -3035,6 +3035,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@n1ru4l/graphql-live-query-patch-json-patch@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "@n1ru4l/graphql-live-query-patch-json-patch@npm:0.3.2"
+  dependencies:
+    fast-json-patch: 3.0.0-1
+  peerDependencies:
+    graphql: ^15.4.0
+  checksum: b6881ce456caafccf6f6b291ce4f0407b035a126f782c5a2d55379536d77a5559c7cd9c23e53b0d2f25ff8c663088b2d0ff88789cdcd044bf6ef7082fe930bcd
+  languageName: node
+  linkType: hard
+
 "@n1ru4l/graphql-live-query-patch@npm:^0.3.2":
   version: 0.3.2
   resolution: "@n1ru4l/graphql-live-query-patch@npm:0.3.2"
@@ -18109,6 +18120,7 @@ typescript@^4.3.5:
     "@headlessui/react": ^1.3.0
     "@n1ru4l/graphql-live-query": ^0.7.1
     "@n1ru4l/graphql-live-query-patch": ^0.3.2
+    "@n1ru4l/graphql-live-query-patch-json-patch": ^0.3.2
     "@n1ru4l/push-pull-async-iterable-iterator": ^2.1.4
     "@netlify/classnames-template-literals": ^1.0.0
     "@popperjs/core": ^2.9.2

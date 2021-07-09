@@ -4,7 +4,7 @@ import Routes from '@/pages/Routes'
 import { ApolloProvider } from '@apollo/client/react'
 import ResponsiveToaster from '@/components/ui/ResponsiveToaster'
 import CustomDragLayer from '@/components/ui/CustomDragLayer'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter, HashRouter } from 'react-router-dom'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import TitleBar from '@/components/ui/electron/titlebar/TitleBar'
 import { getOS } from '@/utils/getOS'
@@ -16,6 +16,7 @@ import UserProvider from '@/providers/UserProvider'
 
 export default function App() {
   const isMac = getOS() === 'Mac OS'
+  const Router = window.electron ? HashRouter : BrowserRouter
 
   return (
     <ApolloProvider client={apolloClient}>
