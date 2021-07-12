@@ -5,7 +5,7 @@ import {
   makeAsyncIterableIteratorFromSink,
   applyAsyncIterableIteratorToSink
 } from '@n1ru4l/push-pull-async-iterable-iterator'
-import { createApplyLiveQueryPatch } from '@n1ru4l/graphql-live-query-patch'
+import { applyLiveQueryJSONPatch } from '@n1ru4l/graphql-live-query-patch-json-patch'
 
 export const wsStatus = {
   status: 'connecting'
@@ -60,10 +60,9 @@ export class WebSocketLink extends ApolloLink {
   }
 
   public request(operation: Operation): Observable<FetchResult> | null {
-    const applyLiveQueryPatch = createApplyLiveQueryPatch()
     return new Observable<FetchResult>(sink =>
       applyAsyncIterableIteratorToSink(
-        applyLiveQueryPatch(
+        applyLiveQueryJSONPatch(
           this.wsFetcher({
             operationName: operation.operationName,
             query: print(operation.query),
