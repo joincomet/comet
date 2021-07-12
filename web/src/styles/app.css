@@ -112,15 +112,15 @@ body {
 }
 
 .scrollbar-custom {
-  @apply scrollbar-thin dark:scrollbar-thumb-gray-850 dark:scrollbar-track-gray-775 scrollbar-thumb-rounded-md;
+  @apply scrollbar-thin dark:scrollbar-thumb-gray-850 dark:scrollbar-track-gray-775 scrollbar-track-gray-200 scrollbar-thumb-gray-300 scrollbar-thumb-rounded-md;
 }
 
 .scrollbar-light {
-  @apply scrollbar-thin dark:scrollbar-thumb-gray-800 dark:scrollbar-track-gray-725 scrollbar-thumb-rounded-md;
+  @apply scrollbar-thin dark:scrollbar-thumb-gray-800 dark:scrollbar-track-gray-725 scrollbar-track-gray-200 scrollbar-thumb-gray-300 scrollbar-thumb-rounded-md;
 }
 
 .scrollbar-dark {
-  @apply scrollbar-thin dark:scrollbar-thumb-gray-850 dark:scrollbar-track-gray-800 scrollbar-thumb-rounded-md;
+  @apply scrollbar-thin dark:scrollbar-thumb-gray-850 dark:scrollbar-track-gray-800 scrollbar-track-gray-200 scrollbar-thumb-gray-300 scrollbar-thumb-rounded-md;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {

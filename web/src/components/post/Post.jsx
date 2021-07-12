@@ -79,7 +79,7 @@ export default memo(function Post({
     <ContextMenuTrigger data={{ type: ContextMenuType.Post, post }}>
       <div
         style={{ opacity }}
-        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 px-2 py-3 md:rounded flex`}
+        className={`${className} cursor-pointer relative group hover:shadow dark:bg-gray-800 dark:hover:bg-gray-825 bg-white px-2 py-3 md:rounded flex hover:bg-gray-50`}
         onClick={() => {
           if (!isDragging) {
             push(post.relativeUrl)
@@ -108,7 +108,7 @@ export default memo(function Post({
         <div className="flex flex-col items-center pr-2">
           <button
             type="button"
-            className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer ${
+            className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer hover:bg-gray-200 ${
               post.voteType === VoteType.Up ? 'text-red-400' : 'text-mid'
             }`}
             onClick={(e) => {
@@ -205,7 +205,7 @@ export default memo(function Post({
 
         {!isPostPage && (
           <div
-            className="w-26 min-w-[6.5rem] h-18 min-h-[4.5rem] rounded dark:bg-gray-750 mr-4 flex items-center justify-center bg-center bg-cover bg-no-repeat"
+            className="w-26 min-w-[6.5rem] h-18 min-h-[4.5rem] rounded dark:bg-gray-750 bg-gray-50 mr-4 flex items-center justify-center bg-center bg-cover bg-no-repeat"
             style={
               post.thumbnailUrl
                 ? { backgroundImage: `url(${post.thumbnailUrl})` }

@@ -15,7 +15,7 @@ export default function SidebarUser({ user, role, server }) {
             user={user}
             size={6}
             showOnline
-            dotClassName="w-2 h-2 ring-2 dark:ring-gray-800"
+            dotClassName="w-2 h-2 ring-2 dark:ring-gray-800 ring-gray-50"
           />
           <div
             className="ml-3 font-medium text-tertiary"

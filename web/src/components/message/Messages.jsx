@@ -105,7 +105,7 @@ export default function Messages({ channel, server, user, group, users }) {
     <div className="flex flex-col h-full">
       {!!messages && (
         <Virtuoso
-          className="scrollbar-custom dark:bg-gray-750"
+          className="scrollbar-custom dark:bg-gray-750 bg-white"
           alignToBottom
           atBottomStateChange={isAtBottom => {
             atBottom.current = isAtBottom

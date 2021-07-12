@@ -17,6 +17,10 @@ import { useLoginDialog } from '@/hooks/useLoginDialog'
 import {getOS} from "@/utils/getOS";
 
 export default function BottomBar() {
+  const getIsDark = () => {
+    return localStorage.getItem('darkMode') == 'true'
+  }
+
   const [currentUser] = useCurrentUser()
   const offset = [0, 14]
   const [open, setOpen] = useState(false)
@@ -24,6 +28,7 @@ export default function BottomBar() {
     s.updateAvailable,
     s.setUpdateAvailable
   ])
+  const [isDark, setIsDark] = useState(getIsDark())
   useEffect(() => {
     if (window.electron) {
       window.electron.on('updateAvailable', () => {
@@ -48,6 +53,27 @@ export default function BottomBar() {
     }
   }, [currentUser])
 
+  useEffect(() => {
+    toggleDarkMode(isDark)
+  }, [isDark])
+
+  const handleDarkModeClick = () => {
+    setIsDark(prev => !prev)
+  }
+
+  const toggleDarkMode = (isDark) => {
+    let body = document.body
+    if (isDark) {
+      body.classList.add('dark')
+      body.classList.remove('light')
+      localStorage.setItem('darkMode', JSON.stringify(isDark))
+    } else {
+      body.classList.add('light')
+      body.classList.remove('dark')
+      localStorage.setItem('darkMode', JSON.stringify(isDark))
+    }
+  }
+
   const downloadLink = getDownloadLink()
   const os = getOS()
   const [loginOpen, setLoginOpen, isCreateAccount, setCreateAccount] =
@@ -56,7 +82,7 @@ export default function BottomBar() {
     <>
       {!!currentUser && <UserSettingsDialog open={open} setOpen={setOpen} />}
 
-      <div className="flex items-center shadow-md px-3 bottom-0 h-5.5 bg-gray-700 z-50">
+      <div className="flex items-center shadow-md px-3 bottom-0 h-5.5 dark:bg-gray-700 z-50 bg-white">
         {currentUser ? (
           <>
             <UserAvatar size={4.5} className="mr-2" user={currentUser} />
@@ -97,6 +123,8 @@ export default function BottomBar() {
               </a>
             </Tippy>
           )}*/}
+
+          <button className="text-xs font-medium cursor-pointer" onClick={handleDarkModeClick}>Turn {isDark ? 'off' : 'on'} dark mode</button>
 
           <Tippy
             content={`${

@@ -368,7 +368,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
         </>
       )}
 
-      <div className="px-4 dark:bg-gray-750 relative">
+      <div className="px-4 dark:bg-gray-750 bg-white relative">
         <div className="relative">
           {canSendMessage && (
             <Tippy content={t('message.upload')}>
@@ -394,7 +394,7 @@ export default function MessageInput({ channel, server, group, user, users }) {
             }}
             className={`${canSendMessage ? 'px-14' : 'px-4 opacity-50'} ${
               currentUser ? '' : 'cursor-pointer'
-            } min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light dark:bg-gray-700 py-3 w-full rounded-lg text-base focus:outline-none text-secondary border-none`}
+            } min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light dark:bg-gray-700 py-3 w-full rounded-lg text-base focus:outline-none text-secondary border-none bg-gray-100`}
           >
             {!editor?.isDestroyed && (
               <EditorContent editor={editor} />
