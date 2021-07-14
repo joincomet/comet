@@ -8199,7 +8199,6 @@ __metadata:
     electron-builder: ^22.11.9
     electron-builder-notarize: ^1.2.0
     electron-context-menu: ^3.1.1
-    electron-is-dev: ^2.0.0
     electron-log: ^4.3.5
     electron-store: ^8.0.0
     electron-updater: ^4.4.1

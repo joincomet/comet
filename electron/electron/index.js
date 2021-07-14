@@ -2,7 +2,7 @@ require("@electron/remote/main").initialize();
 
 const { join } = require("path");
 const { BrowserWindow, app, Tray, Menu } = require("electron");
-const isDev = require("electron-is-dev");
+const isDev = app.isPackaged;
 const contextMenu = require("electron-context-menu");
 // const log = require("electron-log");
 const { createLoadingScreen } = require("./loading");

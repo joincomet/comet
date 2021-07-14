@@ -1,7 +1,7 @@
 const { join } = require("path");
-const { BrowserWindow, shell, screen } = require("electron");
+const { app, BrowserWindow, shell, screen } = require("electron");
 const Store = require("electron-store");
-const isDev = require("electron-is-dev");
+const isDev = app.isPackaged;
 
 const store = new Store();
 
