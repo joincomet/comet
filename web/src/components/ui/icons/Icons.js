@@ -66,6 +66,8 @@ export {
   HiEye as IconShow,
   HiEyeOff as IconHide,
   HiMail as IconEmail,
+  HiMoon as IconDark,
+  HiSun as IconLight,
   // EDITOR
   HiCode as IconFormatCodeInline,
   HiEmojiHappy as IconFormatEmoji,

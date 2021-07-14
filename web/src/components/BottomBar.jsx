@@ -2,7 +2,9 @@ import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import UserAvatar from '@/components/user/UserAvatar'
 import {
   IconBell,
+  IconDark,
   IconDownload,
+  IconLight,
   IconSettings
 } from '@/components/ui/icons/Icons'
 import Tippy from '@tippyjs/react'
@@ -15,12 +17,9 @@ import { Link } from 'react-router-dom'
 import { getDownloadLink } from '@/hooks/getDownloadLink'
 import { useLoginDialog } from '@/hooks/useLoginDialog'
 import { getOS } from '@/utils/getOS'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function BottomBar() {
-  const getIsDark = () => {
-    return localStorage.getItem('darkMode') == 'true'
-  }
-
   const [currentUser] = useCurrentUser()
   const offset = [0, 14]
   const [open, setOpen] = useState(false)
@@ -28,7 +27,6 @@ export default function BottomBar() {
     s.updateAvailable,
     s.setUpdateAvailable
   ])
-  const [isDark, setIsDark] = useState(getIsDark())
   useEffect(() => {
     if (window.electron) {
       window.electron.on('updateAvailable', () => {
@@ -53,26 +51,7 @@ export default function BottomBar() {
     }
   }, [currentUser])
 
-  useEffect(() => {
-    toggleDarkMode(isDark)
-  }, [isDark])
-
-  const handleDarkModeClick = () => {
-    setIsDark(prev => !prev)
-  }
-
-  const toggleDarkMode = (isDark) => {
-    let body = document.body
-    if (isDark) {
-      body.classList.add('dark')
-      body.classList.remove('light')
-      localStorage.setItem('darkMode', JSON.stringify(isDark))
-    } else {
-      body.classList.add('light')
-      body.classList.remove('dark')
-      localStorage.setItem('darkMode', JSON.stringify(isDark))
-    }
-  }
+  const { toggle: toggleDark, value: isDark } = useDarkMode()
 
   const downloadLink = getDownloadLink()
   const os = getOS()
@@ -129,7 +108,18 @@ export default function BottomBar() {
             </Tippy>
           )}
 
-          <button className="text-xs font-medium cursor-pointer" onClick={handleDarkModeClick}>Turn {isDark ? 'off' : 'on'} dark mode</button>
+          <Tippy content={isDark ? 'Light Mode' : 'Dark Mode'}>
+            <button
+              className="text-tertiary cursor-pointer"
+              onClick={() => toggleDark()}
+            >
+              {isDark ? (
+                <IconLight className="w-5 h-5" />
+              ) : (
+                <IconDark className="w-5 h-5" />
+              )}
+            </button>
+          </Tippy>
 
           <Tippy
             content={`${

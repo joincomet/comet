@@ -1,6 +1,13 @@
 import Sidebar from '@/components/ui/sidebar/Sidebar'
 import SidebarSortButtons from '@/components/ui/sidebar/SidebarSortButtons'
-import {IconFeatured, IconFriends, IconHome, IconInbox, IconInfinity, IconX} from '@/components/ui/icons/Icons'
+import {
+  IconFeatured,
+  IconFriends,
+  IconHome,
+  IconInbox,
+  IconInfinity,
+  IconX
+} from '@/components/ui/icons/Icons'
 import { useHistory, useLocation } from 'react-router-dom'
 import UserAvatar from '@/components/user/UserAvatar'
 import SidebarLabel from '@/components/ui/sidebar/SidebarLabel'
@@ -18,7 +25,7 @@ import {
   useRepliesQuery
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import {useStore} from "@/hooks/useStore";
+import { useStore } from '@/hooks/useStore'
 
 export default function HomeSidebar() {
   const { t } = useTranslation()
@@ -71,26 +78,39 @@ export default function HomeSidebar() {
 
           <div className="space-y-0.5">
             {!!currentUser && (
-              <SidebarItem active={postsFeed === 'Joined' && pathname === '/'} onClick={() => {
-                setPostsFeed('Joined')
-                if (pathname !== '/') push('/')
-              }}>
+              <SidebarItem
+                active={postsFeed === 'Joined' && pathname === '/'}
+                onClick={() => {
+                  setPostsFeed('Joined')
+                  if (pathname !== '/') push('/')
+                }}
+              >
                 <IconHome className="mr-3 h-5 w-5" />
                 Your Feed
               </SidebarItem>
             )}
 
-            <SidebarItem active={(postsFeed === 'Featured' || (!currentUser && postsFeed === 'Joined')) && pathname === '/'} onClick={() => {
-              setPostsFeed('Featured')
-              if (pathname !== '/') push('/')
-            }}>
+            <SidebarItem
+              active={
+                (postsFeed === 'Featured' ||
+                  (!currentUser && postsFeed === 'Joined')) &&
+                pathname === '/'
+              }
+              onClick={() => {
+                setPostsFeed('Featured')
+                if (pathname !== '/') push('/')
+              }}
+            >
               <IconFeatured className="mr-3 h-5 w-5" />
               Featured
             </SidebarItem>
-            <SidebarItem active={postsFeed === 'All' && pathname === '/'} onClick={() => {
-              setPostsFeed('All')
-              if (pathname !== '/') push('/')
-            }}>
+            <SidebarItem
+              active={postsFeed === 'All' && pathname === '/'}
+              onClick={() => {
+                setPostsFeed('All')
+                if (pathname !== '/') push('/')
+              }}
+            >
               <IconInfinity className="mr-3 h-5 w-5" />
               Universe
             </SidebarItem>

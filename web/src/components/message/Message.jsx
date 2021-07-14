@@ -172,7 +172,7 @@ export default memo(function Message({
                       role={message.serverUser?.role}
                     >
                       <div
-                        className="text-base font-medium cursor-pointer hover:underline leading-none"
+                        className="text-base text-black dark:text-white font-medium cursor-pointer hover:underline leading-none"
                         style={{ color: message.serverUser?.role?.color }}
                       >
                         {message.author.username}
