@@ -50,7 +50,7 @@ export default function Comment({
 
   return (
     <div
-      className={`relative md:rounded dark:bg-gray-800 ${
+      className={`relative md:rounded dark:bg-gray-800 bg-white ${
         level === 0 ? '' : 'pl-4'
       }`}
     >
@@ -113,7 +113,7 @@ export default function Comment({
               <div className="flex items-center">
                 <button
                   type="button"
-                  className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer ${
+                  className={`focus:outline-none p-1 rounded-full dark:hover:bg-gray-750 transition cursor-pointer hover:bg-gray-200 ${
                     comment.voteType === VoteType.Up
                       ? 'text-red-400'
                       : 'text-mid'

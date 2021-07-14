@@ -25,7 +25,7 @@ export default function ServerInfoCard({
     >
       <Link
         to={`/+${server.name}`}
-        className={`${className} relative relative flex flex-col w-full rounded-lg group dark:bg-gray-800 dark:hover:bg-gray-850 duration-200 transform transition hover:shadow-xl ${
+        className={`${className} relative flex flex-col w-full rounded-lg group dark:bg-gray-800 dark:hover:bg-gray-850 duration-200 transform transition hover:shadow-xl bg-white ${
           shadow ? 'shadow-lg' : ''
         }`}
       >
@@ -41,7 +41,7 @@ export default function ServerInfoCard({
             <ServerAvatar
               size={10}
               server={server}
-              className="dark:bg-gray-750 rounded-xl ring-4 dark:ring-gray-800 transition dark:group-hover:ring-gray-850 group-hover:shadow-md"
+              className="dark:bg-gray-750 rounded-xl ring-4 dark:ring-gray-800 ring-white transition dark:group-hover:ring-gray-850 group-hover:shadow-md bg-white"
             />
           </div>
         </div>

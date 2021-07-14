@@ -26,6 +26,7 @@ const highlightClass = (active, unread) =>
   left-0
   w-1
   dark:bg-white
+  bg-gray-900
   rounded-r-2xl
   top-1/2
   -translate-y-1/2

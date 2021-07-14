@@ -11,7 +11,7 @@ const sidebarClass = ctl(`
   md:translate-x-0
   top-0
   bottom-0
-  bg-gray-200
+  bg-gray-50
   dark:bg-gray-800
   transform
   z-50

@@ -20,6 +20,7 @@ const className = ctl(`
   rounded
   shadow-lg
   outline-none
+  bg-white
 `)
 
 export default function ContextMenu({

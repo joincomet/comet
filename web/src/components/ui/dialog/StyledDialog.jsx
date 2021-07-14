@@ -19,7 +19,7 @@ export default function StyledDialog({
     >
       <form
         onSubmit={onSubmit}
-        className={`md:rounded-lg dark:bg-gray-800 min-w-screen w-full relative text-left ${
+        className={`md:rounded-lg dark:bg-gray-800 min-w-screen w-full relative text-left bg-white text-white ${
           !small && !large ? 'md:max-w-lg' : ''
         } ${small ? 'md:max-w-sm' : ''} ${large ? 'md:max-w-screen-lg' : ''}`}
         onClick={e => e.stopPropagation()}

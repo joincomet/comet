@@ -220,7 +220,7 @@ export default function CreateServerDialog({ open, setOpen, server }) {
 
       <label
         htmlFor="avatarFile"
-        className="flex items-center justify-center cursor-pointer rounded-3xl h-24 w-24 absolute left-3 top-24 transform -translate-y-1/2 dark:bg-gray-700 shadow group bg-center bg-cover"
+        className="flex items-center justify-center cursor-pointer rounded-3xl h-24 w-24 absolute left-3 top-24 transform -translate-y-1/2 dark:bg-gray-700 shadow group bg-center bg-cover bg-white"
         style={avatarSrc ? { backgroundImage: `url(${avatarSrc})` } : {}}
       >
         {!avatarSrc && (

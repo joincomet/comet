@@ -64,9 +64,10 @@ const tabClass = active =>
   h-12
   border-b-2
   dark:hover:bg-gray-775
+  hover:bg-gray-100
   ${
     active
-      ? 'dark:border-gray-100 text-primary dark:bg-gray-775'
+      ? 'dark:border-gray-100 text-primary dark:bg-gray-775 bg-gray-50'
       : 'border-transparent text-tertiary'
   }
   flex
@@ -83,6 +84,7 @@ const titleClass = ctl(`
   h-10
   placeholder-tertiary
   dark:bg-gray-750
+  bg-gray-50
   rounded
   text-sm
   text-primary
@@ -233,7 +235,7 @@ export default function CreatePostDialog({ open, setOpen, serverId }) {
     <Dialog isOpen={open} close={close}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="max-w-screen-md w-full dark:bg-gray-800 text-left rounded-xl"
+        className="max-w-screen-md w-full dark:bg-gray-800 bg-white text-left rounded-xl"
       >
         <div className="grid grid-cols-4">
           <ServerSelect

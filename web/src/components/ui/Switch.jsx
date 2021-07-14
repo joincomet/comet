@@ -25,7 +25,7 @@ export default function Switch({
         className={`${
           checked
             ? `${green ? 'bg-green-600' : 'bg-blue-600'}`
-            : 'dark:bg-gray-500'
+            : 'dark:bg-gray-500 bg-gray-300'
         } relative inline-flex flex-shrink-0 h-6 transition-colors duration-200 ease-in-out border-2 border-transparent rounded-full cursor-pointer w-10 focus:outline-none focus:shadow-outline`}
       >
         {({ checked }) => (

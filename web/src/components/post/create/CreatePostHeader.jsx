@@ -15,7 +15,7 @@ export default function CreatePostHeader({ server }) {
       <div className="p-4">
         <div
           onClick={() => setOpen(true)}
-          className="dark:bg-gray-700 h-13 flex items-center rounded transition dark:hover:bg-gray-650 cursor-pointer"
+          className="dark:bg-gray-700 h-13 flex items-center rounded transition dark:hover:bg-gray-650 cursor-pointer bg-gray-50"
         >
           <div className="px-3 border-r dark:border-gray-650 h-7">
             <UserAvatar user={user} size={7} />

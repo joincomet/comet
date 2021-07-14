@@ -80,7 +80,7 @@ export default function Editor({ text, setText }) {
   }, [pasteListener])
 
   return (
-    <div className="dark:bg-gray-750 rounded">
+    <div className="dark:bg-gray-750 rounded bg-gray-50">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>
@@ -92,6 +92,7 @@ const formatButtonClass = active =>
   p-1
   rounded
   dark:hover:bg-gray-600
+  hover:bg-gray-100
   cursor-pointer
   ${
     active
@@ -129,7 +130,7 @@ function MenuBar({ editor }) {
   if (!editor) return null
 
   return (
-    <div className="min-h-[2.25rem] border-b dark:border-gray-700 flex flex-wrap items-center divide-x dark:divide-gray-700">
+    <div className="min-h-[2.25rem] border-b dark:border-gray-700 border-gray-300 flex flex-wrap items-center divide-x dark:divide-gray-700 divide-gray-300">
       <FormatGroup>
         <FormatButton
           label="Bold (Ctrl+B)"
