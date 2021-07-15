@@ -5764,9 +5764,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.945.0":
-  version: 2.945.0
-  resolution: "aws-sdk@npm:2.945.0"
+"aws-sdk@npm:^2.947.0":
+  version: 2.947.0
+  resolution: "aws-sdk@npm:2.947.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -5777,7 +5777,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 9779845fc31d061bffa9dc29934ff42d8fca6198f9a795160c5920d665df15c7e9ab880efbadea5c99c8d555c2139d19fb1b09bb9fb24730cc16196704e89f95
+  checksum: f92b7302c64fc91c791657ce5e227e1571bd0df25d1667ef9767f0d168db587a27b564a4cd2a7f582fab2129a8a8d4bdc1ce930b1404725c48ae67821cf38b19
   languageName: node
   linkType: hard
 
@@ -8175,16 +8175,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:13.1.6":
-  version: 13.1.6
-  resolution: "electron@npm:13.1.6"
+"electron@npm:13.1.7":
+  version: 13.1.7
+  resolution: "electron@npm:13.1.7"
   dependencies:
     "@electron/get": ^1.0.1
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: d2d7bced86ad17af5d51ff8f9c8fb79276c24dd0bb5fccba1d187527a1e79e7628e974097430e0b33dda8b6069a1baff82ef83a1a7fca59b8a84a76157c4c43f
+  checksum: 0d7bf9a3bf98730e2a2acac8531f0f5942afc9d584867f1a8a7d6198ba7d9861fe9e412ac62d0a7c924dbc85e40dae541000acfeefe28e6a0b840fda0ba2f8af
   languageName: node
   linkType: hard
 
@@ -8195,7 +8195,7 @@ __metadata:
     "@electron/remote": ^1.2.0
     cross-env: ^7.0.3
     discord-rpc: ^4.0.1
-    electron: 13.1.6
+    electron: 13.1.7
     electron-builder: ^22.11.9
     electron-builder-notarize: ^1.2.0
     electron-context-menu: ^3.1.1
@@ -15899,7 +15899,7 @@ resolve@^2.0.0-next.3:
     add: ^2.0.6
     apollo-server-express: ^2.25.2
     argon2: ^0.28.2
-    aws-sdk: ^2.945.0
+    aws-sdk: ^2.947.0
     class-validator: ^0.13.1
     cors: ^2.8.5
     cross-env: ^7.0.3
@@ -15941,7 +15941,7 @@ resolve@^2.0.0-next.3:
     tsconfig-paths: ^3.10.1
     type-graphql: ^1.1.1
     typescript: ^4.3.5
-    user-agents: ^1.0.712
+    user-agents: ^1.0.713
     validator: ^13.6.0
     ws: ^7.5.3
     xss: ^1.0.9
@@ -18011,13 +18011,13 @@ typescript@^4.3.5:
   languageName: node
   linkType: hard
 
-"user-agents@npm:^1.0.712":
-  version: 1.0.712
-  resolution: "user-agents@npm:1.0.712"
+"user-agents@npm:^1.0.713":
+  version: 1.0.713
+  resolution: "user-agents@npm:1.0.713"
   dependencies:
     dot-json: ^1.2.2
     lodash.clonedeep: ^4.5.0
-  checksum: 2a90b949e5ec79d79a587d4f1399a66a1c0587c78a8e32c43f7637bf822851eeeb9621586104653acf200d63dbef098e573a20125471b1d7d2db6ede93243ae0
+  checksum: a77692123d7543ee6cf46d5bc3f8b0eed3b448f3486bc2fd0160a90b30588997ceaa1f09f40727db5a0ae922807aefddad5070cfeb676d2c781a37902b7bb491
   languageName: node
   linkType: hard
 
