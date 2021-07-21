@@ -64,10 +64,10 @@ const tabClass = active =>
   h-12
   border-b-2
   dark:hover:bg-gray-775
-  hover:bg-gray-100
+  hover:bg-gray-200
   ${
     active
-      ? 'dark:border-gray-100 text-primary dark:bg-gray-775 bg-gray-50'
+      ? 'dark:border-gray-100 text-primary dark:bg-gray-775 bg-gray-200'
       : 'border-transparent text-tertiary'
   }
   flex
@@ -84,7 +84,7 @@ const titleClass = ctl(`
   h-10
   placeholder-tertiary
   dark:bg-gray-750
-  bg-gray-50
+  bg-gray-100
   rounded
   text-sm
   text-primary
@@ -330,7 +330,7 @@ export default function CreatePostDialog({ open, setOpen, serverId }) {
 
                 <input
                   maxLength={2000}
-                  className="px-10 h-10 dark:bg-gray-750 rounded text-sm text-primary w-full focus:outline-none"
+                  className="px-10 h-10 dark:bg-gray-750 bg-gray-100 rounded text-sm text-primary w-full focus:outline-none"
                   {...register('linkUrl', {
                     validate: url => !url || isURL(url)
                   })}
@@ -439,7 +439,7 @@ export default function CreatePostDialog({ open, setOpen, serverId }) {
                           </label>
                           <ContentEditable
                             id="caption"
-                            className={`px-4 py-2.5 min-h-[2.5rem] dark:bg-gray-750 rounded text-sm text-primary focus:outline-none break-word`}
+                            className={`px-4 py-2.5 min-h-[2.5rem] dark:bg-gray-750 bg-gray-100 rounded text-sm text-primary focus:outline-none break-word`}
                             html={images[selectedImage]?.caption || ''}
                             onChange={e => {
                               if (

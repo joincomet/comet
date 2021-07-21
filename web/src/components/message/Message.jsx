@@ -39,11 +39,6 @@ export default memo(function Message({
     [message]
   )
 
-  const showUser =
-    index === 0 ||
-    (prevMessage &&
-      (!prevMessage.text || prevMessage.author.id !== message.author.id))
-
   const day = Math.floor(
     new Date(message.createdAt).getTime() / (1000 * 60 * 60 * 24)
   )
@@ -53,6 +48,12 @@ export default memo(function Message({
         new Date(prevMessage.createdAt).getTime() / (1000 * 60 * 60 * 24)
       )
     : null
+
+  const showUser =
+    index === 0 ||
+    (prevMessage &&
+      (!prevMessage.text || prevMessage.author.id !== message.author.id)) ||
+    day > prevDay
 
   if (message.type === MessageType.Initial) {
     return <MessagesStart channel={channel} group={group} user={user} />
@@ -92,7 +93,7 @@ export default memo(function Message({
               }}
             >
               <UserPopup user={message.author} role={message.serverUser?.role}>
-                <span className="ml-2 text-white cursor-pointer hover:underline">
+                <span className="ml-2 text-primary font-medium cursor-pointer hover:underline">
                   {message.author.username}
                 </span>
               </UserPopup>
@@ -111,9 +112,9 @@ export default memo(function Message({
     return (
       <div className={`${showUser ? 'pt-4' : ''}`}>
         {day > prevDay && (
-          <div className="pt-1 pb-4">
-            <div className="text-mid text-xs font-medium h-0 border-t border-gray-700 flex items-center justify-center">
-              <span className="dark:bg-gray-750 px-1 py-0.5">
+          <div className="pt-1 pb-4 px-4">
+            <div className="text-mid text-xs font-medium h-0 border-t dark:border-gray-700 border-gray-200 flex items-center justify-center">
+              <span className="dark:bg-gray-750 bg-white px-1 py-0.5">
                 {format(new Date(message.createdAt), 'MMMM d, y')}
               </span>
             </div>

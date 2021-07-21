@@ -20,7 +20,7 @@ import { useState } from 'react'
 import Dialog from '@/components/ui/dialog/Dialog'
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
 import ShowPasswordButton from '@/components/ui/ShowPasswordButton'
-import CountBadge from "@/components/ui/CountBadge";
+import CountBadge from '@/components/ui/CountBadge'
 
 export default function ServerList({ hide = false }) {
   const { pathname } = useLocation()
@@ -43,7 +43,9 @@ export default function ServerList({ hide = false }) {
   return (
     <>
       <div
-        className={`${hide ? 'hidden md:flex' : 'flex'} h-full flex-col items-center min-w-[4.5rem] w-18 bg-coolGray-200 dark:bg-gray-900 overflow-y-auto scrollbar-none`}
+        className={`${
+          hide ? 'hidden md:flex' : 'flex'
+        } h-full flex-col items-center min-w-[4.5rem] w-18 bg-gray-300 dark:bg-gray-900 overflow-y-auto scrollbar-none`}
       >
         {isMac && <div className="h-5" />}
         <div className="h-full flex flex-col items-center w-full divide-y dark:divide-gray-800 divide-gray-200">
@@ -107,13 +109,14 @@ function ServerListServer({ server }) {
     server,
     permissions: [ServerPermission.PrivateChannels]
   })
-  const channels = (server.channels ?? [])
-    .filter(channel =>
-      channel.type === ChannelType.Private ? canViewPrivateChannels : true
-    )
-  const unread = !!channels
-    .find(c => c.isUnread)
-  const mentionCount = channels.length > 0 ? channels.map(c => c.mentionCount).reduce((acc, cur) => acc + cur) : 0
+  const channels = (server.channels ?? []).filter(channel =>
+    channel.type === ChannelType.Private ? canViewPrivateChannels : true
+  )
+  const unread = !!channels.find(c => c.isUnread)
+  const mentionCount =
+    channels.length > 0
+      ? channels.map(c => c.mentionCount).reduce((acc, cur) => acc + cur)
+      : 0
   const active = serverName === server.name
   const [deleteOpen, setDeleteOpen] = useState(false)
 
@@ -134,9 +137,7 @@ function ServerListServer({ server }) {
         }}
       >
         <ServerListItem
-          to={`/+${server.name}${
-            serverPages[server.name] ?? ''
-          }`}
+          to={`/+${server.name}${serverPages[server.name] ?? ''}`}
           name={server.displayName}
           active={active}
           unread={unread}

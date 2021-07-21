@@ -172,13 +172,13 @@ export default function BottomBar() {
             <>
               <Tippy content="Notifications" offset={offset}>
                 <Link to="/inbox">
-                  <IconBell className="w-4.5 h-4.5 cursor-pointer" />
+                  <IconBell className="w-4.5 h-4.5 cursor-pointer text-tertiary" />
                 </Link>
               </Tippy>
 
               <Tippy content="Settings" offset={offset}>
                 <div onClick={() => setOpen(true)}>
-                  <IconSettings className="w-4.5 h-4.5 cursor-pointer" />
+                  <IconSettings className="w-4.5 h-4.5 cursor-pointer text-tertiary" />
                 </div>
               </Tippy>
             </>

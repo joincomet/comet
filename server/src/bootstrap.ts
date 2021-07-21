@@ -16,10 +16,11 @@ import cors from 'cors'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { Disposable } from 'graphql-ws'
 import { seed } from '@/seed/seed'
+import { createServer } from 'http'
 
 const validationRules = [...specifiedRules, NoLiveMixedWithDeferStreamRule]
 
-const RESET = true // set TRUE to WIPE AND RESET DATABASE in dev
+const RESET = false // set TRUE to WIPE AND RESET DATABASE in dev
 
 export async function bootstrap() {
   console.log(`Initializing database connection...`)
@@ -43,7 +44,7 @@ export async function bootstrap() {
   const schema = await buildSchema(typeGraphQLConf)
 
   const app = express()
-
+  const httpServer = createServer(app)
   app.use(cors({ origin: true }))
   app.use(
     graphqlUploadExpress({
@@ -52,7 +53,6 @@ export async function bootstrap() {
     })
   )
   const apolloServer = new ApolloServer({
-    uploads: false,
     schema,
     validationRules,
     context: ({ req }) => {
@@ -69,12 +69,13 @@ export async function bootstrap() {
       } as Context
     }
   })
+  await apolloServer.start()
   apolloServer.applyMiddleware({ app })
 
   const port = +process.env.PORT || 4000
 
   let graphqlWs: Disposable
-  const server = app.listen(port, () => {
+  const server = httpServer.listen(port, () => {
     console.log(`Listening on port ${port}`)
     // create and use the websocket server
     const wsServer = new ws.Server({
@@ -118,11 +119,13 @@ export async function bootstrap() {
     )
   })
 
-  process.once('SIGINT', () => {
-    console.log('Received SIGINT. Shutting down HTTP and Websocket server.')
-    graphqlWs?.dispose()
-    server.close()
-    orm.close()
+  ;['SIGINT', 'SIGTERM'].forEach(signal => {
+    process.on(signal, () => {
+      console.log('Received SIGINT. Shutting down HTTP and Websocket server.')
+      graphqlWs?.dispose()
+      server.close()
+      orm.close()
+    })
   })
 
   await seed(orm.em.fork())

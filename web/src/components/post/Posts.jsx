@@ -26,7 +26,7 @@ export default function Posts({ folderId, serverId, showServerName, header }) {
   return (
     <>
       <Virtuoso
-        className="scrollbar-custom dark:bg-gray-750 bg-gray-200"
+        className="scrollbar-custom dark:bg-gray-750 bg-gray-100"
         components={{
           Header: header ? () => header : null,
           Footer: () =>

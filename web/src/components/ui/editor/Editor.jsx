@@ -80,7 +80,7 @@ export default function Editor({ text, setText }) {
   }, [pasteListener])
 
   return (
-    <div className="dark:bg-gray-750 rounded bg-gray-50">
+    <div className="dark:bg-gray-750 rounded bg-gray-100">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>

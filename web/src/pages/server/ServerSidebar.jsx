@@ -97,7 +97,7 @@ export default function ServerSidebar() {
         )}
 
         <div className="px-1.5 pt-4">
-          <div className="shadow-inner dark:bg-gray-850 p-2.5 space-y-2.5 rounded">
+          <div className="shadow-inner dark:bg-gray-850 bg-gray-300 p-2.5 space-y-2.5 rounded">
             <div className="flex items-center">
               <ServerAvatar
                 server={server}

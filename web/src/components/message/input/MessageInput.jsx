@@ -210,7 +210,13 @@ export default function MessageInput({ channel, server, group, user, users }) {
     return () => {
       instance.destroy()
     }
-  }, [canSendMessage, placeholder, variables?.channelId, variables?.groupId, variables?.userId])
+  }, [
+    canSendMessage,
+    placeholder,
+    variables?.channelId,
+    variables?.groupId,
+    variables?.userId
+  ])
 
   // const editor = useEditor(editorOptions)
 
@@ -394,11 +400,9 @@ export default function MessageInput({ channel, server, group, user, users }) {
             }}
             className={`${canSendMessage ? 'px-14' : 'px-4 opacity-50'} ${
               currentUser ? '' : 'cursor-pointer'
-            } min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light dark:bg-gray-700 py-3 w-full rounded-lg text-base focus:outline-none text-secondary border-none bg-gray-100`}
+            } min-h-[3rem] max-h-[20rem] overflow-y-auto scrollbar-light dark:bg-gray-700 py-3 w-full rounded-lg text-base focus:outline-none text-secondary border-none bg-gray-200`}
           >
-            {!editor?.isDestroyed && (
-              <EditorContent editor={editor} />
-            )}
+            {!editor?.isDestroyed && <EditorContent editor={editor} />}
           </div>
         </div>
 

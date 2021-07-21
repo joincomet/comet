@@ -46,11 +46,11 @@ export default function Comment({
   ])
   const isReplying = replyingCommentId === comment.id
 
-  if(comment.isDeleted && !comment.childCount) return null
+  if (comment.isDeleted && !comment.childCount) return null
 
   return (
     <div
-      className={`relative md:rounded dark:bg-gray-800 bg-white ${
+      className={`relative md:rounded dark:bg-gray-800 bg-gray-200 ${
         level === 0 ? '' : 'pl-4'
       }`}
     >
@@ -66,7 +66,11 @@ export default function Comment({
             <UserPopup user={comment.author} role={comment.serverUser?.role}>
               <UserAvatar
                 size={7}
-                className={`cursor-pointer transition ${!comment.author ? 'opacity-40 dark:bg-gray-700' : 'hover:opacity-90'}`}
+                className={`cursor-pointer transition ${
+                  !comment.author
+                    ? 'opacity-40 dark:bg-gray-700'
+                    : 'hover:opacity-90'
+                }`}
                 user={comment.author}
               />
             </UserPopup>
@@ -74,7 +78,7 @@ export default function Comment({
 
           <div
             className={`pl-3 pb-3 w-full ${
-              (!!comment.childCount) && !collapse
+              !!comment.childCount && !collapse
                 ? 'border-b dark:border-gray-750'
                 : ''
             }`}
@@ -93,7 +97,9 @@ export default function Comment({
                     }`}
                     style={{ color: comment.serverUser?.role?.color }}
                   >
-                    {comment.author?.username ?? <span className="text-mid">[deleted]</span>}
+                    {comment.author?.username ?? (
+                      <span className="text-mid">[deleted]</span>
+                    )}
                   </div>
                 </UserPopup>
               </ContextMenuTrigger>
@@ -265,7 +271,7 @@ export default function Comment({
 
       <div className="pl-3">
         {!collapse &&
-          comment.childComments.map((childComment) => (
+          comment.childComments.map(childComment => (
             <Comment
               key={childComment.id}
               comment={childComment}

@@ -18,8 +18,8 @@ const className = (large, small, light) =>
   w-full
   ${
     light
-      ? 'dark:hover:bg-gray-725 dark:active:bg-gray-725 hover:bg-gray-200'
-      : 'dark:hover:bg-gray-775 dark:active:bg-gray-775 hover:bg-gray-200'
+      ? 'dark:hover:bg-gray-725 dark:active:bg-gray-725 hover:bg-gray-300 active:bg-gray-300'
+      : 'dark:hover:bg-gray-775 dark:active:bg-gray-775 hover:bg-gray-300 active:bg-gray-300'
   }
   text-gray-600
   dark:text-gray-400
@@ -38,8 +38,8 @@ const activeClassName = light =>
   dark:hover:text-gray-200
   ${
     light
-      ? `dark:bg-gray-700 dark:hover:bg-gray-700 bg-gray-200`
-      : `dark:bg-gray-750 dark:hover:bg-gray-750 bg-gray-200`
+      ? `dark:bg-gray-700 dark:hover:bg-gray-700 bg-gray-300`
+      : `dark:bg-gray-750 dark:hover:bg-gray-750 bg-gray-300`
   }
 `)
 
