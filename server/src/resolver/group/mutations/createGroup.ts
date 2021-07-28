@@ -2,7 +2,7 @@ import { Context } from '@/types'
 import { Field, InputType } from 'type-graphql'
 import { Group, Message, MessageType, User } from '@/entity'
 import { ArrayMaxSize } from 'class-validator'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @InputType()
 export class CreateGroupInput {

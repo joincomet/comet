@@ -9,7 +9,10 @@ import { useTranslation } from 'react-i18next'
 import Page from '@/components/ui/page/Page'
 import CreatePostHeader from '@/components/post/create/CreatePostHeader'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import {createNotification, isNotificationsSupported} from '@/utils/createNotification'
+import {
+  createNotification,
+  isNotificationsSupported
+} from '@/utils/createNotification'
 import InfoSidebar from '@/components/ui/InfoSidebar'
 
 export default function FeedPage() {
@@ -37,10 +40,7 @@ export default function FeedPage() {
         <title>Home – Comet</title>
       </Helmet>
 
-      <Page
-        header={<PostsHeader />}
-        rightSidebar={<InfoSidebar />}
-      >
+      <Page header={<PostsHeader />} rightSidebar={<InfoSidebar />}>
         <Posts
           showServerName
           header={currentUser ? <CreatePostHeader /> : <div className="h-4" />}

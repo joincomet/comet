@@ -1,4 +1,4 @@
-import {Field, InputType, Publisher} from 'type-graphql'
+import { Field, InputType, Publisher } from 'type-graphql'
 import { IsEmail, Length, Matches } from 'class-validator'
 import { Context } from '@/types'
 import {
@@ -14,12 +14,17 @@ import {
   User,
   UserFolder
 } from '@/entity'
-import {createAccessToken, handleUnderscore, logger, ReorderUtils} from '@/util'
+import {
+  createAccessToken,
+  handleUnderscore,
+  logger,
+  ReorderUtils
+} from '@/util'
 import * as argon2 from 'argon2'
 import { LoginResponse } from '@/resolver/user/mutations/LoginResponse'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { usernameRegex } from '@/util/text/usernameRegex'
-import {ChangePayload, ChangeType} from "@/resolver/subscriptions";
+import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
 export class CreateAccountInput {
@@ -94,13 +99,10 @@ export async function createAccount(
 
   await em.persistAndFlush(user)
 
-  const cometServer = await em.findOne(
-    Server,
-    {
-      name: 'Comet',
-      isDeleted: false
-    }
-  )
+  const cometServer = await em.findOne(Server, {
+    name: 'Comet',
+    isDeleted: false
+  })
   if (cometServer) {
     const defaultRole = await em.findOneOrFail(Role, {
       server: cometServer,
@@ -116,7 +118,10 @@ export async function createAccount(
         role: defaultRole
       })
     ])
-    const defaultChannel = await em.findOne(Channel, { server: cometServer, isDefault: true })
+    const defaultChannel = await em.findOne(Channel, {
+      server: cometServer,
+      isDefault: true
+    })
     if (defaultChannel) {
       const message = em.create(Message, {
         type: MessageType.Join,

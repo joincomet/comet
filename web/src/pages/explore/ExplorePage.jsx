@@ -6,8 +6,8 @@ import PageView from '@/components/ui/page/PageView'
 import { usePublicServersQuery } from '@/graphql/hooks'
 import EndReached from '@/components/ui/EndReached'
 import { Helmet } from 'react-helmet-async'
-import Header from "@/components/ui/header/Header";
-import {IconExplore} from "@/components/ui/icons/Icons";
+import Header from '@/components/ui/header/Header'
+import { IconExplore } from '@/components/ui/icons/Icons'
 
 export default function ExplorePage() {
   const [exploreCategory, exploreSort] = useStore(s => [
@@ -30,7 +30,12 @@ export default function ExplorePage() {
   const servers = data?.publicServers ?? []
 
   return (
-    <Page leftSidebar={<ExploreSidebar />} header={<Header title="Explore" icon={<IconExplore className="w-5 h-5" />} />}>
+    <Page
+      leftSidebar={<ExploreSidebar />}
+      header={
+        <Header title="Explore" icon={<IconExplore className="w-5 h-5" />} />
+      }
+    >
       <Helmet>
         <title>Explore Planets – Comet</title>
       </Helmet>

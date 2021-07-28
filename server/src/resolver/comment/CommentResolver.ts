@@ -12,7 +12,7 @@ import {
   Root
 } from 'type-graphql'
 import { Context } from '@/types'
-import {Comment, ServerUser, User, VoteType} from '@/entity'
+import { Comment, ServerUser, User, VoteType } from '@/entity'
 import {
   createComment,
   CreateCommentInput,

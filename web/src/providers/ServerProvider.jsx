@@ -13,7 +13,7 @@ export default function ServerProvider({ children, name }) {
       name
     },
     skip: !name,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'network-only'
     // nextFetchPolicy: 'standby'
   })
   const server = data?.server

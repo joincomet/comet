@@ -24,9 +24,11 @@ export async function MessageSubscriptionFilter({
     if (!userId) return false
     const user = await em.findOneOrFail(User, userId)
     return user.isInGroup(em, message.group.id)
-  }
-  else if (message.toUser){
+  } else if (message.toUser) {
     if (!userId) return false
-    return (message.toUser === em.getReference(User, userId) || message.author === em.getReference(User, userId))
+    return (
+      message.toUser === em.getReference(User, userId) ||
+      message.author === em.getReference(User, userId)
+    )
   }
 }

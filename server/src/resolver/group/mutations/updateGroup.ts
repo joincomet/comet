@@ -3,7 +3,7 @@ import { Length } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { Group, User } from '@/entity'
-import {logger, uploadImageFileSingle} from '@/util'
+import { logger, uploadImageFileSingle } from '@/util'
 
 @InputType()
 export class UpdateGroupInput {

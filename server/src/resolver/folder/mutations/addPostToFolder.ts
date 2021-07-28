@@ -2,7 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { Folder, FolderPost, Post, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @InputType()
 export class AddPostToFolderInput {

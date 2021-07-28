@@ -1,4 +1,8 @@
-query publicServers($sort: PublicServersSort, $category: ServerCategory, $featured: Boolean) {
+query publicServers(
+  $sort: PublicServersSort
+  $category: ServerCategory
+  $featured: Boolean
+) {
   publicServers(sort: $sort, category: $category, featured: $featured) {
     id
     name

@@ -2,7 +2,7 @@ import DataLoader from 'dataloader'
 import { Role, Server } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { QueryOrder } from '@mikro-orm/core'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 export const serverRolesLoader = (em: EntityManager) => {
   const loader = new DataLoader<string, Role[]>(async (serverIds: string[]) => {

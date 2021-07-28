@@ -1,14 +1,18 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Comment, ServerUser } from '@/entity'
 import DataLoader from 'dataloader'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 export const commentServerUserLoader = (em: EntityManager) => {
   const loader = new DataLoader<string, ServerUser>(
     async (commentIds: string[]) => {
       logger('commentServerUserLoader', commentIds)
       loader.clearAll()
-      const comments = (await em.find(Comment, {id:commentIds, isDeleted: false}, ['post.server']))
+      const comments = await em.find(
+        Comment,
+        { id: commentIds, isDeleted: false },
+        ['post.server']
+      )
       const serverIds = comments.map(c => c.post.server.id)
       const authorIds = comments.map(c => c.author.id)
       const serverUsers = await em.find(
@@ -26,7 +30,8 @@ export const commentServerUserLoader = (em: EntityManager) => {
           map[commentId] = null
         } else {
           map[commentId] = serverUsers.find(
-            su => su.server === comment.post.server && su.user === comment.author
+            su =>
+              su.server === comment.post.server && su.user === comment.author
           )
         }
       })

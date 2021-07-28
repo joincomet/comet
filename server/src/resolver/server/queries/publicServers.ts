@@ -1,7 +1,7 @@
 import { ArgsType, Field, registerEnumType } from 'type-graphql'
 import { Context } from '@/types'
 import { Server, ServerCategory } from '@/entity'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @ArgsType()
 export class PublicServersArgs {
@@ -46,5 +46,5 @@ export async function publicServers(
     where.category = category
   }
 
-  return (await em.find(Server, where, {orderBy})) as Server[]
+  return (await em.find(Server, where, { orderBy })) as Server[]
 }

@@ -5,7 +5,8 @@ import { useHistory } from 'react-router-dom'
 import {
   ChannelType,
   ServerDocument,
-  useCreateChannelMutation, useUpdateChannelMutation
+  useCreateChannelMutation,
+  useUpdateChannelMutation
 } from '@/graphql/hooks'
 import { IconChannel } from '@/components/ui/icons/IconChannel'
 import ServerAvatar from '@/components/server/ServerAvatar'
@@ -35,7 +36,12 @@ const typeClass = enabled =>
   }
 `)
 
-export default function CreateChannelDialog({ open, setOpen, server, channel }) {
+export default function CreateChannelDialog({
+  open,
+  setOpen,
+  server,
+  channel
+}) {
   const { handleSubmit, register, setValue, watch, reset } = useForm({
     mode: 'onChange'
   })
@@ -123,9 +129,14 @@ export default function CreateChannelDialog({ open, setOpen, server, channel }) 
         <button
           type="submit"
           className="form-button-submit"
-          disabled={(!channel && !name) || channelAlreadyExists || loading || updateLoading}
+          disabled={
+            (!channel && !name) ||
+            channelAlreadyExists ||
+            loading ||
+            updateLoading
+          }
         >
-          {(loading || updateLoading) ? (
+          {loading || updateLoading ? (
             <IconSpinner className="w-5 h-5" />
           ) : (
             <IconCheck className="w-5 h-5" />

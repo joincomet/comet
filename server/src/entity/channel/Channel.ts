@@ -52,6 +52,6 @@ export class Channel extends BaseEntity {
   isUnread: boolean = true
 
   @Field()
-  @Property({default: false})
+  @Property({ default: false })
   isDefault: boolean = false
 }

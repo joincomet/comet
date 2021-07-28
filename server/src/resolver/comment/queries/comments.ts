@@ -2,7 +2,7 @@ import { ArgsType, Field, ID, registerEnumType } from 'type-graphql'
 import { Comment, Post } from '@/entity'
 import { QueryOrder } from '@mikro-orm/core'
 import { Context } from '@/types'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @ArgsType()
 export class CommentsArgs {
@@ -35,8 +35,11 @@ export async function comments(
   return em.find(
     Comment,
     { post },
-    {orderBy: sort === CommentsSort.Top
-        ? { voteCount: QueryOrder.DESC, createdAt: QueryOrder.DESC }
-        : { createdAt: QueryOrder.DESC }}
+    {
+      orderBy:
+        sort === CommentsSort.Top
+          ? { voteCount: QueryOrder.DESC, createdAt: QueryOrder.DESC }
+          : { createdAt: QueryOrder.DESC }
+    }
   )
 }

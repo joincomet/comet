@@ -4,7 +4,7 @@ import { Message, User } from '@/entity'
 import { Context } from '@/types'
 import { FilterQuery, QueryOrder } from '@mikro-orm/core'
 import { GraphQLPositiveInt } from 'graphql-scalars'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @ArgsType()
 export class MessagesArgs {

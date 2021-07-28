@@ -7,7 +7,7 @@ import {
   ServerUserStatus,
   User
 } from '@/entity'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @InputType()
 export class SetUserRoleInput {
@@ -30,11 +30,15 @@ export async function setUserRole(
     role.server.id,
     ServerPermission.ManageServer
   )
-  const serverUser = await em.findOneOrFail(ServerUser, {
-    user: userId,
-    server: role.server,
-    status: ServerUserStatus.Joined
-  }, ['user', 'role'])
+  const serverUser = await em.findOneOrFail(
+    ServerUser,
+    {
+      user: userId,
+      server: role.server,
+      status: ServerUserStatus.Joined
+    },
+    ['user', 'role']
+  )
   if (serverUser.role === role) return serverUser
   serverUser.role = role
   await em.persistAndFlush(serverUser)

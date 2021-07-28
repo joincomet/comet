@@ -29,7 +29,7 @@ import {
 import { MessageSubscriptionFilter } from '@/resolver/subscriptions/filters/MessageSubscriptionFilter'
 import { RepliesSubscriptionFilter } from '@/resolver/subscriptions/filters/RepliesSubscriptionFilter'
 import { TypingResponse } from '@/resolver/subscriptions/typing/TypingResponse'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @ObjectType()
 class CommentChangedResponse extends ChangeResponse(Comment) {}

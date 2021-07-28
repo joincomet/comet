@@ -218,7 +218,9 @@ export const useMessagesSubscriptions = () => {
               data: {
                 messages: {
                   ...queryData.messages,
-                  messages: queryData.messages.messages.filter(m => m.id !== message.id)
+                  messages: queryData.messages.messages.filter(
+                    m => m.id !== message.id
+                  )
                 }
               }
             })

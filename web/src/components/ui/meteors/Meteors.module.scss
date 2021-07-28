@@ -12,24 +12,23 @@ $shadow: ();
     z-index: 10;
     position: absolute;
     top: $h + px;
-    left: $v*1%;
+    left: $v * 1%;
     width: 300px;
     height: 1px;
     transform: rotate(-45deg);
-    background-image: linear-gradient(to right, #3B82F6, rgba(#EF4444 ,0));
-    animation: meteor $d+s linear  infinite;
+    background-image: linear-gradient(to right, #3b82f6, rgba(#ef4444, 0));
+    animation: meteor $d + s linear infinite;
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       width: 4px;
       height: 5px;
       border-radius: 50%;
       margin-top: -2px;
-      background: rgba(#EF4444,.7);
-      box-shadow: 0 0 15px 3px #3B82F6;
+      background: rgba(#ef4444, 0.7);
+      box-shadow: 0 0 15px 3px #3b82f6;
     }
-
   }
 }
 

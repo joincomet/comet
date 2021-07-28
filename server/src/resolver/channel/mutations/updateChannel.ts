@@ -2,7 +2,7 @@ import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Channel, ChannelType, ServerPermission, User } from '@/entity'
 import { MaxLength } from 'class-validator'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @InputType()
 export class UpdateChannelInput {

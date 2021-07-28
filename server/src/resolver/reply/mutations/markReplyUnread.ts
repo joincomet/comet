@@ -2,7 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Context } from '@/types'
 import { Reply, User } from '@/entity'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @InputType()
 export class MarkReplyUnreadInput {

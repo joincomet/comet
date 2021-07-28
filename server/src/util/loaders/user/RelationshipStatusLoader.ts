@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { Relationship, RelationshipStatus, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 export const relationshipStatusLoader = (
   em: EntityManager,

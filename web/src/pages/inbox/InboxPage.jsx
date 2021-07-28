@@ -20,7 +20,9 @@ export default function InboxPage() {
     skip: !currentUser,
     fetchPolicy: 'cache-and-network'
   })
-  const replies = (data?.replies ?? []).filter(r => inboxPage === 'Unread' ? !r.isRead : true)
+  const replies = (data?.replies ?? []).filter(r =>
+    inboxPage === 'Unread' ? !r.isRead : true
+  )
   return (
     <Page header={<InboxHeader />}>
       <Helmet>

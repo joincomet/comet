@@ -2,7 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { Comment, CommentVote, Post, Reply, User, VoteType } from '@/entity'
-import {handleText, logger} from '@/util'
+import { handleText, logger } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()
@@ -37,7 +37,8 @@ export async function createComment(
     ? await em.findOneOrFail(Comment, parentCommentId, ['author'])
     : null
 
-  if (parentComment && parentComment.isDeleted) throw new Error('Cannot reply to deleted comment')
+  if (parentComment && parentComment.isDeleted)
+    throw new Error('Cannot reply to deleted comment')
 
   text = handleText(text)
 

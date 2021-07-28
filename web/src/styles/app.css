@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
   position: relative;
   height: 100%;
   overflow-y: hidden;
@@ -34,7 +36,7 @@ body {
 }
 
 .text-disabled {
-  @apply text-gray-400 dark:text-gray-600
+  @apply text-gray-400 dark:text-gray-600;
 }
 
 .text-accent {
@@ -66,11 +68,11 @@ body {
 }
 
 .hidescroll {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
 }
 .hidescroll::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
+  display: none; /* Safari and Chrome */
 }
 
 .action-chip {
@@ -166,7 +168,6 @@ span[data-spoiler] {
 .form-input-password {
   @apply border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm rounded-none pl-1.5 pr-9 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;
 }
-
 
 .form-input-icon {
   @apply disabled:opacity-50 border-0 border-b focus:ring-0 dark:border-gray-700 bg-transparent w-full h-10 text-sm pr-1.5 pl-9 focus:outline-none transition dark:focus:border-blue-500 text-gray-900 dark:text-gray-100;

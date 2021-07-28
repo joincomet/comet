@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { ServerUser, ServerUserStatus } from '@/entity'
-import {getReorderPosition, logger} from '@/util'
+import { getReorderPosition, logger } from '@/util'
 
 @InputType()
 export class MoveServerInput {

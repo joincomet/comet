@@ -1,15 +1,15 @@
-import { Operation } from "@apollo/client";
-import { print } from "graphql/language/printer";
+import { Operation } from '@apollo/client'
+import { print } from 'graphql/language/printer'
 
 export interface UriFunction {
-  (operation: Operation): string;
+  (operation: Operation): string
 }
 
 export interface Body {
-  query?: string;
-  operationName?: string;
-  variables?: Record<string, any>;
-  extensions?: Record<string, any>;
+  query?: string
+  operationName?: string
+  variables?: Record<string, any>
+  extensions?: Record<string, any>
 }
 
 export interface HttpOptions {
@@ -18,75 +18,75 @@ export interface HttpOptions {
    *
    * Defaults to '/graphql'.
    */
-  uri?: string | UriFunction;
+  uri?: string | UriFunction
 
   /**
    * Passes the extensions field to your graphql server.
    *
    * Defaults to false.
    */
-  includeExtensions?: boolean;
+  includeExtensions?: boolean
 
   /**
    * A `fetch`-compatible API to use when making requests.
    */
-  fetch?: WindowOrWorkerGlobalScope["fetch"];
+  fetch?: WindowOrWorkerGlobalScope['fetch']
 
   /**
    * An object representing values to be sent as headers on the request.
    */
-  headers?: any;
+  headers?: any
 
   /**
    * The credentials policy you want to use for the fetch call.
    */
-  credentials?: string;
+  credentials?: string
 
   /**
    * Any overrides of the fetch options argument to pass to the fetch call.
    */
-  fetchOptions?: any;
+  fetchOptions?: any
 
   /**
    * If set to true, use the HTTP GET method for query operations. Mutations
    * will still use the method specified in fetchOptions.method (which defaults
    * to POST).
    */
-  useGETForQueries?: boolean;
+  useGETForQueries?: boolean
 }
 
 export interface HttpQueryOptions {
-  includeQuery?: boolean;
-  includeExtensions?: boolean;
+  includeQuery?: boolean
+  includeExtensions?: boolean
 }
 
 export interface HttpConfig {
-  http?: HttpQueryOptions;
-  options?: any;
-  headers?: any;
-  credentials?: any;
+  http?: HttpQueryOptions
+  options?: any
+  headers?: any
+  credentials?: any
 }
 
 const defaultHttpOptions: HttpQueryOptions = {
   includeQuery: true,
-  includeExtensions: false,
-};
+  includeExtensions: false
+}
 
 const defaultHeaders = {
   // headers are case insensitive (https://stackoverflow.com/a/5259004)
-  accept: "*/*",
-  "content-type": "application/json",
-};
+  accept: '*/*',
+  'content-type': 'application/json'
+}
 
 const defaultOptions = {
-  method: "POST",
-};
+  method: 'POST'
+}
 
 export const fallbackHttpConfig = {
   http: defaultHttpOptions,
   headers: defaultHeaders,
-  options: defaultOptions,
-};
+  options: defaultOptions
+}
 
 export const selectHttpOptionsAndBody = (
   operation: Operation,
@@ -96,42 +96,42 @@ export const selectHttpOptionsAndBody = (
   let options: HttpConfig & Record<string, any> = {
     ...fallbackConfig.options,
     headers: fallbackConfig.headers,
-    credentials: fallbackConfig.credentials,
-  };
-  let http: HttpQueryOptions = fallbackConfig.http || {};
+    credentials: fallbackConfig.credentials
+  }
+  let http: HttpQueryOptions = fallbackConfig.http || {}
 
   /*
    * use the rest of the configs to populate the options
    * configs later in the list will overwrite earlier fields
    */
-  configs.forEach((config) => {
+  configs.forEach(config => {
     options = {
       ...options,
       ...config.options,
       headers: {
         ...options.headers,
-        ...config.headers,
-      },
-    };
-    if (config.credentials) options.credentials = config.credentials;
+        ...config.headers
+      }
+    }
+    if (config.credentials) options.credentials = config.credentials
 
     http = {
       ...http,
-      ...config.http,
-    };
-  });
+      ...config.http
+    }
+  })
 
   //The body depends on the http options
-  const { operationName, extensions, variables, query } = operation;
-  const body: Body = { operationName, variables };
+  const { operationName, extensions, variables, query } = operation
+  const body: Body = { operationName, variables }
 
-  if (http.includeExtensions) (body as any).extensions = extensions;
+  if (http.includeExtensions) (body as any).extensions = extensions
 
   // not sending the query (i.e persisted queries)
-  if (http.includeQuery) (body as any).query = print(query);
+  if (http.includeQuery) (body as any).query = print(query)
 
   return {
     options,
-    body,
-  };
-};
+    body
+  }
+}

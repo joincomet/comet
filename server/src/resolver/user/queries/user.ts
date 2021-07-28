@@ -1,7 +1,7 @@
 import { Context } from '@/types'
 import { User } from '@/entity'
 import { ArgsType, Field, ID } from 'type-graphql'
-import {handleUnderscore, logger} from '@/util'
+import { handleUnderscore, logger } from '@/util'
 
 @ArgsType()
 export class UserArgs {

@@ -10,7 +10,7 @@ import {
 } from '@/entity'
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
-import {logger, ReorderUtils} from '@/util'
+import { logger, ReorderUtils } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Publisher } from 'type-graphql/dist/interfaces/Publisher'
 

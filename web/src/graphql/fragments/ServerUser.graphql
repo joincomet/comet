@@ -7,4 +7,3 @@ fragment ServerUser on ServerUser {
     ...User
   }
 }
-

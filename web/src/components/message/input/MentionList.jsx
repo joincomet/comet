@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import UserAvatar from "@/components/user/UserAvatar";
+import UserAvatar from '@/components/user/UserAvatar'
 
 export class MentionList extends Component {
   constructor(props) {
@@ -93,24 +93,29 @@ export class MentionList extends Component {
   render() {
     return (
       <div className="relative w-full w-72 rounded-md dark:bg-gray-800 overflow-hidden shadow-lg p-2 border dark:border-gray-850">
-        {this.users()
-          .map((user, index) => (
-            <button
-              className={`flex items-center rounded w-full text-left text-primary text-base bg-transparent border-none px-2 h-10 focus:outline-none ${
-                index === this.state.selectedIndex ? 'dark:bg-gray-775' : ''
-              }`}
-              key={typeof user === 'string' ? user : user.id}
-              onClick={() => this.selectItem(index)}
-              onMouseMove={() => this.setState({
+        {this.users().map((user, index) => (
+          <button
+            className={`flex items-center rounded w-full text-left text-primary text-base bg-transparent border-none px-2 h-10 focus:outline-none ${
+              index === this.state.selectedIndex ? 'dark:bg-gray-775' : ''
+            }`}
+            key={typeof user === 'string' ? user : user.id}
+            onClick={() => this.selectItem(index)}
+            onMouseMove={() =>
+              this.setState({
                 selectedIndex: index
-              })}
-            >
-              {typeof user === 'string' ? user : <>
-              <UserAvatar user={user} size={6} className="mr-2" />
+              })
+            }
+          >
+            {typeof user === 'string' ? (
+              user
+            ) : (
+              <>
+                <UserAvatar user={user} size={6} className="mr-2" />
                 {user.username}
-              </>}
-            </button>
-          ))}
+              </>
+            )}
+          </button>
+        ))}
       </div>
     )
   }

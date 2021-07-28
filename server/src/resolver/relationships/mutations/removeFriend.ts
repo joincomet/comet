@@ -2,7 +2,7 @@ import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { RelationshipStatus, User } from '@/entity'
 import { BlockUserInput } from '@/resolver/relationships/mutations/blockUser'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @InputType()
 export class RemoveFriendInput {

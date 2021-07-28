@@ -1,5 +1,5 @@
-import {IconMenu} from "@/components/ui/icons/Icons";
-import {useStore} from "@/hooks/useStore";
+import { IconMenu } from '@/components/ui/icons/Icons'
+import { useStore } from '@/hooks/useStore'
 
 export default function Header({
   children,
@@ -19,7 +19,10 @@ export default function Header({
           showDivider ? 'border-r dark:border-gray-700 mr-4' : ''
         }`}
       >
-        <IconMenu className="md:hidden mr-3 w-5 h-5 text-tertiary" onClick={() => setShowLeftSidebar(true)} />
+        <IconMenu
+          className="md:hidden mr-3 w-5 h-5 text-tertiary"
+          onClick={() => setShowLeftSidebar(true)}
+        />
         <div className="text-tertiary mr-3">{icon}</div>
         {title}
       </div>

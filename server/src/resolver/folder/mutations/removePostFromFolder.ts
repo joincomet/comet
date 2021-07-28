@@ -2,7 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Context } from '@/types'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Folder, FolderPost, Post, User } from '@/entity'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 @InputType()
 export class RemovePostFromFolderInput {

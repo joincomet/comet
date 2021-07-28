@@ -3,7 +3,7 @@ import { Length } from 'class-validator'
 import { Server, ServerCategory, ServerPermission, User } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import {logger, uploadImageFileSingle} from '@/util'
+import { logger, uploadImageFileSingle } from '@/util'
 
 @InputType()
 export class UpdateServerInput {

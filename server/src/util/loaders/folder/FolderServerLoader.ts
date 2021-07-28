@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Folder, Server } from '@/entity'
 import DataLoader from 'dataloader'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 export const folderServerLoader = (em: EntityManager) => {
   const loader = new DataLoader<string, Server | null | undefined>(

@@ -98,7 +98,8 @@ export default function ServerContextMenu({
             }}
           />
         )}
-        {!!currentUser && !!server.owner &&
+        {!!currentUser &&
+          !!server.owner &&
           !!openDelete &&
           (currentUser.isAdmin || server.owner.id === currentUser.id) && (
             <ContextMenuItem

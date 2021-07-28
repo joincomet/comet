@@ -11,7 +11,7 @@ import {
   useReadDmMutation,
   useReadGroupMutation
 } from '@/graphql/hooks'
-import {useCurrentUser} from "@/hooks/graphql/useCurrentUser";
+import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 
 const PREPEND_OFFSET = 10 ** 7
 

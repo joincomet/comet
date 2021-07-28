@@ -23,7 +23,8 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
   // const togglePin = useTogglePostPin(post)
 
   const [currentUser] = useCurrentUser()
-  const isAuthor = !!post.author && !!currentUser && post.author.id === currentUser.id
+  const isAuthor =
+    !!post.author && !!currentUser && post.author.id === currentUser.id
   const canDelete = isAuthor || canManagePosts
 
   /*const friends = (currentUser?.relatedUsers ?? []).filter(
@@ -135,12 +136,15 @@ export default function PostContextMenu({ post, ContextMenuItem }) {
           <ContextMenuItem
             red
             onClick={() => {
-              deletePost({ variables: { input: { postId: post.id } }, optimisticResponse: {
-                ...post,
+              deletePost({
+                variables: { input: { postId: post.id } },
+                optimisticResponse: {
+                  ...post,
                   isDeleted: true,
                   author: null,
                   serverUser: null
-                } })
+                }
+              })
               toast.success(t('post.context.deleted'))
             }}
             label={t('post.context.delete')}

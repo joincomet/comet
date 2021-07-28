@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { readURL } from '@/utils/readURL'
 
-export const useDataUrls = (files) => {
+export const useDataUrls = files => {
   const [urls, setUrls] = useState([])
   useEffect(() => {
     if (!files || !files.length) return

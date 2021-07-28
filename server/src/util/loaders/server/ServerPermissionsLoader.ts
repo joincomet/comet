@@ -7,7 +7,7 @@ import {
   User
 } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
-import {logger} from "@/util";
+import { logger } from '@/util'
 
 export const serverPermissionsLoader = (em: EntityManager, userId: string) => {
   const loader = new DataLoader<string, ServerPermission[]>(
@@ -35,7 +35,11 @@ export const serverPermissionsLoader = (em: EntityManager, userId: string) => {
           return
         }
         const role = serverUser.role
-        if (currentUser.isAdmin || serverUser.server.owner === currentUser || role.permissions.includes(ServerPermission.Admin)) {
+        if (
+          currentUser.isAdmin ||
+          serverUser.server.owner === currentUser ||
+          role.permissions.includes(ServerPermission.Admin)
+        ) {
           map[serverId] = Object.values(ServerPermission)
           return
         }

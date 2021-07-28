@@ -9,7 +9,7 @@ import {
   UserFolder
 } from '@/entity'
 import { Context } from '@/types'
-import {logger, uploadImageFileSingle} from '@/util'
+import { logger, uploadImageFileSingle } from '@/util'
 
 @InputType()
 export class UpdateFolderInput {
