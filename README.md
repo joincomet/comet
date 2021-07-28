@@ -36,7 +36,7 @@ Start dev server:
 - `yarn run dev:web`
 
 #### Production
-The frontend is a React app, and can be deployed in many ways. joincomet.app is using GitHub Pages in this repo, but
+The frontend is a React app, and can be deployed in many ways. [joincomet.app](https://joincomet.app) is using GitHub Pages in this repo, but
 another good option is [Cloudflare Pages](https://pages.cloudflare.com/)
 
 Build frontend:
@@ -65,6 +65,5 @@ The following environment variables are related to S3 file uploads and are requi
 - `AWS_SECRET_ACCESS_KEY` (secret access key provided by DO Spaces/AWS)
 
 #### Production
-A Docker image is available at [Docker Hub](https://hub.docker.com/repository/docker/joincomet/server). joincomet.
-app uses [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform/) to deploy the Docker image.
+A Docker image is available at [Docker Hub](https://hub.docker.com/repository/docker/joincomet/server). [joincomet.app](https://joincomet.app) uses [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform/) to deploy the Docker image.
 Run the Docker image with the above environment variables.
