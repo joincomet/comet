@@ -29,7 +29,7 @@ const leftClass = show =>
   md:min-w-[15rem]
   w-78
   min-w-[19.5rem]
-  flex-col
+  flex-row
 `)
 
 const rightClass = show =>
@@ -93,15 +93,17 @@ export default function Sidebar({ children, right = false }) {
             <ServerList />
           </div>
         )}
-        <div
-          className="relative h-full w-full scrollbar-dark overflow-y-auto"
-          onClick={() => {
-            if (!right) setShowLeftSidebar(false)
-          }}
-        >
-          {children}
+        <div className="flex flex-col flex-1">
+          <div
+            className="relative h-full w-full scrollbar-dark overflow-y-auto pb-3"
+            onClick={() => {
+              if (!right) setShowLeftSidebar(false)
+            }}
+          >
+            {children}
+          </div>
+          {!right && <BottomBar />}
         </div>
-        <BottomBar />
       </div>
     </>
   )
