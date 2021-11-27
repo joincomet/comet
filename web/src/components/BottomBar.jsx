@@ -10,8 +10,6 @@ import {
 import Tippy from '@tippyjs/react'
 import { useEffect, useState } from 'react'
 import UserSettingsDialog from '@/components/user/UserSettingsDialog'
-import { version } from '../../package.json'
-import { useStore } from '@/hooks/useStore'
 import { OnlineStatus, useChangeOnlineStatusMutation } from '@/graphql/hooks'
 import { Link } from 'react-router-dom'
 import { getDownloadLink } from '@/hooks/getDownloadLink'
@@ -23,17 +21,6 @@ export default function BottomBar() {
   const [currentUser] = useCurrentUser()
   const offset = [0, 14]
   const [open, setOpen] = useState(false)
-  const [updateAvailable, setUpdateAvailable] = useStore(s => [
-    s.updateAvailable,
-    s.setUpdateAvailable
-  ])
-  useEffect(() => {
-    if (window.electron) {
-      window.electron.on('updateAvailable', () => {
-        setUpdateAvailable(true)
-      })
-    }
-  }, [])
 
   const [changeOnlineStatus] = useChangeOnlineStatusMutation()
 
@@ -61,14 +48,19 @@ export default function BottomBar() {
     <>
       {!!currentUser && <UserSettingsDialog open={open} setOpen={setOpen} />}
 
-      <div className="flex items-center shadow-md px-3 bottom-0 h-5.5 dark:bg-gray-700 z-50 bg-white">
+      <div className="flex items-center shadow-md px-3 bottom-0 dark:bg-gray-700 z-50 bg-white flex-wrap p-2.5 mt-3">
         {currentUser ? (
           <>
-            <UserAvatar size={4.5} className="mr-2" user={currentUser} />
+            <UserAvatar
+              user={currentUser}
+              size={8}
+              showOnline
+              dotClassName="w-2 h-2 ring-2 dark:ring-gray-800 ring-gray-50"
+              className="mr-2"
+            />
             <div className="text-primary text-13 font-medium cursor-pointer">
               {currentUser.username}
             </div>
-            <div className="w-2 h-2 rounded-full bg-green-500 ml-2" />
           </>
         ) : (
           <div className="flex items-center text-primary text-13 font-medium">
@@ -119,41 +111,6 @@ export default function BottomBar() {
                 <IconDark className="w-5 h-5" />
               )}
             </button>
-          </Tippy>
-
-          <Tippy
-            content={`${
-              window.electron && updateAvailable
-                ? 'Update available'
-                : 'Up to date!'
-            }`}
-          >
-            <div
-              className={`flex items-center ${
-                window.electron && updateAvailable ? 'cursor-pointer' : ''
-              }`}
-              onClick={() => {
-                if (window.electron && updateAvailable) {
-                  window.electron.restart()
-                }
-              }}
-            >
-              <div
-                className={`text-xs font-medium ${
-                  updateAvailable && window.electron
-                    ? 'text-green-500'
-                    : 'text-tertiary'
-                }`}
-              >
-                Comet v{version}
-              </div>
-
-              {window.electron && updateAvailable && (
-                <div className="pl-2">
-                  <IconDownload className="w-4.5 h-4.5 text-green-500 cursor-pointer" />
-                </div>
-              )}
-            </div>
           </Tippy>
 
           {/*<Tippy content="Search" offset={offset}>
