@@ -2,6 +2,7 @@ import ctl from '@netlify/classnames-template-literals'
 import { useStore } from '@/hooks/useStore'
 import ServerList from '@/components/server/list/ServerList'
 import { motion, AnimatePresence } from 'framer-motion'
+import BottomBar from "@/components/BottomBar"
 
 const sidebarClass = ctl(`
   transition
@@ -28,6 +29,7 @@ const leftClass = show =>
   md:min-w-[15rem]
   w-78
   min-w-[19.5rem]
+  flex-col
 `)
 
 const rightClass = show =>
@@ -99,6 +101,7 @@ export default function Sidebar({ children, right = false }) {
         >
           {children}
         </div>
+        <BottomBar />
       </div>
     </>
   )
