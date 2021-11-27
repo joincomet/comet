@@ -52,7 +52,7 @@ export default function Routes() {
             <div className="flex-grow">
               <div
                 className="flex items-stretch"
-                style={{ height: 'calc(100% - 1.375rem)' }}
+                style={{ height: '100%' }}
               >
                 <ServerList hide />
                 <Route path="/explore">
@@ -77,7 +77,6 @@ export default function Routes() {
                   </Route>
                 </Route>
               </div>
-              <BottomBar />
             </div>
           </Route>
 
