@@ -76,6 +76,7 @@ export default function BottomBar() {
               onClick={() => {
                 setCreateAccount(false)
                 setLoginOpen(true)
+                setShowLeftSidebar(false)
               }}
             >
               Log In
@@ -86,6 +87,7 @@ export default function BottomBar() {
               onClick={() => {
                 setCreateAccount(true)
                 setLoginOpen(true)
+                setShowLeftSidebar(false)
               }}
             >
               Create account
