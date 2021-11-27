@@ -12,8 +12,10 @@ import {
   useReadGroupMutation
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import Avatar from '@/components/ui/Avatar'
 
 const PREPEND_OFFSET = 10 ** 7
+const NUMBER_OF_SKELETON_MESSAGES = 10
 
 export default function Messages({ channel, server, user, group, users }) {
   const virtuoso = useRef(null)
@@ -35,6 +37,25 @@ export default function Messages({ channel, server, user, group, users }) {
 
   const numItemsPrepended = usePrependedMessagesCount(messages)
   const shouldForceScrollToBottom = useShouldForceScrollToBottom(messages)
+
+  const skeletonMessagesRenderer = () => {
+    return (
+      <div className={`pt-4`}>
+        <div
+          className={`flex py-1 pl-4 pr-18 transparent group relative animate-pulse`}
+        >
+          <Avatar
+              size={10}
+              className="dark:bg-gray-725 bg-gray-300 rounded-full"
+            />
+          <div className="pl-4 w-full">
+            <div className="dark:bg-gray-725 bg-gray-300 w-full h-5 rounded-full"></div>
+            <div className="dark:bg-gray-725 bg-gray-300  w-full h-5 rounded-full mt-3"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const messageRenderer = useCallback(
     (messageList, virtuosoIndex) => {
@@ -103,7 +124,7 @@ export default function Messages({ channel, server, user, group, users }) {
 
   return (
     <div className="flex flex-col h-full">
-      {!!messages && (
+      {(
         <Virtuoso
           className="scrollbar-custom dark:bg-gray-750 bg-white"
           alignToBottom
@@ -125,16 +146,18 @@ export default function Messages({ channel, server, user, group, users }) {
             return isAtBottom ? 'auto' : false
           }}
           initialTopMostItemIndex={
-            messages.length > 0 ? messages.length - 1 : 0
+            !fetching ? messages.length > 0 ? messages.length - 1 : 0 : NUMBER_OF_SKELETON_MESSAGES - 1
           }
-          itemContent={i => messageRenderer(messages, i)}
-          overscan={0}
+          itemContent={i => !fetching ? messageRenderer(messages, i) : skeletonMessagesRenderer()}
+          // itemContent={skeletonMessagesRenderer}
+          overscan={!fetching ? 0 : NUMBER_OF_SKELETON_MESSAGES}
           ref={virtuoso}
           startReached={() => {
             if (!fetching && hasMore) fetchMore()
           }}
-          style={{ overflowX: 'hidden' }}
-          totalCount={messages.length || 0}
+          style={{ overflowX: 'hidden' }, {overflowY: fetching ? "hidden" : null}}
+          totalCount={!fetching ? messages.length || 0 : NUMBER_OF_SKELETON_MESSAGES}
+          // totalCount={NUMBER_OF_SKELETON_MESSAGES}
         />
       )}
       {!!users && (!!channel || !!user || !!group) && (
