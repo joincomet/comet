@@ -16,6 +16,7 @@ import { getDownloadLink } from '@/hooks/getDownloadLink'
 import { useLoginDialog } from '@/hooks/useLoginDialog'
 import { getOS } from '@/utils/getOS'
 import { useDarkMode } from '@/hooks/useDarkMode'
+import { useStore } from '@/hooks/useStore'
 
 export default function BottomBar() {
   const [currentUser] = useCurrentUser()
@@ -23,6 +24,12 @@ export default function BottomBar() {
   const [open, setOpen] = useState(false)
 
   const [changeOnlineStatus] = useChangeOnlineStatusMutation()
+
+  const [
+    setShowLeftSidebar,
+  ] = useStore(s => [
+    s.setShowLeftSidebar,
+  ])
 
   // Update online status every 15 seconds
   useEffect(() => {
@@ -128,13 +135,16 @@ export default function BottomBar() {
           {!!currentUser && (
             <>
               <Tippy content="Notifications" offset={offset}>
-                <Link to="/inbox">
+                <Link to="/inbox" onClick={() => setShowLeftSidebar(false)}>
                   <IconBell className="w-4.5 h-4.5 cursor-pointer text-tertiary" />
                 </Link>
               </Tippy>
 
               <Tippy content="Settings" offset={offset}>
-                <div onClick={() => setOpen(true)}>
+                <div onClick={() => {
+                  setOpen(true)
+                  setShowLeftSidebar(false)
+                }}>
                   <IconSettings className="w-4.5 h-4.5 cursor-pointer text-tertiary" />
                 </div>
               </Tippy>
