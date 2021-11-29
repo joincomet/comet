@@ -12,10 +12,13 @@ import {
   useReadGroupMutation
 } from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
-import Avatar from '@/components/ui/Avatar'
+import {
+  SkeletonMessageLoader,
+  generateSkeletonMessages
+} from '@/components/loaders/SkeletonLoaders'
 
 const PREPEND_OFFSET = 10 ** 7
-const NUMBER_OF_SKELETON_MESSAGES = 10
+const SKELETON_MESSAGES = generateSkeletonMessages()
 
 export default function Messages({ channel, server, user, group, users }) {
   const virtuoso = useRef(null)
@@ -38,23 +41,8 @@ export default function Messages({ channel, server, user, group, users }) {
   const numItemsPrepended = usePrependedMessagesCount(messages)
   const shouldForceScrollToBottom = useShouldForceScrollToBottom(messages)
 
-  const skeletonMessagesRenderer = () => {
-    return (
-      <div className={`pt-4`}>
-        <div
-          className={`flex py-1 pl-4 pr-18 transparent group relative animate-pulse`}
-        >
-          <Avatar
-              size={10}
-              className="dark:bg-gray-725 bg-gray-300 rounded-full"
-            />
-          <div className="pl-4 w-full">
-            <div className="dark:bg-gray-725 bg-gray-300 w-full h-5 rounded-full"></div>
-            <div className="dark:bg-gray-725 bg-gray-300  w-full h-5 rounded-full mt-3"></div>
-          </div>
-        </div>
-      </div>
-    )
+  const skeletonMessagesRenderer = (skeletonMessages, i) => {
+    return <SkeletonMessageLoader messages={skeletonMessages[i]} key={i} />
   }
 
   const messageRenderer = useCallback(
@@ -124,8 +112,9 @@ export default function Messages({ channel, server, user, group, users }) {
 
   return (
     <div className="flex flex-col h-full">
-      {(
+      {!!messages && !fetching ? (
         <Virtuoso
+          key={0}
           className="scrollbar-custom dark:bg-gray-750 bg-white"
           alignToBottom
           atBottomStateChange={isAtBottom => {
@@ -146,20 +135,31 @@ export default function Messages({ channel, server, user, group, users }) {
             return isAtBottom ? 'auto' : false
           }}
           initialTopMostItemIndex={
-            !fetching ? messages.length > 0 ? messages.length - 1 : 0 : NUMBER_OF_SKELETON_MESSAGES - 1
+            messages.length > 0 ? messages.length - 1 : 0
           }
-          itemContent={i => !fetching ? messageRenderer(messages, i) : skeletonMessagesRenderer()}
-          // itemContent={skeletonMessagesRenderer}
-          overscan={!fetching ? 0 : NUMBER_OF_SKELETON_MESSAGES}
+          itemContent={i => messageRenderer(messages, i)}
+          overscan={0}
           ref={virtuoso}
           startReached={() => {
             if (!fetching && hasMore) fetchMore()
           }}
-          style={{ overflowX: 'hidden' }, {overflowY: fetching ? "hidden" : null}}
-          totalCount={!fetching ? messages.length || 0 : NUMBER_OF_SKELETON_MESSAGES}
-          // totalCount={NUMBER_OF_SKELETON_MESSAGES}
+          style={{ overflowX: 'hidden' }}
+          totalCount={messages.length || 0}
         />
-      )}
+      ) : (
+        <Virtuoso
+          key={1}
+          className="scrollbar-custom dark:bg-gray-750 bg-white"
+          alignToBottom
+          components={{
+            Footer: () => <div className="h-5.5" />
+          }}
+          initialTopMostItemIndex={SKELETON_MESSAGES.length - 1}
+          itemContent={i => skeletonMessagesRenderer(SKELETON_MESSAGES, i)}
+          overscan={0}
+          style={{ overflowX: 'hidden' }}
+          totalCount={SKELETON_MESSAGES.length}
+        />)}
       {!!users && (!!channel || !!user || !!group) && (
         <MessageInput
           server={server}

@@ -41,7 +41,7 @@ export default function ServerInfoCard({
             <ServerAvatar
               size={10}
               server={server}
-              className="dark:bg-gray-750 rounded-xl ring-4 dark:ring-gray-800 ring-white transition dark:group-hover:ring-gray-850 group-hover:shadow-md bg-white"
+              className="dark:bg-gray-750 rounded-xl ring-4 dark:ring-gray-800 ring-white transition dark:group-hover:ring-gray-850 group-hover:shadow-md bg-gray-200"
             />
           </div>
         </div>
