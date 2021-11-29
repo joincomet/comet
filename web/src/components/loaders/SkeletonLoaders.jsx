@@ -1,4 +1,5 @@
 import Avatar from '@/components/ui/Avatar'
+import { IconChat, IconDotsVertical } from '@/components/ui/icons/Icons'
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min)
@@ -8,33 +9,28 @@ const getRandomInt = (min, max) => {
 
 export const generateSkeletonMessages = () => {
   const result = []
-  const messageWidths = ['11', '12', '14', '16', '20', '24', '28']
-  const imageWidthsAndHeights = ['36', '40', '44', '48', '52', '56', '60']
+  const messageWidths = ['w-11', 'w-12', 'w-14', 'w-16', 'w-20', 'w-24', 'w-28']
+  const imageWidths = ['w-36', 'w-40', 'w-44', 'w-48', 'w-52', 'w-56', 'w-60']
+  const imageHeights = ['h-36', 'h-40', 'h-44', 'h-48', 'h-52', 'h-56', 'h-60']
   for (let i = 0; i < getRandomInt(10, 12); i++) {
     const skeletonMessage = {
       firstLine: {
-        blobWidth: `w-${messageWidths[getRandomInt(0, messageWidths.length)]}`
+        blobWidth: messageWidths[getRandomInt(0, messageWidths.length)]
       },
       lines: []
     }
     for (let j = 0; j < getRandomInt(2, 5); j++) {
       const blobWidths = []
       for (let k = 0; k < getRandomInt(4, 6); k++) {
-        blobWidths.push(
-          `w-${messageWidths[getRandomInt(0, messageWidths.length)]}`
-        )
+        blobWidths.push(messageWidths[getRandomInt(0, messageWidths.length)])
       }
       skeletonMessage.lines.push({ blobWidths: blobWidths })
     }
     if (getRandomInt(0, 2) == 0) {
       skeletonMessage['imageBlob'] = {
         dimensions: {
-          width: `w-${
-            imageWidthsAndHeights[getRandomInt(0, imageWidthsAndHeights.length)]
-          }`,
-          height: `h-${
-            imageWidthsAndHeights[getRandomInt(0, imageWidthsAndHeights.length)]
-          }`
+          width: imageWidths[getRandomInt(0, imageWidths.length)],
+          height: imageHeights[getRandomInt(0, imageHeights.length)]
         }
       }
     }
@@ -89,22 +85,37 @@ export const SkeletonCommentLoader = () => {
 export const SkeletonPostPageLoader = () => {
   return (
     <div
-      style={{ opacity: 1 }}
-      className={`relative group hover:shadow dark:bg-gray-800 bg-gray-200 px-2 py-3 md:rounded rounded animate-pulse`}
+      className={`relative dark:bg-gray-800 bg-gray-200 px-2 py-3 md:rounded animate-pulse`}
     >
       <div className="flex">
         <div className="flex flex-col items-center pr-2 w-9">
-          <div className="w-7 h-16 rounded-full dark:bg-gray-750 bg-gray-300"></div>
+          <div className="w-5 h-5 rounded-full dark:bg-gray-750 bg-gray-300 mb-2"></div>
+          <div className="w-3 h-3  rounded-sm dark:bg-gray-750 bg-gray-300"></div>
+          <div className="w-5 h-5 rounded-full dark:bg-gray-750 bg-gray-300 mt-2"></div>
         </div>
 
         <div className="pr-4 flex-grow flex flex-col">
-          <div className="text-secondary font-medium text-base w-1/4 dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
+          <div className="flex flex-wrap items-center pb-1.5">
+            <Avatar
+              size={5}
+              className="dark:bg-gray-700 bg-gray-200 rounded-full mr-1.5"
+            />
+            <div className="text-secondary font-medium text-base w-24 dark:bg-gray-750 bg-gray-300 h-4 rounded-full mr-2"></div>
+            <div className="text-secondary font-medium text-base w-24 dark:bg-gray-750 bg-gray-300 h-4 rounded-full mr-2"></div>
+            <div className="text-secondary font-medium text-base w-16 dark:bg-gray-750 bg-gray-300 h-4 rounded-full"></div>
+          </div>
           <div className="text-secondary font-medium text-base w-1/2 dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
+          <div className="text-secondary font-medium text-base w-full dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
+          <div className="text-secondary font-medium text-base w-full dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
+          <div className="text-secondary font-medium text-base w-full dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
+          <div className="flex items-center pt-1.5">
+            <div className={`flex items-center`}>
+              <IconChat className="w-5 h-5" />
+            </div>
 
-          <div className="mb-2 pb-2 w-full dark:bg-gray-750 bg-gray-300 h-20 rounded-lg"></div>
-
-          <div className="flex items-center w-1/4 dark:bg-gray-750 bg-gray-300 h-5 rounded-full">
-            <div className={`flex items-center`}></div>
+            <div className={`ml-2 flex items-center `}>
+              <IconDotsVertical className="w-4 h-4" />
+            </div>
           </div>
         </div>
       </div>

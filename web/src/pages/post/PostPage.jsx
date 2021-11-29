@@ -36,9 +36,7 @@ export default function PostPage({ postId }) {
 
   const skeletonComments = []
   for (let i = 0; i < NUMBER_OF_SKELETON_COMMENTS; i++) {
-    skeletonComments.push(
-      
-    )
+    skeletonComments.push()
   }
 
   return (
@@ -78,9 +76,12 @@ export default function PostPage({ postId }) {
         >
           <div className="md:pt-4 md:px-4 px-0 pt-0">
             {post ? (
+              <>
               <Post post={post} isPostPage />
-            ) : loading ? (
               <SkeletonPostPageLoader />
+              </>
+            ) : loading ? (
+              null
             ) : null}
           </div>
 
