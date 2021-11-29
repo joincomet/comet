@@ -49,10 +49,7 @@ export default function Routes() {
             exact
           >
             <div className="flex-grow">
-              <div
-                className="flex items-stretch"
-                style={{ height: '100%' }}
-              >
+              <div className="flex items-stretch" style={{ height: '100%' }}>
                 <ServerList hide />
                 <Route path="/explore">
                   <ExplorePage />

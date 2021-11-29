@@ -25,11 +25,7 @@ export default function BottomBar() {
 
   const [changeOnlineStatus] = useChangeOnlineStatusMutation()
 
-  const [
-    setShowLeftSidebar,
-  ] = useStore(s => [
-    s.setShowLeftSidebar,
-  ])
+  const [setShowLeftSidebar] = useStore(s => [s.setShowLeftSidebar])
 
   // Update online status every 15 seconds
   useEffect(() => {
@@ -143,10 +139,12 @@ export default function BottomBar() {
               </Tippy>
 
               <Tippy content="Settings" offset={offset}>
-                <div onClick={() => {
-                  setOpen(true)
-                  setShowLeftSidebar(false)
-                }}>
+                <div
+                  onClick={() => {
+                    setOpen(true)
+                    setShowLeftSidebar(false)
+                  }}
+                >
                   <IconSettings className="w-4.5 h-4.5 cursor-pointer text-tertiary" />
                 </div>
               </Tippy>

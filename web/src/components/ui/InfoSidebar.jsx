@@ -7,9 +7,7 @@ import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import { version } from '../../../package.json'
 import { useStore } from '@/hooks/useStore'
-import {
-  IconDownload
-} from '@/components/ui/icons/Icons'
+import { IconDownload } from '@/components/ui/icons/Icons'
 
 const linkClass = ctl(`
   cursor-pointer
@@ -101,39 +99,39 @@ export default function InfoSidebar() {
           </Tippy>
         </div>
         <Tippy
-            content={`${
-              window.electron && updateAvailable
-                ? 'Update available'
-                : 'Up to date!'
+          content={`${
+            window.electron && updateAvailable
+              ? 'Update available'
+              : 'Up to date!'
+          }`}
+        >
+          <div
+            className={`flex pt-2.5 items-center ${
+              window.electron && updateAvailable ? 'cursor-pointer' : ''
             }`}
+            onClick={() => {
+              if (window.electron && updateAvailable) {
+                window.electron.restart()
+              }
+            }}
           >
             <div
-              className={`flex pt-2.5 items-center ${
-                window.electron && updateAvailable ? 'cursor-pointer' : ''
+              className={`text-xs font-medium ${
+                updateAvailable && window.electron
+                  ? 'text-green-500'
+                  : 'text-tertiary'
               }`}
-              onClick={() => {
-                if (window.electron && updateAvailable) {
-                  window.electron.restart()
-                }
-              }}
             >
-              <div
-                className={`text-xs font-medium ${
-                  updateAvailable && window.electron
-                    ? 'text-green-500'
-                    : 'text-tertiary'
-                }`}
-              >
-                Comet v{version}
-              </div>
-
-              {window.electron && updateAvailable && (
-                <div className="pl-2">
-                  <IconDownload className="w-4.5 h-4.5 text-green-500 cursor-pointer" />
-                </div>
-              )}
+              Comet v{version}
             </div>
-          </Tippy>
+
+            {window.electron && updateAvailable && (
+              <div className="pl-2">
+                <IconDownload className="w-4.5 h-4.5 text-green-500 cursor-pointer" />
+              </div>
+            )}
+          </div>
+        </Tippy>
       </div>
     </Sidebar>
   )

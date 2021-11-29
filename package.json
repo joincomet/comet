@@ -1,52 +1,52 @@
 {
-	"name": "comet",
-	"version": "0.0.101",
-	"private": true,
-	"license": "MPL-2.0",
-	"author": {
-		"name": "Dan Beneventano",
-		"email": "danbeneventano@protonmail.com"
-	},
-	"repository": "github:joincomet/comet",
-	"engines": {
-		"node": "16.x.x"
-	},
-	"workspaces": [
-		"server",
-		"web",
-		"electron"
-	],
-	"scripts": {
-		"build:web": "yarn workspace web run build",
-		"build:electron": "yarn workspace web run build:electron",
-		"build:server": "yarn workspace server run build",
-		"start:web": "yarn workspace web run preview",
-		"start:server": "yarn workspace server start",
-		"generate": "graphql-codegen",
-		"dev:web": "yarn workspace web run dev",
-		"dev:server": "concurrently \"yarn workspace server run dev\" \"yarn generate --watch\"",
-		"dev:electron": "yarn workspace electron run dev"
-	},
-	"devDependencies": {
-		"@graphql-codegen/cli": "^1.21.8",
-		"@graphql-codegen/typescript": "^1.23.0",
-		"@graphql-codegen/typescript-operations": "^1.18.4",
-		"@graphql-codegen/typescript-react-apollo": "^2.3.1",
-		"@types/node": "^16.4.6",
-		"@typescript-eslint/eslint-plugin": "^4.28.5",
-		"@typescript-eslint/parser": "^4.28.5",
-		"concurrently": "^6.2.0",
-		"cross-env": "^7.0.3",
-		"eslint": "^7.31.0",
-		"eslint-config-prettier": "^8.3.0",
-		"eslint-plugin-prettier": "^3.4.0",
-		"prettier": "^2.3.2",
-		"rimraf": "^3.0.2"
-	},
-	"dependencies": {
-		"ts-invariant": "^0.8.2"
-	},
-	"resolutions": {
-		"prosemirror-model": "1.14.1"
-	}
+  "name": "comet",
+  "version": "0.0.101",
+  "private": true,
+  "license": "MPL-2.0",
+  "author": {
+    "name": "Dan Beneventano",
+    "email": "danbeneventano@protonmail.com"
+  },
+  "repository": "github:joincomet/comet",
+  "engines": {
+    "node": "16.x.x"
+  },
+  "workspaces": [
+    "server",
+    "web",
+    "electron"
+  ],
+  "scripts": {
+    "build:web": "yarn workspace web run build",
+    "build:electron": "yarn workspace web run build:electron",
+    "build:server": "yarn workspace server run build",
+    "start:web": "yarn workspace web run preview",
+    "start:server": "yarn workspace server start",
+    "generate": "graphql-codegen",
+    "dev:web": "yarn workspace web run dev",
+    "dev:server": "concurrently \"yarn workspace server run dev\" \"yarn generate --watch\"",
+    "dev:electron": "yarn workspace electron run dev"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.21.8",
+    "@graphql-codegen/typescript": "^1.23.0",
+    "@graphql-codegen/typescript-operations": "^1.18.4",
+    "@graphql-codegen/typescript-react-apollo": "^2.3.1",
+    "@types/node": "^16.4.6",
+    "@typescript-eslint/eslint-plugin": "^4.28.5",
+    "@typescript-eslint/parser": "^4.28.5",
+    "concurrently": "^6.2.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "ts-invariant": "^0.8.2"
+  },
+  "resolutions": {
+    "prosemirror-model": "1.14.1"
+  }
 }

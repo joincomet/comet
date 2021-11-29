@@ -11,7 +11,9 @@ import { IconExplore } from '@/components/ui/icons/Icons'
 import { getSkeletonServerInfoCards } from '@/components/loaders/SkeletonLoaders'
 
 const NUMBER_OF_SKELETON_INFO_CARDS = 21
-const SKELETON_SERVER_INFO_CARDS = getSkeletonServerInfoCards(NUMBER_OF_SKELETON_INFO_CARDS)
+const SKELETON_SERVER_INFO_CARDS = getSkeletonServerInfoCards(
+  NUMBER_OF_SKELETON_INFO_CARDS
+)
 
 export default function ExplorePage() {
   const [exploreCategory, exploreSort] = useStore(s => [
@@ -46,11 +48,17 @@ export default function ExplorePage() {
       <PageView>
         <div className="md:px-8 md:py-8 px-0 py-0">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 2xl:grid-cols-5">
-            {!loading && servers ? servers.map(server => (
-              <ServerInfoCard server={server} key={server.id} />
-            )) : SKELETON_SERVER_INFO_CARDS}
+            {!loading && servers
+              ? servers.map(server => (
+                  <ServerInfoCard server={server} key={server.id} />
+                ))
+              : SKELETON_SERVER_INFO_CARDS}
           </div>
-          {!loading && !servers.length ? <EndReached>Nothing here yet!</EndReached> : <div className="h-20"/>}
+          {!loading && !servers.length ? (
+            <EndReached>Nothing here yet!</EndReached>
+          ) : (
+            <div className="h-20" />
+          )}
         </div>
       </PageView>
     </Page>

@@ -2,7 +2,7 @@ import ctl from '@netlify/classnames-template-literals'
 import { useStore } from '@/hooks/useStore'
 import ServerList from '@/components/server/list/ServerList'
 import { motion, AnimatePresence } from 'framer-motion'
-import BottomBar from "@/components/BottomBar"
+import BottomBar from '@/components/BottomBar'
 
 const sidebarClass = ctl(`
   transition

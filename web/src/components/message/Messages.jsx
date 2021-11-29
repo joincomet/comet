@@ -159,7 +159,8 @@ export default function Messages({ channel, server, user, group, users }) {
           overscan={0}
           style={{ overflowX: 'hidden' }}
           totalCount={SKELETON_MESSAGES.length}
-        />)}
+        />
+      )}
       {!!users && (!!channel || !!user || !!group) && (
         <MessageInput
           server={server}

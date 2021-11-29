@@ -4,9 +4,7 @@ import Post from '@/components/post/Post'
 import { IconSpinner } from '@/components/ui/icons/IconSpinner'
 import { useCallback, useRef } from 'react'
 import EndReached from '@/components/ui/EndReached'
-import {
-  SkeletonPostLoader
-} from '@/components/loaders/SkeletonLoaders'
+import { SkeletonPostLoader } from '@/components/loaders/SkeletonLoaders'
 
 const NUMBER_OF_SKELETON_POSTS = 7
 
