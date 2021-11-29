@@ -44,7 +44,7 @@ const joinButtonClass = (isJoined, loading) =>
 `)
 
 export default function ServerSidebar() {
-  const { server } = useCurrentServer()
+  const { server, loading: serverLoading } = useCurrentServer()
   const [currentUser] = useCurrentUser()
   const [editOpen, setEditOpen] = useState(false)
   const [rolesOpen, setRolesOpen] = useState(false)
@@ -60,132 +60,138 @@ export default function ServerSidebar() {
 
   const CategoryIcon = getCategoryIcon(server?.category)
 
-  if (!server) return null
   return (
     <>
-      <CreateServerDialog
-        open={editOpen}
-        setOpen={setEditOpen}
-        server={server}
-      />
-
-      <ManageRolesDialog
-        open={rolesOpen}
-        setOpen={setRolesOpen}
-        server={server}
-        key={server.id}
-      />
-
-      <Sidebar>
-        {server.bannerUrl ? (
-          <div
-            className={`h-20 relative bg-center bg-cover bg-no-repeat ${
-              server.bannerUrl
-                ? ''
-                : 'bg-gradient-to-br from-red-400 to-indigo-600'
-            }`}
-            style={
-              server.bannerUrl
-                ? { backgroundImage: `url(${server.bannerUrl})` }
-                : {}
-            }
+      {server && !serverLoading ? (
+        <>
+          <CreateServerDialog
+            open={editOpen}
+            setOpen={setEditOpen}
+            server={server}
           />
-        ) : (
-          <div className="h-12 border-b dark:border-gray-850 shadow flex items-center px-5 text-base font-medium">
-            <VectorLogo className="h-4" />
-          </div>
-        )}
 
-        <div className="px-1.5 pt-4">
-          <div className="shadow-inner dark:bg-gray-850 bg-gray-300 p-2.5 space-y-2.5 rounded">
-            <div className="flex items-center">
-              <ServerAvatar
-                server={server}
-                size={6}
-                className="rounded-md mr-2 dark:bg-gray-750"
+          <ManageRolesDialog
+            open={rolesOpen}
+            setOpen={setRolesOpen}
+            server={server}
+            key={server.id}
+          />
+
+          <Sidebar>
+            {server.bannerUrl ? (
+              <div
+                className={`h-20 relative bg-center bg-cover bg-no-repeat ${
+                  server.bannerUrl
+                    ? ''
+                    : 'bg-gradient-to-br from-red-400 to-indigo-600'
+                }`}
+                style={
+                  server.bannerUrl
+                    ? { backgroundImage: `url(${server.bannerUrl})` }
+                    : {}
+                }
               />
-              <div className="font-semibold text-primary pr-2.5 truncate">
-                {server.displayName}
+            ) : (
+              <div className="h-12 border-b dark:border-gray-850 shadow flex items-center px-5 text-base font-medium">
+                <VectorLogo className="h-4" />
+              </div>
+            )}
+
+            <div className="px-1.5 pt-4">
+              <div className="shadow-inner dark:bg-gray-850 bg-gray-300 p-2.5 space-y-2.5 rounded">
+                <div className="flex items-center">
+                  <ServerAvatar
+                    server={server}
+                    size={6}
+                    className="rounded-md mr-2 dark:bg-gray-750"
+                  />
+                  <div className="font-semibold text-primary pr-2.5 truncate">
+                    {server.displayName}
+                  </div>
+
+                  {!!currentUser && currentUser.id !== server.owner.id && (
+                    <button
+                      className={joinButtonClass(
+                        server.isJoined,
+                        joinLoading || leaveLoading
+                      )}
+                      type="button"
+                      onClick={() => {
+                        if (joinLoading || leaveLoading) return
+                        if (server.isJoined) {
+                          leaveServer({
+                            variables: { input: { serverId: server.id } }
+                          })
+                        } else {
+                          joinServer({
+                            variables: { input: { serverId: server.id } }
+                          })
+                        }
+                      }}
+                    >
+                      {server.isJoined ? 'Leave' : 'Join'}
+                    </button>
+                  )}
+                </div>
+                <div className="text-13 text-secondary pb-1.5">
+                  {server.description || 'No description'}
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-medium flex items-center text-tertiary">
+                    <IconUsers className="w-4 h-4 mr-2.5" />
+                    {server.userCount} Member{server.userCount === 1 ? '' : 's'}
+                  </div>
+                  <div className="text-xs font-medium flex items-center text-tertiary">
+                    <CategoryIcon className="w-4 h-4 mr-2.5" />
+                    {server.category}
+                  </div>
+                </div>
               </div>
 
-              {!!currentUser && currentUser.id !== server.owner.id && (
-                <button
-                  className={joinButtonClass(
-                    server.isJoined,
-                    joinLoading || leaveLoading
-                  )}
-                  type="button"
-                  onClick={() => {
-                    if (joinLoading || leaveLoading) return
-                    if (server.isJoined) {
-                      leaveServer({
-                        variables: { input: { serverId: server.id } }
-                      })
-                    } else {
-                      joinServer({
-                        variables: { input: { serverId: server.id } }
-                      })
-                    }
-                  }}
-                >
-                  {server.isJoined ? 'Leave' : 'Join'}
-                </button>
+              <SidebarLabel plusLabel="Create Post">Posts</SidebarLabel>
+
+              <SidebarSortButtons />
+
+              <CreateChannel server={server} />
+
+              <div className="space-y-0.5">
+                {server.channels
+                  .filter(channel =>
+                    channel.type === ChannelType.Private
+                      ? canViewPrivateChannels
+                      : true
+                  )
+                  .map(channel => (
+                    <SidebarChannel
+                      key={channel.id}
+                      channel={channel}
+                      server={server}
+                    />
+                  ))}
+              </div>
+
+              {canManageServer && (
+                <>
+                  <SidebarLabel>Admin</SidebarLabel>
+                  <div className="space-y-0.5">
+                    <SidebarItem onClick={() => setEditOpen(true)}>
+                      <IconSettings className="mr-3 w-5 h-5" />
+                      Edit Planet
+                    </SidebarItem>
+                    <SidebarItem onClick={() => setRolesOpen(true)}>
+                      <IconShield className="mr-3 w-5 h-5" />
+                      Manage Roles
+                    </SidebarItem>
+                  </div>
+                </>
               )}
             </div>
-            <div className="text-13 text-secondary pb-1.5">
-              {server.description || 'No description'}
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="text-xs font-medium flex items-center text-tertiary">
-                <IconUsers className="w-4 h-4 mr-2.5" />
-                {server.userCount} Member{server.userCount === 1 ? '' : 's'}
-              </div>
-              <div className="text-xs font-medium flex items-center text-tertiary">
-                <CategoryIcon className="w-4 h-4 mr-2.5" />
-                {server.category}
-              </div>
-            </div>
-          </div>
-
-          <SidebarLabel plusLabel="Create Post">Posts</SidebarLabel>
-
-          <SidebarSortButtons />
-
-          <CreateChannel server={server} />
-
-          <div className="space-y-0.5">
-            {server.channels
-              .filter(channel =>
-                channel.type === ChannelType.Private
-                  ? canViewPrivateChannels
-                  : true
-              )
-              .map(channel => (
-                <SidebarChannel
-                  key={channel.id}
-                  channel={channel}
-                  server={server}
-                />
-              ))}
-          </div>
-
-          {canManageServer && (
-            <>
-              <SidebarLabel>Admin</SidebarLabel>
-              <div className="space-y-0.5">
-                <SidebarItem onClick={() => setEditOpen(true)}>
-                  <IconSettings className="mr-3 w-5 h-5" />
-                  Edit Planet
-                </SidebarItem>
-                <SidebarItem onClick={() => setRolesOpen(true)}>
-                  <IconShield className="mr-3 w-5 h-5" />
-                  Manage Roles
-                </SidebarItem>
-              </div>
-            </>
-          )}
-        </div>
-      </Sidebar>
+          </Sidebar>
+        </>
+      ) : serverLoading ? (
+        <Sidebar />
+      ) : null}
     </>
   )
 }
+

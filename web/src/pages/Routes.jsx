@@ -14,7 +14,6 @@ import ServerPostsPage from '@/pages/server/ServerPostsPage'
 import PostPage from '@/pages/post/PostPage'
 import HomeSidebar from '@/pages/HomeSidebar'
 import ServerList from '@/components/server/list/ServerList'
-import BottomBar from '@/components/BottomBar'
 import ServerSidebar from '@/pages/server/ServerSidebar'
 import ChannelPage from '@/pages/server/channel/ChannelPage'
 import { useMessagesSubscriptions } from '@/hooks/useMessagesSubscriptions'
@@ -79,7 +78,6 @@ export default function Routes() {
               </div>
             </div>
           </Route>
-
           <Route>
             <NotFound />
           </Route>

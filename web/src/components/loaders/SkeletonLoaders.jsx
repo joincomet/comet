@@ -1,43 +1,6 @@
 import Avatar from '@/components/ui/Avatar'
 import { IconChat, IconDotsVertical } from '@/components/ui/icons/Icons'
-
-const getRandomInt = (min, max) => {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min) + min) //The maximum is exclusive and the minimum is inclusive
-}
-
-export const generateSkeletonMessages = () => {
-  const result = []
-  const messageWidths = ['w-11', 'w-12', 'w-14', 'w-16', 'w-20', 'w-24', 'w-28']
-  const imageWidths = ['w-36', 'w-40', 'w-44', 'w-48', 'w-52', 'w-56', 'w-60']
-  const imageHeights = ['h-36', 'h-40', 'h-44', 'h-48', 'h-52', 'h-56', 'h-60']
-  for (let i = 0; i < getRandomInt(10, 12); i++) {
-    const skeletonMessage = {
-      firstLine: {
-        blobWidth: messageWidths[getRandomInt(0, messageWidths.length)]
-      },
-      lines: []
-    }
-    for (let j = 0; j < getRandomInt(2, 5); j++) {
-      const blobWidths = []
-      for (let k = 0; k < getRandomInt(4, 6); k++) {
-        blobWidths.push(messageWidths[getRandomInt(0, messageWidths.length)])
-      }
-      skeletonMessage.lines.push({ blobWidths: blobWidths })
-    }
-    if (getRandomInt(0, 2) == 0) {
-      skeletonMessage['imageBlob'] = {
-        dimensions: {
-          width: imageWidths[getRandomInt(0, imageWidths.length)],
-          height: imageHeights[getRandomInt(0, imageHeights.length)]
-        }
-      }
-    }
-    result.push(skeletonMessage)
-  }
-  return result
-}
+import { getRandomInt } from '@/utils/getRandomInt'
 
 export const SkeletonPostLoader = () => {
   return (
@@ -55,27 +18,6 @@ export const SkeletonPostLoader = () => {
             <div className="w-full flex-1 bg-gray-300 dark:bg-gray-750 rounded-full"></div>
             <div className="w-1/4 flex-1 bg-gray-300 dark:bg-gray-750 select-nonedark:bg-gray-750 rounded-full mt-2"></div>
           </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export const SkeletonCommentLoader = () => {
-  return (
-    <div
-      className={`relative md:rounded dark:bg-gray-800 bg-gray-200 animate-pulse`}
-    >
-      <div className="flex px-3 pt-3">
-        <Avatar
-          size={7}
-          className="dark:bg-gray-750 bg-gray-300 rounded-full"
-        />
-        <div
-          className={`pl-3 pb-3 w-full border-b dark:border-gray-750 border-gray-300`}
-        >
-          <div className="flex flex-wrap items-center mb-2 h-5 dark:bg-gray-750 bg-gray-300 w-full  rounded-full"></div>
-          <div className="flex flex-wrap items-center mb h-5 dark:bg-gray-750 bg-gray-300 w-full  rounded-full"></div>
         </div>
       </div>
     </div>
@@ -100,27 +42,48 @@ export const SkeletonPostPageLoader = () => {
               size={5}
               className="dark:bg-gray-700 bg-gray-200 rounded-full mr-1.5"
             />
-            <div className="text-secondary font-medium text-base w-24 dark:bg-gray-750 bg-gray-300 h-4 rounded-full mr-2"></div>
-            <div className="text-secondary font-medium text-base w-24 dark:bg-gray-750 bg-gray-300 h-4 rounded-full mr-2"></div>
-            <div className="text-secondary font-medium text-base w-16 dark:bg-gray-750 bg-gray-300 h-4 rounded-full"></div>
+            <div className="w-24 dark:bg-gray-750 bg-gray-300 h-4 rounded-full mr-2"></div>
+            <div className="w-24 dark:bg-gray-750 bg-gray-300 h-4 rounded-full mr-2"></div>
+            <div className="w-16 dark:bg-gray-750 bg-gray-300 h-4 rounded-full"></div>
           </div>
-          <div className="text-secondary font-medium text-base w-1/2 dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
-          <div className="text-secondary font-medium text-base w-full dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
-          <div className="text-secondary font-medium text-base w-full dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
-          <div className="text-secondary font-medium text-base w-full dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
+          <div className="w-1/4 dark:bg-gray-750 bg-gray-300 h-5 rounded-full mb-2"></div>
+          <div className="w-full h-30 rounded-full mb-2"></div>
           <div className="flex items-center pt-1.5">
-            <div className={`flex items-center`}>
-              <IconChat className="w-5 h-5" />
-            </div>
-
-            <div className={`ml-2 flex items-center `}>
-              <IconDotsVertical className="w-4 h-4" />
-            </div>
+            <div className="w-16 dark:bg-gray-750 bg-gray-300 h-4 rounded-full mr-2"></div>
           </div>
         </div>
       </div>
     </div>
   )
+}
+
+const SkeletonCommentLoader = () => {
+  return (
+    <div
+      className={`relative md:rounded dark:bg-gray-800 bg-gray-200 animate-pulse`}
+    >
+      <div className="flex px-3 pt-3">
+        <Avatar
+          size={7}
+          className="dark:bg-gray-750 bg-gray-300 rounded-full"
+        />
+        <div
+          className={`pl-3 pb-3 w-full border-b dark:border-gray-750 border-gray-300`}
+        >
+          <div className="flex flex-wrap items-center mb-2 h-5 dark:bg-gray-750 bg-gray-300 w-3/4  rounded-full"></div>
+          <div className="flex flex-wrap items-center mb h-5 dark:bg-gray-750 bg-gray-300 w-1/2  rounded-full"></div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export const getSkeletonComments = amount => {
+  const result = []
+  for (let i = 0; i < amount; i++) {
+    result.push(<SkeletonCommentLoader />)
+  }
+  return result
 }
 
 export const SkeletonMessageLoader = ({ messages }) => {
@@ -135,7 +98,7 @@ const SkeletonMessageLoaderTemplate = ({ children }) => {
   return (
     <div className={`pt-4`}>
       <div
-        className={`flex py-1 pl-4 pr-18 transparent group relative animate-pulse`}
+        className={`flex py-1 pl-4 pr-18 transparent relative animate-pulse`}
       >
         <Avatar
           size={10}
@@ -176,5 +139,74 @@ const SkeletonMessageLoaderChildrenTemplate = ({ messages }) => {
       </div>
     )
   })
+  return result
+}
+
+export const generateSkeletonMessages = () => {
+  const result = []
+  const messageWidths = ['w-11', 'w-12', 'w-14', 'w-16', 'w-20', 'w-24', 'w-28']
+  const imageWidths = ['w-36', 'w-40', 'w-44', 'w-48', 'w-52', 'w-56', 'w-60']
+  const imageHeights = ['h-36', 'h-40', 'h-44', 'h-48', 'h-52', 'h-56', 'h-60']
+  for (let i = 0; i < getRandomInt(10, 12); i++) {
+    const skeletonMessage = {
+      firstLine: {
+        blobWidth: messageWidths[getRandomInt(0, messageWidths.length)]
+      },
+      lines: []
+    }
+    for (let j = 0; j < getRandomInt(2, 5); j++) {
+      const blobWidths = []
+      for (let k = 0; k < getRandomInt(4, 6); k++) {
+        blobWidths.push(messageWidths[getRandomInt(0, messageWidths.length)])
+      }
+      skeletonMessage.lines.push({ blobWidths: blobWidths })
+    }
+    if (getRandomInt(0, 2) == 0) {
+      skeletonMessage['imageBlob'] = {
+        dimensions: {
+          width: imageWidths[getRandomInt(0, imageWidths.length)],
+          height: imageHeights[getRandomInt(0, imageHeights.length)]
+        }
+      }
+    }
+    result.push(skeletonMessage)
+  }
+  return result
+}
+
+export const SkeletonServerInfoCard = () => {
+  return (
+    <div
+      className={`relative flex flex-col w-full rounded-lg group dark:bg-gray-800 bg-white animate-pulse`}
+    >
+      <div className="h-32 rounded-t-lg w-full bg-cover bg-center bg-no-repeat relative dark:bg-gray-700 bg-gray-200">
+        <div className="absolute left-4 -bottom-3">
+          <Avatar
+            size={10}
+            className="dark:bg-gray-750 rounded-xl ring-4 dark:ring-gray-800 ring-white bg-gray-300"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col flex-grow px-4 pt-5 pb-4 h-40">
+        <div className="text-lg font-semibold text-secondary h-5 w-3/4 dark:bg-gray-750 bg-gray-300 rounded-full"></div>
+
+        <div className="text-13 text-tertiary line-clamp-3 pt-1 h-5 w-1/2 dark:bg-gray-750 bg-gray-300 rounded-full mt-3"></div>
+
+        <div className="flex mt-auto text-xs">
+          <div className="inline-flex items-center h-5 w-1/2 dark:bg-gray-750 bg-gray-300 rounded-full"></div>
+
+          <div className="ml-auto inline-flex items-center  h-5 w-1/4 dark:bg-gray-750 bg-gray-300 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export const getSkeletonServerInfoCards = amount => {
+  const result = []
+  for (let i = 0; i < amount; i++) {
+    result.push(<SkeletonServerInfoCard />)
+  }
   return result
 }

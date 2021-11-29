@@ -34,7 +34,7 @@ export default function Posts({ folderId, serverId, showServerName, header }) {
 
   return (
     <>
-      {!!posts && !fetching ? (
+      {posts && !fetching ? (
         <Virtuoso
           key={0}
           className={`scrollbar-custom dark:bg-gray-750 bg-gray-100`}
@@ -60,7 +60,7 @@ export default function Posts({ folderId, serverId, showServerName, header }) {
           style={{ overflowX: 'hidden' }}
           totalCount={posts?.length || 0}
         />
-      ) : (
+      ) : fetching ? (
         <Virtuoso
           key={1}
           className={`scrollbar-custom dark:bg-gray-750 bg-gray-100`}
@@ -69,7 +69,8 @@ export default function Posts({ folderId, serverId, showServerName, header }) {
               <div className="p-4">
                 <div className="dark:bg-gray-700 h-13 flex items-center rounded bg-gray-200 animate-pulse"></div>
               </div>
-            )
+            ),
+            Footer: () => <div className="h-20" />
           }}
           itemContent={skeletonPostsRenderer}
           overscan={100}
@@ -77,7 +78,7 @@ export default function Posts({ folderId, serverId, showServerName, header }) {
           style={{ overflowX: 'hidden' }}
           totalCount={NUMBER_OF_SKELETON_POSTS}
         />
-      )}
+      ) : null}
     </>
   )
 }

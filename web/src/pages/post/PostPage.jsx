@@ -10,12 +10,16 @@ import { useCommentsQuery, usePostQuery } from '@/graphql/hooks'
 import { Helmet } from 'react-helmet-async'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import NotFound from '@/pages/NotFound'
-import { SkeletonPostPageLoader } from '@/components/loaders/SkeletonLoaders'
+import {
+  getSkeletonComments,
+  SkeletonPostPageLoader
+} from '@/components/loaders/SkeletonLoaders'
 
 const NUMBER_OF_SKELETON_COMMENTS = 10
+const SKELETON_COMMENTS = getSkeletonComments(NUMBER_OF_SKELETON_COMMENTS)
 
 export default function PostPage({ postId }) {
-  const [currentUser] = useCurrentUser()
+  const [currentUser, currentUserLoading] = useCurrentUser()
 
   const { data, loading } = usePostQuery({
     variables: {
@@ -25,7 +29,7 @@ export default function PostPage({ postId }) {
   })
   const post = data?.post
 
-  const { data: commentsData } = useCommentsQuery({
+  const { data: commentsData, loading: commentsLoading } = useCommentsQuery({
     variables: { postId }
   })
   const comments = useMemo(
@@ -34,15 +38,10 @@ export default function PostPage({ postId }) {
   )
   const users = useMemo(() => getParticipants(comments, post), [comments])
 
-  const skeletonComments = []
-  for (let i = 0; i < NUMBER_OF_SKELETON_COMMENTS; i++) {
-    skeletonComments.push()
-  }
-
   return (
     <Page
       header={
-        post ? (
+        post && !loading ? (
           <PostHeader post={post} />
         ) : loading ? (
           <header
@@ -59,9 +58,7 @@ export default function PostPage({ postId }) {
           </header>
         ) : null
       }
-      rightSidebar={
-        post ? <PostUsersSidebar post={post} users={users} /> : null
-      }
+      rightSidebar={<PostUsersSidebar post={post} users={users} />}
     >
       <Helmet>
         <title>
@@ -69,38 +66,33 @@ export default function PostPage({ postId }) {
         </title>
       </Helmet>
       {post || loading ? (
-        <div
-          className={`max-h-full h-full scrollbar-custom dark:bg-gray-750 ${
-            loading ? 'overflow-y-hidden' : 'overflow-y-auto'
-          }`}
-        >
+        <div className={`max-h-full h-full scrollbar-custom dark:bg-gray-750`}>
           <div className="md:pt-4 md:px-4 px-0 pt-0">
-            {post ? (
-              <>
+            {post && !loading ? (
               <Post post={post} isPostPage />
+            ) : (
               <SkeletonPostPageLoader />
-              </>
-            ) : loading ? (
-              null
-            ) : null}
+            )}
           </div>
 
-          {currentUser ? (
+          {currentUser && !currentUserLoading ? (
             <div className="pt-4 px-4">
               <CreateCommentCard postId={postId} />
             </div>
-          ) : loading ? (
+          ) : currentUserLoading ? (
             <div className="pt-4 px-4 animate-pulse">
               <div className="dark:bg-gray-700 h-13 rounded bg-gray-200"></div>
             </div>
           ) : null}
 
           <div className="space-y-2 md:px-4 pt-4 px-0 pb-96">
-            {commentsData && comments
+            {comments && !commentsLoading
               ? comments.map(comment => (
                   <Comment key={comment.id} comment={comment} post={post} />
                 ))
-              : skeletonComments}
+              : commentsLoading
+              ? SKELETON_COMMENTS
+              : null}
           </div>
         </div>
       ) : (
