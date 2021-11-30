@@ -81,7 +81,7 @@ const SkeletonCommentLoader = () => {
 export const getSkeletonComments = amount => {
   const result = []
   for (let i = 0; i < amount; i++) {
-    result.push(<SkeletonCommentLoader />)
+    result.push(<SkeletonCommentLoader key={i}/>)
   }
   return result
 }
