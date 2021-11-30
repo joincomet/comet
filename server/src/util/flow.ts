@@ -2,7 +2,7 @@
  *
  * @source https://github.com/gcanti/fp-ts/blob/4e460a6367bd1454fc65359c3ea22fe671722e45/src/function.ts#L118-L241
  */
- export function flow<A extends ReadonlyArray<unknown>, B>(
+export function flow<A extends ReadonlyArray<unknown>, B>(
   ab: (...a: A) => B
 ): (...a: A) => B;
 export function flow<A extends ReadonlyArray<unknown>, B, C>(

@@ -26,13 +26,7 @@ export default function ServerPostsPage() {
       </Helmet>
       <Posts
         serverId={server?.id}
-        header={
-          currentUser ? (
-            <CreatePostHeader server={server} />
-          ) : (
-            <div className="h-4" />
-          )
-        }
+        header={currentUser ? <CreatePostHeader server={server} /> : <div className="h-4" />}
       />
     </Page>
   )
