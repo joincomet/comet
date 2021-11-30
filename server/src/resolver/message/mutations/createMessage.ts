@@ -14,7 +14,7 @@ import {
   User
 } from '@/entity'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { handleMessageLinks, logger, uploadFileOrImage } from '@/util'
+import {handleMessageLinks, logger, uploadFileOrImage} from '@/util'
 import {
   ChangePayload,
   ChangeType,
@@ -147,10 +147,7 @@ export async function createMessage(
         .where({ user: { $ne: user }, channel })
         .execute()
     } else if (mentionIds.length > 0) {
-      await qb
-        .update({ mentionCount })
-        .where({ user: mentionIds, channel })
-        .execute()
+      await qb.update({ mentionCount }).where({ user: mentionIds, channel }).execute()
     }
     await em.persistAndFlush(channel)
   }

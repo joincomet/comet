@@ -8,7 +8,7 @@ import {
   ServerUserStatus,
   User
 } from '@/entity'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class BanUserFromServerInput {

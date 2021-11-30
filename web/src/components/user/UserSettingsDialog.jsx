@@ -1,14 +1,6 @@
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import Dialog from '@/components/ui/dialog/Dialog'
-import {
-  IconCheck,
-  IconDelete,
-  IconEdit,
-  IconImage,
-  IconLogout,
-  IconSpinner,
-  IconX
-} from '@/components/ui/icons/Icons'
+import {IconCheck, IconDelete, IconEdit, IconImage, IconLogout, IconSpinner, IconX} from '@/components/ui/icons/Icons'
 import UserAvatar from '@/components/user/UserAvatar'
 import {
   useChangeUserAvatarMutation,
@@ -20,10 +12,10 @@ import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useApolloClient } from '@apollo/client'
-import StyledDialog from '@/components/ui/dialog/StyledDialog'
-import Tippy from '@tippyjs/react'
-import ShowPasswordButton from '@/components/ui/ShowPasswordButton'
-import ServerAvatar from '@/components/server/ServerAvatar'
+import StyledDialog from "@/components/ui/dialog/StyledDialog";
+import Tippy from "@tippyjs/react";
+import ShowPasswordButton from "@/components/ui/ShowPasswordButton";
+import ServerAvatar from "@/components/server/ServerAvatar";
 
 export default function UserSettingsDialog({ open, setOpen }) {
   const [user] = useCurrentUser()
@@ -70,11 +62,7 @@ export default function UserSettingsDialog({ open, setOpen }) {
 
   return (
     <>
-      <StyledDialog
-        onSubmit={handleSubmit(onSubmit)}
-        open={open}
-        close={close}
-        closeOnOverlayClick
+      <StyledDialog onSubmit={handleSubmit(onSubmit)} open={open} close={close} closeOnOverlayClick
         buttons={
           <>
             <button onClick={() => logout()} className="form-button-delete">
@@ -118,19 +106,14 @@ export default function UserSettingsDialog({ open, setOpen }) {
                 changeAvatar({ variables: { input: { avatarFile } } })
               }}
             />
-            <label
-              htmlFor="avatarFile"
-              className="h-9 transition hover:bg-gray-200 cursor-pointer flex items-center justify-center text-sm font-medium border rounded dark:border-gray-600 px-3 bg-gray-300 text-gray-800 ml-3"
-            >
+            <label htmlFor="avatarFile" className="h-9 transition hover:bg-gray-200 cursor-pointer flex items-center justify-center text-sm font-medium border rounded dark:border-gray-600 px-3 bg-gray-300 text-gray-800 ml-3">
               <IconImage className="w-5 h-5 mr-2" />
               Upload Avatar
             </label>
           </div>
 
           <div className="border dark:border-gray-750 rounded space-y-3 p-3">
-            <div className="text-xs font-medium text-tertiary">
-              Change Password
-            </div>
+            <div className="text-xs font-medium text-tertiary">Change Password</div>
             <div>
               <div className="relative">
                 <input
@@ -144,10 +127,7 @@ export default function UserSettingsDialog({ open, setOpen }) {
                   type={showPassword ? 'text' : 'password'}
                   minLength={6}
                 />
-                <ShowPasswordButton
-                  setShowPassword={setShowPassword}
-                  showPassword={showPassword}
-                />
+                <ShowPasswordButton setShowPassword={setShowPassword} showPassword={showPassword} />
               </div>
               {!!password && errors.password && (
                 <div className="form-error">
@@ -165,10 +145,7 @@ export default function UserSettingsDialog({ open, setOpen }) {
                   {...register('currentPassword', { required: true })}
                   type={showPassword ? 'text' : 'password'}
                 />
-                <ShowPasswordButton
-                  setShowPassword={setShowPassword}
-                  showPassword={showPassword}
-                />
+                <ShowPasswordButton setShowPassword={setShowPassword} showPassword={showPassword} />
               </div>
             </div>
 
@@ -179,12 +156,9 @@ export default function UserSettingsDialog({ open, setOpen }) {
                 !password ||
                 password?.length < 6
               }
-              className="form-button-submit ml-auto"
-            >
+              className="form-button-submit ml-auto">
               Change Password
-              {changePasswordLoading && (
-                <IconSpinner className="w-5 h-5 ml-2" />
-              )}
+              {changePasswordLoading && <IconSpinner className="w-5 h-5 ml-2" />}
             </button>
           </div>
 

@@ -1,1 +1,1 @@
-declare module 'extract-files'
+declare module 'extract-files';

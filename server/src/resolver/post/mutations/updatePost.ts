@@ -3,7 +3,7 @@ import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Post, User } from '@/entity'
-import { handleText, logger } from '@/util'
+import {handleText, logger} from '@/util'
 
 @InputType()
 export class UpdatePostInput {

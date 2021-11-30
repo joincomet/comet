@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Folder, User, UserFolder } from '@/entity'
 import { Context } from '@/types'
-import { logger, ReorderUtils } from '@/util'
+import {logger, ReorderUtils} from '@/util'
 
 @InputType()
 export class FollowFolderInput {

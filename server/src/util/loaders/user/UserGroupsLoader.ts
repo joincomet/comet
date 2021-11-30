@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { Group, User } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 export const userGroupsLoader = (em: EntityManager, currentUserId: string) => {
   const loader = new DataLoader<string, Group[]>(async (userIds: string[]) => {

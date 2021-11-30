@@ -2,7 +2,7 @@ import { Field, InputType } from 'type-graphql'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
 import { User } from '@/entity'
-import { logger, uploadImageFileSingle } from '@/util'
+import {logger, uploadImageFileSingle} from '@/util'
 
 @InputType()
 export class ChangeUserAvatarInput {

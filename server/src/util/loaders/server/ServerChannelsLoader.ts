@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { Channel, Server } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 export const serverChannelsLoader = (em: EntityManager) => {
   const loader = new DataLoader<string, Channel[]>(

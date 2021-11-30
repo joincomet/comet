@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Channel, ServerPermission, User } from '@/entity'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class DeleteChannelInput {
@@ -14,7 +14,9 @@ export async function deleteChannel(
   { channelId }: DeleteChannelInput
 ): Promise<string> {
   logger('deleteChannel')
-  const channel = await em.findOneOrFail(Channel, channelId, ['server'])
+  const channel = await em.findOneOrFail(Channel, channelId, [
+    'server'
+  ])
   const user = await em.findOneOrFail(User, userId)
   await user.checkServerPermission(
     em,
@@ -23,7 +25,7 @@ export async function deleteChannel(
   )
   channel.isDeleted = true
   if (channel.isDefault) {
-    const firstChannel = await em.findOne(Channel, { id: { $ne: channel.id } })
+    const firstChannel = await em.findOne(Channel, { id: { $ne: channel.id }})
     firstChannel.isDefault = true
     em.persist(firstChannel)
   }

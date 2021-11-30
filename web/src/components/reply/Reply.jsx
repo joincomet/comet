@@ -6,10 +6,7 @@ import { calendarDate } from '@/utils/timeUtils'
 import { Link } from 'react-router-dom'
 import ServerAvatar from '@/components/server/ServerAvatar'
 import { IconCheck } from '@/components/ui/icons/Icons'
-import {
-  useMarkReplyReadMutation,
-  useMarkReplyUnreadMutation
-} from '@/graphql/hooks'
+import {useMarkReplyReadMutation, useMarkReplyUnreadMutation} from '@/graphql/hooks'
 
 export default function Reply({ reply }) {
   const { comment } = reply
@@ -78,9 +75,7 @@ export default function Reply({ reply }) {
           }}
         >
           <IconCheck className="h-5 w-5" />
-          <div className="ml-2 text-xs font-medium">
-            {reply.isRead ? 'Mark Unread' : 'Mark Read'}
-          </div>
+          <div className="ml-2 text-xs font-medium">{reply.isRead ? 'Mark Unread' : 'Mark Read'}</div>
         </div>
       </div>
     </Link>

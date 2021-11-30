@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { Channel, ChannelUser } from '@/entity'
 import { EntityManager } from '@mikro-orm/postgresql'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 export const channelMentionCountLoader = (
   em: EntityManager,

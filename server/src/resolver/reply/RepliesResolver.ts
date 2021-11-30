@@ -24,7 +24,9 @@ export class RepliesResolver {
   // --- Queries ---
   @Authorized()
   @Query(() => [Reply])
-  async replies(@Ctx() ctx: Context): Promise<Reply[]> {
+  async replies(
+    @Ctx() ctx: Context
+  ): Promise<Reply[]> {
     return replies(ctx)
   }
 

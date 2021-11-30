@@ -4,7 +4,11 @@ export default function Page({ children, header, rightSidebar, leftSidebar }) {
       {leftSidebar}
       <div className="flex flex-col flex-grow">
         {header}
-        <div className="h-full">{children}</div>
+        <div
+          className="h-full"
+        >
+          {children}
+        </div>
       </div>
       {rightSidebar}
     </div>

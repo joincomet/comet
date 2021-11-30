@@ -1,5 +1,5 @@
 import create from 'zustand'
-import { getOS } from '@/utils/getOS'
+import {getOS} from "@/utils/getOS";
 
 export const useStore = create((set, get) => ({
   friendsPage: 'Online', // Online, All, Pending, Blocked, Add
@@ -53,8 +53,8 @@ export const useStore = create((set, get) => ({
   setCreateAccount: createAccount => set({ createAccount }),
 
   showLeftSidebar: false,
-  setShowLeftSidebar: showLeftSidebar => set({ showLeftSidebar }),
+  setShowLeftSidebar: showLeftSidebar => set({showLeftSidebar}),
 
   showRightSidebar: !['iOS', 'Android'].includes(getOS()),
-  setShowRightSidebar: showRightSidebar => set({ showRightSidebar })
+  setShowRightSidebar: showRightSidebar => set({showRightSidebar})
 }))

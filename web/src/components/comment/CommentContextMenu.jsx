@@ -21,8 +21,7 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
   const [deleteComment] = useDeleteCommentMutation()
   const togglePin = useToggleCommentPin(comment)
 
-  const isAuthor =
-    !!comment.author && !!currentUser && comment.author.id === currentUser.id
+  const isAuthor = !!comment.author && !!currentUser && comment.author.id === currentUser.id
   const canDelete = canManageComments || isAuthor
   return (
     <>
@@ -56,16 +55,13 @@ export default function CommentContextMenu({ comment, post, ContextMenuItem }) {
             label={t('comment.context.delete')}
             red
             onClick={() => {
-              deleteComment({
-                variables: { input: { commentId: comment.id } },
-                optimisticResponse: {
-                  ...comment,
+              deleteComment({variables:{input: { commentId: comment.id }}, optimisticResponse: {
+                ...comment,
                   isDeleted: true,
                   text: '[deleted]',
                   author: null,
                   serverUser: null
-                }
-              })
+                }})
               toast.success('Comment deleted!')
             }}
           />

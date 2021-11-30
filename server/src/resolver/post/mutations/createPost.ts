@@ -2,13 +2,19 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { ArrayMaxSize, Length, MaxLength, IsUrl } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { Context } from '@/types'
-import { Post, PostImage, PostVote, Server, User, VoteType } from '@/entity'
+import {
+  Post,
+  PostImage,
+  PostVote,
+  Server,
+  User,
+  VoteType
+} from '@/entity'
 import {
   handleText,
-  imageMimeTypes,
-  logger,
+  imageMimeTypes, logger,
   scrapeMetadata,
-  uploadImageFile
+  uploadImageFile,
 } from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import mime from 'mime'

@@ -15,12 +15,7 @@ import {
   ServerUser,
   ServerUserStatus
 } from '@/entity'
-import {
-  handleUnderscore,
-  logger,
-  ReorderUtils,
-  uploadImageFileSingle
-} from '@/util'
+import {handleUnderscore, logger, ReorderUtils, uploadImageFileSingle} from '@/util'
 import { serverRegex } from '@/util/text/serverRegex'
 
 @InputType()

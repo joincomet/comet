@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Role, Server, ServerUser, ServerUserStatus, User } from '@/entity'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class LeaveServerInput {
@@ -26,7 +26,9 @@ export async function leaveServer(
   serverUser.status = ServerUserStatus.None
   server.userCount--
   await em.persistAndFlush([serverUser, server])
-  liveQueryStore.invalidate([`Query.serverUsers(serverId:"${server.id}")`])
+  liveQueryStore.invalidate([
+    `Query.serverUsers(serverId:"${server.id}")`
+  ])
   server.isJoined = false
   return server
 }

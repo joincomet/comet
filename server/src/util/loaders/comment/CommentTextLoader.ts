@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Comment } from '@/entity'
 import DataLoader from 'dataloader'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 export const commentTextLoader = (em: EntityManager) => {
   const loader = new DataLoader<string, string>(

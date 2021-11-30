@@ -2,7 +2,7 @@ import { Field, ID, InputType, Publisher } from 'type-graphql'
 import { Length } from 'class-validator'
 import { Context } from '@/types'
 import { Message, User } from '@/entity'
-import { handleText, logger } from '@/util'
+import {handleText, logger} from '@/util'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 
 @InputType()

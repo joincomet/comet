@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { User } from '@/entity'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class ReadDmInput {

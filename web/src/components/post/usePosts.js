@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '@/hooks/useStore'
 import { usePostsQuery } from '@/graphql/hooks'
-import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
+import { useCurrentUser } from "@/hooks/graphql/useCurrentUser";
 
 export const usePosts = ({ serverId, folderId }) => {
   const [currentUser] = useCurrentUser()

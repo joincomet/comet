@@ -13,12 +13,11 @@ export function TypingFilter({
   if (typingChannelId && channelId === typingChannelId) {
     return true
   } else if (typingGroupId && groupId === typingGroupId) {
-    return !!currentUserId
+    return !!currentUserId;
   } else if (typingUserId) {
     if (!currentUserId) return false
     return (
-      typingUserId &&
-      (userId === typingUserId || currentUserId === typingUserId)
+      typingUserId && (userId === typingUserId || currentUserId === typingUserId)
     )
   }
 }

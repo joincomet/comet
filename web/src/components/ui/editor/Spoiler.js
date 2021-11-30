@@ -33,21 +33,15 @@ export const Spoiler = Mark.create({
 
   addCommands() {
     return {
-      setSpoiler:
-        attributes =>
-        ({ commands }) => {
-          return commands.setMark('spoiler', attributes)
-        },
-      toggleSpoiler:
-        attributes =>
-        ({ commands }) => {
-          return commands.toggleMark('spoiler', attributes)
-        },
-      unsetSpoiler:
-        () =>
-        ({ commands }) => {
-          return commands.unsetMark('spoiler')
-        }
+      setSpoiler: attributes => ({ commands }) => {
+        return commands.setMark('spoiler', attributes)
+      },
+      toggleSpoiler: attributes => ({ commands }) => {
+        return commands.toggleMark('spoiler', attributes)
+      },
+      unsetSpoiler: () => ({ commands }) => {
+        return commands.unsetMark('spoiler')
+      }
     }
   }
 })

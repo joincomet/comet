@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from 'react'
 import Dialog from '@/components/ui/dialog/Dialog'
 import UserAvatar from '@/components/user/UserAvatar'
-import { IconDotsVertical, IconEarlyAdopter } from '@/components/ui/icons/Icons'
+import {IconDotsVertical, IconEarlyAdopter} from '@/components/ui/icons/Icons'
 import ctl from '@netlify/classnames-template-literals'
 import { useTranslation } from 'react-i18next'
 import ServerAvatar from '@/components/server/ServerAvatar'

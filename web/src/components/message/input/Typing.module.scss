@@ -7,7 +7,7 @@
   float: left;
   width: 7px;
   height: 7px;
-  background-color: #51535d;
+  background-color: #51535D;
   animation: loadingFade 1.2s infinite;
 }
 
@@ -25,12 +25,12 @@
 
 @keyframes loadingFade {
   0% {
-    background-color: #51535d;
+    background-color: #51535D;
   }
   35% {
-    background-color: #d4d5d9;
+    background-color: #D4D5D9;
   }
   70% {
-    background-color: #51535d;
+    background-color: #51535D;
   }
 }

@@ -2,7 +2,10 @@ import DmHeader from '@/pages/dm/DmHeader'
 import Messages from '@/components/message/Messages'
 import { useSetHomePage } from '@/hooks/useSetHomePage'
 import Page from '@/components/ui/page/Page'
-import { useOpenDmMutation, useUserQuery } from '@/graphql/hooks'
+import {
+  useOpenDmMutation,
+  useUserQuery
+} from '@/graphql/hooks'
 import { useCurrentUser } from '@/hooks/graphql/useCurrentUser'
 import { useEffect } from 'react'
 

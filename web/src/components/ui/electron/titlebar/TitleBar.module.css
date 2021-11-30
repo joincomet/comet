@@ -12,32 +12,29 @@
   @apply justify-center items-center w-8 h-full select-none cursor-pointer;
 }
 
-@media (-webkit-device-pixel-ratio: 1.5),
-  (device-pixel-ratio: 1.5),
-  (-webkit-device-pixel-ratio: 2),
-  (device-pixel-ratio: 2),
-  (-webkit-device-pixel-ratio: 3),
-  (device-pixel-ratio: 3) {
+@media (-webkit-device-pixel-ratio: 1.5), (device-pixel-ratio: 1.5),
+(-webkit-device-pixel-ratio: 2), (device-pixel-ratio: 2),
+(-webkit-device-pixel-ratio: 3), (device-pixel-ratio: 3) {
   .window-button-icon {
-    width: 10px;
-    height: 10px;
+      width: 10px;
+      height: 10px;
   }
 }
 
 .window-button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
 }
 
 .window-button:active {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255,255,255,0.2);
 }
 
 .close-button:hover {
-  background: #e81123 !important;
+  background: #E81123 !important;
 }
 
 .close-button:active {
-  background: #f1707a !important;
+  background: #F1707A !important;
 }
 
 .close-button:active .window-button-icon {

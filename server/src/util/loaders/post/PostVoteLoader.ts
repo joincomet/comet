@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Post, PostVote, VoteType } from '@/entity'
 import DataLoader from 'dataloader'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 export const postVoteLoader = (em: EntityManager, userId: string) => {
   const loader = new DataLoader<string, VoteType>(async (postIds: string[]) => {

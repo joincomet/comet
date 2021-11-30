@@ -3,7 +3,7 @@ import { Context } from '@/types'
 import { Message, MessageType, RelationshipStatus, User } from '@/entity'
 import { ChangePayload, ChangeType } from '@/resolver/subscriptions'
 import { Publisher } from 'type-graphql/dist/interfaces/Publisher'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class CreateFriendRequestInput {

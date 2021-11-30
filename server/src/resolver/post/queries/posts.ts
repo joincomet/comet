@@ -21,7 +21,7 @@ import { Context } from '@/types'
 import { QueryOrder } from '@mikro-orm/core'
 import dayjs from 'dayjs'
 import { GraphQLNonNegativeInt, GraphQLPositiveInt } from 'graphql-scalars'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @ArgsType()
 export class PostsArgs {
@@ -123,9 +123,7 @@ export async function posts(
   let folder: Folder
 
   if (serverId) {
-    servers = [
-      await em.findOneOrFail(Server, { id: serverId, isDeleted: false })
-    ]
+    servers = [await em.findOneOrFail(Server, { id: serverId, isDeleted: false })]
   } else if (folderId) {
     folder = await em.findOneOrFail(Folder, folderId, ['owner'])
     if (!sort || sort === PostsSort.Added)
@@ -147,16 +145,14 @@ export async function posts(
         { user, status: ServerUserStatus.Joined },
         ['server']
       )
-      servers = serverJoins
-        .map(join => join.server)
-        .filter(server => !server.isDeleted)
+      servers = serverJoins.map(join => join.server).filter(server => !server.isDeleted)
     } else {
-      servers = await em.find(Server, { isFeatured: true, isDeleted: false })
+      servers = await em.find(Server, {isFeatured: true, isDeleted: false})
     }
   } else if (feed === PostsFeed.Featured) {
-    servers = await em.find(Server, { isFeatured: true, isDeleted: false })
+    servers = await em.find(Server, {isFeatured: true, isDeleted: false})
   } else if (feed === PostsFeed.All) {
-    servers = await em.find(Server, { isDeleted: false })
+    servers = await em.find(Server, {isDeleted: false})
   }
 
   const posts = await em.find(

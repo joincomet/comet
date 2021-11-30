@@ -3,7 +3,7 @@ import { IsHexColor, Length } from 'class-validator'
 import { Role, ServerPermission, User } from '@/entity'
 import { Context } from '@/types'
 import { GraphQLHexColorCode } from 'graphql-scalars'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class UpdateRoleInput {

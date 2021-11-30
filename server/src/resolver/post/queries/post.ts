@@ -1,6 +1,6 @@
 import { Post } from '@/entity'
 import { Context } from '@/types'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 export async function post({ em }: Context, id: string): Promise<Post> {
   logger('post')

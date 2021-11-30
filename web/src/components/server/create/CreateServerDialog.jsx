@@ -40,23 +40,16 @@ export default function CreateServerDialog({ open, setOpen, server }) {
   const [category, setCategory] = useState(
     server?.category ?? ServerCategory.Other
   )
-  const {
-    handleSubmit,
-    register,
-    watch,
-    reset,
-    setValue,
-    formState: { errors, isValid }
-  } = useForm({
+  const { handleSubmit, register, watch, reset, setValue, formState: { errors, isValid } } = useForm({
     mode: 'onChange'
   })
   watch((values, { type, value, name }) => {
     if (name === 'avatarFile') {
-      const { avatarFile } = values
+      const {avatarFile} = values
       if (!avatarFile || !avatarFile[0]) return
       readURL(avatarFile[0]).then(url => setAvatarSrc(url))
     } else if (name === 'bannerFile') {
-      const { bannerFile } = values
+      const {bannerFile} = values
       if (!bannerFile || !bannerFile[0]) return
       readURL(bannerFile[0]).then(url => setBannerSrc(url))
     }
@@ -169,8 +162,7 @@ export default function CreateServerDialog({ open, setOpen, server }) {
               !name ||
               displayName?.length < 2 ||
               name?.length < 3 ||
-              createLoading ||
-              !serverRegex.test(name)
+              createLoading || !serverRegex.test(name)
             }
           >
             {createLoading ? (
@@ -253,17 +245,12 @@ export default function CreateServerDialog({ open, setOpen, server }) {
       <div className="pb-5 space-y-3 pt-3 px-5 text-left">
         <div>
           <div className="text-sm text-accent flex items-center pt-3">
-            <span className={`h-7 flex items-center`}>
-              joincomet.app/+{server?.name ?? ''}
-            </span>
+          <span className={`h-7 flex items-center`}>
+            joincomet.app/+{server?.name ?? ''}
+          </span>
             {!server && (
               <input
-                {...register('name', {
-                  pattern: serverRegex,
-                  required: true,
-                  minLength: 3,
-                  maxLength: 21
-                })}
+                {...register('name', { pattern: serverRegex, required: true, minLength: 3, maxLength: 21 })}
                 minLength={3}
                 maxLength={21}
                 placeholder="Name"
@@ -273,11 +260,10 @@ export default function CreateServerDialog({ open, setOpen, server }) {
             )}
           </div>
           {errors.name?.type === 'pattern' && (
-            <div className="form-error">
-              Letters, numbers and underscores only
-            </div>
+            <div className="form-error">Letters, numbers and underscores only</div>
           )}
         </div>
+
 
         <textarea
           {...register('description', { maxLength: 500 })}

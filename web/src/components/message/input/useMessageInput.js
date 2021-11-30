@@ -10,10 +10,9 @@ export const useMessageInput = (inputRef, placeholder) => {
       )} ${placeholder}`
   }, [inputRef, placeholder, t])
 
-  const focus = useCallback(
-    () => inputRef.current?.el?.current?.focus(),
-    [inputRef]
-  )
+  const focus = useCallback(() => inputRef.current?.el?.current?.focus(), [
+    inputRef
+  ])
   useEffect(() => focus(), [focus])
 
   const keypress = useCallback(() => {

@@ -18,7 +18,7 @@ import CountBadge from '@/components/ui/CountBadge'
 import { useHistory, useLocation } from 'react-router-dom'
 import StyledDialog from '@/components/ui/dialog/StyledDialog'
 import { useState } from 'react'
-import CreateChannelDialog from '@/components/channel/CreateChannelDialog'
+import CreateChannelDialog from "@/components/channel/CreateChannelDialog";
 
 export default function SidebarChannel({ channel, server }) {
   const { t } = useTranslation()
@@ -36,12 +36,7 @@ export default function SidebarChannel({ channel, server }) {
 
   return (
     <>
-      <CreateChannelDialog
-        open={editOpen}
-        setOpen={setEditOpen}
-        channel={channel}
-        server={server}
-      />
+      <CreateChannelDialog open={editOpen} setOpen={setEditOpen} channel={channel} server={server} />
 
       <ContextMenuTrigger
         data={{
@@ -49,7 +44,7 @@ export default function SidebarChannel({ channel, server }) {
           channel,
           server,
           openDelete: () => setDeleteOpen(true),
-          openEdit: () => setEditOpen(true)
+          openEdit: () => setEditOpen(true),
         }}
       >
         <SidebarItem to={to} active={active}>
@@ -72,14 +67,11 @@ export default function SidebarChannel({ channel, server }) {
           )}
           {canManageChannels && (
             <Tippy content={t('channel.edit')}>
-              <div
-                className="group-hover:block hidden"
-                onClick={e => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                  setEditOpen(true)
-                }}
-              >
+              <div className="group-hover:block hidden" onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                setEditOpen(true)
+              }}>
                 <IconSettings className="w-4 h-4 text-tertiary" />
               </div>
             </Tippy>

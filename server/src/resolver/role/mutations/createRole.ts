@@ -3,7 +3,7 @@ import { Field, ID, InputType } from 'type-graphql'
 import { Context } from '@/types'
 import { Length } from 'class-validator'
 import { QueryOrder } from '@mikro-orm/core'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class CreateRoleInput {

@@ -9,7 +9,7 @@ import {
   ServerPermission,
   User
 } from '@/entity'
-import { handleUnderscore, logger, ReorderUtils } from '@/util'
+import {handleUnderscore, logger, ReorderUtils} from '@/util'
 import { Matches, MaxLength } from 'class-validator'
 
 @InputType()

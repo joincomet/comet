@@ -4,9 +4,7 @@ import {
   Authorized,
   Ctx,
   FieldResolver,
-  Mutation,
-  Publisher,
-  PubSub,
+  Mutation, Publisher, PubSub,
   Query,
   Resolver,
   Root
@@ -32,7 +30,7 @@ import {
 } from '@/resolver/user/mutations'
 import { user, UserArgs } from '@/resolver/user/queries'
 import { GraphQLNonNegativeInt } from 'graphql-scalars'
-import { ChangePayload, SubscriptionTopic } from '@/resolver/subscriptions'
+import {ChangePayload, SubscriptionTopic} from "@/resolver/subscriptions";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -119,8 +117,7 @@ export class UserResolver {
   async createAccount(
     @Ctx() ctx: Context,
     @Arg('input') input: CreateAccountInput,
-    @PubSub(SubscriptionTopic.MessageChanged)
-    notifyMessageChanged: Publisher<ChangePayload>
+    @PubSub(SubscriptionTopic.MessageChanged) notifyMessageChanged: Publisher<ChangePayload>
   ): Promise<LoginResponse> {
     return createAccount(ctx, input, notifyMessageChanged)
   }

@@ -3,7 +3,7 @@ import { MinLength } from 'class-validator'
 import { Context } from '@/types'
 import { User } from '@/entity'
 import * as argon2 from 'argon2'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class ChangePasswordInput {

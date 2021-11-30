@@ -10,7 +10,7 @@ import {
   UserFolder
 } from '@/entity'
 import { Length } from 'class-validator'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class CreateFolderInput {

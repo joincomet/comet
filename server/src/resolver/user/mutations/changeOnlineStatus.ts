@@ -1,7 +1,7 @@
 import { Field, InputType } from 'type-graphql'
 import { OnlineStatus, User } from '@/entity'
 import { Context } from '@/types'
-import { logger } from '@/util'
+import {logger} from "@/util";
 
 @InputType()
 export class ChangeOnlineStatusInput {

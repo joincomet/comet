@@ -28,7 +28,7 @@ import { CustomError } from '@/types/CustomError'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLEmailAddress, GraphQLNonNegativeInt } from 'graphql-scalars'
 import { Color } from '@/types'
-import { logger, randomEnum } from '@/util'
+import {logger, randomEnum} from '@/util'
 
 @ObjectType({ implements: BaseEntity })
 @Entity()

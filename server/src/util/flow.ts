@@ -2,31 +2,31 @@
  *
  * @source https://github.com/gcanti/fp-ts/blob/4e460a6367bd1454fc65359c3ea22fe671722e45/src/function.ts#L118-L241
  */
-export function flow<A extends ReadonlyArray<unknown>, B>(
+ export function flow<A extends ReadonlyArray<unknown>, B>(
   ab: (...a: A) => B
-): (...a: A) => B
+): (...a: A) => B;
 export function flow<A extends ReadonlyArray<unknown>, B, C>(
   ab: (...a: A) => B,
   bc: (b: B) => C
-): (...a: A) => C
+): (...a: A) => C;
 export function flow<A extends ReadonlyArray<unknown>, B, C, D>(
   ab: (...a: A) => B,
   bc: (b: B) => C,
   cd: (c: C) => D
-): (...a: A) => D
+): (...a: A) => D;
 export function flow<A extends ReadonlyArray<unknown>, B, C, D, E>(
   ab: (...a: A) => B,
   bc: (b: B) => C,
   cd: (c: C) => D,
   de: (d: D) => E
-): (...a: A) => E
+): (...a: A) => E;
 export function flow<A extends ReadonlyArray<unknown>, B, C, D, E, F>(
   ab: (...a: A) => B,
   bc: (b: B) => C,
   cd: (c: C) => D,
   de: (d: D) => E,
   ef: (e: E) => F
-): (...a: A) => F
+): (...a: A) => F;
 export function flow<A extends ReadonlyArray<unknown>, B, C, D, E, F, G>(
   ab: (...a: A) => B,
   bc: (b: B) => C,
@@ -34,7 +34,7 @@ export function flow<A extends ReadonlyArray<unknown>, B, C, D, E, F, G>(
   de: (d: D) => E,
   ef: (e: E) => F,
   fg: (f: F) => G
-): (...a: A) => G
+): (...a: A) => G;
 export function flow<A extends ReadonlyArray<unknown>, B, C, D, E, F, G, H>(
   ab: (...a: A) => B,
   bc: (b: B) => C,
@@ -43,7 +43,7 @@ export function flow<A extends ReadonlyArray<unknown>, B, C, D, E, F, G, H>(
   ef: (e: E) => F,
   fg: (f: F) => G,
   gh: (g: G) => H
-): (...a: A) => H
+): (...a: A) => H;
 export function flow<A extends ReadonlyArray<unknown>, B, C, D, E, F, G, H, I>(
   ab: (...a: A) => B,
   bc: (b: B) => C,
@@ -53,7 +53,7 @@ export function flow<A extends ReadonlyArray<unknown>, B, C, D, E, F, G, H, I>(
   fg: (f: F) => G,
   gh: (g: G) => H,
   hi: (h: H) => I
-): (...a: A) => I
+): (...a: A) => I;
 export function flow<
   A extends ReadonlyArray<unknown>,
   B,
@@ -75,7 +75,7 @@ export function flow<
   gh: (g: G) => H,
   hi: (h: H) => I,
   ij: (i: I) => J
-): (...a: A) => J
+): (...a: A) => J;
 export function flow(
   ab: Function,
   bc?: Function,
@@ -89,39 +89,41 @@ export function flow(
 ): unknown {
   switch (arguments.length) {
     case 1:
-      return ab
+      return ab;
     case 2:
       return function (this: unknown) {
-        return bc!(ab.apply(this, arguments))
-      }
+        return bc!(ab.apply(this, arguments));
+      };
     case 3:
       return function (this: unknown) {
-        return cd!(bc!(ab.apply(this, arguments)))
-      }
+        return cd!(bc!(ab.apply(this, arguments)));
+      };
     case 4:
       return function (this: unknown) {
-        return de!(cd!(bc!(ab.apply(this, arguments))))
-      }
+        return de!(cd!(bc!(ab.apply(this, arguments))));
+      };
     case 5:
       return function (this: unknown) {
-        return ef!(de!(cd!(bc!(ab.apply(this, arguments)))))
-      }
+        return ef!(de!(cd!(bc!(ab.apply(this, arguments)))));
+      };
     case 6:
       return function (this: unknown) {
-        return fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))))
-      }
+        return fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))));
+      };
     case 7:
       return function (this: unknown) {
-        return gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments)))))))
-      }
+        return gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments)))))));
+      };
     case 8:
       return function (this: unknown) {
-        return hi!(gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))))))
-      }
+        return hi!(gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))))));
+      };
     case 9:
       return function (this: unknown) {
-        return ij!(hi!(gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments)))))))))
-      }
+        return ij!(
+          hi!(gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))))))
+        );
+      };
   }
-  return
+  return;
 }

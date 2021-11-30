@@ -7,9 +7,7 @@
 Instruction for establishing a live connection that is updated once the underlying data changes.
 """
 directive @live(
-  """
-  Whether the query should be live or not.
-  """
+  """Whether the query should be live or not."""
   if: Boolean = true
 ) on QUERY
 
@@ -290,8 +288,7 @@ type Group implements BaseEntity {
 """
 A field whose value is a hex color code: https://en.wikipedia.org/wiki/Web_colors.
 """
-scalar HexColorCode
-  @specifiedBy(url: "https://en.wikipedia.org/wiki/Web_colors")
+scalar HexColorCode @specifiedBy(url: "https://en.wikipedia.org/wiki/Web_colors")
 
 type Image {
   originalHeight: PositiveInt!
@@ -497,9 +494,7 @@ type Mutation {
   updateTyping(input: TypingInput!): Boolean!
 }
 
-"""
-Integers that will have a value of 0 or more.
-"""
+"""Integers that will have a value of 0 or more."""
 scalar NonNegativeInt
 
 enum OnlineStatus {
@@ -525,9 +520,7 @@ input PinPostInput {
   postId: ID!
 }
 
-"""
-Integers that will have a value greater than 0.
-"""
+"""Integers that will have a value greater than 0."""
 scalar PositiveInt
 
 type Post implements BaseEntity {
@@ -603,30 +596,10 @@ type Query {
   comments(postId: ID, sort: CommentsSort = Top): [Comment!]!
   folder(id: ID!): Folder!
   getLinkMeta(linkUrl: String!): LinkMetadata
-  messages(
-    channelId: ID
-    cursor: ID
-    groupId: ID
-    limit: PositiveInt = 100
-    pinned: Boolean = false
-    userId: ID
-  ): MessagesResponse!
+  messages(channelId: ID, cursor: ID, groupId: ID, limit: PositiveInt = 100, pinned: Boolean = false, userId: ID): MessagesResponse!
   post(id: ID!): Post!
-  posts(
-    feed: PostsFeed = Joined
-    folderId: ID
-    limit: PositiveInt = 20
-    offset: NonNegativeInt = 0
-    search: String
-    serverId: ID
-    sort: PostsSort = Hot
-    time: PostsTime = All
-  ): PostsResponse!
-  publicServers(
-    category: ServerCategory
-    featured: Boolean = false
-    sort: PublicServersSort = Top
-  ): [Server!]!
+  posts(feed: PostsFeed = Joined, folderId: ID, limit: PositiveInt = 20, offset: NonNegativeInt = 0, search: String, serverId: ID, sort: PostsSort = Hot, time: PostsTime = All): PostsResponse!
+  publicServers(category: ServerCategory, featured: Boolean = false, sort: PublicServersSort = Top): [Server!]!
   replies: [Reply!]!
   server(id: ID, name: String): Server
   serverUsers(serverId: ID!): [ServerUser!]!
@@ -879,9 +852,7 @@ input UpdateServerInput {
   serverId: ID!
 }
 
-"""
-The `Upload` scalar type represents a file upload.
-"""
+"""The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 type User implements BaseEntity {
@@ -908,9 +879,7 @@ type User implements BaseEntity {
   username: String!
 }
 
-"""
-Represents NULL values
-"""
+"""Represents NULL values"""
 scalar Void
 
 enum VoteType {

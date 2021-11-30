@@ -15,7 +15,7 @@ const url = import.meta.env.PROD
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
-    graphQLErrors.forEach(error => {
+    graphQLErrors.forEach((error) => {
       const { message, locations, path } = error
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`

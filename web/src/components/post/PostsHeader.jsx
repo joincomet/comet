@@ -1,5 +1,9 @@
 import Header from '@/components/ui/header/Header'
-import { IconHot, IconNew, IconTop } from '@/components/ui/icons/Icons'
+import {
+  IconHot,
+  IconNew,
+  IconTop
+} from '@/components/ui/icons/Icons'
 import { useStore } from '@/hooks/useStore'
 import { useTranslation } from 'react-i18next'
 import HeaderTab from '@/components/ui/header/HeaderTab'
@@ -8,7 +12,9 @@ import ShowUsersButton from '@/components/ui/header/buttons/ShowUsersButton'
 const iconClassName = 'w-5 h-5'
 
 export default function PostsHeader() {
-  const [postsSort] = useStore(s => [s.postsSort])
+  const [postsSort] = useStore(s => [
+    s.postsSort
+  ])
 
   let icon
   switch (postsSort) {
@@ -24,7 +30,11 @@ export default function PostsHeader() {
   }
 
   return (
-    <Header title={postsSort} icon={icon} showDivider={postsSort === 'Top'}>
+    <Header
+      title={postsSort}
+      icon={icon}
+      showDivider={postsSort === 'Top'}
+    >
       {postsSort === 'Top' && (
         <div className="flex items-center space-x-4">
           <TimeTab time="Hour" />
