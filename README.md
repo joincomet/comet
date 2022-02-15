@@ -1,6 +1,6 @@
 # Comet ([joincomet.app](https://joincomet.app))
 
-![Banner](banner.png)
+![Screenshot](https://cdn.discordapp.com/attachments/824830925107101706/853725106647597116/unknown.png)
 
 All-in-one chat and forums for communities.
 
