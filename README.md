@@ -27,7 +27,7 @@ Known active forks: https://github.com/gudfhr95/stelllar
 - [PostgreSQL](https://www.postgresql.org/)
 - [Redis](https://redis.io/)
 
-[Join our Discord server](https://discord.gg/NPCMGSm)
+[Join our Discord server](https://discord.gg/NPCMGSm) (mostly inactive)
 
 
 ## Development Instructions
