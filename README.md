@@ -4,6 +4,8 @@
 
 All-in-one chat and forums for communities.
 
+Known active forks: https://github.com/gudfhr95/stelllar
+
 ## Tech Stack
 
 ### Frontend
